@@ -326,17 +326,17 @@ Only if a marketing or landing surface enters scope. No code from `carbon-for-ib
 |---|---|---|---|
 | S1 | v11 vs v12 preview | **Decided `[H]` 2026-09-24:** full v12 implementation from day one, except where it breaks a component we need | D8 |
 | S2 | Style delivery given v12 | follows from S1: a Sass build is required (precompiled CSS is v11-styled) | D5 |
-| S3 | Table engine | TanStack v8 (examples as written) / v9 (port) / DataTable only | D7 |
-| S4 | tanstack-carbon license | ask upstream / re-implement from docs and TanStack only / use as reference only | D7 |
-| S5 | Preview policy | allow `preview__` only / also `previewCandidate__` / stable only (drops PageHeader, IconIndicator, BigNumber, TruncatedText) | new |
-| S6 | Which `preview__PageHeader` | @carbon/react / @carbon/ibm-products | new |
+| S3 | Table engine | **Decided 2026-09-24:** TanStack v9 (D7) | D7 |
+| S4 | tanstack-carbon license | **Decided 2026-09-24:** reuse IBM's tanstack-carbon examples (Hleb: TanStack is open source and IBM's licensing covers it). Fact on record: the repo has no LICENSE file; one of its 40 package.json files declares MIT | D7 |
+| S5 | Preview policy | **Decided 2026-09-24:** allow `preview__` and `previewCandidate__` | new |
+| S6 | Which `preview__PageHeader` | Pending: Hleb asked for a code comparison of the two implementations first (in progress) | new |
 | S7 | Chat | **Decided `[H]` 2026-09-24:** `@carbon/ai-chat` (O9 included); rule: never render a `<feature-flags>` element above it (section 1.5) | D1 fact |
 | S8 | Labs adoption policy | **Decided `[H]` 2026-09-24:** Labs is mandatory; WC-only Labs use an overlapping React component where one exists, otherwise wrap or rebuild (sections 2.5, 2.6) | new |
-| S9 | App shell | core UI Shell / `@carbon-labs/react-ui-shell` | new |
-| S10 | Onboarding generation | `preview__Coachmark` / Labs first-time-orientation / none | new |
-| S11 | Marketing sections | in scope (6.4) / out | new |
-| S12 | stylelint plugin license | accept after clarification / own lint rules | new |
-| S13 | Package shape for extras (charts, tables, chat) | one package / separate entry points / separate packages | D3 |
+| S9 | App shell | **Decided 2026-09-24:** core UI Shell plus the Labs `react-ui-shell` extensions | new |
+| S10 | Onboarding generation | **Decided 2026-09-24:** both: Coachmark for contextual tips, Labs first-time orientation for first run | new |
+| S11 | Marketing sections | **Decided 2026-09-24:** out (section 6.4 is out of scope) | new |
+| S12 | stylelint plugin license | **Decided 2026-09-24:** use `stylelint-plugin-carbon-tokens` now | new |
+| S13 | Package shape for extras (charts, tables, chat) | **Decided 2026-09-24:** one package (D3) | D3 |
 | S14 | Rich-text editor (`wc-wysiwyg`) | **Decided `[H]` 2026-09-24:** not needed. `wc-wysiwyg` is out (X12). | new |
 | S15 | The 16 components moving from IBM Products into core, on day one | **Decided `[H]` 2026-09-24:** copy Carbon's v12 source of these components from carbon `main` into Afframe UI (option b). Consequences: v12 versions from day one; Afframe maintains and re-syncs the copy until v12 ships, then switches to core imports; Apache-2.0 section 4 applies (keep LICENSE and notices, mark modified files); Tearsheet pulls 5 of the 16 (Tearsheet, SidePanel, ActionSet, Resizer, TruncatedText). Work item M19. | D8 |
 | S16 | Resizer beyond a single handle (`wc-resizer` partial) | **Decided `[H]` 2026-09-24:** wrap the Labs `wc-resizer` web component for grid, panels and the 2D corner handle (option b); `@carbon-labs/react-resizer` (I9) stays for the single handle. Consequence: Lit runtime; v12 via the scoped flag rule (1.5). Work item M21. | new |
