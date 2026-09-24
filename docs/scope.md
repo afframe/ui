@@ -329,7 +329,7 @@ Only if a marketing or landing surface enters scope. No code from `carbon-for-ib
 | S3 | Table engine | **Decided 2026-09-24:** TanStack v9 (D7) | D7 |
 | S4 | tanstack-carbon license | **Decided 2026-09-24:** reuse IBM's tanstack-carbon examples (Hleb: TanStack is open source and IBM's licensing covers it). Fact on record: the repo has no LICENSE file; one of its 40 package.json files declares MIT | D7 |
 | S5 | Preview policy | **Decided 2026-09-24:** allow `preview__` and `previewCandidate__` | new |
-| S6 | Which `preview__PageHeader` | Pending: Hleb asked for a code comparison of the two implementations first (in progress) | new |
+| S6 | Which `preview__PageHeader` | **Chosen by Hleb 2026-09-24: IBM Products' (option b), pending his confirmation in Storybook** (`docs/research/sources/round3/P-pageheader.md`) | new |
 | S7 | Chat | **Decided `[H]` 2026-09-24:** `@carbon/ai-chat` (O9 included); rule: never render a `<feature-flags>` element above it (section 1.5) | D1 fact |
 | S8 | Labs adoption policy | **Decided `[H]` 2026-09-24:** Labs is mandatory; WC-only Labs use an overlapping React component where one exists, otherwise wrap or rebuild (sections 2.5, 2.6) | new |
 | S9 | App shell | **Decided 2026-09-24:** core UI Shell plus the Labs `react-ui-shell` extensions | new |

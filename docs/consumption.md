@@ -59,11 +59,14 @@ TypeScript types ship inside the package.
 
 ## 4. Working across repos
 
-- **Upgrades**: a Carbon upgrade is an Afframe UI release that bumps the exact peers; consumers update `@afframe/ui` and the two Carbon peers together (Dependabot or Renovate group).
-- **Trying unreleased changes in a consumer**: (a) a prerelease version published from a PR (for example `1.4.0-next.3`), or (b) a local link (`pnpm link` or `yalc`). To pick in phase 1.
-- **Breaking changes**: semantic versioning, changelog and a migration note per breaking release.
+Decided 2026-09-24:
+- **Carbon upgrades in afframe/ui**: on a regular schedule plus on demand (security fixes, needed features). Dependabot opens the update PR, tests and visual tests gate it, and a release is published only after Hleb approves it; nothing releases automatically.
+- **Consumer updates**: Dependabot in each consumer monorepo, grouping `@afframe/ui` with its two Carbon peers in one PR.
+- **Only the latest release ships**: no preview or release-candidate versions. Changes are tried inside afframe/ui (Storybook and the reference apps) before a release.
+- **Versioning and changelog**: not now; commit history is enough until the full build is done. Later option on record: the approach of `hlebtkachenko/monorepo` (tag-triggered release workflow, `changelog.d/` fragments compiled into `CHANGELOG.md`, a `release-hold` environment).
+- **Breaking changes**: semantic versioning and a migration note per breaking release.
 
 ## 5. Open points
 
-- Licence: `afframe/ui` is PolyForm Noncommercial with Hleb as licensor. If the consumer repos belong to a company rather than to Hleb personally, that company needs its own licence grant from Hleb for commercial use. Informational, not legal advice.
 - The "(to prove)" items in section 2.7 and the access questions in section 2.6.
+- Licence: resolved (Hleb, 2026-09-24): the README states that commercial use needs a separate licence from the copyright holder.
