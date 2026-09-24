@@ -14,3 +14,13 @@ Results:
 - 199 CSS rules differ between v11 and v12. Every changed selector is a core Carbon class: ai-label, btn, combo-box, date-picker, dropdown, label, layer-two/three, layout, list-box, multi-select, number(-input), popover(-caret/-content), progress-bar, search(-input), select(-input), slug, structured-list, tag, text-input, toggletip, tooltip.
 - No IBM Products (`.c4p--*`) rule changes: IBM Products' own styles are v12-agnostic. Carbon elements used inside IBM Products components (buttons, tags, inputs) do get the v12 styling, because they are compiled in the same build.
 - Conclusion: turning v12 on does not break the combined Sass build. Visual consistency of IBM Products components under v12 still needs a rendered check (Storybook visual tests), not covered here.
+
+## Addendum: square corners under v12 (2026-09-24)
+v12 corner rounding comes from the `@carbon/layout` radius tokens `$border-radius-02`, `$border-radius-04`, `$border-radius-08` (all `!default`) and the `--cds-popover-border-radius` custom property.
+
+    @use '@carbon/layout/scss/generated/border-radius' with ($border-radius-02: 0px, $border-radius-04: 0px, $border-radius-08: 0px);
+    @use '@carbon/styles/scss/feature-flags' with ($feature-flags: ('enable-v12-release': true));
+    @use '@carbon/styles';
+    @use '@carbon/ibm-products-styles/scss/index-without-carbon';
+
+Compiles with exit 0; every v12 radius in the changed rules becomes 0px (popover falls back to `var(--cds-popover-border-radius, 0px)`). Rendered Tag and TextInput markup confirms square corners; the v12 full-border field style stays. Hleb chose the native v12 look for now (2026-09-24); this is kept as evidence for later visual changes.
