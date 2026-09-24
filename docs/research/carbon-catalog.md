@@ -406,7 +406,7 @@ Package count: 36 published `@carbon-labs/*` packages: 18 React, 16 web componen
 
 ## 8. Org repos
 
-121 repos in https://github.com/carbon-design-system (`org-repos.json`); 35 have `archived: true` in the JSON (lane F's summary says 24; the JSON count is used here). Lane F row tags: 4 core, 8 optional, 20 reference, 89 out (88 + `carbon-components-react` tagged "legacy/archived"). F's own summary (5/14/10/92) does not match its rows.
+121 repos in https://github.com/carbon-design-system (`org-repos.json`); 35 have `archived: true` in the JSON. Lane F row tags: 4 core, 8 optional, 20 reference, 89 out (88 + `carbon-components-react` tagged "legacy/archived"). F's own summary (5/14/10/92) does not match its rows.
 
 Non-out repos with this catalog's tag (where it differs from F, F's tag is in brackets):
 

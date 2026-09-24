@@ -14,15 +14,16 @@ Source of truth for all rows: `org-repos.json` (121 repos, snapshot 2026-09-24).
 - template/starter/tutorial: 17
 - tooling/infra: 20
 - governance/process: 8 — rfcs, roadmap, lts-schedule, carbon-contribution, pattern-contributions, okrs, carbon-dco, carbon-job-stories
-- legacy/archived (explicitly `archived: true` in the API, regardless of other category): 24
+- legacy/archived (explicitly `archived: true` in the API, regardless of other category): 35
 - IBM-internal/marketing/org-admin: 12 — .bob, .github, action-ibmcloud-cf, carbon-badges, carbon-triage(archived), content-planning(archived), ibm-cdai, insights, issue-tracking(archived), platform, sync, uptime
 - unknown/empty-shell: 3 — svelte-carbon, digital-design-ideation, remote-learning-enablement
 
 ### By relevance tag
-- core: 5 (carbon, ibm-products, carbon-labs, carbon-ai-chat, carbon-mcp)
-- optional: 14 (React extensions/tools/kits worth a later decision)
-- reference: 10 (worth reading, not shipping/depending on)
-- out: 92 (other framework, archived, internal, marketing, empty, duplicate)
+- core: 4 (carbon, ibm-products, carbon-labs, carbon-ai-chat)
+- optional: 8 (React extensions/tools/kits worth a later decision; includes carbon-mcp)
+- reference: 20 (worth reading, not shipping/depending on)
+- out: 89 (other framework, archived, internal, marketing, empty, duplicate)
+- (Counts corrected 2026-09-24 to match the table below.)
 
 Note: carbon, ibm-products, carbon-labs, and the React/Vanilla extension repos (carbon-for-ibm-dotcom, templates) are covered in full depth by other round-2 lanes (core monorepo lane, ibm-products lane, carbon-labs lane, extensions lane, templates lane). Rows below for those are intentionally short with a pointer.
 
@@ -83,7 +84,7 @@ Columns: repo · category · purpose · lang · pushed_at (date only) · archive
 | carbon-addons-ics | tooling/infra | Carbon Add-on for IBM Collaboration Solutions | JavaScript | 2024-05-23 | yes | out | archived, IBM-internal product add-on |
 | carbon-addons-infrastructure | tooling/infra | Carbon Add-on for IBM Cloud Infrastructure | JavaScript | 2020-06-06 | yes | out | archived, IBM-internal |
 | carbon-addons-website | docs/website | Add-on for design system website (empty desc) | CSS | 2018-01-30 | yes | out | archived, ancient website add-on |
-| carbon-components-react | core (legacy) | "React components for the Carbon Design System" — pre-v11 predecessor of @carbon/react | JavaScript | 2020-07-27 | yes | legacy/archived | archived; fully superseded by @carbon/react inside the `carbon` monorepo |
+| carbon-components-react | core (legacy) | "React components for the Carbon Design System" — pre-v11 predecessor of @carbon/react | JavaScript | 2020-07-27 | yes | out | archived; fully superseded by @carbon/react inside the `carbon` monorepo |
 | carbon-elements | legacy/archived | "Project moved to carbon-design-system/carbon" | (none) | 2019-07-12 | yes | out | explicitly merged into carbon monorepo |
 | carbon-themes | legacy/archived | Collection of themes for Carbon Components (pre-token era) | (none) | 2019-07-12 | yes | out | archived, superseded by @carbon/themes in monorepo |
 | carbon-spec | legacy/archived | "[WIP] Specification for the Carbon Design System" | (none) | 2019-07-12 | yes | out | archived, abandoned WIP |
