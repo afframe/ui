@@ -353,7 +353,7 @@ The two existing workflows, as observed in the repo on 2026-09-23:
 | Fork PRs | write-access check applies to comment and review events | token secret absent on fork PRs, so the action cannot authenticate; error vs skip not observed (unverified) |
 
 Information control facts:
-- The local research and goals folder `.context/` is excluded via `.git/info/exclude`, which is per-clone and not in a committed `.gitignore` (observed with `git check-ignore -v`).
+- (Superseded by D12, 2026-09-24: docs now live in `docs/`.) The local research and goals folder `.context/` was excluded via `.git/info/exclude`, which is per-clone and not in a committed `.gitignore` (observed with `git check-ignore -v`).
 - Public Storybook or docs deploys expose whatever stories and pages they contain; hosting-side access control options were not researched (unverified).
 
 ## 11. Known gaps and pitfalls
@@ -418,6 +418,7 @@ Options with a one-line consequence each; no pick.
 - Facts: TanStack v9 is ESM-only; `@carbon/react` ships entry-point `'use client'`, and bundler handling of the directive per chunk is unverified; Carbon types are incomplete; bundler choices (tsup, tsdown, Vite, Rslib and others) were not verified.
 
 ### D5 Style delivery: Sass source, compiled CSS, or both
+- Note (2026-09-24): the D8 decision requires a Sass build, because precompiled Carbon CSS is v11-styled (`goals.md`, `scope.md` section 1).
 - Sass source: consumers keep `$prefix`, theme maps and per-component imports; every consumer needs Dart Sass with `@use`.
 - Compiled CSS: no Sass in consumers; theme and prefix fixed at build, and shipping CSS compiled from `@carbon/styles` triggers Apache §4.
 - Both: most flexible; two paths to keep in sync and a larger package.
@@ -439,6 +440,7 @@ Options with a one-line consequence each; no pick.
 - Facts (updated 2026-09-24): only the `Datagrid` component carries `@deprecated` (runtime details point to tanstack-carbon); its 20 exported `use*` hooks carry no marker but serve only Datagrid. Issue #4977 (react-table v8) was closed 2024-11-25 as not_planned; no successor grid ships in ibm-products 2.99.0. tanstack-carbon's `react/` folder holds about 23 patterns (batch actions, filter panel and flyout, nested rows, editable cells, sticky columns, resizing, virtual and more), scaffoldable with the `generate-pattern` CLI. [V-verify row 6b](../research/round2/V-verify.md), [E-templates-patterns](../research/round2/E-templates-patterns.md)
 
 ### D8 Carbon v12 timing
+- **Decided 2026-09-24:** full v12 wherever it does not limit us; see `goals.md` D8 and `scope.md` section 1. The options below are kept as the analysis behind it.
 - Stay on v11 defaults until v12 GA: no preview risk; one larger migration later, date unknown.
 - Adopt selected `enable-v12-*` flags now: staged migration; preview APIs and some flags without codemods.
 - Use IBM Products for components migrating to core: available today; they move packages at v12 (16 components).
@@ -466,6 +468,7 @@ Options with a one-line consequence each; no pick.
 - Facts: Carbon's a11y claim is checklist-based ("based on WCAG AA") with WCAG 2.1 AA stated for contrast; four themes to cover.
 
 ### D12 Where private (non-public) project docs live
+- **Decided 2026-09-24:** docs live in this repo, `docs/` permanent and `docs/plans/` temporary; see `goals.md` D12. The options below are kept as the analysis behind it.
 - Git-ignored folder in the public repo (current `.context/` via `.git/info/exclude`): local and simple; per-clone only, not backed up, easy to lose or leak with a changed ignore file.
 - Private companion repo: versioned and access-controlled; one more repo to keep in sync.
 - Private docs space outside Git: no leak path through commits; separate from code history.

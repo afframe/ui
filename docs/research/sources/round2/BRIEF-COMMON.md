@@ -1,3 +1,5 @@
+> **Working brief** given to the round 2 research agents on 2026-09-24. Paths refer to the agents' workspace at the time.
+
 # Round 2 research: common brief (read fully before starting)
 
 ## Project context

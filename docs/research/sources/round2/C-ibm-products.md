@@ -1,3 +1,5 @@
+> **Pre-verification draft, kept as evidence.** Claims here were checked afterwards; the verification files (`round2/V-verify.md`) override this file, and the authoritative text is `docs/research/carbon-reference.md` and `docs/research/carbon-catalog.md`.
+
 # C · IBM Products 2.99.0 catalog
 Retrieved: 2026-09-24
 

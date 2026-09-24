@@ -1,3 +1,5 @@
+> **Pre-verification draft, kept as evidence.** Claims here were checked afterwards; the verification files (`round1/07a-verify-distribution-legal-security.md`, `round1/07b-verify-carbon.md`) override this file, and the authoritative text is `docs/research/carbon-reference.md` and `docs/research/carbon-catalog.md`.
+
 # 06 · Distribution, build, legal, security
 Retrieved: 2026-09-23 · Lane: distribution-legal-security
 
