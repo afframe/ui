@@ -1,6 +1,6 @@
 # Afframe UI docs
 
-Permanent documents live in `docs/`. Temporary working files that agents need to continue a piece of work live in `docs/plans/` and are deleted when that work is done. This repo is public: everything here is publicly readable.
+**Status 2026-09-24: all documents are drafts awaiting Hleb's review.** Permanent documents live in `docs/`. Temporary working files that agents need to continue a piece of work live in `docs/plans/` and are deleted when that work is done. This repo is public: everything here is publicly readable.
 
 | File | What it is |
 |---|---|

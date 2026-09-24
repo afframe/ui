@@ -2,7 +2,7 @@
 
 Delete this file when phase 0 (research, goals, decisions) is closed.
 
-**State, 2026-09-24:** phase 0 decisions complete. Research rounds 1 to 4 are done and verified; goals and scope are written. No code yet.
+**State, 2026-09-24:** phase 0. Everything in `docs/` is Claude's draft: Hleb's answers from the chat are recorded, but Hleb has not yet reviewed or confirmed the documents themselves. Research rounds 1 to 4 are done and verified. No code yet.
 
 ## Decided by Hleb
 - D1: React only.
@@ -11,9 +11,8 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 - Scope (`docs/scope.md`) accepted, with these rules: Carbon Labs is mandatory (web-components-only Labs: use an overlapping React component, otherwise wrap or rebuild); every Optional item is decided one by one; every Build-new item is approved one by one before it is built, and building new is the last milestone.
 
 ## Waiting on Hleb
-1. All phase-0 decisions are made (`docs/goals.md`, `docs/scope.md`, `docs/consumption.md`). D9 brand is deferred until all components work on native v12.
-2. Next: a "go" for phase 1 (foundation) and the merge decision for PR #2.
-3. `docs/plans/open-decisions.md` is fully decided; remove it once Hleb agrees.
+1. Hleb reviews and confirms the drafts (`docs/goals.md`, `docs/scope.md`, `docs/consumption.md`, `docs/research/*`), then the drafts are reworked with him. Nothing is final until he confirms it.
+2. Not now (Hleb, 2026-09-24): no merge of PR #2, no phase 1, no removal of `docs/plans/open-decisions.md`.
 
 ## Proposed for phase 1 `[P]`
 - Prove the consumer path in `docs/consumption.md` with in-repo Next.js and Vite reference apps before the first release.
