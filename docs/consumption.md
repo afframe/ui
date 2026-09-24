@@ -17,7 +17,7 @@ What the package contains:
 | `@afframe/ui/charts` | Carbon Charts wrappers (client) |
 | `@afframe/ui/chat` | `@carbon/ai-chat` wrapper (client) |
 | `@afframe/ui/server` | server-safe helpers, constants and types (no `'use client'`) |
-| `@afframe/ui/styles.css` | compiled native v12 CSS for Carbon, IBM Products, Labs and Afframe; all four themes |
+| `@afframe/ui/styles.css` | compiled native v12 CSS for Carbon, IBM Products, Labs (to prove: Labs web components carry their styles inside shadow DOM) and Afframe; all four themes |
 | `@afframe/ui/charts.css` | Carbon Charts CSS, imported after `styles.css` when charts are used |
 | `dist/fonts/` | IBM Plex WOFF2 files (OFL-1.1), referenced by relative URLs from `styles.css` |
 
@@ -30,7 +30,7 @@ TypeScript types ship inside the package.
 3. Build: tsdown for JavaScript (per-file ESM, `'use client'` kept on client entries) plus a separate `tsc` pass for types; Sass compile of one entry with the v12 flag set before Carbon loads, `$font-path: './fonts'`; font copy into `dist/fonts/`; a post-build check that client entries start with `'use client'` and `./server` does not.
 4. Licences: PolyForm Noncommercial governs the project (Hleb, 2026-09-24: "we still guided by our licence"). Carbon's Apache-2.0 licence is kept verbatim in `third-party/carbon/LICENSE` and ships in the package; it covers the copied Carbon v12 source and the Carbon-derived CSS. Copied files keep their IBM copyright headers and carry a note when modified (Apache-2.0 section 4). OFL-1.1 ships next to the fonts. Carbon publishes no NOTICE file, so none is carried.
 5. Release: a GitHub Actions workflow publishes on a version tag with `permissions: packages: write` and the built-in `GITHUB_TOKEN`. Versioning: semantic versions; publishing needs Hleb's manual approval; changelog tooling comes after the full build (section 4).
-6. Access: in the package settings, "Manage Actions access" adds each consumer repo with read access. To confirm at first publish: whether the package must stop inheriting permissions from `afframe/ui` first, and whether it can stay private while the repo is public.
+6. Access: in the package settings, "Manage Actions access" adds each consumer repo with read access. A package inherits the repository's access permissions but not its visibility, and a newly published package is private by default (GitHub docs, checked 2026-09-24). To confirm at first publish: whether the package must stop inheriting permissions from `afframe/ui` first, and what inherited read access means when the repository is public.
 7. Reference consumers inside this repo: a Next.js App Router app and a Vite app that install the packed tarball (`npm pack`), exactly as a real consumer would, and run in CI (to prove: CSS and font loading under Turbopack, webpack and Vite; server and client entries; the Jest allowlist).
 8. Docs: a "Getting started" page in Storybook with the consumer steps below.
 

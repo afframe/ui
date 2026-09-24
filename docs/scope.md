@@ -135,7 +135,6 @@ Sources: `sources/round3/V3-verify.md` (V3, authoritative), `sources/round3/W-v1
 |---|---|---|
 | I34 | `@carbon/upgrade` 11.46.0 | v12 codemods, HTTPError -> FullPageError codemod |
 | I35 | `stylelint-plugin-carbon-tokens` 5.0.6 | `[P]` enforced tokens-only styling (GOALS D); license conflict MIT vs Apache-2.0 open (section 7) |
-
 | I36 | `enable-v12-release` and all `enable-v12-*` flags in React and Sass | `[H]` full v12 implementation from day one (section 1 decision) |
 
 ### 2.5 Carbon Labs `[H]` (mandatory)
@@ -210,7 +209,7 @@ Final treatment table from V3 ("Final treatment table"; rows 1b to 5b). "Use ins
 | O23 | carbon-mcp | Carbon MCP server for AI-assisted development | IBMid-gated access · **declined** |
 | O24 | devtools browser extension, `@carbon/icons-motion` | developer inspection, animated icons | polish · **included**. Review 2026-09-24: `@carbon/icons-motion` 2.3.0 (last published 2024-04-03) peers React 16 or 17 only, so it conflicts with React 19; waiting on Hleb |
 | O25 | carbon-for-products-design-kit | IBM Products components in Figma | GOALS G · **included** |
-| O26 | Labs reference packages: `@carbon-labs/react-plane-stack-3d`, `primitives`, `mdx-components`, `network-graph` | 3D stack, headless primitives, docs MDX, graph viz | React packages fall under the Labs rule (V3 row 1a; `sources/round3/labs-tech.json`) · **resolved: plane-stack-3d and mdx-components included (2.5), primitives transitive, network-graph out (dead)** |
+| O26 | Labs reference packages: `@carbon-labs/react-plane-stack-3d`, `primitives`, `mdx-components`, `network-graph` | 3D stack, headless primitives, docs MDX, graph viz | React packages fall under the Labs rule (V3 row 1a; `sources/round3/labs-tech.json`) · **resolved: mdx-components included (2.5), plane-stack-3d out (S20), primitives transitive, network-graph out (dead)** |
 ## 4. Exclude [P]
 
 | # | Group | Items | Reason |

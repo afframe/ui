@@ -315,7 +315,7 @@ Monorepo https://github.com/carbon-design-system/carbon-labs, Storybook https://
 | @carbon-labs/vscode-snippets | SCSS snippets | 0.5.0 (2026-05-14) | optional | editor productivity |
 | @carbon-labs/wc-wysiwyg | rich-text editor (WC) | 0.2.0 (2026-09-21) | optional | decision: rich text needed; WC only, wrapper required |
 | @carbon-labs/wc-empty-state, @carbon-labs/wc-ai-tag, @carbon-labs/wc-global-header | WC only. wc-empty-state: partial overlap with IBM Products EmptyState (gap: multi-action slots), and that family is removed at v12 per https://github.com/carbon-design-system/carbon/issues/22473. wc-ai-tag (`labs.status` draft): a clickable tag in a tooltip with a colored start edge, not an AI badge; partial overlap with `OperationalTag` + `Tooltip`; no runtime React wrapper ships (types only) and the bare import is broken. wc-global-header: partial overlap with UI Shell + `react-ui-shell`; its only React wrapper is the IBM Hybrid iPaaS header, bound to IBM backend endpoints (updated 2026-09-24, round 3) | 0.22.0 / 0.27.0 / 0.95.0 | optional | treatment in `docs/scope.md` 2.6 (round3 V3 rows 2a, 3a, 3b, 5a, 5b) |
-| @carbon-labs/react-plane-stack-3d | 3D visualization (three.js); React, peers `react ^18.0.0` (updated 2026-09-24, round 3) | 0.10.0 (2026-09-03) | reference | niche, heavy dependency; included under the Labs rule (`docs/scope.md` I51; round3 `labs-tech.json`) |
+| @carbon-labs/react-plane-stack-3d | 3D visualization (three.js); React, peers `react ^18.0.0` (updated 2026-09-24, round 3) | 0.10.0 (2026-09-03) | reference | niche, heavy dependency; out (`[H]` S20, 2026-09-24: React 18 peer only; `docs/scope.md` I51) |
 | @carbon-labs/primitives | framework-agnostic date-picker state machines ("other", neither React nor WC); transitive dependency of `react-date-picker` and `wc-date-picker`; calls a global `Temporal` with no polyfill dependency; core's copy lives in `@carbon/utilities/date-picker` (PR https://github.com/carbon-design-system/carbon/pull/22728) (updated 2026-09-24, round 3) | 0.6.0 (2026-09-18) | reference | not consumed directly (round3 V3 rows 7, 12h) |
 | @carbon-labs/mdx-components | docs MDX; React (imports `react`) (updated 2026-09-24, round 3) | 0.29.0 (2026-07-29) | reference | docs authoring; included under the Labs rule (`docs/scope.md` I52; round3 L row, V3 row 1a) |
 | @carbon-labs/network-graph | graph viz (web component) (updated 2026-09-24, round 3) | 0.9.0 (2024-06-27) | reference | dead since 2024-06-27; successor `wc-network-graph` is private; stays out (round3 V3 row 1b) |
@@ -449,7 +449,7 @@ Full 121-row table: `docs/research/carbon-org-repos.md`.
 
 ## 10. Sources
 
-- Lane files: `docs/research/sources/round2/{A-v11-vs-v12,B-react-catalog,C-ibm-products,D-labs-extensions,E-templates-patterns,F-org-triage,V-verify}.md`
+- Lane files: `docs/research/sources/round2/{A-v11-vs-v12,B-react-catalog,C-ibm-products,D-labs-extensions,E-templates-patterns,V-verify}.md`; lane F became `docs/research/carbon-org-repos.md`
 - Ground truth: `docs/research/sources/round2/{react-exports,ibm-products-exports,feature-flags,org-repos,org-trees}.json`; `docs/research/sources/round1/00-inventory.json`; unpacked tarballs under `<npm pack>/`
 - Round 1: `docs/research/carbon-reference.md`
 - https://registry.npmjs.org/@carbon%2freact · https://registry.npmjs.org/@carbon%2fai-chat · https://registry.npmjs.org/stylelint-plugin-carbon-tokens

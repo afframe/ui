@@ -6,17 +6,22 @@ Source of truth for all rows: `org-repos.json` (121 repos, snapshot 2026-09-24).
 ## Summary
 
 ### By category
-- core (main Carbon libraries/components): 4 — carbon, carbon-labs, ibm-products, carbon-ai-chat
-- React extension (React-usable add-ons/libraries): 8 — carbon-addons-iot-react, carbon-charts, carbon-echarts-theme, carbon-utils-position, icons-motion, tanstack-carbon, carbon-mcp, devtools
-- other-framework (Angular/Vue/Svelte/Web Components/native, out per React-only decision): 20
-- design kit/Figma: 6 — carbon-design-kit, carbon-for-ibm-dotcom-design-kit, carbon-for-products-design-kit, carbon-design-system.framerfx, carbon-sketch-assistant, team-assets
-- docs/website: 9 — carbon-website(+website-1/-latest/-archive), carbon-for-ibm-dotcom-website, design-language-website, carbon-platform, design-system-website, carbon-day-microsite
-- template/starter/tutorial: 17
-- tooling/infra: 20
-- governance/process: 8 — rfcs, roadmap, lts-schedule, carbon-contribution, pattern-contributions, okrs, carbon-dco, carbon-job-stories
-- legacy/archived (explicitly `archived: true` in the API, regardless of other category): 35
-- IBM-internal/marketing/org-admin: 12 — .bob, .github, action-ibmcloud-cf, carbon-badges, carbon-triage(archived), content-planning(archived), ibm-cdai, insights, issue-tracking(archived), platform, sync, uptime
-- unknown/empty-shell: 3 — svelte-carbon, digital-design-ideation, remote-learning-enablement
+Counts from the category column of the triage table below (recounted 2026-09-24; 121 repos):
+- core: 4 (carbon, carbon-labs, ibm-products, carbon-ai-chat)
+- core (dup): 4 (ibm-cloud-cognitive-1, ibm-cloud-cognitive-2, ibm-products-1, ibm-products-v1)
+- core (legacy): 1 (carbon-components-react)
+- React extension: 13 (carbon-addons-beta-react, carbon-addons-catalog-react, carbon-addons-cloud-react, carbon-addons-data-viz-react, carbon-addons-iot-react, carbon-charts, carbon-echarts-theme, carbon-mcp, carbon-utils-position, devtools, ibm-security, icons-motion, tanstack-carbon)
+- React extension (source): 1 (carbon-icons)
+- other-framework (Angular, Vue, Svelte, Web Components, native; out per React-only decision): 14
+- other-framework/reference: 1 (carbon-for-ibm-dotcom)
+- design kit/Figma: 6 (carbon-design-kit, carbon-for-ibm-dotcom-design-kit, carbon-for-products-design-kit, carbon-design-system.framerfx, carbon-sketch-assistant, team-assets)
+- docs/website: 14
+- template/starter/tutorial: 18
+- tooling/infra: 26
+- governance: 13 (.github, archived-v10-release-issues, carbon-contribution, carbon-dco, carbon-job-stories, carbonated, content-planning, issue-tracking, lts-schedule, okrs, pattern-contributions, rfcs, roadmap)
+- legacy/archived: 4 (carbon-elements, carbon-spec, carbon-themes, carbon-v11)
+- unknown: 2 (digital-design-ideation, svelte-carbon)
+- Archived on GitHub (`archived: true`), across all categories: 35
 
 ### By relevance tag
 - core: 4 (carbon, ibm-products, carbon-labs, carbon-ai-chat)
@@ -24,6 +29,7 @@ Source of truth for all rows: `org-repos.json` (121 repos, snapshot 2026-09-24).
 - reference: 20 (worth reading, not shipping/depending on)
 - out: 89 (other framework, archived, internal, marketing, empty, duplicate)
 - (Counts corrected 2026-09-24 to match the table below.)
+- The tags here are the round-2 triage. Where they differ, `carbon-catalog.md` section 8 supersedes them (for example carbon-ai-chat is `core` here and `optional [core]` there).
 
 Note: carbon, ibm-products, carbon-labs, and the React/Vanilla extension repos (carbon-for-ibm-dotcom, templates) are covered in full depth by other round-2 lanes (core monorepo lane, ibm-products lane, carbon-labs lane, extensions lane, templates lane). Rows below for those are intentionally short with a pointer.
 
