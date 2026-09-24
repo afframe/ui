@@ -11,7 +11,7 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 - Scope (`docs/scope.md`) accepted, with these rules: Carbon Labs is mandatory (web-components-only Labs: use an overlapping React component, otherwise wrap or rebuild); every Optional item is decided one by one; every Build-new item is approved one by one before it is built, and building new is the last milestone.
 
 ## Waiting on Hleb, in this order
-1. The remaining open decisions: D3 to D7, D9 to D11 (`docs/goals.md`) and S3 to S6, S9 to S13 (`docs/scope.md` section 7). Note: S15 (vendored Carbon v12 code) makes Apache-2.0 section 4 obligations apply regardless of D4 and D5.
+1. The remaining open decisions, explained with options in `docs/plans/open-decisions.md`: D3 to D7, D9 to D11 (`docs/goals.md`) and S3 to S6, S9 to S13 (`docs/scope.md` section 7). Note: S15 (vendored Carbon v12 code) makes Apache-2.0 section 4 obligations apply regardless of D4 and D5.
 
 D2 is decided (GitHub Packages). Native v12 look for now; Afframe visual changes after all components work. Round 3 decisions S14 to S20 and the v11-look rule are settled (`docs/scope.md` sections 1.5 and 7).
 
