@@ -186,7 +186,7 @@ IDs are `F1`, `F2` and so on, so they do not clash with scope's I, O, M, B and S
 **F11. Disclosure in the public repo: a private repo name, and local paths in the evidence**
 - Severity: major. The sensitivity is low, but this is exactly what the brief asks to control. Dimension: public-repo disclosure, traceability.
 - Where: consumption.md:66; sources/round4/V4-recommendation.md:4-5; C-carbon-build.md:7; S-solutions.md:47; round3/V3-verify.md:4 and later lines.
-- Claim: "Later option on record: the approach of `<private repo>` (tag-triggered release workflow, `changelog.d/` fragments ..., a `release-hold` environment)".
+- Claim: "Later option on record: the approach of `<private repo>` (its release setup described) ...".
 - Evidence:
   - `gh api repos/<private repo>` returns `visibility: private`.
   - The evidence files cited local scratch paths (git-ignored or temporary folders).
