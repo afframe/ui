@@ -1,0 +1,77 @@
+{
+ "package": "@carbon/feature-flags@1.10.0",
+ "flags": [
+  {
+   "name": "enable-css-custom-properties",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-css-grid",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-v11-release",
+   "enabled_by_default": true
+  },
+  {
+   "name": "enable-v12-release",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-experimental-tile-contrast",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-tile-contrast",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-v12-tile-default-icons",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-v12-tile-radio-icons",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-v12-overflowmenu",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-treeview-controllable",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-v12-structured-list-visible-icons",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-experimental-focus-wrap-without-sentinels",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-focus-wrap-without-sentinels",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-dialog-element",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-v12-dynamic-floating-styles",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-v12-toggle-reduced-label-spacing",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-enhanced-file-uploader",
+   "enabled_by_default": false
+  },
+  {
+   "name": "enable-presence",
+   "enabled_by_default": false
+  }
+ ]
+}

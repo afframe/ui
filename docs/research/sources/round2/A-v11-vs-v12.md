@@ -1,0 +1,158 @@
+> **Pre-verification draft, kept as evidence.** Claims here were checked afterwards; the verification files (`round2/V-verify.md`) override this file, and the authoritative text is `docs/research/carbon-reference.md` and `docs/research/carbon-catalog.md`.
+
+# A · v11 latest vs v12 preview
+Retrieved: 2026-09-24
+
+## Answer in 5 lines
+
+1. v11 (`@carbon/react@1.117.0`) is the only released, installable line; npm `latest` and `next` dist-tags both point to it, and there is no separate `@carbon/react` v12 npm package or tag.
+2. `v12` is officially a "Preview" phase per `docs/release-schedule.md`: it lives as `enable-v12-*` feature flags inside the v11 codebase, not a separate release; the GitHub `v12.x` milestone is open with `due_on: null` and 0 issues attached, confirming no committed date or scoped work list.
+3. The v12 Storybook (`https://v12-react.carbondesignsystem.com`, confirmed live) hardcodes its package identity as "`@carbon/react v2.x`" in `packages/react/.storybook-v12/theme.js`, indicating v12 is planned to ship as `@carbon/react` major version 2 (inferred from that label, not stated as a fact elsewhere).
+4. "v11.117.0 + all `enable-v12-*` flags on" gets the fixed, forward-committed v12 behavior changes (Menu-based OverflowMenu, tile icon changes, floating-UI positioning, spacing/radius changes) today in the shipped package, with codemods for some flags, but it does NOT get the IBM-Products components being migrated for v12 (Tearsheet, ActionSet, Coachmark, BigNumber, etc.); those are explicitly excluded from the published v11 build regardless of flag state, and remain usable today only via the separate `@carbon/ibm-products@2.99.0` package.
+5. Net: v11.117.0 with v12 flags enabled is the most complete, most "latest" thing installable and shippable now; full v12 (native `@carbon/react` exports for migrated components, defaults flipped) requires waiting for GA, which has no committed date.
+
+## What v12 is today (evidence)
+
+- Carbon's own release schedule table lists: `v11` status `Active` (initial release 2021-08-06, active since 2022-03-31); `v12` status `Preview` (initial release date given as 2023-05-25, Begin Active / Maintenance / EOL all `TBD`). Source: `docs/release-schedule.md` in carbon-design-system/carbon, fetched via `gh api repos/carbon-design-system/carbon/contents/docs/release-schedule.md`.
+- "Preview" is officially defined as: "allows consumers to incrementally opt in to changes that will be present in the next major, but through the current active release... begins when the first feature flag is 'committed' to be on-by-default in a future major version." Flags committed this way are renamed with the `enable-v12-*` prefix, and "the API or functionality behind this flag is now fixed and won't change." (same file)
+- v11 remains the default; `docs/working-with-v12.md` states plainly: "v12 work is still developed from within the v11 codebase... v11 remains the default experience, and v12 behavior is enabled through the v12 release flag."
+- There is a separate v12 Storybook build (not a separate npm package) for `packages/react` (port 3012 locally; published at `https://v12-react.carbondesignsystem.com`, HTTP 200 confirmed) and `packages/web-components` (`https://v12-web-components.carbondesignsystem.com`, HTTP 200 confirmed), built via `yarn storybook:v12` and deployed by `.github/workflows/deploy-v12-storybooks.yml` on every push to `main`. The Storybook UI is hardcoded to show `@carbon/react v2.x` / `@carbon/web-components v3.x` as the next-version package identity. Relevance: `reference` (reason: worth watching to see committed v12 defaults ahead of GA, but it is a preview build, not something to ship against or link into product).
+- npm confirms no separate package: dist-tags for `@carbon/react` are `latest=next=1.117.0` (per BRIEF-COMMON ground truth, 2026-09-24), no `v12` or `next` tag pointing elsewhere.
+- `enable-v12-release` (the root flag, default `false`) is defined in `packages/feature-flags/feature-flags.yml`; when enabled it treats every other `enable-v12-*` flag as enabled too, implemented once in the shared `@carbon/feature-flags` package (`FeatureFlagScope.ts` for JS, `index.scss` for Sass) and surfaced via `@carbon/react`'s `<FeatureFlags enableV12Release>` and `@carbon/web-components`'s `enable-v12-release` attribute.
+- A dedicated migration doc, `docs/migration/v12.md`, is required to be kept current with every v12-affecting change (governed by `working-with-v12.md`), and is the authoritative description of what changes for consumers moving from v11 to v12.
+
+## v12 flags (table)
+
+Source: `docs/feature-flags.md` (descriptions/availability/codemods) cross-checked against `feature-flags.json` (defaults) from `@carbon/feature-flags@1.10.0`.
+
+| Flag | Default | What changes | Availability | How to enable | Codemod | Breaking on v12? |
+|---|---|---|---|---|---|---|
+| `enable-v12-release` | false | Master switch: turns on every other `enable-v12-*` flag at once | React, Sass, Web Components | React: `<FeatureFlags enableV12Release>`; Sass: `@use '@carbon/styles/scss/feature-flags' with ($feature-flags: ('enable-v12-release': true))`; WC: `<feature-flags enable-v12-release>` | `npx @carbon/upgrade migrate enable-v12-release --write` (wraps React root render in `<FeatureFlags enableV12Release>`) | Yes, umbrella of below |
+| `enable-v12-overflowmenu` | false | Rebuilds `OverflowMenu` on the `Menu` subcomponent model: children become `MenuItem`/`MenuItemDivider` instead of `OverflowMenuItem`; `itemText`→`label`; delete items use `kind="danger"`; `wrapperClassName` folds into `className` | React, Web Components | React: `<FeatureFlags enableV12Overflowmenu>` (exact boolean prop confirmed in `FeatureFlags/index.d.ts` of `@carbon/react@1.117.0`); WC: `enable-v12-overflowmenu` attribute; or `enable-v12-release` | `npx @carbon/upgrade migrate enable-v12-overflowmenu --write` | Yes, child composition breaking change |
+| `enable-v12-tile-default-icons` | false | `ClickableTile` auto-supplies `ArrowRight` icon (or `Error` icon when disabled), overriding any consumer `renderIcon` | React, Web Components | React: `<FeatureFlags enableV12TileDefaultIcons>`; WC: `enable-v12-tile-default-icons` attribute; or `enable-v12-release` | `npx @carbon/upgrade migrate enable-v12-tile-default-icons --write` | Yes, visual/icon override |
+| `enable-v12-tile-radio-icons` | false | `RadioTile` uses `RadioButton`/`RadioButtonChecked` icons instead of `CheckmarkFilled`; indicator visible in both selected and unselected states; Sass reserves extra inline-end space | React, Sass, Web Components | React: `<FeatureFlags enableV12TileRadioIcons>`; Sass: `enable-v12-tile-radio-icons: true`; WC: attribute; or `enable-v12-release` | `npx @carbon/upgrade migrate enable-v12-tile-radio-icons --write` | Yes, visual, layout |
+| `enable-v12-structured-list-visible-icons` | false | Selection icons in `StructuredListRow` (via new `selection` prop) always visible instead of only when selected; legacy last-cell width/padding override removed | Sass | Sass only, no matching boolean prop in `FeatureFlags/index.d.ts`, so it cannot be set individually from the React `<FeatureFlags>` component: `@use '@carbon/styles/scss/feature-flags' with ($feature-flags: ('enable-v12-structured-list-visible-icons': true))`, or `enable-v12-release` | `npx @carbon/upgrade migrate enable-v12-structured-list-visible-icons --write` | Yes, visual |
+| `enable-v12-dynamic-floating-styles` | false | Floating surfaces (`ComboBox`, `Dropdown`, `MultiSelect`, `MenuButton`, `ComboButton`, `OverflowMenu`, `Popover`, `Tooltip`, `Toggletip`) use Floating UI fixed-position styles even when `autoAlign`/`autoalign` is false (no collision detection added) | React, Web Components | React: `<FeatureFlags enableV12DynamicFloatingStyles>`; WC: attribute; or `enable-v12-release` | none listed | Positioning change inside scroll/transform/clip containers |
+| `enable-v12-toggle-reduced-label-spacing` | false | Reduces block-end margin between Toggle label and control from `$spacing-05` to `$spacing-03` | Sass, Web Components | Sass/WC only, no matching boolean prop in `FeatureFlags/index.d.ts`: `@use '@carbon/styles/scss/feature-flags' with ($feature-flags: ('enable-v12-toggle-reduced-label-spacing': true))`, or `enable-v12-release`; React gets it via the Sass re-export, no React API change | none listed | Visual only |
+| `enable-tile-contrast` | false | Improved tile styling for better contrast (supersedes deprecated `enable-experimental-tile-contrast`) | Sass | flag | none listed | No (opt-in, not yet v12-committed) |
+| `enable-treeview-controllable` | false | New controllable API for `TreeView` | React | flag | none listed | No |
+| `enable-dialog-element` | false | Components can use the native `<dialog>` element | React, Sass | flag | none listed | No |
+| `enable-enhanced-file-uploader` | false | Enhanced `FileUploader` callbacks with richer data and more triggers | React | flag | none listed | No |
+| `enable-focus-wrap-without-sentinels` | false | New focus-wrap behavior without sentinel DOM nodes (supersedes deprecated `enable-experimental-focus-wrap-without-sentinels`) | React | flag | none listed | No |
+| `enable-presence` | false | Components can stay unmounted while closed and mount only when open | React, Sass | flag | none listed | No |
+| `enable-css-custom-properties` | false | Placeholder description in source ("Describe what the flag does") per `packages/feature-flags/feature-flags.yml` on `main`; not documented in `docs/feature-flags.md` at all | unverified | flag | none listed | No (pre-v12 legacy) |
+| `enable-css-grid` | false | "Enable CSS Grid Layout in the Grid and Column React components" per `packages/feature-flags/feature-flags.yml`; not listed in `docs/feature-flags.md` | React | flag | none listed | No (pre-v12 legacy) |
+| `enable-v11-release` | **true** | "Enable the features and functionality for the v11 Release" per `packages/feature-flags/feature-flags.yml`; bookkeeping flag marking v11 as current major, not a v12 item; not listed in `docs/feature-flags.md` | unverified | on by default | none listed | n/a |
+| `enable-experimental-tile-contrast` | false | Deprecated alias, use `enable-tile-contrast` | Sass | flag | none listed | Deprecated |
+| `enable-experimental-focus-wrap-without-sentinels` | false | Deprecated alias, use `enable-focus-wrap-without-sentinels` | React | flag | none listed | Deprecated |
+
+Two nuances confirmed directly in the React `FeatureFlags` component's type definitions (`packages/react` `FeatureFlags/index.d.ts` in the unpacked `@carbon/react@1.117.0` tarball):
+
+- `enableV12Release` "turns on every `enableV12*` flag at once, as well as `enableFocusWrapWithoutSentinels`", i.e. the root v12 flag also silently enables a flag that is NOT v12-prefixed (`enable-focus-wrap-without-sentinels`), so turning on individual `enable-v12-*` flags one at a time does not fully replicate `enable-v12-release`.
+- Several v12-committed behavior changes documented in `docs/migration/v12.md` have **no individual flag at all** and are reachable only through the root `enable-v12-release` (or its Sass/WC equivalents): Popover/Toggletip/Tooltip caret removal and radius, Menu radius/padding, Tag border radius, ProgressBar radius/animation, the label/decorator interactive-content validation (dev warning in v11, dev error under v12), and the removal of the `unstable_Pagination`/`preview_Pagination`/`unstable_PageSelector`/`preview_PageSelector` APIs. None of these appear as rows in `feature-flags.json` or `docs/feature-flags.md`, so "turn on individual v12 flags only" gives a materially smaller subset of v12 behavior than "turn on `enable-v12-release`."
+
+Important nuance confirmed in `docs/feature-flags.md`: even with `enable-v12-release` on, **the IBM-Products-migrated components (Tearsheet, ActionSet, etc.) are not exposed**, "They are not available in the published v11 package and enabling `enable-v12-release` does not expose them, they will be part of the public `@carbon/react` API when v12 ships." This is a distinct mechanism (file exclusion from the build) from the flag system.
+
+Relevance tags for the flags:
+
+- `core`: `enable-v12-release`, `enable-v12-overflowmenu`, `enable-v12-tile-default-icons`, `enable-v12-tile-radio-icons`, `enable-v12-structured-list-visible-icons`, `enable-v12-dynamic-floating-styles`, `enable-v12-toggle-reduced-label-spacing`, `enable-dialog-element`, `enable-presence`, `enable-enhanced-file-uploader`, `enable-focus-wrap-without-sentinels`, `enable-treeview-controllable`, reason: these are the fixed, forward-committed v12 behaviors and stable v11 opt-ins Hleb wants in the "latest Carbon for React" build; low risk, codemods exist for most v12-committed ones.
+- `optional`: `enable-tile-contrast`, `enable-css-grid`, reason: useful depending on whether the platform needs the improved tile contrast styling or CSS Grid layout mode, not required by default.
+- `out`: `enable-css-custom-properties` (undocumented placeholder description in source, unclear purpose), `enable-v11-release` (internal bookkeeping, not a consumer-facing toggle), `enable-experimental-tile-contrast`, `enable-experimental-focus-wrap-without-sentinels` (both explicitly deprecated aliases), reason: no consumer value or already superseded.
+
+## Components moving from IBM Products (table)
+
+Source: `packages/react/product-migrated-components.mjs` in carbon-design-system/carbon (fetched via `gh api .../contents/packages/react/product-migrated-components.mjs`), which is the authoritative exclude-list controlling both the published bundle/`.d.ts` files and the v11/v12 Storybook split. Cross-checked against the unpacked `@carbon/react@1.117.0` npm tarball (`<npm pack>/carbon-react-1.117.0/package/lib`) and `react-exports.json`, and against `@carbon/ibm-products@2.99.0` (`ibm-products-exports.json`).
+
+| Component | In `@carbon/react` 1.117.0 source tree? | Exported/usable from `@carbon/react` 1.117.0 today? | Available today via `@carbon/ibm-products@2.99.0`? |
+|---|---|---|---|
+| ActionSet | Listed in exclude list; no compiled `lib/components/ActionSet` found in the published tarball | No | Not found under this name in `ibm-products-exports.json` (unverified, may be internal-only or composed differently) |
+| NotificationsPanel | Excluded | No | Yes, `NotificationsPanel` exported |
+| BigNumber | Excluded; only stray `.d.ts` files (`BigNumber.d.ts`, `BigNumberSkeleton.d.ts`, `constants.d.ts`, `index.d.ts`) exist in the published `lib/components/BigNumber`, with zero references from `lib/index.js`, i.e. types leaked but the component is not wired into the public API | No | Only as `preview_` / experimental, `previewCandidate__BigNumber` in `ibm-products-exports.json` (preview status) |
+| FullPageError | Excluded | No | Yes, `FullPageError` exported |
+| Coachmark | Excluded | No | Preview-status only: `preview__Coachmark`, `preview__CoachmarkBeacon`, `preview__CoachmarkTagline`, plus `previewCandidate__Coachmark*` variants, `useCoachmark` hook |
+| OptionsTile | Excluded | No | Yes, `OptionsTile` exported |
+| InterstitialScreen | Excluded | No | Yes, `InterstitialScreen`, `InterstitialScreenView` exported |
+| Guidebanner | Excluded | No | Preview-status only: `previewCandidate__Guidebanner`, `previewCandidate__GuidebannerElement*` |
+| Resizer | Excluded | No | Not found under this name in `ibm-products-exports.json` (unverified) |
+| ScrollGradient | Excluded | No | Yes, `ScrollGradient` exported |
+| SidePanel | Excluded | No | Yes, `SidePanel` exported |
+| EditInPlace | Excluded | No | Yes, `EditInPlace` exported |
+| Tearsheet | Excluded | No | Yes, `Tearsheet`, `TearsheetNarrow`, `TearsheetPresence` exported |
+| TagOverflow | Excluded, but README/release notes show active in-progress work: v11.117.0 release notes include `feat(react): v12 migrate TagOverflow from carbon-for-ibm-products (#23160)` under an "Upcoming in v12" section for `@carbon/react@1.117.0`, i.e. migration work has landed in source but the component is still excluded from the public build | No | Yes, `TagOverflow` exported |
+| UserAvatar | Excluded | No | Yes, `UserAvatar` exported |
+| TruncatedText | Excluded | No | Preview-status only: `preview__TruncatedText` |
+
+How they can be used today: only via the separate, already-installable `@carbon/ibm-products@2.99.0` package (a distinct npm dependency, styled to extend Carbon and requiring its own setup), not via `@carbon/react`. Several (BigNumber, Coachmark, Guidebanner, TruncatedText) are additionally gated behind `@carbon/ibm-products`'s own `preview_`/`previewCandidate_` naming, meaning they are pre-stable even within that package. In the v12 preview Storybook, migrated components carry a "Migrated" badge in the sidebar per `docs/feature-flags.md`, but that Storybook view does not correspond to any installable package state, `product-migrated-components.mjs` explicitly states the shipping mechanism: "To ship a component: 1. Remove its entry from this list. 2. Add its export to src/index.ts," meaning this has not happened for any of the 16 listed components as of 1.117.0.
+
+Relevance tags for the migrated components (as consumable today via `@carbon/ibm-products`, since none are usable via `@carbon/react` yet):
+
+- `core`: Tearsheet, TearsheetNarrow, SidePanel, NotificationsPanel, FullPageError, InterstitialScreen, TagOverflow, UserAvatar, EditInPlace, OptionsTile, ScrollGradient, reason: stable, exported today in `@carbon/ibm-products@2.99.0`, and generic business-app building blocks (side panels, error states, tag overflow, avatars) that a business platform is likely to need regardless of the v12 migration timeline.
+- `optional`: BigNumber, Coachmark, Guidebanner, TruncatedText, reason: still `preview_`/`previewCandidate_` status inside `@carbon/ibm-products` itself, so adopting them now is a stability tradeoff decision, not a given.
+- `reference`: ActionSet, Resizer, reason: named in the v12 migration plan but not confirmed as distinct exports in `@carbon/ibm-products@2.99.0` (unverified); worth watching for when they land in v12 rather than building against today.
+
+## Other v12 changes
+
+From `docs/migration/v12.md` (authoritative "what changes for consumers" doc, required to be kept current per `working-with-v12.md`):
+
+- **`@carbon/utilities`**: new date-picker primitives built on the Temporal API; importing `@carbon/utilities/date-picker` auto-installs a `temporal-polyfill` (~20 kB gzipped) only when the engine lacks native `Temporal` (no Safari support yet; Chrome/Edge only from v144). Reaches consumers through the v12 preview date picker.
+- **Popover/Toggletip/Tooltip**: caret removed entirely; `caret` prop/attribute deprecated and forced `false` under v12; corners now use `$border-radius-08` (Popover) / `$border-radius-04` (Toggletip/Tooltip); 4px gap added between trigger and content.
+- **Menu**: corners rounded (`$border-radius-08`/`$border-radius-04`), `$spacing-02` internal padding, submenu positioning and danger menu-item focus states adjusted.
+- **Label/decorator placement**: interactive decorators (including `AILabel`) must render outside native `label`/`legend` elements and outside sortable table header buttons; `ClickableTile` wraps link+decorator in an outer wrapper. In v11 these constraints only emit dev warnings; with `enable-v12-release` they throw dev errors.
+- **`ProgressBar`**: track/fill/indeterminate animation use `$border-radius-max`; indeterminate animation now translates a element across the track (animates `transform`) instead of animating `background-position-x` on a gradient, visually/functionally equivalent.
+- **`Tag`**: no longer pill-shaped; small uses `$border-radius-02`, medium/large use `$border-radius-04`; dismiss buttons and skeletons follow suit. No React/WC API change, only visual via the styles re-export.
+- **Pagination preview APIs removed**: `unstable_Pagination`/`preview_Pagination` and `unstable_PageSelector`/`preview_PageSelector` are removed under v12; use the stable `Pagination` component (page-select control now built in; omit `pageSizes` to hide it, or use `renderPageSelect` for a custom control).
+- No separate list of "new components" beyond the IBM-Products migration set was found in the migration doc; no "removed/deprecated components" beyond the Pagination preview APIs and the `caret` prop deprecation.
+- Migration guidance and codemods live in `@carbon/upgrade` (see flags table above); `npx @carbon/upgrade migrate list` lists all available migrations; codemods run via `jscodeshift` and are tested against fixtures under `packages/upgrade/transforms`.
+
+## Newest in 1.117.0 outside v12 (preview/unstable, recent additions)
+
+- `react-exports.json` shows 91 `preview_`/`unstable_` prefixed exports out of 365 total runtime exports in `@carbon/react@1.117.0` (duplicated `preview_`/`unstable_` pairs for the same underlying API, e.g. `preview_FeatureFlags`/`unstable_FeatureFlags`). Notable ones not tied to any `enable-v12-*` flag: `preview_Layout`/`preview_LayoutDirection`, `preview_OverflowMenuV2` (a distinct preview overflow-menu implementation from the v12-flagged one), full sets of `preview__Fluid*` form-field components (ComboBox, DatePicker, Dropdown, MultiSelect, NumberInput, Search, Select, TextArea, TextInput, TimePicker, and their skeletons), `preview__PageHeader`, `preview__Card`, `preview__ChatButton`(+Skeleton), `preview__Dialog`, `preview__Slug`/`SlugActions`/`SlugContent` (older AI-label naming), `preview__IconIndicator`, `preview__ShapeIndicator`, `preview__AiSkeleton*`.
+- Recent release-note highlights (v11.117.0, 2026-09-23, `gh api repos/carbon-design-system/carbon/releases/tags/v11.117.0`): `feat: upgrade code previewer (#23425)`; `feat(motion): update API to accept custom surfaces (#23212)` in `@carbon/motion@11.53.0`; new September 2026 icon and pictogram sets (`@carbon/icons@11.89.0`, `@carbon/pictograms@12.85.0`); DTCG (Design Tokens Community Group) token additions to `@carbon/colors@11.59.0` and `@carbon/layout@11.60.0`. These ship in v11 unconditionally, not gated by any flag.
+- The "Upcoming in v12" changelog sections in the same release (progress-bar rounded corners/RTL fix, popover/toggletip/tooltip styling, OverflowMenu v12 prop-type export, TagOverflow migration) show v12 work landing incrementally inside every v11 minor release, consistent with the Preview-phase description above.
+
+Relevance tags: `optional` for the `preview__Fluid*` field set, `preview_OverflowMenuV2`, `preview__PageHeader`, `preview__Card`, `preview__ChatButton`, `preview__Dialog`, `preview__AiSkeleton*`, `preview__IconIndicator`/`preview__ShapeIndicator` (reason: functionally useful React-and-latest-Carbon building blocks, but pre-stable naming means adopting them is a stability tradeoff the platform has to decide on a case-by-case basis). `out` for `preview__Slug`/`SlugActions`/`SlugContent` (reason: superseded naming for the AI-label pattern, already replaced by `AILabel` in the stable API, so building on the old preview name is not forward-compatible). `core` for the unconditional v11.117.0 additions (new icons/pictograms, DTCG tokens, motion custom-surface API) (reason: these ship in the stable release with no flag and no migration risk).
+
+## Dates and support
+
+- v11: `Active` since 2022-03-31 (initial release 2021-08-06); receives biweekly minor releases; Maintenance/EOL dates `TBD`.
+- v12: `Preview` since first `enable-v12-*` flag commit, dated 2023-05-25 in the schedule table; `Begin Active`, `Begin Maintenance`, `End of life` all `TBD`. No committed GA date found in any source consulted. Confirmed via GitHub milestones: `gh api repos/carbon-design-system/carbon/milestones?state=all` shows an open `v12.x` milestone (`number: 105`, created 2026-07-29) with `due_on: null`, `description: "TBD"`, and 0 open/closed issues attached, i.e. the milestone exists as a placeholder with no scoped work list or date. No `v12`-named label exists in the repo's label set (`gh api repos/carbon-design-system/carbon/labels` returned no match for "12").
+- Support commitments: per `docs/release-schedule.md`, "Active" releases get biweekly minors; "Maintenance" releases get security/critical-bug patches only; "LTS" is a separate optional designation for releases needing an extended support window, decided per-major, with no fixed end date, intended for on-premises/slow-upgrade consumers, no major has been confirmed as LTS in the material reviewed (unverified beyond the process description).
+- Assets covered by this same schedule: `@carbon/react`, `@carbon/web-components`, `@carbon/styles`, other packages in the carbon monorepo, `@carbon/ibm-products`, and `@carbon/ibm-products-web-components`.
+
+## Comparison table
+
+| | v11 latest, flags off (`@carbon/react@1.117.0` default) | v11.117.0 + all `enable-v12-*` flags on | Wait for v12 GA |
+|---|---|---|---|
+| Install today | Yes, `npm install @carbon/react` gets this as-is | Yes, same package, wrap root in `<FeatureFlags enableV12Release>` or set Sass flag | No, not published; no date committed |
+| OverflowMenu, tile icons, StructuredList selection, floating positioning, toggle spacing, popover/tooltip caret+radius | v11 behavior (legacy composition, `CheckmarkFilled` icons, gradient progress bar, pill tags, caret present) | v12-committed behavior per `docs/migration/v12.md` (Menu-based OverflowMenu, new tile icons, no caret, fixed-position floating styles, translate-based progress animation, non-pill tags) | Same as "flags on" column, but on by default, no flag/wrapper needed |
+| IBM-Products-migrated components (Tearsheet, ActionSet, Coachmark, BigNumber, etc.) as `@carbon/react` exports | Not present | Still not present, explicitly excluded from the build regardless of flag state (`product-migrated-components.mjs`) | Present as native `@carbon/react` exports (per stated plan; date unconfirmed) |
+| Same components via `@carbon/ibm-products@2.99.0` | Available today (separate package, separate dependency) as most are already stable exports; a few remain `preview_`/`previewCandidate_` | Same, unaffected by react's v12 flags | Presumably superseded/removed from `ibm-products` once migrated, per migration intent (unverified, no deprecation timeline for `@carbon/ibm-products` found) |
+| Stability | Stable, tested, documented on carbondesignsystem.com | Flags "generally stable and unlikely to change" per naming-convention rules (v12-committed flags are explicitly fixed), but this is a Preview surface, not covered by Chromatic VRT in the v12 Storybook yet | Presumably fully stable/Active once GA'd |
+| Risk | Lowest, standard supported release | Low-medium: API is fixed per Carbon's own commitment rules, but requires manual review per `docs/migration/v12.md` (label/decorator placement changes throw dev errors under the flag) and codemods only cover some flags (`enable-v12-overflowmenu`, `enable-v12-tile-default-icons`, `enable-v12-tile-radio-icons`, `enable-v12-structured-list-visible-icons`, `enable-v12-release` itself); no codemod for `enable-v12-dynamic-floating-styles` or `enable-v12-toggle-reduced-label-spacing` | Unknown, timeline not committed; blocks on IBM-Products migration completing and v12 moving from Preview to Active |
+| Upgrade path | N/A (current baseline) | `npx @carbon/upgrade migrate <codemod-name> --write` per flag, or `enable-v12-release` codemod for the root wrapper; manual work for Sass/WC-only flags and dynamic-floating-styles/toggle-spacing | Same codemods expected to apply when flags are turned on ahead of time; Carbon's stated intent is "if all `enable-v12-*` flags are enabled within your project before the v12 release, no changes should need to be made... when updating to v12" |
+
+## Open questions
+
+- No committed v12 GA date exists in any source reviewed; "Preview" since 2023-05-25 with all subsequent phase-transition dates `TBD`.
+- Whether/when `@carbon/ibm-products` will deprecate components once they land natively in `@carbon/react` is not documented anywhere found (unverified).
+- Exact fate of `ActionSet` and `Resizer` inside `@carbon/ibm-products@2.99.0`, neither name (nor an obvious alias) appears in `ibm-products-exports.json`; could be internal-only, renamed, or composed from other primitives (unverified, not investigated further within budget).
+- No `docs/lts-schedule` content or dedicated LTS commitment for v11 was found beyond the general process description in `release-schedule.md`; whether v11 will become an official LTS release is unconfirmed (unverified).
+- Round-1 reference doc (`docs/research/carbon-reference.md`) was not re-read in this lane per brief instructions (round 1 already covered general Carbon landscape); this file relies on round-2 ground truth and fresh GitHub/npm retrieval only.
+
+## Sources
+
+- `docs/release-schedule.md`, carbon-design-system/carbon (main branch), retrieved via `gh api repos/carbon-design-system/carbon/contents/docs/release-schedule.md`, 2026-09-24.
+- `docs/working-with-v12.md`, same repo/method, 2026-09-24.
+- `docs/migration/v12.md`, same repo/method, 2026-09-24.
+- `docs/feature-flags.md`, same repo/method, 2026-09-24.
+- `packages/react/product-migrated-components.mjs`, same repo/method, 2026-09-24.
+- `packages/upgrade/README.md`, same repo/method, 2026-09-24.
+- `.github/workflows/deploy-v12-storybooks.yml`, same repo/method, 2026-09-24.
+- GitHub Release `v11.117.0`, `gh api repos/carbon-design-system/carbon/releases/tags/v11.117.0`, 2026-09-24.
+- Live check: `https://v12-react.carbondesignsystem.com` (HTTP 200) and `https://v12-web-components.carbondesignsystem.com` (HTTP 200), 2026-09-24.
+- Ground-truth files supplied for this task: `docs/research/sources/round2/feature-flags.json`, `react-exports.json`, `ibm-products-exports.json`, `org-repos.json`, `org-trees.json`, `docs/research/sources/round1/00-inventory.json`.
+- Unpacked npm package inspected directly: `<npm pack>/carbon-react-1.117.0/package/lib/components/BigNumber` (confirms dead/unwired `.d.ts` leftovers) and `.../FeatureFlags/index.d.ts` (exact React boolean prop names).
+- `packages/feature-flags/feature-flags.yml`, `gh api repos/carbon-design-system/carbon/contents/packages/feature-flags/feature-flags.yml`, 2026-09-24 (flag descriptions not present in `docs/feature-flags.md`).
+- GitHub milestones and labels: `gh api repos/carbon-design-system/carbon/milestones?state=all&per_page=100` and `gh api repos/carbon-design-system/carbon/labels?per_page=100`, 2026-09-24 (confirms open, dateless `v12.x` milestone with 0 issues; no `v12` label).
+- Drift check: `docs/migration/v12.md` and `packages/react/product-migrated-components.mjs` fetched both from `main` and pinned to tag `v11.117.0` via `?ref=v11.117.0`; both identical, so the `main`-branch fetches used throughout this file accurately reflect the 1.117.0 release, 2026-09-24.
+- `carbon-design-system/rfcs`, `carbon-design-system/roadmap`, and `carbon-design-system/lts-schedule` repos exist (confirmed via `jq -r '.[].name' org-repos.json | grep -iE 'roadmap|rfc|lts'`) but contain no v12-specific content within budget: `rfcs/text/` has only `0001-monorepo.md`, no v12 RFC; `roadmap/README.md` points to an external GitHub Projects board (`github.com/carbon-design-system/roadmap/projects/1`, not fetched, HTML project board outside `gh api` content scope) rather than markdown content; `lts-schedule` was not separately fetched (the generated graph it produces is already linked and embedded in `docs/release-schedule.md`). None of these changes the v12-date finding above (unverified beyond what is stated).

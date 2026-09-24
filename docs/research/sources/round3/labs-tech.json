@@ -1,0 +1,307 @@
+[
+  {
+    "name": "@carbon-labs/ai-chat",
+    "version": "0.39.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "^2.41.0"
+    },
+    "latest_published": "2026-06-02"
+  },
+  {
+    "name": "@carbon-labs/ai-extended-button",
+    "version": "0.0.1-rc.0",
+    "deprecated": "",
+    "deps": {
+      "lit": "^3.0.0",
+      "@carbon/styles": "^1.39.0",
+      "@carbon/web-components": "2.0.1-canary.1"
+    },
+    "latest_published": "2023-11-30"
+  },
+  {
+    "name": "@carbon-labs/ai-feedback",
+    "version": "0.12.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "2.9.0"
+    },
+    "latest_published": "2024-06-27"
+  },
+  {
+    "name": "@carbon-labs/ai-prompt-tuning",
+    "version": "0.1.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "2.9.0"
+    },
+    "latest_published": "2024-06-27"
+  },
+  {
+    "name": "@carbon-labs/ai-tag",
+    "version": "0.8.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "2.21.0"
+    },
+    "latest_published": "2025-07-09"
+  },
+  {
+    "name": "@carbon-labs/ai-ux-control",
+    "version": "0.0.2-canary.256",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "2.9.0"
+    },
+    "latest_published": "2024-06-27"
+  },
+  {
+    "name": "@carbon-labs/mdx-components",
+    "version": "0.29.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-07-29"
+  },
+  {
+    "name": "@carbon-labs/network-graph",
+    "version": "0.9.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "2.9.0"
+    },
+    "latest_published": "2024-06-27"
+  },
+  {
+    "name": "@carbon-labs/primitives",
+    "version": "0.6.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-09-18"
+  },
+  {
+    "name": "@carbon-labs/react-animated-header",
+    "version": "0.61.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-08-25"
+  },
+  {
+    "name": "@carbon-labs/react-calendar",
+    "version": "0.11.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-05-18"
+  },
+  {
+    "name": "@carbon-labs/react-date-picker",
+    "version": "0.12.0",
+    "deprecated": "",
+    "deps": {
+      "react": "^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0",
+      "react-dom": "^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0"
+    },
+    "latest_published": "2026-09-18"
+  },
+  {
+    "name": "@carbon-labs/react-example-button",
+    "version": "0.18.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-06-02"
+  },
+  {
+    "name": "@carbon-labs/react-first-time-orientation",
+    "version": "0.21.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-05-15"
+  },
+  {
+    "name": "@carbon-labs/react-plane-stack-3d",
+    "version": "0.10.0",
+    "deprecated": "",
+    "deps": {
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0"
+    },
+    "latest_published": "2026-09-03"
+  },
+  {
+    "name": "@carbon-labs/react-processing",
+    "version": "0.21.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-06-02"
+  },
+  {
+    "name": "@carbon-labs/react-registration-flow",
+    "version": "0.2.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/styles": "^1.110.1"
+    },
+    "latest_published": "2026-07-29"
+  },
+  {
+    "name": "@carbon-labs/react-resizer",
+    "version": "0.25.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-06-02"
+  },
+  {
+    "name": "@carbon-labs/react-split-panel",
+    "version": "0.22.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-05-15"
+  },
+  {
+    "name": "@carbon-labs/react-style-picker",
+    "version": "0.27.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-09-21"
+  },
+  {
+    "name": "@carbon-labs/react-tag-input",
+    "version": "0.6.0",
+    "deprecated": "",
+    "deps": {
+      "react": "^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0",
+      "react-dom": "^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0"
+    },
+    "latest_published": "2026-08-12"
+  },
+  {
+    "name": "@carbon-labs/react-text-highlighter",
+    "version": "0.23.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-05-15"
+  },
+  {
+    "name": "@carbon-labs/react-theme-settings",
+    "version": "0.30.0",
+    "deprecated": "",
+    "deps": {
+      "react": "^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0",
+      "react-dom": "^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0"
+    },
+    "latest_published": "2026-05-15"
+  },
+  {
+    "name": "@carbon-labs/react-ui-shell",
+    "version": "0.106.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-08-20"
+  },
+  {
+    "name": "@carbon-labs/react-whats-new",
+    "version": "0.28.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/ibm-products": "^2.76.0"
+    },
+    "latest_published": "2026-06-02"
+  },
+  {
+    "name": "@carbon-labs/utilities",
+    "version": "0.28.0",
+    "deprecated": "",
+    "deps": {
+      "react": "^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0",
+      "react-dom": "^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0"
+    },
+    "latest_published": "2026-05-15"
+  },
+  {
+    "name": "@carbon-labs/vscode-snippets",
+    "version": "0.5.0",
+    "deprecated": "",
+    "deps": {},
+    "latest_published": "2026-05-14"
+  },
+  {
+    "name": "@carbon-labs/wc-ai-tag",
+    "version": "0.27.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "^2.41.0"
+    },
+    "latest_published": "2026-06-02"
+  },
+  {
+    "name": "@carbon-labs/wc-date-picker",
+    "version": "0.16.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "^2.50.0"
+    },
+    "latest_published": "2026-09-18"
+  },
+  {
+    "name": "@carbon-labs/wc-empty-state",
+    "version": "0.22.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "^2.41.0"
+    },
+    "latest_published": "2026-05-15"
+  },
+  {
+    "name": "@carbon-labs/wc-example-button",
+    "version": "0.28.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "^2.41.0"
+    },
+    "latest_published": "2026-07-20"
+  },
+  {
+    "name": "@carbon-labs/wc-global-header",
+    "version": "0.95.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "^2.47.0"
+    },
+    "latest_published": "2026-09-21"
+  },
+  {
+    "name": "@carbon-labs/wc-resizer",
+    "version": "0.5.0",
+    "deprecated": "",
+    "deps": {
+      "lit": "^3.2.1"
+    },
+    "latest_published": "2026-07-15"
+  },
+  {
+    "name": "@carbon-labs/wc-style-picker",
+    "version": "0.36.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "^2.41.0"
+    },
+    "latest_published": "2026-07-20"
+  },
+  {
+    "name": "@carbon-labs/wc-wysiwyg",
+    "version": "0.2.0",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "^2.40.0"
+    },
+    "latest_published": "2026-09-21"
+  },
+  {
+    "name": "@carbon-labs/web-components-example-button",
+    "version": "0.4.1-canary.389",
+    "deprecated": "",
+    "deps": {
+      "@carbon/web-components": "2.19.0"
+    },
+    "latest_published": "2025-01-02"
+  }
+]
