@@ -2,7 +2,7 @@
 
 **Status:** plan, 2026-09-24. Items marked "(to prove)" are checked by the reference consumer apps in phase 1 before the first release.
 
-Decided inputs: one package (D3); TypeScript, ESM only, Carbon never bundled, tsdown (D4); compiled v12 CSS with fonts inside the package (D5); GitHub Packages (D2). Consumer repos are monorepos (for example pnpm workspaces with `apps/web`, `apps/api`), not microservices. Evidence: `research/sources/round4/V4-recommendation.md`, `research/sources/round1/07a-verify-distribution-legal-security.md`.
+Inputs (status in `goals.md` section 6): one package (D3); TypeScript, ESM only, Carbon never bundled, tsdown (D4); compiled v12 CSS with fonts inside the package (D5); GitHub Packages (D2). Consumer repos are monorepos (for example pnpm workspaces with `apps/web`, `apps/api`), not microservices. Evidence: `research/sources/round4/V4-recommendation.md`, `research/sources/round1/07a-verify-distribution-legal-security.md`.
 
 ## 1. What it is
 
@@ -59,14 +59,14 @@ TypeScript types ship inside the package.
 
 ## 4. Working across repos
 
-Decided 2026-09-24:
-- **Carbon upgrades in afframe/ui**: on a regular schedule plus on demand (security fixes, needed features). Dependabot opens the update PR, tests and visual tests gate it, and a release is published only after Hleb approves it; nothing releases automatically.
+Detail for D14 to D17 (status in `goals.md` section 6):
+- **Carbon upgrades in afframe/ui**: on a regular schedule plus on demand (security fixes, needed features). `[P]` Dependabot opens the update PR, tests and visual tests gate it, and a release is published only after Hleb approves it; nothing releases automatically.
 - **Consumer updates**: Dependabot in each consumer monorepo, grouping `@afframe/ui` with its two Carbon peers in one PR.
 - **Only the latest release ships**: `@afframe/ui` publishes only normal versions, never preview or release-candidate versions, so consumer repos can always update to the latest. Inside, afframe/ui may use any Carbon version, including v12 pre-releases, however it needs (Hleb, 2026-09-24: "we ship latest so other repos can update. but we can use all carbon we want and how we want"). The Carbon peers stay exact at whatever version a release is built on; when IBM Products' own peer range lags behind a Carbon pre-release, afframe/ui overrides it. Changes are tried inside afframe/ui (Storybook and the reference apps) before a release.
 - **Versioning and changelog**: not now; commit history is enough until the full build is done. Later option on record: a tag-triggered release workflow, changelog fragments compiled into `CHANGELOG.md`, and a protected environment that holds each release for approval.
-- **Breaking changes**: semantic versioning and a migration note per breaking release.
+- **Breaking changes**: `[P]` semantic versioning and a migration note per breaking release (D16 defers changelog tooling until the full build).
 
 ## 5. Open points
 
 - The "(to prove)" items in section 2.7 and the access questions in section 2.6.
-- Licence: resolved (Hleb, 2026-09-24): the README states that commercial use needs a separate licence from the copyright holder, and points to Carbon's Apache-2.0 licence for the Carbon-derived parts. Raised by the 2026-09-24 review and waiting on Hleb: how the company that runs the consumer products is licensed, and terms for outside contributions.
+- Licence: D18 in `goals.md` section 6.

@@ -1,8 +1,6 @@
 # Open decisions (temporary)
 
-Explanations and options for every decision still open on 2026-09-24. **Decided the same day:** 1 (one package), 4 (a), 5 (TanStack v9), 6 (reuse IBM's examples), 7 (Storybook not hosted; docs inside Storybook, first page per component), 8 (Carbon's native test stack, path-filtered; Chromatic pending), 9 (a), 11 (b), 12 (a), 13 (b), 14 (a). 2 and 3 decided later that day (recommendations accepted; consumer setup in `docs/consumption.md`). Items 15 to 20 decided later that day: 15 own screenshots with Playwright; 16 regular schedule plus on demand, releases approved manually; 17 Dependabot; 18 no tool until the full build, commit history for now; 19 no prereleases, only the latest release ships; 20 resolved in the README. 10 decided: IBM Products' PageHeader (b), confirmed. **All phase-0 decisions in this file are decided**; the file can be removed once Hleb agrees. Delete this file when all are decided; the outcomes live in `docs/goals.md` and `docs/scope.md`.
-
-Already decided and relevant here: React only; native v12 look for now; GitHub Packages for distribution; Carbon v12 code copied for the 16 migrating components (S15), which means Apache-2.0 notices ship with our package whatever is chosen below.
+Outcomes and status: `docs/goals.md` section 6. This file keeps the options as Hleb saw them; delete it when Hleb agrees.
 
 ## 1. Repo shape (D3, S13)
 What: does afframe/ui publish one package or several (for example tokens, components, tables, charts, chat)?
@@ -99,35 +97,35 @@ What: `stylelint-plugin-carbon-tokens` flags raw colours and spacing in our styl
 - b. Use it after the maintainers fix the licence note.
 - c. Write our own lint rules.
 
-## 15. Visual tests (D11 detail)
+## 15. Visual tests (D11)
 What: screenshots of every story in every theme, compared on each PR, so a visual change (including a v12 break) is caught before release.
 - a. Chromatic, as Carbon uses: hosted service with a review UI for approving changes; an external account with a free tier and paid usage beyond it; screenshots leave our CI.
 - b. Our own screenshots in CI (Playwright or Vitest browser mode against Storybook), baselines committed to the repo: free, nothing external; we approve changes by updating the baseline files in the PR. `hlebtkachenko/analytics` already works this way (Vitest browser mode, `toMatchScreenshot`, per-platform baselines).
 
-## 16. Following Carbon upgrades (afframe/ui side)
+## 16. Following Carbon upgrades (afframe/ui side) (D14)
 What: Carbon publishes new minor versions about every two weeks; IBM Products and Labs follow their own rhythm.
 - a. Follow every release: an automated PR bumps Carbon in afframe/ui, tests and visual tests gate it, then an Afframe release. Most current; most releases.
 - b. Batch on a fixed rhythm (for example monthly): fewer releases; up to a month behind fixes.
 - c. On demand only (security fix or a needed feature): least work; drifts behind and makes each upgrade larger.
 
-## 17. Updating consumer repos
+## 17. Updating consumer repos (D15)
 What: how consumer monorepos get new Afframe UI versions (with the two exact Carbon peers bumped together).
 - a. Dependabot: built into GitHub; works with GitHub Packages through the package access grant; can group `@afframe/ui` with its Carbon peers in one PR.
 - b. Renovate: more flexible grouping and scheduling; a separate app to install and a token for GitHub Packages.
 - c. Manual updates.
 
-## 18. Versioning and changelog tool
+## 18. Versioning and changelog tool (D16)
 - a. Changesets: each PR adds a short note; a release PR bundles them into the version bump and changelog. Explicit and reviewable.
 - b. release-please: version and changelog generated from Conventional Commit messages; a release PR to merge.
 - c. semantic-release: fully automatic release on every merge to main; least control.
 - d. Manual tags and a hand-written changelog.
 
-## 19. Trying unreleased changes in a consumer repo
+## 19. Trying unreleased changes in a consumer repo (D17)
 - a. Preview versions published from PRs (for example `1.4.0-next.3`): installed like a release; clutters the package's version list.
 - b. Local link (`pnpm link` or `yalc`): instant; works only on the developer's machine.
 - c. Both.
 
-## 20. Licence for the consumer repos
+## 20. Licence for the consumer repos (D18)
 What: `afframe/ui` is PolyForm Noncommercial with Hleb as licensor. PolyForm restricts other people, not the licensor. If the consumer repos and the product belong to a company, that company is another party and commercial use needs a licence from Hleb. Informational, not legal advice.
 - a. Keep the copyright personally and give the company a written commercial licence.
 - b. Transfer the copyright to the company; the company becomes the licensor of the public PolyForm licence.

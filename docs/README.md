@@ -1,10 +1,10 @@
 # Afframe UI docs
 
-**Status 2026-09-24: all documents are drafts awaiting Hleb's review.** Permanent documents live in `docs/`. Temporary working files that agents need to continue a piece of work live in `docs/plans/` and are deleted when that work is done. This repo is public: everything here is publicly readable.
+**Status 2026-09-24: all documents are drafts awaiting Hleb's review.** Markers record Hleb's chat answers: `[H]` Hleb's own pick or words, with the date; `[A]` Claude recommended it and Hleb said "ok" or "accept"; `[P]` Claude's proposal or reading, waiting for Hleb; `Deferred [H]` Hleb put it off. Every document stays a draft until Hleb reviews it; the review checks that each record matches what he said. Decision status lives only in `goals.md` section 6. Permanent documents live in `docs/`. Temporary working files that agents need to continue a piece of work live in `docs/plans/` and are deleted when that work is done. This repo is public: everything here is publicly readable.
 
 | File | What it is |
 |---|---|
-| [goals.md](goals.md) | Goals, decisions and open decisions (D1 to D12) |
+| [goals.md](goals.md) | Goals and the decision register (every D and S id, with status) |
 | [consumption.md](consumption.md) | How other Afframe repos install and use the package |
 | [scope.md](scope.md) | Afframe UI scope: v11/v12 answer, include, optional, exclude, improve, build new |
 | [research/carbon-reference.md](research/carbon-reference.md) | IBM Carbon research reference (round 1) |

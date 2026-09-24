@@ -1,10 +1,9 @@
 # Afframe UI: Goals
 
 **Status:** v0.2 · **Date:** 2026-09-24 · **Owner:** Hleb Tkachenko
-**Companion:** `carbon-reference.md` (what IBM Carbon provides, with sources)
+**Companion:** `research/carbon-reference.md` (what IBM Carbon provides, with sources)
 
-**Legend:** `[H]` stated by Hleb · `[P]` proposed by Claude, for Hleb to accept or reject item by item.
-Stack choices live under "Open decisions", not in the goals; decided ones are marked with their date.
+**Markers:** see `README.md`. Every decision and its status lives only in section 6.
 
 ---
 
@@ -15,15 +14,15 @@ Afframe UI is the single source of truth for how every Afframe product looks, re
 - `[H]` The platform is built across several repos, not one app, so UI must be importable as a package.
 - `[H]` afframe/ui is that package.
 - `[H]` IBM Carbon Design System is the foundation.
-- `[H]` React is the implementation (D1 decided 2026-09-24).
+- `[H]` React is the implementation (D1).
 - `[H]` The latest Carbon: whichever of v11 latest or v12 preview is most recent and offers the most.
 - `[H]` Everything we need from the carbon-design-system org (core, IBM Products, Labs, extensions, patterns, examples) and nothing we don't.
 - `[H]` What we keep, we improve: prebuilt pages, sections, blocks and templates on top of Carbon.
 - `[H]` 2026-09-24: "Full v12 implementation from day one, except if it breaks some component we need."
-  - `[P]` Reading: `enable-v12-release` and every `enable-v12-*` flag on in React and in the Sass build from the first commit; v12 pre-releases (alpha, beta) adopted as soon as they are published; peer-range caps are install friction, not breakage; a component stays on v11 behaviour only when v12 demonstrably breaks a component we need, documented case by case. How the 16 components moving from IBM Products into core are used on day one: `scope.md` S15 (pending). Verified v12 surface and known breakages: `scope.md` section 1.5.
+  - `[P]` Reading: `enable-v12-release` and every `enable-v12-*` flag on in React and in the Sass build from the first commit; v12 pre-releases (alpha, beta) may be used as soon as they are published (D17: "we can use all carbon we want and how we want"), and IBM Products' own peer cap is overridden when it lags; a component stays on v11 behaviour only when v12 demonstrably breaks a component we need, documented case by case. How the 16 components moving from IBM Products into core are used on day one: `scope.md` S15. Verified v12 surface and known breakages: `scope.md` section 1.5.
 - `[H]` 2026-09-24: "Labs is mandatory. If they are web-components only, then in our version we need rebuild or adaptation with dependencies." And: "If something overlaps with Labs, and Labs are not React, then we better use what overlaps than rebuild Labs to React for this component."
   - `[P]` Reading: every live Labs package is in. For a web-components-only Labs package: if an included React component covers it, use that; if it covers it partly, use it and list the gap under Improve; if nothing covers it, wrap or rebuild it in React. Per-package treatment: `scope.md` section 2.6.
-- `[H]` 2026-09-24 round-3 decisions (`scope.md` section 7): S14 no rich-text editor; S15 copy Carbon's v12 code for the 16 components moving into core; S16 wrap the Labs resizer web component; S17 keep IBM Products EmptyState until v12, then migrate; S18 keep v12 in the DataTable toolbar (workaround); S19 Afframe components use the Labs date picker; S20 plane-stack-3d out; where a component keeps the v11 look, force v12 where possible (`scope.md` 1.5).
+- `[H]` Round-3 scope rulings: section 6, S14 to S20.
 - `[H]` 2026-09-24: full native v12 look as IBM ships it (rounded corners, full-border fields). Afframe visual changes (for example corner radius) come later, after all components work on native v12. Evidence that the look is adjustable later: `research/sources/round3/S-sass-check.md` (radius tokens set to 0 compile and render square).
 - `[H]` Every optional item and every new page, section, block or template is approved by Hleb one by one; building new is the last milestone.
 - `[H]` The remote repo is the source of truth: work is saved by pushing a PR. `docs/` holds permanent documents; `docs/plans/` holds temporary files that future agents need to continue, deleted when done.
@@ -41,7 +40,7 @@ Afframe UI is the single source of truth for how every Afframe product looks, re
 
 - `[H]` Importable as a package by every Afframe repo.
 - `[P]` One install, one documented entry point for styles/theme, typed imports for components.
-- `[P]` Semantic versioning, a changelog per release, and a migration guide for every breaking change.
+- `[P]` Semantic versioning, a changelog per release, and a migration guide for every breaking change (changelog after the full build, D16).
 - `[P]` Consumers never need to configure Carbon themselves (Sass paths, prefixes, fonts, feature flags): Afframe UI does it once.
 - `[P]` A reference consumer app inside the repo that installs the built package the way a real consumer would, used as a CI smoke test.
 - `[P]` Works with server-side rendering if the chosen consumer framework uses it.
@@ -104,7 +103,7 @@ Afframe UI is the single source of truth for how every Afframe product looks, re
 - `[H]` Use GitHub Actions secrets and variables (and environments) for anything sensitive.
 - `[P]` Layered secret defence: GitHub secret scanning and push protection, a local pre-commit scanner, and the same scanner in CI.
 - `[P]` Supply-chain hygiene: CodeQL, automated dependency updates, actions pinned by SHA, least-privilege workflow permissions, publishing without long-lived tokens (OIDC trusted publishing is documented for npmjs.com only; automatic provenance needs a public repo and a public package).
-- `[P]` A decision on IBM Telemetry, which `@carbon/react` embeds and enables by default (opt-out), for Afframe UI and its consumers.
+- IBM Telemetry: D13.
 - `[P]` Branch rulesets on `main`: PR required, checks required, no force-push.
 - `[P]` Information control beyond secrets: no business plans, client names or internal URLs in code, commits, issues, PRs or public deploys; internal docs live outside the public repo; access-controlled Storybook and docs deploys if they reveal unreleased work.
 - `[P]` Review the two existing `claude-code-action` workflows for public-repo safety (who can trigger them, fork PRs).
@@ -141,24 +140,57 @@ Afframe UI is the single source of truth for how every Afframe product looks, re
 8. Figma link (Code Connect) where a Figma component exists.
 9. Changelog entry.
 
-## 6. Open decisions (options, no pick yet)
+## 6. Decisions
 
-Options and consequences in carbon-reference.md section 12. Rows marked Decided are settled; the rest are open.
+The single register of decisions and their status. Other documents give detail but do not state status. Markers are defined in `README.md`. All rulings are dated 2026-09-24 unless noted. Options and consequences: `research/carbon-reference.md` section 12 and `plans/open-decisions.md`.
 
-| # | Decision | Options | Fact that matters most |
+| # | Decision | Status and outcome | Fact that matters most |
 |---|---|---|---|
-| D1 | Framework target: React only, Web Components, or both | **Decided 2026-09-24: React** | Only React and Web Components are core-maintained; `@carbon/ai-chat` peers `@carbon/web-components` even in React apps |
-| D2 | Package distribution to consumer repos | **Decided 2026-09-24:** GitHub Packages (npm registry) | Install needs a token: consumer repos use `GITHUB_TOKEN` in Actions after a per-repo "Manage Actions access" grant; developers need a classic PAT with `read:packages`. To confirm at setup: whether a package from a public repo can stay private, and the exact grant steps |
-| D3 | Repo shape: one package or a multi-package workspace | **Decided 2026-09-24:** one package (easiest to maintain); separate import paths inside it for heavy extras are an implementation detail | The repo still holds Storybook and a reference consumer app |
-| D4 | Language, build tool and output format | **Decided 2026-09-24:** TypeScript (copied Carbon JS via `allowJs`); ESM only; Carbon never bundled (`react`, `@carbon/react` 1.117.0, `@carbon/ibm-products` 2.99.0 exact peers; Labs, TanStack, charts, ai-chat exact dependencies); tsdown like Carbon's build; `'use client'` client entries plus `./server` | `research/sources/round4/V4-recommendation.md` section 3; consumer setup in `consumption.md` |
-| D5 | Style delivery: Sass source, compiled CSS, or both | **Decided 2026-09-24:** compiled native v12 CSS only (`@afframe/ui/styles.css`), IBM Plex fonts inside the package, prefixes `cds`/`c4p` | `V4-recommendation.md` section 4 |
-| D6 | Token source of truth and pipeline | **Decided 2026-09-24:** Carbon's tokens as they are, Afframe overrides in the Sass theme | Figma kept in sync by hand |
-| D7 | Table engine and TanStack version | **Decided 2026-09-24:** TanStack Table v9 with Carbon DataTable styling (Hleb asked for the more powerful option that fits) | v9: faster row models, lower memory, cell selection and spanning, richer pinning/resizing/selection, React Compiler support; ESM only, React 18+; IBM's v8 examples need porting (markup unchanged; `useLegacyTable` shim exists). Source: TanStack/table docs/framework/react/guide/migrating.md |
-| D8 | Carbon v12 timing | **Decided 2026-09-24:** full v12 implementation from day one, except where it breaks a component we need (section 1) | v12-alpha target 2026-10-31, stable 2027-03-31; the 16 migrated components are not in published `@carbon/react` yet |
-| D9 | Brand: typeface and brand colours | **Deferred 2026-09-24:** native v12 look (IBM Plex, Carbon colours) until all components work; brand changes come after that | Radius-to-0 proof on record in `research/sources/round3/S-sass-check.md` |
-| D10 | Storybook and docs hosting and visibility | **Decided 2026-09-24:** Storybook not hosted (local and CI only); component docs inside Storybook, the docs page first for each component, as Carbon does | |
-| D11 | Test stack | **Decided 2026-09-24:** Carbon's native stack, run on PRs only for the parts that changed (path filters, as Carbon's CI does): Prettier format check, ESLint + Stylelint, Jest + Testing Library unit tests, Playwright accessibility tests with IBM `accessibility-checker` against the built Storybook, visual regression. Visual tests: our own screenshots with Playwright (open source, Apache-2.0) in CI, baselines committed, instead of Chromatic (decided 2026-09-24) | Source: carbon `package.json` scripts and `.github/workflows/ci.yml` |
-| D12 | Where project docs live | **Decided 2026-09-24:** in this repo: `docs/` permanent, `docs/plans/` temporary (deleted when done), saved through PRs | The repo is public, so everything in `docs/` is publicly readable |
+| D1 | Framework target: React only, Web Components, or both | `[H]` React only | Only React and Web Components are core-maintained; `@carbon/ai-chat` peers `@carbon/web-components` even in React apps |
+| D2 | Package distribution to consumer repos | `[A]` GitHub Packages (npm registry) ("d2 is ok") | Install needs a token: consumer repos use `GITHUB_TOKEN` in Actions after a per-repo "Manage Actions access" grant; developers need a classic PAT with `read:packages`. A new package is private by default and does not inherit the repo's visibility (GitHub docs). To confirm at setup: the exact grant steps and what inherited read access means for a public repo |
+| D3 | Repo shape: one package or a multi-package workspace | `[H]` one package ("what is the easyest to maintain, i think a"). `[P]` separate import paths inside it (`/tables`, `/charts`, `/chat`, `/server`), carried in with the D4 recommendation | The repo still holds Storybook and a reference consumer app |
+| D4 | Language, build tool and output format | `[A]` ("Accept.") TypeScript (copied Carbon JS via `allowJs`); ESM only; Carbon never bundled (`react`, `@carbon/react` 1.117.0, `@carbon/ibm-products` 2.99.0 exact peers; Labs, TanStack, charts, ai-chat exact dependencies); tsdown like Carbon's build; `'use client'` client entries plus `./server` | `research/sources/round4/V4-recommendation.md` section 3; consumer setup in `consumption.md` |
+| D5 | Style delivery: Sass source, compiled CSS, or both | `[A]` ("Accept.") compiled native v12 CSS only (`@afframe/ui/styles.css`), IBM Plex fonts inside the package, prefixes `cds`/`c4p`; the native look itself is `[H]` | `V4-recommendation.md` section 4 |
+| D6 | Token source of truth and pipeline | `[H]` ("4 - a") Carbon's tokens as they are, Afframe overrides in the Sass theme | Figma kept in sync by hand |
+| D7 | Table engine and TanStack version | `[P]` TanStack Table v9 with Carbon DataTable styling. Hleb set the test ("what is more powerfull and fits"); Claude picked v9 against it, and Hleb has not ruled on the pick | v9: faster row models, lower memory, cell selection and spanning, richer pinning/resizing/selection, React Compiler support; ESM only, React 18+; IBM's v8 examples need porting (markup unchanged; `useLegacyTable` shim exists). Source: TanStack/table docs/framework/react/guide/migrating.md |
+| D8 | Carbon v12 timing | `[H]` "Full v12 implementation from day one, except if it breaks some component we need." `[P]` the reading in section 1 | v12-alpha target 2026-10-31, stable 2027-03-31; the 16 migrated components are not in published `@carbon/react` yet |
+| D9 | Brand: typeface and brand colours | Deferred `[H]`: native v12 look (IBM Plex, Carbon colours) until all components work; brand changes come after that | Radius-to-0 proof on record in `research/sources/round3/S-sass-check.md` |
+| D10 | Storybook and docs hosting and visibility | `[H]` Storybook is deployed only on the Afframe dev server, not public, so Hleb and the team can see it; consumer repos do not need it (review ruling F10). Component docs live inside Storybook, the docs page first for each component, as Carbon does ("7 - c for Storybook and b for Docs") | The earlier answer "c" was no hosting; F10 replaced it with the dev-server deploy |
+| D11 | Test stack | `[H]` Carbon's native stack, run on PRs only for the parts that changed ("what is nativ shiped, lets do this"); visual tests are our own screenshots with Playwright in CI, baselines committed, not Chromatic ("playwright?", then "all other ok"). `[P]` the tool list: Prettier format check, ESLint + Stylelint, Jest + Testing Library unit tests, Playwright accessibility tests with IBM `accessibility-checker` against the built Storybook | Source: carbon `package.json` scripts and `.github/workflows/ci.yml` |
+| D12 | Where project docs live | `[H]` in this repo: `docs/` permanent, `docs/plans/` temporary (deleted when done), saved through PRs | The repo is public, so everything in `docs/` is publicly readable |
+| D13 | IBM Telemetry | `[H]` off, in afframe/ui and in every consumer repo ("switch off. dont want to share data with them"). `[P]` the mechanism | `@carbon/react` and `@carbon/ibm-products` run `ibmtelemetry` at install; it reports repo, dependency and JSX usage data to IBM from CI |
+| D14 | Carbon upgrades in afframe/ui | `[H]` on a regular schedule plus on demand; every release approved by Hleb, never automatic ("b and c combined ... manualy approve release, not auto"). `[P]` Dependabot opens the update PRs | `consumption.md` section 4 |
+| D15 | Updating consumer repos | `[H]` Dependabot in each consumer monorepo ("4 - a"), grouping `@afframe/ui` with its Carbon peers | `consumption.md` section 4 |
+| D16 | Versioning and changelog tool | Deferred `[H]`: commit history until the full build ("we will implement changelog after we build it in full") | Semantic versions from the first release |
+| D17 | Pre-releases | `[H]` `@afframe/ui` ships only normal latest versions, no preview or release-candidate versions ("only latest always"); inside, any Carbon version may be used, including v12 pre-releases ("we can use all carbon we want and how we want") | `consumption.md` section 4 |
+| D18 | Licence | `[H]` PolyForm Noncommercial governs ("resolved in readme"; "we still guided by our licence"); Carbon's Apache-2.0 licence is kept in `third-party/carbon/LICENSE` for the Carbon-derived parts | Raised by the review and waiting on Hleb: licensing of the company that runs the consumer products, and terms for outside contributions |
+
+### Scope decisions (S)
+
+Detail in `scope.md`.
+
+| # | Decision | Status and outcome | Related |
+|---|---|---|---|
+| S1 | v11 vs v12 preview | Same as D8. | D8 |
+| S2 | Style delivery given v12 | Same as D5. | D5 |
+| S3 | Table engine | Same as D7. | D7 |
+| S4 | tanstack-carbon license | `[H]` reuse IBM's tanstack-carbon examples. Hleb: "tanstack oficial repos is licenced, same as IBM and this connector described as part of their research under Apache 2 licenced Carbon Design system = its open for us." Attribution goes with Carbon's Apache-2.0 licence (`third-party/carbon/LICENSE`). Fact on record: the tanstack-carbon repo has no LICENSE file of its own; one of its 40 package.json files declares MIT | D7 |
+| S5 | Preview policy | `[H]` ("9 - a") allow `preview__` and `previewCandidate__` |  |
+| S6 | Which `preview__PageHeader` | `[H]` IBM Products' `preview__PageHeader` (option b), confirmed after the Storybook review; at v12 it moves into core and Afframe's wrapper switches the imports (`docs/research/sources/round3/P-pageheader.md`) |  |
+| S7 | Chat | `[H]` include `@carbon/ai-chat` (O9). `[P]` rule: never render a `<feature-flags>` element above it (`scope.md` section 1.5) | D1 |
+| S8 | Labs adoption policy | `[H]` Labs is mandatory; WC-only Labs use an overlapping React component where one exists, otherwise wrap or rebuild. `[P]` the per-package reading (section 1; `scope.md` sections 2.5, 2.6) |  |
+| S9 | App shell | `[H]` ("11 - b") core UI Shell plus the Labs `react-ui-shell` extensions |  |
+| S10 | Onboarding generation | `[H]` ("12 - a") both: Coachmark for contextual tips, Labs first-time orientation for first run |  |
+| S11 | Marketing sections | `[H]` ("13 - b") out (`scope.md` section 6.4 is out of scope) |  |
+| S12 | stylelint plugin license | `[H]` ("14 - a") use `stylelint-plugin-carbon-tokens` now |  |
+| S13 | Package shape for extras (charts, tables, chat) | Same as D3. | D3 |
+| S14 | Rich-text editor (`wc-wysiwyg`) | `[H]` not needed. `wc-wysiwyg` is out (X12). |  |
+| S15 | The 16 components moving from IBM Products into core, on day one | `[H]` copy Carbon's v12 source of these components from carbon `main` into Afframe UI (option b). Consequences: v12 versions from day one; Afframe maintains and re-syncs the copy until v12 ships, then switches to core imports; Apache-2.0 section 4 applies (keep LICENSE and notices, mark modified files); Tearsheet pulls 5 of the 16 (Tearsheet, SidePanel, ActionSet, Resizer, TruncatedText). Review 2026-09-24: the copies also import Carbon internals (for example `usePrefix`, `usePresence`, `useCollapsible`, `FeatureFlags`) that `@carbon/react` 1.117.0 does not export publicly; copying those can create a second React context, and then a copied component silently misses `AfframeProvider`'s v12 flags. Hleb accepted the extra cost: "this is ok, if it is working at the end." Acceptance check: each copied component imports Carbon internals only through public `@carbon/react` exports or copies that share Carbon's context, and a test proves it sees the provider's v12 flags. Work item M19. | D8 |
+| S16 | Resizer beyond a single handle (`wc-resizer` partial) | `[H]` wrap the Labs `wc-resizer` web component for grid, panels and the 2D corner handle (option b); `@carbon-labs/react-resizer` (I9) stays for the single handle. Consequence: Lit runtime; v12 via the scoped flag rule (1.5). Review 2026-09-24: `wc-resizer` 0.5.0 pulls `@carbon-labs/utilities` 0.21.0, which peers React 18 at most, so npm installs a second React 18 copy under it and pnpm with strict peers fails; waiting on Hleb. Work item M21. |  |
+| S17 | Empty states under v12 (IBM Products EmptyState family removed at v12, #22473) | `[H]` keep IBM Products EmptyState (I23) until the v12 major, then migrate (option a). | D8 |
+| S18 | DataTable toolbar menu under v12 (#23260) | `[H]` keep v12 (option a): use the workaround (`MenuItem` children in `TableToolbarMenu`, or `OverflowMenu`/`MenuButton` in `TableToolbarContent`); verify it in the phase-1 visual gate. |  |
+| S19 | Two copies of one date picker (O3 core copy and I38 Labs copy, same code) | `[H]` Afframe components use the Labs copy, `@carbon-labs/react-date-picker` (I38) (option b); Afframe supplies the `Temporal` polyfill (M20). `preview__DatePicker` stays available in `@carbon/react` but Afframe components do not use it. |  |
+| S20 | `@carbon-labs/react-plane-stack-3d` (React 18 peer only) | `[H]` out (X12). |  |
 
 ## 7. Phases `[P]`
 
