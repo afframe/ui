@@ -16,6 +16,7 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 D2 is decided (GitHub Packages). Native v12 look for now; Afframe visual changes after all components work. Round 3 decisions S14 to S20 and the v11-look rule are settled (`docs/scope.md` sections 1.5 and 7).
 
 ## Proposed for phase 1 `[P]`
+- Prove the consumer path in `docs/consumption.md` with in-repo Next.js and Vite reference apps before the first release.
 - A v12 breakage gate: render every included component under v12 in Storybook visual tests and record any visible break as a named exception to the v12 rule. Today the breakage check rests on source reading and one Sass compile; nothing was rendered.
 
 ## Rules for agents working here

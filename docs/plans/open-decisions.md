@@ -1,6 +1,6 @@
 # Open decisions (temporary)
 
-Explanations and options for every decision still open on 2026-09-24. **Decided the same day:** 1 (one package), 4 (a), 5 (TanStack v9), 6 (reuse IBM's examples), 7 (Storybook not hosted; docs inside Storybook, first page per component), 8 (Carbon's native test stack, path-filtered; Chromatic pending), 9 (a), 11 (b), 12 (a), 13 (b), 14 (a). **Still open:** 2 (build output), 3 (style delivery), 10 (PageHeader, code comparison in progress), Chromatic account for visual tests. Delete this file when all are decided; the outcomes live in `docs/goals.md` and `docs/scope.md`.
+Explanations and options for every decision still open on 2026-09-24. **Decided the same day:** 1 (one package), 4 (a), 5 (TanStack v9), 6 (reuse IBM's examples), 7 (Storybook not hosted; docs inside Storybook, first page per component), 8 (Carbon's native test stack, path-filtered; Chromatic pending), 9 (a), 11 (b), 12 (a), 13 (b), 14 (a). 2 and 3 decided later that day (recommendations accepted; consumer setup in `docs/consumption.md`). **Still open:** 10 (PageHeader), Chromatic account or own screenshots for visual tests. Delete this file when all are decided; the outcomes live in `docs/goals.md` and `docs/scope.md`.
 
 Already decided and relevant here: React only; native v12 look for now; GitHub Packages for distribution; Carbon v12 code copied for the 16 migrating components (S15), which means Apache-2.0 notices ship with our package whatever is chosen below.
 

@@ -5,6 +5,7 @@ Permanent documents live in `docs/`. Temporary working files that agents need to
 | File | What it is |
 |---|---|
 | [goals.md](goals.md) | Goals, decisions and open decisions (D1 to D12) |
+| [consumption.md](consumption.md) | How other Afframe repos install and use the package |
 | [scope.md](scope.md) | Afframe UI scope: v11/v12 answer, include, optional, exclude, improve, build new |
 | [research/carbon-reference.md](research/carbon-reference.md) | IBM Carbon research reference (round 1) |
 | [research/carbon-catalog.md](research/carbon-catalog.md) | Catalog of the Carbon ecosystem for React (round 2) |
