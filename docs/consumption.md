@@ -15,9 +15,10 @@ What the package contains:
 | `@afframe/ui` | components and the `AfframeProvider` (client entry, `'use client'`) |
 | `@afframe/ui/tables` | TanStack v9 tables on Carbon DataTable styling (client) |
 | `@afframe/ui/charts` | Carbon Charts wrappers (client) |
+| `@afframe/ui/echarts` | Apache ECharts with the Carbon theme (`@carbon/echarts-theme`), for chart types Carbon Charts lacks (client; O22) |
 | `@afframe/ui/chat` | `@carbon/ai-chat` wrapper (client) |
 | `@afframe/ui/server` | server-safe helpers, constants and types (no `'use client'`) |
-| `@afframe/ui/styles.css` | compiled native v12 CSS for Carbon, IBM Products, Labs (to prove: Labs web components carry their styles inside shadow DOM) and Afframe; all four themes |
+| `@afframe/ui/styles.css` | compiled native v12 CSS for Carbon, IBM Products, Labs (to prove: Labs web components carry their styles inside shadow DOM) and Afframe; two themes, `light` and `dark` (D5) |
 | `@afframe/ui/charts.css` | Carbon Charts CSS, imported after `styles.css` when charts are used |
 | `dist/fonts/` | IBM Plex WOFF2 files (OFL-1.1), referenced by relative URLs from `styles.css` |
 
@@ -26,13 +27,13 @@ TypeScript types ship inside the package.
 ## 2. What afframe/ui needs (this repo)
 
 1. `package.json`: `"name": "@afframe/ui"`, `"type": "module"`, an `exports` map for the paths above, `"repository"` pointing at `afframe/ui` (links the package to the repo), `"publishConfig": { "registry": "https://npm.pkg.github.com" }`, `"files"` limited to `dist/`, the licences and NOTICE.
-2. Dependencies: peers `react`, `react-dom` (`^18.3 || ^19`), `@carbon/react` `1.117.0` and `@carbon/ibm-products` `2.99.0` (exact); regular dependencies, exact: Carbon Labs packages, `@tanstack/react-table`, `@carbon/charts-react`, `@carbon/ai-chat`, `@carbon/web-components`, `@carbon/icons-react`; build-only: `sass`, `@carbon/styles`, `@carbon/ibm-products-styles`, `@ibm/plex`, `tsdown`, `typescript`.
+2. Dependencies: peers `react`, `react-dom` (`^18.3 || ^19`), `@carbon/react` `1.117.0` and `@carbon/ibm-products` `2.99.0` (exact); regular dependencies, exact: Carbon Labs packages, `@tanstack/react-table`, `@carbon/charts-react`, `echarts`, `@carbon/echarts-theme`, `@carbon/ai-chat`, `@carbon/web-components`, `@carbon/icons-react`; build-only: `sass`, `@carbon/styles`, `@carbon/ibm-products-styles`, `@ibm/plex`, `tsdown`, `typescript`.
 3. Build: tsdown for JavaScript (per-file ESM, `'use client'` kept on client entries) plus a separate `tsc` pass for types; Sass compile of one entry with the v12 flag set before Carbon loads, `$font-path: './fonts'`; font copy into `dist/fonts/`; a post-build check that client entries start with `'use client'` and `./server` does not.
 4. Licences: PolyForm Noncommercial governs the project (Hleb, 2026-09-24: "we still guided by our licence"). Carbon's Apache-2.0 licence is kept verbatim in `third-party/carbon/LICENSE` and ships in the package; it covers the copied Carbon v12 source and the Carbon-derived CSS. Copied files keep their IBM copyright headers and carry a note when modified (Apache-2.0 section 4). OFL-1.1 ships next to the fonts. Carbon publishes no NOTICE file, so none is carried.
 5. Release: a GitHub Actions workflow publishes on a version tag with `permissions: packages: write` and the built-in `GITHUB_TOKEN`. Versioning: semantic versions; publishing needs Hleb's manual approval; changelog tooling comes after the full build (section 4).
 6. Access: in the package settings, "Manage Actions access" adds each consumer repo with read access. A package inherits the repository's access permissions but not its visibility, and a newly published package is private by default (GitHub docs, checked 2026-09-24). To confirm at first publish: whether the package must stop inheriting permissions from `afframe/ui` first, and what inherited read access means when the repository is public.
 7. Reference consumers inside this repo: a Next.js App Router app and a Vite app that install the packed tarball (`npm pack`), exactly as a real consumer would, and run in CI (to prove: CSS and font loading under Turbopack, webpack and Vite; server and client entries; the Jest allowlist).
-8. Docs: a "Getting started" page in Storybook with the consumer steps below.
+8. Docs (D10): component docs and a "Getting started" page with the consumer steps below live in Storybook, which runs on the Afframe dev server; the package also carries its docs; `docs/` holds clarifications, ADRs and patterns.
 9. IBM Telemetry off (D13). `[P]` Mechanism: `IBM_TELEMETRY_DISABLED=true` (the exact lowercase string; `1` or `TRUE` do not work) in every CI job and every container or devcontainer build of this repo. With pnpm, every instrumented package is also set to `false` under `allowBuilds` in `pnpm-workspace.yaml`. Side effect: blocking install scripts also blocks `@carbon-labs/vscode-snippets` (I50), whose install script copies snippets into `.vscode/`.
 
 ## 3. What each consumer monorepo needs
@@ -55,7 +56,7 @@ TypeScript types ship inside the package.
    - `import '@afframe/ui/styles.css'` (and `@afframe/ui/charts.css` after it if charts are used) in `app/layout.tsx` (Next.js) or `main.tsx` (Vite).
    - Wrap the app in `<AfframeProvider>`; it turns on the React side of v12 and the theme. In Next.js App Router the provider is a client component placed inside the root layout.
    - No Sass, no `transpilePackages`, no load-path settings.
-4. **Use it**: components from `@afframe/ui` (and `/tables`, `/charts`, `/chat`); in Server Components only `@afframe/ui/server`. Own styles use Carbon tokens as CSS variables (`var(--cds-spacing-05)`, `var(--cds-text-primary)`).
+4. **Use it**: components from `@afframe/ui` (and `/tables`, `/charts`, `/echarts`, `/chat`); in Server Components only `@afframe/ui/server`. Own styles use Carbon tokens as CSS variables (`var(--cds-spacing-05)`, `var(--cds-text-primary)`).
 5. **Rules for consumers**: do not install or configure `@carbon/styles` Sass (a second configuration is a compile error); do not override `.cds--` or `.c4p--` classes; do not import `@carbon/*` directly for things Afframe UI wraps.
 6. **Tests**: Vitest works as is; Jest needs `transformIgnorePatterns` to let `@afframe/ui`, `@tanstack`, `@carbon/ai-chat` and `lit` through (exact list to prove).
 7. **IBM Telemetry off (D13)**: almost every Carbon package runs `ibmtelemetry` at install time, and it collects when the install runs in CI or inside a container (Docker, devcontainers). afframe/ui cannot switch it off for a consumer; each consumer repo does it:

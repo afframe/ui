@@ -304,7 +304,7 @@ Monorepo https://github.com/carbon-design-system/carbon-labs, Storybook https://
 | @carbon-labs/react-calendar | calendar | 0.11.0 (2026-05-18) | optional | decision: full calendar view needed |
 | @carbon-labs/react-tag-input | tag input field | 0.6.0 (2026-08-12) | optional | decision: tag entry control |
 | @carbon-labs/react-theme-settings | theme switcher panel | 0.30.0 (2026-05-15) | optional | decision: user-facing theme settings (used by carbon-react-router-starter) |
-| @carbon-labs/react-style-picker | style/theme picker; a `@lit/react` wrapper of `wc-style-picker`, so it ships the WC runtime (Lit, `@carbon/web-components` <3); `@lit/react` is a devDependency the consumer must install; close event not mapped to a prop (updated 2026-09-24, round 3) | 0.27.0 (2026-09-21) | optional | same decision; stays on v11 behaviour under React `<FeatureFlags>` (round3 V3 rows 2d, 10) |
+| @carbon-labs/react-style-picker | style/theme picker; a `@lit/react` wrapper of `wc-style-picker`, so it ships the WC runtime (Lit, `@carbon/web-components` <3); `@lit/react` is a devDependency the consumer must install; close event not mapped to a prop (updated 2026-09-24, round 3) | 0.27.0 (2026-09-21) | out | cannot be installed (requires an unpublished `wc-empty-state` version); out by Hleb 2026-09-24 (`docs/scope.md` X13) |
 | @carbon-labs/react-whats-new | "what's new" panel | 0.28.0 (2026-06-02) | optional | decision: release notes in product |
 | @carbon-labs/react-first-time-orientation | onboarding overlay | 0.21.0 (2026-05-15) | optional | decision: guided tours (vs Coachmark) |
 | @carbon-labs/react-registration-flow | multi-step registration | 0.2.0 (2026-07-29) | optional | decision: signup flow; very young |
@@ -344,7 +344,7 @@ Package count: 36 published `@carbon-labs/*` packages: 18 React, 16 web componen
 | @carbon/upgrade | codemods (`npx @carbon/upgrade migrate <name> --write`; list via `migrate list`): `enable-v12-release`, `enable-v12-overflowmenu`, `enable-v12-tile-default-icons`, `enable-v12-tile-radio-icons`, `enable-v12-structured-list-visible-icons`, `featureflag-deprecate-flags-prop`, `ibm-products-update-http-errors` | n/a | 11.46.0 (2026-09-23) | Apache-2.0 | core | v12 flag codemods, ibm-products HTTPError migration; 11.46.0 contains the `enable-v12-release` codemod (checked 2026-09-24; was unverified) |
 | carbon-mcp | MCP server for Carbon docs and codegen | n/a | issue repo pushed 2026-09-01; server access-gated (IBMid) | not stated | optional | decision: AI-assisted dev with gated access |
 | devtools | browser extension + component-list/utilities | n/a | pushed 2026-06-17 | Apache-2.0 | optional | dev-time inspection |
-| icons-motion (`@carbon/icons-motion`) | animated icons | React | pushed 2026-07-27 | (unverified) | optional | decision: motion polish |
+| icons-motion (`@carbon/icons-motion`) | animated icons | React | pushed 2026-07-27 | (unverified) | out | React 16/17 peers only; out by Hleb 2026-09-24 (`docs/scope.md` X13) |
 | carbon-utils-position | positioning helper | DOM | 1.3.0 (2024) | MIT | out | Floating UI already in @carbon/react |
 | @carbon/element-styles | attribute-based styles for native HTML | CSS | 0.3.13 | Apache-2.0 | reference | markdown content styling idea |
 | @carbon/agentic-renderer | A2UI/GenUI renderer on `cds-*` elements | WC | 0.1.0 (2026-09-15) | (unverified) | reference | npm description only (carbon-reference.md 5.5) |
@@ -420,7 +420,7 @@ Non-out repos with this catalog's tag (where it differs from F, F's tag is in br
 | stylelint-plugin-carbon-tokens | core [optional] | token lint, license conflict |
 | carbon-mcp | optional | gated |
 | carbon-echarts-theme | optional | ECharts path |
-| icons-motion | optional | polish |
+| icons-motion | out | React 16/17 peers only (`docs/scope.md` X13) |
 | devtools | optional [reference] | dev inspection |
 | carbon-for-products-design-kit | optional | decision: IBM Products parity in Figma |
 | carbon-react-router-starter | reference [optional] | adapt code, not a dependency |
