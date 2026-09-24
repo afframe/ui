@@ -11,9 +11,10 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 - Scope (`docs/scope.md`) accepted, with these rules: Carbon Labs is mandatory (web-components-only Labs: use an overlapping React component, otherwise wrap or rebuild); every Optional item is decided one by one; every Build-new item is approved one by one before it is built, and building new is the last milestone.
 
 ## Waiting on Hleb, in this order
-1. Round 3 recheck results (`docs/scope.md` sections 1.5, 2.5, 2.6): the new decisions S14 rich-text editor, S15 the 16 migrated components on day one, S16 Resizer beyond a single handle, S17 empty states under v12, S18 DataTable toolbar under v12, S19 two copies of one date picker, S20 plane-stack-3d React 18 peer. O3, O21 and O26 are resolved by the v12 and Labs rules; all Optional picks are settled (`docs/scope.md` section 3).
-2. D2: package distribution (`docs/goals.md` section 6, `docs/research/carbon-reference.md` section 12).
-3. The remaining open decisions: D3 to D7, D9 to D11 (`docs/goals.md`) and S3 to S6, S9 to S13 (`docs/scope.md` section 7).
+1. D2: package distribution (`docs/goals.md` section 6, `docs/research/carbon-reference.md` section 12).
+2. The remaining open decisions: D3 to D7, D9 to D11 (`docs/goals.md`) and S3 to S6, S9 to S13 (`docs/scope.md` section 7). Note: S15 (vendored Carbon v12 code) makes Apache-2.0 section 4 obligations apply regardless of D4 and D5.
+
+Round 3 decisions S14 to S20 and the v11-look rule are settled (`docs/scope.md` sections 1.5 and 7).
 
 ## Proposed for phase 1 `[P]`
 - A v12 breakage gate: render every included component under v12 in Storybook visual tests and record any visible break as a named exception to the v12 rule. Today the breakage check rests on source reading and one Sass compile; nothing was rendered.
