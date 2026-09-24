@@ -2,7 +2,7 @@
 
 # A: hlebtkachenko/analytics, Carbon usage, build output and style delivery
 
-Source: `git clone --depth 200` of github.com/hlebtkachenko/analytics at HEAD `a041d9a` (2026-09-23, merge of PR #88) into `/tmp/analytics`. All paths are repo-relative. Read-only; nothing pushed.
+Source: `git clone --depth 200` of github.com/hlebtkachenko/analytics at HEAD `a041d9a` (2026-09-23, merge of PR #88) into a scratch folder. All paths are repo-relative. Read-only; nothing pushed.
 
 ## TL;DR for D4 / D5
 

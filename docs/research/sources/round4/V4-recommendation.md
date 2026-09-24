@@ -1,8 +1,8 @@
 # V4: verification of lanes C, S, A and recommendation for D4 (build output) and D5 (style delivery)
 
 Verifier: adversarial pass over `BRIEF-R4.md`, `C-carbon-build.md`, `S-solutions.md`, `A-analytics.md`, 2026-09-24.
-Primary evidence only: unpacked tarballs in `.context/research/pkg/`, `round3/sass-check/node_modules` (sass 1.105.0, @carbon/react 1.117.0, @carbon/styles 1.116.0, @carbon/ibm-products-styles 2.95.0), `gh api` on carbon-design-system/carbon and ibm-products (main), `npm view`, `npm pack`, the analytics clone `/tmp/analytics` at `a041d9a`, and local reproductions (scratch dirs `/tmp/v4sass`, `/tmp/v4esm`, `/tmp/v4labs`; the inputs and numbers are copied inline below, so they survive when `/tmp` is cleared).
-Abbreviations: `R/` = `.context/research/pkg/carbon-react-1.117.0/package/`, `P/` = `.context/research/pkg/carbon-ibm-products-2.99.0/package/`, `SC/` = `.context/research/round3/sass-check/node_modules/`, `carbon:` = github.com/carbon-design-system/carbon at main, `ibmp:` = github.com/carbon-design-system/ibm-products at main.
+Primary evidence only: unpacked npm tarballs (`<npm pack>/`), the round-3 Sass scratch install (`S-sass-check.md`) (sass 1.105.0, @carbon/react 1.117.0, @carbon/styles 1.116.0, @carbon/ibm-products-styles 2.95.0), `gh api` on carbon-design-system/carbon and ibm-products (main), `npm view`, `npm pack`, a clone of the analytics repo at `a041d9a`, and local reproductions in scratch folders (the inputs and numbers are copied inline below, so they do not depend on the scratch folders).
+Abbreviations: `R/` = `<npm pack>/carbon-react-1.117.0/package/`, `P/` = `<npm pack>/carbon-ibm-products-2.99.0/package/`, `SC/` = `node_modules/` of the round-3 Sass scratch install, `carbon:` = github.com/carbon-design-system/carbon at main, `ibmp:` = github.com/carbon-design-system/ibm-products at main.
 
 ## 1. Verdict table
 
@@ -109,7 +109,7 @@ The compiled CSS (D5) makes version matching critical. Our stylesheet is frozen 
 ### 3.5 "use client" strategy
 - **The pattern.**
   - Put `// prettier-ignore` + `'use client'` as the first statement of every client entry source: `src/index.ts`, `src/tables/index.ts`, `src/charts/index.ts`, `src/chat/index.ts`. This copies `carbon:packages/react/src/index.ts:8-9`. tsdown `unbundle` keeps it on the emitted entry file.
-  - Add a directive-free `./server` entry for anything a Server Component must call or read: constants, types, a theme-cookie helper, component metadata. This is analytics' "server-safe vs client" split (`/tmp/analytics` `carbon.md:31-44`, A:73).
+  - Add a directive-free `./server` entry for anything a Server Component must call or read: constants, types, a theme-cookie helper, component metadata. This is analytics' "server-safe vs client" split (analytics `carbon.md:31-44`, A:73).
   - The `exports` map blocks deep imports, so per-component directives are unnecessary.
   - Add a post-build test that asserts each client entry's first statement is `"use client"` and the server entry has none. This guards against a tsdown regression (row 16).
 - **The React half of v12.**

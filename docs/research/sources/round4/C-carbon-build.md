@@ -4,7 +4,7 @@
 
 Scope: `@carbon/react` 1.117.0, `@carbon/styles` 1.116.0, `@carbon/ibm-products` 2.99.0,
 `@carbon/ibm-products-styles` 2.95.0, `@carbon-labs/react-ui-shell` 0.106.0.
-Sources: unpacked tarballs in `.context/research/pkg/`, `npm view --json`, `npm pack`,
+Sources: unpacked npm tarballs (`<npm pack>/`), `npm view --json`, `npm pack`,
 and `gh api` reads of `carbon-design-system/carbon` and `carbon-design-system/ibm-products`
 at `main`/latest tag content.
 
@@ -89,7 +89,7 @@ trees (verified by directory listing of the unpacked tarballs), except
 `@carbon-labs/react-ui-shell` which uses the same `es/`/`lib/` pair but
 exposes them through an `exports` map instead of `main`/`module`.
 
-`@carbon/react` package.json (`.context/research/pkg/carbon-react-1.117.0/package/package.json`):
+`@carbon/react` package.json (`<npm pack>/carbon-react-1.117.0/package/package.json`):
 `"main": "lib/index.js"`, `"module": "es/index.js"`, `"types": "lib/index.d.ts"`,
 `"sass": "index.scss"`, no `"exports"` field, no `"type"` field (so CJS is the
 default resolution and `module`/consumers rely on bundler-specific `module`
