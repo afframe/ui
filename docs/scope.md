@@ -6,8 +6,11 @@ Legend: `[H]` stated by Hleb · `[P]` proposed, for Hleb to accept or reject ite
 Hleb's stated frame `[H]`: React only (D1 decided 2026-09-24); the latest Carbon, "whichever of v11 latest or v12 preview is most recent and offers the most"; everything useful from the carbon-design-system org and nothing that isn't; what is kept gets improved with prebuilt pages, sections, blocks and templates. (`goals.md` section 1; `sources/round2/BRIEF-COMMON.md`)
 
 **Decisions `[H]` 2026-09-24:**
-- **v12:** full v12 wherever it does not limit us. Today that is option B: `enable-v12-release` on in React (`<FeatureFlags enableV12Release>`) and in the Sass build. Move to the v12 alpha, beta and stable packages as they are published, once every included package accepts them (today `@carbon/ibm-products` peers `@carbon/react ^1.115.0`, which blocks a 2.x install). If one included package breaks under v12, only that package stays on v11 behaviour until upstream catches up, and the exception is documented.
-- **Scope:** accepted as proposed, with three rules: Carbon Labs is mandatory (live React Labs packages are in Include, section 2.5); every Optional item (section 3) is decided by Hleb one by one; every Build-new item (section 6) is approved by Hleb one by one before it is built, and building new is the last milestone.
+- **v12:** `[H]` 2026-09-24: "Full v12 implementation from day one, except if it breaks some component we need."
+  - `[P]` Reading: `enable-v12-release` and every `enable-v12-*` flag on in React and in the Sass build from the first commit; v12 pre-releases (alpha, beta) adopted as soon as they are published; peer-range caps are install friction, not breakage; a component stays on v11 behaviour only when v12 demonstrably breaks a component we need, documented case by case. How the 16 components moving from IBM Products into core are used in their v12 form on day one: under recheck.
+- **Scope:** accepted as proposed, with these rules: Carbon Labs is mandatory (section 2.5): `[H]` 2026-09-24: "Labs is mandatory. If they are web-components only, then in our version we need rebuild or adaptation with dependencies." And: "If something overlaps with Labs, and Labs are not React, then we better use what overlaps than rebuild Labs to React for this component."
+  - `[P]` Reading: every live Labs package is in. For a web-components-only Labs package: if an included React component covers it, use that; if it covers it partly, use it and list the gap under Improve; if nothing covers it, wrap or rebuild it in React (method under recheck).
+- **Also:** every Optional item (section 3) is decided by Hleb one by one; every Build-new item (section 6) is approved by Hleb one by one before it is built, and building new is the last milestone.
 
 ---
 
@@ -101,11 +104,11 @@ Hleb's stated frame `[H]`: React only (D1 decided 2026-09-24); the latest Carbon
 | I34 | `@carbon/upgrade` 11.46.0 | v12 codemods, HTTPError -> FullPageError codemod |
 | I35 | `stylelint-plugin-carbon-tokens` 5.0.6 | `[P]` enforced tokens-only styling (GOALS D); license conflict MIT vs Apache-2.0 open (section 7) |
 
-| I36 | `enable-v12-release` in React and Sass | `[H]` full v12 where it does not limit us (section 1 decision) |
+| I36 | `enable-v12-release` and all `enable-v12-*` flags in React and Sass | `[H]` full v12 implementation from day one (section 1 decision) |
 
 ### 2.5 Carbon Labs `[H]` (mandatory)
 
-Live React packages from https://github.com/carbon-design-system/carbon-labs, all 0.x (catalog 5). `@carbon-labs/react-resizer` is I9. WC-only and reference-tagged Labs packages are in section 3 (O21, O26); deprecated, superseded, scaffold and dead AI experiments stay excluded (section 4).
+Live React packages from https://github.com/carbon-design-system/carbon-labs, all 0.x (catalog 5). `@carbon-labs/react-resizer` is I9. WC-only Labs packages (O21) and reference-tagged Labs packages (O26) fall under the Labs rule and are under recheck (overlap, wrap or rebuild); deprecated, superseded, scaffold and dead AI experiments stay excluded (section 4).
 
 | # | Package | What |
 |---|---|---|
@@ -126,38 +129,37 @@ Live React packages from https://github.com/carbon-design-system/carbon-labs, al
 
 ## 3. Optional: Hleb decides each item
 
-Status of every row: **pending Hleb's decision** (2026-09-24). Removed from this list by the 2026-09-24 decisions: O1 (v12 flags, now I36), O18, O19, O20 (Labs, now I37 to I50).
+**Hleb's decisions 2026-09-24:** include O2, O7, O9, O10, O11, O13, O14, O15, O16, O22, O24, O25; decline O4, O5, O6, O8, O12, O17, O23. O3, O21 and O26 are settled by his v12 and Labs rules and are under recheck; O4, O5 and O6 are rechecked too in case v12 makes them defaults. Removed from this list by the 2026-09-24 decisions: O1 (v12 flags, now I36), O18, O19, O20 (Labs, now I37 to I50).
 
 | # | Item | What it adds | Depends on / note |
 |---|---|---|---|
-| O2 | Non-v12 flags: `enable-dialog-element`, `enable-presence`, `enable-enhanced-file-uploader`, `enable-treeview-controllable`, `enable-tile-contrast` | opt-in behaviour changes outside v12 | per-flag review; `enable-focus-wrap-without-sentinels` is already turned on by `enable-v12-release` |
-| O3 | `preview__DatePicker` (v12 Temporal-based rewrite) | second date picker next to the Labs one (I38) | Temporal polyfill cost; v12-stable graduates the Labs DatePicker |
-| O4 | `preview__Dialog` | native `<dialog>` primitive | vs Modal + `enable-dialog-element` |
-| O5 | `preview__Card` | new core Card | vs IBM Products ProductiveCard/ExpressiveCard (I-list) |
-| O6 | `preview_Layout`, `preview_Text` (+ direction) | layout density and text direction primitives | RTL or density needs |
-| O7 | TreeView | hierarchical data | platform has tree data |
-| O8 | ClassPrefix / IdPrefix | custom CSS/id prefix, multiple Carbon instances | D5 |
-| O9 | `@carbon/ai-chat` (+ components) and `preview__ChatButton` | full AI chat surface | caps `@carbon/web-components <3.0.0`, which conflicts with the v12 rule until upstream widens it |
-| O10 | `preview__Coachmark` family | guided tours, next-generation Coachmark | in addition to Labs first-time-orientation (I44) |
-| O11 | InterstitialScreen, `previewCandidate__Guidebanner`, `previewCandidate__GetStartedCard`, Checklist, Cascade, `previewCandidate__InlineTip` | onboarding set | onboarding scope |
-| O12 | OptionsTile | expandable settings tiles | settings UX |
-| O13 | ScrollGradient | scroll-edge gradient | needs canary opt-in `pkg.component.ScrollGradient = true` |
-| O14 | `preview__AddSelect` (+ Single/MultiAddSelect) | entity picker | entity-picker UX |
-| O15 | `previewCandidate__ConditionBuilder` | rule and filter builder | advanced filtering needs |
-| O16 | `previewCandidate__Toolbar`, `SearchBar`, `Decorator`, `TruncatedList`, `NonLinearReading` | assorted previewCandidate components | preview policy (S5) |
-| O17 | AboutModal | product "about" dialog | |
-| O21 | WC-only Labs: `@carbon-labs/wc-wysiwyg`, `wc-empty-state`, `wc-ai-tag`, `wc-global-header` | rich-text editor and others | React-only rule: usable only through a React wrapper |
-| O22 | `@carbon/echarts-theme` | Carbon theme for Apache ECharts | chart types Carbon Charts lacks |
-| O23 | carbon-mcp | Carbon MCP server for AI-assisted development | IBMid-gated access |
-| O24 | devtools browser extension, `@carbon/icons-motion` | developer inspection, animated icons | polish |
-| O25 | carbon-for-products-design-kit | IBM Products components in Figma | GOALS G |
-| O26 | Labs reference packages: `@carbon-labs/react-plane-stack-3d`, `primitives`, `mdx-components`, `network-graph` | 3D stack, headless primitives, docs MDX, graph viz | Labs rule vs: heavy (three.js), early, docs-only, stale since 2024-06 |
-
+| O2 | Non-v12 flags: `enable-dialog-element`, `enable-presence`, `enable-enhanced-file-uploader`, `enable-treeview-controllable`, `enable-tile-contrast` | opt-in behaviour changes outside v12 | per-flag review; `enable-focus-wrap-without-sentinels` is already turned on by `enable-v12-release` · **included** |
+| O3 | `preview__DatePicker` (v12 Temporal-based rewrite) | second date picker next to the Labs one (I38) | Temporal polyfill cost; v12-stable graduates the Labs DatePicker · **under recheck (v12 rule)** |
+| O4 | `preview__Dialog` | native `<dialog>` primitive | vs Modal + `enable-dialog-element` · **declined** |
+| O5 | `preview__Card` | new core Card | vs IBM Products ProductiveCard/ExpressiveCard (I-list) · **declined** |
+| O6 | `preview_Layout`, `preview_Text` (+ direction) | layout density and text direction primitives | RTL or density needs · **declined** |
+| O7 | TreeView | hierarchical data | platform has tree data · **included** |
+| O8 | ClassPrefix / IdPrefix | custom CSS/id prefix, multiple Carbon instances | D5 · **declined** |
+| O9 | `@carbon/ai-chat` (+ components) and `preview__ChatButton` | full AI chat surface | caps `@carbon/web-components <3.0.0`, which conflicts with the v12 rule until upstream widens it · **included** |
+| O10 | `preview__Coachmark` family | guided tours, next-generation Coachmark | in addition to Labs first-time-orientation (I44) · **included** |
+| O11 | InterstitialScreen, `previewCandidate__Guidebanner`, `previewCandidate__GetStartedCard`, Checklist, Cascade, `previewCandidate__InlineTip` | onboarding set | onboarding scope · **included** |
+| O12 | OptionsTile | expandable settings tiles | settings UX · **declined** |
+| O13 | ScrollGradient | scroll-edge gradient | needs canary opt-in `pkg.component.ScrollGradient = true` · **included** |
+| O14 | `preview__AddSelect` (+ Single/MultiAddSelect) | entity picker | entity-picker UX · **included** |
+| O15 | `previewCandidate__ConditionBuilder` | rule and filter builder | advanced filtering needs · **included** |
+| O16 | `previewCandidate__Toolbar`, `SearchBar`, `Decorator`, `TruncatedList`, `NonLinearReading` | assorted previewCandidate components | preview policy (S5) · **included** |
+| O17 | AboutModal | product "about" dialog | · **declined** |
+| O21 | WC-only Labs: `@carbon-labs/wc-wysiwyg`, `wc-empty-state`, `wc-ai-tag`, `wc-global-header` | rich-text editor and others | React-only rule: usable only through a React wrapper · **under recheck (Labs rule)** |
+| O22 | `@carbon/echarts-theme` | Carbon theme for Apache ECharts | chart types Carbon Charts lacks · **included** |
+| O23 | carbon-mcp | Carbon MCP server for AI-assisted development | IBMid-gated access · **declined** |
+| O24 | devtools browser extension, `@carbon/icons-motion` | developer inspection, animated icons | polish · **included** |
+| O25 | carbon-for-products-design-kit | IBM Products components in Figma | GOALS G · **included** |
+| O26 | Labs reference packages: `@carbon-labs/react-plane-stack-3d`, `primitives`, `mdx-components`, `network-graph` | 3D stack, headless primitives, docs MDX, graph viz | Labs rule vs: heavy (three.js), early, docs-only, stale since 2024-06 · **under recheck (Labs rule)** |
 ## 4. Exclude [P]
 
 | # | Group | Items | Reason |
 |---|---|---|---|
-| X1 | Other frameworks | `@carbon/web-components` (except as ai-chat peer), carbon-components-angular/vue/svelte, icons/pictograms for Svelte/Angular, `@carbon/charts-angular/vue/svelte`, `@carbon/ibm-products-web-components`, carbon-react-native, Labs `wc-*` twins of React packages, Gatsby theme/starter | `[H]` React only |
+| X1 | Other frameworks | `@carbon/web-components` (except as ai-chat peer and, pending recheck, for WC-only Labs), carbon-components-angular/vue/svelte, icons/pictograms for Svelte/Angular, `@carbon/charts-angular/vue/svelte`, `@carbon/ibm-products-web-components`, carbon-react-native, Labs `wc-*` twins of React packages, Gatsby theme/starter | `[H]` React only |
 | X2 | Deprecated ibm-products | all 35 unprefixed + 9 prefixed deprecated exports (catalog 4.2), incl. Datagrid, PageHeader (legacy), Edit* except EditInPlace, CreateModal, CreateSidePanel, FilterPanel family, Nav, StatusIcon, StatusIndicator, HTTPError*, DescriptionList, Decorator* (legacy), ImportModal, ExportModal, RemoveModal, APIKeyModal, StringFormatter, UserProfileImage, EmptyStateV2, ComboButton (ibm-products), `previewCandidate__Coachmark*`, `previewCandidate__DataSpreadsheet`, `previewCandidate__DelimitedList`; Datagrid hooks and children of deprecated parents | deprecated in source (V table) |
 | X3 | Deprecated or alias @carbon/react names | `preview_OverflowMenuV2`, `preview_Pagination`/`PageSelector`, `preview__Slug*`, `preview__AiSkeleton*`, `preview__Fluid*`, `preview_FeatureFlags`, all `unstable_*` names, `TableSlugRow` | deprecated, removed in v12, or aliases of stable names |
 | X4 | Deprecated flags | `enable-experimental-*`, `enable-css-custom-properties`, `enable-v11-release` | superseded or bookkeeping |
@@ -167,6 +169,7 @@ Status of every row: **pending Hleb's decision** (2026-09-24). Removed from this
 | X8 | IBM-internal and org admin | insights, platform, sync, uptime, .bob, .github, action-ibmcloud-cf, carbon-dco, ibm-cdai, team-assets, okrs, carbonated | internal |
 | X9 | Dead Labs experiments | ai-extended-button, ai-feedback, ai-prompt-tuning, ai-ux-control, react-split-panel (deprecated), example-button scaffolds, `@carbon-labs/ai-chat` | abandoned or superseded |
 | X10 | Design tools not in use | carbon-sketch-assistant, framerfx kit | `[H]` Figma kit in use (GOALS 2) |
+| X11 | Declined optional items | O4 `preview__Dialog`, O5 `preview__Card`, O6 `preview_Layout`/`preview_Text`, O8 ClassPrefix/IdPrefix, O12 OptionsTile, O17 AboutModal, O23 carbon-mcp | `[H]` declined 2026-09-24 (O4 to O6 rechecked in case v12 makes them defaults) |
 
 ## 5. Improve [P]
 
@@ -256,16 +259,18 @@ Only if a marketing or landing surface enters scope. No code from `carbon-for-ib
 
 | # | Decision | Options | GOALS link |
 |---|---|---|---|
-| S1 | v11 vs v12 preview | **Decided `[H]` 2026-09-24:** option B now, v12 packages once all included packages accept them | D8 |
+| S1 | v11 vs v12 preview | **Decided `[H]` 2026-09-24:** full v12 implementation from day one, except where it breaks a component we need | D8 |
 | S2 | Style delivery given v12 | follows from S1: a Sass build is required (precompiled CSS is v11-styled) | D5 |
 | S3 | Table engine | TanStack v8 (examples as written) / v9 (port) / DataTable only | D7 |
 | S4 | tanstack-carbon license | ask upstream / re-implement from docs and TanStack only / use as reference only | D7 |
 | S5 | Preview policy | allow `preview__` only / also `previewCandidate__` / stable only (drops PageHeader, IconIndicator, BigNumber, TruncatedText) | new |
 | S6 | Which `preview__PageHeader` | @carbon/react / @carbon/ibm-products | new |
 | S7 | Chat | `@carbon/ai-chat` with WC runtime and `<3.0.0` cap / own chat on core components / no chat | D1 fact |
-| S8 | Labs adoption policy | **Decided `[H]` 2026-09-24:** Labs is mandatory (section 2.5) | new |
+| S8 | Labs adoption policy | **Decided `[H]` 2026-09-24:** Labs is mandatory; WC-only Labs use an overlapping React component where one exists, otherwise wrap or rebuild (section 2.5) | new |
 | S9 | App shell | core UI Shell / `@carbon-labs/react-ui-shell` | new |
 | S10 | Onboarding generation | `preview__Coachmark` / Labs first-time-orientation / none | new |
 | S11 | Marketing sections | in scope (6.4) / out | new |
 | S12 | stylelint plugin license | accept after clarification / own lint rules | new |
+| S14 | WC-only Labs with no React overlap | wrap the web component / rebuild in React (under recheck) | new |
+| S15 | The 16 components moving from IBM Products into core, on day one | IBM Products versions / vendor v12 source from carbon `main` / v12 pre-release when published (under recheck) | D8 |
 | S13 | Package shape for extras (charts, tables, chat) | one package / separate entry points / separate packages | D3 |

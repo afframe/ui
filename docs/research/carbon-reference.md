@@ -440,7 +440,7 @@ Options with a one-line consequence each; no pick.
 - Facts (updated 2026-09-24): only the `Datagrid` component carries `@deprecated` (runtime details point to tanstack-carbon); its 20 exported `use*` hooks carry no marker but serve only Datagrid. Issue #4977 (react-table v8) was closed 2024-11-25 as not_planned; no successor grid ships in ibm-products 2.99.0. tanstack-carbon's `react/` folder holds about 23 patterns (batch actions, filter panel and flyout, nested rows, editable cells, sticky columns, resizing, virtual and more), scaffoldable with the `generate-pattern` CLI. [V-verify row 6b](../research/round2/V-verify.md), [E-templates-patterns](../research/round2/E-templates-patterns.md)
 
 ### D8 Carbon v12 timing
-- **Decided 2026-09-24:** full v12 wherever it does not limit us; see `goals.md` D8 and `scope.md` section 1. The options below are kept as the analysis behind it.
+- **Decided 2026-09-24:** full v12 implementation from day one, except where it breaks a component we need; see `goals.md` D8 and `scope.md` section 1. The options below are kept as the analysis behind it.
 - Stay on v11 defaults until v12 GA: no preview risk; one larger migration later, date unknown.
 - Adopt selected `enable-v12-*` flags now: staged migration; preview APIs and some flags without codemods.
 - Use IBM Products for components migrating to core: available today; they move packages at v12 (16 components).

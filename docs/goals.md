@@ -19,8 +19,10 @@ Afframe UI is the single source of truth for how every Afframe product looks, re
 - `[H]` The latest Carbon: whichever of v11 latest or v12 preview is most recent and offers the most.
 - `[H]` Everything we need from the carbon-design-system org (core, IBM Products, Labs, extensions, patterns, examples) and nothing we don't.
 - `[H]` What we keep, we improve: prebuilt pages, sections, blocks and templates on top of Carbon.
-- `[H]` Full v12 wherever it does not limit us (D8 decided 2026-09-24).
-- `[H]` Carbon Labs is mandatory.
+- `[H]` 2026-09-24: "Full v12 implementation from day one, except if it breaks some component we need."
+  - `[P]` Reading: `enable-v12-release` and every `enable-v12-*` flag on in React and in the Sass build from the first commit; v12 pre-releases (alpha, beta) adopted as soon as they are published; peer-range caps are install friction, not breakage; a component stays on v11 behaviour only when v12 demonstrably breaks a component we need, documented case by case. How the 16 components moving from IBM Products into core are used in their v12 form on day one: under recheck.
+- `[H]` 2026-09-24: "Labs is mandatory. If they are web-components only, then in our version we need rebuild or adaptation with dependencies." And: "If something overlaps with Labs, and Labs are not React, then we better use what overlaps than rebuild Labs to React for this component."
+  - `[P]` Reading: every live Labs package is in. For a web-components-only Labs package: if an included React component covers it, use that; if it covers it partly, use it and list the gap under Improve; if nothing covers it, wrap or rebuild it in React (method under recheck).
 - `[H]` Every optional item and every new page, section, block or template is approved by Hleb one by one; building new is the last milestone.
 - `[H]` The remote repo is the source of truth: work is saved by pushing a PR. `docs/` holds permanent documents; `docs/plans/` holds temporary files that future agents need to continue, deleted when done.
 - `[P]` "Ultimate setup" means: a consumer repo gets a correct, themed, accessible, tested Carbon experience by installing one package and following one short guide.
@@ -28,7 +30,7 @@ Afframe UI is the single source of truth for how every Afframe product looks, re
 ## 2. Context
 
 - Repos in the afframe org today: `afframe/afframe` (web apps, empty), `afframe/docs` (Mintlify docs site), `afframe/framework`. Which of them will consume afframe/ui is unconfirmed.
-- Design sources Hleb already has: the Carbon Figma kit and a Carbon design-system project in Claude Design.
+- Design sources Hleb already has: the Carbon Figma kit, the IBM Products Figma kit, and a Carbon design-system project in Claude Design.
 - Repo `afframe/ui` is public on GitHub, licensed PolyForm Noncommercial 1.0.0: source-available, not open source.
 
 ## 3. Goals
@@ -150,7 +152,7 @@ Options and consequences in carbon-reference.md section 12. Rows marked Decided 
 | D5 | Style delivery: Sass source, compiled CSS, or both | Sass source / compiled CSS / both | The v12 decision (D8) requires a Sass build: precompiled Carbon CSS is v11-styled. Font replacement and `$prefix` also work only in the Sass path; compiled Carbon CSS triggers Apache-2.0 §4 |
 | D6 | Token source of truth and pipeline | Carbon Sass/JS tokens / own DTCG + Style Dictionary / Figma variables / CSS custom properties only | Carbon's DTCG migration is partial and Figma/code parity is not automated (#23255) |
 | D7 | Table engine and TanStack version | Datagrid / TanStack v8 / TanStack v9 / core DataTable only | Datagrid is deprecated (component only; #4977 closed not_planned, no successor ships); IBM's tanstack-carbon examples pin TanStack `^8.20.1` while v9 is a breaking release, and GitHub reports no license for tanstack-carbon |
-| D8 | Carbon v12 timing | **Decided 2026-09-24:** full v12 where it does not limit us (`enable-v12-release` in React and Sass now; v12 packages once every included package accepts them) | v12-alpha target 2026-10-31, stable 2027-03-31; IBM Products peers block a 2.x install today |
+| D8 | Carbon v12 timing | **Decided 2026-09-24:** full v12 implementation from day one, except where it breaks a component we need (section 1) | v12-alpha target 2026-10-31, stable 2027-03-31; the 16 migrated components are not in published `@carbon/react` yet |
 | D9 | Brand: typeface and brand colours | keep IBM Plex / replace via Sass / custom theme maps | Font swap is build-time only and discouraged; a self-subset Plex cannot be named "Plex" |
 | D10 | Storybook and docs hosting and visibility | public / access-controlled / composed with Carbon's / docs in Mintlify / docs in repo | A public Storybook exposes every story, including unreleased work |
 | D11 | Test stack | Storybook tests / Equal Access in CI / Playwright e2e+a11y / visual regression per theme | Carbon's CI uses `accessibility-checker` with a reduced ruleset and Playwright `avt` tests |
