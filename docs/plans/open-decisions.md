@@ -66,6 +66,12 @@ What: two different page headers exist. Carbon core's `preview__PageHeader` has 
 - a. Core's: part of Carbon core; fewer features.
 - b. IBM Products': more features; lives in IBM Products.
 - c. Core's, plus the missing parts built by Afframe.
+Code comparison (2026-09-24, `docs/research/sources/round3/P-pageheader.md`):
+- Core's `preview__PageHeader` is marked deprecated in its own source (carbon #21926): development warnings, no removal date; last changed 2026-05-12.
+- Carbon is moving the IBM Products PageHeader into core for v12 (#22929, PR #23209, approved, not merged). Core's current name will keep pointing at the old deprecated code.
+- IBM Products': 24 exports vs 14, collapse on scroll, sticky tab bar, breadcrumb and tag overflow; 91 tests vs 46; last changed 2026-09-02; already uses the v12 overflow menu.
+- Neither is touched by a v12 flag. At v12, the IBM Products one moves to core: new import names and `c4p` to `cds` CSS classes, handled inside Afframe's wrapper.
+- Option c means about 1,000 to 1,200 lines of TypeScript, 350 lines of styles and tests, drifting from what Carbon ships.
 
 ## 11. App shell (S9)
 What: Carbon core UI Shell (header, side nav, panels, switcher) is the base. Labs `react-ui-shell` extends it (enhanced side nav with flyout menus, profile, trial countdown, header popover); both are included. Which one Afframe's app-shell template uses:
