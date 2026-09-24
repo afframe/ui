@@ -18,11 +18,15 @@ What: the language, the JavaScript format we ship, and whether Carbon is inside 
 - Carbon: a. peer dependency (consumers install `@carbon/react` and friends next to ours; no duplicate copies) / b. bundled inside ours (one install; risk of two Carbon copies when a consumer also uses Carbon directly).
 - Build tool (Vite library mode, tsup/tsdown, Rollup, Rslib): not researched; it changes our build only. a. decide now / b. phase 1 evaluates and proposes.
 
+Deep research (2026-09-24, `docs/research/sources/round4/V4-recommendation.md` section 3), recommendation: TypeScript (copied Carbon JS compiled as is with `allowJs`); ESM only (TanStack v9 and ai-chat are already ESM only; consumers on Jest add a `transformIgnorePatterns` allowlist); Carbon never bundled: `react`, `@carbon/react` 1.117.0 and `@carbon/ibm-products` 2.99.0 as exact peers, Labs, TanStack, charts and ai-chat as exact dependencies; tsdown configured like Carbon's own build (Carbon and IBM Products build with tsdown); `'use client'` on client entries plus a server-safe `./server` entry; one `AfframeProvider` that turns on the React v12 flags. Runner-up: dual ESM + CommonJS like Carbon, only if a consumer cannot load ESM.
+
 ## 3. Style delivery (D5)
 What: how consumers get the CSS. Native v12 needs Carbon's Sass compiled with the v12 flag; IBM's prebuilt CSS is v11.
 - a. Sass source: each consumer compiles our Sass (needs Sass in every consumer build); consumers can adjust values at compile time.
 - b. Compiled CSS: we compile once with v12 on; consumers import one CSS file; runtime changes only through CSS variables.
 - c. Both: most flexible; two paths to keep in sync.
+
+Deep research (2026-09-24, `V4-recommendation.md` section 4), recommendation: ship compiled v12 CSS only (`@afframe/ui/styles.css`, one import at the app root; 1.77 MB, 173 KB gzipped, all four themes); v12 flag baked in by our Sass build; prefixes stay `cds` and `c4p`; IBM Plex fonts shipped inside the package with relative URLs; consumers need no Sass, no `transpilePackages`, no load-path workaround. Runner-up: add an open Sass entry later if a consumer needs compile-time Sass. Shipping Sass alone is not recommended: a consumer configuring Carbon Sass a second time is a hard compile error.
 
 ## 4. Token source (D6)
 What: where Afframe's design values (colours, spacing, type, radius) are defined, and how code and Figma get them. With the native v12 look, this matters mostly when Afframe visual changes start.
