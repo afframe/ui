@@ -2,7 +2,7 @@
 
 Delete this file when phase 0 (research, goals, decisions) is closed.
 
-**State, 2026-09-24:** phase 0. Research rounds 1 to 3 are done and verified; goals and scope are written. No code yet.
+**State, 2026-09-24:** phase 0 decisions complete. Research rounds 1 to 4 are done and verified; goals and scope are written. No code yet.
 
 ## Decided by Hleb
 - D1: React only.
@@ -10,10 +10,10 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 - D12: docs live in this repo: `docs/` permanent, `docs/plans/` temporary; the remote is the source of truth and work is saved through PRs.
 - Scope (`docs/scope.md`) accepted, with these rules: Carbon Labs is mandatory (web-components-only Labs: use an overlapping React component, otherwise wrap or rebuild); every Optional item is decided one by one; every Build-new item is approved one by one before it is built, and building new is the last milestone.
 
-## Waiting on Hleb, in this order
-1. The remaining open decisions, explained with options in `docs/plans/open-decisions.md`: D3 to D7, D9 to D11 (`docs/goals.md`) and S3 to S6, S9 to S13 (`docs/scope.md` section 7). Note: S15 (vendored Carbon v12 code) makes Apache-2.0 section 4 obligations apply regardless of D4 and D5.
-
-D2 is decided (GitHub Packages). Native v12 look for now; Afframe visual changes after all components work. Round 3 decisions S14 to S20 and the v11-look rule are settled (`docs/scope.md` sections 1.5 and 7).
+## Waiting on Hleb
+1. All phase-0 decisions are made (`docs/goals.md`, `docs/scope.md`, `docs/consumption.md`). D9 brand is deferred until all components work on native v12.
+2. Next: a "go" for phase 1 (foundation) and the merge decision for PR #2.
+3. `docs/plans/open-decisions.md` is fully decided; remove it once Hleb agrees.
 
 ## Proposed for phase 1 `[P]`
 - Prove the consumer path in `docs/consumption.md` with in-repo Next.js and Vite reference apps before the first release.
