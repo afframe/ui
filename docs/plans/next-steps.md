@@ -11,13 +11,14 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 1. Hleb reviews and confirms the drafts (`docs/goals.md`, `docs/scope.md`, `docs/consumption.md`, `docs/research/*`), then the drafts are reworked with him. Nothing is final until he confirms it.
 2. Not now (Hleb, 2026-09-24): no merge of PR #2, no phase 1, no removal of `docs/plans/open-decisions.md`.
 3. `[P]` items to rule on: D7 (the TanStack v9 pick), the D11 tool list, the D3 import paths against his pick "a", the readings under D8 and S8, the S7 feature-flags rule and the scoped flag mechanism in `scope.md` section 1, and the `[P]` lines in `consumption.md` section 4. Spot-check the `[A]` rows D2, D4 and D5.
-4. Open points from the independent review of 2026-09-24 that Hleb has not ruled on yet:
+4. Open points from the independent review and the upstream sweep of 2026-09-24 (`docs/research/sources/round5/`) that Hleb has not ruled on yet:
    - D10: what "ships with it" means in his F10 answer ("we deploy on dev server only but ships with it, so our devs/me can see").
    - I42 `react-style-picker` cannot be installed today (upstream dependency missing), `scope.md` I42.
-   - The v12 flags cover only part of the planned v12 design (OKLCH theming, a two-theme model and token consolidation are not behind a flag); what "full v12 look" means today.
+   - The v12 flags cover only part of the planned v12 design (OKLCH theming, token consolidation and the two-theme model are not behind a flag); v12 will ship only `light` and `dark` themes, while D5 and D11 plan four; what "full v12 look" means today (`docs/scope.md` section 1.6).
    - React 19 conflicts: O24 `@carbon/icons-motion` (React 16 and 17 only) and S16 `wc-resizer` (pulls a second React 18); pnpm strict-peer guidance for consumers.
    - O22 ECharts theme has no import path; Labs tooling packages (I50, I52) should not be runtime dependencies; `react-is` peer and the `@carbon/icons-react` range.
-   - PageHeader: S6 (IBM Products) against S15 (copy core's v12 code) now that PageHeader joined Carbon's migration list.
+   - PageHeader: S6 (IBM Products) against S15 (copy core's v12 code) now that PageHeader joined Carbon's migration list; `preview__PageHeader` also lacks a title skeleton and an editable title (ibm-products #9804, #9805).
+   - IBM Products deprecated Create flows, Saving and WebTerminal on main (unpublished): I21, I28, B5, B6, B7.
    - How to read "Labs is mandatory": every live Labs package, or Labs packages that map to a need.
    - D18: licensing of the company that runs the consumer products, and terms for outside contributions.
    - Package visibility on GitHub Packages: private or public.

@@ -12,7 +12,7 @@ This document informs; it does not choose. Nothing here is legal advice.
 2. `@carbon/react` is at 1.117.0 (published 2026-09-23) and is branded "v11". v11 is Active; v12 has been in Preview since 2023-05-25 with Active, Maintenance and EOL all TBD. [release-schedule.md](https://github.com/carbon-design-system/carbon/blob/main/docs/release-schedule.md) GitHub milestones set targets (not commitments): v12-alpha 2026-10-31, v12-rc.0 2026-11-12, v12-beta 2026-12-31, v12-stable 2027-03-31; v12.x undated. npm has no v12 package or tag (`latest` = `next` = 1.117.0). (updated 2026-09-24) [milestones](https://github.com/carbon-design-system/carbon/milestones)
 3. `@carbon/react` ships `"use client"` at its entry point (`es/index.js`, `lib/index.js`) since PR #20391 (merged 2025-09-02): every import from the package is a Client Component, still server-side rendered; deep imports do not carry the directive. (corrected on verification) [PR #20391](https://github.com/carbon-design-system/carbon/pull/20391)
 4. React peers are `^16.8.6`, `^17.0.1`, `^18.2.0` and `^19.0.0`, plus `sass ^1.33.0`. Types are bundled but incomplete; the README advises `skipLibCheck: true`. [packages/react/README.md](https://github.com/carbon-design-system/carbon/blob/main/packages/react/README.md)
-5. 16 IBM Products components (Tearsheet, SidePanel, UserAvatar and others) sit in `@carbon/react`'s GitHub source but are not exported from the published 1.117.0 build, and `enable-v12-release` does not expose them; they arrive with v12. (corrected on verification) The tarball ships no JS or source directories for them, only their Sass partials (compiled into the full `@carbon/styles` bundle) and type-only BigNumber `.d.ts` files. Today 14 of 16 are `@carbon/ibm-products` 2.99.0 root exports (BigNumber and Guidebanner only as `previewCandidate__`, Coachmark and TruncatedText only as `preview__`), Resizer ships as `@carbon-labs/react-resizer`, ActionSet is not publicly exported. (updated 2026-09-24) [V-verify rows 3a to 3d](sources/round2/V-verify.md) [product-migrated-components.mjs](https://github.com/carbon-design-system/carbon/blob/main/packages/react/product-migrated-components.mjs)
+5. 17 IBM Products components (Tearsheet, SidePanel, UserAvatar and others; 16 until PageHeader joined on 2026-09-24, #23209) sit in `@carbon/react`'s GitHub source but are not exported from the published 1.117.0 build, and `enable-v12-release` does not expose them; they arrive with v12. (corrected on verification) The tarball ships no JS or source directories for them, only their Sass partials (compiled into the full `@carbon/styles` bundle) and type-only BigNumber `.d.ts` files. Today 15 of 17 are `@carbon/ibm-products` 2.99.0 root exports (PageHeader as `preview__PageHeader`; BigNumber and Guidebanner only as `previewCandidate__`, Coachmark and TruncatedText only as `preview__`), Resizer ships as `@carbon-labs/react-resizer`, ActionSet is not publicly exported. (updated 2026-09-24) [V-verify rows 3a to 3d](sources/round2/V-verify.md) [product-migrated-components.mjs](https://github.com/carbon-design-system/carbon/blob/main/packages/react/product-migrated-components.mjs)
 6. IBM deprecated the IBM Products Datagrid on 2024-11-20 (v2.54.0) in favour of TanStack Table plus core `DataTable` styling; v4 of IBM Products (date TBD) removes Datagrid. Datagrid still runs on `react-table ^7.8.0`. [tanstack-carbon README](https://github.com/carbon-design-system/tanstack-carbon/blob/main/README.md)
 7. IBM's TanStack examples pin `@tanstack/react-table ^8.20.1` per example; npm `latest` is 9.2.4 (v9.0.0 published 2026-08-04), a breaking release (renamed hooks, required `features`, ESM-only, React >=18). (corrected on verification) [TanStack migration guide](https://tanstack.com/table/latest/docs/framework/react/guide/migrating)
 8. Tokens: four themes (White, Gray 10, Gray 90, Gray 100), Sass maps plus `--cds-*` CSS custom properties on by default. Carbon is migrating tokens to W3C DTCG plus Style Dictionary; `@carbon/colors` is already DTCG-sourced; Figma-code parity is not automated (#23255). [colors README](https://github.com/carbon-design-system/carbon/blob/main/packages/colors/README.md)
@@ -22,7 +22,7 @@ This document informs; it does not choose. Nothing here is legal advice.
 12. GitHub Packages npm needs a token to install even public packages, but consumer repos granted "Manage Actions access" can install with `GITHUB_TOKEN` (no PAT) in Actions. (corrected on verification) [GitHub Packages access control](https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#ensuring-workflow-access-to-your-package)
 13. Using `@carbon/*` only as external dependencies avoids Apache-2.0 redistribution conditions; bundling Carbon JS or shipping CSS compiled from `@carbon/styles` redistributes Carbon in Object form and triggers §4. The Carbon repo root and the four checked tarballs ship `LICENSE`, no NOTICE. [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 14. Accessibility: components follow the IBM Accessibility Checklist ("based on WCAG AA", version unstated); only colour themes cite WCAG 2.1 AA, for contrast. (corrected on verification) [accessibility overview source](https://github.com/carbon-design-system/carbon-website/blob/main/src/pages/guidelines/accessibility/overview.mdx)
-15. `@carbon/react` embeds IBM Telemetry by default (opt-out). [packages/react/README.md](https://github.com/carbon-design-system/carbon/blob/main/packages/react/README.md)
+15. `@carbon/react`, like almost every Carbon package, runs IBM Telemetry at install time through a `postinstall` script (opt-out); no telemetry code ships in the runtime bundle (`sources/round5/U-upstream-sweep.md` section 4). [packages/react/README.md](https://github.com/carbon-design-system/carbon/blob/main/packages/react/README.md)
 
 ## 2. Ecosystem map
 
@@ -117,7 +117,7 @@ Note: `@carbon/react` is branded v11 but versioned 1.x on npm; the design-system
 ### 3.3 Component surface
 
 - `packages/react/src/components` holds roughly 120 component directories (Accordion through UserAvatar). Stable vs preview is authoritative only in the export names (3.2) and the Storybook sidebar. [src/components](https://github.com/carbon-design-system/carbon/tree/main/packages/react/src/components)
-- 16 IBM-Products-migrated components exist in `src/` but are not exported from the published 1.117.0 entry point: ActionSet, NotificationsPanel, BigNumber, FullPageError, Coachmark, OptionsTile, InterstitialScreen, Guidebanner, Resizer, ScrollGradient, SidePanel, EditInPlace, Tearsheet, TagOverflow, UserAvatar, TruncatedText. (corrected on verification) [product-migrated-components.mjs](https://github.com/carbon-design-system/carbon/blob/main/packages/react/product-migrated-components.mjs)
+- 17 IBM-Products-migrated components exist in `src/` on main but are not exported from the published 1.117.0 entry point: ActionSet, NotificationsPanel, BigNumber, FullPageError, Coachmark, OptionsTile, InterstitialScreen, Guidebanner, Resizer, ScrollGradient, SidePanel, EditInPlace, Tearsheet, TagOverflow, UserAvatar, TruncatedText, and PageHeader (added 2026-09-24, #23209). (corrected on verification) [product-migrated-components.mjs](https://github.com/carbon-design-system/carbon/blob/main/packages/react/product-migrated-components.mjs)
 
 ### 3.4 React, TypeScript, SSR
 
@@ -127,7 +127,7 @@ Note: `@carbon/react` is branded v11 but versioned 1.x on npm; the design-system
 - `'use client'`: shipped at the top of `es/index.js` and `lib/index.js` by PR #20391 (merged 2025-09-02), which closed RSC request [#14458](https://github.com/carbon-design-system/carbon/issues/14458). Every import from `@carbon/react` is a Client Component and none can be a Server Component, but they are still server-side rendered. `exports` is `null`, so deep imports (`es/components/...`) do not carry the directive. (corrected on verification) [PR #20391](https://github.com/carbon-design-system/carbon/pull/20391)
 - No carbondesignsystem.com page stating Next.js App Router or RSC support was found (unverified). The first `@carbon/react` version with the directive was not checked (unverified).
 - Module output: `main: lib/index.js` (CJS), `module: es/index.js` (ESM), `sideEffects` allowlist covering entry points, feature-flag files and all `.scss`/`.css`. [package.json](https://github.com/carbon-design-system/carbon/blob/main/packages/react/package.json)
-- IBM Telemetry is bundled, opt-out. [README](https://github.com/carbon-design-system/carbon/blob/main/packages/react/README.md)
+- IBM Telemetry runs at install time (`postinstall`), opt-out; nothing ships in the runtime bundle. [README](https://github.com/carbon-design-system/carbon/blob/main/packages/react/README.md)
 
 ### 3.5 Sass and CSS pipeline
 
@@ -173,7 +173,7 @@ Note: `@carbon/react` is branded v11 but versioned 1.x on npm; the design-system
 - Maturity tiers: Draft (not exported); Preview Candidate (`previewCandidate__`, "Partially complete", for non-production or controlled production environments, being validated with real use cases); Preview (`preview__`, production-ready, minor API changes possible, at least 80% coverage); Stable (no prefix, at least 90% coverage, breaking changes need a major). (corrected on verification) [COMPONENT_STATUS_DEFINITIONS.md](https://github.com/carbon-design-system/ibm-products/blob/main/docs/guides/COMPONENT_STATUS_DEFINITIONS.md)
 - Per-component status is enumerable from the published entry: 2.99.0 has 26 `previewCandidate__*` exports (e.g. ConditionBuilder, DataSpreadsheet, Toolbar, SearchBar) and 10 `preview__*` exports (e.g. PageHeader, Tearsheet, AddSelect, TruncatedText); unprefixed exports are nominally Stable, but 35 of them are deprecated in source; see carbon-catalog.md section 4. (updated 2026-09-24) [es/index.js](https://unpkg.com/@carbon/ibm-products@2.99.0/es/index.js)
 - The prefix system replaced the older canary `pkg.component.*` flags. [CANARY_MIGRATION_GUIDE.md](https://github.com/carbon-design-system/ibm-products/blob/main/docs/guides/CANARY_MIGRATION_GUIDE.md)
-- Moving to core: 16 components migrate into `@carbon/react` for v12 (see 3.3 and 3.6).
+- Moving to core: 17 components migrate into `@carbon/react` for v12 (see 3.3 and 3.6).
 - Storybook: [ibm-products.carbondesignsystem.com](https://ibm-products.carbondesignsystem.com/). A WC port (`@carbon/ibm-products-web-components` 0.48.0) is pre-1.0.
 
 ### 5.2 Datagrid deprecation and TanStack Table
@@ -224,7 +224,7 @@ Source: [TanStack migration guide](https://tanstack.com/table/latest/docs/framew
 
 | Group | Packages (latest, published) |
 |---|---|
-| Active in 2026-08/09 | react-style-picker 0.27.0 (09-21), wc-global-header 0.95.0 (09-21), wc-wysiwyg 0.2.0 (09-21), primitives 0.6.0 (09-18), react-date-picker 0.12.0 (09-18), wc-date-picker 0.16.0 (09-18), react-plane-stack-3d 0.10.0 (09-03), react-animated-header 0.61.0 (08-25), react-ui-shell 0.106.0 (08-20), react-tag-input 0.6.0 (08-12) |
+| Active in 2026-08/09 | react-style-picker 0.27.0 (09-21), wc-global-header 0.95.0 (09-21), wc-wysiwyg 0.3.0 (09-24), primitives 0.6.0 (09-18), react-date-picker 0.12.0 (09-18), wc-date-picker 0.16.0 (09-18), react-plane-stack-3d 0.10.0 (09-03), react-animated-header 0.61.0 (08-25), react-ui-shell 0.106.0 (08-20), react-tag-input 0.6.0 (08-12) |
 | Published 2026-05 to 2026-07 | ai-chat 0.39.0, react-resizer 0.25.0, react-processing 0.21.0, react-whats-new 0.28.0, wc-ai-tag 0.27.0, react-example-button 0.18.0 (all 06-02); mdx-components 0.29.0, react-registration-flow 0.2.0 (07-29); wc-example-button 0.28.0, wc-style-picker 0.36.0 (07-20); wc-resizer 0.5.0 (07-15); react-calendar 0.11.0 (05-18); react-first-time-orientation 0.21.0, react-split-panel 0.22.0, react-text-highlighter 0.23.0, react-theme-settings 0.30.0, utilities 0.28.0, wc-empty-state 0.22.0 (05-15); vscode-snippets 0.5.0 (05-14) |
 | No release since 2025 or earlier | ai-tag 0.8.0 (2025-07-09), web-components-example-button 0.4.1-canary.389 (2025-01-02), ai-feedback 0.12.0, ai-prompt-tuning 0.1.0, ai-ux-control 0.0.2-canary.256, network-graph 0.9.0 (all 2024-06-27), ai-extended-button 0.0.1-rc.0 (2023-11-30) |
 
@@ -324,7 +324,7 @@ Informational, not legal advice. Statements report what the license texts say.
 - Trademarks: Apache-2.0 §6 grants no trademark rights. IBM fair use is limited to truthful, text-only references and excludes logos; "Do not incorporate any IBM product names into your company's product names." "IBM" is a trademark and trade name; "IBM Plex®" and "Plex®" are listed trademarks. [IBM trademarks](https://www.ibm.com/legal/copyright-trademark)
 - "Carbon" is not on IBM's trademark list and no Carbon-specific naming guidance was found; its status is (unverified).
 - Whether a CSS `font-family` alias for a self-subset Plex counts as the OFL "primary font name" is (unverified).
-- IBM Telemetry in `@carbon/react` is a data-collection consideration for redistribution (3.4).
+- IBM Telemetry: consumers of `@afframe/ui` install the Carbon packages themselves, so collection runs in their CI unless each consumer repo switches it off (D13; `consumption.md` section 3).
 
 ## 10. Security and information control
 
@@ -364,7 +364,7 @@ Candidates for "improved components" or Afframe-side work. Status as of retrieva
 |---|---|---|
 | Types | Incomplete TypeScript coverage; `skipLibCheck` advised | [README](https://github.com/carbon-design-system/carbon/blob/main/packages/react/README.md), Project 53 |
 | RSC | Entry-point `'use client'` makes every import a Client Component; deep imports lack it | [PR #20391](https://github.com/carbon-design-system/carbon/pull/20391) |
-| v12 | 16 migrated components unavailable until v12; milestone targets only (stable 2027-03-31) | [feature-flags.md](https://github.com/carbon-design-system/carbon/blob/main/docs/feature-flags.md) |
+| v12 | 17 migrated components unavailable until v12; milestone targets only (stable 2027-03-31) | [feature-flags.md](https://github.com/carbon-design-system/carbon/blob/main/docs/feature-flags.md) |
 | Tables | Datagrid deprecated, on react-table v7; TanStack integration is copy-paste examples on v8, no package, no stated licence | [tanstack-carbon](https://github.com/carbon-design-system/tanstack-carbon) |
 | Tables | Datagrid backlog (222 title matches), e.g. [#5659](https://github.com/carbon-design-system/ibm-products/issues/5659) blank body with global filter, [#3887](https://github.com/carbon-design-system/ibm-products/issues/3887) selectable nested rows | ibm-products issues |
 | Sass build | Compile time: [#7294](https://github.com/carbon-design-system/carbon/issues/7294), [#3348](https://github.com/carbon-design-system/carbon/issues/3348), [#6198](https://github.com/carbon-design-system/carbon/issues/6198), [#5059](https://github.com/carbon-design-system/carbon/issues/5059), [discussion #8526](https://github.com/carbon-design-system/carbon/discussions/8526); current severity (unverified) | carbon issues |
@@ -378,7 +378,7 @@ Candidates for "improved components" or Afframe-side work. Status as of retrieva
 | Tokens | DTCG migration mid-flight; Figma/code parity not automated [#23255](https://github.com/carbon-design-system/carbon/issues/23255) | 6 |
 | Tailwind | No maintained preset | 6 |
 | Fonts | No runtime font override; replacement discouraged | 6 |
-| Telemetry | IBM Telemetry on by default in `@carbon/react` | 3.4 |
+| Telemetry | IBM Telemetry runs at install in almost every Carbon package, on by default | 3.4; D13 |
 | WC | v3 breaking change (no auto-registration); SSR guidance only from archived repo | 4 |
 | Vue | `@carbon/vue` still on Carbon v10 and deprecated `carbon-components` | 4 |
 | Figma | Code Connect lacks variable modes (AI presence) [#17607](https://github.com/carbon-design-system/carbon/issues/17607) | 7 |
@@ -443,7 +443,7 @@ Options with a one-line consequence each; no pick.
 - **Decided 2026-09-24:** full v12 implementation from day one, except where it breaks a component we need; see `goals.md` D8 and `scope.md` section 1. The options below are kept as the analysis behind it.
 - Stay on v11 defaults until v12 GA: no preview risk; one larger migration later, date unknown.
 - Adopt selected `enable-v12-*` flags now: staged migration; preview APIs and some flags without codemods.
-- Use IBM Products for components migrating to core: available today; they move packages at v12 (16 components).
+- Use IBM Products for components migrating to core: available today; they move packages at v12 (17 components).
 - Facts: `enable-v12-release` does not expose the migrated components; IBM Products peers `@carbon/react ^1.115.0`; v12 in Preview since 2023-05-25.
 - Facts (updated 2026-09-24): milestone targets v12-alpha 2026-10-31, v12-rc.0 2026-11-12, v12-beta 2026-12-31, v12-stable 2027-03-31 (not commitments; release-schedule.md still TBD). Full v12 needs the React `<FeatureFlags enableV12Release>` AND a Sass build with `enable-v12-release: true`; precompiled `styles.min.css` stays v11-styled. The root flag also restyles form fields (rounded, fully bordered text-input and list-box), not documented in `docs/migration/v12.md`. Peer caps: ibm-products `@carbon/react ^1.115.0` excludes 2.x; `@carbon/ai-chat` requires `@carbon/web-components <3.0.0`. Options and mapping: `scope.md` section 1. [V-verify rows 2b, 2c, 4a, 8b, 10h](sources/round2/V-verify.md)
 

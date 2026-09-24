@@ -69,8 +69,8 @@ What: two different page headers exist. Carbon core's `preview__PageHeader` has 
 - b. IBM Products': more features; lives in IBM Products.
 - c. Core's, plus the missing parts built by Afframe.
 Code comparison (2026-09-24, `docs/research/sources/round3/P-pageheader.md`):
-- Core's `preview__PageHeader` is marked deprecated in its own source (carbon #21926): development warnings, no removal date; last changed 2026-05-12.
-- Carbon is moving the IBM Products PageHeader into core for v12 (#22929, PR #23209, approved, not merged). Core's current name will keep pointing at the old deprecated code.
+- Core's `preview__PageHeader` is marked deprecated in its own source (carbon #21926): development warnings, no removal date. On 2026-09-24 it moved to `PageHeaderDeprecated/` (#23209); the code is identical to the published 1.117.0 source.
+- Carbon moved the IBM Products PageHeader into core source for v12 (#22929, PR #23209, merged 2026-09-24). It stays out of the published build until v12. Core's current `preview__PageHeader` name still points at the old deprecated code.
 - IBM Products': 24 exports vs 14, collapse on scroll, sticky tab bar, breadcrumb and tag overflow; 91 tests vs 46; last changed 2026-09-02; already uses the v12 overflow menu.
 - Neither is touched by a v12 flag. At v12, the IBM Products one moves to core: new import names and `c4p` to `cds` CSS classes, handled inside Afframe's wrapper.
 - Option c means about 1,000 to 1,200 lines of TypeScript, 350 lines of styles and tests, drifting from what Carbon ships.

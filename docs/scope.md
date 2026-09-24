@@ -8,7 +8,7 @@ Hleb's stated frame `[H]`: React only (D1); the latest Carbon, "whichever of v11
 **Hleb's rules for this scope `[H]`** (status: `goals.md` section 6):
 - **v12:** `[H]` 2026-09-24: "Full v12 implementation from day one, except if it breaks some component we need."
   - **Look:** `[H]` 2026-09-24: full native v12 look as IBM ships it (rounded corners, full-border fields). Afframe visual changes (for example corner radius) come later, after all components work on native v12. Evidence that the look is adjustable later: `docs/research/sources/round3/S-sass-check.md` (radius tokens set to 0 compile and render square).
-  - `[P]` Reading: `enable-v12-release` and every `enable-v12-*` flag on in React and in the Sass build from the first commit; v12 pre-releases (alpha, beta) adopted as soon as they are published; peer-range caps are install friction, not breakage; a component stays on v11 behaviour only when v12 demonstrably breaks a component we need, documented case by case. Verified day-one surface and breakages: section 1.5 (round 3). How the 16 components moving from IBM Products into core are used on day one: decision S15.
+  - `[P]` Reading: `enable-v12-release` and every `enable-v12-*` flag on in React and in the Sass build from the first commit; v12 pre-releases (alpha, beta) may be used as soon as they are published (D17), and IBM Products' own peer cap is overridden when it lags; a component stays on v11 behaviour only when v12 demonstrably breaks a component we need, documented case by case. Verified day-one surface and breakages: section 1.5 (round 3). How the components moving from IBM Products into core are used on day one: decision S15. Upstream changes to watch: section 1.6.
 - **Scope:** `[H]` agreed with conditions ("I agree with Proposed scope, but:"): Carbon Labs is mandatory (section 2.5): `[H]` 2026-09-24: "Labs is mandatory. If they are web-components only, then in our version we need rebuild or adaptation with dependencies." And: "If something overlaps with Labs, and Labs are not React, then we better use what overlaps than rebuild Labs to React for this component."
   - `[P]` Reading: every live Labs package is in. For a web-components-only Labs package: if an included React component covers it, use that; if it covers it partly, use it and list the gap under Improve; if nothing covers it, wrap or rebuild it in React. Round 3 treatment: section 2.6.
 - **Also:** every Optional item (section 3) is decided by Hleb one by one; every Build-new item (section 6) is approved by Hleb one by one before it is built, and building new is the last milestone.
@@ -21,17 +21,17 @@ Hleb's stated frame `[H]`: React only (D1); the latest Carbon, "whichever of v11
 
 | # | Fact | Source |
 |---|---|---|
-| 1 | Newest published Carbon for React: `@carbon/react` 1.117.0 (2026-09-23). npm `latest` = `next` = 1.117.0; no 2.x, alpha or v12 tag exists. | https://registry.npmjs.org/@carbon%2freact; V row 1 |
+| 1 | Newest published Carbon for React: `@carbon/react` 1.117.0 (2026-09-23). npm `latest` = `next` = 1.117.0; no 2.x, alpha or v12 tag exists (a legacy `beta` tag points to 0.1.0 from 2021). | https://registry.npmjs.org/@carbon%2freact; V row 1 |
 | 2 | "v12 preview" is not a separate package: it is `enable-v12-release` (plus six `enable-v12-*` sub-flags) inside 1.117.0, and a v12 Storybook that brands itself "@carbon/react v2.x". | `docs/working-with-v12.md`; carbon@main `packages/react/.storybook-v12/theme.js:14`; V row 1 |
 | 3 | So "v11 latest" and "v12 preview" are the same 1.117.0 install with the same 365 exports. The flag does not add components; it replaces v11 behaviour and styling on flagged components (OverflowMenu children, carets, Tag shape, form-field borders, and others below). | `react-exports.json`; V rows 1, 2a, 2b, 10a |
 | 4 | v12 preview gives: Menu-based OverflowMenu, tile default and radio icons, StructuredList visible icons, fixed-position floating styles, reduced Toggle label spacing, focus wrap without sentinels; plus root-flag-only changes: no Popover/Tooltip/Toggletip caret and new radius, rounded Menu, non-pill Tag, ProgressBar radius and animation, label/decorator placement as dev errors. | A flags table; `docs/migration/v12.md`; V rows 2a, 2b |
 | 5 | v12 preview also restyles form fields: text-input and list-box (ComboBox, Dropdown, MultiSelect) get rounded corners and a full 1px border instead of the v11 bottom border; select, number-input, search, date-picker and fluid-* are also gated (grep only). This is not in `docs/migration/v12.md`. | `S/scss/components/text-input/_text-input.scss:54-56`; `S/scss/components/list-box/_list-box.scss:105-107`; V row 2b |
 | 6 | Sass flag requirement: the React prop only switches JS behaviour. Styling changes compile from Sass, so full v12 needs `<FeatureFlags enableV12Release>` AND a Sass build with `$feature-flags: ('enable-v12-release': true)`. The precompiled `@carbon/styles/css/styles.min.css` is v11-styled (pill Tags). | V row 2c; `S/css/styles.min.css` |
-| 7 | v12 preview does not give the 16 components moving from IBM Products (Tearsheet, SidePanel, NotificationsPanel, etc.): they are excluded from 1.117.0 JS, flag on or off. Today 14 come from `@carbon/ibm-products` 2.99.0, Resizer from `@carbon-labs/react-resizer`, ActionSet is not public. | `packages/react/product-migrated-components.mjs:34-62`; V rows 3a, 3d |
+| 7 | v12 preview does not give the 17 components moving from IBM Products (Tearsheet, SidePanel, NotificationsPanel, PageHeader, etc.; PageHeader added 2026-09-24 by #23209): they are excluded from the published JS, flag on or off. Today 15 come from `@carbon/ibm-products` 2.99.0 (PageHeader as `preview__PageHeader`), Resizer from `@carbon-labs/react-resizer`, ActionSet is not public. | `packages/react/product-migrated-components.mjs:45-64` on main; V rows 3a, 3d |
 | 8 | `preview_Pagination`/`preview_PageSelector` are removed in the v12 major, but 1.117.0 exports them flag on or off. | V row 2b |
 | 9 | Dates (GitHub milestone targets, not commitments; rc.0 before beta as published): v12-alpha 2026-10-31 (28 open / 21 closed), v12-rc.0 2026-11-12 (10 open), v12-beta 2026-12-31 (13 open / 5 closed), v12-stable 2027-03-31 (5 open / 1 closed), v12.x undated. `docs/release-schedule.md` still lists v12 Active as TBD. Whether v12-alpha is published to npm is unknown. | https://github.com/carbon-design-system/carbon/milestones (orchestrator check 2026-09-24); V row 4a |
 | 10 | Peer caps: `@carbon/ibm-products` 2.99.0 peers `@carbon/react ^1.115.0` (excludes 2.x). `@carbon/ai-chat` 1.21.0 requires `@carbon/web-components >=2.54.0 <3.0.0`; WC v3 sits in the v12-stable milestone (#22817). Inference: both pin an app to the v11 majors until they widen. | `P/package.json:128`; https://registry.npmjs.org/@carbon%2fai-chat/latest; V rows 8b, 10h |
-| 11 | Codemods: `npx @carbon/upgrade migrate <flag> --write` exists for `enable-v12-release`, overflowmenu, tile-default-icons, tile-radio-icons, structured-list-visible-icons; none for dynamic-floating-styles or toggle spacing. Whether published 11.46.0 already contains the `enable-v12-release` codemod is (unverified). | `docs/feature-flags.md`; carbon@main `packages/upgrade/README.md:84-121`; V still-open |
+| 11 | Codemods: `npx @carbon/upgrade migrate <flag> --write` exists for `enable-v12-release`, overflowmenu, tile-default-icons, tile-radio-icons, structured-list-visible-icons; none for dynamic-floating-styles or toggle spacing. Published 11.46.0 contains the `enable-v12-release` codemod (checked 2026-09-24). | `docs/feature-flags.md`; carbon@main `packages/upgrade/README.md:84-121`; V still-open |
 | 12 | Label `version: 12` tags 166 issues (135 open). | V row 4b |
 
 ### 1.2 Options
@@ -46,7 +46,7 @@ Hleb's stated frame `[H]`: React only (D1); the latest Carbon, "whichever of v11
 
 ### 1.3 Mapping to Hleb's criterion
 
-`[H]` "the latest, and the one that has more": options A, B and C are the same newest install (1.117.0), so they tie on "latest"; on "has more", B carries the most v12-committed behaviour, but no installable option has more components, because the 16 migrated components come from `@carbon/ibm-products` in A, B and C alike. B's cost: a mandatory Sass build (no precompiled CSS), an undocumented form-field restyle, and dev errors on label placement. Only D adds components to core; it does not exist on npm yet (alpha target 2026-10-31), and ibm-products and ai-chat peer caps block a combined install until they widen.
+`[H]` "the latest, and the one that has more": options A, B and C are the same newest install (1.117.0), so they tie on "latest"; on "has more", B carries the most v12-committed behaviour, but no installable option has more components, because the migrated components (16 at the time, 17 since 2026-09-24) come from `@carbon/ibm-products` in A, B and C alike. B's cost: a mandatory Sass build (no precompiled CSS), an undocumented form-field restyle, and dev errors on label placement. Only D adds components to core; it does not exist on npm yet (alpha target 2026-10-31), and ibm-products and ai-chat peer caps block a combined install until they widen.
 
 ### 1.5 v12 on day one: verified surface and breakages (2026-09-24, round 3)
 
@@ -71,13 +71,32 @@ Sources: `sources/round3/V3-verify.md` (V3, authoritative), `sources/round3/W-v1
 | IBM Products components with internal v12 menus: AddSelect (O14), Card, `preview__PageHeader` (I30), BreadcrumbWithOverflow | No; they self-scope `enableV12Overflowmenu` and use `MenuItem` | none needed. (V3 row 12d) |
 | IBM Products components with hardcoded `OverflowMenuItem`: ActionBar, Datagrid, DatagridSelectAllWithToggle, ComboButton (ibm-products), FilterPanelCheckboxWithOverflow, WebTerminal | Would break, but none is included (X2 or not in scope) | n/a. (V3 row 12c) |
 | `preview_Pagination` / `preview_PageSelector` | Removed at the v12 major | I13 already uses stable `Pagination` |
-| The 16 migrated components (Tearsheet, SidePanel, etc.) | Not a break: unavailable, excluded from the published build until the major (#23451 blocked) | Decision S15. (V3 rows 11a to 11c) |
+| The 17 migrated components (Tearsheet, SidePanel, PageHeader, etc.) | Not a break: unavailable, excluded from the published build until the major (#23451 blocked, milestone v12-rc.0, due 2026-11-12) | Decision S15. (V3 rows 11a to 11c) |
 | Combined Sass build (Carbon + IBM Products) | No (199 core-only rule changes) | Rendered visual check still open |
 
 **Implementation rules that follow** (V3 row 10, correction 14; rule 3 is `[H]` 2026-09-24):
 - Never render a `<feature-flags>` DOM element as an ancestor of `@carbon/ai-chat` (#2308).
 - Web-component-backed Labs items stay on v11 behaviour under React `<FeatureFlags>` unless given their own scoped `<feature-flags>` element.
 - `[H]` Force v12 where possible. `[P]` Mechanism: put a scoped `<feature-flags enable-v12-release>` element around each web-component-backed Labs item (I42 style picker, the wrapped `wc-resizer`). `[P]` `@carbon/ai-chat` keeps the v11 look, because a v12 flag element above it breaks its menus.
+
+### 1.6 Upstream changes to watch (checked 2026-09-24)
+
+Merged or planned upstream work that changes items in this scope. Evidence: `sources/round5/U-upstream-sweep.md` section 3.
+
+| Change | State on 2026-09-24 | Affects |
+|---|---|---|
+| PageHeader moved into core source for v12 (#23209); the migration list is now 17 | merged 2026-09-24; unpublished until v12 | S6, S15, M8, M19 |
+| ConditionBuilder (#23219) and AddSelect (#23181) migrate into core | open PRs, approved but blocked; the list would reach 19 | O14, O15, S15, M19 |
+| v12 releases: a `next` branch with `enable-v12-release` on by default (#22382, PR #23394); alphas published under an npm `v12-alpha` dist-tag (#23455) | open; #23455 in milestone v12-rc.0 | D8, D17, I36 |
+| v12 ships only two themes, `light` and `dark`; `white` and `g10` alias to light, `g90` and `g100` to dark (RFC #23448, epic #22894) | RFC closed as completed 2026-09-23 | D5 and D11 ("all four themes", "every theme") |
+| OKLCH token pipeline (#23334, #23429) and consolidation of the `-01/-02/-03` token variants (#23485) | open, v12-alpha | D6, D9, M13 |
+| DataTable toolbar menu fixed under `enable-v12-overflowmenu` (PR #23375, closes #23260) | open, one approval | S18, M17: the workaround may no longer be needed |
+| IBM Products deprecations on main, unpublished: Create flows (#9900), Saving (#9888), WebTerminal (#9890); stable Tearsheet in favour of `preview__Tearsheet` proposed (#9874) | #9900, #9888, #9890 merged 2026-09-23; #9874 open | I19, I21, I28, B5, B6, B7 |
+| ADR 0007 (proposed, not decided): deprecate TagSet, ProductiveCard, ExpressiveCard, GetStartedCard, Toolbar and SearchBar; move Cascade, Checklist, InlineTip, TruncatedList and NonLinearReading to Labs | proposed; PR #22880 open | I27, I29, O5, O11, O16, B24, B26 |
+| `preview__PageHeader` lacks a title skeleton and an inline-editable title (ibm-products #9804, #9805) | open | S6, I30, B16 |
+| `@carbon/ai-chat` moves to Carbon 12 only in 2.0.0, with `@carbon/web-components` 3.0.0; 1.x stays on Carbon 11 (carbon-ai-chat #2308) | open, on hold for the WC 3.0.0 alpha | S7, O9 |
+| Carbon Charts v12 support with no API changes (carbon-charts #2098); "eCharts is the future", with a Charts deprecation plan after v12 | open | I8, O22, B27, B28 |
+| The Labs DatePicker graduates to core (#22427) | open, v12-stable | I38, S19 |
 
 ## 2. Include [P]
 
@@ -115,14 +134,14 @@ Sources: `sources/round3/V3-verify.md` (V3, authoritative), `sources/round3/W-v1
 |---|---|---|---|
 | I19 | Tearsheet, TearsheetNarrow, TearsheetPresence, `preview__Tearsheet` | stable / preview | large task panels; moving to core |
 | I20 | SidePanel | stable | detail and edit panels; moving to core |
-| I21 | CreateFullPage(+Step), CreateTearsheet(+Step, Divider, Narrow) | stable | create flows |
+| I21 | CreateFullPage(+Step), CreateTearsheet(+Step, Divider, Narrow) | stable in 2.99.0; deprecated on ibm-products main 2026-09-23 (#9900), replacement is example code under `examples/carbon-for-ibm-products/Create*` | create flows |
 | I22 | EditInPlace | stable | inline edit; moving to core |
 | I23 | EmptyState + ErrorEmptyState, NoDataEmptyState, NoTagsEmptyState, NotFoundEmptyState, NotificationsEmptyState, UnauthorizedEmptyState | stable | empty states |
 | I24 | FullPageError | stable | replaces deprecated HTTPError403/404/Other |
 | I25 | NotificationsPanel | stable | notification center |
 | I26 | UserAvatar | stable | replaces deprecated UserProfileImage |
 | I27 | TagSet, TagOverflow | TagSet stable; TagOverflow default-off canary (render gating unverified) | tag lists |
-| I28 | Saving | stable | save-state indicator |
+| I28 | Saving | stable in 2.99.0; deprecated on ibm-products main 2026-09-23 (#9888), replaced by a pattern | save-state indicator |
 | I29 | ProductiveCard, ExpressiveCard | stable | cards |
 | I30 | `preview__PageHeader` (ibm-products) | preview | replaces deprecated PageHeader; pick one of the two `preview__PageHeader` implementations (S6, `goals.md` section 6) |
 | I31 | `preview__TruncatedText` | preview | replaces deprecated StringFormatter |
@@ -176,7 +195,7 @@ Final treatment table from V3 ("Final treatment table"; rows 1b to 5b). "Use ins
 | `@carbon-labs/wc-style-picker` 0.36.0 | full (same code) | `@carbon-labs/react-style-picker` (I42), which is this web component wrapped with `@lit/react`; the WC runtime ships either way | No functional gap. Packaging: close event not mapped to a prop; `@lit/react` added by the consumer; `@carbon/web-components` <3 cap; no React `<FeatureFlags>` reach. (V3 row 2d) |
 | `@carbon-labs/wc-ai-tag` 0.27.0 (draft) | partial | `@carbon/react` `OperationalTag` (or `Tag`) inside `Tooltip`, with AILabel where an AI marker is needed | 4px colored start-edge accent (`color`; M15); `tag-click` maps to `onClick`. No runtime React wrapper is published (types only); bare import broken. (V3 rows 3a, 5a) |
 | `@carbon-labs/wc-global-header` 0.95.0 | partial | `@carbon/react` UI Shell (I13) + `@carbon-labs/react-ui-shell` (I37: Profile, TrialCountdown, HeaderPopover, SideNavFlyoutMenu) | IBM Hybrid iPaaS / Solis backend integration: not reusable. Environment switcher, logout banner/tile and help menu composed from HeaderGlobalAction/HeaderPanel (M14). Generic `CommonHeader` config schema only partly read (unverified). (V3 rows 3b, 5b) |
-| `@carbon-labs/wc-wysiwyg` 0.2.0 | none | **out: not needed (`[H]` S14)** | Full editor surface (formatting, headings, lists, tables, color, search, code, links, images, source toggle, history). (V3 rows 4, 5a) |
+| `@carbon-labs/wc-wysiwyg` 0.3.0 | none | **out: not needed (`[H]` S14)** | Full editor surface (formatting, headings, lists, tables, color, search, code, links, images, source toggle, history). (V3 rows 4, 5a) |
 | `@carbon-labs/ai-chat` 0.39.0 (preview) | partial (unverified) | `@carbon/ai-chat` 1.21.0 (O9), as the result of the overlap rule; Labs ai-chat is not superseded (Labs preview candidate, https://github.com/carbon-design-system/carbon-labs/pull/1228) | Labs-only element types not compared: chart, diagram, molecular, formula, carousel and others (24 element folders) (M18). (V3 row 2e) |
 | `@carbon-labs/primitives` 0.6.0 (other) | n/a (headless) | not consumed directly; transitive dependency of I38 | Needs a global `Temporal`. Core's copy lives in `@carbon/utilities/date-picker`. (V3 row 7) |
 | `@carbon-labs/vscode-snippets` 0.5.0 (other) | n/a (tooling) | I50 as tooling | none |
@@ -191,7 +210,7 @@ Final treatment table from V3 ("Final treatment table"; rows 1b to 5b). "Use ins
 | O2 | Non-v12 flags: `enable-dialog-element`, `enable-presence`, `enable-enhanced-file-uploader`, `enable-treeview-controllable`, `enable-tile-contrast` | opt-in behaviour changes outside v12 | per-flag review; `enable-focus-wrap-without-sentinels` is already turned on by `enable-v12-release` · **included** |
 | O3 | `preview__DatePicker` (v12 Temporal-based rewrite) | core preview copy of the I38 date picker; v12's DatePicker, reached by explicit import (V3 row 7) | same code as I38, migrated into core by PR #22728; core installs `temporal-polyfill`, Labs relies on a global `Temporal`; v12-stable graduates this lineage (1.5; V3 row 7) · **included (v12 default, round 3)** · Afframe components use the Labs copy (S19) |
 | O4 | `preview__Dialog` | native `<dialog>` primitive | vs Modal + `enable-dialog-element` · **declined** |
-| O5 | `preview__Card` | new core Card | vs IBM Products ProductiveCard/ExpressiveCard (I-list) · **declined** |
+| O5 | `preview__Card` | new core Card: IBM Products' composable Card, moved into core (#22867, 2026-08-12); upstream plans it as the successor of ProductiveCard/ExpressiveCard (ibm-products #9308, ADR 0007 proposed) | vs IBM Products ProductiveCard/ExpressiveCard (I-list) · **declined** |
 | O6 | `preview_Layout`, `preview_Text` (+ direction) | layout density and text direction primitives | RTL or density needs · **declined** |
 | O7 | TreeView | hierarchical data | platform has tree data · **included** |
 | O8 | ClassPrefix / IdPrefix | custom CSS/id prefix, multiple Carbon instances | D5 · **declined** |
@@ -238,7 +257,7 @@ Final treatment table from V3 ("Final treatment table"; rows 1b to 5b). "Use ins
 | M5 | Status | one Afframe status indicator on `preview__IconIndicator`/`ShapeIndicator` + Tag | StatusIcon/StatusIndicator deprecated; replacement is preview | https://carbondesignsystem.com/patterns/status-indicator-pattern/ |
 | M6 | Description list | Afframe key/value list on StructuredList or ContainedList | DescriptionList deprecated, no replacement | catalog 4.2 |
 | M7 | Alias cleanup | Afframe exports only stable names (`Fluid*`, `AILabel`, `AISkeleton*`, `FeatureFlags`) and wraps the genuinely preview components behind Afframe names so a later rename stays internal | 31 of 47 prefixed suffixes are aliases; prefixes change on promotion (V row 5d) | `R/es/index.js:255` |
-| M8 | Migrated components | one Afframe import path for Tearsheet, SidePanel, NotificationsPanel, FullPageError, UserAvatar, TagOverflow, EditInPlace, BigNumber, TruncatedText, Coachmark, Resizer, so the ibm-products -> @carbon/react move at v12 is internal | 16 components change package at v12 (fact 7) | product-migrated-components.mjs |
+| M8 | Migrated components | one Afframe import path for Tearsheet, SidePanel, NotificationsPanel, FullPageError, UserAvatar, TagOverflow, EditInPlace, BigNumber, TruncatedText, Coachmark, Resizer, PageHeader, so the ibm-products -> @carbon/react move at v12 is internal | 17 components change package at v12 (fact 7) | product-migrated-components.mjs |
 | M9 | TypeScript gaps | complete, exported prop types for every Afframe component; no `any` in exports | Carbon types are incomplete, README advises `skipLibCheck` (carbon-reference.md 3.4) | GOALS C, section 5 |
 | M10 | Prefix and style alignment | one Sass build that sets `enable-v12-release` (if option B) for both `@carbon/styles` and ibm-products Sass, and one prefix policy for `cds` and `c4p` | precompiled CSS is v11-styled; ibm-products uses its own `c4p` prefix (C Setup; V row 2c) | ibm-products `scss` entry points |
 | M11 | Canary handling | Afframe sets `pkg` once (enable components it ships, e.g. ScrollGradient, TagOverflow) so consumers never touch it | canary mechanism is deprecated but still gates some exports | `P/lib/global/js/package-settings.js` |
@@ -249,7 +268,7 @@ Final treatment table from V3 ("Final treatment table"; rows 1b to 5b). "Use ins
 | M16 | Controllable open for the date picker | a controlled `open` prop (programmatic open/close) on the date picker | only `wc-date-picker` has it; React `DatePickerProps` has no `open` (2.6; V3 row 2b) | I38 / `preview__DatePicker` (O3) |
 | M17 | DataTable toolbar menu under v12 | toolbar menu built with `MenuItem`/`MenuItemDivider` children and `label` instead of `TableToolbarAction` (workaround for #23260; not runtime-tested) | `TableToolbarAction` breaks under `enable-v12-overflowmenu` (1.5; V3 rows 9a to 9c); decision S18 | DataTable `TableToolbarMenu`, `Menu` |
 | M18 | AI chat element types | Afframe renderers for Labs ai-chat element types missing from `@carbon/ai-chat` (chart, diagram, formula, carousel and others) | Labs ai-chat overlaps `@carbon/ai-chat` only partly; the element-by-element comparison was not done (unverified) (2.6; V3 row 2e) | `@carbon-labs/ai-chat` element folders, `@carbon/ai-chat` (O9) |
-| M19 | Vendored v12 components | Copy the v12 source of the 16 components moving into core (Tearsheet, SidePanel, NotificationsPanel and the rest) from carbon `main`; re-sync until v12 ships; then replace with `@carbon/react` imports | `[H]` S15: v12 versions from day one; done when the S15 acceptance check passes | https://github.com/carbon-design-system/carbon/blob/main/packages/react/product-migrated-components.mjs; Apache-2.0 section 4 applies |
+| M19 | Vendored v12 components | Copy the v12 source of the components moving into core (17 since 2026-09-24: Tearsheet, SidePanel, NotificationsPanel and the rest) from carbon `main`; re-sync until v12 ships; then replace with `@carbon/react` imports | `[H]` S15: v12 versions from day one; done when the S15 acceptance check passes | https://github.com/carbon-design-system/carbon/blob/main/packages/react/product-migrated-components.mjs; Apache-2.0 section 4 applies |
 | M20 | Temporal polyfill for the date picker | Ship or require a `Temporal` polyfill so `@carbon-labs/react-date-picker` works in browsers without native `Temporal` | `[H]` S19 (V3 row 7) | `@carbon-labs/primitives` needs a global `Temporal` |
 | M21 | Wrapped Labs web components | React wrappers for `wc-resizer` (and any other wrapped Labs web component) with typed props and events, plus the scoped v12 flag element | `[H]` S16 and the force-v12 rule (1.5) | `@lit/react` createComponent |
 
@@ -267,9 +286,9 @@ Legend for the last column: ready-made = a non-deprecated Carbon component does 
 | B2 | Dashboard | KPI row, charts, filters via URL params | carbon-react-router-starter `pages/dashboard`; `@carbon/charts-react`; BigNumber; /data-visualization/dashboards/ | adapt |
 | B3 | List / detail | table page with detail in side panel or full page | M1 table, SidePanel, `preview__PageHeader`, Tabs | build |
 | B4 | Table page | page header + filter bar + table section + pagination | M1, M2, Pagination | build (from tanstack-carbon patterns) |
-| B5 | Settings | grouped settings with tabs or side nav, save state | Tabs/TabsVertical, Form, Toggle, Accordion, Saving, OptionsTile (optional) | build |
-| B6 | Create flow, full page | multi-step create | CreateFullPage(+Step) | ready-made |
-| B7 | Create flow, tearsheet | multi-step create in tearsheet | CreateTearsheet(+Step) | ready-made |
+| B5 | Settings | grouped settings with tabs or side nav, save state | Tabs/TabsVertical, Form, Toggle, Accordion, Saving (deprecated on ibm-products main, #9888), OptionsTile (optional) | build |
+| B6 | Create flow, full page | multi-step create | CreateFullPage(+Step) | ready-made in 2.99.0; deprecated on ibm-products main (#9900), IBM's replacement is example code |
+| B7 | Create flow, tearsheet | multi-step create in tearsheet | CreateTearsheet(+Step) | ready-made in 2.99.0; deprecated on ibm-products main (#9900), IBM's replacement is example code |
 | B8 | Create / edit, side panel | short create and edit | SidePanel + Form (M3) | build |
 | B9 | Create / edit, modal | minimal create, confirm | Modal/ComposedModal + Form (M3) | build |
 | B10 | Edit flow, full page and tearsheet | edit with consequences messaging | Tearsheet, Form, EditInPlace (M3); edit pattern | build |

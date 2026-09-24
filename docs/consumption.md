@@ -33,6 +33,7 @@ TypeScript types ship inside the package.
 6. Access: in the package settings, "Manage Actions access" adds each consumer repo with read access. A package inherits the repository's access permissions but not its visibility, and a newly published package is private by default (GitHub docs, checked 2026-09-24). To confirm at first publish: whether the package must stop inheriting permissions from `afframe/ui` first, and what inherited read access means when the repository is public.
 7. Reference consumers inside this repo: a Next.js App Router app and a Vite app that install the packed tarball (`npm pack`), exactly as a real consumer would, and run in CI (to prove: CSS and font loading under Turbopack, webpack and Vite; server and client entries; the Jest allowlist).
 8. Docs: a "Getting started" page in Storybook with the consumer steps below.
+9. IBM Telemetry off (D13). `[P]` Mechanism: `IBM_TELEMETRY_DISABLED=true` (the exact lowercase string; `1` or `TRUE` do not work) in every CI job and every container or devcontainer build of this repo. With pnpm, every instrumented package is also set to `false` under `allowBuilds` in `pnpm-workspace.yaml`. Side effect: blocking install scripts also blocks `@carbon-labs/vscode-snippets` (I50), whose install script copies snippets into `.vscode/`.
 
 ## 3. What each consumer monorepo needs
 
@@ -48,6 +49,7 @@ TypeScript types ship inside the package.
    pnpm --filter web add @afframe/ui react react-dom @carbon/react@1.117.0 @carbon/ibm-products@2.99.0
    ```
    Keep one version per monorepo (for example a pnpm catalog or root overrides), because the Carbon peers are exact.
+   With pnpm 11 or later this install fails (`ERR_PNPM_IGNORED_BUILDS`) until every Carbon package with an install script is listed under `allowBuilds` in the root `pnpm-workspace.yaml` (checked on pnpm 11.20.0, 2026-09-24). Names must be exact (no `@carbon/*` wildcard) and cover the whole resolved tree. Set them to `false` (step 7). `[P]` The Getting started page carries the full list.
 3. **Wire it once** in the app root:
    - `import '@afframe/ui/styles.css'` (and `@afframe/ui/charts.css` after it if charts are used) in `app/layout.tsx` (Next.js) or `main.tsx` (Vite).
    - Wrap the app in `<AfframeProvider>`; it turns on the React side of v12 and the theme. In Next.js App Router the provider is a client component placed inside the root layout.
@@ -55,7 +57,13 @@ TypeScript types ship inside the package.
 4. **Use it**: components from `@afframe/ui` (and `/tables`, `/charts`, `/chat`); in Server Components only `@afframe/ui/server`. Own styles use Carbon tokens as CSS variables (`var(--cds-spacing-05)`, `var(--cds-text-primary)`).
 5. **Rules for consumers**: do not install or configure `@carbon/styles` Sass (a second configuration is a compile error); do not override `.cds--` or `.c4p--` classes; do not import `@carbon/*` directly for things Afframe UI wraps.
 6. **Tests**: Vitest works as is; Jest needs `transformIgnorePatterns` to let `@afframe/ui`, `@tanstack`, `@carbon/ai-chat` and `lit` through (exact list to prove).
-7. **Optional app-level package**: a consumer monorepo may keep its own thin internal package for app-specific composites (like analytics' design-system facade), which depends on `@afframe/ui` instead of on Carbon.
+7. **IBM Telemetry off (D13)**: almost every Carbon package runs `ibmtelemetry` at install time, and it collects when the install runs in CI or inside a container (Docker, devcontainers). afframe/ui cannot switch it off for a consumer; each consumer repo does it:
+   - `IBM_TELEMETRY_DISABLED=true` (exact lowercase string) in every CI workflow and container build that installs dependencies.
+   - pnpm 11 or later: each instrumented package set to `false` under `allowBuilds` (step 2).
+   - npm 12 skips unreviewed install scripts by default; npm 11 runs them unless root `allowScripts` denies them.
+   - Dependabot's lockfile updates do not run install scripts; the consumer's CI run on the Dependabot PR does, and the environment variable covers it.
+   Evidence: `research/sources/round5/U-upstream-sweep.md` section 4.
+8. **Optional app-level package**: a consumer monorepo may keep its own thin internal package for app-specific composites (like analytics' design-system facade), which depends on `@afframe/ui` instead of on Carbon.
 
 ## 4. Working across repos
 

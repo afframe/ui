@@ -25,7 +25,7 @@ Tags (analysis for Hleb, not decisions):
 - Newest installable Carbon for React is `@carbon/react` 1.117.0 (2026-09-23); npm `latest` = `next` = 1.117.0; no v12 package or tag exists. v12 today is the `enable-v12-release` flag family inside 1.117.0 plus a v12 Storybook that brands itself "@carbon/react v2.x". (V row 1; https://registry.npmjs.org/@carbon%2freact)
 - v12 dated GitHub milestones (targets, not commitments): v12-alpha 2026-10-31, v12-rc.0 2026-11-12, v12-beta 2026-12-31, v12-stable 2027-03-31; `docs/release-schedule.md` still says TBD. (V row 4a; https://github.com/carbon-design-system/carbon/milestones)
 - Full v12 styling needs the React flag AND a Sass build with `enable-v12-release: true`; the precompiled `css/styles.min.css` is v11-styled. The root flag also restyles form fields (rounded, fully bordered text-input and list-box), which `docs/migration/v12.md` does not document. (V rows 2b, 2c)
-- The 16 components moving from IBM Products into core are not in 1.117.0 JS, flag on or off. Today: 14 via `@carbon/ibm-products` root exports, Resizer via `@carbon-labs/react-resizer`, ActionSet not publicly exported. (V rows 3a, 3d)
+- The 17 components moving from IBM Products into core (PageHeader added 2026-09-24, #23209) are not in the published JS, flag on or off. Today: 15 via `@carbon/ibm-products` root exports (PageHeader as `preview__PageHeader`), Resizer via `@carbon-labs/react-resizer`, ActionSet not publicly exported. (V rows 3a, 3d)
 - Of the 91 prefixed `@carbon/react` exports: 47 unique suffixes (44 `preview_`/`unstable_` pairs + 3 `preview_`-only); 31 are aliases of stable exports, only 16 are genuinely preview. (V rows 5b, 5d)
 - IBM Products 2.99.0: 151 exports (10 `preview__`, 26 `previewCandidate__`); 35 unprefixed exports carry a whole-component deprecation marker, plus 9 prefixed exports that are themselves the deprecated implementations. (V row 6a and table)
 - Datagrid component is `@deprecated` (runtime details point to tanstack-carbon); its 20 hooks carry no marker. The upstream direction is TanStack Table + core `DataTable`, shown in `tanstack-carbon` examples. (V row 6b)
@@ -94,7 +94,7 @@ Evidence: `R/es/index.js:255` (V rows 5b to 5e).
 | CodeSnippet | CodeSnippet, CodeSnippetSkeleton | stable | none listed | core | API keys, payloads, CLI snippets |
 | Lists | OrderedList, UnorderedList, ListItem, ContainedList, ContainedListItem | stable | none listed | core | content and settings lists |
 | AspectRatio | AspectRatio | stable | none listed | core | media and card sizing |
-| Card (preview) | `preview__Card` | preview, `preview_`-only | none | optional | decision: preview Card vs ibm-products ProductiveCard/ExpressiveCard |
+| Card (preview) | `preview__Card` | preview, `preview_`-only | none | optional | IBM Products' composable Card moved into core (#22867, 2026-08-12); upstream plans it as the successor of ProductiveCard/ExpressiveCard (ibm-products #9308, ADR 0007 proposed) |
 | IconIndicator / ShapeIndicator | `preview__IconIndicator`, `preview__ShapeIndicator` (+ `unstable_`) | preview | none | core | status pattern; named replacement for deprecated ibm-products StatusIcon (V table) |
 
 ### 2.5 Navigation and shell
@@ -189,7 +189,7 @@ Source: `feature-flags.json`; A flags table; `R/lib/components/FeatureFlags/inde
 | @carbon/utilities | 0.26.0 | utilities incl. `date-picker` (Temporal) primitives | yes | optional (decision: Temporal date picker) |
 | @carbon/upgrade | 11.46.0 | codemods (listed in section 6) | no | see section 6 |
 
-Other runtime deps of @carbon/react: `@floating-ui/react`, `downshift`, `flatpickr`, `motion`, `tabbable`, `es-toolkit`. Peers: React 16.8.6 to 19, `react-is`, `sass ^1.33.0`. (B, `R/package.json`) IBM Telemetry is embedded, opt-out (carbon-reference.md 3.4). `@carbon/web-components` 2.x is `out` on its own but becomes a required transitive peer if `@carbon/ai-chat` is adopted (section 6).
+Other runtime deps of @carbon/react: `@floating-ui/react`, `downshift`, `flatpickr`, `motion`, `tabbable`, `es-toolkit`. Peers: React 16.8.6 to 19, `react-is`, `sass ^1.33.0`. (B, `R/package.json`) IBM Telemetry runs at install time (`postinstall`), opt-out; nothing ships at runtime (carbon-reference.md 3.4; D13). `@carbon/web-components` 2.x is `out` on its own but becomes a required transitive peer if `@carbon/ai-chat` is adopted (section 6).
 
 ## 4. IBM Products 2.99.0
 
@@ -201,8 +201,8 @@ Other runtime deps of @carbon/react: `@floating-ui/react`, `downshift`, `flatpic
 |---|---|---|---|---|---|
 | Tearsheet | Tearsheet, TearsheetNarrow, TearsheetPresence, withTearsheetPresence, `preview__Tearsheet` | stable + preview twin | yes | core | large task panels |
 | SidePanel | SidePanel | stable | yes | core | detail and edit panels |
-| CreateFullPage | CreateFullPage, CreateFullPageStep | stable | no | core | full-page create wizard |
-| CreateTearsheet | CreateTearsheet, CreateTearsheetStep, CreateTearsheetDivider, CreateTearsheetNarrow | stable | no | core | create flow in tearsheet |
+| CreateFullPage | CreateFullPage, CreateFullPageStep | stable in 2.99.0; deprecated on main (#9900) | no | core | full-page create wizard |
+| CreateTearsheet | CreateTearsheet, CreateTearsheetStep, CreateTearsheetDivider, CreateTearsheetNarrow | stable in 2.99.0; deprecated on main (#9900) | no | core | create flow in tearsheet |
 | EditInPlace | EditInPlace | stable | yes | core | inline edit |
 | EmptyState family | EmptyState, ErrorEmptyState, NoDataEmptyState, NoTagsEmptyState, NotFoundEmptyState, NotificationsEmptyState, UnauthorizedEmptyState, getEmptyState | stable (`EmptyState` `v2` prop deprecated) | no | core | empty and error states |
 | FullPageError | FullPageError | stable | yes | core | 403/404/other error pages; replaces HTTPError* |
@@ -210,9 +210,9 @@ Other runtime deps of @carbon/react: `@floating-ui/react`, `downshift`, `flatpic
 | UserAvatar | UserAvatar | stable | yes | core | avatars; replaces UserProfileImage |
 | TagSet | TagSet | stable | no | core | tag lists with overflow |
 | TagOverflow | TagOverflow | default-off canary (render gating unverified) | yes | core | tag overflow |
-| Saving | Saving | stable | no | core | save-state indicator |
+| Saving | Saving | stable in 2.99.0; deprecated on main (#9888) | no | core | save-state indicator |
 | ProductiveCard / ExpressiveCard | ProductiveCard, ExpressiveCard | stable | no | core | dashboard and content cards |
-| PageHeader (new) | `preview__PageHeader` | preview | no (core has its own `preview__PageHeader`) | core | replacement for deprecated PageHeader |
+| PageHeader (new) | `preview__PageHeader` | preview | yes (#23209, merged 2026-09-24); core's old `preview__PageHeader` is the deprecated `PageHeaderDeprecated` | core | replacement for deprecated PageHeader |
 | TruncatedText | `preview__TruncatedText` | preview | yes | core | replacement for deprecated StringFormatter |
 | BigNumber | `previewCandidate__BigNumber` | previewCandidate | yes | core | KPI numbers (only source in the org) |
 | Coachmark (new) | `preview__Coachmark`, `preview__CoachmarkBeacon`, `preview__CoachmarkTagline`, `useCoachmark`, BEACON_KIND, COACHMARK_ALIGNMENT, COACHMARK_OVERLAY_KIND | preview (from `components/Coachmark/next`) | yes | optional | decision: guided tours |
@@ -230,13 +230,13 @@ Other runtime deps of @carbon/react: `@floating-ui/react`, `downshift`, `flatpic
 | SearchBar | `previewCandidate__SearchBar` | previewCandidate | no | optional | decision: scoped search bar |
 | Cascade, Checklist | Cascade, Checklist | stable | no | optional | decision: onboarding / setup checklists |
 | AboutModal | AboutModal | stable | no | optional | decision: product "about" dialog |
-| WebTerminal | WebTerminal, WebTerminalContentWrapper, WebTerminalProvider, useWebTerminal | stable | no | reference | niche console surface |
+| WebTerminal | WebTerminal, WebTerminalContentWrapper, WebTerminalProvider, useWebTerminal | stable in 2.99.0; deprecated on main (#9890) | no | reference | niche console surface |
 | ActionBar | ActionBar | default-off canary | no (ActionSet migrates; not public in ibm-products) | reference | small utility inside headers |
 | Settings | `pkg`, `usePrefix`, StackProvider, `preview__FeatureFlags`, `preview__useFeatureFlag(s)` | stable / preview | n/a | core (pkg, usePrefix) | required to configure any ibm-products component |
 | Datagrid hooks | useDatagrid + 19 more `use*`, getAutoSizedColumnWidth | no marker, but serve only the deprecated Datagrid (V row 6b) | no | out | deprecated in effect |
 | FilterPanelLabel, NavItem, NavList, DescriptionListBody/Cell/Row, EditTearsheetForm | as named | no marker, children of deprecated parents | no | out | parent deprecated |
 
-Migrated set status today (V row 3d): 14 of 16 are ibm-products root exports; BigNumber and Guidebanner only as `previewCandidate__`, Coachmark and TruncatedText only as `preview__`; ActionSet is an internal module (`P/lib/components/ActionSet`); Resizer ships as `@carbon-labs/react-resizer`. `@carbon/react` 1.117.0 contains only type files for BigNumber (`R/lib/index.d.ts:10`, type-only `preview__BigNumberProps`).
+Migrated set status today (V row 3d, updated 2026-09-24): 15 of 17 are ibm-products root exports (PageHeader, added by #23209, as `preview__PageHeader`); BigNumber and Guidebanner only as `previewCandidate__`, Coachmark and TruncatedText only as `preview__`; ActionSet is an internal module (`P/lib/components/ActionSet`); Resizer ships as `@carbon-labs/react-resizer`. `@carbon/react` 1.117.0 contains only type files for BigNumber (`R/lib/index.d.ts:10`, type-only `preview__BigNumberProps`).
 
 ### 4.2 Deprecated components and replacements (source of truth: V)
 
@@ -274,14 +274,14 @@ Totals: 35 unprefixed (29 with the J phrase) + 9 prefixed. All tagged `out` as c
 
 | Pattern | Built from (current, non-deprecated) | Docs | Tag |
 |---|---|---|---|
-| Create flows | CreateFullPage, CreateTearsheet(Narrow); modal and side-panel variants as patterns only | `packages/ibm-products/src/patterns/Create*`; https://carbondesignsystem.com/community/patterns/create-flows | core |
+| Create flows | CreateFullPage, CreateTearsheet(Narrow) (deprecated on ibm-products main, #9900); modal and side-panel variants as patterns only | `packages/ibm-products/src/patterns/Create*`; https://carbondesignsystem.com/community/patterns/create-flows | core |
 | Edit | EditInPlace; other Edit* deprecated, no replacement | https://carbondesignsystem.com/community/patterns/edit-pattern | core |
 | Remove / delete | Modal (danger) per pattern | `src/patterns/DeleteAndRemove`; https://carbondesignsystem.com/community/patterns/remove-pattern | core |
 | Import / export | FileUploader, Modal per pattern | `src/patterns/ImportAndUpload`, `ExportModal`; community import/export pages | core |
 | Empty states | EmptyState family | https://carbondesignsystem.com/patterns/empty-states-pattern/ | core |
 | Errors | FullPageError | Storybook "FullPageError" | core |
 | Notifications | NotificationsPanel | https://carbondesignsystem.com/patterns/notification-pattern/ | core |
-| Saving | Saving | `src/patterns/Saving` | core |
+| Saving | Saving (deprecated on ibm-products main, #9888) | `src/patterns/Saving` | core |
 | Onboarding | `preview__Coachmark*`, InterstitialScreen, Guidebanner | `src/patterns/Coachmark*` | optional |
 | Generate an API key | Modal/Tearsheet per pattern | `src/patterns/GenerateAnAPIKey` | optional |
 | Add / select data | `preview__AddSelect` | `src/patterns/AddSelect` | optional |
@@ -313,7 +313,7 @@ Monorepo https://github.com/carbon-design-system/carbon-labs, Storybook https://
 | @carbon-labs/react-animated-header | animated header | 0.61.0 (2026-08-25) | optional | decision: visual fit |
 | @carbon-labs/utilities | shared helpers | 0.28.0 (2026-05-15) | optional | transitive of Labs packages |
 | @carbon-labs/vscode-snippets | SCSS snippets | 0.5.0 (2026-05-14) | optional | editor productivity |
-| @carbon-labs/wc-wysiwyg | rich-text editor (WC) | 0.2.0 (2026-09-21) | optional | decision: rich text needed; WC only, wrapper required |
+| @carbon-labs/wc-wysiwyg | rich-text editor (WC) | 0.3.0 (2026-09-24) | out (S14) | rich text not needed |
 | @carbon-labs/wc-empty-state, @carbon-labs/wc-ai-tag, @carbon-labs/wc-global-header | WC only. wc-empty-state: partial overlap with IBM Products EmptyState (gap: multi-action slots), and that family is removed at v12 per https://github.com/carbon-design-system/carbon/issues/22473. wc-ai-tag (`labs.status` draft): a clickable tag in a tooltip with a colored start edge, not an AI badge; partial overlap with `OperationalTag` + `Tooltip`; no runtime React wrapper ships (types only) and the bare import is broken. wc-global-header: partial overlap with UI Shell + `react-ui-shell`; its only React wrapper is the IBM Hybrid iPaaS header, bound to IBM backend endpoints (updated 2026-09-24, round 3) | 0.22.0 / 0.27.0 / 0.95.0 | optional | treatment in `docs/scope.md` 2.6 (round3 V3 rows 2a, 3a, 3b, 5a, 5b) |
 | @carbon-labs/react-plane-stack-3d | 3D visualization (three.js); React, peers `react ^18.0.0` (updated 2026-09-24, round 3) | 0.10.0 (2026-09-03) | reference | niche, heavy dependency; out (`[H]` S20, 2026-09-24: React 18 peer only; `docs/scope.md` I51) |
 | @carbon-labs/primitives | framework-agnostic date-picker state machines ("other", neither React nor WC); transitive dependency of `react-date-picker` and `wc-date-picker`; calls a global `Temporal` with no polyfill dependency; core's copy lives in `@carbon/utilities/date-picker` (PR https://github.com/carbon-design-system/carbon/pull/22728) (updated 2026-09-24, round 3) | 0.6.0 (2026-09-18) | reference | not consumed directly (round3 V3 rows 7, 12h) |
@@ -341,7 +341,7 @@ Package count: 36 published `@carbon-labs/*` packages: 18 React, 16 web componen
 | generate-pattern | CLI scaffolding tanstack-carbon patterns and tearsheet-step-flow | CLI | pushed 2024-12-04 | (unverified) | reference | model for an Afframe block CLI |
 | stylelint-plugin-carbon-tokens | token-usage lint with autofix | n/a | 5.0.6 (2026-06-03), Carbon v11 only, stylelint 16/17 | conflict: MIT in package.json/README, Apache-2.0 in LICENSE file and tarball (V row 9b) | core | enforces tokens-only styling; in the carbon-design-system org, single npm maintainer (V row 9c) |
 | @carbon/cli-plugin-stylelint | old stylelint plugin | n/a | 0.0.24 (2020) | Apache-2.0 | out | dead |
-| @carbon/upgrade | codemods (`npx @carbon/upgrade migrate <name> --write`; list via `migrate list`): `enable-v12-release`, `enable-v12-overflowmenu`, `enable-v12-tile-default-icons`, `enable-v12-tile-radio-icons`, `enable-v12-structured-list-visible-icons`, `featureflag-deprecate-flags-prop`, `ibm-products-update-http-errors` | n/a | 11.46.0 (2026-09-23) | Apache-2.0 | core | v12 flag codemods, ibm-products HTTPError migration; whether 11.46.0 contains the `enable-v12-release` codemod is (unverified) |
+| @carbon/upgrade | codemods (`npx @carbon/upgrade migrate <name> --write`; list via `migrate list`): `enable-v12-release`, `enable-v12-overflowmenu`, `enable-v12-tile-default-icons`, `enable-v12-tile-radio-icons`, `enable-v12-structured-list-visible-icons`, `featureflag-deprecate-flags-prop`, `ibm-products-update-http-errors` | n/a | 11.46.0 (2026-09-23) | Apache-2.0 | core | v12 flag codemods, ibm-products HTTPError migration; 11.46.0 contains the `enable-v12-release` codemod (checked 2026-09-24; was unverified) |
 | carbon-mcp | MCP server for Carbon docs and codegen | n/a | issue repo pushed 2026-09-01; server access-gated (IBMid) | not stated | optional | decision: AI-assisted dev with gated access |
 | devtools | browser extension + component-list/utilities | n/a | pushed 2026-06-17 | Apache-2.0 | optional | dev-time inspection |
 | icons-motion (`@carbon/icons-motion`) | animated icons | React | pushed 2026-07-27 | (unverified) | optional | decision: motion polish |
@@ -442,7 +442,6 @@ Full 121-row table: `docs/research/carbon-org-repos.md`.
 - Whether prefixed ibm-products exports bypass the deprecated canary gate; whether TagOverflow is canary-gated at render. (V)
 - Which Coachmark generation the @carbon/react migration copy is based on. (V)
 - License of `stylelint-plugin-carbon-tokens` (MIT field vs Apache-2.0 file) and of `tanstack-carbon` (none reported). (V row 9b; carbon-reference.md 5.2)
-- Whether `@carbon/upgrade` 11.46.0 contains the `enable-v12-release` codemod. (V)
 - Tag conflicts between lanes, resolved here as shown in section 8: carbon-ai-chat (D core, F core; here optional because of the WC peer), carbon-charts (D core, F optional), stylelint plugin (D core, F optional), tanstack-carbon (D optional, E core, F reference), carbon-react-router-starter (E core, F optional).
 - Lane E tags community create/edit/remove/import/export pages "out (site tooling meta-pages)"; lane C reads them as product workflow patterns. Not re-fetched here.
 - Labs package count: resolved, 36 (18 React / 16 web components / 2 other; round3 V3 row 1a) (updated 2026-09-24, round 3). F archived count: 24 (F text) vs 35 (JSON).
