@@ -2,7 +2,7 @@
 
 Delete this file when phase 0 (research, goals, decisions) is closed.
 
-**State, 2026-09-24:** phase 0. Research rounds 1 and 2 are done and verified; goals and scope are written. No code yet.
+**State, 2026-09-24:** phase 0. Research rounds 1 to 3 are done and verified; goals and scope are written. No code yet.
 
 ## Decided by Hleb
 - D1: React only.
@@ -11,9 +11,9 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 - Scope (`docs/scope.md`) accepted, with these rules: Carbon Labs is mandatory (web-components-only Labs: use an overlapping React component, otherwise wrap or rebuild); every Optional item is decided one by one; every Build-new item is approved one by one before it is built, and building new is the last milestone.
 
 ## Waiting on Hleb, in this order
-1. Recheck in progress: WC-only Labs treatment (O21, O26), the v12 day-one surface (O3 to O6, the 16 migrated components). Optional picks O2 to O25 are decided (`docs/scope.md` section 3).
+1. Round 3 recheck results (`docs/scope.md` sections 1.5, 2.5, 2.6): the new decisions S14 rich-text editor, S15 the 16 migrated components on day one, S16 Resizer beyond a single handle, S17 empty states under v12, S18 DataTable toolbar under v12, S19 two copies of one date picker. O3, O21 and O26 are resolved by the v12 and Labs rules; all Optional picks are settled (`docs/scope.md` section 3).
 2. D2: package distribution (`docs/goals.md` section 6, `docs/research/carbon-reference.md` section 12).
-3. The remaining open decisions: D3 to D7, D9 to D11 (`docs/goals.md`) and S3 to S7, S9 to S13 (`docs/scope.md` section 7).
+3. The remaining open decisions: D3 to D7, D9 to D11 (`docs/goals.md`) and S3 to S6, S9 to S13 (`docs/scope.md` section 7).
 
 ## Rules for agents working here
 - Hleb decides architecture and stack. Stack presets from any global agent configuration do not apply to this project; present options with consequences, no picks unless asked.

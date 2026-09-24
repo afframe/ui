@@ -304,7 +304,7 @@ Monorepo https://github.com/carbon-design-system/carbon-labs, Storybook https://
 | @carbon-labs/react-calendar | calendar | 0.11.0 (2026-05-18) | optional | decision: full calendar view needed |
 | @carbon-labs/react-tag-input | tag input field | 0.6.0 (2026-08-12) | optional | decision: tag entry control |
 | @carbon-labs/react-theme-settings | theme switcher panel | 0.30.0 (2026-05-15) | optional | decision: user-facing theme settings (used by carbon-react-router-starter) |
-| @carbon-labs/react-style-picker | style/theme picker | 0.27.0 (2026-09-21) | optional | same decision |
+| @carbon-labs/react-style-picker | style/theme picker; a `@lit/react` wrapper of `wc-style-picker`, so it ships the WC runtime (Lit, `@carbon/web-components` <3); `@lit/react` is a devDependency the consumer must install; close event not mapped to a prop (updated 2026-09-24, round 3) | 0.27.0 (2026-09-21) | optional | same decision; stays on v11 behaviour under React `<FeatureFlags>` (round3 V3 rows 2d, 10) |
 | @carbon-labs/react-whats-new | "what's new" panel | 0.28.0 (2026-06-02) | optional | decision: release notes in product |
 | @carbon-labs/react-first-time-orientation | onboarding overlay | 0.21.0 (2026-05-15) | optional | decision: guided tours (vs Coachmark) |
 | @carbon-labs/react-registration-flow | multi-step registration | 0.2.0 (2026-07-29) | optional | decision: signup flow; very young |
@@ -314,18 +314,18 @@ Monorepo https://github.com/carbon-design-system/carbon-labs, Storybook https://
 | @carbon-labs/utilities | shared helpers | 0.28.0 (2026-05-15) | optional | transitive of Labs packages |
 | @carbon-labs/vscode-snippets | SCSS snippets | 0.5.0 (2026-05-14) | optional | editor productivity |
 | @carbon-labs/wc-wysiwyg | rich-text editor (WC) | 0.2.0 (2026-09-21) | optional | decision: rich text needed; WC only, wrapper required |
-| @carbon-labs/wc-empty-state, @carbon-labs/wc-ai-tag, @carbon-labs/wc-global-header | WC only | 0.22.0 / 0.27.0 / 0.95.0 | optional | only via WC wrapper; React equivalents exist elsewhere |
-| @carbon-labs/react-plane-stack-3d | 3D visualization (three.js) | 0.10.0 (2026-09-03) | reference | niche, heavy dependency |
-| @carbon-labs/primitives | headless primitives | 0.6.0 (2026-09-18) | reference | watch direction |
-| @carbon-labs/mdx-components | docs MDX | 0.29.0 (2026-07-29) | reference | docs authoring |
-| @carbon-labs/network-graph | graph viz | 0.9.0 (2024-06-27) | reference | stale |
+| @carbon-labs/wc-empty-state, @carbon-labs/wc-ai-tag, @carbon-labs/wc-global-header | WC only. wc-empty-state: partial overlap with IBM Products EmptyState (gap: multi-action slots), and that family is removed at v12 per https://github.com/carbon-design-system/carbon/issues/22473. wc-ai-tag (`labs.status` draft): a clickable tag in a tooltip with a colored start edge, not an AI badge; partial overlap with `OperationalTag` + `Tooltip`; no runtime React wrapper ships (types only) and the bare import is broken. wc-global-header: partial overlap with UI Shell + `react-ui-shell`; its only React wrapper is the IBM Hybrid iPaaS header, bound to IBM backend endpoints (updated 2026-09-24, round 3) | 0.22.0 / 0.27.0 / 0.95.0 | optional | treatment in `docs/scope.md` 2.6 (round3 V3 rows 2a, 3a, 3b, 5a, 5b) |
+| @carbon-labs/react-plane-stack-3d | 3D visualization (three.js); React, peers `react ^18.0.0` (updated 2026-09-24, round 3) | 0.10.0 (2026-09-03) | reference | niche, heavy dependency; included under the Labs rule (`docs/scope.md` I51; round3 `labs-tech.json`) |
+| @carbon-labs/primitives | framework-agnostic date-picker state machines ("other", neither React nor WC); transitive dependency of `react-date-picker` and `wc-date-picker`; calls a global `Temporal` with no polyfill dependency; core's copy lives in `@carbon/utilities/date-picker` (PR https://github.com/carbon-design-system/carbon/pull/22728) (updated 2026-09-24, round 3) | 0.6.0 (2026-09-18) | reference | not consumed directly (round3 V3 rows 7, 12h) |
+| @carbon-labs/mdx-components | docs MDX; React (imports `react`) (updated 2026-09-24, round 3) | 0.29.0 (2026-07-29) | reference | docs authoring; included under the Labs rule (`docs/scope.md` I52; round3 L row, V3 row 1a) |
+| @carbon-labs/network-graph | graph viz (web component) (updated 2026-09-24, round 3) | 0.9.0 (2024-06-27) | reference | dead since 2024-06-27; successor `wc-network-graph` is private; stays out (round3 V3 row 1b) |
 | @carbon-labs/react-split-panel | split panel | 0.22.0 | out | "DEPRECATED, use @carbon-labs/react-resizer" |
-| @carbon-labs/ai-chat | chat (WC) | 0.39.0 (2026-06-02) | out | superseded for React by `@carbon/ai-chat` (distinct project, V row 8a) |
-| @carbon-labs/wc-date-picker, wc-resizer, wc-style-picker | WC twins | various | out | React twins exist |
+| @carbon-labs/ai-chat | chat (WC); `labs.status` preview and a Labs preview candidate (PR https://github.com/carbon-design-system/carbon-labs/pull/1228), not superseded; 24 element folders (chart, diagram, formula, carousel and others) (updated 2026-09-24, round 3) | 0.39.0 (2026-06-02) | out | partial overlap with `@carbon/ai-chat` (distinct project, V row 8a), feature diff not done (unverified); `@carbon/ai-chat` is used as the result of the overlap rule (round3 V3 row 2e) |
+| @carbon-labs/wc-date-picker, wc-resizer, wc-style-picker | WC twins. wc-date-picker: partial overlap with `react-date-picker` (only the WC has a controllable `open`). wc-resizer: partial overlap with `react-resizer` (React has one drag handle; the WC adds grid, panel and 2D pivot handle). wc-style-picker: full overlap, it is the runtime inside `react-style-picker` (updated 2026-09-24, round 3) | 0.16.0 / 0.5.0 / 0.36.0 | out | React counterparts cover them fully or partly; gaps in `docs/scope.md` 2.6 (round3 V3 rows 2b, 2c, 2d) |
 | @carbon-labs/react-example-button, wc-example-button, web-components-example-button | scaffolds | various | out | boilerplate |
 | @carbon-labs/ai-extended-button, ai-feedback, ai-prompt-tuning, ai-ux-control | dead AI experiments | last 2023-11 to 2024-06 | out | abandoned rc/canary |
 
-Package count: D reports 38 published `@carbon-labs/*` packages; round 1 inventory counted 36 (carbon-reference.md 5.4). Not reconciled (section 9).
+Package count: 36 published `@carbon-labs/*` packages: 18 React, 16 web components (Lit / `@carbon/web-components`), 2 other (`primitives`, `vscode-snippets`); one React package, `react-style-picker`, is a `@lit/react` wrapper of a web component (round3 `labs-tech.json`; V3 row 1a). D's 38 is not confirmed. The rows above cover 35; the 36th, `@carbon-labs/ai-tag` (last 0.8.0, 2025-07-09), is superseded by `wc-ai-tag` (V3 row 12f) (updated 2026-09-24, round 3).
 
 ## 6. Extensions and dev tooling
 
@@ -445,7 +445,7 @@ Full 121-row table: `docs/research/carbon-org-repos.md`.
 - Whether `@carbon/upgrade` 11.46.0 contains the `enable-v12-release` codemod. (V)
 - Tag conflicts between lanes, resolved here as shown in section 8: carbon-ai-chat (D core, F core; here optional because of the WC peer), carbon-charts (D core, F optional), stylelint plugin (D core, F optional), tanstack-carbon (D optional, E core, F reference), carbon-react-router-starter (E core, F optional).
 - Lane E tags community create/edit/remove/import/export pages "out (site tooling meta-pages)"; lane C reads them as product workflow patterns. Not re-fetched here.
-- Labs package count: 38 (D) vs 36 (round 1). F archived count: 24 (F text) vs 35 (JSON).
+- Labs package count: resolved, 36 (18 React / 16 web components / 2 other; round3 V3 row 1a) (updated 2026-09-24, round 3). F archived count: 24 (F text) vs 35 (JSON).
 
 ## 10. Sources
 
