@@ -28,6 +28,26 @@ TypeScript types ship inside the package.
 
 1. `package.json`: `"name": "@afframe/ui"`, `"type": "module"`, an `exports` map for the paths above, `"repository"` pointing at `afframe/ui` (links the package to the repo), `"publishConfig": { "registry": "https://npm.pkg.github.com" }`, `"files"` limited to `dist/`, the licences and NOTICE.
 2. Dependencies: peers `react`, `react-dom` (`^18.3 || ^19`), `@carbon/react` `1.117.0` and `@carbon/ibm-products` `2.99.0` (exact); regular dependencies, exact: Carbon Labs packages, `@tanstack/react-table`, `@carbon/charts-react`, `echarts`, `@carbon/echarts-theme`, `@carbon/ai-chat`, `@carbon/web-components`, `@carbon/icons-react`; build-only: `sass`, `@carbon/styles`, `@carbon/ibm-products-styles`, `@ibm/plex`, `tsdown`, `typescript`.
+   Versions (D19, latest on npm, checked 2026-09-24):
+
+   | Package | Version | Package | Version |
+   |---|---|---|---|
+   | react, react-dom, react-is | 19.3.0 | typescript | 7.0.2 |
+   | @carbon/react | 1.117.0 | @carbon/styles | 1.116.0 |
+   | @carbon/ibm-products | 2.99.0 | @carbon/ibm-products-styles | 2.95.0 |
+   | @carbon/ai-chat | 1.21.0 | @carbon/web-components | 2.64.0 (ai-chat caps it below 3.0.0) |
+   | @carbon/charts-react | 1.27.20 | echarts, @carbon/echarts-theme | 6.1.0, 0.7.0 |
+   | @tanstack/react-table | 9.2.4 | tsdown | 0.23.0 |
+   | sass | 1.105.0 | storybook, @storybook/react-vite | 10.6.0 |
+   | vite | 8.3.1 | next (reference app) | 16.3.6 |
+   | jest | 30.5.2 | vitest | 5.0.1 |
+   | @testing-library/react | 16.3.3 | @playwright/test | 1.63.0 |
+   | accessibility-checker | 4.0.34 | @axe-core/playwright | 4.13.0 |
+   | eslint | 10.11.0 | stylelint | 17.15.0 |
+   | prettier | 3.9.9 | pnpm | 12.6.0 |
+   | Node.js | 24.21.0 LTS (26.10.0 current) | | |
+
+   Peer check: `@carbon/react`, `@carbon/ibm-products`, `@carbon/charts-react`, the Labs React packages and `@storybook/react-vite` accept React 19; `@carbon/ai-chat` accepts React below 20; tsdown accepts TypeScript 7; `@storybook/react-vite` accepts Vite 8.
 3. Build: tsdown for JavaScript (per-file ESM, `'use client'` kept on client entries) plus a separate `tsc` pass for types; Sass compile of one entry with the v12 flag set before Carbon loads, `$font-path: './fonts'`; font copy into `dist/fonts/`; a post-build check that client entries start with `'use client'` and `./server` does not.
 4. Licences: PolyForm Noncommercial governs the project (Hleb, 2026-09-24: "we still guided by our licence"). Carbon's Apache-2.0 licence is kept verbatim in `third-party/carbon/LICENSE` and ships in the package; it covers the copied Carbon v12 source and the Carbon-derived CSS. Copied files keep their IBM copyright headers and carry a note when modified (Apache-2.0 section 4). OFL-1.1 ships next to the fonts. Carbon publishes no NOTICE file, so none is carried.
 5. Release: a GitHub Actions workflow publishes on a version tag with `permissions: packages: write` and the built-in `GITHUB_TOKEN`. Versioning: semantic versions; publishing needs Hleb's manual approval; changelog tooling comes after the full build (section 4).

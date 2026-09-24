@@ -13,6 +13,8 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 3. `[P]` items to rule on: D7 (the TanStack v9 pick), the D11 tool list, the D3 import paths against his pick "a", the readings under D8 and S8, the S7 feature-flags rule and the scoped flag mechanism in `scope.md` section 1, and the `[P]` lines in `consumption.md` section 4. Spot-check the `[A]` rows D2, D4 and D5.
 4. The review's open points were answered on 2026-09-24 (D5 themes, D10 docs, I42 out, O24 icons-motion out, S16 `react-resizer` only, O22 `@afframe/ui/echarts`, outside PRs closed by Hleb); status in `docs/goals.md` section 6. Still waiting for Hleb's yes: mark as answered the `[P]` items in item 3 and the review points he says he already ruled on (PageHeader S6, the Labs reading, D18 company licensing, private package visibility).
 
+5. Open, research round 6 running (`.context/research/round6/`): repo structure and import paths (D3), where Carbon's licence file lives (the current `third-party/carbon/LICENSE` path is not approved), and the `docs/` structure (never approved by Hleb).
+
 ## Proposed for phase 1 `[P]`
 - Prove the consumer path in `docs/consumption.md` with in-repo Next.js and Vite reference apps before the first release.
 - A v12 breakage gate: render every included component under v12 in Storybook visual tests and record any visible break as a named exception to the v12 rule. Today the breakage check rests on source reading, one Sass compile and rendered Tag and TextInput markup (`research/sources/round3/S-sass-check.md`); no component was rendered under v12 in Storybook.
