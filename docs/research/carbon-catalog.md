@@ -1,5 +1,7 @@
 # Carbon ecosystem catalog for a React design system
 
+> **Update 2026-10-02 (facts below are dated 2026-09-24 unless marked):** `@carbon/react` 2.0.0-alpha.x is published under the npm `v12-alpha` dist-tag since 2026-09-29 (alpha.3 on 2026-10-01); the migration list has 19 components (ConditionBuilder and AddSelect merged 2026-09-25 and 2026-09-29; it includes OptionsTile); `@carbon/ibm-products` is 2.100.0 and deprecates Create flows, Saving and WebTerminal. Current facts: `docs/scope.md` section 1.
+
 Retrieved 2026-09-24 · Sources: 6 research lanes (A v11 vs v12, B @carbon/react, C IBM Products, D Labs and extensions, E templates and patterns, F org triage) plus one adversarial verification pass (V), all in `docs/research/sources/round2/`. V overrides A to D wherever they disagree; every corrected or refuted lane claim is replaced by the verified fact here.
 Tags (analysis for Hleb, not decisions):
 - `core`: directly serves a React, latest-Carbon business-platform design system.
@@ -22,7 +24,7 @@ Tags (analysis for Hleb, not decisions):
 | Extensions and tooling (section 6) | 21 rows | 4 | 5 | 4 | 8 |
 | Org repos (section 8) | 121 repos | 4 | 8 | 20 | 89 (lane F row tags) |
 
-- Newest installable Carbon for React is `@carbon/react` 1.117.0 (2026-09-23); npm `latest` = `next` = 1.117.0; no v12 package or tag exists. v12 today is the `enable-v12-release` flag family inside 1.117.0 plus a v12 Storybook that brands itself "@carbon/react v2.x". (V row 1; https://registry.npmjs.org/@carbon%2freact)
+- Newest installable Carbon for React is `@carbon/react` 1.117.0 (2026-09-23); npm `latest` = `next` = 1.117.0; no v12 package or tag existed on 2026-09-24 (see the update note above). v12 today is the `enable-v12-release` flag family inside 1.117.0 plus a v12 Storybook that brands itself "@carbon/react v2.x". (V row 1; https://registry.npmjs.org/@carbon%2freact)
 - v12 dated GitHub milestones (targets, not commitments): v12-alpha 2026-10-31, v12-rc.0 2026-11-12, v12-beta 2026-12-31, v12-stable 2027-03-31; `docs/release-schedule.md` still says TBD. (V row 4a; https://github.com/carbon-design-system/carbon/milestones)
 - Full v12 styling needs the React flag AND a Sass build with `enable-v12-release: true`; the precompiled `css/styles.min.css` is v11-styled. The root flag also restyles form fields (rounded, fully bordered text-input and list-box), which `docs/migration/v12.md` does not document. (V rows 2b, 2c)
 - The 17 components moving from IBM Products into core (PageHeader added 2026-09-24, #23209) are not in the published JS, flag on or off. Today: 15 via `@carbon/ibm-products` root exports (PageHeader as `preview__PageHeader`), Resizer via `@carbon-labs/react-resizer`, ActionSet not publicly exported. (V rows 3a, 3d)

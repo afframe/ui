@@ -32,10 +32,10 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
    - R11 the deprecated Create flows, Saving and WebTerminal.
 5. Other open items:
    - whether a release may be built on a Carbon pre-release (M0-10);
-   - a licence for a separate operating company;
    - the accessibility target, locales, browser matrix and size budgets;
-   - the docs coverage strategy for Storybook;
+   - the docs coverage strategy for Storybook (M0-27): copy Carbon's and IBM Products' docs pages and stories, write our own, link IBM's public Storybooks, or a mix; foundations pages (tokens, icons) are an Afframe extra, and prop tables depend on R3;
    - a re-ruling on O23 (carbon-mcp);
+   - whether to reopen the company licence (outside review X2) and the S4 attribution sentence (PR #2 review comment);
    - the `[P]` items in `goals.md` sections 3 to 5 and 7.
 
 ## Proposed for phase 1 `[P]`
@@ -48,3 +48,4 @@ Delete this file when phase 0 (research, goals, decisions) is closed.
 - Build nothing from `docs/scope.md` section 6 without Hleb's approval of that specific item.
 - Never merge a PR without Hleb's explicit "merge".
 - Prefix every package install with `IBM_TELEMETRY_DISABLED=true`.
+- `afframe/carbon` is unrelated to this project (Hleb, 2026-09-24); do not propose it.

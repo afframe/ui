@@ -1,6 +1,6 @@
 # Afframe UI docs
 
-**Status 2026-10-02: all documents are drafts awaiting Hleb's review; upstream facts re-checked on 2026-10-02.** Markers record Hleb's chat answers: `[H]` Hleb's own pick or words, with the date; `[A]` Claude recommended it and Hleb said "ok" or "accept"; `[P]` Claude's proposal or reading, waiting for Hleb; `Deferred [H]` Hleb put it off. Every document stays a draft until Hleb reviews it; the review checks that each record matches what he said. Decision status lives only in `goals.md` section 6. Permanent documents live in `docs/`. Temporary working files that agents need to continue a piece of work live in `docs/plans/` and are deleted when that work is done. This repo is public: everything here is publicly readable.
+**Status 2026-10-02: all documents are drafts awaiting Hleb's review; upstream facts re-checked on 2026-10-02. The `docs/` structure itself is not approved (open question Q2).** Markers record Hleb's chat answers: `[H]` Hleb's own pick or words, with the date; `[A]` Claude recommended it and Hleb said "ok" or "accept"; `[P]` Claude's proposal or reading, waiting for Hleb; `Deferred [H]` Hleb put it off. Every document stays a draft until Hleb reviews it; the review checks that each record matches what he said. Decision status lives only in `goals.md` section 6. Permanent documents live in `docs/`. Temporary working files that agents need to continue a piece of work live in `docs/plans/` and are deleted when that work is done. This repo is public: everything here is publicly readable.
 
 | File | What it is |
 |---|---|

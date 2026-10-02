@@ -1,5 +1,7 @@
 # IBM Carbon: research reference for Afframe UI
 
+> **Update 2026-10-02 (facts below are dated 2026-09-24 unless marked):** `@carbon/react` 2.0.0-alpha.x is published under the npm `v12-alpha` dist-tag since 2026-09-29 (alpha.3 on 2026-10-01); the migration list has 19 components (ConditionBuilder and AddSelect merged 2026-09-25 and 2026-09-29; it includes OptionsTile); `@carbon/ibm-products` is 2.100.0 and deprecates Create flows, Saving and WebTerminal. Current facts: `docs/scope.md` section 1.
+
 Retrieved 2026-09-23 · Method: ground-truth npm/GitHub inventory (139 npm packages, 121 GitHub repos; publish dates from the `latest_published` field, never `time.modified`), 6 research lanes (core, frameworks, extensions, tokens/theming, tooling, distribution/legal/security), 2 adversarial verification passes (Carbon technical claims; distribution, legal, security).
 Tags: **(unverified)** = not confirmed from a primary source; **(corrected on verification)** = a lane claim was corrected or refuted by a verification pass, and the corrected fact is stated.
 This document informs; it does not choose. Nothing here is legal advice.
