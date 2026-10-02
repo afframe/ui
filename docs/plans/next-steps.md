@@ -2,25 +2,49 @@
 
 Delete this file when phase 0 (research, goals, decisions) is closed.
 
-**State, 2026-09-24:** phase 0. Everything in `docs/` is Claude's draft: Hleb's answers from the chat are recorded, but Hleb has not yet reviewed or confirmed the documents themselves. Research rounds 1 to 4 are done and verified. No code yet.
+**State, 2026-10-02:** phase 0. Everything in `docs/` is Claude's draft: Hleb's answers from the chat are recorded, but Hleb has not yet reviewed or confirmed the documents themselves. Research rounds 1 to 6, an independent review, an upstream sweep and an outside advisor review are done; upstream facts were re-checked against npm and GitHub on 2026-10-02. No code yet.
 
 ## Decision status
 `docs/goals.md` section 6 is the only register. Markers are defined in `docs/README.md`.
 
 ## Waiting on Hleb
-1. Hleb reviews and confirms the drafts (`docs/goals.md`, `docs/scope.md`, `docs/consumption.md`, `docs/research/*`), then the drafts are reworked with him. Nothing is final until he confirms it.
-2. Not now (Hleb, 2026-09-24): no merge of PR #2, no phase 1, no removal of `docs/plans/open-decisions.md`.
-3. `[P]` items to rule on: D7 (the TanStack v9 pick), the D11 tool list, the D3 import paths against his pick "a", the readings under D8 and S8, the S7 feature-flags rule and the scoped flag mechanism in `scope.md` section 1, and the `[P]` lines in `consumption.md` section 4. Spot-check the `[A]` rows D2, D4 and D5.
-4. The review's open points were answered on 2026-09-24 (D5 themes, D10 docs, I42 out, O24 icons-motion out, S16 `react-resizer` only, O22 `@afframe/ui/echarts`, outside PRs closed by Hleb); status in `docs/goals.md` section 6. Still waiting for Hleb's yes: mark as answered the `[P]` items in item 3 and the review points he says he already ruled on (PageHeader S6, the Labs reading, D18 company licensing, private package visibility).
-
-5. Open, research round 6 running (`.context/research/round6/`): repo structure and import paths (D3), where Carbon's licence file lives (the current `third-party/carbon/LICENSE` path is not approved), and the `docs/` structure (never approved by Hleb).
+1. Hleb reviews and confirms the drafts (`docs/goals.md`, `docs/scope.md`, `docs/consumption.md`, `docs/research/*`). Nothing is final until he confirms it.
+2. Not now: no merge of PR #2, no phase 1, no removal of `docs/plans/open-decisions.md`.
+3. Repo structure questions (research round 6):
+   - Q1 where Carbon's Apache-2.0 licence lives (the current `third-party/carbon/LICENSE` path is not approved);
+   - Q2 the `docs/` structure (never approved);
+   - Q3 component folder layout;
+   - Q4 import paths;
+   - Q5 test apps;
+   - Q6 React range for consumers;
+   - Q7 update bot.
+4. Decisions to revisit, raised by the outside review:
+   - R1 the S15 copy set (now 19 components, including the declined OptionsTile);
+   - R2 exact peers or regular dependencies;
+   - R3 the TypeScript toolchain (TypeScript 7 has no classic compiler API);
+   - R4 public repo or private;
+   - R5 what v1.0.0 includes;
+   - R6 full-suite CI triggers;
+   - R7 Jest or Vitest;
+   - R8 dropping the S18 workaround;
+   - R9 private or public package;
+   - R10 an install-and-render gate per Labs package;
+   - R11 the deprecated Create flows, Saving and WebTerminal.
+5. Other open items:
+   - whether a release may be built on a Carbon pre-release (M0-10);
+   - a licence for a separate operating company;
+   - the accessibility target, locales, browser matrix and size budgets;
+   - the docs coverage strategy for Storybook;
+   - a re-ruling on O23 (carbon-mcp);
+   - the `[P]` items in `goals.md` sections 3 to 5 and 7.
 
 ## Proposed for phase 1 `[P]`
 - Prove the consumer path in `docs/consumption.md` with in-repo Next.js and Vite reference apps before the first release.
-- A v12 breakage gate: render every included component under v12 in Storybook visual tests and record any visible break as a named exception to the v12 rule. Today the breakage check rests on source reading, one Sass compile and rendered Tag and TextInput markup (`research/sources/round3/S-sass-check.md`); no component was rendered under v12 in Storybook.
+- A v12 breakage gate: render every included component under v12 in Storybook visual tests and record any visible break as a named exception to the v12 rule.
 
 ## Rules for agents working here
 - Hleb decides architecture and stack. Stack presets from any global agent configuration do not apply to this project; present options with consequences, no picks unless asked.
 - Markers: `docs/README.md`. Never turn `[P]` or `[A]` into `[H]` without his word.
 - Build nothing from `docs/scope.md` section 6 without Hleb's approval of that specific item.
 - Never merge a PR without Hleb's explicit "merge".
+- Prefix every package install with `IBM_TELEMETRY_DISABLED=true`.
