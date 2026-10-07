@@ -123,7 +123,7 @@ dist/
 LICENSES/
 ```
 
-The root `LICENSE` is a symlink, which npm and pnpm do not pack; the texts ship in `LICENSES/`. No stories, tests, fixtures or examples ship. A pre-publish check on the packed tarball proves it.
+The root `LICENSE` is a symlink, which npm does not pack (pnpm does, so releases pack with npm); the texts ship in `LICENSES/`. No stories, tests, fixtures or examples ship. A pre-publish check on the packed tarball proves it.
 
 ## Outside the package
 

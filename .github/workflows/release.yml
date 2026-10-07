@@ -20,7 +20,7 @@ env:
 jobs:
   # The same checks as the release checks, without write permissions.
   verify:
-    # Only the public repo publishes; forks and the old repo never do.
+    # Only the public repo publishes; forks never do.
     if: github.repository == 'afframe/ui'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -46,8 +46,9 @@ jobs:
       - run: pnpm test
       - run: pnpm build
       - run: pnpm check:pack
-      # The checked tarball is what publish uploads; publish runs no build code.
-      - run: pnpm pack --out package.tgz
+      # check:pack inspects npm's pack, so publish uploads that one; pnpm pack
+      # would also ship the LICENSE symlink. Publish runs no build code.
+      - run: mv "$(npm pack --ignore-scripts --silent)" package.tgz
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: package
