@@ -45,7 +45,7 @@
     "LICENSES"
   ],
   "engines": {
-    "node": ">=22.12"
+    "node": ">=22.15"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

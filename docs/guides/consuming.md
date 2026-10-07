@@ -31,7 +31,7 @@ In the app package that renders UI:
 IBM_TELEMETRY_DISABLED=true pnpm add @afframe/ui react react-dom
 ```
 
-The package is ESM and needs Node.js 22.12 or newer, where `require()` also loads it. React and React DOM 19 are the only required peers. `@types/react` and `@types/react-dom` 19 are optional peers: a TypeScript app installs them, since the package types use React types; `react-is`, `sass` and the Carbon packages IBM Products peers are regular dependencies of `@afframe/ui`, so you add only `react` and `react-dom`. Carbon, IBM Products, Labs and the extras come with `@afframe/ui`.
+The package is ESM and needs Node.js 22.15 or newer, where `require()` also loads it. React and React DOM 19 are the only required peers. `@types/react` and `@types/react-dom` 19 are optional peers: a TypeScript app installs them, since the package types use React types; `react-is`, `sass` and the Carbon packages IBM Products peers are regular dependencies of `@afframe/ui`, so you add only `react` and `react-dom`. Carbon, IBM Products, Labs and the extras come with `@afframe/ui`.
 
 ## 4. Wire it once
 

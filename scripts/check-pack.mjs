@@ -1,6 +1,7 @@
 // Checks the packed tarball's contents and the built dist/. Run after `build`.
 import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { posix } from 'node:path';
 
 const forbidden = [
@@ -95,7 +96,7 @@ const problems = [
 ];
 
 // Every `exports` target ships, and each JavaScript entry loads through the
-// package name with at least one export.
+// package name with at least one export, by import and by require.
 const { exports } = JSON.parse(readFileSync('package.json', 'utf8'));
 for (const [subpath, target] of Object.entries(exports)) {
   const targets = typeof target === 'string' ? [target] : Object.values(target);
@@ -108,6 +109,7 @@ for (const [subpath, target] of Object.entries(exports)) {
     if (Object.keys(await import(specifier)).length === 0) {
       problems.push(`${specifier} has no exports`);
     }
+    createRequire(import.meta.url)(specifier);
   } catch (error) {
     problems.push(`${specifier} does not load: ${error.message}`);
   }
