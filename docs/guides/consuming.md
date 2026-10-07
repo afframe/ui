@@ -31,7 +31,7 @@ In the app package that renders UI:
 IBM_TELEMETRY_DISABLED=true pnpm add @afframe/ui react react-dom
 ```
 
-React and React DOM 19 are the only required peers. `@types/react` and `@types/react-dom` 19 are optional peers: a TypeScript app installs them, since the package types use React types; `react-is`, `sass` and the Carbon packages IBM Products peers are regular dependencies of `@afframe/ui`, so you add only `react` and `react-dom`. Carbon, IBM Products, Labs and the extras come with `@afframe/ui`.
+The package is ESM and needs Node.js 22.12 or newer, where `require()` also loads it. React and React DOM 19 are the only required peers. `@types/react` and `@types/react-dom` 19 are optional peers: a TypeScript app installs them, since the package types use React types; `react-is`, `sass` and the Carbon packages IBM Products peers are regular dependencies of `@afframe/ui`, so you add only `react` and `react-dom`. Carbon, IBM Products, Labs and the extras come with `@afframe/ui`.
 
 ## 4. Wire it once
 
@@ -113,4 +113,8 @@ Vitest works as is.
 
 ## 7. Updates
 
-Dependabot in the consumer repo keeps `@afframe/ui` current.
+Dependabot in the consumer repo keeps `@afframe/ui` current. Each version has release notes on the GitHub Releases page of `afframe/ui`.
+
+## 8. Known issues
+
+- Unmounting a `Modal` or `ComposedModal` during its exit animation logs an unhandled `AbortError` in the console. It comes from Carbon's `usePresence` ([carbon#23659](https://github.com/carbon-design-system/carbon/issues/23659)) and is harmless; IBM Products' `Tearsheet` does the same ([ibm-products#9944](https://github.com/carbon-design-system/ibm-products/issues/9944)). This repo patches the Carbon one for its own tests only (`docs/guides/updating-carbon.md`, Local patches).
