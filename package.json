@@ -1,6 +1,6 @@
 {
   "name": "@afframe/ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Afframe UI and design system on IBM's Carbon Design System",
   "license": "PolyForm-Noncommercial-1.0.0",
   "repository": {
@@ -18,33 +18,34 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "default": "./dist/index.js"
     },
     "./icons": {
       "types": "./dist/icons.d.ts",
-      "import": "./dist/icons.js"
+      "default": "./dist/icons.js"
     },
     "./pictograms": {
       "types": "./dist/pictograms.d.ts",
-      "import": "./dist/pictograms.js"
+      "default": "./dist/pictograms.js"
     },
     "./tokens": {
       "types": "./dist/tokens.d.ts",
-      "import": "./dist/tokens.js"
+      "default": "./dist/tokens.js"
     },
     "./format": {
       "types": "./dist/format/index.d.ts",
-      "import": "./dist/format/index.js"
+      "default": "./dist/format/index.js"
     },
     "./styles.css": "./dist/styles.css",
-    "./charts.css": "./dist/charts.css"
+    "./charts.css": "./dist/charts.css",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
     "LICENSES"
   ],
   "engines": {
-    "node": ">=24"
+    "node": ">=22.15"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

@@ -280,8 +280,12 @@ for (const { from, star, names } of exportsOf(index)) {
 
 // Subpath entries from package.json `exports`: a module that already backs a
 // family gains the import path, any other is an entry of its own.
+// `./package.json` is metadata for tools, not an entry.
 const pkg = JSON.parse(read(join(root, 'package.json')));
-for (const subpath of Object.keys(pkg.exports).filter((key) => key !== '.')) {
+const subpaths = Object.keys(pkg.exports).filter(
+  (key) => key !== '.' && key !== './package.json'
+);
+for (const subpath of subpaths) {
   const name = subpath.slice(2);
   const importPath = `@afframe/ui/${name}`;
   const owner = families.find((entry) => entry.folder === `src/${name}`);
