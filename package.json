@@ -1,7 +1,6 @@
 {
   "name": "@afframe/ui",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
   "description": "Afframe UI and design system on IBM's Carbon Design System",
   "license": "PolyForm-Noncommercial-1.0.0",
   "repository": {
