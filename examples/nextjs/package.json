@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@afframe/ui": "file:../../afframe-ui-0.0.0.tgz",
+    "@afframe/ui": "file:../../afframe-ui.tgz",
     "next": "16.3.8",
     "react": "19.3.0",
     "react-dom": "19.3.0"

@@ -1,7 +1,6 @@
 {
   "name": "@afframe/ui",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
   "description": "Afframe UI and design system on IBM's Carbon Design System",
   "license": "PolyForm-Noncommercial-1.0.0",
   "repository": {
@@ -102,10 +101,10 @@
     "sass": "1.105.1"
   },
   "peerDependencies": {
-    "@types/react": ">=19",
-    "@types/react-dom": ">=19",
-    "react": ">=19",
-    "react-dom": ">=19"
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19",
+    "react-dom": "^19"
   },
   "peerDependenciesMeta": {
     "@types/react": {

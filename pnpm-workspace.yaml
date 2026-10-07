@@ -6,3 +6,50 @@ allowUnusedPatches: true
 # Fixes an unhandled AbortError in Carbon's usePresence (docs/guides/updating-carbon.md says when to drop it).
 patchedDependencies:
   '@carbon/react@1.117.0': patches/@carbon__react@1.117.0.patch
+
+# Every dependency with install scripts, all blocked; without the list pnpm writes undecided entries here on each install.
+allowBuilds:
+  '@carbon-labs/react-calendar': false
+  '@carbon-labs/react-first-time-orientation': false
+  '@carbon-labs/react-processing': false
+  '@carbon-labs/react-resizer': false
+  '@carbon-labs/react-text-highlighter': false
+  '@carbon-labs/react-theme-settings': false
+  '@carbon-labs/react-ui-shell': false
+  '@carbon-labs/react-whats-new': false
+  '@carbon/ai-chat': false
+  '@carbon/ai-chat-components': false
+  '@carbon/charts': false
+  '@carbon/charts-react': false
+  '@carbon/colors': false
+  '@carbon/echarts-theme': false
+  '@carbon/feature-flags': false
+  '@carbon/grid': false
+  '@carbon/ibm-products': false
+  '@carbon/ibm-products-styles': false
+  '@carbon/icon-helpers': false
+  '@carbon/icons': false
+  '@carbon/icons-react': false
+  '@carbon/layout': false
+  '@carbon/motion': false
+  '@carbon/pictograms-react': false
+  '@carbon/react': false
+  '@carbon/styles': false
+  '@carbon/themes': false
+  '@carbon/type': false
+  '@carbon/utilities': false
+  '@carbon/utilities-react': false
+  '@carbon/utils-position': false
+  '@carbon/web-components': false
+  '@ibm/plex': false
+  '@ibm/plex-mono': false
+  '@ibm/plex-sans': false
+  '@ibm/plex-sans-arabic': false
+  '@ibm/plex-sans-devanagari': false
+  '@ibm/plex-sans-hebrew': false
+  '@ibm/plex-sans-thai': false
+  '@ibm/plex-sans-thai-looped': false
+  '@ibm/plex-serif': false
+  '@parcel/watcher': false
+  esbuild: false
+  stylelint-plugin-carbon-tokens: false

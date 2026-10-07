@@ -21,7 +21,7 @@ Carbon packages arrive as dependencies of `@afframe/ui` and carry IBM Telemetry 
 - Set `IBM_TELEMETRY_DISABLED=true` in every CI job and container build that installs dependencies.
 - pnpm: add `strictDepBuilds: false` to `pnpm-workspace.yaml`.
 
-pnpm blocks dependency install scripts by default, and with `strictDepBuilds` (default `true`) it fails the install with `ERR_PNPM_IGNORED_BUILDS` for every package that has one, including transitive dependencies such as Carbon under `@afframe/ui`. Setting `strictDepBuilds: false` keeps the scripts blocked and removes only the failure. 21 of 22 `@carbon/*` and `@ibm/plex` packages run `ibmtelemetry` on postinstall. Checked on pnpm 12.9.1 on 2026-10-05: the default fails, an `allowBuilds` wildcard does not match, `strictDepBuilds: false` passes. A dependency cannot ship this setting, so each consumer repo sets it.
+pnpm blocks dependency install scripts by default, and with `strictDepBuilds` (default `true`) it fails the install with `ERR_PNPM_IGNORED_BUILDS` for every package that has one, including transitive dependencies such as Carbon under `@afframe/ui`. Setting `strictDepBuilds: false` keeps the scripts blocked and removes only the failure. 21 of 22 `@carbon/*` and `@ibm/plex` packages run `ibmtelemetry` on postinstall. Checked on pnpm 12.9.1 on 2026-10-05: the default fails, an `allowBuilds` wildcard does not match, `strictDepBuilds: false` passes. A dependency cannot ship this setting, so each consumer repo sets it. pnpm then writes each of these packages under `allowBuilds` as undecided; set them to `false` (as this repo's `pnpm-workspace.yaml` does) so installs leave the file unchanged.
 
 ## 3. Install
 
@@ -31,7 +31,7 @@ In the app package that renders UI:
 IBM_TELEMETRY_DISABLED=true pnpm add @afframe/ui react react-dom
 ```
 
-React and React DOM 19 or newer are the only required peers. `@types/react` and `@types/react-dom` 19 or newer are optional peers: a TypeScript app installs them, since the package types use React types; `react-is`, `sass` and the Carbon packages IBM Products peers are regular dependencies of `@afframe/ui`, so you add only `react` and `react-dom`. Carbon, IBM Products, Labs and the extras come with `@afframe/ui`.
+React and React DOM 19 are the only required peers. `@types/react` and `@types/react-dom` 19 are optional peers: a TypeScript app installs them, since the package types use React types; `react-is`, `sass` and the Carbon packages IBM Products peers are regular dependencies of `@afframe/ui`, so you add only `react` and `react-dom`. Carbon, IBM Products, Labs and the extras come with `@afframe/ui`.
 
 ## 4. Wire it once
 
