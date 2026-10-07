@@ -1,0 +1,240 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DataGridStories from './DataGrid.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# Data grid
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/DataGrid). See also [TanStack Table](https://tanstack.com/table/latest) and [Carbon data table](https://carbondesignsystem.com/components/data-table/usage/).
+
+`DataGrid` renders a TanStack Table v9 table with Carbon data table markup.
+TanStack keeps the state; the grid draws Carbon's headers, rows, toolbar and
+pagination. Each feature is opt in: spread its fragment into TanStack's
+`tableFeatures`, and the grid shows that feature's controls and nothing else.
+
+```tsx
+'use client';
+import { DataGrid, dataGridSorting } from '@afframe/ui';
+import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
+
+const features = tableFeatures({ ...dataGridSorting });
+const helper = createColumnHelper<typeof features, Invoice>();
+const columns = helper.columns([
+  helper.accessor('number', { header: 'Number' }),
+  helper.accessor('amount', { header: 'Amount' }),
+]);
+
+export function Invoices({ data }: { data: Invoice[] }) {
+  return <DataGrid title="Invoices" options={{ features, columns, data }} />;
+}
+```
+
+Each fragment registers only its own TanStack features, and the grid draws a
+feature's controls only when that feature is registered. The pagination bar
+also needs rows to page: `dataGridPagination`'s row model, or
+`manualPagination` for server paging.
+
+Keep `features`, `columns` and `data` stable (module scope, state or memo):
+a new array on every render makes TanStack rebuild its rows each time.
+
+## Usage and props
+
+- `options`: TanStack Table options, passed to `useTable`. Controlled state
+  (`state` with its `on...Change` callbacks) goes here too.
+- `title`, `description`: shown above the table; the title names the table.
+- `size`: row height, `xs` to `xl`.
+- `useZebraStyles`: striped rows.
+- `batchActions`: buttons shown above the table while rows are selected:
+  `{ id, label, icon?, onClick(rows) }`. They need `dataGridSelection`.
+- `renderExpandedRow(row)`: content of an expanded row's detail panel. It
+  needs `dataGridExpansion`.
+- `maxHeight`: height limit of the body, such as `'20rem'`. Rows scroll under
+  a sticky header.
+- `virtualize`: render only the rows in view, for long lists. It needs
+  `maxHeight`. Rendered rows are measured, so wrapped and nested rows keep
+  their height; the server and the first client render show the first 20
+  rows. A grid with `renderExpandedRow` is not virtualized, because a detail
+  panel is not part of its row's measured height. It is a prop, not a TanStack feature: TanStack still sorts,
+  filters and selects every row.
+- `onCellEdit({ row, rowId, columnId, value })`: saves an inline edit of a
+  column with `meta: { editable: true }`. The app updates its data.
+- `getRowLabel(row)`: names a row in labels such as "Select row ...".
+  Default: the text of the first shown cell, or the row id when that cell
+  holds no text or number.
+- `rowActions`: items of an overflow menu at the end of each row:
+  `{ id, label, danger?, onClick(row) }`.
+- `pageSizes`: page sizes offered by the pagination bar, default 10, 20, 50.
+- `messages`: overrides for any string (below).
+
+| Feature    | Fragment             |
+| ---------- | -------------------- |
+| Sorting    | `dataGridSorting`    |
+| Filtering  | `dataGridFiltering`  |
+| Pagination | `dataGridPagination` |
+| Selection  | `dataGridSelection`  |
+
+## Messages
+
+Every string comes from `defaultDataGridMessages`; pass `messages` to replace
+any of them.
+
+| Key                             | Default                                           |
+| ------------------------------- | ------------------------------------------------- |
+| `sortDescription(header, next)` | "Click to sort rows by Number in ascending order" |
+| `emptyState`                    | "No rows to show"                                 |
+
+## Keyboard and screen reader behaviour
+
+- Tab moves through the interactive parts in reading order: the toolbar,
+  sortable header buttons, then controls inside the rows.
+- The toolbar is a `group` named by `toolbarLabel`. Its search field is a
+  `searchbox` named by `searchLabel`; typing filters the rows across all
+  columns, Escape clears it.
+- Enter or Space on a sortable header sorts by it: ascending, descending, then
+  none. Shift with a click adds the column as a further sort.
+- Each header is a `columnheader` with `aria-sort` (`none`, `ascending` or
+  `descending`). Its button is described by `sortDescription`, which names the
+  next action.
+- The pagination bar follows the table: a page size select named by
+  `itemsPerPage`, a page select named by `pageSelectLabel`, and previous and
+  next buttons named by `previousPage` and `nextPage`. The buttons are
+  disabled on the first and last page.
+- With selection, each row starts with a `checkbox` named by `selectRow` and
+  the header with one named by `selectAll`; Space toggles the focused
+  checkbox. The select-all checkbox is mixed while some rows are selected.
+  Selected rows carry Carbon's selected style. Each checkbox keeps a 24 px
+  target, also in `xs` and `sm` rows.
+- With batch actions, selecting a row replaces the toolbar with the batch
+  action bar, named by `batchActionsLabel`: the selected count, the actions,
+  "Select all" and "Cancel". The toolbar under it is `aria-hidden` and `inert`,
+  so Tab skips it. Cancel clears the selection and brings the toolbar back.
+- With row actions, each row ends with a menu button named by `rowActions`.
+  Enter or Space opens the menu and focuses its first item; Up
+  and Down Arrow move, Enter runs the item, Escape closes the menu and
+  returns focus to the button. The menu is Carbon's v12 overflow menu, also
+  when the app does not turn the v12 flags on.
+- With expansion, each row starts with a button named by `expandRow`, with
+  `aria-expanded` and `aria-controls` pointing at its detail row; Enter or
+  Space toggles it. The header button, named by `expandAll`, expands or
+  collapses every row. The detail row follows its row in the tab order.
+- With column customization, the toolbar has a button named by
+  `columnSettings`, with `aria-expanded`. It opens a list of checkboxes, one
+  per column, under the legend `columnSettingsLegend`; Space shows or hides a
+  column. Each column has "move up" and "move down" buttons; after a move,
+  focus stays on the moved column's button. Escape closes the list and
+  returns focus to the toolbar button. Columns with `enableHiding: false`
+  keep a disabled checkbox.
+- With resizing, each header ends with a focusable `separator` named by
+  `resizeColumn`, with `aria-valuenow` in pixels. Left and Right Arrow change
+  the width by 16 px, Home and End set the narrowest and widest width: the
+  column's `minSize` and `maxSize`, kept between 48 and 1200. Dragging resizes with a pointer; a double click
+  resets the width. Column widths come from `size` in the column definition.
+- With sticky columns, columns pinned in `columnPinning` state (`start` or
+  `end`) move to that edge and stay in view while the table scrolls sideways;
+  the expand and select columns stick with the start ones, the row actions
+  with the end ones. With `maxHeight`, the header sticks to the top. Focus
+  is not hidden under them (WCAG 2.4.11): tabbing onto a sticky header or a
+  sticky cell after scrolling both ways leaves it uncovered, and the scroll
+  container keeps padding for the sticky parts. The focus order stays the
+  visual order.
+- With nested rows (`getSubRows` and no `renderExpandedRow`), a row with
+  children has the expand button; its children follow it when expanded, the
+  first cell indented by 24 px per level. Rows without children keep an
+  empty expand cell. Selecting a parent selects its children. The table
+  stays a `table`: screen readers do not announce the level, so give child
+  rows a label that names them, as the credit note numbers do here.
+- With inline edit, an editable cell ends with a button named by
+  `editCell`. Enter or Space opens a field with the same name and focuses
+  it. Enter saves and Escape cancels, and focus returns to the edit button.
+  Leaving the field saves and focus stays where it went. An unchanged value
+  is not saved. Number values get a number field; an empty one is not saved
+  (Enter keeps the field open, leaving it cancels).
+- With `virtualize`, the table has `aria-rowcount` (all rows plus the
+  header rows) and each rendered row, header rows included, `aria-rowindex`, so a screen reader reports
+  the position in the whole list. Rows out of view are not in the DOM, so Tab
+  reaches only rendered rows; scrolling brings more in.
+- With a title, the table is named by it.
+- A table with no rows shows `emptyState` in one cell.
+
+## Stories
+
+### Sorting
+
+<Canvas of={DataGridStories.Sorting} />
+
+### Filtering
+
+The search field sets TanStack's `globalFilter`. Column filters go in
+`columnFilters` state, for example from a filter panel.
+
+<Canvas of={DataGridStories.Filtering} />
+
+### Pagination
+
+<Canvas of={DataGridStories.Pagination} />
+
+### Selection
+
+Set `getRowId` so selection follows rows across sorting and filtering.
+
+<Canvas of={DataGridStories.Selection} />
+
+<Canvas of={DataGridStories.SelectionExtraSmall} />
+
+### Batch actions
+
+<Canvas of={DataGridStories.BatchActions} />
+
+### Row actions
+
+<Canvas of={DataGridStories.RowActions} />
+
+### Expansion
+
+<Canvas of={DataGridStories.Expansion} />
+
+### Column customization
+
+<Canvas of={DataGridStories.ColumnCustomization} />
+
+### Resizing
+
+<Canvas of={DataGridStories.Resizing} />
+
+### Sticky columns
+
+<Canvas of={DataGridStories.StickyColumns} />
+
+### Nested rows
+
+Pass `getSubRows` in `options` and leave out `renderExpandedRow`.
+
+<Canvas of={DataGridStories.NestedRows} />
+
+### Inline edit
+
+<Canvas of={DataGridStories.InlineEdit} />
+
+### Virtualization
+
+<Canvas of={DataGridStories.Virtualization} />
+
+### With a filter panel
+
+A `FilterPanel` beside the grid keeps its selection in app state; the app
+turns it into TanStack's `columnFilters` and passes it in `options.state`.
+Each filtered column gets a `filterFn` that keeps a row when its value is one
+of the selected options.
+
+<Canvas of={DataGridStories.WithFilterPanel} />
+
+### All features
+
+Every control together, also in `xs` rows.
+
+<Canvas of={DataGridStories.AllFeatures} />

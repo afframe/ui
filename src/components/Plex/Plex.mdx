@@ -1,0 +1,32 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as PlexStories from './Plex.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: docs page written for the upstream stories, which have none; source label and links pinned to v11.117.0.
+
+<Meta isTemplate />
+
+# IBM Plex
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/Plex)
+&nbsp;|&nbsp;
+[Typography](https://carbondesignsystem.com/elements/typography/overview/)
+
+## Overview
+
+IBM Plex is Carbon's typeface. `@afframe/ui/styles.css` ships IBM Plex Sans,
+Mono and Serif and loads them by relative URLs, so apps need no font setup.
+Use the type tokens, for example `var(--cds-code-02-font-family)`, rather than
+font names.
+
+The Arabic, Devanagari, Hebrew and Thai Plex families are not shipped, so
+their upstream stories are not copied.
+
+<Canvas of={PlexStories.IBMPlexSans} />
+
+<Canvas of={PlexStories.IBMPlexMono} />
+
+<Canvas of={PlexStories.IBMPlexSerif} />

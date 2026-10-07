@@ -1,0 +1,54 @@
+/*
+ * Copyright IBM Corp. 2024, 2024
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, breakpoints as literal values, contextual layer tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.full-page-error-stories__breadcrumb-container {
+  position: sticky;
+  padding: var(--cds-spacing-04) var(--cds-spacing-09);
+  background: var(--cds-layer);
+  border-block-end: 1px solid var(--cds-border-subtle-03);
+  inset-block-start: 0;
+}
+
+@media (width <= 41.98rem) {
+  .full-page-error-stories__breadcrumb-container {
+    padding: var(--cds-spacing-04) var(--cds-spacing-03);
+  }
+}
+
+.full-page-error-stories__breadcrumb {
+  padding: 0;
+}
+
+@media (width >= 42rem) {
+  .full-page-error-stories__breadcrumb {
+    padding: 0 var(--cds-spacing-03);
+  }
+}
+
+.full-page-error-stories__offset {
+  block-size: calc(100% - var(--cds-spacing-09));
+  margin-block-start: var(--cds-spacing-09);
+  overflow-y: auto;
+  overflow-block: auto;
+}
+
+.full-page-error-stories__viewport {
+  overflow: hidden;
+  block-size: 100vh;
+}
+
+.sbdocs .full-page-error-stories__viewport {
+  background-color: var(--cds-background);
+  box-shadow: 0 0 4px 1px var(--cds-layer-accent);
+  color: var(--cds-text-primary);
+  max-block-size: 60vh;
+}

@@ -1,0 +1,79 @@
+import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as CoachmarkStories from './Coachmark.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, title Components/Coachmark, link pinned to the tag, internal IBM links removed.
+
+<Meta isTemplate />
+
+# Coachmark
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/Coachmark/next)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Coachmark code sample](#coachmark-code-sample)
+- [Tooltip example usage](#tooltip-example-usage)
+- [Floating example usage](#floating-example-usage)
+- [Component API](#component-api)
+
+## Overview
+
+Coachmarks
+are just-in-time messages used to draw a user’s attention to a particular spot,
+and explain new functionality or concepts they might not otherwise notice or
+understand.
+
+**Note:**
+
+- The trigger element or first child of `Coachmark` should always be either a
+  CoachmarkBeacon or a Button.
+
+## Coachmark code sample
+
+```jsx
+<Theme theme="white">
+  <Coachmark
+    ariaLabel="Coachmark"
+    position={{ x: 151, y: 155 }}
+    open={isOpen}
+    onClose={handleClose}
+    launcherButtonRef={beaconButtonRef}
+    {...args}>
+    <CoachmarkBeacon
+      label="Show information"
+      buttonProps={{
+        id: 'CoachmarkBtn',
+        ref: beaconButtonRef,
+        onClick: handleBeaconClick,
+      }}></CoachmarkBeacon>
+    <Coachmark.Content aria-label="Coachmark content" highContrast={true}>
+      <Coachmark.ContentHeader
+        closeIconDescription="Close"
+        dragIconDescription="Drag"
+        dragAriaLabel="Coachmark is being dragged"></Coachmark.ContentHeader>
+      <Coachmark.ContentBody>
+        <h2>Hello World</h2>
+        <p>this is a description test</p>
+        <Button size="sm">Done</Button>
+      </Coachmark.ContentBody>
+    </Coachmark.Content>
+  </Coachmark>
+</Theme>
+```
+
+## Tooltip example usage
+
+<Canvas className="coachmark--docs-demo" of={CoachmarkStories.Tooltip} />
+
+## Floating example usage
+
+<Canvas className="coachmark--docs-demo" of={CoachmarkStories.Floating} />
+
+## Component API
+
+<Controls />

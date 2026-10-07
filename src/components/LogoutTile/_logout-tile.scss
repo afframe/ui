@@ -1,0 +1,26 @@
+// LogoutTile styles, Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type' as *;
+
+.afframe-logout-tile {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-02;
+  outline: none;
+}
+
+.afframe-logout-tile-name {
+  @include type-style('heading-compact-01');
+}
+
+.afframe-logout-tile-email {
+  @include type-style('body-compact-01');
+
+  color: $text-secondary;
+  overflow-wrap: anywhere;
+}
+
+.afframe-logout-tile-button {
+  margin-block-start: $spacing-05;
+}

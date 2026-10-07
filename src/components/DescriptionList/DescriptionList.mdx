@@ -1,0 +1,89 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DescriptionListStories from './DescriptionList.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# DescriptionList
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/DescriptionList). See also [Structured list](https://carbondesignsystem.com/components/structured-list/usage/).
+
+`DescriptionList` shows terms and their values, for example the details of
+an invoice. It is built on Carbon's `StructuredList` (`StructuredListWrapper`,
+`StructuredListBody`, `StructuredListRow`, `StructuredListCell`) and replaces
+IBM Products' deprecated `DescriptionList`.
+
+It is a server component: no `'use client'` directive and no hooks. The
+Carbon parts it renders are client components, which a server component may
+render.
+
+<Canvas of={DescriptionListStories.Default} />
+
+## Usage and props
+
+```tsx
+import { DescriptionList, DescriptionListItem } from '@afframe/ui';
+
+<DescriptionList
+  aria-label="Invoice details"
+  items={[
+    { term: 'Invoice', description: 'FV-2026-0042' },
+    { term: 'Issued', description: '7. 10. 2026' },
+  ]}
+/>;
+
+<DescriptionList aria-labelledby="supplier-heading" orientation="vertical">
+  <DescriptionListItem term="Supplier">
+    Northwind Studio s.r.o.
+  </DescriptionListItem>
+  <DescriptionListItem term="VAT ID">{vatId}</DescriptionListItem>
+</DescriptionList>;
+```
+
+`items` and `DescriptionListItem` children render the same markup. One of
+`aria-label` or `aria-labelledby` is required. `size` sets padding and type
+size (`xs`, `sm`, `md` default, `lg`); `border` draws a rule between rows;
+`orientation="vertical"` puts each term above its value. An empty value
+(`null`, `undefined`, `false` or `''`) shows a dash with the visually hidden
+text from `messages.emptyValue`, never an empty cell.
+
+<ArgTypes of={DescriptionListStories} />
+
+## Messages
+
+| Key          | Default    | Used for                                        |
+| ------------ | ---------- | ----------------------------------------------- |
+| `emptyValue` | "No value" | Visually hidden text in place of an empty value |
+
+All keys are strings, so server code may pass `messages` directly. A
+function message (none today) would have to be overridden from a client
+component.
+
+## Keyboard and screen reader behaviour
+
+- The list is static and takes no focus; Tab moves only to links or controls
+  inside values.
+- Roles: the list is a `table` named by `aria-label` or `aria-labelledby`,
+  holding one `rowgroup` of `row`s. Each row has the term as a `rowheader`
+  and the value as a `cell`, so a screen reader in table mode reads the term
+  with the value. Outside table mode it reads term and value in order.
+- Carbon's own default `aria-label` ("Structured list section") is
+  suppressed.
+- An empty value reads as "No value"; the dash is hidden from assistive
+  technology.
+
+## Examples
+
+<Canvas of={DescriptionListStories.Sizes} />
+
+<Canvas of={DescriptionListStories.Vertical} />
+
+<Canvas of={DescriptionListStories.WithBorder} />
+
+<Canvas of={DescriptionListStories.EmptyValues} />
+
+<Canvas of={DescriptionListStories.Dark} />

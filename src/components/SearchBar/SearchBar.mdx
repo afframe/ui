@@ -1,0 +1,47 @@
+import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import * as SearchBarStories from './SearchBar.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, TODO note and code sample section removed.
+
+<Meta isTemplate />
+
+# SearchBar
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/SearchBar)
+&nbsp;|&nbsp;
+[Carbon Search pattern](https://carbondesignsystem.com/patterns/search-pattern/)
+
+## Table of Contents
+
+- [Example usage](#example-usage)
+- [Component API](#component-api)
+
+## Example usage
+
+### Default
+
+<Canvas of={SearchBarStories.Default} />
+
+### Initial Value
+
+<Canvas of={SearchBarStories.InitialValue} />
+
+### Scopes
+
+<Canvas of={SearchBarStories.Scopes} />
+
+### Unsorted Scopes
+
+<Canvas of={SearchBarStories.UnsortedScopes} />
+
+### Selected Scopes
+
+<Canvas of={SearchBarStories.SelectedScopes} />
+
+## Component API
+
+<ArgTypes />

@@ -1,0 +1,33 @@
+/*
+ * Copyright IBM Corp. 2025
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: converted from SCSS to plain CSS (the border-subtle-01 theme token and 3rem spacing as Carbon custom properties), the unused .story-wrapper rule dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.theme-setting-in-context {
+  display: grid;
+  block-size: 100vh;
+  grid-template-rows: var(--cds-spacing-09) 1fr;
+}
+
+.theme-setting-in-context__header {
+  display: flex;
+  align-items: center;
+  border-block-end: 1px solid var(--cds-border-subtle-01);
+  padding-inline: var(--cds-spacing-09);
+}
+
+.theme-setting-in-context__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cds-spacing-09);
+  padding-inline: var(--cds-spacing-09);
+}

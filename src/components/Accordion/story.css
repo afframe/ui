@@ -1,0 +1,19 @@
+/*
+ * Copyright IBM Corp. 2016, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS instead of story.scss, literal spacing, colour and type values as Carbon tokens.
+ */
+
+.controlled-accordion-btnset {
+  padding-block-end: var(--cds-spacing-03);
+}
+
+.controlled-accordion-btnset .controlled-accordion-btn {
+  max-inline-size: 13.25rem;
+}

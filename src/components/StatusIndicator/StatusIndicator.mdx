@@ -1,0 +1,80 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as StatusIndicatorStories from './StatusIndicator.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# StatusIndicator
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/StatusIndicator). See also [Status indicator pattern](https://carbondesignsystem.com/patterns/status-indicator-pattern/).
+
+`StatusIndicator` shows one status: a glyph and a label. It is built on
+Carbon's preview `IconIndicator` and `ShapeIndicator`, or on a Carbon `Tag`
+with `appearance="tag"`. It replaces IBM Products' deprecated `StatusIcon`.
+IBM's deprecated `StatusIndicator` showed the steps of a process; use
+Carbon's `ProgressIndicator` for that.
+
+It is a server component: no `'use client'` directive and no hooks. The
+Carbon parts it renders are client components, which a server component may
+render.
+
+Status is never shown by colour alone: the glyph or shape differs per kind
+and the label is text (WCAG 1.4.1).
+
+<Canvas of={StatusIndicatorStories.Icon} />
+
+## Usage and props
+
+```tsx
+import { StatusIndicator } from '@afframe/ui';
+
+<StatusIndicator kind="succeeded" />; // icon, label "Succeeded"
+<StatusIndicator variant="shape" kind="critical" textSize={14} />;
+<StatusIndicator kind="failed" compact />; // glyph, label in a tooltip
+<StatusIndicator kind="in-progress" appearance="tag" />;
+```
+
+`variant` picks the kind list: `icon` (default) takes Carbon's icon kinds
+and `size` (16 or 20), `shape` takes Carbon's shape kinds and `textSize`
+(12 or 14). `compact` has no effect with `appearance="tag"`. The tag colour
+per kind is a table in `kinds.ts`; Carbon tags have no orange or yellow, so
+warning kinds use magenta and warm gray.
+
+<ArgTypes of={StatusIndicatorStories} />
+
+## Messages
+
+| Key         | Default                               | Used for                                         |
+| ----------- | ------------------------------------- | ------------------------------------------------ |
+| `kindLabel` | English per kind, "Failed", "Pending" | `(variant, kind) => string`, the default `label` |
+
+`label` overrides the message for one indicator. `kindLabel` is a function,
+so a server component cannot pass it across to a client component: override
+it from a client component, or pass a plain `label` string from server code.
+
+## Keyboard and screen reader behaviour
+
+- The default indicator is text. It takes no focus; a screen reader reads the
+  label. The glyph is hidden from assistive technology.
+- Compact mode wraps the glyph in Carbon's definition tooltip button, so Tab
+  reaches it. Its accessible name is the label (visually hidden text inside
+  the button). Focus and hover open the tooltip with the label; Enter and
+  Space toggle it; Escape closes it and focus stays on the button. The button
+  is also described by the tooltip, so some screen readers read the label
+  twice, and it reports "collapsed" or "expanded".
+- The compact button is padded to 24 by 24 px.
+- The tag appearance is a non-interactive `div`; the label is read as text.
+
+## Examples
+
+<Canvas of={StatusIndicatorStories.Shape} />
+
+<Canvas of={StatusIndicatorStories.Compact} />
+
+<Canvas of={StatusIndicatorStories.AsTag} />
+
+<Canvas of={StatusIndicatorStories.Dark} />

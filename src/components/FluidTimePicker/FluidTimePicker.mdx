@@ -1,0 +1,54 @@
+import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import * as FluidTimePickerStories from './FluidTimePicker.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.117.0.
+
+<Meta isTemplate />
+
+# Fluid TimePicker
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/FluidTimePicker)
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+  - [Skeleton](#skeleton)
+- [Accessibility Considerations](#accessibility-considerations)
+  - [Accessible Name](#accessible-name)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+<Canvas of={FluidTimePickerStories.Default} />
+
+### Skeleton
+
+<Canvas of={FluidTimePickerStories.Skeleton} />
+
+## Accessibility Considerations
+
+### Accessible Name
+
+To comply with accessibility requirements, make sure to supply the component
+with an accessible name by providing either the `aria-label`, `aria-labelledby`
+or `title` attribute. Read more on the accessible naming rule
+[here](https://able.ibm.com/rules/archives/latest/doc/en-US/aria_accessiblename_exists.html).
+
+## Component API
+
+<ArgTypes />
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/react/src/components/FluidTimePicker/FluidTimePicker.mdx).

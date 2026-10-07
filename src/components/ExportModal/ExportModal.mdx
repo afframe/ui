@@ -1,0 +1,140 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ExportModalStories from './ExportModal.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# ExportModal
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/ExportModal). See also [Modal usage](https://carbondesignsystem.com/components/modal/usage/).
+
+`ExportModal` asks for a file name, a format and, optionally, a password,
+then hands them to the app. It is a small Carbon modal with a text field, a
+radio group and a password field. It replaces IBM Products' deprecated
+ExportModal.
+
+The dialog does not create the file; `onExport` does.
+
+<Canvas of={ExportModalStories.Default} />
+
+## Usage and props
+
+```tsx
+import { ExportModal } from '@afframe/ui';
+
+<ExportModal
+  open={open}
+  onClose={() => setOpen(false)}
+  launcherRef={launcherRef}
+  filename="invoices-2026"
+  formats={[
+    { extension: 'csv', description: 'Spreadsheet' },
+    { extension: 'pdf', description: 'PDF document' },
+  ]}
+  onExport={({ filename, extension, password }) =>
+    api.exportInvoices({ filename, extension, password })
+  }
+/>;
+```
+
+- `open`, `onClose`: the app owns the open state. `onClose` is called by
+  Cancel, the close icon, Escape, and after a successful export.
+- `filename`: the default name, without the extension. `filenameEditable`
+  (default `true`) set to `false` shows it read-only.
+- `formats`: one radio per format, labelled `description (.extension)`; the
+  first is selected. If `formats` change and no longer hold the selected one,
+  the first is selected again.
+- `onExport({ filename, extension, password })`: `filename` is trimmed;
+  `extension` is the selected format's value as given; `password` is present
+  only when the field is shown and filled. It may return a promise: while it
+  runs the buttons are disabled, the Export button shows a spinner with
+  `exporting`, and closing waits. If it rejects, the dialog stays open with an
+  alert.
+- `password`: `true` shows an optional password field with a show/hide
+  toggle; `{ required: true }` makes it required (Export stays disabled until
+  it is filled).
+- `validate(filename)`: extra name rules; return a message to reject the
+  name. The built-in rule rejects an empty name and the characters
+  `\ / : * ? " < > |` (and control characters).
+- `closeOnSuccess` (default `true`): after a successful export the success
+  message is shown and announced, and the dialog closes 1.5 seconds later
+  (Carbon's success delay for inline loading). With `false` it stays open with
+  Export disabled until it is reopened.
+- `messages`: overrides for the strings below.
+
+The password is never written to an HTML attribute (the field is not
+controlled by React) and is cleared on success and on every open.
+
+A click on the page behind the dialog does not close it.
+
+<ArgTypes of={ExportModalStories} />
+
+## Messages
+
+`messages?: Partial<ExportModalMessages>`; defaults in
+`defaultExportModalMessages`. `success` is a function; override it from a
+client component (a function cannot cross from a server component).
+
+| Key                    | Default                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| `title`                | Export                                                     |
+| `filenameLabel`        | File name                                                  |
+| `formatLegend`         | Format                                                     |
+| `passwordLabel`        | Password                                                   |
+| `showPassword`         | Show password                                              |
+| `hidePassword`         | Hide password                                              |
+| `passwordRequired`     | Enter a password.                                          |
+| `export`               | Export                                                     |
+| `exporting`            | Exporting                                                  |
+| `success`              | `filename` was exported.                                   |
+| `invalidFilename`      | Enter a name without these characters: \ / : \* ? " < > \| |
+| `cancel`               | Cancel                                                     |
+| `pending`              | Working (not used here; `exporting` replaces it)           |
+| `genericError`         | Something went wrong. Try again.                           |
+| `errorIconDescription` | Error                                                      |
+| `closeIconDescription` | Close                                                      |
+
+## Examples
+
+<Canvas of={ExportModalStories.WithPassword} />
+
+<Canvas of={ExportModalStories.Success} />
+
+<Canvas of={ExportModalStories.Pending} />
+
+<Canvas of={ExportModalStories.Dark} />
+
+## Keyboard and screen reader behaviour
+
+On open, focus goes to the file name field. Focus order: close icon, file name,
+the selected format radio, the password field and its toggle (when shown),
+Cancel, Export.
+
+| Key            | Where           | Action                                                |
+| -------------- | --------------- | ----------------------------------------------------- |
+| Tab            | anywhere        | Moves through the dialog; never to the page behind.   |
+| Arrow Down, Up | format radios   | Selects the next or previous format.                  |
+| Enter, Space   | password toggle | Shows or hides the password.                          |
+| Enter          | Export          | Exports; the success message appears, then it closes. |
+| Escape         | anywhere        | Closes the dialog, except while the export runs.      |
+
+Focus is trapped by the browser's modal dialog: the page behind it is inert.
+On close, focus returns to `launcherRef`, else to the element focused before
+the dialog opened, else to the page body. After a failed export, focus returns
+to Export.
+
+Screen readers announce:
+
+- the dialog as a `dialog` named by its title;
+- the name field by its label, and `invalidFilename` (or the `validate`
+  message) once the name has been changed or the field left;
+- the formats as a radio group named by `formatLegend`;
+- the toggle as `showPassword`, then `hidePassword` while the password shows;
+- `exporting` while the export runs;
+- the success message through a status region (`role="status"`), before the
+  dialog closes;
+- a failure as an alert with `genericError`.

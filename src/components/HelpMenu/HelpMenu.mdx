@@ -1,0 +1,173 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as HelpMenuStories from './HelpMenu.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# HelpMenu
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/HelpMenu). See also [Global header pattern](https://carbondesignsystem.com/patterns/global-header/) and [UI Shell header](https://carbondesignsystem.com/components/UI-shell-header/usage/).
+
+`HelpMenu` is a header action with a help icon. It opens a Carbon
+`HeaderPanel` with a list of help links and actions (Carbon `Switcher`,
+`SwitcherItem`, `SwitcherDivider`).
+
+IBM's `@carbon-labs/wc-global-header` has a help menu: a "Help" text trigger
+with a chevron that opens a header menu of links, each with a launch icon,
+and an optional `onclick` per link. `HelpMenu` keeps the list of links and
+actions and closing on selection, and changes three things:
+
+- the trigger is an icon action like the other header actions;
+- only links that open a new tab get the launch icon, plus hidden text for
+  screen readers (the reference shows the icon on every link and says nothing);
+- items without `href` are real buttons.
+
+The list is a plain list of links and buttons, not `role="menu"`. A menu role
+tells screen readers to expect application-style arrow navigation and hides
+the fact that the items are links (no "open in new tab", no link list). Arrow
+keys still move between items, as in Carbon's switcher.
+
+<Canvas of={HelpMenuStories.Default} />
+
+## Usage and props
+
+```tsx
+import { HelpMenu } from '@afframe/ui';
+
+<HeaderGlobalBar>
+  <HelpMenu
+    items={[
+      { id: 'docs', label: 'Documentation', href: '/docs' },
+      { id: 'tour', label: 'Product tour', onSelect: startTour },
+      { type: 'divider' },
+      {
+        id: 'status',
+        label: 'Service status',
+        href: 'https://status.example.com',
+        external: true,
+      },
+    ]}
+  />
+</HeaderGlobalBar>;
+```
+
+- `items`: each item has `id` and `label`, optional `description` (secondary
+  text, read as the item's description) and `icon` (a Carbon icon).
+  - `href`: the item is a link.
+  - `external`: opens `href` in a new tab (`target="_blank"`,
+    `rel="noopener noreferrer"`) with a launch icon and the hidden
+    `opensInNewTab` text.
+  - `onSelect`: called when the item is chosen. Without `href` the item is a
+    button.
+  - `{ type: 'divider' }`: a line between groups.
+- `open`, `defaultOpen`, `onOpenChange`: controlled or uncontrolled open
+  state. `onOpenChange` is called once per change.
+- `label`: the action's accessible name and tooltip; default
+  `messages.label`.
+- `renderAction`: a trigger element to use instead of the icon action (see
+  the Labs shell).
+- `presentation`: `'panel'` (default) renders the action and its panel;
+  `'content'` renders only the list, for a Labs `HeaderPopover` (see below).
+  In `'content'` mode `open`, `defaultOpen`, `onOpenChange`, `label` and
+  `renderAction` are ignored.
+- `messages`: overrides for the strings below.
+
+### Use in the Carbon header
+
+Put `HelpMenu` in `HeaderGlobalBar`. It renders the `HeaderGlobalAction` and
+its `HeaderPanel`, fixed under the header at the end of the page.
+
+### Use in the Labs shell
+
+The Labs shell uses the same Carbon `Header` and `HeaderGlobalBar`, so the
+default action works there as it is. To match the Labs controls with visible
+text, pass `renderAction`: an element (for example a ghost `Button`) that
+names itself. `HelpMenu` adds `ref`, `onClick`, `aria-expanded` and
+`aria-controls` to it, and calls its own `onClick` first. A Labs
+`HeaderPopoverButton` cannot be this trigger: it only works inside a Labs
+`HeaderPopover`, which keeps its own open state. For that, use content mode.
+
+### Use inside a Labs HeaderPopover
+
+`presentation="content"` renders only the list (no action, no panel, no open
+state). Put it in `HeaderPopoverContent`; the popover owns open state, the
+outside press, Escape and focus return.
+
+```tsx
+<HeaderPopover align="bottom-end">
+  <HeaderPopoverButton align="bottom-end" label="Help">
+    <Help size={20} />
+  </HeaderPopoverButton>
+  <HeaderPopoverContent>
+    <HelpMenu presentation="content" items={items} />
+  </HeaderPopoverContent>
+</HeaderPopover>
+```
+
+Choosing an item does not close the popover: the content cannot reach the Labs
+`HeaderPopover`'s close action (its context is not exported).
+`HeaderPopoverButton` sets no `aria-expanded`, so screen readers do not hear
+the popover's state.
+
+<Canvas of={HelpMenuStories.InHeaderPopover} />
+
+### One panel at a time
+
+Header panels share the same place under the header. Keep one open: hold the
+open panel's name in state and pass `open` and `onOpenChange` to each action
+(see the EnvironmentSwitcher page for a page with two actions).
+
+<ArgTypes of={HelpMenuStories} />
+
+## Messages
+
+`messages?: Partial<HelpMenuMessages>`; defaults in `defaultHelpMenuMessages`.
+
+| Key             | Default              |
+| --------------- | -------------------- |
+| `label`         | Help                 |
+| `opensInNewTab` | (opens in a new tab) |
+| `panelLabel`    | Help links           |
+
+## Examples
+
+<Canvas of={HelpMenuStories.WithExternalLinks} />
+
+<Canvas of={HelpMenuStories.InLabsShell} />
+
+<Canvas of={HelpMenuStories.Dark} />
+
+## Keyboard and screen reader behaviour
+
+On open, focus moves to the first item. While the panel is closed its items
+are inert (out of the tab order).
+
+| Key             | Where         | Action                                                                       |
+| --------------- | ------------- | ---------------------------------------------------------------------------- |
+| Enter, Space    | action        | Opens or closes the panel.                                                   |
+| Down, Up arrows | item          | Moves to the next or previous item, wrapping, skipping dividers.             |
+| Tab             | item          | Moves to the next item; past the last one focus leaves and the panel closes. |
+| Enter           | link          | Follows the link and closes the panel.                                       |
+| Enter, Space    | action item   | Runs `onSelect`, closes the panel, focus returns to the action.              |
+| Escape          | panel, action | Closes the panel; focus returns to the action.                               |
+
+In content mode inside a Labs `HeaderPopover`, opening keeps focus on the
+popover button and Tab moves into the list. The arrow keys work as above,
+Enter chooses an item and focus stays on it, and Escape reaches the
+popover, which closes and focuses its button.
+
+A click outside the panel and the action closes it; a click on the action
+toggles it. Choosing a link that opens a new tab also returns focus to the
+action; a link that navigates the page does not move focus.
+
+Screen readers announce:
+
+- the action as a button named by `label`, with its expanded state;
+  `aria-controls` points at the panel;
+- the list by `panelLabel`, and each item as a link or a button named by its
+  label (plus `opensInNewTab` for external links) and described by its
+  `description`.

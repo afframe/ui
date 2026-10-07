@@ -1,0 +1,194 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SideNavStories from './SideNav.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, code samples import from @afframe/ui (the Labs side nav set and HeaderContainer under their Labs names), the package names in the overview as @afframe/ui, an unused HeaderPanel import removed from the samples.
+
+<Meta isTemplate />
+
+# SideNav
+
+<SourceLabel name="labs" />
+
+[Source code](https://github.com/carbon-design-system/carbon-labs/tree/%40carbon-labs%2Freact-ui-shell%400.106.0/packages/react/src/components/UIShell)
+
+## Table of Contents
+
+- [Overview](#overview)
+- Examples
+  - [SideNavSlot](#sidenavslot)
+  - [SideNavTitle](#sidenavtitle)
+  - [Treeview](#treeview)
+  - [Double wide](#double-wide)
+- [Component API](#component-api)
+
+## Overview
+
+The `SideNavLabs` is composed using Carbon and Carbon Labs components from
+`@afframe/ui`. It supports features like treeview navigation,
+double wide menus, and custom slots for interactive elements. The component can
+be used within the `Header` for global navigation or within the page for in-page
+navigation.
+
+The `navType` prop can be used to control the behavior of the side navigation.
+Setting the prop to `SIDE_NAV_TYPE.RAIL_PANEL` will change the interaction model
+of the side navigation. Note that `SIDE_NAV_TYPE.RAIL_PANEL` requires two levels
+of nesting due to the flyout menus, otherwise it may not function as intended
+and the side navigation will need to be configured as a rail (via the `isRail`
+prop)
+
+## SideNavSlot
+
+`SideNavSlot` is a child component of `SideNavItems`. It renders a `<li>`
+element and allows you to place custom components inside the side navigation.
+The optional `renderIcon` prop displays an icon when the navigation is in rail
+mode (`isRail`) and collapsed.
+
+```jsx
+<SideNavItemsLabs>
+  <SideNavSlot renderIcon={SearchIcon}>
+    <Search
+      size="sm"
+      placeholder="Filter"
+      closeButtonLabelText="Clear input"
+      id="filter-1"
+    />
+  </SideNavSlot>
+</SideNavItemsLabs>
+```
+
+## SideNavTitle
+
+`SideNavTitle` is a child component of `SideNavItems`. It renders a `<li>`
+element and allows you to place custom components inside the side navigation to
+act as a title for a section of links.
+
+```jsx
+<SideNavItemsLabs>
+  <SideNavTitle>Experience services</SideNavTitle>
+  <SideNavLinkLabs
+    href="http://www.carbondesignsystem.com"
+    renderIcon={Dashboard}>
+    Dashboard
+  </SideNavLinkLabs>
+  <SideNavLinkLabs
+    href="http://www.carbondesignsystem.com"
+    renderIcon={DataAnalytics}>
+    Analytics
+  </SideNavLinkLabs>
+</SideNavItemsLabs>
+```
+
+## Double wide
+
+The double wide feature can be enabled by adding the `primary` prop to each top
+level `SideNavMenu`'s. This should be used with the treeview navigation. In
+mobile, there is a configurable back button, which defaults to using the icon
+`<ArrowRight/>` and text "My products". These can be updated by using the props
+`backButtonRenderIcon` and `backButtonTitle`.
+
+```jsx
+import {
+  SideNavLabs,
+  SideNavItemsLabs,
+  SideNavLinkLabs,
+  SideNavMenuLabs,
+  SideNavMenuItemLabs,
+} from '@afframe/ui';
+import { Fade } from '@afframe/ui/icons';
+
+function App() {
+  return (
+    <SideNavLabs
+      isFixedNav
+      isTreeview
+      expanded={true}
+      isChildOfHeader={false}
+      aria-label="Side navigation">
+      <SideNavItemsLabs>
+        <SideNavLinkLabs renderIcon={Fade} href="#">
+          Link level 1
+        </SideNavLinkLabs>
+        <SideNavMenuLabs
+          defaultExpanded={true}
+          renderIcon={Fade}
+          title="Sub-menu level 1"
+          primary>
+          <SideNavMenuItemLabs href="#">Link level 2</SideNavMenuItemLabs>
+          <SideNavMenuItemLabs href="#">Link level 2</SideNavMenuItemLabs>
+          <SideNavMenuLabs title="Sub-menu level 2" defaultExpanded={true}>
+            <SideNavMenuItemLabs isActive href="#">
+              Link level 3
+            </SideNavMenuItemLabs>
+            <SideNavMenuItemLabs href="#">Link level 3</SideNavMenuItemLabs>
+          </SideNavMenuLabs>
+        </SideNavMenuLabs>
+        <SideNavMenuLabs renderIcon={Fade} title="Sub-menu level 1" primary>
+          <SideNavMenuItemLabs renderIcon={Fade} href="#">
+            Item level 2
+          </SideNavMenuItemLabs>
+        </SideNavMenuLabs>
+      </SideNavItemsLabs>
+    </SideNavLabs>
+  );
+}
+
+export default App;
+```
+
+## Treeview
+
+`SideNav` has a new treeview navigation type that can be enabled by adding the
+`isTreeview` prop. Note that this feature should only be used if there are two
+levels of content within the component.
+
+Also note that it will be automatically enabled if there are more than two
+levels of content within the component.
+
+```jsx
+import {
+  SideNavLabs,
+  SideNavItemsLabs,
+  SideNavLinkLabs,
+  SideNavMenuLabs,
+  SideNavMenuItemLabs,
+} from '@afframe/ui';
+import { Fade } from '@afframe/ui/icons';
+
+function App() {
+  return (
+    <SideNavLabs
+      isFixedNav
+      isTreeview
+      expanded={true}
+      isChildOfHeader={false}
+      aria-label="Side navigation">
+      <SideNavItemsLabs>
+        <SideNavLinkLabs renderIcon={Fade} href="#">
+          Link level 1
+        </SideNavLinkLabs>
+        <SideNavMenuLabs
+          defaultExpanded={true}
+          renderIcon={Fade}
+          title="Sub-menu level 1">
+          <SideNavMenuItemLabs href="#">Link level 2</SideNavMenuItemLabs>
+          <SideNavMenuItemLabs href="#">Link level 2</SideNavMenuItemLabs>
+          <SideNavMenuLabs title="Sub-menu level 2" defaultExpanded={true}>
+            <SideNavMenuItemLabs isActive href="#">
+              Link level 3
+            </SideNavMenuItemLabs>
+            <SideNavMenuItemLabs href="#">Link level 3</SideNavMenuItemLabs>
+          </SideNavMenuLabs>
+        </SideNavMenuLabs>
+      </SideNavItemsLabs>
+    </SideNavLabs>
+  );
+}
+
+export default App;
+```
+
+## Component API
+
+<ArgTypes />

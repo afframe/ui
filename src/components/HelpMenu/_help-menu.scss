@@ -1,0 +1,42 @@
+// HelpMenu styles, Carbon tokens only.
+/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type' as *;
+
+.afframe-help-menu {
+  .cds--switcher__item-link {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-03;
+    block-size: auto;
+    min-block-size: $spacing-07;
+  }
+
+  // Item buttons look like the item links.
+  button.cds--switcher__item-link {
+    inline-size: 100%;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: start;
+  }
+}
+
+.afframe-help-menu-icon {
+  flex: none;
+  margin-block-start: $spacing-01;
+}
+
+.afframe-help-menu-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.afframe-help-menu-description {
+  @include type-style('helper-text-01');
+
+  color: $text-secondary;
+}

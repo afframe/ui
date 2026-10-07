@@ -1,0 +1,116 @@
+name: Release checks
+
+# The heavy checks, run before a release and by hand: visual tests, the package
+# and example check, the Storybook build. No caches: a tag run must not restore
+# a cache that a PR run wrote.
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  IBM_TELEMETRY_DISABLED: 'true'
+  STORYBOOK_DISABLE_TELEMETRY: '1'
+
+jobs:
+  # Screenshot tests against the committed baselines. The runner stays
+  # ubuntu-24.04: the baselines are rendered on it.
+  visual:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CI: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install chromium --only-shell
+      - run: pnpm build:css
+      - run: pnpm exec vitest run --project visual
+      # Regenerates the visual baselines so the artifact holds the new images.
+      - if: failure()
+        continue-on-error: true
+        run: pnpm exec vitest run --project visual --update
+      - if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: screenshots
+          path: src/**/__screenshots__/**
+          retention-days: 7
+          if-no-files-found: ignore
+      - if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: vitest-attachments
+          path: .vitest/attachments
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # Builds the package and the example from the packed tarball.
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm check:pack
+      - run: pnpm pack
+      - name: Install the example from the packed tarball
+        working-directory: examples/nextjs
+        run: pnpm install --no-frozen-lockfile
+      - name: Build the example
+        working-directory: examples/nextjs
+        run: pnpm exec next build
+      - name: Start the example and check it
+        run: |
+          (cd examples/nextjs && pnpm exec next start -p 3100 &)
+          for _ in $(seq 30); do
+            curl -sf -o /dev/null http://localhost:3100/ && break
+            sleep 1
+          done
+          node scripts/check-example.mjs
+
+  # Builds Storybook and uploads it as an artifact.
+  storybook:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:storybook
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: storybook
+          path: storybook-static
+          retention-days: 7
+          if-no-files-found: error

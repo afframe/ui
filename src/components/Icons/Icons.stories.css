@@ -1,0 +1,30 @@
+/*
+ * Copyright IBM Corp. 2021
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2021
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS instead of SCSS, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.demo-icon-example {
+  display: flex;
+  justify-content: space-between;
+  margin: var(--cds-spacing-07);
+  inline-size: 15rem;
+}
+
+.demo-icon-example:nth-child(1) svg {
+  min-inline-size: 1rem;
+}
+
+.demo-icon-example:nth-child(2) svg {
+  min-inline-size: 1.25rem;
+}
+
+.demo-icon-example:nth-child(3) svg {
+  min-inline-size: 2rem;
+}

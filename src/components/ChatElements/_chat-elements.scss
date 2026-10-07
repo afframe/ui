@@ -1,0 +1,12 @@
+// ChatElements styles, Carbon tokens only.
+/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
+.afframe-chat-element__loading .cds--skeleton__placeholder {
+  inline-size: 100%;
+  block-size: 20rem;
+}
+
+// ECharts draws into a box of its own size.
+.afframe-chat-chart__echarts {
+  inline-size: 100%;
+  block-size: 20rem;
+}

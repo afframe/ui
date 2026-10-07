@@ -1,0 +1,8 @@
+# Carbon runs IBM Telemetry on postinstall: scripts stay blocked, only the failure goes (ADR 0007).
+strictDepBuilds: false
+
+# A Carbon bump leaves the patch unused instead of failing the install; ModalPresence.test.tsx shows if it is still needed.
+allowUnusedPatches: true
+# Fixes an unhandled AbortError in Carbon's usePresence (docs/guides/updating-carbon.md says when to drop it).
+patchedDependencies:
+  '@carbon/react@1.117.0': patches/@carbon__react@1.117.0.patch

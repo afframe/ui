@@ -1,0 +1,7 @@
+/* Story layout: a filter panel beside the data grid. */
+.afframe-data-grid-demo {
+  display: grid;
+  align-items: start;
+  gap: var(--cds-spacing-05);
+  grid-template-columns: 16rem 1fr;
+}

@@ -1,0 +1,116 @@
+/*
+ * Copyright IBM Corp. 2021, 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2021, 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) properties; tile-story.scss and the AI label rules used by the stories merged, the preview-tile mixin call dropped (flags are on globally), literal spacing, colour and type values as Carbon tokens.
+ */
+
+div .cds--tile--selectable:not(:last-child) {
+  margin-block-end: var(--cds-spacing-05);
+}
+
+.carbon-storybook-template--annotation--background {
+  margin: 0 !important;
+  min-block-size: 0 !important;
+}
+
+.ai-label-container .cds--toggletip-content p {
+  font-size: var(--cds-body-compact-01-font-size);
+  line-height: var(--cds-body-compact-01-line-height);
+  letter-spacing: var(--cds-body-compact-01-letter-spacing);
+}
+
+.ai-label-container .cds--toggletip-content .bold {
+  font-weight: var(--cds-heading-compact-01-font-weight);
+}
+
+.ai-label-container .cds--toggletip-content .secondary {
+  color: var(--cds-text-secondary);
+}
+
+.ai-label-container .cds--toggletip-content hr {
+  border: 0;
+  height: 1px;
+  background: var(--cds-border-subtle);
+  margin-top: var(--cds-spacing-07);
+  margin-bottom: var(--cds-spacing-07);
+}
+
+.ai-label-tile-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.ai-label-tile-container .cds--tile {
+  max-width: 320px;
+  margin-right: var(--cds-spacing-09);
+  margin-bottom: var(--cds-spacing-09);
+  padding-bottom: var(--cds-spacing-12);
+}
+
+.ai-label-tile-container h4 {
+  margin-bottom: var(--cds-spacing-05);
+}
+
+.ai-label-tile-container .ai-data {
+  margin-top: var(--cds-spacing-05);
+  padding: var(--cds-spacing-05) 0;
+  display: flex;
+}
+
+.ai-label-tile-container .data-container {
+  width: 126px;
+}
+
+.ai-label-tile-container .data-container:first-of-type {
+  margin-right: var(--cds-spacing-05);
+}
+
+.ai-label-tile-container p {
+  font-size: var(--cds-body-01-font-size);
+  line-height: var(--cds-body-01-line-height);
+  letter-spacing: var(--cds-body-01-letter-spacing);
+}
+
+.ai-label-tile-container .data-container p {
+  font-size: var(--cds-label-01-font-size);
+  line-height: var(--cds-label-01-line-height);
+  letter-spacing: var(--cds-label-01-letter-spacing);
+}
+
+.ai-label-tile-container .cds--tile-content__below-the-fold {
+  padding-top: var(--cds-spacing-05);
+}
+
+.ai-label-tile-container .cds--tile-content__below-the-fold p {
+  font-size: var(--cds-label-01-font-size);
+  line-height: var(--cds-label-01-line-height);
+  letter-spacing: var(--cds-label-01-letter-spacing);
+  margin: var(--cds-spacing-03) 0 var(--cds-spacing-09);
+}
+
+.ai-label-selectable-tile-container .cds--tile-group > div {
+  display: flex;
+  gap: var(--cds-spacing-05);
+}
+
+.ai-label-selectable-tile-container .cds--tile-group > div > div {
+  flex: 1 1 0;
+}
+
+.ai-label-selectable-tile-container .cds--tile-group .ai-label-radio-tile,
+.ai-label-selectable-tile-container .cds--tile-group .ai-label-selectable-tile {
+  height: 200px;
+}
+
+.ai-label-heading {
+  font-size: var(--cds-heading-06-font-size);
+  font-weight: var(--cds-heading-06-font-weight);
+  margin-bottom: var(--cds-spacing-05);
+}

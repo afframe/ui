@@ -1,0 +1,58 @@
+import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import * as OrderedListStories from './OrderedList.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, inline spacing as Carbon spacing tokens.
+
+<Meta isTemplate />
+
+# OrderedList
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/OrderedList)
+&nbsp;|&nbsp;
+[Usage guidelines](https://www.carbondesignsystem.com/components/list/usage)
+&nbsp;|&nbsp;
+[Accessibility](https://www.carbondesignsystem.com/components/list/accessibility)
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Native List Styles](#native-list-styles)
+- [Nested](#nested)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+<div style={{ paddingLeft: 'var(--cds-spacing-05)' }}>
+  <Canvas of={OrderedListStories.Default} />
+</div>
+
+## Native List Styles
+
+<div style={{ paddingLeft: 'var(--cds-spacing-05)' }}>
+  <Canvas of={OrderedListStories.NativeListStyles} />
+</div>
+
+## Nested
+
+<div style={{ paddingLeft: 'var(--cds-spacing-05)' }}>
+  <Canvas of={OrderedListStories.Nested} />
+</div>
+
+## Component API
+
+<ArgTypes />
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/react/src/components/OrderedList/OrderedList.mdx).

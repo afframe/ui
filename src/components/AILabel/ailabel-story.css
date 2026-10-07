@@ -1,0 +1,184 @@
+/*
+ * Copyright IBM Corp. 2024, 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, nesting flattened, duplicate rules removed, the tile mixin for the preview radio tile container dropped (the package styles compile tiles), literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.ai-label-container-example {
+  display: flex;
+  margin-bottom: var(--cds-spacing-12);
+  align-items: flex-start;
+}
+
+.ai-label-container-example > * {
+  margin-left: var(--cds-spacing-07);
+}
+
+.ai-label-container-example.centered {
+  margin: 0;
+  width: calc(100vw - 84px);
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-label-container-example.centered > * {
+  margin: 0;
+}
+
+.ai-label-container .cds--toggletip-content p {
+  font-size: var(--cds-body-compact-01-font-size);
+  font-weight: var(--cds-body-compact-01-font-weight);
+  line-height: var(--cds-body-compact-01-line-height);
+  letter-spacing: var(--cds-body-compact-01-letter-spacing);
+}
+
+.ai-label-container .cds--toggletip-content .bold {
+  font-weight: var(--cds-heading-compact-01-font-weight);
+}
+
+.ai-label-container .cds--toggletip-content .secondary {
+  color: var(--cds-text-secondary);
+}
+
+.ai-label-container .cds--toggletip-content h1 {
+  margin-bottom: var(--cds-spacing-05);
+}
+
+.ai-label-container .cds--toggletip-content hr {
+  border: 0;
+  height: 1px;
+  background: var(--cds-border-subtle);
+  margin-top: var(--cds-spacing-07);
+  margin-bottom: var(--cds-spacing-07);
+}
+
+.ai-label-tile-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.ai-label-tile-container .cds--tile {
+  max-width: 320px;
+  margin-right: var(--cds-spacing-09);
+  margin-bottom: var(--cds-spacing-09);
+  padding-bottom: var(--cds-spacing-12);
+}
+
+.ai-label-tile-container h4 {
+  margin-bottom: var(--cds-spacing-05);
+}
+
+.ai-label-tile-container .ai-data {
+  margin-top: var(--cds-spacing-05);
+  padding: var(--cds-spacing-05) 0;
+  display: flex;
+}
+
+.ai-label-tile-container .data-container {
+  width: 126px;
+}
+
+.ai-label-tile-container .data-container:first-of-type {
+  margin-right: var(--cds-spacing-05);
+}
+
+.ai-label-tile-container p {
+  font-size: var(--cds-body-01-font-size);
+  font-weight: var(--cds-body-01-font-weight);
+  line-height: var(--cds-body-01-line-height);
+  letter-spacing: var(--cds-body-01-letter-spacing);
+}
+
+.ai-label-tile-container .data-container p {
+  font-size: var(--cds-label-02-font-size);
+  font-weight: var(--cds-label-02-font-weight);
+  line-height: var(--cds-label-02-line-height);
+  letter-spacing: var(--cds-label-02-letter-spacing);
+}
+
+.ai-label-tile-container .arrow-right {
+  position: absolute;
+  bottom: var(--cds-spacing-05);
+  right: var(--cds-spacing-05);
+}
+
+.ai-label-tile-container .cds--tile-content__below-the-fold {
+  padding-top: var(--cds-spacing-05);
+}
+
+.ai-label-tile-container .cds--tile-content__below-the-fold p {
+  font-size: var(--cds-label-01-font-size);
+  font-weight: var(--cds-label-01-font-weight);
+  line-height: var(--cds-label-01-line-height);
+  letter-spacing: var(--cds-label-01-letter-spacing);
+  margin: var(--cds-spacing-03) 0 var(--cds-spacing-09);
+}
+
+.form-example {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fluid-ai-label-form,
+.ai-label-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  max-width: 450px;
+  margin-left: var(--cds-spacing-10);
+}
+
+.fluid-ai-label-form .cds--date-picker-container {
+  width: 100%;
+}
+
+.fluid-ai-label-form .cds--list-box__wrapper {
+  width: 100%;
+}
+
+.ai-label-check-radio-container
+  .cds--form-item:not(:first-of-type, .cds--checkbox-wrapper),
+.ai-label-check-radio-container
+  fieldset.cds--checkbox-group:not(:first-of-type) {
+  margin-top: var(--cds-spacing-07);
+}
+
+.ai-label-modal .cds--form-item {
+  margin-top: var(--cds-spacing-05);
+}
+
+.sbdocs-ai-label .cds--ai-label__text {
+  font-size: var(--cds-label-01-font-size);
+}
+
+.sbdocs-ai-label .cds--toggletip-content {
+  font-size: var(--cds-body-compact-01-font-size);
+}
+
+.ai-label-selectable-tile-container .cds--tile-group > div {
+  display: flex;
+  gap: var(--cds-spacing-05);
+}
+
+.ai-label-selectable-tile-container .cds--tile-group > div > div {
+  flex: 1 1 0;
+}
+
+.ai-label-selectable-tile-container .cds--tile-group .ai-label-radio-tile,
+.ai-label-selectable-tile-container .cds--tile-group .ai-label-selectable-tile {
+  height: 200px;
+}
+
+.ai-label-heading {
+  font-size: var(--cds-heading-06-font-size);
+  font-weight: var(--cds-heading-06-font-weight);
+  margin-bottom: var(--cds-spacing-05);
+}

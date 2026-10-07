@@ -1,0 +1,131 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as CreateSidePanelStories from './CreateSidePanel.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# CreateSidePanel
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/CreateSidePanel). See also [Create flows pattern](https://carbondesignsystem.com/community/patterns/create-flows/).
+
+`CreateSidePanel` is a create form in IBM Products' `SidePanel`, for a create
+task with more fields than a modal holds while the page stays in view. It
+replaces IBM Products' deprecated CreateSidePanel. It shares its submit,
+cancel, discard and focus behaviour with `CreateModal`, `EditSidePanel`,
+`EditTearsheet` and `EditFullPage`.
+
+<Canvas of={CreateSidePanelStories.Default} />
+
+## Usage and props
+
+`open` is controlled. `onSubmit` may return a promise: while it is pending the
+panel is busy and cannot close; when it resolves, `onClose` is called; when it
+rejects, the panel stays open and shows the error above the action bar.
+
+```tsx
+import { CreateSidePanel } from '@afframe/ui';
+
+const launcherRef = useRef<HTMLButtonElement>(null);
+const [open, setOpen] = useState(false);
+const [name, setName] = useState('');
+
+<Button ref={launcherRef} onClick={() => setOpen(true)}>
+  New customer
+</Button>
+<CreateSidePanel
+  open={open}
+  onClose={() => setOpen(false)}
+  onSubmit={() => api.createCustomer({ name })}
+  launcherRef={launcherRef}
+  title="New customer"
+  formTitle="Contact"
+  isDirty={name !== ''}
+  submitDisabled={name.trim() === ''}>
+  <TextInput id="name" labelText="Name" value={name} onChange={...} />
+</CreateSidePanel>;
+```
+
+- `title` and `subtitle` head the panel; `formTitle` (a level 3 heading) and
+  `formDescription` head the form and name it.
+- `size` (default `md`), `placement` (`right` or `left`), `slideIn` with
+  `pageContentSelector` (the page content the panel pushes aside; no overlay
+  then) are passed to `SidePanel`.
+- `decorator`: an AI label or another decorator next to the close icon
+  (`SidePanel` supports it).
+- `isDirty`: the app compares the field state with the initial values. When
+  true, Escape, the close icon, Cancel and an overlay click ask "Discard
+  changes?" first, unless `confirmDiscard` is false.
+- `submitDisabled`: disables the primary button and Enter.
+- `launcherRef`: where focus goes on close when the element that had focus
+  when the panel opened is gone.
+
+<ArgTypes of={CreateSidePanelStories} />
+
+## Messages
+
+`messages?: Partial<CreateSidePanelMessages>`; defaults in
+`defaultCreateSidePanelMessages`. All strings except the optional `errorText` function,
+which is set from a client component.
+
+| Key                    | Default                                    |
+| ---------------------- | ------------------------------------------ |
+| `create`               | Create                                     |
+| `cancel`               | Cancel                                     |
+| `closePanel`           | Close panel                                |
+| `submitting`           | Creating                                   |
+| `submitError`          | The changes could not be saved. Try again. |
+| `errorText`            | not set: `submitError` is shown            |
+| `errorIconDescription` | Error                                      |
+| `discardTitle`         | Discard changes?                           |
+| `discardBody`          | Your changes will be lost.                 |
+| `discard`              | Discard                                    |
+| `keepEditing`          | Keep editing                               |
+| `closeIconDescription` | Close (the discard dialog's close icon)    |
+
+## Keyboard and screen reader behaviour
+
+On open, focus moves to the first form control. Focus order: the close icon,
+the form fields, Cancel, Create. With the overlay (the default), Tab and
+Shift+Tab stay inside the panel and wrap. A `slideIn` panel has no overlay and
+no trap: Tab continues into the page. Its Escape is ignored while an
+open list or menu inside the panel takes it.
+
+| Key    | Where                 | Action                                                                                   |
+| ------ | --------------------- | ---------------------------------------------------------------------------------------- |
+| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field. |
+| Escape | anywhere in the panel | Closes a clean panel. On a dirty one, opens the discard dialog.                          |
+| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                |
+| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.    |
+
+On close, focus returns to the element that had focus when the panel opened,
+else to `launcherRef`, else to the page body.
+
+A focused field never sits under the action bar: fields keep a scroll margin
+the size of the bar (the `LongForm` story checks it).
+
+Screen readers announce:
+
+- the panel as a complementary region named by `title`, and the form named
+  by `formTitle`;
+- while submitting, the form as busy and the primary button's loading text
+  (`submitting`);
+- a rejected submit as an alert with `submitError` (or `errorText(error)`). Focus moves to the first
+  field with `aria-invalid="true"`, else to the alert;
+- the discard dialog as an alert dialog named by `discardTitle`, described by
+  `discardBody`.
+
+## Stories
+
+<Canvas of={CreateSidePanelStories.WithValidationError} />
+
+<Canvas of={CreateSidePanelStories.Dirty} />
+
+<Canvas of={CreateSidePanelStories.Submitting} />
+
+<Canvas of={CreateSidePanelStories.LongForm} />
+
+<Canvas of={CreateSidePanelStories.Dark} />

@@ -1,0 +1,48 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as PictogramsStories from './Pictograms.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# Pictograms
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/blob/main/src/pictograms.ts)
+&nbsp;|&nbsp;
+[Usage guidelines](https://carbondesignsystem.com/elements/pictograms/usage/)
+&nbsp;|&nbsp;
+[Library](https://carbondesignsystem.com/elements/pictograms/library/)
+
+## Overview
+
+Pictograms are Carbon's larger illustrations for marketing and empty states.
+Import them from `@afframe/ui/pictograms` with Carbon's names, as in
+`@carbon/pictograms-react`. Each pictogram is its own module, so a bundler keeps
+only the ones you import.
+
+```jsx
+import { Bee } from '@afframe/ui/pictograms';
+
+<Bee width={80} height={80} />;
+```
+
+<Canvas of={PictogramsStories.Default} />
+
+## Size and color
+
+Pictograms are 64 by 64 pixels. Set `width` and `height` to change that; the
+`size` prop in the types has no effect on pictograms. They draw with
+`currentColor`, so they follow the text color around them.
+
+## Accessibility
+
+A pictogram is decorative by default (`aria-hidden`). When it carries meaning,
+give it an `aria-label`; it then gets `role="img"`.
+
+## Feedback
+
+Open an issue or a pull request on
+[GitHub](https://github.com/afframe/ui).

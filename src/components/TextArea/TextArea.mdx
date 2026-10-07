@@ -1,0 +1,52 @@
+import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as TextAreaStories from './TextArea.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added.
+
+<Meta isTemplate />
+
+# TextArea
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/TextArea)
+&nbsp;|&nbsp;
+[Usage guidelines](https://carbondesignsystem.com/components/text-input/usage/#text-area)
+&nbsp;|&nbsp;
+[Accessibility](https://www.carbondesignsystem.com/components/text-input/accessibility)
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Skeleton](#skeleton)
+- [AI Label](#ai-label)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+<Canvas of={TextAreaStories.Default} />
+
+## Skeleton
+
+<Canvas of={TextAreaStories.Skeleton} />
+
+## AI Label
+
+<Canvas of={TextAreaStories.withAILabel} />
+
+## Component API
+
+<ArgTypes />
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/react/src/components/TextArea/TextArea.mdx).

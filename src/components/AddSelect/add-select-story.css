@@ -1,0 +1,203 @@
+/*
+ * Copyright IBM Corp. 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: converted from SCSS to plain CSS, the c4p prefix written out, spacing and type as Carbon custom properties, layer-hover-01 as the contextual layer-hover token, em-dashes in comments replaced. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+/* Storybook-specific styles for AddSelect demos and examples.
+   These styles are NOT part of the production component styles. */
+
+/* Viewport container for next stories */
+.add-select-next-stories__viewport {
+  inline-size: 50%;
+}
+
+/* PlaceholderShell: dashed outline container used across Body/Column stories */
+.add-select-next-stories__placeholder-shell {
+  border: 1px dashed var(--cds-border-subtle);
+  background: var(--cds-layer);
+}
+
+/* PlaceholderRows: skeleton row grid shown inside Body stories */
+.add-select-next-stories__placeholder-rows {
+  display: grid;
+  gap: 1px;
+}
+
+.add-select-next-stories__placeholder-row {
+  padding: var(--cds-spacing-03);
+  background: var(--cds-layer-hover);
+
+  p {
+    margin: 0;
+  }
+}
+
+.add-select-next-stories-container--single {
+  inline-size: 26rem;
+}
+
+/* Column story container */
+.add-select-next-stories-column-container {
+  border: 1px dashed var(--cds-border-subtle);
+  background: var(--cds-layer);
+  block-size: 400px;
+  inline-size: 360px;
+}
+
+/* Column story container */
+.add-select-next-stories-summary-container {
+  overflow: auto;
+  border: 1px dashed var(--cds-border-subtle);
+  background: var(--cds-layer);
+  block-size: 32rem;
+  inline-size: 22.5rem;
+}
+
+/* Row story: hide the header border that AddSelect.Body adds, so the
+   single-row demo doesn't show a divider above the row. */
+.add-select-next-stories--no-header-border .c4p--add-select__next__header {
+  padding: 0;
+  border-block-end: none;
+}
+
+/* Row story: rowContent slot example */
+.add-select-next-stories__row-content {
+  display: flex;
+  align-items: center;
+  gap: var(--cds-spacing-03);
+}
+
+/* SelectionSummary: emptyState slot wrapper */
+.add-select-next-stories__empty-state {
+  padding: var(--cds-spacing-05) var(--cds-spacing-03);
+}
+
+/* SelectionSummary: headerContent slot */
+.add-select-next-stories__summary-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+
+  h3 {
+    font-size: var(--cds-heading-03-font-size);
+    font-weight: var(--cds-heading-03-font-weight);
+    line-height: var(--cds-heading-03-line-height);
+    letter-spacing: var(--cds-heading-03-letter-spacing);
+    margin: 0;
+  }
+}
+
+/* SelectionSummaryItem: "item removed" fallback message */
+.add-select-next-stories__summary-item-removed {
+  margin: 0;
+}
+
+/* SelectionSummaryItem: story wrapper */
+.add-select-next-stories__summary-item-wrapper {
+  padding: var(--cds-spacing-03);
+  border: 1px dashed var(--cds-border-subtle);
+  background: var(--cds-layer);
+  inline-size: 22.5rem;
+}
+
+/* ItemPanel: renderItem / useChildren slot content */
+.add-select-next-stories__item-panel-content p {
+  margin: 0;
+}
+
+.add-select-next-stories__item-panel-content__title {
+  font-size: var(--cds-body-compact-02-font-size);
+  font-weight: var(--cds-body-compact-02-font-weight);
+  line-height: var(--cds-body-compact-02-line-height);
+  letter-spacing: var(--cds-body-compact-02-letter-spacing);
+}
+
+.add-select-next-stories__item-panel-content__body {
+  margin-block-start: var(--cds-spacing-02);
+}
+
+/* SelectionSummaryItem: renderAccordionTitle / renderAccordionBody slots */
+.add-select-next-stories__accordion-title {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--cds-spacing-03);
+}
+
+.add-select-next-stories__accordion-title-text__title {
+  font-size: var(--cds-body-compact-01-font-size);
+  font-weight: var(--cds-body-compact-01-font-weight);
+  line-height: var(--cds-body-compact-01-line-height);
+  letter-spacing: var(--cds-body-compact-01-letter-spacing);
+  margin: 0;
+  color: var(--cds-text-primary);
+}
+
+.add-select-next-stories__accordion-title-text__subtitle {
+  font-size: var(--cds-body-01-font-size);
+  font-weight: var(--cds-body-01-font-weight);
+  line-height: var(--cds-body-01-line-height);
+  letter-spacing: var(--cds-body-01-letter-spacing);
+  margin: 0;
+  color: var(--cds-text-secondary);
+}
+
+.add-select-next-stories__accordion-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cds-spacing-02);
+  margin-block-start: var(--cds-spacing-05);
+}
+
+/* SelectionSummaryItem: useChildren / renderItem example rows */
+.add-select-next-stories__summary-item-row {
+  display: flex;
+  align-items: center;
+  padding: var(--cds-spacing-04) var(--cds-spacing-05);
+  gap: var(--cds-spacing-03);
+}
+
+.add-select-next-stories__summary-item-row-reorder {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--cds-spacing-03);
+}
+
+.add-select-next-stories__summary-item-row-text {
+  flex: 1;
+}
+
+.add-select-next-stories__summary-item-row-text__title {
+  font-size: var(--cds-body-compact-01-font-size);
+  font-weight: var(--cds-body-compact-01-font-weight);
+  line-height: var(--cds-body-compact-01-line-height);
+  letter-spacing: var(--cds-body-compact-01-letter-spacing);
+  margin: 0;
+  color: var(--cds-text-primary);
+}
+
+.add-select-next-stories__summary-item-row-text__subtitle {
+  font-size: var(--cds-body-01-font-size);
+  font-weight: var(--cds-body-01-font-weight);
+  line-height: var(--cds-body-01-line-height);
+  letter-spacing: var(--cds-body-01-letter-spacing);
+  margin: 0;
+  color: var(--cds-text-secondary);
+}
+
+.add-select-next-stories__summary-item-row-modifier {
+  font-size: var(--cds-body-compact-01-font-size);
+  font-weight: var(--cds-body-compact-01-font-weight);
+  line-height: var(--cds-body-compact-01-line-height);
+  letter-spacing: var(--cds-body-compact-01-letter-spacing);
+  color: var(--cds-text-secondary);
+  white-space: nowrap;
+}

@@ -1,0 +1,68 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, code samples import from @afframe/ui.
+
+<Meta isTemplate />
+
+# TrialCountdown
+
+<SourceLabel name="labs" />
+
+[Source code](https://github.com/carbon-design-system/carbon-labs/tree/%40carbon-labs%2Freact-ui-shell%400.106.0/packages/react/src/components/UIShell)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Component API](#component-api)
+
+## Overview
+
+The `TrialCountdown` component displays a visual countdown indicator, typically
+used to show the number of days remaining in a product trial. It can be placed
+directly in the `Header` or inside a `HeaderPopover`, depending on whether you
+want to provide additional details when clicked. The `count` prop sets the
+number of days remaining, and the optional `warning` prop applies a warning
+style when the trial is close to expiring.
+
+```jsx
+import { TrialCountdown } from '@afframe/ui';
+
+<TrialCountdown count={2} warning />;
+```
+
+```jsx
+import {
+  HeaderPopover,
+  HeaderPopoverContent,
+  HeaderPopoverButton,
+  HeaderPopoverActions,
+  TrialCountdown,
+  Link,
+  Button,
+} from '@afframe/ui';
+import { Share, ShoppingCart, User } from '@afframe/ui/icons';
+
+<HeaderPopover align="bottom">
+  <HeaderPopoverButton label="Trial Countdown" as={Button} kind="ghost">
+    <TrialCountdown count={2} warning />
+  </HeaderPopoverButton>
+  <HeaderPopoverContent>
+    <p>Your trial ends on May 13, 2025</p>
+    <Link href="#" renderIcon={Share}>
+      Invite team members
+    </Link>
+    <Link href="#" renderIcon={User}>
+      Contact sales
+    </Link>
+    <Button size="sm" renderIcon={ShoppingCart}>
+      Buy
+    </Button>
+  </HeaderPopoverContent>
+</HeaderPopover>;
+```
+
+## Component API
+
+<ArgTypes />

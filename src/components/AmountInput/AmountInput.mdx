@@ -1,0 +1,97 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AmountInputStories from './AmountInput.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# AmountInput
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/AmountInput). See also [Carbon NumberInput](https://carbondesignsystem.com/components/number-input/usage/) and [Formatting](?path=/docs/components-formatting--overview).
+
+`AmountInput` is a money field on Carbon's `NumberInput` with `type="text"`.
+People type in the locale's format (`1234,5` in Czech); on blur the field
+shows the formatted amount (`1 234,50 Kč`) and reports a `number` rounded to
+the currency's minor digits. It is a client component.
+
+<Canvas of={AmountInputStories.Default} />
+
+## Usage and props
+
+```jsx
+'use client';
+import { AmountInput } from '@afframe/ui';
+
+const [amount, setAmount] = useState(null);
+
+<AmountInput id="price" label="Price" value={amount} onChange={setAmount} />;
+```
+
+| Prop                 | Default  | What it does                                                           |
+| -------------------- | -------- | ---------------------------------------------------------------------- |
+| `id`, `label`        | required | Input id and visible label.                                            |
+| `value`              |          | `number` or `null` (empty). Leave undefined for an uncontrolled field. |
+| `defaultValue`       |          | Starting amount of an uncontrolled field.                              |
+| `onChange`           |          | `(value: number \| null) => void`.                                     |
+| `currency`           | `CZK`    | ISO 4217 code.                                                         |
+| `locale`             | `cs-CZ`  | Locale for typing and display.                                         |
+| `min`, `max`, `step` |          | Limits and step size, as Carbon's `NumberInput`.                       |
+| `messages`           |          | Overrides for the strings below.                                       |
+
+Other `NumberInput` props (`helperText`, `size`, `disabled`, `readOnly`,
+`warn`, `invalid`, `invalidText`, `hideSteppers`, `name`) pass through.
+
+- `onChange` runs on blur and on each step, not on each keystroke. A form
+  submitted with Enter before blur still holds the previous value.
+- Typed amounts round half away from zero (`1,005` becomes `1,01 Kč`), and the
+  field shows the rounded amount. Zero never shows a minus sign.
+- From an empty field or zero, the first step goes to 1 or -1 (or to `min`
+  when only a positive `min` is set), not to `step`; later steps add `step`.
+  This is Carbon's behaviour. Carbon's `stepStartValue` sets that first value,
+  but for both directions, so Arrow Down from zero would go up.
+- An amount outside `min` and `max` is still reported and the field is marked
+  invalid; check it before saving.
+- Text that is not a number is cleared on blur and reported as `null`.
+- A `.` or `,` that is neither the locale's decimal nor group separator is
+  rejected, not guessed: in Czech `1.500` stays as typed, the field is
+  invalid ("Use "," for decimals.") and `null` is reported. The reverse is
+  ambiguous and follows Carbon: in en-GB `1,50` is read as 150.
+
+## Messages
+
+| Key                | Default                                                    |
+| ------------------ | ---------------------------------------------------------- |
+| `increment`        | `Increase amount`                                          |
+| `decrement`        | `Decrease amount`                                          |
+| `invalidText`      | `({ min, max }) => 'Enter an amount from {min} to {max}.'` |
+| `invalidSeparator` | `(decimal) => 'Use "{decimal}" for decimals.'`             |
+
+`invalidText` gets the limits as formatted amounts; without `max` it says
+"at least", without `min` "at most". An `invalidText` prop wins over it.
+
+## Keyboard and screen reader behaviour
+
+| Key            | What it does                                        |
+| -------------- | --------------------------------------------------- |
+| Tab            | Moves focus to the input; the steppers are skipped. |
+| Arrow Up       | Adds `step` and reports the new amount.             |
+| Arrow Down     | Subtracts `step` and reports the new amount.        |
+| Tab out (blur) | Formats the text and reports the amount.            |
+
+- The input is the only tab stop. The step buttons have `tabindex="-1"` and
+  work with a pointer.
+- Screen readers announce a text field named by `label`. When out of range or
+  holding a wrong decimal separator the field is `aria-invalid="true"` and
+  the invalid text is its description.
+- The step buttons are named by the `increment` and `decrement` messages.
+
+## Stories
+
+<Canvas of={AmountInputStories.Empty} />
+
+<Canvas of={AmountInputStories.WithLimits} />
+
+<Canvas of={AmountInputStories.OtherCurrency} />

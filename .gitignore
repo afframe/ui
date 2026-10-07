@@ -1,0 +1,25 @@
+node_modules/
+dist/
+storybook-static/
+*.tgz
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+.DS_Store
+.claude/settings.local.json
+.claude/handoffs/
+.claude/progress.md
+CLAUDE.local.md
+.context/
+_junk/
+.claude/worktrees/
+# Example app build output; its lockfile would pin the hash of a tarball that
+# changes on every build.
+examples/nextjs/.next/
+examples/nextjs/next-env.d.ts
+examples/nextjs/pnpm-lock.yaml
+.vitest/
+# Visual baselines are Linux only; local macOS and Windows runs stay out.
+**/__screenshots__/**/*-darwin.png
+**/__screenshots__/**/*-win32.png

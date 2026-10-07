@@ -1,0 +1,74 @@
+/*
+ * Copyright IBM Corp. 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, only the background and layer types, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.carbon-storybook-template--annotation {
+  position: relative;
+  border: 1px dashed transparent;
+}
+
+.carbon-storybook-template--annotation .carbon-storybook-template--annotation {
+  margin-block-start: var(--cds-spacing-07);
+}
+
+.carbon-storybook-template--annotation__content
+  > .carbon-storybook-template--annotation:first-child {
+  margin-block-start: 0;
+}
+
+.carbon-storybook-template--annotation__label {
+  display: inline-flex;
+  padding: var(--cds-spacing-02);
+  column-gap: var(--cds-spacing-02);
+  font-family: var(--cds-code-01-font-family);
+  font-size: var(--cds-code-01-font-size);
+  font-weight: var(--cds-code-01-font-weight);
+  letter-spacing: var(--cds-code-01-letter-spacing);
+  line-height: var(--cds-code-01-line-height);
+}
+
+.carbon-storybook-template--annotation__label > :first-child {
+  flex-shrink: 0;
+}
+
+.carbon-storybook-template--annotation__label a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.carbon-storybook-template--annotation__content {
+  padding: var(--cds-spacing-05);
+}
+
+.carbon-storybook-template--annotation--background {
+  margin: calc(-1 * var(--cds-spacing-08));
+  min-block-size: 100vh;
+}
+
+.carbon-storybook-template--annotation--background {
+  border-color: var(--cds-tag-border-magenta);
+}
+
+.carbon-storybook-template--annotation--background
+  > .carbon-storybook-template--annotation__label {
+  background-color: var(--cds-tag-background-magenta);
+  color: var(--cds-tag-color-magenta);
+}
+
+.carbon-storybook-template--annotation--layer {
+  border-color: var(--cds-tag-border-purple);
+}
+
+.carbon-storybook-template--annotation--layer
+  > .carbon-storybook-template--annotation__label {
+  background-color: var(--cds-tag-background-purple);
+  color: var(--cds-tag-color-purple);
+}

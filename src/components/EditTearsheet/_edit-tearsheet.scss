@@ -1,0 +1,80 @@
+// EditTearsheet styles, Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+
+.afframe-edit-tearsheet-nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.afframe-edit-tearsheet-nav-item {
+  @include type.type-style('body-compact-01');
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-04 $spacing-05;
+  border: 0;
+  border-inline-start: 3px solid transparent;
+  background: transparent;
+  block-size: $spacing-09;
+  color: $text-secondary;
+  cursor: pointer;
+  gap: $spacing-03;
+  inline-size: 100%;
+  text-align: start;
+}
+
+.afframe-edit-tearsheet-nav-item:hover {
+  background: $layer-hover;
+  color: $text-primary;
+}
+
+.afframe-edit-tearsheet-nav-item:focus {
+  outline: 2px solid $focus;
+  outline-offset: -2px;
+}
+
+.afframe-edit-tearsheet-nav-item[aria-current='true'] {
+  border-inline-start-color: $border-interactive;
+  color: $text-primary;
+  font-weight: type.font-weight('semibold');
+}
+
+.afframe-edit-tearsheet-nav-invalid {
+  flex: none;
+  fill: $support-error;
+}
+
+.afframe-edit-tearsheet-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-05;
+  padding-block-end: $spacing-07;
+}
+
+.afframe-edit-tearsheet-form-title {
+  @include type.type-style('heading-03');
+
+  color: $text-primary;
+  scroll-margin-block-start: $spacing-05;
+}
+
+.afframe-edit-tearsheet-form-description {
+  @include type.type-style('body-01');
+
+  color: $text-secondary;
+}
+
+.afframe-edit-tearsheet-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-05;
+}
+
+// Keeps a focused field clear of the sticky footer (WCAG 2.4.11).
+.afframe-edit-tearsheet .afframe-create-edit-form :focus {
+  scroll-margin-block-end: $spacing-10;
+}

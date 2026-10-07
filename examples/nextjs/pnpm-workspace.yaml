@@ -1,0 +1,5 @@
+# Own workspace root, so pnpm does not treat the repository root as this
+# app's workspace. Carbon packages run IBM Telemetry on postinstall; install
+# scripts stay blocked, this only turns the hard failure into a warning, as in
+# a real consumer (docs/guides/consuming.md).
+strictDepBuilds: false

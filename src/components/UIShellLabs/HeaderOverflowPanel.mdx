@@ -1,0 +1,88 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as HeaderOverflowPanelStories from './HeaderOverflowPanel.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, code samples import from @afframe/ui (the Labs side nav set and HeaderContainer under their Labs names).
+
+<Meta isTemplate />
+
+# HeaderOverflowPanel
+
+<SourceLabel name="labs" />
+
+[Source code](https://github.com/carbon-design-system/carbon-labs/tree/%40carbon-labs%2Freact-ui-shell%400.106.0/packages/react/src/components/UIShell)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Component API](#component-api)
+
+## Overview
+
+The `HeaderOverflowPanel` component uses the overflow icon in the header to
+display a panel with navigation options. It can be used to provide quick access
+to a set of related actions or links, or to display additional information or
+settings for sm and md breakpoints.
+
+```jsx
+import {
+  HeaderOverflowPanel,
+  SideNavDivider,
+  SideNavLabs,
+  SideNavItemsLabs,
+  SideNavMenuLabs,
+  SideNavLinkLabs,
+} from '@afframe/ui';
+import {
+  Settings,
+  ChartCustom,
+  Notification,
+  Help,
+  Logout,
+  Launch,
+} from '@afframe/ui/icons';
+
+<HeaderOverflowPanel>
+  <SideNavLabs
+    isTreeview
+    isFixedNav
+    expanded
+    isChildOfHeader={false}
+    aria-label="Header navigation"
+    headerOverflowPanel>
+    <SideNavItemsLabs>
+      <SideNavMenuLabs
+        renderIcon={Settings}
+        primary
+        title="Settings"
+        backButtonTitle="Back">
+        <SideNavLinkLabs renderIcon={ChartCustom} href="#">
+          Customize
+          <Launch />
+        </SideNavLinkLabs>
+      </SideNavMenuLabs>
+      <SideNavLinkLabs renderIcon={Notification} href="#">
+        Notifications
+        <Launch />
+      </SideNavLinkLabs>
+      <SideNavLinkLabs renderIcon={Help} href="#">
+        Help
+        <Launch />
+      </SideNavLinkLabs>
+      <SideNavLinkLabs renderIcon={Help} href="#">
+        Custom action
+        <Launch />
+      </SideNavLinkLabs>
+      <SideNavDivider />
+      <SideNavLinkLabs renderIcon={Logout} href="#">
+        Logout
+      </SideNavLinkLabs>
+    </SideNavItemsLabs>
+  </SideNavLabs>
+</HeaderOverflowPanel>;
+```
+
+## Component API
+
+<ArgTypes />

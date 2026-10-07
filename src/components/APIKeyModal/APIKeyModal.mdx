@@ -1,0 +1,153 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as APIKeyModalStories from './APIKeyModal.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# APIKeyModal
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/APIKeyModal). See also [Generate an API key pattern](https://carbondesignsystem.com/community/patterns/generate-an-api-key/).
+
+`APIKeyModal` names and generates an API key, then shows it once with copy
+and download actions. In edit mode it renames an existing key. It is a small
+Carbon modal. It replaces IBM Products' deprecated APIKeyModal.
+
+<Canvas of={APIKeyModalStories.Default} />
+
+## Usage and props
+
+```tsx
+import { APIKeyModal } from '@afframe/ui';
+
+<APIKeyModal
+  open={open}
+  onClose={() => setOpen(false)}
+  launcherRef={launcherRef}
+  onGenerate={(name) => api.createKey(name)} // resolves with the key
+  showDownload
+/>;
+```
+
+- `open`, `onClose`: the app owns the open state. `onClose` is called by
+  Cancel, Done, the close icon and Escape, and after a successful save.
+- `mode`: `generate` (default) or `edit`. The props type is a union on
+  `mode`: generate mode requires `onGenerate`, edit mode requires `onSave`.
+- `onGenerate(name)`: generate mode; resolves with the key. While it runs the
+  buttons are disabled and closing waits. If it rejects or resolves with an
+  empty key, the dialog stays on the name step with an alert. A key that
+  arrives after the dialog was closed is dropped.
+- `onSave(name)`: edit mode; may return a promise; the dialog closes when it
+  succeeds.
+- `apiKeyName`: the initial name. `nameRequired` (default `true`) keeps
+  Generate and Save disabled while the name is empty.
+- `showDownload`, `downloadFileName` (default `apikey`), `downloadFileType`
+  (`txt`, the key only, default; or `json`, `{ "name", "apiKey" }`): a Download
+  button in the success view.
+- `steps`: optional steps before the name step, each `{ title, content,
+valid }`; `valid: false` disables Next.
+- `messages`: overrides for the strings below.
+
+The flow: the steps (if any), the name field, Generate, then the success view.
+Closing from the success view needs no confirmation.
+
+A click on the page behind the dialog does not close it.
+
+### Secret key handling
+
+- The key exists only in the component's state while the dialog is open.
+  Closing clears it; reopening starts at the first step with no key.
+- The key is written to the read-only field through the DOM `value` property,
+  never to an HTML attribute, and is never logged. It is hidden (a password
+  field) until the user shows it.
+- The fields use `autoComplete="off"`.
+- Copy uses `navigator.clipboard.writeText`. Download builds a `Blob` in the
+  browser, creates an object URL for one click on a link attached inside the
+  dialog, removes the link and revokes the URL one second later; nothing goes
+  over the network.
+- The warning under the key tells the user to store it now: the app cannot
+  show it again.
+
+<ArgTypes of={APIKeyModalStories} />
+
+## Messages
+
+`messages?: Partial<APIKeyModalMessages>`; defaults in
+`defaultAPIKeyModalMessages`. All keys are strings.
+
+| Key                    | Default                                                                                |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| `generateTitle`        | Generate an API key                                                                    |
+| `editTitle`            | Edit API key                                                                           |
+| `nameLabel`            | Name                                                                                   |
+| `nameHelper`           | A name helps you tell your keys apart.                                                 |
+| `generate`             | Generate                                                                               |
+| `save`                 | Save                                                                                   |
+| `keyLabel`             | API key                                                                                |
+| `showKey`              | Show key                                                                               |
+| `hideKey`              | Hide key                                                                               |
+| `copy`                 | Copy key                                                                               |
+| `copied`               | Copied                                                                                 |
+| `copyFailed`           | The key could not be copied. Select it and copy it by hand.                            |
+| `storeWarning`         | Store this key now in a safe place. It is not shown again after you close this dialog. |
+| `download`             | Download                                                                               |
+| `previous`             | Previous                                                                               |
+| `next`                 | Next                                                                                   |
+| `done`                 | Done                                                                                   |
+| `cancel`               | Cancel                                                                                 |
+| `pending`              | Working                                                                                |
+| `genericError`         | Something went wrong. Try again.                                                       |
+| `errorIconDescription` | Error                                                                                  |
+| `closeIconDescription` | Close                                                                                  |
+
+## Examples
+
+<Canvas of={APIKeyModalStories.GenerateSuccess} />
+
+<Canvas of={APIKeyModalStories.WithSteps} />
+
+<Canvas of={APIKeyModalStories.Edit} />
+
+<Canvas of={APIKeyModalStories.Pending} />
+
+<Canvas of={APIKeyModalStories.Dark} />
+
+## Keyboard and screen reader behaviour
+
+On open, focus goes to the name field, or to the step content when `steps` are
+given. Next and Previous move focus to the new step's content (the name field
+on the name step). After Generate, focus moves to the key field.
+
+Focus order on the name step: close icon, name, Cancel (or Previous),
+Generate. In the success view: close icon, key field, show/hide toggle, Copy,
+Download, Done.
+
+| Key          | Where      | Action                                                      |
+| ------------ | ---------- | ----------------------------------------------------------- |
+| Tab          | anywhere   | Moves through the dialog; never to the page behind it.      |
+| Enter        | Generate   | Generates the key and shows the success view.               |
+| Enter, Space | key toggle | Shows or hides the key.                                     |
+| Enter        | Copy       | Copies the key.                                             |
+| Enter        | Download   | Downloads the key as a file.                                |
+| Enter        | Done       | Closes the dialog.                                          |
+| Escape       | anywhere   | Closes the dialog, except while the key is being generated. |
+
+Focus is trapped by the browser's modal dialog: the page behind it is inert.
+On close, focus returns to `launcherRef`, else to the element focused before
+the dialog opened, else to the page body. After a failure, focus returns to
+the button that started it.
+
+Screen readers announce:
+
+- the dialog as a `dialog` named by its title;
+- the key field by `keyLabel`, described by `storeWarning`;
+- the toggle as `showKey`, then `hideKey` while the key shows;
+- the copy button by `copy`; after a copy, `copied` (or `copyFailed`) through
+  a polite status region. The button's own feedback shows `pending` until the
+  clipboard answers, then the same text;
+- a step's content as a section named by the step title;
+- `pending` while the key is generated, and a failure as an alert with
+  `genericError`.

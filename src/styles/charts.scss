@@ -1,0 +1,5 @@
+// Never @use Charts after IBM Products in one compile: IBM Products'
+// ConditionBuilder Sass reassigns @carbon/colors' $colors map, which Charts
+// reads when it loads.
+@use 'charts-component-tokens';
+@use '@carbon/charts/scss/index' as charts;

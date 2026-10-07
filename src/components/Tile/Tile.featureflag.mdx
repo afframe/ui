@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: flag setup samples replaced by a note that Afframe UI turns each flag on, source label added, codemod links pinned to v11.117.0.
+
+# Tile Feature Flags
+
+<SourceLabel name="carbon" />
+
+[Usage guidelines](https://carbondesignsystem.com/components/tile/usage/#feature-flags)
+
+<Meta title="Components/Tile/Feature Flag" name="Flag details" />
+
+[Feature flags](/docs/getting-started-feature-flags--overview) have been added
+to tile to improve accessibility and change their visual appearance, not their
+functionality. Designed to meet accessibility standards, particularly regarding
+contrast minimums. This ensures that tiles are more accessible to users with
+
+| Flag                                | Description                                                         | Availability | Codemod                                                                                                                                       |
+| ----------------------------------- | ------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enable-tile-contrast`              | Enable the improved styling for tiles that provides better contrast | Sass         |                                                                                                                                               |
+| `enable-v12-tile-default-icons`     | Enable default icons for Tile components                            | React        | [enable-v12-tile-default-icons](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/upgrade#enable-v12-tile-default-icons) |
+| `enable-v12-tile-radio-icons`       | Enable rendering of default icons in the tile components            | React, Sass  | [enable-v12-tile-radio-icons](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/upgrade#enable-v12-tile-radio-icons)     |
+| **Deprecated flags**                |                                                                     |              |                                                                                                                                               |
+| `enable-experimental-tile-contrast` | Deprecated, use `enable-tile-contrast` instead                      | Sass         |                                                                                                                                               |
+
+## Enable tile contrast
+
+The `enable-tile-contrast` flag adds a border to the tile with improved contrast
+for accessibility and to visually indicate they are operable.
+
+On in Afframe UI: `styles.css` sets it.
+
+## Enable tile default icons
+
+The `enable-v12-tile-default-icons` flag enables the rendering of default icons
+on the clickable variant of a tile, such as the ArrowRight icon for navigation
+or the Error icon when the tile is disabled. If the user hasn’t configured a
+different icon, these defaults will be used.
+
+On in Afframe UI: `AfframeProvider` sets it.
+
+## Enable tile radio icons
+
+The `enable-v12-tile-radio-icons` flag changes RadioTile to use radio button
+icons instead of checkmark icons.
+
+On in Afframe UI: `styles.css` and `AfframeProvider` set it.

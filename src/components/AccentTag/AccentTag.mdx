@@ -1,0 +1,80 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AccentTagStories from './AccentTag.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# AccentTag
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/AccentTag). See also [Tag](https://carbondesignsystem.com/components/tag/usage/).
+
+`AccentTag` is a clickable tag with a tooltip and a coloured strip on its
+inline-start edge. It is built on Carbon's `OperationalTag` (a gray tag) and
+`Tooltip`. It is a client module.
+
+<Canvas of={AccentTagStories.Default} />
+
+## Usage and props
+
+```tsx
+'use client';
+import { AccentTag } from '@afframe/ui';
+
+<AccentTag
+  text="Acme Trading"
+  accent="red"
+  tooltip="Two invoices overdue"
+  accentLabel="Overdue"
+  onClick={() => openCustomer('acme')}
+/>;
+```
+
+- `accent` is one of Carbon's tag colours. The strip is 4 px
+  (`$spacing-02`) wide and uses that colour's tag text token
+  (`$tag-color-<name>`), so it follows the light and dark themes. A disabled
+  tag shows the strip in `$border-disabled`. The three grays differ only
+  slightly.
+- The strip is decorative. If the colour means something, say it in text:
+  `accentLabel` adds that text to the tag's accessible name. With
+  `announceAccent`, the name gets `messages.accentLabel(accent)` ("Red
+  accent") instead.
+- `size` is `md` (24 px, default) or `lg` (32 px). Carbon's `sm` tag is
+  about 20 px high, under the 24 px target size, so it is not offered.
+- Without `onClick` the tag is still a button, so keyboard users can reach
+  the tooltip.
+- `tooltip` must not hold links or buttons; Carbon's tooltip is not
+  interactive.
+
+<ArgTypes of={AccentTagStories} />
+
+## Messages
+
+| Key           | Default                  | Used for                                   |
+| ------------- | ------------------------ | ------------------------------------------ |
+| `accentLabel` | "Red accent", per colour | `(color) => string`, with `announceAccent` |
+
+`accentLabel` is a function: pass `messages` from a client component.
+
+## Keyboard and screen reader behaviour
+
+- The tag is a `button` named by its text, plus the accent text when
+  `accentLabel` or `announceAccent` is set. It is described by the tooltip
+  (`aria-describedby`).
+- Tab focuses the tag and opens the tooltip. Hover opens it too, and it stays
+  open while the pointer is over it. Escape closes it; focus stays on the tag.
+- Enter and Space call `onClick`.
+- A disabled tag is skipped by Tab and does not call `onClick`.
+
+## Examples
+
+<Canvas of={AccentTagStories.Accents} />
+
+<Canvas of={AccentTagStories.WithIcon} />
+
+<Canvas of={AccentTagStories.Disabled} />
+
+<Canvas of={AccentTagStories.Dark} />

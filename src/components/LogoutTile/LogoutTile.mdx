@@ -1,0 +1,103 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as LogoutTileStories from './LogoutTile.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# LogoutTile
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/LogoutTile). See also [Global header pattern](https://carbondesignsystem.com/patterns/global-header/).
+
+`LogoutTile` goes in the profile panel of the header. It says who is signed
+in and holds the log-out button. It is a Carbon `Tile` on a `Layer`; the
+button is its only interactive element.
+
+IBM's `@carbon-labs/wc-global-header` has a "logout tile", but that part is a
+signed-out landing card (brand, product name, a text and a sign-in link). Its
+signed-in log-out action lives in the profile popover: a small ghost "Log out"
+button that first closes the popover, then runs the app's handler or follows
+a sign-out link. `LogoutTile` follows the profile popover: the same two forms
+(a handler or a link), with a larger tertiary button and a loading state.
+
+<Canvas of={LogoutTileStories.Default} />
+
+## Usage and props
+
+```tsx
+import { LogoutTile } from '@afframe/ui';
+
+<LogoutTile
+  userName="Sample User"
+  userEmail="user@example.com"
+  onLogout={() => auth.signOut()}
+/>;
+
+// No function needed, so a server component can render it:
+<LogoutTile userName="Sample User" href="/auth/sign-out" />;
+```
+
+- `onLogout` or `href`, never both. `onLogout` may return a promise: the tile
+  shows the loading state until it settles, and ignores further presses. A
+  rejected promise ends the loading state; the app shows its own error.
+- `href`: the button is a link to the sign-out URL.
+- `userName`, `userEmail`: the "Signed in as" line uses `userName`, or
+  `userEmail` when there is no name.
+- `loading`: shows the loading state (for example while the app signs out
+  after a redirect).
+- `messages`: overrides for the strings below.
+
+### Use in the Carbon header
+
+Put the tile in a Carbon `HeaderPanel` opened by a profile
+`HeaderGlobalAction`. The tile has no panel of its own. Keep one header panel
+open at a time (see "One panel at a time" on the EnvironmentSwitcher page).
+
+### Use in the Labs shell
+
+Put the tile in the Labs `Profile` popover, after `Profile.UserInfo`. Avoid
+`HeaderOverflowPanel`: it wraps its children in a list, so a tile there is not
+a list item.
+
+<ArgTypes of={LogoutTileStories} />
+
+## Messages
+
+`messages?: Partial<LogoutTileMessages>`; defaults in
+`defaultLogoutTileMessages`. Override the function key from a client
+component (a function cannot cross from a server component).
+
+| Key          | Default             |
+| ------------ | ------------------- |
+| `logOut`     | Log out             |
+| `signedInAs` | Signed in as `name` |
+| `loggingOut` | Logging out         |
+
+## Examples
+
+<Canvas of={LogoutTileStories.Loading} />
+
+<Canvas of={LogoutTileStories.AsLink} />
+
+<Canvas of={LogoutTileStories.InLabsShell} />
+
+<Canvas of={LogoutTileStories.Dark} />
+
+## Keyboard and screen reader behaviour
+
+The log-out button is the tile's only tab stop; the text is not a click
+target.
+
+| Key          | Where          | Action                                          |
+| ------------ | -------------- | ----------------------------------------------- |
+| Tab          | panel          | Reaches the log-out button.                     |
+| Enter, Space | log-out button | Runs `onLogout` (Enter only for the link form). |
+
+While logging out, the button is disabled and reads `loggingOut`, and the
+tile has `aria-busy="true"`. If the button had focus, focus moves to the tile
+so it is not lost; the tile is focusable by script only. Screen readers read
+the "Signed in as" line and the email as plain text and the button by its
+text.

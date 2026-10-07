@@ -1,0 +1,194 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as EnvironmentSwitcherStories from './EnvironmentSwitcher.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# EnvironmentSwitcher
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/EnvironmentSwitcher). See also [Global header pattern](https://carbondesignsystem.com/patterns/global-header/) and [UI Shell header](https://carbondesignsystem.com/components/UI-shell-header/usage/).
+
+`EnvironmentSwitcher` is a header action that shows the current environment
+(for example Development, Staging, Live) and opens a Carbon `HeaderPanel`
+with the environments as radio buttons. A production environment carries a
+red "Production" tag, so the status is text, not colour only.
+
+IBM's `@carbon-labs/wc-global-header` has a switcher of this kind: a header
+menu whose trigger shows the selected item (cut to 22 characters, with the
+full name as a tooltip), items with a check mark on the selected one, closing
+on selection, and a `disabled` state where the menu opens but items do
+nothing. `EnvironmentSwitcher` keeps the visible name (cut with an ellipsis,
+full name in the tooltip), closing on selection and `disabled`, and changes:
+
+- the list is a radio group in a panel, which says "one of these is current"
+  better than a menu;
+- the app owns the current environment (`value`); the reference keeps it
+  internally;
+- arrow keys only move the selection; Enter, Space or a click switches. An
+  arrow press never switches by accident, for example into production;
+- a production tag and a spoken confirmation after a switch.
+
+<Canvas of={EnvironmentSwitcherStories.Default} />
+
+## Usage and props
+
+```tsx
+import { EnvironmentSwitcher } from '@afframe/ui';
+
+<HeaderGlobalBar>
+  <EnvironmentSwitcher
+    environments={[
+      { id: 'dev', label: 'Development' },
+      { id: 'staging', label: 'Staging', description: 'Data copied nightly' },
+      { id: 'prod', label: 'Live', production: true },
+    ]}
+    value={environment}
+    onChange={setEnvironment}
+  />
+</HeaderGlobalBar>;
+```
+
+- `environments`: `id`, `label`, optional `description` and `production`.
+- `value`, `onChange`: the app owns the current environment. `onChange` is
+  called once per switch, never for the current one.
+- `open`, `defaultOpen`, `onOpenChange`: controlled or uncontrolled open
+  state. `onOpenChange` is called once per change.
+- `label`: the action's accessible name and tooltip; default
+  `messages.currentEnvironment(current label)`.
+- `disabled`: the panel opens, the radios are disabled.
+- `renderAction`: a trigger element to use instead of the icon action.
+- `presentation`: `'panel'` (default) renders the action and its panel;
+  `'content'` renders only the radio group, for a Labs `HeaderPopover` (see
+  below). In `'content'` mode `open`, `defaultOpen`, `onOpenChange`, `label`
+  and `renderAction` are ignored.
+- `messages`: overrides for the strings below.
+
+### Use in the Carbon header
+
+Put `EnvironmentSwitcher` in `HeaderGlobalBar`. It renders the
+`HeaderGlobalAction` (icon and current name) and its `HeaderPanel`, fixed
+under the header at the end of the page.
+
+### Use in the Labs shell
+
+The Labs shell uses the same Carbon `Header` and `HeaderGlobalBar`, so the
+default action works there as it is. To match the Labs menu buttons, pass
+`renderAction`: an element (for example a ghost `Button` with the
+environment name) that names itself. The component adds `ref`, `onClick`,
+`aria-expanded` and `aria-controls` and calls the element's own `onClick`
+first. A Labs `HeaderPopoverButton` cannot be this trigger: it only works
+inside a Labs `HeaderPopover`, which keeps its own open state. For that, use
+content mode.
+
+### Use inside a Labs HeaderPopover
+
+`presentation="content"` renders only the radio group and the status region
+(no action, no panel, no open state). Put it in `HeaderPopoverContent`; the
+popover owns open state, the outside press, Escape and focus return. The
+status region is inside the popover content, so keep the popover open after a
+switch (as it stays by default): closing it in `onChange` can cut off the
+announcement.
+
+```tsx
+<HeaderPopover align="bottom-end">
+  <HeaderPopoverButton align="bottom-end" label="Switch environment">
+    <ArrowsHorizontal size={20} />
+  </HeaderPopoverButton>
+  <HeaderPopoverContent>
+    <EnvironmentSwitcher
+      presentation="content"
+      environments={environments}
+      value={environment}
+      onChange={setEnvironment}
+    />
+  </HeaderPopoverContent>
+</HeaderPopover>
+```
+
+A switch does not close the popover: the content cannot reach the Labs
+`HeaderPopover`'s close action (its context is not exported).
+`HeaderPopoverButton` sets no `aria-expanded`, so screen readers do not hear
+the popover's state.
+
+<Canvas of={EnvironmentSwitcherStories.InHeaderPopover} />
+
+### One panel at a time
+
+Header panels share the same place under the header. Keep one open: hold the
+open panel's name in state and pass `open` and `onOpenChange` to each action.
+A press on another action closes the open panel (outside press), and the
+other action then opens.
+
+```tsx
+const [openPanel, setOpenPanel] = useState<'environment' | 'help' | null>(null);
+const toggle = (panel) => (open) =>
+  setOpenPanel((current) => (open ? panel : current === panel ? null : current));
+
+<EnvironmentSwitcher open={openPanel === 'environment'} onOpenChange={toggle('environment')} ... />
+<HelpMenu open={openPanel === 'help'} onOpenChange={toggle('help')} ... />
+```
+
+<Canvas of={EnvironmentSwitcherStories.OnePanelAtATime} />
+
+<ArgTypes of={EnvironmentSwitcherStories} />
+
+## Messages
+
+`messages?: Partial<EnvironmentSwitcherMessages>`; defaults in
+`defaultEnvironmentSwitcherMessages`. Override the function keys from a
+client component (a function cannot cross from a server component).
+
+| Key                  | Default              |
+| -------------------- | -------------------- |
+| `label`              | Switch environment   |
+| `panelHeading`       | Environments         |
+| `currentEnvironment` | Environment: `label` |
+| `productionTag`      | Production           |
+| `switched`           | Switched to `label`  |
+
+`label` names the panel (a region); `currentEnvironment` names the action, so
+the visible name is part of the accessible name.
+
+## Examples
+
+<Canvas of={EnvironmentSwitcherStories.WithProduction} />
+
+<Canvas of={EnvironmentSwitcherStories.InLabsShell} />
+
+<Canvas of={EnvironmentSwitcherStories.Dark} />
+
+## Keyboard and screen reader behaviour
+
+On open, focus moves to the checked radio (the current environment). While
+the panel is closed its radios are inert (out of the tab order).
+
+| Key          | Where         | Action                                                                                            |
+| ------------ | ------------- | ------------------------------------------------------------------------------------------------- |
+| Enter, Space | action        | Opens or closes the panel.                                                                        |
+| Arrow keys   | radio         | Moves the selection. Nothing switches yet.                                                        |
+| Enter, Space | radio         | Switches to that environment (if it is not the current one), closes, focus returns to the action. |
+| Tab          | radio         | Leaves the group; focus leaves the panel and it closes.                                           |
+| Escape       | panel, action | Closes without switching; focus returns to the action.                                            |
+
+A click on an environment switches to it and closes the panel; a click on
+the current one only closes. A click outside closes without switching.
+Reopening starts from the current environment.
+
+In content mode inside a Labs `HeaderPopover`, opening keeps focus on the
+popover button and Tab moves to the checked radio. Arrow keys move the
+selection without switching; Enter, Space or a click switches, focus stays
+on the radio and the popover stays open. Escape reaches the popover, which
+closes and focuses its button. When focus leaves the group without a switch,
+the selection goes back to the current environment.
+
+Screen readers announce:
+
+- the action as a button named by `currentEnvironment`, with its expanded
+  state; `aria-controls` points at the panel;
+- the panel as a region named by `label`, the group by `panelHeading`, and
+  each radio by its label (plus `productionTag`) and description;
+- after a switch, `switched` in a polite status region outside the panel.

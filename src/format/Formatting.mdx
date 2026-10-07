@@ -1,0 +1,144 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta title="Components/Formatting" />
+
+# Formatting
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/format). See also [Amount](?path=/docs/components-amount--overview) and [AmountInput](?path=/docs/components-amount-input--overview).
+
+Functions for amounts, numbers, dates and date-range presets. They run on the
+server and in the browser (no `'use client'`). Defaults: locale `cs-CZ`,
+currency `CZK`, time zone `Europe/Prague` (`defaultLocale`,
+`defaultCurrency`, `defaultTimeZone`). Every default can be overridden per
+call. Import them from `@afframe/ui`, or from `@afframe/ui/format` in server
+code that should not load the components.
+
+```js
+import { formatAmount, formatDate, getDateRangePreset } from '@afframe/ui';
+
+formatAmount(1234.5); // '1 234,50 Kč' (U+00A0 spaces)
+formatAmount(1234.5, { currency: 'EUR', locale: 'en-GB' }); // '€1,234.50'
+formatDate(new Date('2026-10-06T22:30:00Z')); // '7. 10. 2026' (Prague)
+getDateRangePreset('thisMonth'); // { start: '2026-10-01', end: '2026-10-31' }
+```
+
+## App-wide defaults
+
+`createFormat({ locale, currency, timeZone, weekStartsOn })` returns the same
+functions with the app's defaults; options per call still win. Create it once
+in a module and import that module wherever the app formats. It is a plain
+function, so it works in server and client components (a React context would
+not reach server components). For `Amount`, pass `format.locale` and
+`format.currency`, or wrap `Amount` once in the app.
+
+```js
+// app/format.ts
+import { createFormat } from '@afframe/ui/format';
+
+export const format = createFormat({ locale: 'en-US', currency: 'EUR' });
+
+format.formatAmount(1234.5); // '€1,234.50'
+format.formatAmount(1234.5, { currency: 'USD' }); // '$1,234.50'
+```
+
+## Amounts
+
+An amount is a `number` in major units (crowns, not hellers).
+
+| Function                                     | Returns                                                                                                                             |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `formatAmount(value, options?)`              | Formatted amount. Options: `locale`, `currency`, `digits`, `signDisplay`, `currencyDisplay`, `currencySign`, `trailingZeroDisplay`. |
+| `roundAmount(value, { currency?, digits? })` | The amount rounded to the currency's minor digits, or to `digits`.                                                                  |
+| `currencyDigits(currency?)`                  | Minor digits from the engine's locale data: CZK and EUR 2, JPY 0.                                                                   |
+| `formatNumber(value, options?)`              | A plain number; Intl `NumberFormat` options pass through.                                                                           |
+
+Money rules:
+
+- Amounts round to the currency's minor digits, as the engine's locale data
+  (CLDR) reports them, not ISO 4217: HUF and IDR give 0 where ISO 4217 lists 2.
+  Pass `digits` to round and print another number of digits.
+- Rounding is half away from zero on the number cut to 15 significant digits:
+  `1.005` becomes `1.01`, `9.5 * 0.21` (`1.9949999999999999` in binary)
+  becomes `2.00`, `2.5` JPY becomes `3`, `-2.5` JPY becomes `-3`.
+- Amounts are exact to 15 significant digits (about 10 trillion crowns to the
+  heller); above that the number is cut to 15 digits before rounding.
+- Do money arithmetic in integer minor units (hellers) or with a decimal
+  library, and pass the result here to format it.
+- Zero never shows a minus sign: `-0` and `-0.004` give `0,00 Kč`.
+- The minus sign is U+002D. Group and currency spaces in Czech are U+00A0.
+- `NaN` and `Infinity` throw a `RangeError`, in `formatNumber` too. `Amount`
+  shows its `fallback` instead, when given.
+
+## Dates
+
+Dates come as a `Date`, epoch milliseconds, an ISO timestamp with `Z` or an
+offset (`2026-10-07T10:00:00Z`, `2026-10-07T12:00+02:00`), or a civil date
+string `YYYY-MM-DD` (type `CivilDate`). An instant is shown in the time zone
+(default Prague); a civil date is the same calendar day everywhere. Any other
+string throws a `RangeError`, including a timestamp without `Z` or an offset.
+
+| Function                                | Returns                                                       |
+| --------------------------------------- | ------------------------------------------------------------- |
+| `formatDate(value, options?)`           | Default medium style: `7. 10. 2026`.                          |
+| `formatDateRange(start, end, options?)` | `01.10.2026 – 31.10.2026`; spaces around the dash are U+0020. |
+| `civilDateIn(instant, timeZone?)`       | The civil date of an instant in a zone.                       |
+| `startOfDayIn(date, timeZone?)`         | The instant a civil date starts in a zone.                    |
+| `addDays(date, days)`                   | A civil date moved by whole days.                             |
+| `civilDateToLocalDate(date)`            | A local `Date` at midnight, for Carbon's `DatePicker`.        |
+| `localDateToCivilDate(date)`            | The civil date of a local `Date` that `DatePicker` returns.   |
+
+Options for `formatDate` and `formatDateRange` are Intl `DateTimeFormat`
+options plus `locale`. Node and browsers can differ in Intl's spaces, so both
+functions print U+2009 and U+202F as U+0020 and server and client agree. Range
+ends must both be civil dates or both instants. A reversed range prints in the
+given order; sort the ends first.
+
+`startOfDayIn` assumes local midnight exists. In zones that skip midnight for
+daylight saving time (America/Santiago) it returns the hour before; Prague
+switches at 02:00.
+
+## Date-range presets
+
+`getDateRangePreset(preset, { now?, timeZone?, weekStartsOn? })` returns an
+inclusive range of civil dates, `{ start, end }`. "Today" is taken in the time
+zone (default Prague), so at 00:30 in Prague the range is already the new day.
+
+Presets (`dateRangePresets`): `today`, `yesterday`, `thisWeek`, `lastWeek`,
+`last7Days`, `last30Days`, `thisMonth`, `lastMonth`, `thisQuarter`,
+`lastQuarter`, `thisYear`, `lastYear`.
+
+- Weeks start on Monday (ISO 8601); `weekStartsOn` changes it.
+- Week, month, quarter and year presets cover the whole period, including days
+  after today. `last7Days` and `last30Days` end today.
+- `defaultDateRangePresetMessages` holds English labels for a preset list.
+
+With Carbon's `DatePicker` (it works in the browser's own time zone):
+
+```jsx
+const { start, end } = getDateRangePreset('lastMonth');
+<DatePicker
+  datePickerType="range"
+  value={[civilDateToLocalDate(start), civilDateToLocalDate(end)]}
+  onChange={([from, to]) => {
+    // The first click gives only the start.
+    if (from && to) {
+      setRange({
+        start: localDateToCivilDate(from),
+        end: localDateToCivilDate(to),
+      });
+    }
+  }}
+/>;
+```
+
+For a server query use half-open bounds in the business time zone:
+
+```js
+const from = startOfDayIn(start); // inclusive
+const until = startOfDayIn(addDays(end, 1)); // exclusive
+```

@@ -1,0 +1,122 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as LogoutBannerStories from './LogoutBanner.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# LogoutBanner
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/LogoutBanner). See also [Global header pattern](https://carbondesignsystem.com/patterns/global-header/).
+
+`LogoutBanner` tells the user that the session is ending (`expiring`) or has
+ended (`signed-out`). It is a Carbon inline `ActionableNotification` at the
+top of the page content, under the header.
+
+IBM's `@carbon-labs/wc-global-header` has a "logout banner", but that part is
+a plain branded header bar for the signed-out landing page. Its session expiry
+notice is the closer match: a warning that says how long is left, ticking
+every second, with no action and no close button. `LogoutBanner` keeps the
+warning and adds what the expiry notice leaves out:
+
+- a "Stay signed in" action, so the user can extend the session (WCAG 2.2.1);
+- the `signed-out` state with a "Sign in" action;
+- an optional close button;
+- one update per minute instead of per second, so a screen reader is not
+  interrupted every second.
+
+<Canvas of={LogoutBannerStories.Default} />
+
+## Usage and props
+
+```tsx
+import { LogoutBanner } from '@afframe/ui';
+
+{
+  minutesLeft <= 5 && (
+    <LogoutBanner
+      variant="expiring"
+      minutesLeft={minutesLeft}
+      onStaySignedIn={refreshSession}
+      onDismiss={() => setBannerHidden(true)}
+    />
+  );
+}
+{
+  signedOut && <LogoutBanner variant="signed-out" onSignIn={goToSignIn} />;
+}
+```
+
+- `variant`: `expiring` (Carbon `warning`) or `signed-out` (Carbon `info`).
+- `minutesLeft`: required for `expiring`. The app owns the clock and passes
+  whole minutes. A fraction is rounded up and a negative or non-number value
+  shows 0; both log a warning. The banner never runs a timer, so it renders
+  the same on the server and in tests.
+- `onStaySignedIn` (`expiring`) and `onSignIn` (`signed-out`): the action
+  button appears only when its callback is set.
+- `onDismiss`: shows the close button. The banner does not hide itself: the
+  app removes it in `onDismiss`.
+- `messages`: overrides for the strings below.
+
+### Use in the Carbon header
+
+Render the banner as the first element of the page content (Carbon
+`Content`), so it sits under the fixed header.
+
+### Use in the Labs shell
+
+The same: the banner goes at the top of the content under the Labs header. It
+has no panel of its own.
+
+<ArgTypes of={LogoutBannerStories} />
+
+## Messages
+
+`messages?: Partial<LogoutBannerMessages>`; defaults in
+`defaultLogoutBannerMessages`. Override the function key from a client
+component (a function cannot cross from a server component).
+
+| Key                        | Default                                 |
+| -------------------------- | --------------------------------------- |
+| `expiring`                 | Your session ends in `minutes` minutes. |
+| `signedOut`                | You have been signed out.               |
+| `staySignedIn`             | Stay signed in                          |
+| `signIn`                   | Sign in                                 |
+| `closeIconDescription`     | Close                                   |
+| `expiringIconDescription`  | Warning                                 |
+| `signedOutIconDescription` | Information                             |
+
+## Examples
+
+<Canvas of={LogoutBannerStories.Expiring} />
+
+<Canvas of={LogoutBannerStories.SignedOut} />
+
+<Canvas of={LogoutBannerStories.InLabsShell} />
+
+<Canvas of={LogoutBannerStories.Dark} />
+
+## Keyboard and screen reader behaviour
+
+The banner never moves focus when it appears. Focus order: the action button,
+then the close button (when `onDismiss` is set).
+
+| Key          | Where         | Action                                   |
+| ------------ | ------------- | ---------------------------------------- |
+| Tab          | page          | Reaches the action button, then close.   |
+| Enter, Space | action button | Calls `onStaySignedIn` or `onSignIn`.    |
+| Enter, Space | close button  | Calls `onDismiss`.                       |
+| Escape       | in the banner | Calls `onDismiss` (only when it is set). |
+
+Screen readers announce:
+
+- `expiring` as a polite `status` region: a change of `minutesLeft` is read
+  once, without interrupting. The text changes only when the minute count
+  changes;
+- `signed-out` as an `alert`: it interrupts, because the user has lost the
+  session;
+- the status icon by `expiringIconDescription` or `signedOutIconDescription`,
+  and the close button by `closeIconDescription`.

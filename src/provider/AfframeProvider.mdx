@@ -1,0 +1,37 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AfframeProviderStories from './AfframeProvider.stories';
+import { SourceLabel } from '../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# AfframeProvider
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/provider)
+
+Wrap the app once, near the root. The provider turns on Carbon's v12
+feature flags (`docs/feature-flags.md`); the stylesheet carries the same flags.
+
+```tsx
+import '@afframe/ui/styles.css';
+import { AfframeProvider } from '@afframe/ui';
+
+<AfframeProvider>{children}</AfframeProvider>;
+```
+
+<Canvas of={AfframeProviderStories.Default} />
+
+## Themes
+
+The app sets `data-afframe-theme` on `<html>`; the provider does not.
+
+- `light` or no attribute: light theme.
+- `dark`: dark theme.
+- `system`: follows the operating system.
+
+## Component API
+
+<ArgTypes />

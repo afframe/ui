@@ -1,0 +1,5 @@
+/* Story canvases on docs pages follow the selected Carbon theme. */
+.docs-story {
+  background-color: var(--cds-background);
+  color: var(--cds-text-primary);
+}

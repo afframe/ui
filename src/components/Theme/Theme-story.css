@@ -1,0 +1,38 @@
+/*
+ * Copyright IBM Corp. 2018, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2018, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with Carbon custom properties, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.theme-section {
+  padding: var(--cds-spacing-05);
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+}
+
+.theme-layer-example {
+  padding: var(--cds-spacing-05);
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+}
+
+.theme-layer-header {
+  margin-block-end: var(--cds-spacing-05);
+}
+
+.theme-with-layer {
+  padding: var(--cds-spacing-05);
+  background: var(--cds-layer);
+  color: var(--cds-text-primary);
+}
+
+.carbon-storybook-template--annotation--background {
+  margin: 0 !important;
+  min-block-size: 0 !important;
+}

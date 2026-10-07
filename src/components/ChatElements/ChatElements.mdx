@@ -1,0 +1,223 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ChartStories from './ChatChart.stories';
+import * as InChatStories from './InChat.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# Chat elements
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/ChatElements). See also [Carbon AI Chat docs](https://chat.carbondesignsystem.com/tag/latest/docs/documents/Overview.html).
+
+A renderer for `user_defined` items of IBM's AI chat (`@carbon/ai-chat`):
+a chart drawn by Carbon Charts or ECharts, which the chat has no item type
+for. `ChatChart` also works on its own, outside a chat. Both are client
+modules.
+
+Carousels, tables and code render natively in `@carbon/ai-chat`, so Afframe
+has no renderer for them: send a `carousel` item
+([`CarouselItem`](https://chat.carbondesignsystem.com/tag/latest/docs/interfaces/Type_reference.CarouselItem.html)), or a
+markdown table or fenced code block in a `text` item (the chat's markdown
+renderer sorts, filters and pages tables and highlights and copies code). See
+the [message format](https://chat.carbondesignsystem.com/tag/latest/docs/documents/Server_communication.Message_format.html)
+and the [markdown options](https://chat.carbondesignsystem.com/tag/latest/docs/interfaces/Type_reference.ChatContainerPropsMarkdown.html).
+
+## Wiring
+
+Pass `renderChatElement` as the chat's `renderUserDefinedResponse`:
+
+```tsx
+'use client';
+import { ChatCustomElement, renderChatElement } from '@afframe/ui';
+
+<ChatCustomElement
+  className="assistant"
+  messaging={{ customSendMessage }}
+  renderUserDefinedResponse={renderChatElement}
+/>;
+```
+
+It draws items whose `user_defined.user_defined_type` is one of
+`chatElementTypes` (`afframe-chart`) and returns `null` for any other item,
+so an app chains its own renderer after it:
+
+```tsx
+const render: RenderUserDefinedResponse = (state, instance) =>
+  renderChatElement(state, instance) ?? renderMyElement(state);
+```
+
+The third argument takes `elements` (the types to draw, default all) and
+`messages` (`{ chart }`, a partial of the chart's messages).
+
+## Payloads
+
+A server sends a `user_defined` item. Every payload is JSON and passes a
+runtime guard (`isChatChartData`) before it renders.
+
+```json
+{
+  "response_type": "user_defined",
+  "user_defined": {
+    "user_defined_type": "afframe-chart",
+    "chart_type": "bar",
+    "title": "Revenue by region",
+    "summary": "Prague 2,000; Brno 1,400.",
+    "data": [
+      { "group": "Prague", "value": 2000 },
+      { "group": "Brno", "value": 1400 }
+    ]
+  }
+}
+```
+
+| `user_defined_type` | Payload                                                                                                                                          | Engine        |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| `afframe-chart`     | `{ chart_type: 'bar' \| 'line' \| 'area' \| 'pie' \| 'donut' \| 'scatter'; title?; summary; data: { group; key?; value }[]; engine?: 'charts' }` | Carbon Charts |
+| `afframe-chart`     | `{ engine: 'echarts'; title?; summary; option: object }` (a subset, below)                                                                       | ECharts       |
+
+- Chart: `summary` is required, it is the text alternative. `data` is
+  Carbon Charts tabular data: `group` is the series or slice, `key` the x
+  value of line, area, scatter and grouped bar charts. `group` and `key` must not
+  contain `<` or `>` (Carbon Charts tooltips render them as HTML); in the
+  Carbon Charts title they are dropped. A bar chart without
+  `key` draws one bar per group. Vega-Lite specs, the format of the Carbon
+  Labs chart element, are not accepted.
+- ECharts: the payload is untrusted, so only this subset of the option
+  reaches ECharts; every other key is dropped:
+  - `title` (one or a list): `text`, `subtext`.
+  - `legend`: `show`, `orient`, `data` (strings).
+  - `grid`: `left`, `right`, `top`, `bottom`, `containLabel`.
+  - `xAxis`, `yAxis` (one or a list): `type`, `name`, `data`, `min`, `max`,
+    `boundaryGap`.
+  - `dataset`: `source` (rows of strings, numbers and `null`), `dimensions`.
+  - `tooltip`: `trigger`, `axisPointer.type`; it always renders on the canvas
+    (`renderMode: 'richText'`).
+  - `series` (one or a list) of type `bar`, `line`, `pie` or `scatter`:
+    `name`, `data` (values, value lists or `{ name, value }`), `stack`,
+    `smooth`, `radius`, `center`, `xAxisIndex`, `yAxisIndex`,
+    `datasetIndex`, `encode`, `areaStyle.opacity`.
+  - `animation`.
+
+  Dropped on purpose: title links and targets, formatters, rich text,
+  labels, symbols (`image://`), background images, `baseOption`, `media`,
+  `options` and `timeline`.
+
+- `ChatChart` takes `animations` (default `true`) besides the payload, for
+  screenshots.
+
+## Loading
+
+Each engine loads with `import()` of its family's module when an element
+first renders, behind a skeleton. A route that imports `ChatElements` ships
+none of the Carbon Charts or ECharts code in its script tags; the engine
+arrives as an async chunk when a message needs it. A Carbon Charts
+figure carries `data-afframe-extra="charts"` and needs `@afframe/ui/charts.css`
+imported by the app (the Charts page); ECharts renders inside its
+`data-afframe-extra="echarts"` container. If an engine's code fails to load, the element
+shows an inline error (`loadError`); the next element that needs it tries
+the import again.
+
+## States
+
+- Streaming: until the item is complete (`messageItem` unset, `partialItems`
+  present), an element type of this module shows a skeleton with
+  `aria-busy="true"` and the `loading` message.
+- Invalid payload: an inline error with `invalid(type)`; raw data is never
+  shown. `renderChatElement` passes only the payload fields of each type to
+  the component, so a payload cannot set `className` or `messages`.
+- Engine errors: each element sits behind its own error boundary. A failed
+  engine import shows `loadError` (the next element that needs the engine
+  imports it again); an engine that throws while drawing (such as ECharts on
+  an option it cannot draw, like a line series without axes) shows
+  `invalid(type)`. Other elements in the chat keep rendering.
+
+## Messages
+
+Function messages are overridden from a client component (or use string
+overrides in server code). The chart also takes the shared keys of
+`ChatElementsMessages`: `loading` ("Loading"), `invalid(type)` ("This
+content could not be shown."), and `loadError` ("This content could not
+load. Reload the page to try again.").
+
+| Element     | Key                 | Default                 |
+| ----------- | ------------------- | ----------------------- |
+| `ChatChart` | `chartLabel(title)` | the title, else "Chart" |
+
+## Examples
+
+Charts: bar, line, pie, donut, ECharts and dark.
+
+<Canvas of={ChartStories.Bar} />
+
+<Canvas of={ChartStories.Line} />
+
+<Canvas of={ChartStories.Pie} />
+
+<Canvas of={ChartStories.Donut} />
+
+<Canvas of={ChartStories.Echarts} />
+
+<Canvas of={ChartStories.Dark} />
+
+<ArgTypes of={ChartStories} />
+
+In a chat: one message with a chart and a markdown code block, which the chat renders natively.
+
+<Canvas of={InChatStories.InChat} />
+
+## Keyboard and screen reader behaviour
+
+- Chart: a `figure` named by the title (`chartLabel`) and described by
+  `summary` (visually hidden text, `aria-describedby`). No tab stop: no
+  toolbar, and the legend does not filter. Carbon Charts keeps its own roles
+  inside (title heading, legend group, labelled bars and slices). ECharts
+  draws on a canvas; the figure's name and description are its text.
+- Every control is at least 24 px (axe `target-size` runs on every story).
+
+## Comparison with Carbon Labs AI chat
+
+Checked on 2026-10-07: `@carbon-labs/ai-chat` 0.39.0 (every folder of
+`es/components/`, the element sources `src/*.js` and templates) against
+`@carbon/ai-chat` 1.22.0 (`MessageResponseTypes`, the `GenericItem` union in
+the server entry types, and the compiled response dispatch) and
+`@carbon/ai-chat-components` 1.12.0 (the markdown renderer). Labs elements
+take their content as strings (JSON or text) on custom elements.
+
+`@carbon/ai-chat 1.22` column: `native item type X`, `markdown renderer`,
+`user_defined` or `none`. Result: `Afframe renderer`, `native, not built`,
+or `not built: no engine`.
+
+| Labs element          | What it renders                                                              | Needs in Labs                | @carbon/ai-chat 1.22                                                     | Afframe                  | Result                                                                          |
+| --------------------- | ---------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------ | ------------------------ | ------------------------------------------------------------------------------- |
+| `cardElement`         | Link preview, file, audio and video cards                                    | Carbon web components, icons | native item types `card`, `preview_card`, `video`, `audio`               | none                     | native, not built                                                               |
+| `carouselElement`     | Slides of media or link cards from a list of URLs, previous and next buttons | Carbon web components        | native item type `carousel` (holds any items, such as cards)             | none                     | native, not built                                                               |
+| `chartElement`        | A Vega-Lite chart, with export, zoom and editor options                      | vega, vega-lite, vega-embed  | none (`user_defined`)                                                    | `ChatChart`              | Afframe renderer (tabular data or an ECharts option; Vega-Lite is not accepted) |
+| `codeElement`         | A code block with highlighting, line count, copy, edit and diff              | highlight.js                 | markdown renderer (fenced code: code snippet with highlighting and copy) | none                     | native, not built                                                               |
+| `diagramElement`      | A Mermaid diagram                                                            | mermaid                      | none                                                                     | none                     | not built: no engine (needs Mermaid)                                            |
+| `editableTextElement` | A text area to edit the user's own message                                   | none                         | none (no message editing item found; unverified beyond the types)        | none                     | not built: no engine (an editing control, not a response element)               |
+| `errorElement`        | Error text                                                                   | none                         | native item type `inline_error`                                          | none                     | native, not built                                                               |
+| `fileUploadElement`   | A file chip with upload status                                               | Carbon web components        | none as an item; the chat's own file upload (config unverified)          | none                     | native, not built                                                               |
+| `formulaElement`      | LaTeX or MathML                                                              | MathJax                      | none                                                                     | none                     | not built: no engine (needs MathJax)                                            |
+| `imageElement`        | An image                                                                     | none                         | native item type `image`                                                 | none                     | native, not built                                                               |
+| `linkListElement`     | Up to four links, more behind "show more"                                    | none                         | native item type `conversational_search` (citations); markdown links     | none                     | native, not built                                                               |
+| `listElement`         | An ordered or unordered list from lines of text                              | none                         | markdown renderer (lists in `text` items)                                | none                     | native, not built                                                               |
+| `loadingElement`      | Three animated dots                                                          | none                         | none as an item; the chat's own loading indicator (unverified)           | skeleton while streaming | native, not built                                                               |
+| `molecularElement`    | A molecule drawn from a SMILES string                                        | smiles-drawer                | none                                                                     | none                     | not built: no engine (needs smiles-drawer)                                      |
+| `popupElement`        | Feedback and data collection popups                                          | Carbon web components        | none as an item; the chat's own message feedback                         | none                     | native, not built                                                               |
+| `tableElement`        | A plain table from comma-separated text (no quoting, sorting or pages)       | none                         | markdown renderer (tables with sorting, filtering and pages)             | none                     | native, not built                                                               |
+| `tagListElement`      | Selectable tags                                                              | Carbon web components        | native item types `option` and `button`                                  | none                     | native, not built                                                               |
+| `textElement`         | Text with annotations, highlighting and streaming                            | none                         | native item type `text` (markdown)                                       | none                     | native, not built                                                               |
+| `chat`                | The chat container                                                           | Carbon web components        | none as an item; the chat itself (`ChatContainer`, `ChatCustomElement`)  | AI Chat                  | native, not built                                                               |
+| `header`              | The chat header: title, menu, minimize, close                                | Carbon web components        | none as an item; the chat's header config                                | AI Chat                  | native, not built                                                               |
+| `footer`              | The input line, character limit, stop streaming                              | Carbon web components        | none as an item; the chat's input                                        | AI Chat                  | native, not built                                                               |
+| `historyViewer`       | A tree of past conversations                                                 | Carbon web components        | none as an item; the chat's history                                      | AI Chat                  | native, not built                                                               |
+| `message`             | One message: avatar, elements, feedback, regenerate                          | Carbon web components        | none as an item; the chat's message rendering                            | AI Chat                  | native, not built                                                               |
+| `messages`            | The message list: scrolling, docking, streaming                              | Carbon web components        | none as an item; the chat's message list                                 | AI Chat                  | native, not built                                                               |
+
+The last six rows are parts of the chat itself, not elements; `AI Chat`
+covers them. The markdown table and code renderers can be replaced through
+the chat's `markdownConfig.customRenderers`.

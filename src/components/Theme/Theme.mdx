@@ -1,0 +1,143 @@
+import { ArgTypes, Story, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ThemeStories from './Theme.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.117.0, code samples import from @afframe/ui, Sass setup replaced by the Afframe theme model (styles.css and data-afframe-theme).
+
+<Meta isTemplate />
+
+# Theme
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/Theme)
+
+{/* prettier-ignore-start */}
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Setting the global theme](#setting-the-global-theme)
+- [Setting an inline theme](#setting-an-inline-theme)
+- [Getting the current theme in a component](#getting-the-current-theme-in-a-component)
+- [Component API](#component-api)
+  - [Theme as](#theme-as)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+{/* prettier-ignore-end */}
+
+## Overview
+
+The `GlobalTheme` and `Theme` components allow you to specify the theme for a
+page, or for a part of a page, respectively. `Theme` is most often used to
+implement inline theming where you can style a portion of your page with a
+particular theme.
+
+`styles.css` from `@afframe/ui` includes the theme zone classes; nothing to add.
+
+<Canvas of={ThemeStories.Default} />
+
+## Setting the global theme
+
+To the set the theme for your entire project, the `GlobalTheme` component can be
+used.
+
+Please note that in contrast to `Theme` this does not apply any styles on its
+own but rather sets the context's theme according to the value you pass to its
+`theme` prop.
+
+Afframe UI applies the global theme in CSS: the app sets
+`data-afframe-theme="light"`, `"dark"` or `"system"` on `<html>` in the
+server-rendered root layout (see the
+[consuming guide](https://github.com/afframe/ui/blob/main/docs/guides/consuming.md)).
+Give `GlobalTheme` the matching theme, `"white"` for light or `"g100"` for dark:
+
+```jsx
+import { GlobalTheme } from '@afframe/ui';
+
+function App() {
+  return (
+    <GlobalTheme theme="g100">
+      <YourApp />
+    </GlobalTheme>
+  );
+}
+```
+
+This way, the `GlobalTheme` component keeps the application's context in step
+with the theme on `<html>`, so that other components and hooks like `useTheme`
+work properly. For this reason, the component should be used as a wrapper of the
+root of your application.
+
+By default, the global theme is set to `white`.
+
+## Setting an inline theme
+
+Use the `Theme` component to set an inline theme for a part of the UI in your
+project. All components that you render as `children` of `Theme` will now use
+the design token values from that theme.
+
+```jsx
+import { Theme } from '@afframe/ui';
+
+function ExamplePage() {
+  return (
+    <GlobalTheme theme="white">
+      <h1>Page title</h1>
+      <p>Display in the white theme</p>
+      <Theme theme="g100">
+        <p>Display in the g100 theme</p>
+      </Theme>
+    <GlobalTheme>
+  );
+}
+```
+
+<Canvas of={ThemeStories.Default} />
+
+## Getting the current theme in a component
+
+The `useTheme` hook provides the current theme for a component. This can be
+helpful if you need to conditionally render items based on the current theme.
+
+```jsx
+import { useTheme } from '@afframe/ui';
+
+function ExampleComponent() {
+  const { theme } = useTheme();
+
+  // Use the current theme in your component
+}
+```
+
+<Canvas of={ThemeStories.UseTheme} />
+
+## Component API
+
+<ArgTypes />
+
+### Theme as
+
+You can configure the base element rendered by `Theme` using the `as` prop. For
+example, if you would like the `Theme` component to render as a `section` you
+could write the following:
+
+```jsx
+<Theme as="section" theme="g100">
+  <ChildComponent />
+</Theme>
+```
+
+Similarly, you can provide any custom component to the `as` prop which the
+`Theme` component will use.
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/carbon-react/src/components/Theme/Theme.mdx).

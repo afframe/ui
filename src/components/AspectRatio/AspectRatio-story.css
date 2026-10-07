@@ -1,0 +1,16 @@
+/*
+ * Copyright IBM Corp. 2016, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) properties instead of AspectRatio-story.scss, literal spacing, colour and type values as Carbon tokens.
+ */
+
+.aspect-ratio-story .cds--aspect-ratio {
+  padding: var(--cds-spacing-05);
+  background: var(--cds-layer);
+}

@@ -1,0 +1,77 @@
+import {
+  Canvas,
+  Controls,
+  Description,
+  Meta,
+  Source,
+} from '@storybook/addon-docs/blocks';
+import * as SingleAddSelectStories from './SingleAddSelect.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: converted from the StoryDocsPage docs page to MDX, source label and source link added, internal IBM guidelines link and coded examples removed.
+
+<Meta isTemplate />
+
+# SingleAddSelect
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/SingleAddSelect)
+
+## Table of contents
+
+- [Overview](#overview)
+- [Example usage](#example-usage)
+  - [Structuring items](#structuring-items)
+  - [Default](#default)
+  - [With hierarchy](#with-hierarchy)
+- [Component API](#component-api)
+
+## Overview
+
+<Description />
+
+## Example usage
+
+### Structuring items
+
+The `items` object has a lot of customization potential and can greatly effect
+the way the component is displayed and how you interact with it..
+
+Let's walk through an example.
+
+<Source
+  language="jsx"
+  code={`items: {
+  entries: [ // the actual list of items / entries
+    {
+      id: '1', // required unique id for the entry
+      value: '1', // required value of the entry
+      title: 'item 1', // required title to display
+      subtitle: 'item 1 subtitle', // subtitle to display
+      children: { // designates if entry has children. if the children prop is found a hierarchy list will be used
+        entries: [
+          {
+            id: '1-1',
+            value: 'file1.pdf',
+            title: 'file1.pdf',
+          },
+        ],
+      },
+    },
+  ],
+}`}
+/>
+
+### Default
+
+<Canvas of={SingleAddSelectStories.Default} />
+
+### With hierarchy
+
+<Canvas of={SingleAddSelectStories.WithHierarchy} />
+
+## Component API
+
+<Controls />

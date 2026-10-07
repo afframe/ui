@@ -1,0 +1,34 @@
+// CreateModal styles, plus the shared create and edit flow classes
+// (CreateEditFlow has no partial of its own). Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+
+.afframe-create-modal-subtitle {
+  @include type.type-style('body-01');
+
+  margin-block-end: $spacing-03;
+  color: $text-primary;
+}
+
+.afframe-create-modal-description {
+  @include type.type-style('body-01');
+
+  margin-block-end: $spacing-05;
+  color: $text-secondary;
+}
+
+.afframe-create-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-05;
+}
+
+.afframe-create-edit-error:focus {
+  outline: 2px solid $focus;
+  outline-offset: 2px;
+}
+
+.afframe-create-edit-error > * {
+  margin-block-end: 0;
+}

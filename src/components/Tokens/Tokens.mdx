@@ -1,0 +1,58 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TokensStories from './Tokens.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# Tokens
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/blob/main/src/tokens.ts)
+&nbsp;|&nbsp;
+[Color tokens](https://carbondesignsystem.com/elements/color/tokens/)
+&nbsp;|&nbsp;
+[Motion](https://carbondesignsystem.com/elements/motion/overview/)
+
+## Overview
+
+Carbon's design tokens come in two forms.
+
+- CSS custom properties, in `@afframe/ui/styles.css`. They follow the theme
+  set on `<html>`, so prefer them in styles.
+- JavaScript values, from `@afframe/ui/tokens`. These are Carbon's exports of
+  `@carbon/themes` and `@carbon/motion` with Carbon's names.
+
+```css
+.panel {
+  background: var(--cds-layer-01);
+  color: var(--cds-text-primary);
+}
+```
+
+```js
+import { white, g100, formatTokenName } from '@afframe/ui/tokens';
+
+white.layer01; // '#f4f4f4'
+`--cds-${formatTokenName('layer01')}`; // '--cds-layer-01'
+```
+
+<Canvas of={TokensStories.Default} />
+
+## Themes
+
+`white` is the light theme and `g100` the dark theme. The top-level color
+exports, such as `background`, carry the `white` values. Switch the Theme menu
+in the toolbar to see the last column follow the CSS custom properties.
+
+## Motion
+
+Motion values (`easings`, `fast01`, `motion()` and others) exist only in
+JavaScript; the stylesheet has no custom properties for them.
+
+## Feedback
+
+Open an issue or a pull request on
+[GitHub](https://github.com/afframe/ui).

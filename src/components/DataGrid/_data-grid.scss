@@ -1,0 +1,184 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+
+/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
+
+// Selection checkboxes keep a 24 px target (WCAG 2.5.8); Carbon's xs rows
+// make the label 23 px tall.
+.afframe-data-grid
+  .cds--data-table
+  .cds--table-column-checkbox
+  .cds--checkbox-label {
+  align-items: center;
+  justify-content: center;
+  block-size: auto;
+  min-block-size: $spacing-06;
+  min-inline-size: $spacing-06;
+}
+
+.afframe-data-grid__columns {
+  padding: $spacing-05;
+}
+
+.afframe-data-grid__column {
+  display: flex;
+  align-items: center;
+  gap: $spacing-02;
+
+  .cds--checkbox-wrapper {
+    flex: 1;
+  }
+}
+
+// Sized columns (resizing): widths come from a colgroup.
+.afframe-data-grid--sized .cds--data-table {
+  table-layout: fixed;
+  inline-size: var(--afframe-data-grid-width);
+}
+
+.afframe-data-grid__control {
+  inline-size: $spacing-09;
+}
+
+.afframe-data-grid--sized th {
+  position: relative;
+}
+
+// 24 px wide target with a 2 px line at the column edge.
+.afframe-data-grid__resizer {
+  position: absolute;
+  z-index: 1;
+  cursor: col-resize;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: $spacing-06;
+  touch-action: none;
+
+  &::after {
+    position: absolute;
+    background: $border-strong;
+    content: '';
+    inset-block: $spacing-03;
+    inset-inline-end: 0;
+    inline-size: $spacing-01 * 0.5;
+  }
+
+  &:hover::after,
+  &--active::after {
+    background: $interactive;
+    inset-block: 0;
+  }
+
+  &:focus {
+    outline: $spacing-01 * 0.5 solid $focus;
+    outline-offset: -$spacing-01 * 0.5;
+  }
+}
+
+// Sticky header: set by `maxHeight`; the body scrolls under the header.
+.afframe-data-grid--sticky-header .cds--data-table-content {
+  overflow: auto;
+  max-block-size: var(--afframe-data-grid-max-height);
+  scroll-padding-block-start: $spacing-09;
+}
+
+.afframe-data-grid--sticky-header thead th {
+  position: sticky;
+  z-index: 2;
+  inset-block-start: 0;
+}
+
+// Sticky columns. Focus is never hidden under them (WCAG 2.4.11): the
+// scroll padding keeps a focused cell clear of the pinned ones.
+.afframe-data-grid--pinned-start .cds--data-table-content {
+  scroll-padding-inline-start: var(--afframe-data-grid-start);
+}
+
+.afframe-data-grid .afframe-data-grid__sticky-start,
+.afframe-data-grid--pinned-start .cds--table-expand,
+.afframe-data-grid--pinned-start .cds--table-column-checkbox {
+  position: sticky;
+  z-index: 1;
+  // stylelint-disable-next-line carbon/layout-use -- computed column offset
+  inset-inline-start: var(--afframe-data-grid-sticky, 0);
+}
+
+.afframe-data-grid--pinned-start .cds--table-column-checkbox {
+  // stylelint-disable-next-line carbon/layout-use -- computed column offset
+  inset-inline-start: var(--afframe-data-grid-select-start);
+}
+
+.afframe-data-grid .afframe-data-grid__sticky-end,
+.afframe-data-grid--pinned-end .cds--table-column-menu {
+  position: sticky;
+  z-index: 1;
+  // stylelint-disable-next-line carbon/layout-use -- computed column offset
+  inset-inline-end: var(--afframe-data-grid-sticky, 0);
+}
+
+.afframe-data-grid--sticky-header
+  thead
+  :is(
+    .afframe-data-grid__sticky-start,
+    .afframe-data-grid__sticky-end,
+    .cds--table-expand,
+    .cds--table-column-checkbox,
+    .cds--table-column-menu
+  ) {
+  z-index: 3;
+}
+
+// Nested rows: the first cell is indented by the row's depth.
+.afframe-data-grid__nested {
+  display: block;
+  // stylelint-disable-next-line carbon/layout-use -- a token per depth level
+  padding-inline-start: calc(var(--afframe-data-grid-depth) * #{$spacing-06});
+}
+
+// Inline edit: the value with its edit button at the end.
+.afframe-data-grid__editable {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-02;
+}
+
+// Virtualization: spacer rows stand in for the rows out of view.
+.afframe-data-grid .afframe-data-grid__spacer td {
+  padding: 0;
+  border: 0;
+}
+
+// Sticky body cells are opaque in every row state, so cells scrolling under
+// them do not show through. Carbon colours the row (and tbody), not the cell.
+@mixin sticky-body-cells($row) {
+  .afframe-data-grid
+    #{$row}
+    > :is(.afframe-data-grid__sticky-start, .afframe-data-grid__sticky-end),
+  .afframe-data-grid--pinned-start
+    #{$row}
+    > :is(.cds--table-expand, .cds--table-column-checkbox),
+  .afframe-data-grid--pinned-end #{$row} > .cds--table-column-menu {
+    @content;
+  }
+}
+
+@include sticky-body-cells('tbody tr') {
+  background-color: $layer;
+}
+
+@include sticky-body-cells('.cds--data-table--zebra tbody tr:nth-child(even)') {
+  background-color: $layer-accent;
+}
+
+@include sticky-body-cells('tbody tr:hover') {
+  background-color: $layer-hover;
+}
+
+@include sticky-body-cells('tbody tr.cds--data-table--selected') {
+  background-color: $layer-selected;
+}
+
+@include sticky-body-cells('tbody tr.cds--data-table--selected:hover') {
+  background-color: $layer-selected-hover;
+}

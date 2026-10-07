@@ -1,0 +1,25 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+# Conductor workspace scripts.
+[scripts]
+setup = "IBM_TELEMETRY_DISABLED=true pnpm install --frozen-lockfile"
+
+[scripts.run.storybook]
+available_in = ["local"]
+command = "pnpm build:css && pnpm exec storybook dev -p $CONDUCTOR_PORT --no-open"
+default = true
+icon = "play"
+
+[scripts.run.gate]
+command = "pnpm preflight"
+icon = "check"
+
+[scripts.run.test]
+command = "pnpm exec playwright install chromium --only-shell && pnpm test"
+icon = "test-tube"
+
+[prompts]
+create_pr = """\
+Open a pull request into main with a Conventional Commit title. \
+Write what changed, why, and which of pnpm preflight, pnpm test and pnpm check:pack ran. \
+Do not merge."""

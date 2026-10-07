@@ -1,0 +1,112 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AIChatStories from './AIChat.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# AI Chat
+
+<SourceLabel name="extras" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/AIChat). See also [Carbon AI Chat docs](https://chat.carbondesignsystem.com/tag/latest/docs/documents/Overview.html) and [Carbon for AI](https://carbondesignsystem.com/guidelines/carbon-for-ai/).
+
+IBM's `@carbon/ai-chat`, exported by IBM's names. `ChatContainer` floats a
+launcher and a chat panel over the page; `ChatCustomElement` renders the chat
+inside an element you size with `className`. Both take IBM's props, so IBM's
+docs cover the full API: messaging, header, layout, history, service desks.
+Report problems in the chat itself to
+[IBM](https://github.com/carbon-design-system/carbon-ai-chat/issues).
+
+`AIChat` is another name for `ChatContainer`.
+
+## Loading and server rendering
+
+`@carbon/ai-chat` defines custom elements when it loads, which fails on the
+server. `ChatContainer` and `ChatCustomElement` therefore load it in the
+browser after the first render. Until then they show a Carbon skeleton. If the
+load fails they show an error, and the next mount tries again. Both
+render inside `<div data-afframe-extra="ai-chat">`, also on the server. The
+`div` has `display: contents`, so a `className` that sizes `ChatCustomElement`
+as a flex or grid item works as if the `div` were not there.
+
+The enums and helpers (`MessageResponseTypes`, `BusEventType`, `ViewType`,
+`enLanguagePack` and the rest) come from `@carbon/ai-chat/server` and load
+anywhere. All exports sit in one client module, so a server component can
+render the chat but cannot read the enums: build messages in a client
+component, as below. A route that does not import the chat ships none of its
+JavaScript.
+
+## Usage and props
+
+Answer messages with `messaging.customSendMessage`. This mock replies with
+fixed text and makes no network request:
+
+```tsx
+'use client';
+import { ChatContainer, MessageResponseTypes } from '@afframe/ui';
+import type {
+  ChatInstance,
+  CustomSendMessageOptions,
+  MessageRequest,
+} from '@afframe/ui';
+
+async function customSendMessage(
+  _request: MessageRequest,
+  _options: CustomSendMessageOptions,
+  instance: ChatInstance
+) {
+  await instance.messaging.addMessage({
+    output: {
+      generic: [
+        {
+          response_type: MessageResponseTypes.TEXT,
+          text: 'Invoice 2026-0142 is due on 15 October.',
+        },
+      ],
+    },
+  });
+}
+
+export function Assistant() {
+  return <ChatContainer messaging={{ customSendMessage }} />;
+}
+```
+
+The chat takes the page's Carbon theme tokens, so it follows the light and
+dark themes. `injectCarbonTheme` forces one theme instead.
+
+<Canvas of={AIChatStories.Default} />
+
+## Messages
+
+`messages` overrides Afframe's one string, `loadError`, the error shown when
+the chat fails to load (English default in `defaultAIChatMessages`).
+
+The chat's own strings are IBM's. Override them with the `strings` prop, a partial
+of IBM's `LanguagePack` (English defaults in `enLanguagePack`). Header menu
+items come from `header.menuOptions`.
+
+## Stories
+
+Response types: text, a `user_defined` item drawn by
+`renderUserDefinedResponse`, options as buttons, a button and an inline error.
+
+<Canvas of={AIChatStories.ResponseTypes} />
+
+Loading: the assistant is answering.
+
+<Canvas of={AIChatStories.Loading} />
+
+Float: `ChatContainer` with its launcher in the corner of the page.
+
+<Canvas of={AIChatStories.Float} />
+
+Sidebar: `ChatCustomElement` in a side column.
+
+<Canvas of={AIChatStories.Sidebar} />
+
+Dark theme.
+
+<Canvas of={AIChatStories.Dark} />

@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# Keys left out use the schema defaults; organization UI settings are not inherited.
+language: en-US
+reviews:
+  profile: chill
+  # The summary goes into the walkthrough comment; PR bodies stay as written.
+  high_level_summary_in_walkthrough: true
+  # No pending CodeRabbit check or commit status on PRs; the review arrives as comments.
+  review_progress: false
+  commit_status: false
+  in_progress_fortune: false
+  sequence_diagrams: false
+  estimate_code_review_effort: false
+  related_issues: false
+  related_prs: false
+  suggested_labels: false
+  suggested_reviewers: false
+  # Reviews only on request: comment "@coderabbitai review" on the PR.
+  auto_review:
+    enabled: false
+  # Code paths only: docs-only PRs get no review.
+  path_filters:
+    - 'src/**'
+    - 'scripts/**'
+    - 'examples/**'
+    - '.github/**'
+    - 'package.json'
+    - 'pnpm-workspace.yaml'
+    - 'tsconfig*.json'
+    - 'tsdown.config.ts'
+    - 'vitest.config.ts'
+    - 'vitest.setup.ts'
+    - '.storybook/**'
+    - '*.config.js'
+    - '.coderabbit.yaml'
+  path_instructions:
+    - path: '**'
+      instructions: >-
+        Public repository: flag secrets, internal URLs, client names and business plans.
+        The UI stack is IBM Carbon; flag shadcn/ui or Tailwind. TypeScript stays 6.0.3.
+  pre_merge_checks:
+    docstrings:
+      mode: 'off'
+  tools:
+    # ESLint, Stylelint and Prettier run in CI.
+    biome:
+      enabled: false
+    oxc:
+      enabled: false
+    languagetool:
+      enabled: false
+    trufflehog:
+      enabled: false
+chat:
+  # Public repo: only organization members can talk to CodeRabbit.
+  allow_non_org_members: false

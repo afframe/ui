@@ -1,0 +1,36 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { FirstTimeOrientationStory } from './FirstTimeOrientation.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, Stackblitz link and unused imports removed, Meta as a plain template, a link to an IBM-internal site removed (the IBM-only pages site), prose reflowed and typos fixed.
+
+<Meta isTemplate />
+
+# First-time orientation pattern
+
+<SourceLabel name="labs" />
+
+[Source code](https://github.com/carbon-design-system/carbon-labs/tree/%40carbon-labs%2Freact-first-time-orientation%400.21.0/packages/react/src/components/FirstTimeOrientation)
+
+- **Initiative owner(s):** Carbon
+- **Status:** Draft
+- **Target library:** @carbon/ibm-products
+- **Target library maintainer(s) / PR Reviewer(s):** Carbon
+- **Support channel:** `#carbon-labs`
+
+## Overview
+
+The first-time orientation pattern is built using the
+[InterstitialScreen](https://ibm-products.carbondesignsystem.com/?path=/docs/experimental-onboarding-interstitialscreen)
+component
+of the Carbon for IBM Products library.
+
+First-time orientation happens from the moment a user gains access to the
+product, post login, and guides them to realizing the product's primary value.
+The pattern consists of a welcome interstitial and a personalization
+interstitial. The personalization interstitial uses
+[SelectableTag](https://react.carbondesignsystem.com/?path=/story/components-tag--selectable)
+from Carbon.
+
+<Canvas of={FirstTimeOrientationStory} />

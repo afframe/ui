@@ -1,0 +1,10 @@
+version = 1
+
+# Everything is the project's own work unless a file says otherwise.
+# Files copied from IBM carry their own SPDX headers; in .mdx they are // comments
+# inside the first import block (docs/developer-handbook.md).
+[[annotations]]
+path = "**"
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Hleb Tkachenko"
+SPDX-License-Identifier = "PolyForm-Noncommercial-1.0.0"

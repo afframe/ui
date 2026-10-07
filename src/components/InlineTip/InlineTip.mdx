@@ -1,0 +1,42 @@
+import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as stories from './InlineTip.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2023
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label added, Stackblitz example and story helper import removed, source link pinned to the tag, internal IBM links removed.
+
+<Meta isTemplate />
+
+# InlineTip
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/InlineTip)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Example usage](#example-usage)
+  - [Inline tip](#inline-tip)
+  - [Inline tip narrow](#inline-tip-narrow)
+- [Component API](#component-api)
+
+## Overview
+
+Inline tips are messages embedded within other components that provide an
+ambient way to deliver learning content without distracting the user from their
+flow.
+
+## Example usage
+
+### Inline tip
+
+<Canvas of={stories.inlineTip} />
+
+### Inline tip narrow
+
+<Canvas of={stories.inlineTipNarrow} />
+
+## Component API
+
+<Controls />

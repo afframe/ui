@@ -1,0 +1,22 @@
+/*
+ * Copyright IBM Corp. 2023, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.storybook--inline-tip-wide {
+  /* Allow enough space above the component to show the "X" tooltip. */
+  margin-block-start: var(--cds-spacing-07);
+  max-inline-size: 784px;
+}
+
+.storybook--inline-tip-narrow {
+  margin-block-start: var(--cds-spacing-07);
+  max-inline-size: 348px;
+}

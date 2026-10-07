@@ -1,0 +1,44 @@
+// EnvironmentSwitcher styles, Carbon tokens only.
+/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type' as *;
+
+// The action shows the current environment name next to the icon.
+.cds--header__action.afframe-environment-switcher-action {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-03;
+  inline-size: auto;
+  max-inline-size: 14rem;
+  padding-inline: $spacing-05;
+}
+
+.afframe-environment-switcher-current {
+  @include type-style('body-compact-01');
+
+  overflow: hidden;
+  color: $text-primary;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.afframe-environment-switcher-body {
+  padding: $spacing-05;
+}
+
+.afframe-environment-switcher-option {
+  display: flex;
+  flex-direction: column;
+}
+
+.afframe-environment-switcher-tag {
+  margin-block: 0;
+  margin-inline-start: $spacing-03;
+}
+
+.afframe-environment-switcher-description {
+  @include type-style('helper-text-01');
+
+  color: $text-secondary;
+}

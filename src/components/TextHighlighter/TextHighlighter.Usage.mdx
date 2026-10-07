@@ -1,0 +1,139 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TextHighlighterStories from './TextHighlighter.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+import TextHighlighterAnatomy from './images/text-highlighter-anatomy.png';
+import MarkVariant from './images/mark-variant.png';
+import InsDelVariants from './images/ins-del-variants.png';
+import ReferenceAnnotation from './images/reference-annotation.png';
+import HighlighterColor from './images/highlighter-color.png';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: page rebuilt from the Carbon website MDX components as plain Markdown (page description as an intro paragraph, anchor links as a table of contents and as plain text in the variants table, rows, columns and image wrappers removed, captions as italic text), live demo as a Canvas block of the local Default story with a note on its kind control, title, source label and source link added, an em-dash replaced with a colon.
+
+<Meta title="Components/TextHighlighter/Docs/Usage" />
+
+# TextHighlighter: Usage
+
+<SourceLabel name="labs" />
+
+[Source code](https://github.com/carbon-design-system/carbon-labs/tree/%40carbon-labs%2Freact-text-highlighter%400.23.0/packages/react/src/components/TextHighlighter)
+
+Use TextHighlighter to visually emphasize specific parts of text within a larger body of content.
+
+## Table of Contents
+
+- [Live demo](#live-demo)
+- [Overview](#overview)
+- [Formatting](#formatting)
+- [Content](#content)
+- [Mark](#mark)
+- [Ins & Del](#ins--del)
+- [Modifiers](#modifiers)
+- [Feedback](#feedback)
+
+## Live demo
+
+<Canvas of={TextHighlighterStories.Default} />
+
+The `kind` control of the Default story switches between the `mark`, `ins` and `del` variants.
+
+## Overview
+
+The TextHighlighter component is a valuable tool for improving the user experience by making content more digestible, scannable, and engaging. It helps users quickly identify and focus on the most important information within your web pages. Text highlighters can also be used to compare different versions of a document/artifacts by visually indicating insertions and deletions. To support different use cases, TextHighlighter comes in three variants - `mark`, `ins`(Insertion), and `del`(Deletion).
+
+### When to use
+
+- **Highlighting keywords in search results or within content:** If you're displaying search results within your site or want to emphasize terms related to a user's search within a document, highlighting those keywords can significantly improve usability.
+- **Version comparison:** To see the differences between versions at a glance, highlighters can be a used.
+- **Improving scanability of long-form content:** In lengthy articles, reports, or documentation, strategically highlighting key phrases or summary sentences can help users quickly grasp the main points without reading every word.
+- **Providing context in code snippets:** Highlighting specific lines or variables in code examples can draw attention to the part being discussed.
+- **Interactive highlighting for user selection:** Allowing users to highlight text themselves can be useful for copying, annotating, or focusing on specific sections.
+
+### When not to use
+
+- **Overuse:** Highlighting too much text defeats the purpose. If everything is highlighted, nothing stands out, and it can become visually overwhelming and distracting.
+- **Purely Decorative Purposes:** Avoid using highlighting simply to add visual flair without a clear functional benefit. It can be confusing and will look unprofessional.
+- **Use all variants together:** Refrain from using all variants simultaneously. While the `ins`(Insertion) and `del`(Deletion) variants are intended for comparison and can be used together, avoid using the `mark` variant alongside them within a comparison context, as this could lead to confusion.
+
+### Variants
+
+| Variant   | Purpose                                                                                                                                                                                                                                      |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mark      | `mark` variant used to represents text which is marked or highlighted for reference or notation purposes.                                                                                                                                    |
+| Ins & Del | `ins`(Insertion) variant used to represents a range of text that has been added to a document. (Comparison purpose). `del`(Deletion) variant used to represents a range of text that has been deleted from a document. (Comparison purpose). |
+
+## Formatting
+
+### Anatomy
+
+A Text Highlighter component is generally comprised of the following elements:
+
+- **Text (or Content):** This is the base content within which specific portions are to be highlighted. It can be a single word, a phrase, a sentence, or even a larger block of text.
+- **Highlighted Segment(s):** These are the specific portions of the text that have been visually emphasized. They are distinguished from the surrounding text by a different background color, text color, or other styling.
+- **Highlight Style (or Visual Indicator):** This defines how the highlighted segments appear. The `mark` variant offers various color themes. In contrast, the `ins`(Insertion) variant is consistently green with a dashed border, while the `del`(Deletion) variant is always red with a strike-through.
+
+<img alt="text highlighter anatomy" src={TextHighlighterAnatomy} />
+_Anatomy of mark, ins, and del text highliters_
+
+#### 1. Mark highlighter
+
+A. Text (or content) <br />
+B. Reference annotation <br />
+C. Container
+
+#### 2. Ins highlighter
+
+A. Text (or content)<br />
+B. Dashed border<br />
+C. Container
+
+#### 3. Del highlighter
+
+A. Text (or content)<br />
+B. Strike through<br />
+C. Container
+
+## Content
+
+The text highlighted can vary depending on the context: it may include headings, body content, or labels.
+
+### Further guidance
+
+For further content guidance, see Carbon's
+[content guidelines](<[https://www.carbondesignsystem.com/guidelines/content/general](https://www.carbondesignsystem.com/guidelines/content/general)>).
+
+## Mark
+
+The `mark` variant highlights content intended for review, annotation, or special attention. The Mark variant is designed for non-semantic highlighting.
+
+<img alt="mark variant" src={MarkVariant} />
+_Example of mark variant - text highlighter._
+
+## Ins & Del
+
+The `ins`(Insertion) variant is used to denote newly added text in a document. Conversely, the `del`(Deletion) variant marks text that has been removed. Both are commonly employed for comparison or revision purposes. The `ins`(Insertion) and `del`(Deletion) variants are used to semantically indicate edits or changes to the text.
+
+<img alt="ins and del variant" src={InsDelVariants} />
+_Example of ins and del variant - text highlighter._
+
+## Modifiers
+
+### Reference annotation
+
+The Reference Annotation allows users to tag a group of highlighted text segments with a brief, unique identifier. This identifier appears as a superscript next to the highlighted content. The `reference` property only applies to the `mark` variant. You can use symbol or max of 3 characters.
+
+<img alt="referece annotaion" src={ReferenceAnnotation} />
+_Example of referece annotaion - text highlighter._
+
+### Highlighter Colors
+
+The Mark variant is used for non-semantic highlighting, so it comes in a variety of different colors, with values from the IBM Design Language [color palette](https://www.ibm.com/design/language/color/) using [tag component tokens](https://carbondesignsystem.com/elements/color/tokens/#tag).
+
+<img alt="highlighter colors" src={HighlighterColor} />
+_Example of text highlighter colors._
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions, and
+leaving any other comments on
+[GitHub](https://github.com/carbon-design-system/carbon-website/issues/new?assignees=&labels=feedback&template=feedback.md).

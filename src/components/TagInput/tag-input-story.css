@@ -1,0 +1,124 @@
+/*
+ * Copyright IBM Corp. 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: converted from SCSS to plain CSS (nesting flattened, Carbon theme, spacing and type tokens as custom properties, moderate-02 and fast-02 durations and productive entrance and exit easings as literal values), the #storybook-root layout rule dropped so it does not leak into other stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+/* Toast notification container with animations */
+.toast-notification-container {
+  position: fixed;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cds-spacing-05);
+  inset-block-start: var(--cds-spacing-05);
+  inset-inline-end: var(--cds-spacing-05);
+}
+
+/* Individual toast notification with slide-in animation */
+.toast-notification-item {
+  /* stylelint-disable-next-line carbon/motion-duration-use, carbon/motion-easing-use -- Carbon motion tokens have no custom properties: duration-moderate-02 and the productive entrance easing */
+  animation: slide-in-from-right 240ms cubic-bezier(0, 0, 0.38, 0.9);
+  transform-origin: right center;
+}
+
+/* Keyframe animation for sliding in from right */
+@keyframes slide-in-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Exit animation when toast is dismissed */
+.toast-notification-item-exit {
+  /* stylelint-disable-next-line carbon/motion-duration-use, carbon/motion-easing-use -- Carbon motion tokens have no custom properties: duration-fast-02 and the productive exit easing */
+  animation: slide-out-to-right 110ms cubic-bezier(0.2, 0, 1, 0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-notification-item,
+  .toast-notification-item-exit {
+    animation: none;
+  }
+}
+
+@keyframes slide-out-to-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Common styles for content inside story-info */
+.story-info {
+  padding: var(--cds-spacing-05);
+  font-family: var(--cds-code-02-font-family);
+  font-size: var(--cds-code-02-font-size);
+  font-weight: var(--cds-code-02-font-weight);
+  letter-spacing: var(--cds-code-02-letter-spacing);
+  line-height: var(--cds-code-02-line-height);
+}
+
+.story-info pre {
+  margin-block-start: var(--cds-spacing-03);
+}
+
+.story-info > div {
+  margin-block-start: var(--cds-spacing-03);
+}
+
+.story-description {
+  font-size: var(--cds-label-02-font-size);
+  font-weight: var(--cds-label-02-font-weight);
+  letter-spacing: var(--cds-label-02-letter-spacing);
+  line-height: var(--cds-label-02-line-height);
+}
+
+/* WithSuggestions story styles */
+.with-suggestions-container {
+  position: relative;
+}
+
+.tag-suggestions-dropdown {
+  position: absolute;
+  z-index: 1000;
+  border: 1px solid var(--cds-border-subtle);
+  border-radius: 2px;
+  background-color: var(--cds-layer);
+  box-shadow: 0 2px 6px var(--cds-shadow);
+  inset-block-start: 100%;
+  inset-inline: 0;
+  margin-block-start: var(--cds-spacing-02);
+  max-block-size: 200px;
+  overflow-y: auto;
+}
+
+.tag-suggestion-item {
+  min-block-size: auto;
+}
+
+.tag-suggestion-item[aria-selected='true'] {
+  background-color: var(--cds-layer-selected);
+}
+
+/* FullyControlled story styles */
+.fully-controlled-buttons {
+  margin-block-end: var(--cds-spacing-05);
+}

@@ -1,0 +1,127 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# Charts
+
+<SourceLabel name="extras" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/Charts). See also [Carbon Charts docs](https://charts.carbondesignsystem.com/) and [Data visualization guidelines](https://carbondesignsystem.com/data-visualization/getting-started/).
+
+IBM's Carbon Charts (`@carbon/charts-react`) under IBM's names, with one
+change: when `options.theme` is unset, a chart takes the page's Carbon theme
+(`white` for light, `g100` for dark) and follows a switch of
+`data-afframe-theme` on `<html>`, including `system`. An explicit
+`options.theme` wins.
+
+Charts: `SimpleBarChart`, `GroupedBarChart`, `StackedBarChart`, `LineChart`,
+`AreaChart`, `StackedAreaChart`, `ScatterChart`, `BubbleChart`, `PieChart`,
+`DonutChart`, `GaugeChart`, `MeterChart`, `BulletChart`, `BoxplotChart`,
+`HistogramChart`, `LollipopChart`, `AlluvialChart`, `TreeChart`,
+`CirclePackChart`, `TreemapChart`, `ComboChart`, `RadarChart`,
+`HeatmapChart`, `WordCloudChart`, `ChoroplethChart`. Their enums
+(`ScaleTypes`, `ChartTheme`, `GaugeTypes`, `Statuses`, the `*Event` names
+for `chart.services.events` and others) and option
+types (`BarChartOptions`, `ChartTabularData` and others) come from the same
+import.
+
+## Usage and props
+
+Each chart takes IBM's `data` and `options`. A `ref` reaches IBM's class
+instance; its `chart` field is the core chart.
+
+```tsx
+'use client';
+import { ScaleTypes, SimpleBarChart } from '@afframe/ui';
+import type { BarChartOptions } from '@afframe/ui';
+
+const options: BarChartOptions = {
+  title: 'Revenue',
+  axes: {
+    left: { mapsTo: 'value' },
+    bottom: { mapsTo: 'group', scaleType: ScaleTypes.LABELS },
+  },
+  height: '300px',
+};
+
+export function Revenue({ data }) {
+  return (
+    <div data-afframe-extra="charts">
+      <SimpleBarChart data={data} options={options} />
+    </div>
+  );
+}
+```
+
+IBM's type declarations resolve with `moduleResolution: "bundler"` (the
+Next.js and Vite default). Under `node16` or `nodenext` they do not resolve,
+so the option types fall back to `any` and TypeScript does not check them.
+
+For every option, see IBM's
+[chart documentation](https://charts.carbondesignsystem.com/).
+
+## Loading and server rendering
+
+The charts live in their own client module (`'use client'`), loaded
+statically: a route that renders a chart ships Carbon Charts, a route that
+does not ships none of it. The enums are client references, so options that
+use them belong in a client component, as above. Charts draw in the browser;
+the server renders an empty holder. Wrap a chart in an element with
+`data-afframe-extra="charts"` so the server HTML marks where it appears. The
+chart styles are not in `@afframe/ui/styles.css`: an app that renders charts
+must import `@afframe/ui/charts.css` after it, in the root layout or in the
+routes that render charts.
+
+## Messages
+
+Afframe adds no strings. Chart titles, axis titles and legends come from your
+`options` and `data`; the toolbar strings are IBM's, set through
+`options.locale` and `options.toolbar`.
+
+## Accessibility
+
+- Give every chart a `title`: IBM uses it to name the chart.
+- Carbon Charts draws SVG with a tabular view in the toolbar menu ("Show as
+  table"), which screen reader users can open with the keyboard.
+- Do not rely on colour alone; keep the legend on or label values.
+- Upstream axe findings: every rule stays on in the stories; axe skips only
+  the Carbon Charts nodes below, so a violation anywhere else still fails.
+
+| Skipped nodes                                           | Stories     | Rule                   | Upstream cause                              |
+| ------------------------------------------------------- | ----------- | ---------------------- | ------------------------------------------- |
+| toolbar controls (`.cds--cc--toolbar .toolbar-control`) | every chart | `nested-interactive`   | a `div role="button"` around a button       |
+| alluvial links (`path.link`)                            | Alluvial    | `aria-prohibited-attr` | `aria-label` on SVG paths that have no role |
+| heatmap cells (`g.cell > rect.heat`)                    | Heatmap     | `aria-prohibited-attr` | `aria-label` on SVG rects that have no role |
+
+## Stories
+
+Animations are off in every story, so they render the same each time.
+
+<Canvas id="components-charts-bar--simple" />
+<Canvas id="components-charts-bar--grouped" />
+<Canvas id="components-charts-bar--stacked" />
+<Canvas id="components-charts-line-and-area--line" />
+<Canvas id="components-charts-line-and-area--area" />
+<Canvas id="components-charts-line-and-area--stacked-area" />
+<Canvas id="components-charts-scatter-and-bubble--scatter" />
+<Canvas id="components-charts-scatter-and-bubble--bubble" />
+<Canvas id="components-charts-pie-and-donut--pie" />
+<Canvas id="components-charts-pie-and-donut--donut" />
+<Canvas id="components-charts-gauge-and-meter--gauge" />
+<Canvas id="components-charts-gauge-and-meter--meter" />
+<Canvas id="components-charts-gauge-and-meter--bullet" />
+<Canvas id="components-charts-distribution--boxplot" />
+<Canvas id="components-charts-distribution--histogram" />
+<Canvas id="components-charts-distribution--lollipop" />
+<Canvas id="components-charts-flow-and-hierarchy--alluvial" />
+<Canvas id="components-charts-flow-and-hierarchy--tree" />
+<Canvas id="components-charts-flow-and-hierarchy--circle-pack" />
+<Canvas id="components-charts-flow-and-hierarchy--treemap" />
+<Canvas id="components-charts-more--combo" />
+<Canvas id="components-charts-more--radar" />
+<Canvas id="components-charts-more--heatmap" />
+<Canvas id="components-charts-more--word-cloud" />
+<Canvas id="components-charts-more--choropleth" />

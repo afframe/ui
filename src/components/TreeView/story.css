@@ -1,0 +1,18 @@
+/*
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS from Carbon's TreeView story styles. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.cds--tree {
+  inline-size: 20rem;
+}
+
+#page-body {
+  display: flex;
+}
+
+#page-body main {
+  flex: 1;
+}

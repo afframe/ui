@@ -1,0 +1,103 @@
+/*
+ * Copyright IBM Corp. 2020, 2025
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, side panel decorator styles inlined, header theme moved to the story markup. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.side-panel-stories__body-content .side-panel-stories__text-inputs {
+  display: flex;
+  margin: var(--cds-spacing-05) 0;
+}
+
+.side-panel-stories__body-content
+  .side-panel-stories__text-inputs
+  #side-panel-story-text-input-a,
+.side-panel-stories__body-content
+  .side-panel-stories__text-inputs
+  #side-panel-story-text-input-c {
+  margin-inline-end: var(--cds-spacing-05);
+}
+
+.side-panel-stories__body-content .side-panel-stories__text-area-container {
+  position: relative;
+}
+
+.side-panel-stories__body-content .side-panel-stories__multi-select-container {
+  position: relative;
+  margin: var(--cds-spacing-05) 0;
+}
+
+.side-panel-stories__body-content
+  .side-panel-stories__text-area-container
+  .side-panel-stories__allowed-characters {
+  position: absolute;
+  color: var(--cds-text-secondary);
+  font-size: var(--cds-label-01-font-size);
+  font-weight: var(--cds-label-01-font-weight);
+  inset-inline-end: 0;
+  letter-spacing: var(--cds-label-01-letter-spacing);
+  line-height: var(--cds-label-01-line-height);
+}
+
+.side-panel-stories__body-content
+  .side-panel-stories__text-area-container
+  .side-panel-stories__allowed-characters-invalid {
+  color: var(--cds-support-error);
+}
+
+.side-panel-stories__body-content .side-panel-stories__content-subtitle {
+  margin: var(--cds-spacing-05) 0 var(--cds-spacing-04);
+}
+
+.side-panel-stories__body-content .side-panel-stories__body-subheading {
+  font-size: var(--cds-heading-02-font-size);
+  font-weight: var(--cds-heading-02-font-weight);
+  letter-spacing: var(--cds-heading-02-letter-spacing);
+  line-height: var(--cds-heading-02-line-height);
+}
+
+.side-panel-stories__grid {
+  block-size: 100%;
+}
+
+/* Side panel decorator: docs page iframe views of stories */
+.sbdocs .side-panel-stories__container {
+  display: flex;
+  background-color: var(--cds-background);
+  block-size: 60vh;
+  box-shadow: 0 0 4px 1px var(--cds-layer-accent);
+  color: var(--cds-text-primary);
+}
+
+.sbdocs .side-panel-stories__content {
+  block-size: unset;
+}
+
+/* Side panel decorator: story pages */
+.side-panel-stories__content {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  block-size: calc(100vh - 48px);
+}
+
+.side-panel-stories__toggle {
+  margin: auto;
+}
+
+/* The side panel hides body overflow when open; story pages render several isolated panels */
+.sb-show-main.sb-main-fullscreen {
+  /* stylelint-disable-next-line declaration-no-important */
+  overflow: unset !important;
+}
+
+.sbdocs .docs-story > div {
+  overflow: hidden;
+}

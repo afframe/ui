@@ -1,0 +1,150 @@
+{
+  "name": "@afframe/ui",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Afframe UI and design system on IBM's Carbon Design System",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afframe/ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/afframe/ui/issues"
+  },
+  "homepage": "https://github.com/afframe/ui#readme",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "import": "./dist/icons.js"
+    },
+    "./pictograms": {
+      "types": "./dist/pictograms.d.ts",
+      "import": "./dist/pictograms.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js"
+    },
+    "./format": {
+      "types": "./dist/format/index.d.ts",
+      "import": "./dist/format/index.js"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./charts.css": "./dist/charts.css"
+  },
+  "files": [
+    "dist",
+    "LICENSES"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "packageManager": "pnpm@12.9.1",
+  "scripts": {
+    "build": "pnpm build:js && pnpm build:types && pnpm build:css",
+    "build:js": "tsdown",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:css": "node scripts/build-css.mjs",
+    "check:licences": "reuse lint --json | node scripts/check-licence-labels.mjs",
+    "check:pack": "node scripts/check-pack.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . && stylelint \"src/**/*.{scss,css}\" \".storybook/**/*.css\" --allow-empty-input",
+    "typecheck": "tsc --noEmit",
+    "preflight": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm registry --check",
+    "registry": "node scripts/registry.mjs",
+    "storybook": "pnpm build:css && storybook dev -p 6006",
+    "build:storybook": "pnpm build:css && storybook build -o storybook-static",
+    "test": "pnpm build:css && vitest run"
+  },
+  "dependencies": {
+    "@carbon-labs/react-calendar": "0.11.0",
+    "@carbon-labs/react-first-time-orientation": "0.21.0",
+    "@carbon-labs/react-processing": "0.21.0",
+    "@carbon-labs/react-resizer": "0.25.0",
+    "@carbon-labs/react-tag-input": "0.6.0",
+    "@carbon-labs/react-text-highlighter": "0.23.0",
+    "@carbon-labs/react-theme-settings": "0.30.0",
+    "@carbon-labs/react-ui-shell": "0.106.0",
+    "@carbon-labs/react-whats-new": "0.28.0",
+    "@carbon-labs/utilities": "0.28.0",
+    "@carbon/ai-chat": "1.22.0",
+    "@carbon/charts": "1.27.21",
+    "@carbon/charts-react": "1.27.21",
+    "@carbon/echarts-theme": "0.7.0",
+    "@carbon/grid": "11.63.0",
+    "@carbon/ibm-products": "2.100.0",
+    "@carbon/icons-react": "11.89.0",
+    "@carbon/layout": "11.60.0",
+    "@carbon/motion": "11.53.0",
+    "@carbon/pictograms-react": "11.111.0",
+    "@carbon/react": "1.117.0",
+    "@carbon/themes": "11.82.0",
+    "@carbon/type": "11.68.0",
+    "@carbon/web-components": "2.64.0",
+    "@tanstack/react-table": "9.2.6",
+    "@tanstack/react-virtual": "3.14.13",
+    "classnames": "2.5.1",
+    "echarts": "6.1.0",
+    "prop-types": "15.8.1",
+    "react-is": "19.3.0",
+    "sass": "1.105.1"
+  },
+  "peerDependencies": {
+    "@types/react": ">=19",
+    "@types/react-dom": ">=19",
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@carbon/ibm-products-styles": "2.96.0",
+    "@carbon/styles": "1.116.0",
+    "@carbon/utilities-react": "0.29.0",
+    "@eslint/js": "10.0.1",
+    "@ibm/plex": "6.4.1",
+    "@storybook/addon-a11y": "10.6.1",
+    "@storybook/addon-docs": "10.6.1",
+    "@storybook/addon-vitest": "10.6.1",
+    "@storybook/react-vite": "10.6.1",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "24.19.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitest/browser-playwright": "5.0.3",
+    "eslint": "10.12.0",
+    "globals": "17.13.0",
+    "playwright": "1.63.0",
+    "prettier": "3.9.9",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "storybook": "10.6.1",
+    "stylelint": "17.16.0",
+    "stylelint-config-standard-scss": "17.0.0",
+    "stylelint-plugin-carbon-tokens": "5.0.6",
+    "tsdown": "0.23.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.0",
+    "vite": "8.3.2",
+    "vitest": "5.0.3"
+  }
+}

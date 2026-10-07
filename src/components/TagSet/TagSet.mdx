@@ -1,0 +1,47 @@
+import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import * as stories from './TagSet.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, usage guidelines link removed (internal IBM page), Carbon links point to the Carbon site, code sample section removed.
+
+<Meta isTemplate />
+
+# TagSet
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/TagSet)
+&nbsp;|&nbsp;
+[Carbon tag usage guidelines](https://carbondesignsystem.com/components/tag/usage/)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Example usage](#example-usage)
+- [Component API](#component-api)
+
+## Overview
+
+The Tag set component allows users to see all the labels of a cluster in areas
+where all tags may not be visible at one time. They provide the ability to see
+how many additional labels exist and what they are.
+
+## Example usage
+
+Here it is in use with no overflow. Change max-visible to see an overflow.
+
+<Canvas of={stories.FiveTags} />
+
+Here it is with more than 10 tags.
+
+<Canvas of={stories.ManyTags} />
+
+Here it is with hundreds of tags. This option offers a searchable modal to
+display all tags.
+
+<Canvas of={stories.HundredsOfTags} />
+
+## Component API
+
+<ArgTypes />

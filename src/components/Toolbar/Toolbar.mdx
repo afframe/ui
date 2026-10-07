@@ -1,0 +1,33 @@
+import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import * as stories from './Toolbar.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2021, 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, TODO notes and code sample section removed, usage guidelines link removed (internal IBM page), vertical example heading renamed from With Image.
+
+<Meta isTemplate />
+
+# Toolbar
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/Toolbar)
+
+## Table of Contents
+
+- [Example usage](#example-usage)
+- [Component API](#component-api)
+
+## Example usage
+
+### Default
+
+<Canvas of={stories._Toolbar} />
+
+### Vertical
+
+<Canvas of={stories.vertical} />
+
+## Component API
+
+<ArgTypes />

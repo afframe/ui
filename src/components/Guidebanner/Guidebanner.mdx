@@ -1,0 +1,49 @@
+import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as stories from './Guidebanner.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label added, Stackblitz link import removed, source link pinned to the tag, internal IBM links removed.
+
+<Meta isTemplate />
+
+# Guidebanner
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/Guidebanner)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Example usage](#example-usage)
+  - [Collapsible](#collapsible)
+  - [Many insights](#many-insights)
+  - [Few insights](#few-insights)
+- [Component API](#component-api)
+
+## Overview
+
+The guide banner sits at the top of a page, or page-level tab, to introduce
+foundational concepts related to the page's content. The component is a
+collapsible banner that provides guidance or information to users. It features a
+horizontal scrollable list of guide elements with navigation controls, and can
+be expanded or collapsed to show or hide detailed content.
+
+## Example usage
+
+### Collapsible
+
+<Canvas of={stories.collapsible} />
+
+### Many insights
+
+<Canvas of={stories.manyInsights} />
+
+### Few insights
+
+<Canvas of={stories.fewInsights} />
+
+## Component API
+
+<Controls />

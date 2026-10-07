@@ -1,0 +1,78 @@
+import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import * as FluidMultiSelectStories from './FluidMultiSelect.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.117.0.
+
+<Meta isTemplate />
+
+# Fluid Multiselect
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/FluidMultiSelect)
+&nbsp;|&nbsp;
+[Usage guidelines](https://www.carbondesignsystem.com/components/Multiselect/usage)
+&nbsp;|&nbsp;
+[Accessibility](https://www.carbondesignsystem.com/components/Multiselect/accessibility)
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+  - [Filterable](#filterable)
+  - [Filterable With Layer](#filterable-with-layer)
+  - [Skeleton](#skeleton)
+  - [With AI Label](#wth-ai-label)
+  - [Condensed](#condensed)
+- [Accessibility Considerations](#accessibility-considerations)
+  - [Accessible Name](#accessible-name)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+<Canvas of={FluidMultiSelectStories.Default} />
+
+## Filterable
+
+<Canvas of={FluidMultiSelectStories.Filterable} />
+
+## Filterable With Layer
+
+<Canvas of={FluidMultiSelectStories._FilterableWithLayer} />
+
+### Skeleton
+
+<Canvas of={FluidMultiSelectStories.Skeleton} />
+
+### With AI Label
+
+<Canvas of={FluidMultiSelectStories.withAILabel} />
+
+### Condensed
+
+<Canvas of={FluidMultiSelectStories.Condensed} />
+
+## Accessibility Considerations
+
+### Accessible Name
+
+To comply with accessibility requirements, make sure to supply the component
+with an accessible name by providing either the `aria-label`, `aria-labelledby`
+or `title` attribute. Read more on the accessible naming rule
+[here](https://able.ibm.com/rules/archives/latest/doc/en-US/aria_accessiblename_exists.html).
+
+## Component API
+
+<ArgTypes />
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/react/src/components/FluidMultiSelect/FluidMultiSelect.mdx).

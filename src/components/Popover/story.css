@@ -1,0 +1,85 @@
+/*
+ * Copyright IBM Corp. 2016, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, only the classes the stories use, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+/* Utilities */
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.mt-10 {
+  padding-block-start: var(--cds-spacing-10);
+}
+
+.p-3 {
+  padding: var(--cds-spacing-05);
+}
+
+.playground-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--cds-border-subtle);
+  background: var(--cds-background);
+  block-size: 2rem;
+  inline-size: 2rem;
+}
+
+.playground-trigger svg {
+  fill: var(--cds-background-inverse);
+}
+
+.popover-title,
+.popover-details {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.popover-title {
+  font-size: var(--cds-heading-compact-01-font-size);
+  font-weight: var(--cds-heading-compact-01-font-weight);
+  letter-spacing: var(--cds-heading-compact-01-letter-spacing);
+  line-height: var(--cds-heading-compact-01-line-height);
+  margin-block-end: var(--cds-spacing-01);
+}
+
+.popover-details {
+  font-size: var(--cds-body-compact-01-font-size);
+  font-weight: var(--cds-body-compact-01-font-weight);
+  letter-spacing: var(--cds-body-compact-01-letter-spacing);
+  line-height: var(--cds-body-compact-01-line-height);
+}
+
+.popover-tabtip-story .cds--popover-content.p-3 {
+  inline-size: 16rem;
+}
+
+.popover-tabtip-story .cds--radio-button-wrapper {
+  margin-block-end: var(--cds-spacing-03);
+}
+
+.popover-tabtip-story hr {
+  border: none;
+  margin: var(--cds-spacing-03) 0 var(--cds-spacing-05);
+  background: var(--cds-border-subtle);
+  block-size: 1px;
+}
+
+.popover-tabtip-story .cds--popover-container:last-of-type {
+  /* stylelint-disable-next-line carbon/layout-use -- demo offset larger than the spacing scale */
+  margin-inline-start: 15rem;
+}

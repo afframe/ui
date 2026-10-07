@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: example without the FeatureFlags wrapper (AfframeProvider turns the flag on), source label added.
+
+<Meta title="Components/FileUploader/Feature Flag" name="Flag details" />
+
+# Enhanced FileUploader Callbacks
+
+<SourceLabel name="carbon" />
+
+The `enable-enhanced-file-uploader` flag enables enhanced functionality for the
+FileUploader component, including richer callback data and expanded trigger
+events for `onChange` and `onDelete`. `AfframeProvider` turns this flag on.
+
+When this flag is enabled, the `onChange` callback is consistently triggered for
+all file list modifications (additions, deletions, programmatic clears), and
+both `onChange` and `onDelete` events are augmented with detailed file
+information like `deletedFile`, `addedFiles`, and `currentFiles` on
+`event.target`.
+
+the `getCurrentFiles` and `setCurrentFiles` methods are available on the
+`FileUploader` component, which can be used to get and update the file state and
+to disable specific files based on disabled prop.
+
+## Enable enhanced FileUploader callbacks
+
+```js
+<FileUploader
+  multiple
+  filenameStatus="edit"
+  onChange={(evt) =>
+    console.log('onChange', evt.target.action, evt.target.currentFiles)
+  }
+  onDelete={(evt) => console.log('onDelete', evt.target.deletedFile)}
+/>
+```

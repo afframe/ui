@@ -1,0 +1,25 @@
+/* Sizes for ChatCustomElement: the class must give the chat its size. */
+.demo-chat-embedded {
+  inline-size: 100%;
+  block-size: 36rem;
+}
+
+.demo-chat-sidebar-page {
+  display: flex;
+  block-size: 36rem;
+}
+
+.demo-chat-sidebar-page main {
+  flex: 1;
+  padding: var(--cds-spacing-05);
+}
+
+/* Sized as a flex item of the page, so the class must reach the chat. */
+.demo-chat-sidebar {
+  flex: 0 0 22.5rem;
+}
+
+/* A float chat is fixed to the viewport; this keeps room for its launcher. */
+.demo-chat-float {
+  block-size: 6rem;
+}

@@ -1,0 +1,26 @@
+diff --git a/es/internal/usePresence.js b/es/internal/usePresence.js
+index 6fae5fc2283ac5f08d1f4994cce6b05b2de15402..8d47e36c0fc6895946204da8ccb35f36ba3b22d3 100644
+--- a/es/internal/usePresence.js
++++ b/es/internal/usePresence.js
+@@ -40,7 +40,7 @@ const usePresence = (ref, isOpen, exitHoldCount = 0, animationNamePrefix) => {
+ 			return;
+ 		}
+ 		let cancelled = false;
+-		Promise.all(animations.map((animation) => animation.finished)).finally(() => {
++		Promise.all(animations.map((animation) => animation.finished)).catch(() => {}).finally(() => {
+ 			if (cancelled) return;
+ 			setExitState("finished");
+ 		});
+diff --git a/lib/internal/usePresence.js b/lib/internal/usePresence.js
+index f16be1ab442d1e3cfdf2ace9602492ed01f903e9..0711496dda214f7d35bbeabc00f621204f25c58a 100644
+--- a/lib/internal/usePresence.js
++++ b/lib/internal/usePresence.js
+@@ -40,7 +40,7 @@ const usePresence = (ref, isOpen, exitHoldCount = 0, animationNamePrefix) => {
+ 			return;
+ 		}
+ 		let cancelled = false;
+-		Promise.all(animations.map((animation) => animation.finished)).finally(() => {
++		Promise.all(animations.map((animation) => animation.finished)).catch(() => {}).finally(() => {
+ 			if (cancelled) return;
+ 			setExitState("finished");
+ 		});

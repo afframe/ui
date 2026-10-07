@@ -1,0 +1,59 @@
+import { Canvas, ArgTypes, Meta } from '@storybook/addon-docs/blocks';
+import * as stories from './NotificationsEmptyState.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label and tag-pinned source link added.
+
+<Meta isTemplate />
+
+# Notifications Empty State
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/EmptyStates/NotificationsEmptyState)
+&nbsp;|&nbsp;
+[Carbon empty states pattern](https://carbondesignsystem.com/patterns/empty-states-pattern/)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Default](#default)
+- [WithDarkModeIllustration](#with-dark-mode-illustration)
+- [withAction](#with-action)
+- [withActionIconButton](#with-action-icon-button)
+- [withLink](#with-link)
+- [withActionAndLink](#with-action-and-link)
+
+## Overview
+
+Empty states are moments in an app where there is no data to display to the
+user.
+
+## Default
+
+<Canvas of={stories.Default} />
+
+## With Dark Mode Illustration
+
+<Canvas of={stories.WithDarkModeIllustration} />
+
+## With Action
+
+<Canvas of={stories.withAction} />
+
+## with Action Icon Button
+
+<Canvas of={stories.withActionIconButton} />
+
+## With Link
+
+<Canvas of={stories.withLink} />
+
+## With Action And Link
+
+<Canvas of={stories.withActionAndLink} />
+
+## Component API
+
+<ArgTypes />

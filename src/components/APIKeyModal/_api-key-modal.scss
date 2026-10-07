@@ -1,0 +1,17 @@
+// APIKeyModal styles, Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+
+.afframe-api-key-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-03;
+}
+
+.afframe-api-key-modal-step {
+  @include type.type-style('heading-compact-01');
+
+  margin-block-end: $spacing-03;
+  color: $text-primary;
+}

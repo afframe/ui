@@ -1,0 +1,132 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as RemoveModalStories from './RemoveModal.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# RemoveModal
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/RemoveModal). See also [Delete and remove pattern](https://carbondesignsystem.com/community/patterns/delete-and-remove-pattern/).
+
+`RemoveModal` asks the user to confirm a delete or remove action. It is a
+small Carbon danger modal with a Cancel button and a red confirm button. It
+replaces IBM Products' deprecated RemoveModal.
+
+When to use it, from the Carbon pattern:
+
+- **Delete** destroys the item for good. Use `kind="delete"` (the default).
+- **Remove** takes the item out of a list or group; it still exists elsewhere
+  and can be added back. Use `kind="remove"`.
+- Name the item in the title and the button, and say what happens in the body.
+- For high-impact deletes (many items, an item other people use), ask the user
+  to type the item name: `confirmByTyping`.
+- For low-impact actions that can be undone, skip the dialog and offer undo.
+
+<Canvas of={RemoveModalStories.Default} />
+
+## Usage and props
+
+```tsx
+import { RemoveModal } from '@afframe/ui';
+
+const launcherRef = useRef<HTMLButtonElement>(null);
+
+<RemoveModal
+  open={open}
+  onClose={() => setOpen(false)}
+  launcherRef={launcherRef}
+  resourceName="Invoice 2026-001"
+  onConfirm={() => api.deleteInvoice(id)}
+/>;
+```
+
+- `open`, `onClose`: the app owns the open state. `onClose` is called by
+  Cancel, the close icon, Escape, and after `onConfirm` succeeds.
+- `onConfirm`: may return a promise. While it runs, the buttons are disabled,
+  the confirm button shows a spinner with the `pending` message, and Escape,
+  Cancel and the close icon do nothing. If it rejects, the dialog stays open
+  and shows an error alert; the user can try again.
+- `kind`: `delete` or `remove`; changes the default title and button text
+  only.
+- `title`, `body`: replace the default heading and body.
+- `confirmByTyping`: `true` asks the user to type `resourceName`; a string
+  asks for that phrase. The confirm button stays disabled until the typed text
+  equals the phrase exactly; the match is case-sensitive and spaces count.
+  An empty phrase (`confirmByTyping=""`, or `true` with an empty
+  `resourceName`) keeps the confirm button disabled and logs a warning.
+- `label`: a small label above the title (for example the item type).
+- `launcherRef`: the element that gets focus back on close.
+- `messages`: overrides for the strings below.
+
+A click on the page behind the dialog does not close it.
+
+<ArgTypes of={RemoveModalStories} />
+
+## Messages
+
+`messages?: Partial<RemoveModalMessages>`; defaults in
+`defaultRemoveModalMessages`. Keys that are functions take the values shown;
+override them from a client component (a function cannot cross from a server
+component), or pass `title` and `body` as props.
+
+| Key                    | Default                                                  |
+| ---------------------- | -------------------------------------------------------- |
+| `title`                | Delete `name`? / Remove `name`?                          |
+| `body`                 | Deleting `name` is permanent and cannot be undone. / ... |
+| `confirm`              | Delete / Remove                                          |
+| `typeToConfirm`        | Type `phrase` to confirm                                 |
+| `mismatch`             | The text does not match.                                 |
+| `dangerDescription`    | Danger                                                   |
+| `cancel`               | Cancel                                                   |
+| `pending`              | Working                                                  |
+| `genericError`         | Something went wrong. Try again.                         |
+| `errorIconDescription` | Error                                                    |
+| `closeIconDescription` | Close                                                    |
+
+## Examples
+
+<Canvas of={RemoveModalStories.WithTypedConfirmation} />
+
+<Canvas of={RemoveModalStories.Pending} />
+
+<Canvas of={RemoveModalStories.Dark} />
+
+## Keyboard and screen reader behaviour
+
+On open, focus goes to Cancel, the safe choice. With `confirmByTyping`, focus
+goes to the text field instead. Focus order: close icon, the text field (if
+any), Cancel, the confirm button.
+
+| Key    | Where          | Action                                                            |
+| ------ | -------------- | ----------------------------------------------------------------- |
+| Tab    | anywhere       | Moves through the dialog's controls; never to the page behind it. |
+| Enter  | confirm button | Runs the action; on success the dialog closes.                    |
+| Enter  | Cancel         | Closes the dialog.                                                |
+| Escape | anywhere       | Closes the dialog, except while the action runs.                  |
+
+Focus is trapped by the browser's modal dialog: the page behind it is inert,
+so Tab never reaches it. Past the last control the browser may move focus to
+its own interface before returning to the first control.
+
+On close, focus returns to `launcherRef`. Without it, or when that element is
+gone, focus returns to the element that had focus before the dialog opened;
+when that is gone too, focus stays with the browser default (the page body).
+
+While the action runs, focus moves to the dialog content if the focused button
+was disabled. After a failure, focus returns to the confirm button.
+
+Screen readers announce:
+
+- the dialog as an `alertdialog`, named by its title (or by `label` when set)
+  and described by its body (Carbon's `alert` prop);
+- the confirm button by its text after the `dangerDescription`, for example
+  "Danger Delete". The name stays the same while the button is disabled; only
+  its disabled state changes;
+- the text field by its label, and the mismatch message after the field loses
+  focus with text that does not match;
+- the spinner text (`pending`) while the action runs;
+- a failure as an alert with `genericError`.

@@ -1,0 +1,130 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as EditFullPageStories from './EditFullPage.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# EditFullPage
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/EditFullPage). See also [Edit pattern](https://carbondesignsystem.com/community/patterns/edit-pattern/).
+
+`EditFullPage` is a page-level edit form: a heading, an optional
+description, the fields, and a sticky action bar with Cancel and Save. It is
+not a modal. It replaces IBM Products' deprecated EditFullPage, which was only
+a `role="main"` container. It shares its submit, cancel, discard and focus
+behaviour with `CreateModal`, `CreateSidePanel`, `EditSidePanel` and
+`EditTearsheet`.
+
+<Canvas of={EditFullPageStories.Default} />
+
+## Usage and props
+
+Render it in place of the read-only view while the record is in edit mode.
+It renders a `<form>` named by its heading, not a `main` landmark: the app
+owns the page landmarks. `onClose` leaves edit mode. `onSubmit` may return a
+promise: while it is pending the form is busy and cannot be left with Cancel
+or Escape; when it resolves, `onClose` is called; when it rejects, the form
+stays and shows the error above the action bar.
+
+### Wiring `isDirty`
+
+```tsx
+import { EditFullPage } from '@afframe/ui';
+
+const editRef = useRef<HTMLButtonElement>(null);
+const [editing, setEditing] = useState(false);
+const [name, setName] = useState(customer.name);
+
+editing ? (
+  <EditFullPage
+    title={customer.name}
+    onClose={() => setEditing(false)}
+    onSubmit={() => api.updateCustomer(customer.id, { name })}
+    launcherRef={editRef}
+    isDirty={name !== customer.name}
+    submitDisabled={name.trim() === ''}>
+    <TextInput id="name" labelText="Name" value={name} onChange={...} />
+  </EditFullPage>
+) : (
+  <Button ref={editRef} onClick={() => setEditing(true)}>
+    Edit
+  </Button>
+);
+```
+
+- `title` with `headingLevel` (2, the default, or 3) heads the form and names
+  it through `aria-labelledby`; `description` follows the heading.
+- `isDirty`: when true, Escape and Cancel ask "Discard changes?" first,
+  unless `confirmDiscard` is false.
+- `warnOnLeave` (default true): while `isDirty`, a `beforeunload` handler asks
+  the browser to confirm leaving the page. It is registered only while dirty
+  and removed when the form is clean again or unmounts. The browser shows its
+  own text; pages cannot set it, so there is no message key for it.
+- `submitDisabled`: disables Save and Enter.
+- `launcherRef`: focused after leaving edit mode, for example the Edit button
+  that replaces the form.
+
+<ArgTypes of={EditFullPageStories} />
+
+## Messages
+
+`messages?: Partial<EditFullPageMessages>`; defaults in
+`defaultEditFullPageMessages`. All strings except the optional `errorText` function,
+which is set from a client component.
+
+| Key                    | Default                                    |
+| ---------------------- | ------------------------------------------ |
+| `save`                 | Save                                       |
+| `cancel`               | Cancel                                     |
+| `submitting`           | Saving                                     |
+| `submitError`          | The changes could not be saved. Try again. |
+| `errorText`            | not set: `submitError` is shown            |
+| `errorIconDescription` | Error                                      |
+| `discardTitle`         | Discard changes?                           |
+| `discardBody`          | Your changes will be lost.                 |
+| `discard`              | Discard                                    |
+| `keepEditing`          | Keep editing                               |
+| `closeIconDescription` | Close (the discard dialog's close icon)    |
+
+## Keyboard and screen reader behaviour
+
+On mount, focus moves to the first form control. Focus order: the form
+fields, Cancel, Save. There is no focus trap: it is a page, and Tab continues
+to the rest of the page.
+
+| Key    | Where                | Action                                                                                                      |
+| ------ | -------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Enter  | single-line field    | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                    |
+| Escape | anywhere in the form | Leaves a clean form. On a dirty one, opens the discard dialog. Ignored while an open list or menu takes it. |
+| Escape | discard dialog       | Closes only the discard dialog; focus returns to the element that had it.                                   |
+| Tab    | discard dialog       | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.                       |
+
+After leaving edit mode, focus moves to `launcherRef` once it is on the page.
+
+A focused field never sits under the sticky action bar: fields keep a scroll
+margin the size of the bar (the `LongForm` story checks it).
+
+Screen readers announce:
+
+- the form named by its heading;
+- while saving, the form as busy and Save's loading text (`submitting`);
+- a rejected submit as an alert with `submitError` (or `errorText(error)`). Focus moves to the first
+  field with `aria-invalid="true"`, else to the alert;
+- the discard dialog as an alert dialog named by `discardTitle`, described by
+  `discardBody`.
+
+## Stories
+
+<Canvas of={EditFullPageStories.Dirty} />
+
+<Canvas of={EditFullPageStories.WithValidationError} />
+
+<Canvas of={EditFullPageStories.Submitting} />
+
+<Canvas of={EditFullPageStories.LongForm} />
+
+<Canvas of={EditFullPageStories.Dark} />

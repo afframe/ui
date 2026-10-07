@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label added, Afframe note on the flag.
+
+<Meta title="Components/StructuredList/Feature Flag" name="Flag details" />
+
+# Structured List
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/StructuredList)
+
+In Afframe UI, `enable-v12-release` turns on
+`enable-v12-structured-list-visible-icons` in `AfframeProvider` and in
+`styles.css`, so the stories next to this page render with the flag on.
+
+## The feature flag `enable-v12-structured-list-visible-icons` will enable structured list visible icons
+
+```js
+<FeatureFlags enableV12StructuredListVisibleIcons>
+  <StructuredList />
+</FeatureFlags>
+```

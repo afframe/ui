@@ -1,0 +1,125 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as FilterPanelStories from './FilterPanel.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# FilterPanel
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/FilterPanel). See also [Filtering pattern](https://carbondesignsystem.com/patterns/filtering/).
+
+`FilterPanel` is a side panel of checkbox filter groups. `FilterFlyout` is a
+toolbar button that opens the same panel in a popover. Both are built on
+Carbon's Accordion, Checkbox, Search, DismissibleTag, Button and Popover.
+They replace IBM Products' deprecated FilterPanel.
+
+Filtering is instant: every change calls `onChange`. There is no Apply button.
+
+<Canvas of={FilterPanelStories.Default} />
+
+<Canvas of={FilterPanelStories.Flyout} />
+
+## Usage and props
+
+Both components are controlled. The app keeps the selection in state and
+filters its own data; the components keep only the open state and the search
+text.
+
+```tsx
+import { FilterFlyout, FilterPanel } from '@afframe/ui';
+import type { FilterPanelGroup, FilterPanelValue } from '@afframe/ui';
+
+const groups: FilterPanelGroup[] = [
+  {
+    id: 'status',
+    label: 'Status',
+    defaultOpen: true,
+    options: [
+      { value: 'paid', label: 'Paid' },
+      { value: 'overdue', label: 'Overdue' },
+    ],
+  },
+  { id: 'customer', label: 'Customer', searchable: true, options: customers },
+];
+
+const [value, setValue] = useState<FilterPanelValue>({});
+
+<FilterPanel
+  groups={groups}
+  value={value}
+  onChange={setValue}
+  resultCount={rows.length}
+/>;
+```
+
+- `groups`: each group is one accordion item with checkbox options.
+  `searchable` adds a search field that narrows the options by label;
+  `defaultOpen` opens the item on first render.
+- `value`: the selected option values per group id, for example
+  `{ status: ['paid'] }`. A group with nothing selected is left out.
+- `onChange`: called with the next value.
+- `resultCount`: when set, the panel shows and announces it.
+- `messages`: overrides for the strings below.
+
+`FilterFlyout` takes the same props. Its toggle button shows the number of
+selected options.
+
+<ArgTypes of={FilterPanelStories} />
+
+## Messages
+
+`messages?: Partial<FilterPanelMessages>`; defaults in
+`defaultFilterPanelMessages`.
+
+| Key                 | Default                          |
+| ------------------- | -------------------------------- |
+| `title`             | Filters                          |
+| `groupTitle`        | `label`, then `(count)` when set |
+| `resultCount`       | 1 result, `count` results        |
+| `selectedFilters`   | Selected filters                 |
+| `clearAll`          | Clear all                        |
+| `removeFilter`      | Remove filter `label`            |
+| `searchLabel`       | Search `group label`             |
+| `searchPlaceholder` | Search                           |
+| `clearSearch`       | Clear search                     |
+| `noMatches`         | No matching options              |
+
+`FilterFlyout` takes `messages?: Partial<FilterFlyoutMessages>` (defaults in
+`defaultFilterFlyoutMessages`): the keys above plus `toggle`, the button text
+(Filter, or Filter (`count`) when options are selected).
+
+## Keyboard and screen reader behaviour
+
+Focus order in the panel: the selected filter tags, Clear all, then each group
+heading; inside an open group, its search field and then its checkboxes.
+
+| Key          | Where                    | Action                                                                                         |
+| ------------ | ------------------------ | ---------------------------------------------------------------------------------------------- |
+| Tab          | anywhere                 | Moves to the next tag, button, heading or checkbox.                                            |
+| Enter        | group heading            | Opens or closes the group.                                                                     |
+| Space        | checkbox                 | Selects or clears the option.                                                                  |
+| Enter, Space | tag dismiss button       | Removes that filter; focus moves to the next tag, else the previous one, else the panel title. |
+| Enter        | Clear all                | Clears every filter; focus moves to the panel title.                                           |
+| Enter        | flyout button            | Opens or closes the flyout. Tab moves into it.                                                 |
+| Escape       | flyout button or content | Closes the flyout and returns focus to its button.                                             |
+| Escape       | search field with text   | Clears the search; a second Escape closes the flyout.                                          |
+
+Screen readers announce:
+
+- the panel as a region named by its title (Filters);
+- the result count as a status message when it changes;
+- the selected filters as a list named Selected filters; each dismiss button
+  is named Remove filter `label`;
+- each group heading as a button with its expanded state, and its options as a
+  group named by the group label;
+- the flyout button with its expanded state.
+
+## Stories
+
+<Canvas of={FilterPanelStories.FlyoutOpen} />
+
+<Canvas of={FilterPanelStories.Dark} />

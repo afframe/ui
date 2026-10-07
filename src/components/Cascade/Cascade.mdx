@@ -1,0 +1,38 @@
+import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as stories from './Cascade.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: written from the upstream docs page component (StoryDocsPage), source label added, source link pinned to the tag, internal IBM links removed.
+
+<Meta isTemplate />
+
+# Cascade
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/Cascade)
+&nbsp;|&nbsp;
+[Carbon motion overview](https://carbondesignsystem.com/elements/motion/overview/)
+
+## Table of Contents
+
+- [Without grid](#without-grid)
+- [With grid](#with-grid)
+- [Component API](#component-api)
+
+## Without grid
+
+<Canvas of={stories.WithoutGrid} />
+
+## With grid
+
+When using `Cascade` with grid support its important that you follow the
+example code structure and provide the rows and columns. The component will
+assume this structure and add the appropriate CSS classes to the columns.
+
+<Canvas of={stories.WithGrid} />
+
+## Component API
+
+<Controls />

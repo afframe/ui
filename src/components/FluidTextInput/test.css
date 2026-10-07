@@ -1,0 +1,23 @@
+/**
+ * Copyright IBM Corp. 2022, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: renamed from test.scss to plain CSS, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.fluid-input-wrapper {
+  display: flex;
+  justify-content: space-between;
+  inline-size: 100%;
+  margin-block-end: var(--cds-spacing-07);
+}
+
+.fluid-input-wrapper > * {
+  margin: 0 var(--cds-spacing-05);
+  inline-size: 33%;
+}

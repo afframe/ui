@@ -1,0 +1,35 @@
+name: Bug
+description: Report something that does not work as documented.
+labels: [bug]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component or export
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: '@afframe/ui version'
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: A minimal way to reproduce it.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+    validations:
+      required: true

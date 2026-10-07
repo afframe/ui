@@ -1,0 +1,66 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as HeaderPopoverStories from './HeaderPopover.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, code samples import from @afframe/ui.
+
+<Meta isTemplate />
+
+# HeaderPopover
+
+<SourceLabel name="labs" />
+
+[Source code](https://github.com/carbon-design-system/carbon-labs/tree/%40carbon-labs%2Freact-ui-shell%400.106.0/packages/react/src/components/UIShell)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Component API](#component-api)
+
+## Overview
+
+The `HeaderPopover` component provides an interactive popover menu within the
+`Header`. It can display additional information or actions without navigating
+away from the page. The popover is triggered by a `HeaderPopoverButton`, which
+can include an icon or label. The content is defined using
+`HeaderPopoverContent`, with optional action buttons or links in
+`HeaderPopoverActions`.
+
+```jsx
+import {
+  HeaderPopover,
+  HeaderPopoverContent,
+  HeaderPopoverButton,
+  HeaderPopoverActions,
+  Header,
+  HeaderGlobalBar,
+  Link,
+  Button,
+} from '@afframe/ui';
+import { Information } from '@afframe/ui/icons';
+
+<Header aria-label="IBM Platform Name">
+  <HeaderGlobalBar>
+    <HeaderPopover align="bottom-end">
+      <HeaderPopoverButton align="bottom" label="Show information">
+        <Information />
+      </HeaderPopoverButton>
+      <HeaderPopoverContent>
+        <p>
+          Lorem ipsum dolor sit amet, di os consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut fsil labore et dolore magna aliqua.
+        </p>
+        <HeaderPopoverActions>
+          <Link href="#">Link action</Link>
+          <Button size="sm">Button</Button>
+        </HeaderPopoverActions>
+      </HeaderPopoverContent>
+    </HeaderPopover>
+  </HeaderGlobalBar>
+</Header>;
+```
+
+## Component API
+
+<ArgTypes />

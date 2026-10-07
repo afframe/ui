@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { useCarbonPrefix } from '../../index.js';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: usePrefix renamed to useCarbonPrefix (the plain name is reserved for IBM Products' usePrefix), examples import from @afframe/ui and build the class name without classnames, ClassPrefix link removed (not exported), source label added, source link pinned to v11.117.0.
+
+<Meta title="Hooks/useCarbonPrefix" component={useCarbonPrefix} />
+
+# useCarbonPrefix
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/blob/v11.117.0/packages/react/src/internal/usePrefix.ts)
+
+## Overview
+
+A hook that returns the prefix used in our classes. It is Carbon's `usePrefix`,
+exported as `useCarbonPrefix` because `usePrefix` is kept for IBM Products.
+
+## Examples
+
+```js
+import { useCarbonPrefix } from '@afframe/ui';
+
+function ExampleComponent() {
+  const prefix = useCarbonPrefix();
+}
+```
+
+Typically, `useCarbonPrefix` will be used to build class names.
+
+```js
+import { useCarbonPrefix } from '@afframe/ui';
+
+function ExampleComponent() {
+  const prefix = useCarbonPrefix();
+  const className = `${prefix}--custom-component`;
+}
+```

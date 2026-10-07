@@ -1,0 +1,42 @@
+import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import * as ScrollGradientStories from './ScrollGradient.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, Meta title removed.
+
+<Meta isTemplate />
+
+# ScrollGradient
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/ScrollGradient)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Example usage](#example-usage)
+- [Component API](#component-api)
+
+## Overview
+
+The ScrollGradient implements gradient fades in horizontal and vertical
+directions based on the user's scroll position. Visually, it informs the user of
+more content that can be scrolled to.
+
+## Example usage
+
+<Canvas of={ScrollGradientStories.scrollGradientVertical} />
+
+## Code sample
+
+```jsx
+<ScrollGradient>
+  <p>Scrolling content here</p>
+</ScrollGradient>
+```
+
+## Component API
+
+<ArgTypes />

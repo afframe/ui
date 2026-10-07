@@ -1,0 +1,83 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# ECharts
+
+<SourceLabel name="extras" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/ECharts). See also [Apache ECharts option reference](https://echarts.apache.org/en/option.html) and [Carbon ECharts theme](https://github.com/carbon-design-system/carbon-echarts-theme).
+
+`EChart` is a thin wrapper around one Apache ECharts instance. It uses
+ECharts' modular `echarts/core` build with the Carbon theme from
+`@carbon/echarts-theme`: `carbon-white` for light and `carbon-g100` for dark.
+It follows `data-afframe-theme` on `<html>` (`light`, `dark`, `system`) and
+switches the theme without recreating the chart.
+
+Registered: bar, line, pie and scatter series; aria, dataset, grid, legend,
+title and tooltip components; the canvas renderer. Other series or components
+in the option are ignored by ECharts.
+
+## Usage and props
+
+```tsx
+import { EChart } from '@afframe/ui';
+import type { EChartOption } from '@afframe/ui';
+
+const option: EChartOption = {
+  title: { text: 'Revenue' },
+  xAxis: { type: 'category', data: ['Q1', 'Q2', 'Q3'] },
+  yAxis: { type: 'value' },
+  series: [{ type: 'bar', data: [12, 18, 9] }],
+};
+
+<EChart option={option} style={{ height: 300 }} />;
+```
+
+| Prop       | Type                                 | Default | Description                                                  |
+| ---------- | ------------------------------------ | ------- | ------------------------------------------------------------ |
+| `option`   | `EChartsCoreOption`                  |         | Passed to `setOption`. `EChartOption` is the strict type.    |
+| `notMerge` | `boolean`                            | `false` | Replace the previous option instead of merging into it.      |
+| `onEvents` | `Record<string, EChartEventHandler>` |         | Handlers by ECharts event name, bound with `chart.on`.       |
+| `ref`      | `Ref<EChartInstance \| null>`        |         | The ECharts instance; `null` before mount and after unmount. |
+
+Other props go to the container `div`. Give it a height: ECharts draws into
+the container's size and resizes with it. The chart is disposed on unmount.
+For every option, see the
+[ECharts option reference](https://echarts.apache.org/en/option.html).
+
+## Loading and server rendering
+
+`EChart` lives in its own client module (`'use client'`), loaded statically: a
+route that renders it ships ECharts, a route that does not ships none of it.
+It can be used directly in a server component when the option is plain data.
+The server renders the empty container `<div data-afframe-extra="echarts">`;
+the chart draws in the browser.
+
+## Messages
+
+Afframe adds no strings. Titles, series names and labels come from your
+`option`.
+
+## Accessibility
+
+- ECharts draws on a canvas. `EChart` turns on ECharts' aria component unless
+  your option sets `aria`, so the container gets an `aria-label` that
+  describes the chart from its title and series. Set `title.text` and series
+  names so the description is useful.
+- The canvas is not keyboard operable; put values that matter in text or a
+  table as well.
+- No axe rule is switched off in these stories.
+
+## Stories
+
+Animations are off in every story, so they render the same each time.
+
+<Canvas id="components-echarts--bar" />
+<Canvas id="components-echarts--line" />
+<Canvas id="components-echarts--pie" />
+<Canvas id="components-echarts--scatter" />
+<Canvas id="components-echarts--dataset" />

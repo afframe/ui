@@ -1,0 +1,67 @@
+import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import * as LoadingStories from './Loading.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added.
+
+<Meta isTemplate />
+
+# Loading
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/Loading)
+&nbsp;|&nbsp;
+[Usage guidelines](https://www.carbondesignsystem.com/components/loading/usage)
+&nbsp;|&nbsp;
+[Accessibility](https://www.carbondesignsystem.com/components/loading/accessibility)
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Overlay loading](#overlay-loading)
+  - [Overlay loading behind a modal](#overlay-loading-behind-a-modal)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+<Canvas of={LoadingStories.Default} />
+
+## Overlay loading
+
+Setting `withOverlay` renders the indicator on top of a full-screen overlay that
+blocks interaction with the content behind it. When the overlay is active and no
+recognized modal is layered above it, focus moves to the loading dialog and
+stays there. When loading finishes, focus returns to the previously focused
+element when it is still available, or to a suitable fallback when possible.
+
+Select **Start** to trigger a two second loading state.
+
+<Canvas of={LoadingStories.OverlayLoading} />
+
+### Overlay loading behind a modal
+
+When a modal dialog is already active above the loading overlay, the overlay
+does not take focus from the modal.
+
+Open the modal and select **Save** to trigger a two second loading state behind
+it. Focus remains on **Save**, and `Tab` continues cycling through the modal
+instead of moving to the overlay underneath.
+
+<Canvas of={LoadingStories.OverlayLoadingBehindModal} />
+
+## Component API
+
+<ArgTypes />
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/react/src/components/Loading/Loading.mdx).

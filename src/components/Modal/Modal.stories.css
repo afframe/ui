@@ -1,0 +1,16 @@
+/*
+ * Copyright IBM Corp. 2023, 2025
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2025
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS; the dialog-refactor prefixed modal styles are dropped, as the package styles already compile Modal with the dialog and presence flags, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.sb-notification p {
+  /* stylelint-disable-next-line carbon/type-use -- unitless reset, no Carbon type token is 1 */
+  line-height: 1;
+}

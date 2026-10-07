@@ -1,0 +1,119 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as UIShellStories from './UIShell.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, Stackblitz links removed, the component list and imports under their @afframe/ui names (the Labs side nav set and HeaderContainer end in Labs), getting started rewritten for @afframe/ui (install, styles in the package CSS, imports), the SCSS section and the Stackblitz examples section removed, the Profile icon in the imports sample replaced by UserAvatar (Profile is the Labs component).
+
+<Meta isTemplate />
+
+# UIShell
+
+<SourceLabel name="labs" />
+
+[Source code](https://github.com/carbon-design-system/carbon-labs/tree/%40carbon-labs%2Freact-ui-shell%400.106.0/packages/react/src/components/UIShell)
+
+- **Initiative owner(s):** Carbon
+- **Status:** Draft
+- **Target library:** @carbon/react
+- **Target library maintainer(s) / PR Reviewer(s):** Carbon
+- **Support channel:** `#carbon-labs`
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> */}
+{/* <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Getting started](#getting-started)
+  - [JS](#js-imports)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+The Labs UI Shell is composed from Carbon and Carbon Labs components, all
+exported by `@afframe/ui`. Where a Labs component shares a Carbon name, Carbon
+keeps the name and the Labs one ends in `Labs`. Additional documentation and
+examples for the Carbon components can be found in the
+[Carbon React Storybook](https://react.carbondesignsystem.com/?path=/docs/components-ui-shell-header--overview).
+The following components come from Carbon Labs:
+
+- `HeaderContainerLabs`
+- `HeaderDivider`
+- `HeaderOverflowPanel`
+- `HeaderPopover`
+- `HeaderPopoverActions`
+- `HeaderPopoverButton`
+- `HeaderPopoverContent`
+- `Profile`
+- `SideNavLabs`
+- `SideNavItemsLabs`
+- `SideNavLinkLabs`
+- `SideNavMenuLabs`
+- `SideNavMenuItemLabs`
+- `SideNavSlot`
+- `SideNavTitle`
+- `TrialCountdown`
+
+<Canvas of={UIShellStories.Demo} />
+
+## Getting started
+
+Install `@afframe/ui`:
+
+```bash
+pnpm add @afframe/ui
+```
+
+The Labs UI Shell styles ship in the package CSS, `@afframe/ui/styles.css`.
+
+### JS (imports)
+
+Import the components and any icons needed from `@afframe/ui` to build your UI
+Shell.
+
+```javascript
+import {
+  SideNavLabs,
+  SideNavItemsLabs,
+  SideNavMenuLabs,
+  SideNavMenuItemLabs,
+  SideNavLinkLabs,
+  HeaderPopover,
+  HeaderPopoverActions,
+  HeaderPopoverButton,
+  HeaderPopoverContent,
+  HeaderContainerLabs,
+  HeaderDivider,
+  HeaderOverflowPanel,
+  Profile,
+  SkipToContent,
+  Header,
+  HeaderName,
+  Theme,
+  HeaderMenuButton,
+  SideNavDivider,
+  Content,
+  Grid,
+  Column,
+  HeaderGlobalBar,
+  HeaderGlobalAction,
+  HeaderNavigation,
+  HeaderMenuItem,
+  HeaderMenu,
+  Switcher,
+  SwitcherItem,
+  SwitcherDivider,
+  MenuButton,
+  MenuItemRadioGroup,
+  ExpandableSearch,
+  Link,
+  Button,
+} from '@afframe/ui';
+import { Help, Settings, UserAvatar } from '@afframe/ui/icons';
+```
+
+## Component API
+
+<ArgTypes />

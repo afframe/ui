@@ -1,0 +1,85 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ProcessingStories from './Processing.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+import AIChatLoop from './images/ai_chat_loop.gif';
+import NoLoopLight from './images/processing_element_load_unload_light_128x128.gif';
+import NoLoopDark from './images/processing_element_load_unload_dark_128x128.gif';
+import LoopLight from './images/processing_element_loop_light_128x128.gif';
+import LoopDark from './images/processing_element_loop_dark_128x128.gif';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label and source link added, Stackblitz links and the unused Processing import removed, getting started imports Processing from @afframe/ui, so the install and SCSS steps are dropped (its styles ship in the package CSS).
+
+<Meta isTemplate />
+
+# Processing
+
+<SourceLabel name="labs" />
+
+[Source code](https://github.com/carbon-design-system/carbon-labs/tree/%40carbon-labs%2Freact-processing%400.21.0/packages/react/src/components/Processing)
+
+- **Initiative owner(s):** Drew Glapa & Krista Starr
+- **Status:** Draft
+- **Target library:** TBD
+- **Target library maintainer(s) / PR Reviewer(s):** N/A
+- **Support channel:** `#carbon-labs`
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> */}
+{/* <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Getting started](#getting-started)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+Processing element is used to indicate that data is currently being
+processed/loaded and the user should wait.
+
+<Canvas of={ProcessingStories.LinearLoop} />
+
+<img src={AIChatLoop} alt="AI chat window example" width={319} />
+
+**Ex.** Content processing in a chat shell.
+
+### Using Processing element in Figma
+
+As a designer, you can use the Processing component in Figma to create a more
+interactive prototype. This can be done by downloading the desired `.gif` below
+and adding to Figma.
+
+|             |                                     Light mode (white, g10)                                     |                                    Dark mode (g90, g100)                                    |
+| :---------- | :---------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: |
+| **No Loop** | <div style={{ background: '#ffffff' }}><img src={NoLoopLight} alt="No loop light mode" /></div> | <div style={{background: '#161616'}}><img src={NoLoopDark} alt="No loop dark mode" /></div> |
+| **Loop**    |   <div style={{ background: '#ffffff' }}><img src={LoopLight} alt="Loop light mode" /></div>    |  <div style={{ background: '#161616' }}><img src={LoopDark} alt="Loop dark mode" /></div>   |
+
+## Getting started
+
+Here's a quick example to get you started.
+
+### JS (via import)
+
+```javascript
+import { Processing } from '@afframe/ui';
+
+function App() {
+  return <Processing />;
+}
+
+export default App;
+```
+
+## Component API
+
+<ArgTypes />
+
+## Example usages
+
+Example of Processing element w/ loop
+
+```jsx
+<Processing loop />
+```

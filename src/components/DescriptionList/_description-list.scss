@@ -1,0 +1,139 @@
+// DescriptionList styles, Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/utilities/visually-hidden' as *;
+
+// Selectors name the body, row and cell to win over Carbon's
+// StructuredList rules without !important.
+.afframe-description-list
+  .afframe-description-list-body
+  .afframe-description-list-row {
+  border-block: 0;
+}
+
+.afframe-description-list.afframe-description-list-border
+  .afframe-description-list-body
+  .afframe-description-list-row {
+  border-block-start: 1px solid $border-subtle;
+}
+
+.afframe-description-list.afframe-description-list-border
+  .afframe-description-list-body
+  .afframe-description-list-row:last-child {
+  border-block-end: 1px solid $border-subtle;
+}
+
+.afframe-description-list
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-term,
+.afframe-description-list
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-description {
+  @include type.type-style('body-01');
+
+  padding-block: $spacing-04;
+  padding-inline: 0 $spacing-05;
+  vertical-align: top;
+}
+
+.afframe-description-list
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-term {
+  color: $text-secondary;
+  inline-size: 33%;
+}
+
+.afframe-description-list
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-description {
+  color: $text-primary;
+  padding-inline-end: 0;
+}
+
+.afframe-description-list-xs
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-term,
+.afframe-description-list-xs
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-description {
+  @include type.type-style('body-compact-01');
+
+  padding-block: $spacing-02;
+}
+
+.afframe-description-list-sm
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-term,
+.afframe-description-list-sm
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-description {
+  @include type.type-style('body-compact-01');
+
+  padding-block: $spacing-03;
+}
+
+.afframe-description-list-lg
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-term,
+.afframe-description-list-lg
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-description {
+  @include type.type-style('body-02');
+
+  padding-block: $spacing-05;
+}
+
+// Vertical: the term sits above its description.
+.afframe-description-list-vertical,
+.afframe-description-list-vertical .afframe-description-list-body,
+.afframe-description-list-vertical
+  .afframe-description-list-body
+  .afframe-description-list-row,
+.afframe-description-list-vertical
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-term,
+.afframe-description-list-vertical
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-description {
+  display: block;
+  inline-size: auto;
+}
+
+.afframe-description-list-vertical
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-term {
+  @include type.type-style('label-01');
+
+  padding-block-end: 0;
+}
+
+.afframe-description-list-vertical
+  .afframe-description-list-body
+  .afframe-description-list-row
+  .afframe-description-list-description {
+  padding-block-start: $spacing-02;
+}
+
+// Empty description: a decorative dash; the text is visually hidden.
+.afframe-description-list-empty::before {
+  color: $text-secondary;
+  content: '\2013';
+}
+
+.afframe-description-list-empty-text {
+  @include visually-hidden;
+}

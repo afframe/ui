@@ -1,0 +1,24 @@
+// ImportModal styles, Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+
+.afframe-import-modal-files {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-03;
+  margin-block-start: $spacing-05;
+}
+
+.afframe-import-modal-size {
+  @include type.type-style('helper-text-01');
+
+  margin-block-start: $spacing-02;
+  color: $text-secondary;
+}
+
+.afframe-import-modal-url {
+  display: flex;
+  align-items: flex-end;
+  gap: $spacing-03;
+}

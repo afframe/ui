@@ -1,0 +1,429 @@
+// Feature flags: docs/feature-flags.md. Charts styles ship apart in charts.scss.
+@use '@carbon/styles/scss/feature-flags' with (
+  $feature-flags: (
+    'enable-v12-release': true,
+    'enable-dialog-element': true,
+    'enable-presence': true,
+    'enable-enhanced-file-uploader': true,
+    'enable-treeview-controllable': true,
+    'enable-tile-contrast': true,
+  )
+);
+@use '@carbon/styles/scss/config' with (
+  $font-path: './fonts'
+);
+@use '@carbon/styles';
+@use '@carbon/styles/scss/breakpoint';
+@use '@carbon/styles/scss/utilities/z-index';
+@use '@carbon/styles/scss/theme';
+@use '@carbon/styles/scss/themes';
+@use '@carbon/styles/scss/colors';
+@use '@carbon/ibm-products-styles/scss/index-without-carbon';
+@use '@carbon-labs/react-ui-shell/scss/ui-shell';
+@use '@carbon-labs/react-calendar/scss/calendar';
+@use '@carbon-labs/react-tag-input/scss/tag-input';
+@use '@carbon-labs/react-theme-settings/scss/theme-settings';
+@use '@carbon-labs/react-whats-new/scss/whats-new';
+@use '@carbon-labs/react-first-time-orientation/scss/styles/firstTimeOrientation';
+@use '@carbon-labs/react-processing/scss/processing';
+@use '@carbon-labs/react-text-highlighter/scss/text-highlighter';
+@use '../components/DataGrid/data-grid';
+@use '../components/FilterPanel/filter-panel';
+@use '../components/Amount/amount';
+@use '../components/CreateModal/create-modal';
+@use '../components/CreateSidePanel/create-side-panel';
+@use '../components/EditSidePanel/edit-side-panel';
+@use '../components/EditTearsheet/edit-tearsheet';
+@use '../components/EditFullPage/edit-full-page';
+@use '../components/RemoveModal/remove-modal';
+@use '../components/ImportModal/import-modal';
+@use '../components/ExportModal/export-modal';
+@use '../components/APIKeyModal/api-key-modal';
+@use '../components/StatusIndicator/status-indicator';
+@use '../components/DescriptionList/description-list';
+@use '../components/AccentTag/accent-tag';
+@use '../components/EnvironmentSwitcher/environment-switcher';
+@use '../components/LogoutBanner/logout-banner';
+@use '../components/LogoutTile/logout-tile';
+@use '../components/HelpMenu/help-menu';
+@use '../components/ChatElements/chat-elements';
+
+// Labs CSS also matches Carbon components and plain HTML outside the Labs
+// components; the rules below give those back Carbon's (or the browser's)
+// values. Each repeats the Labs selector it undoes with the Labs marker inside
+// :where(): same specificity, later, so it wins, while Carbon's more specific
+// rules still win over it. Recheck after a Labs update
+// (docs/guides/updating-carbon.md). The values are Carbon's compiled ones, so
+// the Carbon token lint rules are off here.
+/* stylelint-disable selector-class-pattern, carbon/layout-use, carbon/motion-duration-use, carbon/motion-easing-use, carbon/theme-use, carbon/type-use */
+
+// Labs UI shell styles Carbon's .cds--side-nav and .cds--header
+// classes. Labs SideNav sets role="navigation" on its <nav>, Carbon's does not.
+// A header is a Labs header when it holds a Labs component.
+$carbon-side-nav: '.cds--side-nav__navigation:not([role="navigation"])';
+$carbon-header: ':not(:has(.cds--header-action, .cds--header__divider, .cds--header-overflow-panel, .cds--side-nav__navigation[role="navigation"]))';
+
+.cds--side-nav:where(#{$carbon-side-nav}) {
+  z-index: z-index.z('header');
+  overflow: hidden;
+}
+
+.cds--side-nav:where(#{$carbon-side-nav}),
+.cds--side-nav.cds--side-nav--expanded:where(#{$carbon-side-nav}) {
+  transition:
+    inline-size 0.11s cubic-bezier(0.2, 0, 1, 0.9),
+    transform 0.11s cubic-bezier(0.2, 0, 1, 0.9);
+}
+
+.cds--side-nav--rail:where(#{$carbon-side-nav}) {
+  z-index: z-index.z('header');
+  border-inline-end: none;
+}
+
+.cds--side-nav--rail.cds--side-nav--expanded:where(#{$carbon-side-nav}) {
+  box-shadow: none;
+}
+
+div:has(.cds--header)
+  ~ div:has(.cds--side-nav)
+  .cds--side-nav:where(#{$carbon-side-nav}),
+.cds--header
+  ~ div:has(.cds--side-nav)
+  .cds--side-nav:where(#{$carbon-side-nav}) {
+  block-size: auto;
+  inset-block-start: 0;
+
+  &.cds--side-nav--ux {
+    inset-block-start: 3rem;
+  }
+}
+
+.cds--side-nav__overlay-active:where(:has(+ #{$carbon-side-nav})) {
+  block-size: 0;
+  inline-size: 0;
+
+  @include breakpoint.breakpoint-down('lg') {
+    background-color: var(--cds-overlay, rgb(0 0 0 / 60%));
+    block-size: 100vh;
+    inline-size: 100vw;
+  }
+}
+
+:where(#{$carbon-side-nav})
+  .cds--side-nav__icon:not(.cds--side-nav__submenu-chevron) {
+  margin-inline-end: 1.5rem;
+}
+
+:where(#{$carbon-side-nav})
+  :is(
+    .cds--side-nav__link:hover .cds--side-nav__icon,
+    .cds--side-nav__link:hover .cds--side-nav__submenu-chevron,
+    .cds--side-nav__submenu:hover .cds--side-nav__icon,
+    .cds--side-nav__submenu:hover .cds--side-nav__submenu-chevron
+  )
+  > svg {
+  fill: var(--cds-icon-secondary, #525252);
+
+  &:where(.cds--side-nav__item--active *) {
+    fill: var(--cds-icon-primary, #161616);
+  }
+}
+
+// Carbon's SideNavDetails title is an h2 with Carbon's h2 type style.
+:where(#{$carbon-side-nav}) .cds--side-nav__title {
+  display: block;
+  padding: 0;
+  color: inherit;
+  font-size: var(--cds-heading-05-font-size, 2rem);
+  font-weight: var(--cds-heading-05-font-weight, 400);
+  letter-spacing: var(--cds-heading-05-letter-spacing, 0);
+  line-height: var(--cds-heading-05-line-height, 1.25);
+  white-space: inherit;
+}
+
+// Small screens: Labs makes items 2.5rem high with 1.25rem icons.
+$carbon-small-side-nav: '.cds--side-nav:where(#{$carbon-side-nav}):not(.cds--side-nav--rail):not(.cds--side-nav--panel)';
+
+@include breakpoint.breakpoint-down('md') {
+  #{$carbon-small-side-nav} .cds--side-nav__submenu {
+    padding: 0 1rem;
+    block-size: 2rem;
+  }
+
+  #{$carbon-small-side-nav} .cds--side-nav__link {
+    block-size: auto;
+  }
+
+  #{$carbon-small-side-nav} .cds--side-nav__menu a.cds--side-nav__link {
+    block-size: 2rem;
+  }
+
+  #{$carbon-small-side-nav}
+    :is(
+      .cds--side-nav__submenu,
+      .cds--side-nav__link,
+      .cds--side-nav__menu a.cds--side-nav__link
+    ):where(.cds--side-nav__item--large *) {
+    block-size: 3rem;
+  }
+
+  #{$carbon-small-side-nav} .cds--side-nav__icon > svg {
+    block-size: 1rem;
+    inline-size: 1rem;
+  }
+}
+
+// Nested menus: Carbon indents every submenu button by 1rem and every menu
+// link by 2rem, or 4.5rem under a menu with an icon. Each :is() lists the Labs
+// selectors, so it has the specificity of the most specific one.
+:where(#{$carbon-side-nav})
+  :is(
+    .cds--side-nav__submenu
+      + .cds--side-nav__menu
+      > .cds--side-nav__item
+      .cds--side-nav__submenu,
+    .cds--side-nav__submenu
+      + .cds--side-nav__menu
+      > .cds--side-nav__item--icon
+      > .cds--side-nav__submenu,
+    .cds--side-nav__submenu
+      + .cds--side-nav__menu
+      > .cds--side-nav__item
+      .cds--side-nav__menu
+      > .cds--side-nav__item
+      .cds--side-nav__submenu,
+    .cds--side-nav__item--icon
+      > .cds--side-nav__submenu
+      + .cds--side-nav__menu
+      > .cds--side-nav__item--icon
+      > .cds--side-nav__submenu
+      + .cds--side-nav__menu
+      > .cds--side-nav__item
+      > .cds--side-nav__submenu,
+    .cds--side-nav__submenu
+      + .cds--side-nav__menu
+      > .cds--side-nav__item
+      .cds--side-nav__menu
+      > .cds--side-nav__item
+      .cds--side-nav__menu
+      > .cds--side-nav__item
+      .cds--side-nav__submenu,
+    .cds--side-nav__item--icon
+      > .cds--side-nav__submenu
+      + .cds--side-nav__menu
+      > .cds--side-nav__item--icon
+      .cds--side-nav__menu
+      > .cds--side-nav__item
+      .cds--side-nav__menu
+      > .cds--side-nav__item
+      .cds--side-nav__submenu
+  ) {
+  padding-inline-start: 1rem;
+}
+
+:where(#{$carbon-side-nav})
+  :is(
+    .cds--side-nav__item.cds--side-nav__item--icon a.cds--side-nav__link,
+    .cds--side-nav__item.cds--side-nav__item--icon
+      a.cds--side-nav__link:has(.cds--side-nav__icon),
+    .cds--side-nav__menu .cds--side-nav__menu a.cds--side-nav__link,
+    .cds--side-nav__menu
+      .cds--side-nav__item.cds--side-nav__item--icon
+      a.cds--side-nav__link,
+    .cds--side-nav__menu
+      .cds--side-nav__menu
+      .cds--side-nav__menu
+      a.cds--side-nav__link,
+    .cds--side-nav__item--icon
+      .cds--side-nav__menu
+      .cds--side-nav__item--icon
+      .cds--side-nav__menu
+      .cds--side-nav__menu
+      a.cds--side-nav__link,
+    .cds--side-nav__item--icon
+      .cds--side-nav__menu
+      .cds--side-nav__menu
+      .cds--side-nav__menu
+      .cds--side-nav__menu
+      a.cds--side-nav__link,
+    .cds--side-nav__item--icon
+      .cds--side-nav__menu
+      .cds--side-nav__item--icon
+      .cds--side-nav__menu
+      .cds--side-nav__menu
+      .cds--side-nav__menu
+      a.cds--side-nav__link
+  ) {
+  padding-inline-start: 2rem;
+
+  &:where(.cds--side-nav__item--icon *) {
+    padding-inline-start: 4.5rem;
+  }
+
+  &:where(
+    .cds--side-nav--fixed
+      .cds--side-nav__item:not(.cds--side-nav__item--icon)
+      .cds--side-nav__menu
+      *
+  ) {
+    padding-inline-start: 2rem;
+  }
+}
+
+:where(#{$carbon-side-nav})
+  .cds--side-nav__item--active
+  .cds--side-nav__submenu:not(.cds--side-nav__submenu--active)
+  > .cds--side-nav__submenu-title {
+  font-weight: 600;
+}
+
+:where(.cds--header#{$carbon-header}) .cds--header__global {
+  align-items: normal;
+}
+
+:where(.cds--header#{$carbon-header})
+  .cds--header__action:where(:not(.cds--btn)) {
+  flex-shrink: 1;
+}
+
+:where(.cds--header#{$carbon-header}) .cds--header__action:focus {
+  outline-offset: 0;
+}
+
+.cds--header:where(#{$carbon-header}) .cds--header__name {
+  padding-inline-end: 2rem;
+
+  @include breakpoint.breakpoint-down('md') {
+    padding-inline-end: 1rem;
+  }
+}
+
+.cds--header:where(#{$carbon-header}) .cds--menu-button__trigger {
+  z-index: auto;
+
+  &.cds--btn--ghost:not([disabled]) {
+    color: var(--cds-link-primary, #0f62fe);
+
+    &:hover {
+      color: var(--cds-link-primary, #0f62fe);
+
+      @media (hover: hover) {
+        color: var(--cds-link-primary-hover, #0043ce);
+      }
+    }
+
+    &:active {
+      color: var(--cds-link-primary-hover, #0043ce);
+    }
+  }
+
+  &[aria-expanded='true'] {
+    border: 1px solid transparent;
+
+    &.cds--btn--tertiary {
+      border-color: var(--cds-button-tertiary, #0f62fe);
+    }
+
+    &:focus {
+      border-color: var(--cds-button-focus-color, var(--cds-focus, #0f62fe));
+    }
+
+    &.cds--btn--tertiary:active {
+      border-color: transparent;
+    }
+
+    &::after {
+      content: none;
+    }
+  }
+}
+
+.cds--header:where(#{$carbon-header}) .cds--menu.cds--menu--border {
+  border: 0;
+  outline: 1px solid var(--cds-border-subtle);
+}
+
+.cds--header:where(#{$carbon-header}) .cds--menu--background-token__background {
+  background-color: var(--cds-background, #fff);
+}
+
+.cds--header:where(#{$carbon-header}) .cds--search--expanded {
+  @include breakpoint.breakpoint-down('lg') {
+    position: relative;
+    z-index: auto;
+    inset-inline-start: auto;
+  }
+}
+
+// Labs Calendar restyles flatpickr's classes, which Carbon's DatePicker
+// uses too. Labs Calendar renders its date picker in
+// .clabs--calendar__date-picker-panel.
+$carbon-flatpickr: ':not(.clabs--calendar__date-picker-panel *)';
+
+.flatpickr-calendar:where(#{$carbon-flatpickr}) {
+  overflow: hidden;
+  padding: 0;
+  block-size: auto;
+  inline-size: 19.6875rem;
+  max-block-size: 0;
+
+  &:focus-visible {
+    outline: 0;
+  }
+}
+
+.flatpickr-day.selected:where(#{$carbon-flatpickr}) {
+  background-color: var(--cds-button-primary, #0f62fe);
+  color: var(--cds-text-on-color, #fff);
+
+  @media screen and (forced-colors: active) {
+    color: Highlight;
+  }
+}
+
+// Labs TextHighlighter styles every mark, del and ins element and adds
+// screen reader text before and after them. Its own elements are children of
+// .clabs--text-highlighter__container.
+$plain-text-level: ':not(.clabs--text-highlighter__container > *)';
+
+mark:where(#{$plain-text-level}) {
+  background-color: revert;
+  color: revert;
+}
+
+:is(del, ins):where(#{$plain-text-level}) {
+  color: revert;
+  text-decoration: revert;
+}
+
+:is(mark, del, ins):where(#{$plain-text-level})::before,
+:is(mark, del, ins):where(#{$plain-text-level})::after {
+  content: revert;
+}
+/* stylelint-enable */
+
+// Carbon writes theme tokens only on theme classes such as .cds--white, so
+// :root gets the light tokens. :where() keeps zero specificity, so the dark
+// rules below and a Carbon theme class on <html> still win.
+:where(:root) {
+  @include theme.theme(themes.$white);
+}
+
+// Labs TrialCountdown keys its dark gradient to Carbon's theme classes, so the
+// dark rules set it too, with the colours Labs uses for g100.
+@mixin dark {
+  @include theme.theme(themes.$g100);
+
+  --trial-countdown-start: #{colors.$blue-50};
+  --trial-countdown-end: #{colors.$purple-40};
+}
+
+:root[data-afframe-theme='dark'] {
+  @include dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-afframe-theme='system'] {
+    @include dark;
+  }
+}

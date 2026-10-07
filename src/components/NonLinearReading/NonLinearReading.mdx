@@ -1,0 +1,46 @@
+import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as stories from './NonLinearReading.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label added, story helper import removed, source link pinned to the tag, internal IBM links removed.
+
+<Meta isTemplate />
+
+# NonLinearReading
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/NonLinearReading)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Example usage](#example-usage)
+  - [Single level](#single-level)
+  - [Multiple level](#multiple-level)
+  - [With gradient background](#with-gradient-background)
+- [Component API](#component-api)
+
+## Overview
+
+Use non-linear reading when space is limited to share a brief, at-a-glance,
+summary of a concept that may require more explanation for some users.
+
+## Example usage
+
+### Single level
+
+<Canvas of={stories.SingleLevel} />
+
+### Multiple level
+
+<Canvas of={stories.MultipleLevel} />
+
+### With gradient background
+
+<Canvas of={stories.WithGradientBackground} />
+
+## Component API
+
+<Controls />

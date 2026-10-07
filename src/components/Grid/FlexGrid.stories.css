@@ -1,0 +1,103 @@
+/*
+ * Copyright IBM Corp. 2022, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS, Carbon palette colors as hex values, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+/* base of project work area */
+#root > #templates > div:first-child {
+  inline-size: 100%;
+}
+
+/* grid styles */
+.cds--grid .outside {
+  block-size: 100%;
+  min-block-size: 80px;
+}
+
+.cds--grid .inside {
+  block-size: 100%;
+  min-block-size: 80px;
+  color: var(--cds-text-primary);
+}
+
+/* hack to enable zoom feature to trigger */
+.cds--grid--full-width {
+  max-inline-size: 100%;
+}
+
+.default .cds--col code {
+  display: flex;
+  justify-content: center;
+}
+
+/* template hard-coded styles */
+#templates .inside {
+  background-color: var(--cds-layer);
+}
+
+#templates .cds--grid [class*='col'] {
+  background-color: var(--cds-tag-background-blue);
+  outline: 1px dashed var(--cds-tag-border-blue);
+}
+
+#templates .cds--grid--condensed,
+#templates .cds--row--condensed {
+  background-color: var(--cds-background-inverse);
+  color: var(--cds-text-inverse);
+}
+
+#templates .cds--grid--condensed [class*='col'],
+#templates .cds--row--condensed [class*='col'] {
+  background: none;
+  outline: none;
+}
+
+#templates .cds--grid--condensed .outside,
+#templates .cds--row--condensed .outside {
+  background-color: var(--cds-background-inverse-hover);
+  outline: none;
+}
+
+#templates .cds--grid--condensed .inside,
+#templates .cds--row--condensed .inside {
+  background: none;
+  color: var(--cds-text-inverse);
+}
+
+#templates .cds--grid--narrow .inside,
+#templates .cds--row--narrow .inside {
+  background-color: var(--cds-tag-background-teal);
+}
+
+#templates .cds--grid--narrow [class*='col'],
+#templates .cds--row--narrow [class*='col'] {
+  background-color: var(--cds-tag-background-teal);
+  outline: 1px dashed var(--cds-tag-border-teal);
+}
+
+/* css grid */
+#templates > .cds--css-grid {
+  border: 1px dashed var(--cds-border-inverse);
+}
+
+#templates .cds--css-grid .cds--subgrid [class*='col'] {
+  background-color: color-mix(
+    in srgb,
+    var(--cds-support-warning) 25%,
+    transparent
+  );
+  outline: 1px solid var(--cds-support-warning);
+}
+
+#templates .cds--css-grid [class*='col'] {
+  background-color: var(--cds-layer);
+  min-block-size: 80px;
+  outline: 1px solid var(--cds-tag-border-blue);
+}

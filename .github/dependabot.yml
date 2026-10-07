@@ -1,0 +1,79 @@
+# Titles like `chore(deps): bump ...`: the PR title check requires Conventional Commits.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore
+      include: scope
+    versioning-strategy: increase
+    groups:
+      carbon:
+        patterns:
+          - '@carbon/*'
+          - '@carbon-labs/*'
+          - '@ibm/*'
+        # The extras packages update in their own group.
+        exclude-patterns:
+          - '@carbon/charts*'
+          - '@carbon/echarts-theme'
+          - '@carbon/ai-chat'
+          - '@carbon/web-components'
+      extras:
+        patterns:
+          - '@carbon/charts*'
+          - 'echarts'
+          - '@carbon/echarts-theme'
+          - '@carbon/ai-chat'
+          - '@carbon/web-components'
+          - '@tanstack/*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - 'react-is'
+          - '@types/react'
+          - '@types/react-dom'
+      storybook:
+        patterns:
+          - 'storybook'
+          - '@storybook/*'
+      test:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+          - 'playwright'
+          - '@testing-library/*'
+    ignore:
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      # Node types follow the Node major in .nvmrc.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      actions:
+        patterns: ['*']
+
+  - package-ecosystem: docker
+    directory: /scripts/ci/toolbox
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore
+      include: scope

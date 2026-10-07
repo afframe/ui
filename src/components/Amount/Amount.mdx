@@ -1,0 +1,69 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as AmountStories from './Amount.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# Amount
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/Amount). See also [Formatting](?path=/docs/components-formatting--overview).
+
+`Amount` shows a money amount. It renders a `<data>` element: the text is
+the formatted amount and `value` holds the rounded number for machines.
+It is a server component: no hooks and no client JavaScript.
+
+<Canvas of={AmountStories.Default} />
+
+## Usage and props
+
+```jsx
+import { Amount } from '@afframe/ui';
+
+<Amount value={1234.5} />; // 1 234,50 Kč
+<Amount value={-80} colorNegative />;
+<Amount value={1234.5} currency="EUR" locale="en-GB" />; // €1,234.50
+```
+
+| Prop                  | Default    | What it does                                                                                                                |
+| --------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `value`               | required   | The amount as a `number`. NaN and Infinity throw unless `fallback` is set.                                                  |
+| `currency`            | `CZK`      | ISO 4217 code.                                                                                                              |
+| `locale`              | `cs-CZ`    | BCP 47 locale.                                                                                                              |
+| `digits`              | currency's | Minor digits to round and print. The default comes from the engine's locale data, not ISO 4217 (HUF and IDR give 0).        |
+| `signDisplay`         | `negative` | Intl `signDisplay`. `exceptZero` adds `+` to positives.                                                                     |
+| `currencyDisplay`     | `symbol`   | Intl `currencyDisplay`: `code`, `symbol`, `narrowSymbol` or `name`.                                                         |
+| `currencySign`        | `standard` | Intl `currencySign`. `accounting` puts negatives in parentheses in some locales.                                            |
+| `trailingZeroDisplay` | `auto`     | Intl `trailingZeroDisplay`. `stripIfInteger` prints `12 Kč` for 12.                                                         |
+| `colorNegative`       | `false`    | Colours negatives with the `text-error` token. Zero is never negative.                                                      |
+| `fallback`            | none       | Shown for a NaN or Infinity `value`, in a `<span>` with the same class and attributes (a `<data>` element needs a `value`). |
+
+Other attributes (`className`, `id`, `data-*`, `aria-*`) go to the `<data>`
+element. The rounding rules are on the Formatting page.
+
+## Messages
+
+`Amount` has no strings of its own. Numbers and currencies come from
+`formatAmount`.
+
+## Keyboard and screen reader behaviour
+
+- `Amount` is text. It takes no focus and has no keys.
+- Screen readers read the formatted text, for example "1 234,50 Kč". The
+  minus sign is part of the text, so colour is not the only sign of a
+  negative amount. Keep it that way: do not combine `colorNegative` with
+  `signDisplay="never"`.
+- The `<data>` element has no role; it adds no announcement.
+
+## Stories
+
+<Canvas of={AmountStories.Negative} />
+
+<Canvas of={AmountStories.Currencies} />
+
+<Canvas of={AmountStories.Signs} />
+
+<Canvas of={AmountStories.Fallback} />

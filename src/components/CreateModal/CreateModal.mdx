@@ -1,0 +1,124 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as CreateModalStories from './CreateModal.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# CreateModal
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/CreateModal). See also [Create flows pattern](https://carbondesignsystem.com/community/patterns/create-flows/).
+
+`CreateModal` is a small create form (one to three fields) in a Carbon
+`Modal`. It replaces IBM Products' deprecated CreateModal. It shares its
+submit, cancel, discard and focus behaviour with `CreateSidePanel`,
+`EditSidePanel`, `EditTearsheet` and `EditFullPage`.
+
+<Canvas of={CreateModalStories.Default} />
+
+## Usage and props
+
+`open` is controlled. `onSubmit` may return a promise: while it is pending the
+modal is busy and cannot close; when it resolves, `onClose` is called; when it
+rejects, the modal stays open and shows the error.
+
+```tsx
+import { CreateModal } from '@afframe/ui';
+
+const launcherRef = useRef<HTMLButtonElement>(null);
+const [open, setOpen] = useState(false);
+const [name, setName] = useState('');
+
+<Button ref={launcherRef} onClick={() => setOpen(true)}>
+  New customer
+</Button>
+<CreateModal
+  open={open}
+  onClose={() => setOpen(false)}
+  onSubmit={() => api.createCustomer({ name })}
+  launcherRef={launcherRef}
+  title="New customer"
+  isDirty={name !== ''}
+  submitDisabled={name.trim() === ''}>
+  <TextInput id="name" labelText="Name" value={name} onChange={...} />
+</CreateModal>;
+```
+
+- `isDirty`: the app compares the field state with the initial values. When
+  true, Escape, the close icon and Cancel ask "Discard changes?" first, unless
+  `confirmDiscard` is false.
+- `submitDisabled`: disables the primary button and Enter.
+- An overlay click never closes the modal (Carbon's default for a modal
+  with buttons), dirty or not.
+- `launcherRef`: where focus goes on close when the element that had focus
+  when the modal opened is gone (for example a row action that unmounted).
+- `selectorPrimaryFocus`: the element focused on open. Default
+  `[data-modal-primary-focus]`; without a match, the first form control.
+- `size`: `sm`, `md` (default) or `lg`.
+- A rejection shows `messages.submitError`. To show details from the
+  rejection reason, set `messages.errorText` (a function, so from a client
+  component). To mark fields, set `invalid` on them before rejecting: focus then goes to
+  the first invalid field instead of the alert.
+
+<ArgTypes of={CreateModalStories} />
+
+## Messages
+
+`messages?: Partial<CreateModalMessages>`; defaults in
+`defaultCreateModalMessages`. All strings except the optional `errorText` function, which is set
+from a client component.
+
+| Key                    | Default                                    |
+| ---------------------- | ------------------------------------------ |
+| `create`               | Create                                     |
+| `cancel`               | Cancel                                     |
+| `submitting`           | Creating                                   |
+| `submitError`          | The changes could not be saved. Try again. |
+| `errorText`            | not set: `submitError` is shown            |
+| `errorIconDescription` | Error                                      |
+| `discardTitle`         | Discard changes?                           |
+| `discardBody`          | Your changes will be lost.                 |
+| `discard`              | Discard                                    |
+| `keepEditing`          | Keep editing                               |
+| `closeIconDescription` | Close                                      |
+
+## Keyboard and screen reader behaviour
+
+On open, focus moves to the primary focus target (by default the first form
+control). Focus order: the close icon, the form fields, Cancel, Create. Tab
+and Shift+Tab stay inside the modal (the native dialog element makes the page
+behind it inert; Tab after Create wraps to the close icon).
+
+| Key    | Where                 | Action                                                                                   |
+| ------ | --------------------- | ---------------------------------------------------------------------------------------- |
+| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field. |
+| Escape | anywhere in the modal | Closes a clean modal. On a dirty one, opens the discard dialog.                          |
+| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                |
+| Enter  | Cancel, close icon    | Same as Escape.                                                                          |
+| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.    |
+
+On close, focus returns to the element that had focus when the modal opened,
+else to `launcherRef`, else to the page body.
+
+Screen readers announce:
+
+- the modal as a dialog named by its title, and the form named by the title;
+- while submitting, the form as busy and the primary button's loading text
+  (`submitting`);
+- a rejected submit as an alert with `submitError` (or `errorText(error)`). Focus moves to the first
+  field with `aria-invalid="true"`, else to the alert;
+- the discard dialog as an alert dialog named by `discardTitle`, described by
+  `discardBody`.
+
+## Stories
+
+<Canvas of={CreateModalStories.WithValidationError} />
+
+<Canvas of={CreateModalStories.Dirty} />
+
+<Canvas of={CreateModalStories.Submitting} />
+
+<Canvas of={CreateModalStories.Dark} />

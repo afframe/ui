@@ -1,0 +1,113 @@
+import { Story, ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TileStories from './Tile.stories';
+import * as TileFeatureFlagStories from './Tile.featureflag.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, Sass flag setup replaced (enable-tile-contrast is on in styles.css).
+
+<Meta isTemplate />
+
+# Tile
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/Tile)
+&nbsp;|&nbsp;
+[Usage guidelines](https://www.carbondesignsystem.com/components/tile/usage)
+&nbsp;|&nbsp;
+[Accessibility](https://www.carbondesignsystem.com/components/tile/accessibility)
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Clickable](#clickable)
+  - [With Custom Icon](#with-custom-icon)
+- [Expandable](#expandable)
+- [Expandable with Interactive](#expandable-with-interactive)
+- [Selectable](#selectable)
+- [Multi Select](#multi-select)
+- [Radio](#radio)
+- [Experimental Improved Contrast](#experimental-improved-contrast)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+<Canvas of={TileStories.Default} />
+
+## Clickable
+
+<Canvas of={TileStories.Clickable} />
+
+#### With Custom Icon
+
+<Canvas of={TileStories.ClickableWithCustomIcon} />
+
+## Expandable
+
+<Canvas of={TileStories.Expandable} />
+
+## Expandable with Interactive
+
+<Canvas of={TileStories.ExpandableWithInteractive} />
+
+## Selectable
+
+<Canvas of={TileStories.Selectable} />
+
+## Multi Select
+
+<Canvas of={TileStories.MultiSelect} />
+
+## Radio
+
+<Canvas of={TileStories.Radio} />
+
+## Improved Contrast Flag
+
+`enable-tile-contrast` is on in `styles.css`.
+
+<Canvas>
+  <div style={{ width: '1018px', maxWidth: '100%' }}>
+    <Canvas
+      of={TileFeatureFlagStories.Clickable}
+      meta={TileFeatureFlagStories}
+    />
+  </div>
+  <div style={{ width: '1018px', maxWidth: '100%' }}>
+    <Canvas
+      of={TileFeatureFlagStories.Expandable}
+      meta={TileFeatureFlagStories}
+    />
+  </div>
+  <div style={{ width: '1018px', maxWidth: '100%' }}>
+    <Canvas
+      of={TileFeatureFlagStories.MultiSelect}
+      meta={TileFeatureFlagStories}
+    />
+  </div>
+  <div style={{ width: '1018px', maxWidth: '100%' }}>
+    <Canvas of={TileFeatureFlagStories.Radio} meta={TileFeatureFlagStories} />
+  </div>
+  <div style={{ width: '1018px', maxWidth: '100%' }}>
+    <Canvas
+      of={TileFeatureFlagStories.Selectable}
+      meta={TileFeatureFlagStories}
+    />
+  </div>
+</Canvas>
+
+## Component API
+
+<ArgTypes />
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/react/src/components/Tile/Tile.mdx).

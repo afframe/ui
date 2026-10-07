@@ -1,0 +1,22 @@
+// CreateSidePanel styles, plus the side panel classes EditSidePanel shares
+// (CreateEditFlow has no partial of its own). Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+
+.afframe-flow-side-panel-title {
+  @include type.type-style('heading-compact-02');
+
+  color: $text-primary;
+}
+
+.afframe-flow-side-panel-description {
+  @include type.type-style('body-01');
+
+  color: $text-secondary;
+}
+
+// Keeps a focused field clear of the sticky action bar (WCAG 2.4.11).
+.afframe-flow-side-panel .afframe-create-edit-form :focus {
+  scroll-margin-block-end: $spacing-10;
+}

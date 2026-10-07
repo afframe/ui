@@ -1,0 +1,110 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ControlledDatePickerStories from './ControlledDatePicker.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# ControlledDatePicker
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/ControlledDatePicker). See also [Date picker](https://carbondesignsystem.com/components/date-picker/usage/).
+
+`ControlledDatePicker` is Carbon's classic `DatePicker` with an `open` prop,
+so the app can open and close the calendar. Carbon's `DatePicker` has no such
+prop. It is a client module.
+
+It opens and closes the calendar through flatpickr's own `open()` and
+`close()`, on the flatpickr instance that Carbon's `DatePicker` ref holds
+(`ref.current.calendar`).
+
+<Canvas of={ControlledDatePickerStories.Controlled} />
+
+## Usage and props
+
+```tsx
+'use client';
+import { useState } from 'react';
+import { Button, ControlledDatePicker, DatePickerInput } from '@afframe/ui';
+
+function DueDate() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        onClick={() => {
+          setOpen(true);
+          document.getElementById('due-date')?.focus();
+        }}>
+        Choose due date
+      </Button>
+      <ControlledDatePicker
+        datePickerType="single"
+        open={open}
+        onOpenChange={setOpen}>
+        <DatePickerInput id="due-date" labelText="Due date" />
+      </ControlledDatePicker>
+    </>
+  );
+}
+```
+
+- With `open`, the picker is controlled: the calendar shows when `open` is
+  `true`. A user action (focus or click on the input, Arrow Down, Escape, a
+  selected date, a click outside) calls `onOpenChange` and does not change
+  the calendar by itself: if the caller keeps `open`, the calendar returns to
+  it.
+- Without `open`, the picker opens and closes itself as Carbon's does and
+  reports each change through `onOpenChange`.
+- One click on a closed input opens flatpickr twice (on focus, then on
+  click). A controlled picker that stays closed reports `true` for each.
+- Every other prop goes to Carbon's `DatePicker`: `datePickerType` (`single`
+  or `range`; `simple` has no calendar), `value`, `onChange`, `onOpen`,
+  `onClose` and the rest. `ref` gives Carbon's handle,
+  `{ calendar }`.
+- Setting `open` does not move focus. When a control elsewhere opens the
+  calendar, move focus to the date input, as the example does, so Escape and
+  the calendar keys work.
+
+Cost: it relies on the flatpickr instance of the classic `DatePicker`. Carbon
+marks the flatpickr props deprecated and points to `preview__DatePicker`,
+which does not use flatpickr. When the classic `DatePicker` goes, this
+component goes with it or moves to the new picker.
+
+<ArgTypes of={ControlledDatePickerStories} />
+
+## Messages
+
+None of its own. The labels are Carbon's props: `labelText` on each
+`DatePickerInput`, and `nextMonthAriaLabel` and `prevMonthAriaLabel` for the
+month arrows.
+
+## Keyboard and screen reader behaviour
+
+- The date input is a text box named by its `labelText`. Focus, a click or
+  Arrow Down in it opens the calendar; focus stays in the input.
+- Tab in the input moves focus into the open calendar, to the selected date
+  (or today). Each day is a `button` named by its full date ("Thursday,
+  October 15, 2026").
+- The calendar is Carbon's: `role="application"` with the fixed name
+  "calendar-container", which Carbon sets and no prop changes. The month
+  arrows are images named by `nextMonthAriaLabel` and `prevMonthAriaLabel`
+  inside elements with no role, so a screen reader does not announce them as
+  buttons.
+- Escape in the input closes the calendar and keeps focus in the input.
+  Escape in the calendar closes it and returns focus to the input. Both call
+  `onOpenChange(false)`.
+- Opening through `open` leaves focus where it is.
+- In a range, one calendar serves both inputs.
+
+## Examples
+
+<Canvas of={ControlledDatePickerStories.Open} />
+
+<Canvas of={ControlledDatePickerStories.Uncontrolled} />
+
+<Canvas of={ControlledDatePickerStories.Range} />
+
+<Canvas of={ControlledDatePickerStories.Dark} />

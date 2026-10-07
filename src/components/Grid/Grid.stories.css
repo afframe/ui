@@ -1,0 +1,114 @@
+/*
+ * Copyright IBM Corp. 2018, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2018, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS, Carbon palette colors as hex values, type styles as Carbon custom properties, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+/* Gutter modes */
+.sb-css-grid-container .cds--css-grid {
+  background-color: var(--cds-tag-background-blue);
+  color: var(--cds-text-primary);
+  outline: 1px dashed var(--cds-tag-border-blue);
+}
+
+.sb-css-grid-container .cds--css-grid p {
+  font-family: var(--cds-code-02-font-family);
+  font-size: var(--cds-code-02-font-size);
+  font-weight: var(--cds-code-02-font-weight);
+  letter-spacing: var(--cds-code-02-letter-spacing);
+  line-height: var(--cds-code-02-line-height);
+}
+
+.sb-css-grid-container .cds--css-grid p:first-of-type {
+  margin-block-start: 0;
+}
+
+/* Narrow */
+.sb-css-grid-container .cds--css-grid.cds--css-grid--narrow {
+  background-color: var(--cds-tag-background-teal);
+  outline: 1px dashed var(--cds-tag-border-green);
+}
+
+/* Condensed */
+.sb-css-grid-container .cds--css-grid.cds--css-grid--condensed {
+  background-color: var(--cds-tag-background-purple);
+  outline: 1px dashed var(--cds-tag-border-purple);
+}
+
+.sb-css-grid-container .cds--subgrid {
+  position: relative;
+  background: var(--cds-layer);
+  outline: 1px solid var(--cds-border-inverse);
+  padding-block: var(--cds-spacing-07);
+  color: var(--cds-text-primary);
+}
+
+.sb-css-grid-container .cds--css-grid,
+.sb-css-grid-container .cds--subgrid--wide {
+  --grid-mode-color: var(--cds-tag-border-blue);
+}
+
+.sb-css-grid-container .cds--css-grid--narrow,
+.sb-css-grid-container .cds--subgrid--narrow {
+  --grid-mode-color: var(--cds-tag-border-teal);
+
+  background: var(--cds-tag-background-green);
+}
+
+.sb-css-grid-container .cds--css-grid--condensed,
+.sb-css-grid-container .cds--subgrid--condensed {
+  --grid-mode-color: var(--cds-tag-border-purple);
+
+  background: var(--cds-tag-background-purple);
+}
+
+.sb-css-grid-container .cds--subgrid--narrow {
+  background: var(--cds-tag-background-teal);
+}
+
+.sb-css-grid-container .cds--subgrid--condensed {
+  background: var(--cds-tag-background-purple);
+}
+
+.sb-css-grid-container .cds--subgrid::before {
+  font-family: var(--cds-code-01-font-family);
+  font-size: var(--cds-code-01-font-size);
+  font-weight: var(--cds-code-01-font-weight);
+  letter-spacing: var(--cds-code-01-letter-spacing);
+  line-height: var(--cds-code-01-line-height);
+  position: absolute;
+  display: block;
+  padding: var(--cds-spacing-01) var(--cds-spacing-02);
+  /* stylelint-disable-next-line carbon/theme-use -- --grid-mode-color holds a Carbon tag token per grid mode */
+  background: var(--grid-mode-color);
+  color: var(--cds-text-primary);
+  content: 'subgrid';
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+/* Column */
+.sb-css-grid-container .cds--css-grid-column {
+  --border-color: var(--cds-tag-border-blue);
+
+  background: var(--cds-background);
+  /* stylelint-disable-next-line carbon/theme-use -- --border-color holds a Carbon tag token per grid mode */
+  box-shadow: 0 0 0 1px var(--border-color);
+  min-block-size: 80px;
+}
+
+.sb-css-grid-container .cds--css-grid--narrow .cds--css-grid-column,
+.sb-css-grid-container .cds--subgrid--narrow .cds--css-grid-column {
+  --border-color: var(--cds-tag-border-teal);
+}
+
+.sb-css-grid-container .cds--css-grid--condensed .cds--css-grid-column,
+.sb-css-grid-container .cds--subgrid--condensed .cds--css-grid-column {
+  --border-color: var(--cds-tag-border-purple);
+}

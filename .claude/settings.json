@@ -1,0 +1,13 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "env": {
+    "IBM_TELEMETRY_DISABLED": "true"
+  },
+  "permissions": {
+    "deny": ["Bash(git push --force:*)", "Bash(git push -f:*)"]
+  }
+}

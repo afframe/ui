@@ -1,0 +1,41 @@
+// EditFullPage styles, Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+
+.afframe-edit-full-page {
+  gap: 0;
+}
+
+.afframe-edit-full-page-body {
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-07 $spacing-05;
+  gap: $spacing-05;
+}
+
+.afframe-edit-full-page-title {
+  @include type.type-style('heading-04');
+
+  color: $text-primary;
+}
+
+.afframe-edit-full-page-description {
+  @include type.type-style('body-01');
+
+  color: $text-secondary;
+}
+
+.afframe-edit-full-page-actions {
+  position: sticky;
+  z-index: 1;
+  justify-content: flex-end;
+  border-block-start: 1px solid $border-subtle;
+  background: $background;
+  inset-block-end: 0;
+}
+
+// Keeps a focused field clear of the sticky action bar (WCAG 2.4.11).
+.afframe-edit-full-page-body :focus {
+  scroll-margin-block-end: $spacing-11;
+}

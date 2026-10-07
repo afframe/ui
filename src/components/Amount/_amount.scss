@@ -1,0 +1,9 @@
+@use '@carbon/styles/scss/theme' as *;
+
+.afframe-amount {
+  white-space: nowrap;
+}
+
+.afframe-amount-negative {
+  color: $text-error;
+}

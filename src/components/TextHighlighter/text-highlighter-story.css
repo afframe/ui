@@ -1,0 +1,193 @@
+/*
+ * Copyright IBM Corp. 2025
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: converted from SCSS to plain CSS (nesting flattened, Carbon theme, tag, spacing and type tokens as custom properties), the global tag label and paragraph rules scoped to the story classes so they do not leak into other stories, a commented-out declaration removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.th-compare .cds--tag__label,
+.th-doc .cds--tag__label {
+  display: inline-flex;
+  pointer-events: none;
+}
+
+.th-compare p,
+.th-ref p,
+.th-doc p {
+  font-size: var(--cds-body-02-font-size);
+  font-weight: var(--cds-body-02-font-weight);
+  letter-spacing: var(--cds-body-02-letter-spacing);
+  line-height: var(--cds-body-02-line-height);
+}
+
+/* VersionComparison story */
+.th-compare h6 {
+  margin-block-end: var(--cds-spacing-01);
+}
+
+.th-compare
+  .cds--structured-list
+  .cds--structured-list-row
+  .cds--structured-list-td:first-of-type {
+  border-inline-end: 1px solid var(--cds-border-subtle-02);
+}
+
+.th-compare
+  .cds--structured-list
+  .cds--structured-list-row
+  .cds--structured-list-td:not(.th-compare-title) {
+  padding: var(--cds-spacing-05);
+  color: var(--cds-text-primary);
+}
+
+/* ReferenceAnnotation story */
+.th-ref {
+  margin-block-start: var(--cds-spacing-05);
+}
+
+.th-ref-header {
+  display: flex;
+  justify-content: space-between;
+  border-block-end: 1px solid var(--cds-border-subtle-01);
+  margin-block-end: var(--cds-spacing-05);
+  padding-block-end: var(--cds-spacing-03);
+}
+
+.th-ref .th-ref-header p {
+  color: var(--cds-text-secondary);
+  font-size: var(--cds-label-01-font-size);
+  font-weight: var(--cds-label-01-font-weight);
+  letter-spacing: var(--cds-label-01-letter-spacing);
+  line-height: var(--cds-label-01-line-height);
+}
+
+.th-ref .th-ref-body p {
+  margin-block-end: var(--cds-spacing-05);
+}
+
+.th-ref-right-panel {
+  block-size: 100%;
+}
+
+.th-ref-right-panel-container {
+  position: sticky;
+  inset-block-start: var(--cds-spacing-04);
+}
+
+.th-ref-right-panel-header {
+  margin-block-end: var(--cds-spacing-07);
+}
+
+.th-ref-right-panel-header h3 {
+  font-size: var(--cds-heading-compact-02-font-size);
+  font-weight: var(--cds-heading-compact-02-font-weight);
+  letter-spacing: var(--cds-heading-compact-02-letter-spacing);
+  line-height: var(--cds-heading-compact-02-line-height);
+  margin-block-end: var(--cds-spacing-03);
+}
+
+.th-ref .th-ref-right-panel-header p {
+  font-size: var(--cds-body-compact-01-font-size);
+  font-weight: var(--cds-body-compact-01-font-weight);
+  letter-spacing: var(--cds-body-compact-01-letter-spacing);
+  line-height: var(--cds-body-compact-01-line-height);
+}
+
+.th-ref-right-panel-body {
+  margin: 0 calc(-1 * var(--cds-spacing-05));
+}
+
+.th-ref-right-panel-body
+  .cds--contained-list--on-page
+  .cds--contained-list__header {
+  background-color: transparent;
+}
+
+.th-ref-entity .cds--contained-list-item__content {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.th-ref-entity .cds--contained-list-item__content::before {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  block-size: var(--cds-spacing-05);
+  content: '';
+  inline-size: var(--cds-spacing-05);
+  margin-inline-end: var(--cds-spacing-03);
+}
+
+.th-ref-entity .cds--contained-list-item__content sup {
+  /* stylelint-disable-next-line carbon/type-use -- relative superscript size, no Carbon type token */
+  font-size: 65%;
+  vertical-align: top;
+}
+
+.th-ref-entity .cds--contained-list-item__content sup::before {
+  content: '[';
+}
+
+.th-ref-entity .cds--contained-list-item__content sup::after {
+  content: ']';
+}
+
+.th-ref-entity.th-ref-entity-magenta
+  .cds--contained-list-item__content::before {
+  border-color: var(--cds-tag-color-magenta);
+  background-color: var(--cds-tag-background-magenta);
+}
+
+.th-ref-entity.th-ref-entity-purple .cds--contained-list-item__content::before {
+  border-color: var(--cds-tag-color-purple);
+  background-color: var(--cds-tag-background-purple);
+}
+
+.th-ref-entity.th-ref-entity-blue .cds--contained-list-item__content::before {
+  border-color: var(--cds-tag-color-blue);
+  background-color: var(--cds-tag-background-blue);
+}
+
+.th-ref-entity.th-ref-entity-teal .cds--contained-list-item__content::before {
+  border-color: var(--cds-tag-color-teal);
+  background-color: var(--cds-tag-background-teal);
+}
+
+/* DocumentVersioning story */
+.th-doc h1 {
+  margin-block-end: var(--cds-spacing-05);
+}
+
+.th-doc p {
+  margin-block-end: var(--cds-spacing-05);
+}
+
+.th-doc ol {
+  list-style: decimal;
+  margin-block-end: var(--cds-spacing-05);
+  padding-inline-end: var(--cds-spacing-07);
+}
+
+.th-doc ol li {
+  margin-block-end: var(--cds-spacing-04);
+}
+
+.th-doc .th-doc-wrapper {
+  padding: var(--cds-spacing-10) var(--cds-spacing-12);
+  border: 1px solid var(--cds-border-strong);
+  margin: auto;
+  box-shadow: 0 0 8px var(--cds-layer-active);
+  max-inline-size: 60vw;
+}
+
+.th-doc-source {
+  display: flex;
+  flex-direction: column;
+  padding: var(--cds-spacing-03);
+}

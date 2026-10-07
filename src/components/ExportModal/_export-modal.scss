@@ -1,0 +1,10 @@
+// ExportModal styles, Carbon tokens only.
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+
+.afframe-export-modal .afframe-modal-status {
+  @include type.type-style('body-compact-01');
+
+  margin: 0;
+  color: $text-primary;
+}

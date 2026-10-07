@@ -1,0 +1,54 @@
+// AccentTag styles, Carbon tokens only.
+/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/components/tag/tokens' as tag;
+
+.afframe-accent-tag.cds--tag.cds--tag--operational {
+  border-inline-start-width: $spacing-02;
+}
+
+// The strip uses each colour's tag text token: strong in light and dark.
+.afframe-accent-tag-red.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-red;
+}
+
+.afframe-accent-tag-magenta.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-magenta;
+}
+
+.afframe-accent-tag-purple.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-purple;
+}
+
+.afframe-accent-tag-blue.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-blue;
+}
+
+.afframe-accent-tag-cyan.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-cyan;
+}
+
+.afframe-accent-tag-teal.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-teal;
+}
+
+.afframe-accent-tag-green.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-green;
+}
+
+.afframe-accent-tag-gray.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-gray;
+}
+
+.afframe-accent-tag-cool-gray.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-cool-gray;
+}
+
+.afframe-accent-tag-warm-gray.cds--tag.cds--tag--operational {
+  border-inline-start-color: tag.$tag-color-warm-gray;
+}
+
+.afframe-accent-tag.cds--tag.cds--tag--operational.cds--tag--disabled {
+  border-inline-start-color: $border-disabled;
+}

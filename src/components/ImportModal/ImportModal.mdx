@@ -1,0 +1,153 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ImportModalStories from './ImportModal.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# ImportModal
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/components/ImportModal). See also [Uploader pattern](https://carbondesignsystem.com/components/file-uploader/usage/).
+
+`ImportModal` lets the user pick one or more files, or give a URL, and hands
+them to the app. It is a small Carbon modal with Carbon's file drop area and
+file rows. It replaces IBM Products' deprecated ImportModal.
+
+The dialog does not read or upload the files; `onImport` gets the `File`
+objects and does the work.
+
+<Canvas of={ImportModalStories.Default} />
+
+## Usage and props
+
+```tsx
+import { ImportModal } from '@afframe/ui';
+
+<ImportModal
+  open={open}
+  onClose={() => setOpen(false)}
+  launcherRef={launcherRef}
+  title="Import invoices"
+  accept={['.csv', '.xlsx']}
+  maxFileSize={5_000_000}
+  onImport={(files) => api.importInvoices(files)}
+/>;
+```
+
+- `open`, `onClose`: the app owns the open state. `onClose` is called by
+  Cancel, the close icon, Escape, and after a successful import.
+- `onImport(files)`: called with the valid files. It may return a promise:
+  while it runs the buttons and the drop area are disabled and closing waits;
+  if it rejects, the dialog stays open with the `importFailed` alert.
+- `onImportUrl(url)`: when set, a URL field and an Import from URL button
+  appear. Import also uses the URL when no file is listed.
+- `accept`: file extensions (`.csv`) or MIME types (`text/csv`, `image/*`).
+  Empty means any file.
+- `maxFileSize`: the largest accepted file in bytes.
+- `multiple`: allow more than one file (default `false`: a new file replaces
+  the listed one).
+- `title`, `description`: replace the default heading and text.
+- `locale`: the locale of file sizes (default `cs-CZ`).
+- `messages`: overrides for the strings below.
+
+A click on the page behind the dialog does not close it.
+
+### File type and size rules
+
+- A file is accepted when its name ends with one of the `accept` extensions
+  (any letter case) or its MIME type equals one of the `accept` types;
+  `type/*` accepts every subtype. When the browser reports no MIME type, the
+  dialog derives one from the extension for common types (csv, txt, json, xml,
+  pdf, zip, xls, xlsx, docx, png, jpg, gif, svg).
+- A file larger than `maxFileSize` is rejected. Sizes use decimal units
+  (1 kB = 1000 bytes), formatted with `Intl.NumberFormat` through
+  `formatNumber` from the package's formatting module.
+- A rejected file stays in the list, marked invalid with the reason, until the
+  user removes it. Import is disabled while any listed file is invalid, and
+  until there is at least one valid file or a non-empty URL.
+- A file with the same name as a listed file replaces that row.
+- Without `multiple`, dropping several files keeps the first; a note under
+  the drop area (also announced) says how many were ignored.
+- These checks are a convenience for the user, not a security control: the
+  server must check type, size and content again.
+- The browser's file picker shows all files: the dialog checks the type itself
+  so a wrong file gets a visible reason instead of being dropped silently.
+
+<ArgTypes of={ImportModalStories} />
+
+## Messages
+
+`messages?: Partial<ImportModalMessages>`; defaults in
+`defaultImportModalMessages`. Function keys take the values shown; override
+them from a client component (a function cannot cross from a server
+component).
+
+| Key                    | Default                                                          |
+| ---------------------- | ---------------------------------------------------------------- |
+| `title`                | Import                                                           |
+| `description`          | Add a file to import.                                            |
+| `dropLabel`            | File                                                             |
+| `browseLabel`          | Drag and drop a file here or click to browse                     |
+| `requirements`         | Accepted: `accept`. Maximum size: `limit`.                       |
+| `urlLabel`             | Or import from a URL                                             |
+| `urlPlaceholder`       | https://example.com/file.csv                                     |
+| `urlButton`            | Import from URL                                                  |
+| `import`               | Import                                                           |
+| `removeFile`           | Remove file (Carbon adds " - `file name`")                       |
+| `invalidType`          | `name` is not an accepted file type. Use `accept`.               |
+| `tooLarge`             | `name` is larger than `limit`.                                   |
+| `importFailed`         | The import failed. Try again.                                    |
+| `fileAdded`            | `name` added.                                                    |
+| `extraFilesIgnored`    | Only one file can be imported; `count` other files were ignored. |
+| `cancel`               | Cancel                                                           |
+| `pending`              | Working                                                          |
+| `genericError`         | Something went wrong. Try again. (not used here)                 |
+| `errorIconDescription` | Error                                                            |
+| `closeIconDescription` | Close                                                            |
+
+## Examples
+
+<Canvas of={ImportModalStories.WithErrors} />
+
+<Canvas of={ImportModalStories.WithUrl} />
+
+<Canvas of={ImportModalStories.Pending} />
+
+<Canvas of={ImportModalStories.Dark} />
+
+## Keyboard and screen reader behaviour
+
+On open, focus goes to the drop area. Focus order: close icon, drop area, the
+remove button of each listed file, the URL field and Import from URL (when
+shown), Cancel, Import.
+
+| Key          | Where           | Action                                                       |
+| ------------ | --------------- | ------------------------------------------------------------ |
+| Enter, Space | drop area       | Opens the browser's file picker.                             |
+| Enter, Space | a file's remove | Removes the file; focus moves to the drop area.              |
+| Enter        | Import from URL | Imports from the URL.                                        |
+| Enter        | Import          | Imports the listed files (or the URL); on success it closes. |
+| Escape       | anywhere        | Closes the dialog, except while an import runs.              |
+| Tab          | anywhere        | Moves through the dialog; never to the page behind it.       |
+
+Files can also be dragged onto the drop area.
+
+Focus is trapped by the browser's modal dialog: the page behind it is inert.
+On close, focus returns to `launcherRef`, else to the element focused before
+the dialog opened, else to the page body. After a failed import, focus returns
+to the button that started it.
+
+Screen readers announce:
+
+- the dialog as a `dialog` named by its title;
+- the drop area as a button named by `browseLabel`;
+- each added valid file through a polite status region (`fileAdded`), and
+  `extraFilesIgnored` when a drop had more than one file without `multiple`;
+- each rejected file through its row's own alert (Carbon renders the reason
+  with `role="alert"`), so it is not repeated in the status region;
+- each remove button as "Remove file - `file name`";
+- the spinner text (`pending`) while an import runs, and a failure as an alert
+  (`importFailed`).

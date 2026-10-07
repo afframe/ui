@@ -1,0 +1,35 @@
+/*
+ * Copyright IBM Corp. 2020, 2022
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2022
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefixes as literals, nesting flattened. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.productive-card-stories__graph {
+  border: 10px solid var(--cds-border-subtle);
+  margin: 0 auto var(--cds-spacing-06);
+  block-size: 100px;
+  border-block-end: 0;
+  border-inline-end-color: var(--cds-support-success);
+  border-inline-start-color: var(--cds-support-error);
+  border-start-end-radius: 110px;
+  border-start-start-radius: 110px;
+  inline-size: 100%;
+}
+
+.productive-card-stories__visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  visibility: inherit;
+  white-space: nowrap;
+}

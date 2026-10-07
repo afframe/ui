@@ -1,0 +1,20 @@
+// StatusIndicator styles, Carbon tokens only.
+/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
+@use '@carbon/styles/scss/spacing' as *;
+
+// Compact mode: Carbon's tooltip trigger wraps a 16 px glyph; pad it to the
+// 24 px minimum target (WCAG 2.5.8).
+.afframe-status-indicator .cds--icon-indicator__button,
+.afframe-status-indicator .cds--shape-indicator__button {
+  align-items: center;
+  justify-content: center;
+  min-block-size: $spacing-06;
+  min-inline-size: $spacing-06;
+}
+
+// Tag appearance: Carbon's indicator glyph before the label.
+.afframe-status-indicator-tag-content {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-02;
+}

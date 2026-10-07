@@ -1,0 +1,19 @@
+/*
+ * Copyright IBM Corp. 2018, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2018, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS instead of SCSS, font families as Carbon type tokens; the Arabic, Devanagari, Hebrew and Thai font includes removed (Afframe ships Plex Sans, Mono and Serif only), so those classes and .text-sans keep the inherited Plex Sans. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.text-mono {
+  font-family: var(--cds-code-02-font-family);
+}
+
+.text-serif {
+  font-family: var(--cds-quotation-01-font-family);
+}

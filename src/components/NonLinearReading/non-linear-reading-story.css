@@ -1,0 +1,30 @@
+/*
+ * Copyright IBM Corp. 2023, 2023
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2023
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, the body-01 type style moved from #storybook-root to the story viewport, the g100 theme mixin replaced by the Theme component in the story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+/* For demo purposes, have text surrounding component match styling in component. */
+.non-linear-reading-stories__viewport {
+  /* The layout is top/left because the component can expand downwards. */
+  margin: var(--cds-spacing-10);
+  font-size: var(--cds-body-01-font-size);
+  font-weight: var(--cds-body-01-font-weight);
+  letter-spacing: var(--cds-body-01-letter-spacing);
+  line-height: var(--cds-body-01-line-height);
+}
+
+.gradient-bg {
+  padding: var(--cds-spacing-05);
+
+  /* Carbon blue-90 to purple-70, no theme token for them. */
+  /* stylelint-disable-next-line carbon/theme-use */
+  background: linear-gradient(90deg, #001d6c 0%, #6929c4 100%);
+  color: var(--cds-text-primary);
+}
