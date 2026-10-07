@@ -91,7 +91,7 @@ Versions are Afframe's own release numbers; they do not follow Carbon's versions
 4. Approve the `release` environment on the workflow run.
 5. Publish the release notes: `gh release create v<version> --verify-tag --generate-notes`.
 
-GitHub Packages creates a new package as private. After the first publish, an org owner sets `@afframe/ui` to public and checks it is linked to this repo (package settings on `github.com/orgs/afframe/packages`); later versions keep both.
+GitHub Packages creates a new package as private. After the first publish, an org owner sets `@afframe/ui` to public and checks it is linked to this repo (package settings on `github.com/orgs/afframe/packages`); later versions keep both. A public package cannot be made private again.
 
 ## Components
 
