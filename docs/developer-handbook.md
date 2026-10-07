@@ -81,15 +81,14 @@ pnpm build:storybook
 
 ## Release
 
-`.github/workflows/release.yml` publishes to GitHub Packages (`@afframe` scope) on a `v*` tag, only in `afframe/ui` (ADR 0016). It refuses a tag that does not equal `v` plus the `package.json` version or that is not on `main`, runs preflight, `pnpm test` (visual included), `pnpm build` and `check:pack`, packs the tarball, and a second job publishes that tarball after a reviewer approves the `release` environment. Only admins can push `v*` tags (`tags` ruleset), so apply both rulesets before anyone else gets write access.
+`.github/workflows/release.yml` publishes to GitHub Packages (`@afframe` scope) on a `v*` tag, only in `afframe/ui` (ADR 0016). It refuses a tag that does not equal `v` plus the `package.json` version or that is not on `main`, runs preflight, `pnpm test` (visual included), `pnpm build` and `check:pack`, packs the tarball, a second job publishes that tarball after a reviewer approves the `release` environment, and a third creates the GitHub Release with notes generated from the merged PR titles. Only admins can push `v*` tags (`tags` ruleset), so apply both rulesets before anyone else gets write access.
 
-Versions are Afframe's own release numbers; they do not follow Carbon's versions.
+Versions are Afframe's own release numbers; they do not follow Carbon's versions. A release with a breaking change gets migration notes added to its GitHub Release by hand.
 
 1. In a PR, set `version` in `package.json` to the release version and merge it.
 2. Run the release checks on `main` for the example app and Storybook build, which the release workflow does not run: `gh workflow run release-checks.yml --ref main`.
-3. Tag the merge commit and push the tag: `git tag v<version> && git push origin v<version>`.
+3. Tag the merge commit and push the tag: `git tag -m v<version> v<version> && git push origin v<version>`.
 4. Approve the `release` environment on the workflow run.
-5. Publish the release notes: `gh release create v<version> --verify-tag --generate-notes`.
 
 GitHub Packages creates a new package as private. After the first publish, an org owner sets `@afframe/ui` to public and checks it is linked to this repo (package settings on `github.com/orgs/afframe/packages`); later versions keep both. A public package cannot be made private again.
 
