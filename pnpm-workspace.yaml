@@ -5,7 +5,7 @@ strictDepBuilds: false
 allowUnusedPatches: true
 # Fixes an unhandled AbortError in Carbon's usePresence (docs/guides/updating-carbon.md says when to drop it).
 patchedDependencies:
-  '@carbon/react@1.117.0': patches/@carbon__react@1.117.0.patch
+  '@carbon/react@1.118.0': patches/@carbon__react@1.118.0.patch
 
 # Every dependency with install scripts, all blocked; without the list pnpm writes undecided entries here on each install.
 allowBuilds:
