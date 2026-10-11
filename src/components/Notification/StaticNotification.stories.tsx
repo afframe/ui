@@ -25,9 +25,9 @@ export default {
   },
 } satisfies Meta<typeof StaticNotification>;
 
-export const Default: StoryFn<typeof StaticNotification> = () => (
+export const Default: StoryFn<typeof StaticNotification> = (args) => (
   <>
-    <StaticNotification title="StaticNotification has been renamed to Callout" />
+    <StaticNotification {...args} />
 
     <div
       style={{
@@ -44,3 +44,13 @@ export const Default: StoryFn<typeof StaticNotification> = () => (
     </div>
   </>
 );
+
+Default.args = {
+  title: 'StaticNotification has been renamed to Callout',
+};
+
+Default.parameters = {
+  controls: {
+    include: ['title'],
+  },
+};

@@ -1,21 +1,23 @@
 /**
- * Copyright IBM Corp. 2016, 2025
+ * Copyright IBM Corp. 2016, 2026
  *
  * This source code is licensed under the Apache-2.0 license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, TableToolbarAction story rendered with the v11 toolbar menu, unused imports removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, unused imports removed, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
+import { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { action } from 'storybook/actions';
 import { Download, Save, TrashCan } from '../../../icons.js';
 import {
   Button,
   DataTable,
+  NotFoundEmptyState,
   Table,
   TableBatchAction,
   TableBatchActions,
@@ -46,7 +48,6 @@ import {
   rows,
   headers,
 } from './shared.js';
-import { withV11OverflowMenu } from '../../../../.storybook/templates/withV11OverflowMenu.js';
 import type { DataTableStoryArgs } from './shared.js';
 import mdx from '../DataTable.mdx';
 
@@ -79,123 +80,162 @@ export default {
   },
 } satisfies Meta;
 
-export const Default: StoryFn<DataTableStoryArgs> = (args) => (
-  <DataTable rows={rows} headers={headers} {...args}>
-    {({
-      rows,
-      headers,
-      getHeaderProps,
-      getRowProps,
-      getSelectionProps,
-      getToolbarProps,
-      getBatchActionProps,
-      onInputChange,
-      selectedRows,
-      getTableProps,
-      getTableContainerProps,
-      getCellProps,
-    }) => {
-      const batchActionProps = getBatchActionProps();
+export const Default: StoryFn<DataTableStoryArgs> = (args) => {
+  const [searchValue, setSearchValue] = useState('');
 
-      return (
-        <TableContainer
-          title="DataTable"
-          description="With batch actions"
-          {...getTableContainerProps()}>
-          <TableToolbar {...(getToolbarProps() as Partial<TableToolbarProps>)}>
-            <TableBatchActions {...batchActionProps}>
-              <TableBatchAction
-                tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}
-                renderIcon={TrashCan}
-                onClick={batchActionClick(
-                  selectedRows,
-                  action('Batch action click')
-                )}>
-                Delete
-              </TableBatchAction>
-              <TableBatchAction
-                tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}
-                renderIcon={Save}
-                onClick={batchActionClick(
-                  selectedRows,
-                  action('Batch action click')
-                )}>
-                Save
-              </TableBatchAction>
-              <TableBatchAction
-                tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}
-                renderIcon={Download}
-                onClick={batchActionClick(
-                  selectedRows,
-                  action('Batch action click')
-                )}>
-                Download
-              </TableBatchAction>
-            </TableBatchActions>
-            <TableToolbarContent
-              aria-hidden={batchActionProps.shouldShowBatchActions}>
-              <TableToolbarSearch
-                tabIndex={batchActionProps.shouldShowBatchActions ? -1 : 0}
-                onChange={(evt) => {
-                  action('TableToolbarSearch - onChange')(evt);
-                  onInputChange(evt);
-                }}
-              />
-              <TableToolbarMenu
-                tabIndex={batchActionProps.shouldShowBatchActions ? -1 : 0}>
-                <TableToolbarAction onClick={() => alert('Alert 1')}>
-                  Action 1
-                </TableToolbarAction>
-                <TableToolbarAction onClick={() => alert('Alert 2')}>
-                  Action 2
-                </TableToolbarAction>
-                <TableToolbarAction onClick={() => alert('Alert 3')}>
-                  Action 3
-                </TableToolbarAction>
-              </TableToolbarMenu>
-              <Button
-                tabIndex={batchActionProps.shouldShowBatchActions ? -1 : 0}
-                onClick={action('Add new row')}
-                kind="primary">
-                Add new
-              </Button>
-            </TableToolbarContent>
-          </TableToolbar>
-          <Table {...getTableProps()} aria-label="sample table">
-            <TableHead>
-              <TableRow>
-                <TableSelectAll
-                  {...(getSelectionProps() as TableSelectAllProps)}
+  const filteredRows = rows.filter((row) => {
+    const search = searchValue.trim().toLowerCase();
+    if (search === '') return true;
+    return Object.values(row).some((val) =>
+      String(val).toLowerCase().includes(search)
+    );
+  });
+
+  const showEmptyState = filteredRows.length === 0;
+
+  return (
+    <DataTable
+      rows={showEmptyState ? [] : filteredRows}
+      headers={headers}
+      {...args}>
+      {({
+        rows: tableRows,
+        headers: tableHeaders,
+        getHeaderProps,
+        getRowProps,
+        getSelectionProps,
+        getToolbarProps,
+        getBatchActionProps,
+        selectedRows,
+        getTableProps,
+        getTableContainerProps,
+        getCellProps,
+      }) => {
+        const batchActionProps = getBatchActionProps();
+
+        return (
+          <TableContainer
+            title="DataTable"
+            description="With batch actions"
+            {...getTableContainerProps()}>
+            <TableToolbar
+              {...(getToolbarProps() as Partial<TableToolbarProps>)}>
+              <TableBatchActions {...batchActionProps}>
+                <TableBatchAction
+                  tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}
+                  renderIcon={TrashCan}
+                  onClick={batchActionClick(
+                    selectedRows,
+                    action('Batch action click')
+                  )}>
+                  Delete
+                </TableBatchAction>
+                <TableBatchAction
+                  tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}
+                  renderIcon={Save}
+                  onClick={batchActionClick(
+                    selectedRows,
+                    action('Batch action click')
+                  )}>
+                  Save
+                </TableBatchAction>
+                <TableBatchAction
+                  tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}
+                  renderIcon={Download}
+                  onClick={batchActionClick(
+                    selectedRows,
+                    action('Batch action click')
+                  )}>
+                  Download
+                </TableBatchAction>
+              </TableBatchActions>
+              <TableToolbarContent
+                aria-hidden={batchActionProps.shouldShowBatchActions}>
+                <TableToolbarSearch
+                  tabIndex={batchActionProps.shouldShowBatchActions ? -1 : 0}
+                  value={searchValue}
+                  onChange={(evt, value = '') => {
+                    action('TableToolbarSearch - onChange')(evt);
+                    setSearchValue(value);
+                  }}
                 />
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow {...getRowProps({ row })}>
-                  <TableSelectRow
-                    {...(getSelectionProps({ row }) as TableSelectRowProps)}
-                    onChange={action('TableSelectRow - onChange')}
+                <TableToolbarMenu
+                  tabIndex={batchActionProps.shouldShowBatchActions ? -1 : 0}>
+                  <TableToolbarAction onClick={() => alert('Alert 1')}>
+                    Action 1
+                  </TableToolbarAction>
+                  <TableToolbarAction onClick={() => alert('Alert 2')}>
+                    Action 2
+                  </TableToolbarAction>
+                  <TableToolbarAction onClick={() => alert('Alert 3')}>
+                    Action 3
+                  </TableToolbarAction>
+                </TableToolbarMenu>
+                <Button
+                  tabIndex={batchActionProps.shouldShowBatchActions ? -1 : 0}
+                  onClick={action('Add new row')}
+                  kind="primary">
+                  Add new
+                </Button>
+              </TableToolbarContent>
+            </TableToolbar>
+            <Table {...getTableProps()} aria-label="sample table">
+              <TableHead>
+                <TableRow>
+                  <TableSelectAll
+                    {...(getSelectionProps() as TableSelectAllProps)}
                   />
-                  {row.cells.map((cell) => (
-                    <TableCell {...getCellProps({ cell })}>
-                      {cell.value}
-                    </TableCell>
+                  {tableHeaders.map((header) => (
+                    <TableHeader
+                      {...(getHeaderProps({ header }) as TableHeaderProps)}>
+                      {header.header}
+                    </TableHeader>
                   ))}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      );
-    }}
-  </DataTable>
-);
+              </TableHead>
+              <TableBody>
+                {showEmptyState
+                  ? null
+                  : tableRows.map((row) => (
+                      <TableRow {...getRowProps({ row })}>
+                        <TableSelectRow
+                          {...(getSelectionProps({
+                            row,
+                          }) as TableSelectRowProps)}
+                          onChange={action('TableSelectRow - onChange')}
+                        />
+                        {row.cells.map((cell) => (
+                          <TableCell {...getCellProps({ cell })}>
+                            {cell.value}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+              </TableBody>
+            </Table>
+            {showEmptyState && (
+              <div
+                style={{
+                  padding: 'var(--cds-spacing-07) var(--cds-spacing-05)',
+                }}>
+                <NotFoundEmptyState
+                  illustrationDescription="Not found illustration"
+                  title="No results match the current search"
+                  subtitle="Clear the search field to see all results, or try a different search term."
+                  action={{
+                    text: 'Clear search',
+                    kind: 'tertiary',
+                    onClick: () => setSearchValue(''),
+                  }}
+                />
+              </div>
+            )}
+          </TableContainer>
+        );
+      }}
+    </DataTable>
+  );
+};
 
 Default.args = {
   isSortable: false,
@@ -207,7 +247,6 @@ Default.args = {
   useZebraStyles: false,
 };
 
-Default.decorators = [withV11OverflowMenu];
 Default.argTypes = {
   locale: {
     control: 'text',

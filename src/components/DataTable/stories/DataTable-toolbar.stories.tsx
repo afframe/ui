@@ -7,10 +7,11 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), TableToolbarAction stories rendered with the v11 toolbar menu, v12 toolbar menu story with a play test. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), v12 toolbar menu story with a play test, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { action } from 'storybook/actions';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import {
@@ -18,6 +19,7 @@ import {
   DataTable,
   MenuItem,
   MenuItemDivider,
+  NotFoundEmptyState,
   OverflowMenu,
   OverflowMenuItem,
   Table,
@@ -32,10 +34,10 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
+  useFeatureFlag,
 } from '../../../index.js';
 import mdx from '../DataTable.mdx';
 import { dataTableArgs, dataTableArgTypes, headers, rows } from './shared.js';
-import { withV11OverflowMenu } from '../../../../.storybook/templates/withV11OverflowMenu.js';
 import type { DataTableStoryArgs } from './shared.js';
 import type { TableHeaderProps, TableToolbarProps } from '../../../index.js';
 
@@ -76,77 +78,113 @@ const sharedArgTypes = {
   persistent: { control: { type: 'boolean' } },
 } satisfies ArgTypes;
 
-export const Default: StoryFn<ToolbarStoryArgs> = ({ persistent, ...args }) => (
-  <DataTable rows={rows} headers={headers} {...args}>
-    {({
-      rows,
-      headers,
-      getHeaderProps,
-      getRowProps,
-      getTableProps,
-      getToolbarProps,
-      onInputChange,
-      getTableContainerProps,
-      getCellProps,
-    }) => (
-      <TableContainer
-        title="DataTable"
-        description="With toolbar"
-        {...getTableContainerProps()}>
-        <TableToolbar
-          {...(getToolbarProps() as Partial<TableToolbarProps>)}
-          aria-label="data table toolbar">
-          <TableToolbarContent>
-            <TableToolbarSearch
-              onChange={onInputChange}
-              persistent={persistent}
-            />
-            <TableToolbarMenu>
-              <TableToolbarAction onClick={action('Action 1 Click')}>
-                Action 1
-              </TableToolbarAction>
-              <TableToolbarAction onClick={action('Action 2 Click')}>
-                Action 2
-              </TableToolbarAction>
-              <TableToolbarAction onClick={action('Action 3 Click')}>
-                Action 3
-              </TableToolbarAction>
-            </TableToolbarMenu>
-            <Button onClick={action('Button click')}>Primary Button</Button>
-          </TableToolbarContent>
-        </TableToolbar>
-        <Table {...getTableProps()} aria-label="sample table">
-          <TableHead>
-            <TableRow>
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow {...getRowProps({ row })}>
-                {row.cells.map((cell) => (
-                  <TableCell {...getCellProps({ cell })}>
-                    {cell.value}
-                  </TableCell>
+export const Default: StoryFn<ToolbarStoryArgs> = ({ persistent, ...args }) => {
+  const [searchValue, setSearchValue] = useState('');
+
+  const filteredRows = rows.filter((row) => {
+    const q = searchValue.trim().toLowerCase();
+    if (!q) return true;
+    return Object.values(row).some((v) => String(v).toLowerCase().includes(q));
+  });
+
+  const showEmptyState = filteredRows.length === 0;
+
+  return (
+    <DataTable
+      rows={showEmptyState ? [] : filteredRows}
+      headers={headers}
+      {...args}>
+      {({
+        rows,
+        headers,
+        getHeaderProps,
+        getRowProps,
+        getTableProps,
+        getToolbarProps,
+        getTableContainerProps,
+        getCellProps,
+      }) => (
+        <TableContainer
+          title="DataTable"
+          description="With toolbar"
+          {...getTableContainerProps()}>
+          <TableToolbar
+            {...(getToolbarProps() as Partial<TableToolbarProps>)}
+            aria-label="data table toolbar">
+            <TableToolbarContent>
+              <TableToolbarSearch
+                value={searchValue}
+                onChange={(evt, value = '') => {
+                  action('TableToolbarSearch - onChange')(evt);
+                  setSearchValue(value);
+                }}
+                persistent={persistent}
+              />
+              <TableToolbarMenu>
+                <TableToolbarAction onClick={action('Action 1 Click')}>
+                  Action 1
+                </TableToolbarAction>
+                <TableToolbarAction onClick={action('Action 2 Click')}>
+                  Action 2
+                </TableToolbarAction>
+                <TableToolbarAction onClick={action('Action 3 Click')}>
+                  Action 3
+                </TableToolbarAction>
+              </TableToolbarMenu>
+              <Button onClick={action('Button click')}>Primary Button</Button>
+            </TableToolbarContent>
+          </TableToolbar>
+          <Table {...getTableProps()} aria-label="sample table">
+            <TableHead>
+              <TableRow>
+                {headers.map((header) => (
+                  <TableHeader
+                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
                 ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    )}
-  </DataTable>
-);
+            </TableHead>
+            <TableBody>
+              {showEmptyState
+                ? null
+                : rows.map((row) => (
+                    <TableRow {...getRowProps({ row })}>
+                      {row.cells.map((cell) => (
+                        <TableCell {...getCellProps({ cell })}>
+                          {cell.value}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+          {showEmptyState && (
+            <div
+              style={{
+                padding: 'var(--cds-spacing-07) var(--cds-spacing-05)',
+              }}>
+              <NotFoundEmptyState
+                illustrationDescription="Not found illustration"
+                title="No results match the current search"
+                subtitle="Clear the search field to see all results, or try a different search term."
+                action={{
+                  text: 'Clear search',
+                  kind: 'tertiary',
+                  onClick: () => setSearchValue(''),
+                }}
+              />
+            </div>
+          )}
+        </TableContainer>
+      )}
+    </DataTable>
+  );
+};
 
 Default.args = { persistent: false };
 Default.argTypes = sharedArgTypes;
-Default.decorators = [withV11OverflowMenu];
-// The v11 toolbar menu opens on Enter and moves focus to its first item.
+// The toolbar menu opens on Enter and moves focus to its first item.
 Default.play = async ({ canvasElement }) => {
   toolbarMenuTrigger(canvasElement).focus();
   await userEvent.keyboard('{Enter}');
@@ -160,232 +198,353 @@ Default.play = async ({ canvasElement }) => {
 export const PersistentToolbar: StoryFn<ToolbarStoryArgs> = ({
   persistent,
   ...args
-}) => (
-  <DataTable rows={rows} headers={headers} {...args}>
-    {({
-      rows,
-      headers,
-      getHeaderProps,
-      getRowProps,
-      getTableProps,
-      getToolbarProps,
-      onInputChange,
-      getTableContainerProps,
-      getCellProps,
-    }) => (
-      <TableContainer
-        title="DataTable"
-        description="With toolbar"
-        {...getTableContainerProps()}>
-        <TableToolbar
-          {...(getToolbarProps() as Partial<TableToolbarProps>)}
-          aria-label="data table toolbar">
-          <TableToolbarContent>
-            <TableToolbarSearch
-              onChange={onInputChange}
-              persistent={persistent}
-            />
-            <TableToolbarMenu>
-              <TableToolbarAction onClick={action('Action 1 Click')}>
-                Action 1
-              </TableToolbarAction>
-              <TableToolbarAction onClick={action('Action 2 Click')}>
-                Action 2
-              </TableToolbarAction>
-              <TableToolbarAction onClick={action('Action 3 Click')}>
-                Action 3
-              </TableToolbarAction>
-            </TableToolbarMenu>
-            <Button onClick={action('Button click')}>Primary Button</Button>
-          </TableToolbarContent>
-        </TableToolbar>
-        <Table {...getTableProps()} aria-label="sample table">
-          <TableHead>
-            <TableRow>
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow {...getRowProps({ row })}>
-                {row.cells.map((cell) => (
-                  <TableCell {...getCellProps({ cell })}>
-                    {cell.value}
-                  </TableCell>
+}) => {
+  const [searchValue, setSearchValue] = useState('');
+
+  const filteredRows = rows.filter((row) => {
+    const q = searchValue.trim().toLowerCase();
+    if (!q) return true;
+    return Object.values(row).some((v) => String(v).toLowerCase().includes(q));
+  });
+
+  const showEmptyState = filteredRows.length === 0;
+
+  return (
+    <DataTable
+      rows={showEmptyState ? [] : filteredRows}
+      headers={headers}
+      {...args}>
+      {({
+        rows,
+        headers,
+        getHeaderProps,
+        getRowProps,
+        getTableProps,
+        getToolbarProps,
+        getTableContainerProps,
+        getCellProps,
+      }) => (
+        <TableContainer
+          title="DataTable"
+          description="With toolbar"
+          {...getTableContainerProps()}>
+          <TableToolbar
+            {...(getToolbarProps() as Partial<TableToolbarProps>)}
+            aria-label="data table toolbar">
+            <TableToolbarContent>
+              <TableToolbarSearch
+                value={searchValue}
+                onChange={(evt, value = '') => {
+                  action('TableToolbarSearch - onChange')(evt);
+                  setSearchValue(value);
+                }}
+                persistent={persistent}
+              />
+              <TableToolbarMenu>
+                <TableToolbarAction onClick={action('Action 1 Click')}>
+                  Action 1
+                </TableToolbarAction>
+                <TableToolbarAction onClick={action('Action 2 Click')}>
+                  Action 2
+                </TableToolbarAction>
+                <TableToolbarAction onClick={action('Action 3 Click')}>
+                  Action 3
+                </TableToolbarAction>
+              </TableToolbarMenu>
+              <Button onClick={action('Button click')}>Primary Button</Button>
+            </TableToolbarContent>
+          </TableToolbar>
+          <Table {...getTableProps()} aria-label="sample table">
+            <TableHead>
+              <TableRow>
+                {headers.map((header) => (
+                  <TableHeader
+                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
                 ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    )}
-  </DataTable>
-);
+            </TableHead>
+            <TableBody>
+              {showEmptyState
+                ? null
+                : rows.map((row) => (
+                    <TableRow {...getRowProps({ row })}>
+                      {row.cells.map((cell) => (
+                        <TableCell {...getCellProps({ cell })}>
+                          {cell.value}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+          {showEmptyState && (
+            <div
+              style={{
+                padding: 'var(--cds-spacing-07) var(--cds-spacing-05)',
+              }}>
+              <NotFoundEmptyState
+                illustrationDescription="Not found illustration"
+                title="No results match the current search"
+                subtitle="Clear the search field to see all results, or try a different search term."
+                action={{
+                  text: 'Clear search',
+                  kind: 'tertiary',
+                  onClick: () => setSearchValue(''),
+                }}
+              />
+            </div>
+          )}
+        </TableContainer>
+      )}
+    </DataTable>
+  );
+};
 
 PersistentToolbar.args = { persistent: true };
 PersistentToolbar.argTypes = {
   ...sharedArgTypes,
   persistent: { table: { readonly: true } },
 };
-PersistentToolbar.decorators = [withV11OverflowMenu];
 
 export const SmallPersistentToolbar: StoryFn<ToolbarStoryArgs> = ({
   persistent,
   ...args
-}) => (
-  <DataTable rows={rows} headers={headers} {...args}>
-    {({
-      rows,
-      headers,
-      getHeaderProps,
-      getRowProps,
-      getTableProps,
-      getToolbarProps,
-      onInputChange,
-      getTableContainerProps,
-      getCellProps,
-    }) => (
-      <TableContainer
-        title="DataTable"
-        description="With toolbar"
-        {...getTableContainerProps()}>
-        <TableToolbar
-          {...(getToolbarProps() as Partial<TableToolbarProps>)}
-          aria-label="data table toolbar"
-          size={args.size as ToolbarSize}>
-          <TableToolbarContent>
-            <TableToolbarSearch
-              onChange={onInputChange}
-              persistent={persistent}
-              size={args.size as ToolbarSize}
-            />
-            <TableToolbarMenu size={args.size as ToolbarSize}>
-              <TableToolbarAction onClick={action('Action 1 Click')}>
-                Action 1
-              </TableToolbarAction>
-              <TableToolbarAction onClick={action('Action 2 Click')}>
-                Action 2
-              </TableToolbarAction>
-              <TableToolbarAction onClick={action('Action 3 Click')}>
-                Action 3
-              </TableToolbarAction>
-            </TableToolbarMenu>
-            <Button onClick={action('Button click')}>Primary Button</Button>
-          </TableToolbarContent>
-        </TableToolbar>
-        <Table {...getTableProps()} size={args.size} aria-label="sample table">
-          <TableHead>
-            <TableRow>
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow {...getRowProps({ row })}>
-                {row.cells.map((cell) => (
-                  <TableCell {...getCellProps({ cell })}>
-                    {cell.value}
-                  </TableCell>
+}) => {
+  const [searchValue, setSearchValue] = useState('');
+
+  const filteredRows = rows.filter((row) => {
+    const q = searchValue.trim().toLowerCase();
+    if (!q) return true;
+    return Object.values(row).some((v) => String(v).toLowerCase().includes(q));
+  });
+
+  const showEmptyState = filteredRows.length === 0;
+
+  return (
+    <DataTable
+      rows={showEmptyState ? [] : filteredRows}
+      headers={headers}
+      {...args}>
+      {({
+        rows,
+        headers,
+        getHeaderProps,
+        getRowProps,
+        getTableProps,
+        getToolbarProps,
+        getTableContainerProps,
+        getCellProps,
+      }) => (
+        <TableContainer
+          title="DataTable"
+          description="With toolbar"
+          {...getTableContainerProps()}>
+          <TableToolbar
+            {...(getToolbarProps() as Partial<TableToolbarProps>)}
+            aria-label="data table toolbar"
+            size={args.size as ToolbarSize}>
+            <TableToolbarContent>
+              <TableToolbarSearch
+                value={searchValue}
+                onChange={(evt, value = '') => {
+                  action('TableToolbarSearch - onChange')(evt);
+                  setSearchValue(value);
+                }}
+                persistent={persistent}
+                size={args.size as ToolbarSize}
+              />
+              <TableToolbarMenu size={args.size as ToolbarSize}>
+                <TableToolbarAction onClick={action('Action 1 Click')}>
+                  Action 1
+                </TableToolbarAction>
+                <TableToolbarAction onClick={action('Action 2 Click')}>
+                  Action 2
+                </TableToolbarAction>
+                <TableToolbarAction onClick={action('Action 3 Click')}>
+                  Action 3
+                </TableToolbarAction>
+              </TableToolbarMenu>
+              <Button onClick={action('Button click')}>Primary Button</Button>
+            </TableToolbarContent>
+          </TableToolbar>
+          <Table
+            {...getTableProps()}
+            size={args.size}
+            aria-label="sample table">
+            <TableHead>
+              <TableRow>
+                {headers.map((header) => (
+                  <TableHeader
+                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
                 ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    )}
-  </DataTable>
-);
+            </TableHead>
+            <TableBody>
+              {showEmptyState
+                ? null
+                : rows.map((row) => (
+                    <TableRow {...getRowProps({ row })}>
+                      {row.cells.map((cell) => (
+                        <TableCell {...getCellProps({ cell })}>
+                          {cell.value}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+          {showEmptyState && (
+            <div
+              style={{
+                padding: 'var(--cds-spacing-07) var(--cds-spacing-05)',
+              }}>
+              <NotFoundEmptyState
+                illustrationDescription="Not found illustration"
+                title="No results match the current search"
+                subtitle="Clear the search field to see all results, or try a different search term."
+                action={{
+                  text: 'Clear search',
+                  kind: 'tertiary',
+                  onClick: () => setSearchValue(''),
+                }}
+              />
+            </div>
+          )}
+        </TableContainer>
+      )}
+    </DataTable>
+  );
+};
 
 SmallPersistentToolbar.args = { persistent: true, size: 'sm' };
 SmallPersistentToolbar.argTypes = {
   ...sharedArgTypes,
   persistent: { table: { readonly: true } },
 };
-SmallPersistentToolbar.decorators = [withV11OverflowMenu];
 
 export const WithOverflowMenu: StoryFn<ToolbarStoryArgs> = ({
   persistent,
   ...args
-}) => (
-  <DataTable rows={rows} headers={headers} {...args}>
-    {({
-      rows,
-      headers,
-      getHeaderProps,
-      getRowProps,
-      getTableProps,
-      getToolbarProps,
-      onInputChange,
-      getCellProps,
-    }) => (
-      <TableContainer title="DataTable" description="With overflow menu">
-        <TableToolbar
-          {...(getToolbarProps() as Partial<TableToolbarProps>)}
-          aria-label="data table toolbar">
-          <TableToolbarContent>
-            <TableToolbarSearch
-              onChange={onInputChange}
-              persistent={persistent}
-            />
-            <TableToolbarMenu>
-              <TableToolbarAction onClick={action('Action 1 Click')}>
-                Action 1
-              </TableToolbarAction>
-              <TableToolbarAction onClick={action('Action 2 Click')}>
-                Action 2
-              </TableToolbarAction>
-              <TableToolbarAction onClick={action('Action 3 Click')}>
-                Action 3
-              </TableToolbarAction>
-            </TableToolbarMenu>
-            <Button onClick={action('Button click')}>Primary Button</Button>
-          </TableToolbarContent>
-        </TableToolbar>
-        <Table {...getTableProps()} aria-label="sample table">
-          <TableHead>
-            <TableRow>
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
-              <TableHeader>Actions</TableHeader>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow {...getRowProps({ row })}>
-                {row.cells.map((cell) => (
-                  <TableCell {...getCellProps({ cell })}>
-                    {cell.value}
-                  </TableCell>
+}) => {
+  const enableV12OverflowMenu = useFeatureFlag('enable-v12-overflowmenu');
+  const [searchValue, setSearchValue] = useState('');
+
+  const filteredRows = rows.filter((row) => {
+    const q = searchValue.trim().toLowerCase();
+    if (!q) return true;
+    return Object.values(row).some((v) => String(v).toLowerCase().includes(q));
+  });
+
+  const showEmptyState = filteredRows.length === 0;
+
+  return (
+    <DataTable
+      rows={showEmptyState ? [] : filteredRows}
+      headers={headers}
+      {...args}>
+      {({
+        rows,
+        headers,
+        getHeaderProps,
+        getRowProps,
+        getTableProps,
+        getToolbarProps,
+        getCellProps,
+      }) => (
+        <TableContainer title="DataTable" description="With overflow menu">
+          <TableToolbar
+            {...(getToolbarProps() as Partial<TableToolbarProps>)}
+            aria-label="data table toolbar">
+            <TableToolbarContent>
+              <TableToolbarSearch
+                value={searchValue}
+                onChange={(evt, value = '') => {
+                  action('TableToolbarSearch - onChange')(evt);
+                  setSearchValue(value);
+                }}
+                persistent={persistent}
+              />
+              <TableToolbarMenu>
+                <TableToolbarAction onClick={action('Action 1 Click')}>
+                  Action 1
+                </TableToolbarAction>
+                <TableToolbarAction onClick={action('Action 2 Click')}>
+                  Action 2
+                </TableToolbarAction>
+                <TableToolbarAction onClick={action('Action 3 Click')}>
+                  Action 3
+                </TableToolbarAction>
+              </TableToolbarMenu>
+              <Button onClick={action('Button click')}>Primary Button</Button>
+            </TableToolbarContent>
+          </TableToolbar>
+          <Table {...getTableProps()} aria-label="sample table">
+            <TableHead>
+              <TableRow>
+                {headers.map((header) => (
+                  <TableHeader
+                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
                 ))}
-                <TableCell className="cds--table-column-menu">
-                  <OverflowMenu size="sm" flipped>
-                    <OverflowMenuItem itemText="Stop app" />
-                    <OverflowMenuItem itemText="Restart app" />
-                    <OverflowMenuItem itemText="Rename app" />
-                  </OverflowMenu>
-                </TableCell>
+                <TableHeader>Actions</TableHeader>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    )}
-  </DataTable>
-);
+            </TableHead>
+            <TableBody>
+              {showEmptyState
+                ? null
+                : rows.map((row) => (
+                    <TableRow {...getRowProps({ row })}>
+                      {row.cells.map((cell) => (
+                        <TableCell {...getCellProps({ cell })}>
+                          {cell.value}
+                        </TableCell>
+                      ))}
+                      <TableCell className="cds--table-column-menu">
+                        {enableV12OverflowMenu ? (
+                          <OverflowMenu label="Options">
+                            <MenuItem label="Stop app" />
+                            <MenuItem label="Restart app" />
+                            <MenuItem label="Rename app" />
+                          </OverflowMenu>
+                        ) : (
+                          <OverflowMenu size="sm" flipped>
+                            <OverflowMenuItem itemText="Stop app" />
+                            <OverflowMenuItem itemText="Restart app" />
+                            <OverflowMenuItem itemText="Rename app" />
+                          </OverflowMenu>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+          {showEmptyState && (
+            <div
+              style={{
+                padding: 'var(--cds-spacing-07) var(--cds-spacing-05)',
+              }}>
+              <NotFoundEmptyState
+                illustrationDescription="Not found illustration"
+                title="No results match the current search"
+                subtitle="Clear the search field to see all results, or try a different search term."
+                action={{
+                  text: 'Clear search',
+                  kind: 'tertiary',
+                  onClick: () => setSearchValue(''),
+                }}
+              />
+            </div>
+          )}
+        </TableContainer>
+      )}
+    </DataTable>
+  );
+};
 
 WithOverflowMenu.argTypes = {
   ...sharedArgTypes,
@@ -395,7 +554,6 @@ WithOverflowMenu.argTypes = {
   },
 };
 WithOverflowMenu.args = { overflowMenuOnHover: false, persistent: false };
-WithOverflowMenu.decorators = [withV11OverflowMenu];
 
 // `TableToolbarMenu` types omit `label`, which the v12 overflow menu reads
 // for its accessible name, so it is passed through a spread.

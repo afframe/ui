@@ -200,7 +200,7 @@ export const withAILabel: StoryFn<
       <FluidSelect
         id="select-1"
         labelText="Select an option"
-        // `decorator` is missing from FluidSelectProps in Carbon 11.117.0.
+        // `decorator` is missing from FluidSelectProps in Carbon 11.118.0.
         {...{ decorator: aiLabel }}
         {...selectArgs}>
         <SelectItem value="" text="" />

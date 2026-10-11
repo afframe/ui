@@ -1,13 +1,13 @@
 /**
- * Copyright IBM Corp. 2023
+ * Copyright IBM Corp. 2023, 2026
  *
  * This source code is licensed under the Apache-2.0 license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * SPDX-FileCopyrightText: Copyright IBM Corp. 2023
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript (OverflowMenu cast to its v12 props, which Carbon's export type leaves out), components from @afframe/ui, the WithFeatureFlags decorator removed (enable-v12-release turns enable-v12-overflowmenu and enable-v12-dynamic-floating-styles on globally), the Nested story's inner FeatureFlags wrapper rewritten to individual props with enableV12Release off (under enable-v12-release a v12 flag cannot be turned off alone), keyboard play test on Default, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript (OverflowMenu cast to the story args, which may be undefined), components from @afframe/ui, the WithFeatureFlags decorator removed (enable-v12-release turns enable-v12-overflowmenu and enable-v12-dynamic-floating-styles on globally), the Nested story's inner FeatureFlags wrapper rewritten to individual props with enableV12Release off (under enable-v12-release a v12 flag cannot be turned off alone), keyboard play test on Default, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useEffect } from 'react';
@@ -27,25 +27,35 @@ import type { PopoverProps } from '../../index.js';
 
 interface OverflowMenuStoryArgs {
   autoAlign?: boolean | undefined;
+  disabled?: boolean | undefined;
   label?: string | undefined;
   menuAlignment?:
     'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | undefined;
   size?: 'xs' | 'sm' | 'md' | 'lg' | undefined;
   tooltipAlignment?: PopoverProps<'span'>['align'];
+  tooltipAutoAlign?: boolean | undefined;
+  tooltipDefaultOpen?: boolean | undefined;
+  tooltipEnterDelayMs?: number | undefined;
+  tooltipLeaveDelayMs?: number | undefined;
 }
 
-// Under enable-v12-overflowmenu, OverflowMenu renders the v12 menu, whose
-// props Carbon's export type does not list.
+// Story args may be undefined, which the v12 props reject under
+// exactOptionalPropertyTypes.
 const OverflowMenu = CarbonOverflowMenu as ComponentType<
   OverflowMenuStoryArgs & { children?: ReactNode }
 >;
 
 const args: OverflowMenuStoryArgs = {
   autoAlign: false,
+  disabled: false,
   label: 'Options',
   menuAlignment: 'bottom-start',
   size: 'md',
   tooltipAlignment: 'top',
+  tooltipAutoAlign: false,
+  tooltipDefaultOpen: false,
+  tooltipEnterDelayMs: 100,
+  tooltipLeaveDelayMs: 100,
 };
 
 const tooltipAlignmentOptions = [
@@ -66,6 +76,12 @@ const tooltipAlignmentOptions = [
 const argTypes: Partial<ArgTypes<OverflowMenuStoryArgs>> = {
   autoAlign: {
     control: { type: 'boolean' },
+    description:
+      'Will attempt to automatically align the menu with the trigger button to avoid collisions with the viewport',
+  },
+  disabled: {
+    control: { type: 'boolean' },
+    description: 'Specify whether the trigger button should be disabled',
   },
   label: {
     control: { type: 'text' },
@@ -74,7 +90,7 @@ const argTypes: Partial<ArgTypes<OverflowMenuStoryArgs>> = {
     options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
     control: { type: 'select' },
     description:
-      'Specify how the menu should align with the button element `bottom-start` `bottom-end` `top-start` `top-end`',
+      'Specify how the menu should align with the trigger button `bottom-start` `bottom-end` `top-start` `top-end`',
   },
   size: {
     options: ['xs', 'sm', 'md', 'lg'],
@@ -83,6 +99,28 @@ const argTypes: Partial<ArgTypes<OverflowMenuStoryArgs>> = {
   tooltipAlignment: {
     options: tooltipAlignmentOptions,
     control: { type: 'select' },
+    description:
+      'Specify how the tooltip on the trigger button should be aligned',
+  },
+  tooltipAutoAlign: {
+    control: { type: 'boolean' },
+    description:
+      'Will attempt to automatically align the tooltip on the trigger button to avoid collisions with the viewport',
+  },
+  tooltipDefaultOpen: {
+    control: { type: 'boolean' },
+    description:
+      'Specify whether the tooltip on the trigger button should be open when it first renders',
+  },
+  tooltipEnterDelayMs: {
+    control: { type: 'number' },
+    description:
+      'Specify the duration in milliseconds to delay before displaying the tooltip on the trigger button',
+  },
+  tooltipLeaveDelayMs: {
+    control: { type: 'number' },
+    description:
+      'Specify the duration in milliseconds to delay before hiding the tooltip on the trigger button',
   },
 };
 

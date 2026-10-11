@@ -212,16 +212,48 @@ export default {
     },
   },
   args: {
+    hideLabel: false,
+    label: 'Tree View',
+    multiselect: false,
+    onActivate: action('onActivate'),
     onSelect: action('onSelect'),
+    size: 'sm',
+  },
+  argTypes: {
+    hideLabel: {
+      control: { type: 'boolean' },
+    },
+    label: {
+      control: { type: 'text' },
+    },
+    multiselect: {
+      control: { type: 'boolean' },
+    },
+    onActivate: {
+      action: 'onActivate',
+    },
+    onSelect: {
+      action: 'onSelect',
+    },
+    size: {
+      options: ['xs', 'sm'],
+      control: { type: 'select' },
+    },
   },
 } satisfies Meta<typeof TreeView>;
 
-export const Default: StoryFn<Partial<TreeViewProps>> = (args) => {
+// Under enable-treeview-controllable, onSelect receives the selected IDs.
+type ControlledTreeViewArgs = Omit<TreeViewProps, 'onSelect'> & {
+  onSelect?: (selected: TreeViewProps['selected']) => void;
+};
+
+export const Default: StoryFn<ControlledTreeViewArgs> = (args) => {
   const [selected, setSelected] = useState<Array<string | number>>([]);
   // Null keeps the tree controlled; Carbon's prop types leave it out.
   const [active, setActive] = useState<string | number | null | undefined>(
     null
   );
+  const { onActivate, onSelect, ...treeViewArgs } = args;
 
   return (
     <VStack gap={6}>
@@ -246,14 +278,17 @@ export const Default: StoryFn<Partial<TreeViewProps>> = (args) => {
 
       <div>
         <TreeView
-          label="Tree View"
-          {...args}
+          {...treeViewArgs}
           active={active as string | number}
-          onActivate={setActive}
+          onActivate={(nextActive) => {
+            setActive(nextActive);
+            onActivate?.(nextActive);
+          }}
           selected={selected}
-          onSelect={
-            setSelected as (selected: TreeViewProps['selected']) => void
-          }>
+          onSelect={(nextSelected: TreeViewProps['selected']) => {
+            setSelected(nextSelected ?? []);
+            onSelect?.(nextSelected);
+          }}>
           {renderTree(nodes)}
         </TreeView>
       </div>
@@ -261,20 +296,8 @@ export const Default: StoryFn<Partial<TreeViewProps>> = (args) => {
   );
 };
 
-Default.args = {
-  hideLabel: false,
-  multiselect: false,
-};
-
-Default.argTypes = {
-  size: {
-    options: ['xs', 'sm'],
-    control: { type: 'select' },
-  },
-};
-
 Default.parameters = {
   controls: {
-    exclude: ['active', 'selected'],
+    exclude: ['active', 'children', 'selected'],
   },
 };

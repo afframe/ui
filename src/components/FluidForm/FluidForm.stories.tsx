@@ -201,7 +201,7 @@ const formShellStyle: CSSProperties = {
   minWidth: 0,
 };
 
-// `required` and `pattern` are missing from FluidPasswordInputProps in Carbon 11.117.0.
+// `required` and `pattern` are missing from FluidPasswordInputProps in Carbon 11.118.0.
 const passwordRules = {
   required: true,
   pattern: '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,}',

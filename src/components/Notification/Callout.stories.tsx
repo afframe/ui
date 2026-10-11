@@ -28,6 +28,12 @@ export default {
     lowContrast: false,
     statusIconDescription: 'notification',
   },
+  argTypes: {
+    kind: {
+      options: ['info', 'warning'],
+      control: { type: 'select' },
+    },
+  },
 } satisfies Meta<typeof Callout>;
 
 export const Default: StoryFn<typeof Callout> = (args) => (
@@ -38,24 +44,32 @@ export const Default: StoryFn<typeof Callout> = (args) => (
   />
 );
 
-export const WithInteractiveElements: StoryFn<typeof Callout> = () => (
-  <Callout
-    title="Notification title"
-    titleId="my fancy id 123"
-    kind="info"
-    lowContrast>
+Default.args = {
+  subtitle: 'Subtitle text goes here',
+  title: 'Notification title',
+};
+
+export const WithInteractiveElements: StoryFn<typeof Callout> = (args) => (
+  <Callout {...args}>
     <div className="cds--inline-notification__subtitle">
       Additional text can describe the notification, or a link to{' '}
-      <Link inline href="#" aria-describedby="my fancy id 123">
+      <Link inline href="#" aria-describedby={args.titleId}>
         learn more
       </Link>
     </div>
   </Callout>
 );
 
-Default.argTypes = {
-  kind: {
-    options: ['info', 'warning'],
-    control: { type: 'select' },
+WithInteractiveElements.args = {
+  kind: 'info',
+  lowContrast: true,
+  statusIconDescription: 'notification',
+  title: 'Notification title',
+  titleId: 'callout-title-interactive',
+};
+
+WithInteractiveElements.parameters = {
+  controls: {
+    include: ['kind', 'lowContrast', 'statusIconDescription', 'title'],
   },
 };

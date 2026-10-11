@@ -8,11 +8,11 @@ const v12FlagsWithoutProps = {
 };
 
 /**
- * Renders `OverflowMenu` with `OverflowMenuItem` children, including DataTable
- * `TableToolbarAction`, with its v11 behaviour. Under `enable-v12-overflowmenu`
- * the menu only focuses items that register with it, and `OverflowMenuItem`
- * never does, so the items cannot be reached or activated with the keyboard
- * (carbon issue #23260, fixed by PR #23375, not in a stable release yet).
+ * Renders `OverflowMenu` with `OverflowMenuItem` children with its v11
+ * behaviour. Under `enable-v12-overflowmenu` the menu only focuses items that
+ * register with it, and `OverflowMenuItem` never does, so the items cannot be
+ * reached or activated with the keyboard. Still so in `@carbon/react` 1.118.0:
+ * PR #23375 closed carbon issue #23260 for DataTable `TableToolbarAction` only.
  * `enable-v12-release` forces every v12 flag on, so it is turned off here and
  * the other v12 flags are turned back on.
  */

@@ -19,6 +19,7 @@ import {
   MenuItem,
   OverflowMenu,
   OverflowMenuItem,
+  useFeatureFlag,
 } from '../../index.js';
 import { withV11OverflowMenu } from '../../../.storybook/templates/withV11OverflowMenu.js';
 import mdx from './Breadcrumb.mdx';
@@ -82,24 +83,50 @@ Default.argTypes = {
   ...sharedArgTypes,
 };
 
+const getBreadcrumbOverflowMenuProps = (enableV12OverflowMenu: boolean) =>
+  enableV12OverflowMenu
+    ? {
+        label: 'Overflow menu in a breadcrumb',
+        tooltipAlignment: 'bottom' as const,
+      }
+    : {
+        align: 'bottom' as const,
+        'aria-label': 'Overflow menu in a breadcrumb',
+      };
+
+const renderBreadcrumbOverflowMenuItems = (enableV12OverflowMenu: boolean) =>
+  enableV12OverflowMenu
+    ? [
+        <MenuItem key="breadcrumb-3" label="Breadcrumb 3" />,
+        <MenuItem key="breadcrumb-4" label="Breadcrumb 4" />,
+      ]
+    : [
+        <OverflowMenuItem key="breadcrumb-3" itemText="Breadcrumb 3" />,
+        <OverflowMenuItem key="breadcrumb-4" itemText="Breadcrumb 4" />,
+      ];
+
 export const BreadcrumbWithOverflowMenu: StoryFn<typeof Breadcrumb> = (
   args
-) => (
-  <Breadcrumb {...args} noTrailingSlash>
-    <BreadcrumbItem>
-      <a href="/#">Breadcrumb 1</a>
-    </BreadcrumbItem>
-    <BreadcrumbItem href="#">Breadcrumb 2</BreadcrumbItem>
-    <BreadcrumbItem data-floating-menu-container>
-      <OverflowMenu align="bottom" aria-label="Overflow menu in a breadcrumb">
-        <OverflowMenuItem itemText="Breadcrumb 3" />
-        <OverflowMenuItem itemText="Breadcrumb 4" />
-      </OverflowMenu>
-    </BreadcrumbItem>
-    <BreadcrumbItem href="#">Breadcrumb 5</BreadcrumbItem>
-    <BreadcrumbItem isCurrentPage>Breadcrumb 6</BreadcrumbItem>
-  </Breadcrumb>
-);
+) => {
+  const enableV12OverflowMenu = useFeatureFlag('enable-v12-overflowmenu');
+
+  return (
+    <Breadcrumb {...args} noTrailingSlash>
+      <BreadcrumbItem>
+        <a href="/#">Breadcrumb 1</a>
+      </BreadcrumbItem>
+      <BreadcrumbItem href="#">Breadcrumb 2</BreadcrumbItem>
+      <BreadcrumbItem data-floating-menu-container>
+        <OverflowMenu
+          {...getBreadcrumbOverflowMenuProps(enableV12OverflowMenu)}>
+          {renderBreadcrumbOverflowMenuItems(enableV12OverflowMenu)}
+        </OverflowMenu>
+      </BreadcrumbItem>
+      <BreadcrumbItem href="#">Breadcrumb 5</BreadcrumbItem>
+      <BreadcrumbItem isCurrentPage>Breadcrumb 6</BreadcrumbItem>
+    </Breadcrumb>
+  );
+};
 
 BreadcrumbWithOverflowMenu.args = { ...sharedArgs };
 
@@ -108,10 +135,6 @@ BreadcrumbWithOverflowMenu.argTypes = {
 };
 
 BreadcrumbWithOverflowMenu.decorators = [withV11OverflowMenu];
-
-// `OverflowMenu` types omit `label`, which the v12 overflow menu reads for its
-// accessible name, so it is passed through a spread.
-const overflowMenuLabel = { label: 'Overflow menu in a breadcrumb' };
 
 /**
  * Overflow menu under the v12 flags: `MenuItem` children and a `label` on
@@ -124,7 +147,7 @@ export const BreadcrumbWithMenuItems: StoryFn<typeof Breadcrumb> = (args) => (
     </BreadcrumbItem>
     <BreadcrumbItem href="#">Breadcrumb 2</BreadcrumbItem>
     <BreadcrumbItem data-floating-menu-container>
-      <OverflowMenu {...overflowMenuLabel}>
+      <OverflowMenu label="Overflow menu in a breadcrumb">
         <MenuItem label="Breadcrumb 3" />
         <MenuItem label="Breadcrumb 4" />
       </OverflowMenu>
@@ -158,22 +181,26 @@ BreadcrumbWithMenuItems.play = async ({ canvasElement }) => {
 
 export const BreadcrumbWithOverflowMenuSizeSmall: StoryFn<typeof Breadcrumb> = (
   args
-) => (
-  <Breadcrumb {...args} noTrailingSlash>
-    <BreadcrumbItem>
-      <a href="/#">Breadcrumb 1</a>
-    </BreadcrumbItem>
-    <BreadcrumbItem href="#">Breadcrumb 2</BreadcrumbItem>
-    <BreadcrumbItem data-floating-menu-container>
-      <OverflowMenu align="bottom" aria-label="Overflow menu in a breadcrumb">
-        <OverflowMenuItem itemText="Breadcrumb 3" />
-        <OverflowMenuItem itemText="Breadcrumb 4" />
-      </OverflowMenu>
-    </BreadcrumbItem>
-    <BreadcrumbItem href="#">Breadcrumb 5</BreadcrumbItem>
-    <BreadcrumbItem isCurrentPage>Breadcrumb 6</BreadcrumbItem>
-  </Breadcrumb>
-);
+) => {
+  const enableV12OverflowMenu = useFeatureFlag('enable-v12-overflowmenu');
+
+  return (
+    <Breadcrumb {...args} noTrailingSlash>
+      <BreadcrumbItem>
+        <a href="/#">Breadcrumb 1</a>
+      </BreadcrumbItem>
+      <BreadcrumbItem href="#">Breadcrumb 2</BreadcrumbItem>
+      <BreadcrumbItem data-floating-menu-container>
+        <OverflowMenu
+          {...getBreadcrumbOverflowMenuProps(enableV12OverflowMenu)}>
+          {renderBreadcrumbOverflowMenuItems(enableV12OverflowMenu)}
+        </OverflowMenu>
+      </BreadcrumbItem>
+      <BreadcrumbItem href="#">Breadcrumb 5</BreadcrumbItem>
+      <BreadcrumbItem isCurrentPage>Breadcrumb 6</BreadcrumbItem>
+    </Breadcrumb>
+  );
+};
 
 BreadcrumbWithOverflowMenuSizeSmall.argTypes = {
   ...sharedArgTypes,
@@ -217,22 +244,26 @@ Skeleton.argTypes = {
 
 export const BreadcrumbWithOverflowVisualSnapshots: StoryFn<
   typeof Breadcrumb
-> = (args) => (
-  <Breadcrumb {...args} noTrailingSlash>
-    <BreadcrumbItem>
-      <a href="/#">Breadcrumb 1</a>
-    </BreadcrumbItem>
-    <BreadcrumbItem href="#">Breadcrumb 2</BreadcrumbItem>
-    <BreadcrumbItem data-floating-menu-container>
-      <OverflowMenu align="bottom" aria-label="Overflow menu in a breadcrumb">
-        <OverflowMenuItem itemText="Breadcrumb 3" />
-        <OverflowMenuItem itemText="Breadcrumb 4" />
-      </OverflowMenu>
-    </BreadcrumbItem>
-    <BreadcrumbItem href="#">Breadcrumb 5</BreadcrumbItem>
-    <BreadcrumbItem isCurrentPage>Breadcrumb 6</BreadcrumbItem>
-  </Breadcrumb>
-);
+> = (args) => {
+  const enableV12OverflowMenu = useFeatureFlag('enable-v12-overflowmenu');
+
+  return (
+    <Breadcrumb {...args} noTrailingSlash>
+      <BreadcrumbItem>
+        <a href="/#">Breadcrumb 1</a>
+      </BreadcrumbItem>
+      <BreadcrumbItem href="#">Breadcrumb 2</BreadcrumbItem>
+      <BreadcrumbItem data-floating-menu-container>
+        <OverflowMenu
+          {...getBreadcrumbOverflowMenuProps(enableV12OverflowMenu)}>
+          {renderBreadcrumbOverflowMenuItems(enableV12OverflowMenu)}
+        </OverflowMenu>
+      </BreadcrumbItem>
+      <BreadcrumbItem href="#">Breadcrumb 5</BreadcrumbItem>
+      <BreadcrumbItem isCurrentPage>Breadcrumb 6</BreadcrumbItem>
+    </Breadcrumb>
+  );
+};
 
 BreadcrumbWithOverflowVisualSnapshots.argTypes = {
   ...sharedArgTypes,

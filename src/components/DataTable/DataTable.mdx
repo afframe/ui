@@ -18,7 +18,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <SourceLabel name="carbon" />
 
-[Source code](https://github.com/carbon-design-system/carbon/tree/v11.117.0/packages/react/src/components/DataTable)
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/DataTable)
 &nbsp;|&nbsp;
 [Usage guidelines](https://www.carbondesignsystem.com/components/data-table/usage)
 &nbsp;|&nbsp;
@@ -294,7 +294,7 @@ The filtering story shows an example of how to implement the
 pattern.
 
 To implement this in your own project you should copy the
-[TableToolbarFilter](https://github.com/carbon-design-system/carbon/blob/v11.117.0/packages/react/src/components/DataTable/stories/examples/TableToolbarFilter.tsx)
+[TableToolbarFilter](https://github.com/carbon-design-system/carbon/blob/v11.118.0/packages/react/src/components/DataTable/stories/examples/TableToolbarFilter.tsx)
 example component into your code. Then import and use it inside
 `TableToolbarContent`:
 
@@ -378,16 +378,17 @@ _Note: press "Show code" above to view a code snippet of this example_
 ### Toolbar menu under the v12 flags
 
 Under the v12 flags (`enable-v12-overflowmenu`, turned on by
-`enable-v12-release`), `TableToolbarMenu` renders the v12 overflow menu, and
-`TableToolbarAction` items inside it cannot be reached or activated with the
-keyboard. Carbon fixed this in
-[PR #23375](https://github.com/carbon-design-system/carbon/pull/23375), which is
-not in a stable `@carbon/react` release yet.
+`enable-v12-release`), `TableToolbarMenu` renders the v12 overflow menu with
+`iconDescription` as its label, and each `TableToolbarAction` renders a v12
+`MenuItem` (since `@carbon/react` 1.118.0,
+[PR #23375](https://github.com/carbon-design-system/carbon/pull/23375)). The
+`MenuItem` label is the text of the `TableToolbarAction` children, so give it
+plain text only.
 
-Until then, build the toolbar menu from `MenuItem` and `MenuItemDivider`
-children, and give `TableToolbarMenu` a `label` (the accessible name of the
-menu and its trigger). The `TableToolbarMenu` types omit `label`, so pass it
-through a spread.
+For dividers or other menu items, build the toolbar menu from `MenuItem` and
+`MenuItemDivider` children instead. A `label` overrides `iconDescription` as the
+accessible name of the menu and its trigger; the `TableToolbarMenu` types omit
+`label`, so pass it through a spread.
 
 <Canvas id="components-datatable-toolbar--toolbar-menu-with-menu-items" />
 
@@ -403,10 +404,6 @@ const toolbarMenuLabel = { label: 'Settings' };
   <MenuItem label="Action 3" onClick={handleAction3} />
 </TableToolbarMenu>;
 ```
-
-The other stories that use `TableToolbarAction` render it with its v11
-behaviour: `enable-v12-release` and `enable-v12-overflowmenu` are turned off
-for those stories only, and the other v12 flags stay on.
 
 ### Overflow Menu
 
@@ -581,7 +578,7 @@ built-in functionality like sorting, selection, and expansion.
 
 For full details on the arguments and returned values of these getters, refer to
 the `DataTableRenderProps` type in the
-[source code](https://github.com/carbon-design-system/carbon/blob/v11.117.0/packages/react/src/components/DataTable/DataTable.tsx).
+[source code](https://github.com/carbon-design-system/carbon/blob/v11.118.0/packages/react/src/components/DataTable/DataTable.tsx).
 
 #### Actions
 

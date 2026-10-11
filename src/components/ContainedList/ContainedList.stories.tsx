@@ -446,10 +446,6 @@ UsageExamples.argTypes = sharedArgTypes;
 UsageExamples.parameters = sharedParameters;
 UsageExamples.decorators = [withV11OverflowMenu];
 
-// `OverflowMenu` types omit `label`, which the v12 overflow menu reads for its
-// accessible name, so it is passed through a spread.
-const overflowMenuLabel = { label: 'List item options' };
-
 /**
  * Overflow menus under the v12 flags: `MenuItem` children and a `label` on
  * `OverflowMenu` instead of `OverflowMenuItem`.
@@ -471,7 +467,7 @@ export const UsageExamplesWithMenuItems: StoryFn<typeof ContainedList> = (
       <ContainedListItem
         key={i}
         action={
-          <OverflowMenu {...overflowMenuLabel}>
+          <OverflowMenu label="List item options">
             <MenuItem label="View details" />
             <MenuItem label="Edit" />
             <MenuItemDivider />
