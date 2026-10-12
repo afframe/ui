@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), v12 toolbar menu story with a play test, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), v12 toolbar menu story with a play test, keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -554,6 +554,26 @@ WithOverflowMenu.argTypes = {
   },
 };
 WithOverflowMenu.args = { overflowMenuOnHover: false, persistent: false };
+// A row menu opens on Enter, moves focus with the arrow keys and returns focus
+// to its trigger on Escape.
+WithOverflowMenu.play = async ({ canvasElement }) => {
+  const body = within(canvasElement.ownerDocument.body);
+  const trigger = canvasElement.querySelector(
+    '.cds--table-column-menu button[aria-haspopup="true"]'
+  ) as HTMLButtonElement;
+
+  trigger.focus();
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() =>
+    expect(body.getByRole('menuitem', { name: 'Stop app' })).toHaveFocus()
+  );
+  await userEvent.keyboard('{ArrowDown}');
+  await expect(
+    body.getByRole('menuitem', { name: 'Restart app' })
+  ).toHaveFocus();
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(trigger).toHaveFocus());
+};
 
 // `TableToolbarMenu` types omit `label`, which the v12 overflow menu reads
 // for its accessible name, so it is passed through a spread.
