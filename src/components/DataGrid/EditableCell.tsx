@@ -82,6 +82,9 @@ export function EditableCell({
       <span>{children}</span>
       <IconButton
         ref={button}
+        // The tooltip escapes the table's scroll area, which cuts it off at
+        // the edges.
+        autoAlign
         kind="ghost"
         size="sm"
         label={label}

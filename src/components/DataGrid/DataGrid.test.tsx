@@ -500,6 +500,29 @@ test('edits a cell with the keyboard: Enter saves, Escape cancels', async () => 
   );
 });
 
+test('keeps the edit tooltip of the last column inside the table', async () => {
+  render(
+    <DataGrid
+      options={{ features: editFeatures, columns: editColumns, data: few }}
+      onCellEdit={vi.fn()}
+    />
+  );
+  const edit = iconButton('Edit Amount of row 2026-0001');
+  await userEvent.hover(edit);
+  const tooltip = edit
+    .closest('.cds--popover-container')
+    ?.querySelector('.cds--popover-content');
+  const scroll = edit.closest('.cds--data-table-content');
+  if (!tooltip || !scroll) throw new Error('no tooltip or scroll area');
+  // A closed tooltip measures 0, so wait for it to open first.
+  await expect
+    .poll(() => tooltip.getBoundingClientRect().width)
+    .toBeGreaterThan(0);
+  expect(tooltip.getBoundingClientRect().right).toBeLessThanOrEqual(
+    scroll.getBoundingClientRect().right
+  );
+});
+
 test('renders only the rows in view and keeps the row count', async () => {
   render(
     <DataGrid
