@@ -20,7 +20,7 @@ const SearchBar = previewCandidate__SearchBar;
 type Scope = { id: string; text: string };
 
 export default {
-  title: 'Preview Candidate/SearchBar',
+  title: 'Preview/previewCandidate__SearchBar',
   component: SearchBar,
   tags: ['ibm-products'],
   argTypes: {

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, the inner FeatureFlags wrapper, feature flag annotation and ClassPrefix wrapper removed (Afframe turns the flags on globally and its styles compile them), story stylesheet dropped, source tag, autofocus="true" written as autoFocus, inline spacing as Carbon spacing tokens, enable-focus-wrap-without-sentinels story removed (the flag has no effect with the dialog element). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, the inner FeatureFlags wrapper, feature flag annotation and ClassPrefix wrapper removed (Afframe turns the flags on globally and its styles compile them), story stylesheet dropped, source tag, autofocus="true" written as autoFocus, inline spacing as Carbon spacing tokens, enable-focus-wrap-without-sentinels story removed (the flag has no effect with the dialog element), story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -33,7 +33,7 @@ export default {
   },
 } satisfies Meta<typeof Modal>;
 
-export const EnableDialogElement: StoryFn<typeof Modal> = () => {
+export const NativeDialog: StoryFn<typeof Modal> = () => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -90,4 +90,3 @@ export const EnableDialogElement: StoryFn<typeof Modal> = () => {
     </>
   );
 };
-EnableDialogElement.storyName = 'enable-dialog-element';

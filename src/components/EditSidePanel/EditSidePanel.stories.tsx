@@ -52,7 +52,7 @@ function Harness({
 }
 
 const meta = {
-  title: 'Components/Create and Edit/Edit Side Panel',
+  title: 'Components/Create and Edit/EditSidePanel',
   component: EditSidePanel,
   tags: ['afframe'],
   parameters: {
@@ -99,5 +99,6 @@ export const LongForm: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

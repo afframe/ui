@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 toolbar menu items added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 toolbar menu items added, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -569,7 +569,7 @@ WithOverflowMenu.play = async ({ canvasElement }) => {
 // Afframe: the 1.0.x shape, `label` and MenuItem children. The Afframe
 // TableToolbarMenu turns on Carbon's newer menu for it, so the keyboard works.
 export const MenuItemsFrom101: StoryObj<typeof TableToolbarMenu> = {
-  name: 'Toolbar menu items from 1.0.1',
+  name: 'Menu Items From 1.0.1',
   tags: ['afframe'],
   parameters: { ...afframeA11y },
   render: () => (

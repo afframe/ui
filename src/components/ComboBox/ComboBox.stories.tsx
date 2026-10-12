@@ -7,13 +7,13 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, AI label story styles as plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { action } from 'storybook/actions';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import '../AILabel/ailabel-story.css';
 import {
   AILabel,
@@ -243,8 +243,8 @@ export const ExperimentalAutoAlign: StoryFn<ItemArgs> = (args) => (
 
 ExperimentalAutoAlign.argTypes = { ...sharedArgTypes };
 
-export const _WithLayer: StoryFn<ItemArgs> = (args) => (
-  <WithLayer>
+export const WithLayer: StoryFn<ItemArgs> = (args) => (
+  <WithLayerTemplate>
     {(layer) => (
       <div style={{ width: 300 }}>
         <ComboBox
@@ -260,12 +260,12 @@ export const _WithLayer: StoryFn<ItemArgs> = (args) => (
         />
       </div>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
 
-_WithLayer.argTypes = { ...sharedArgTypes };
+WithLayer.argTypes = { ...sharedArgTypes };
 
-export const withAILabel: StoryFn<ItemArgs> = (args) => {
+export const WithAILabel: StoryFn<ItemArgs> = (args) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -341,7 +341,7 @@ export const withAILabel: StoryFn<ItemArgs> = (args) => {
   );
 };
 
-withAILabel.argTypes = { ...sharedArgTypes };
+WithAILabel.argTypes = { ...sharedArgTypes };
 
 export const Controlled: StoryFn<ItemArgs> = (args) => {
   const options: Item[] = [

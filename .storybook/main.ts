@@ -1,9 +1,16 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.tsx'],
+  stories: ['./Welcome.mdx', '../src/**/*.mdx', '../src/**/*.stories.tsx'],
   addons: [
-    '@storybook/addon-docs',
+    {
+      // GitHub-flavoured Markdown: tables in the MDX pages.
+      name: '@storybook/addon-docs',
+      options: {
+        mdxPluginOptions: { mdxCompileOptions: { remarkPlugins: [remarkGfm] } },
+      },
+    },
     '@storybook/addon-a11y',
     '@storybook/addon-vitest',
   ],
@@ -11,10 +18,14 @@ const config: StorybookConfig = {
   // Story assets, served from the root (the What's new example image).
   staticDirs: ['./public'],
   docs: { defaultName: 'Overview' },
-  core: { disableTelemetry: true },
-  // Reads props through the TypeScript checker, so API tables of Carbon
-  // re-exports fill in (react-docgen sees only local sources).
-  features: { experimentalDocgenServer: true },
+  core: { disableTelemetry: true, disableWhatsNewNotifications: true },
+  features: {
+    // Reads props through the TypeScript checker, so API tables of Carbon
+    // re-exports fill in (react-docgen sees only local sources).
+    experimentalDocgenServer: true,
+    sidebarOnboardingChecklist: false,
+    menuOnboardingChecklist: false,
+  },
   typescript: { reactDocgen: 'react-docgen' },
 };
 

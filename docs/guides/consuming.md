@@ -43,7 +43,7 @@ import '@afframe/ui/styles.css';
 
 An app that renders Carbon Charts (`Charts`, or `ChatChart` with the Carbon Charts engine) must also import `@afframe/ui/charts.css`, after `styles.css`: in the root layout, or only in the routes that render charts. `EChart` needs no stylesheet.
 
-Set the theme on `<html>` in the server-rendered root layout: `data-afframe-theme="light"`, `"dark"` or `"system"` (follows the OS). Without the attribute the theme is `light`. The type `AfframeTheme` lists the values. The CSS applies the theme, so it does not flash and needs no script.
+Set the theme on `<html>` in the server-rendered root layout with `data-afframe-theme`. Values, runtime switching and the theme hooks: the Theming docs page (`src/theme/Theming.mdx`).
 
 Wrap the app in `<AfframeProvider>`. It turns on the Carbon feature flags Afframe UI uses. In Next.js App Router it is a client component placed inside the root layout. No Sass, no `transpilePackages`, no load-path settings.
 

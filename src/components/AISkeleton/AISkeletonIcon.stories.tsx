@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, AISkeletonIcon from @afframe/ui, unused module-level props and eslint directive removed, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, AISkeletonIcon from @afframe/ui, unused module-level props and eslint directive removed, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -15,7 +15,7 @@ import { AISkeletonIcon } from '../../index.js';
 import mdx from './AISkeleton.mdx';
 
 export default {
-  title: 'Components/Skeleton/AISkeleton',
+  title: 'Components/Skeletons/AISkeleton',
   component: AISkeletonIcon,
   tags: ['carbon'],
   parameters: {
@@ -25,7 +25,7 @@ export default {
   },
 } satisfies Meta<typeof AISkeletonIcon>;
 
-export const _AISkeletonIcon: StoryFn<typeof AISkeletonIcon> = () => {
+export const Default: StoryFn<typeof AISkeletonIcon> = () => {
   const propsSkeleton = {
     style: {
       margin: 'var(--cds-spacing-09)',

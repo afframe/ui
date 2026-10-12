@@ -70,9 +70,9 @@ Three internal folders hold shared code and are not exported, have no `index.ts`
 
 `src/components/HelpMenu/useHeaderPanel.ts` is internal too: the open state and focus handling of the two header actions, `HelpMenu` and `EnvironmentSwitcher`. Only its `HeaderPanelActionProps` type is exported, through the `HelpMenu` index. `EnvironmentSwitcher` imports its values from that file, the one shipped import of another family's file outside the chat element engines. `src/components/LogoutBanner/storyShells.tsx` holds the story scaffolds of the four header components (a Carbon `Header` and the Labs shell); it is stories-only, imports the `src/index.ts` barrel and ships nothing.
 
-The formatting docs page is `src/format/Formatting.mdx`.
+The Getting Started pages are `.storybook/Welcome.mdx`, `src/theme/Theming.mdx`, `src/format/Formatting.mdx` and `src/components/FeatureFlags/FeatureFlags.mdx`.
 
-Story titles of Afframe components: a family shares a group (`Components/Create and Edit/*`, `Components/Modals/*`, `Components/UI Shell/Afframe/*`, `Components/Chat Elements/*`), every other component sits flat under `Components/<Name>`, and the name is the component name in words (`Components/Data Grid`, `Components/Modals/API Key Modal`).
+Story titles, sections and sort order: ADR 0019.
 
 Every docs page is marked with where its component comes from: `carbon`, `ibm-products`, `labs`, `extras` or `afframe`. The stories file sets it as a Storybook tag (sidebar badge and tag filter), and the page shows it under the title with `<SourceLabel name="..." />` from `.storybook/`.
 

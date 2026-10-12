@@ -7,11 +7,11 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, table default summaries as strings, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, table default summaries as strings, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import { ContentSwitcher, IconSwitch, Switch } from '../../index.js';
 import type { ContentSwitcherProps } from '../../index.js';
 import { TableOfContents, ViewMode_2, Workspace } from '../../icons.js';
@@ -113,20 +113,20 @@ export const Default: StoryFn<StoryArgs> = (args) => {
 Default.args = { ...sharedArgs };
 Default.argTypes = { ...sharedArgTypes };
 
-export const _WithLayer: StoryFn<StoryArgs> = (args) => {
+export const WithLayer: StoryFn<StoryArgs> = (args) => {
   return (
-    <WithLayer>
+    <WithLayerTemplate>
       <ContentSwitcher {...args}>
         <Switch name="one" text="First section" disabled={args.disabled} />
         <Switch name="two" text="Second section" disabled={args.disabled} />
         <Switch name="three" text="Third section" disabled={args.disabled} />
       </ContentSwitcher>
-    </WithLayer>
+    </WithLayerTemplate>
   );
 };
 
-_WithLayer.args = { ...sharedArgs };
-_WithLayer.argTypes = { ...sharedArgTypes };
+WithLayer.args = { ...sharedArgs };
+WithLayer.argTypes = { ...sharedArgTypes };
 
 export const IconOnly: StoryFn<StoryArgs> = (args) => {
   return (
@@ -149,7 +149,7 @@ IconOnly.argTypes = { ...sharedArgTypes };
 
 export const IconOnlyWithLayer: StoryFn<StoryArgs> = (args) => {
   return (
-    <WithLayer>
+    <WithLayerTemplate>
       <ContentSwitcher {...args}>
         <IconSwitch
           name="one"
@@ -164,14 +164,14 @@ export const IconOnlyWithLayer: StoryFn<StoryArgs> = (args) => {
           <ViewMode_2 />
         </IconSwitch>
       </ContentSwitcher>
-    </WithLayer>
+    </WithLayerTemplate>
   );
 };
 
 IconOnlyWithLayer.args = { ...sharedArgs };
 IconOnlyWithLayer.argTypes = { ...sharedArgTypes };
 
-export const lowContrast: StoryFn<StoryArgs> = (args) => {
+export const LowContrast: StoryFn<StoryArgs> = (args) => {
   return (
     <ContentSwitcher {...args}>
       <Switch name="one" text="First section" disabled={args.disabled} />
@@ -181,11 +181,11 @@ export const lowContrast: StoryFn<StoryArgs> = (args) => {
   );
 };
 
-lowContrast.args = {
+LowContrast.args = {
   ...sharedArgs,
   lowContrast: true,
 };
-lowContrast.argTypes = {
+LowContrast.argTypes = {
   ...sharedArgTypes,
   lowContrast: {
     ...sharedArgTypes.lowContrast,
@@ -196,7 +196,7 @@ lowContrast.argTypes = {
   },
 };
 
-export const lowContrastIconOnly: StoryFn<StoryArgs> = ({
+export const LowContrastIconOnly: StoryFn<StoryArgs> = ({
   disabled,
   ...args
 }) => (
@@ -213,11 +213,11 @@ export const lowContrastIconOnly: StoryFn<StoryArgs> = ({
   </ContentSwitcher>
 );
 
-lowContrastIconOnly.args = {
+LowContrastIconOnly.args = {
   ...sharedArgs,
   lowContrast: true,
 };
-lowContrastIconOnly.argTypes = {
+LowContrastIconOnly.argTypes = {
   ...sharedArgTypes,
   lowContrast: {
     ...sharedArgTypes.lowContrast,

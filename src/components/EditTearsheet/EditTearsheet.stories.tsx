@@ -64,7 +64,7 @@ function Harness({
 }
 
 const meta = {
-  title: 'Components/Create and Edit/Edit Tearsheet',
+  title: 'Components/Create and Edit/EditTearsheet',
   component: EditTearsheet,
   subcomponents: { EditTearsheetForm },
   tags: ['afframe'],
@@ -115,5 +115,6 @@ export const LongForm: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

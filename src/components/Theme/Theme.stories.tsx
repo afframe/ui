@@ -7,14 +7,14 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as plain CSS. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as plain CSS, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './Theme-story.css';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import type { ComponentProps, ReactNode } from 'react';
 
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import {
   GlobalTheme,
   Theme,
@@ -103,8 +103,6 @@ export const UseTheme: StoryFn<typeof Theme> = () => {
   );
 };
 
-UseTheme.storyName = 'useTheme';
-
 export const UsePrefersDarkScheme: StoryFn<typeof Theme> = () => {
   const prefersDark = usePrefersDarkScheme();
 
@@ -148,9 +146,8 @@ export const UsePrefersDarkScheme: StoryFn<typeof Theme> = () => {
     </Theme>
   );
 };
-UsePrefersDarkScheme.storyName = 'usePrefersDarkScheme';
 
-export const _WithLayer: StoryFn<typeof Theme> = () => {
+export const WithLayer: StoryFn<typeof Theme> = () => {
   const themes: ThemeName[] = ['white', 'g10', 'g90', 'g100'];
 
   return (
@@ -159,9 +156,9 @@ export const _WithLayer: StoryFn<typeof Theme> = () => {
         <Theme key={theme} theme={theme}>
           <article className="theme-layer-example">
             <header className="theme-layer-header">{theme} theme</header>
-            <WithLayer>
+            <WithLayerTemplate>
               <div className="theme-with-layer">Content</div>
-            </WithLayer>
+            </WithLayerTemplate>
           </article>
         </Theme>
       ))}

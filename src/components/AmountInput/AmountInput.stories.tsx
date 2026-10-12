@@ -11,7 +11,7 @@ function Controlled(props: AmountInputProps) {
 }
 
 const meta = {
-  title: 'Components/Amount Input',
+  title: 'Components/AmountInput',
   component: AmountInput,
   tags: ['afframe'],
   args: {
@@ -48,10 +48,13 @@ export const OtherCurrency: Story = {
 };
 
 export const Dark: Story = {
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };
 
+// Focus-ring fixture for the visual test.
 export const Focus: Story = {
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvasElement }) => {
     await userEvent.tab();
     await expect(within(canvasElement).getByLabelText('Amount')).toHaveFocus();

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, previewCandidate__Decorator from @afframe/ui cast to a props type (IBM types it ref-only), source tag, scss styles dropped, the empty controls on className and setLabelTitle replaced by disabled controls. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, previewCandidate__Decorator from @afframe/ui cast to a props type (IBM types it ref-only), source tag, scss styles dropped, the empty controls on className and setLabelTitle replaced by disabled controls, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentType } from 'react';
@@ -53,7 +53,7 @@ const scoreOptions = {
 };
 
 export default {
-  title: 'Preview Candidate/Decorator',
+  title: 'Preview/previewCandidate__Decorator',
   component: Decorator,
   tags: ['ibm-products'],
   parameters: {
@@ -132,7 +132,6 @@ const Template: StoryFn<DecoratorProps> = (args) => {
 };
 
 export const Default = Template.bind({});
-Default.storyName = 'Decorator';
 Default.args = {
   hideIcon: false,
   label: 'IP',

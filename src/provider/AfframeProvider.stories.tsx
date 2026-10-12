@@ -5,7 +5,7 @@ import { AfframeProvider } from './AfframeProvider.js';
 import mdx from './AfframeProvider.mdx';
 
 const meta = {
-  title: 'Afframe/AfframeProvider',
+  title: 'Getting Started/AfframeProvider',
   component: AfframeProvider,
   tags: ['afframe'],
   parameters: {
@@ -32,5 +32,6 @@ export const Default: StoryObj<typeof meta> = {
 
 export const Dark: StoryObj<typeof meta> = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

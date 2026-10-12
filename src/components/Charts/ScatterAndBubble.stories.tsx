@@ -6,7 +6,7 @@ import mdx from './Charts.mdx';
 import { upstreamA11y } from './upstreamA11y.js';
 
 const meta = {
-  title: 'Components/Charts/Scatter and bubble',
+  title: 'Components/Charts/Scatter and Bubble',
   tags: ['extras'],
   parameters: { docs: { page: mdx } },
 } satisfies Meta;

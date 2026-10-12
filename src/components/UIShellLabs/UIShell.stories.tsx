@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Labs UI shell and theme settings components from @afframe/ui (the clashing Labs ones under their Labs names: SideNavLabs, HeaderContainerLabs and the rest of the Labs side nav set), Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), story styles converted from SCSS to plain CSS, the header ref that was never attached dropped with the menuTarget it fed (MenuButton falls back to its default target), the internal useMatchMedia hook as a local copy, the @carbon/layout md breakpoint as its 42rem value, isFixedNav dropped from Carbon's HeaderMenuButton (not a prop there; it reached the button element), sample user name, email and instance name replaced with neutral placeholders, title Components/UI Shell/Labs/Overview, the story-wide a11y and accessibilityChecker opt-outs replaced by rule exceptions for the upstream side nav markup, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Labs UI shell and theme settings components from @afframe/ui (the clashing Labs ones under their Labs names: SideNavLabs, HeaderContainerLabs and the rest of the Labs side nav set), Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), story styles converted from SCSS to plain CSS, the header ref that was never attached dropped with the menuTarget it fed (MenuButton falls back to its default target), the internal useMatchMedia hook as a local copy, the @carbon/layout md breakpoint as its 42rem value, isFixedNav dropped from Carbon's HeaderMenuButton (not a prop there; it reached the button element), sample user name, email and instance name replaced with neutral placeholders, title Components/UI Shell/Examples, the story-wide a11y and accessibilityChecker opt-outs replaced by rule exceptions for the upstream side nav markup, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import {
@@ -129,7 +129,7 @@ interface DropdownItem {
 }
 
 export default {
-  title: 'Components/UI Shell/Labs/Overview',
+  title: 'Components/UI Shell/Examples',
   component: HeaderDivider,
   subcomponents: {
     HeaderDivider,

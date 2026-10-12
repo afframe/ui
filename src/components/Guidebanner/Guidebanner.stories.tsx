@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Guidebanner components from @afframe/ui, plain CSS file, theme argType dropped, typed casts for the element button and link, title Components/Guidebanner. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Guidebanner components from @afframe/ui, plain CSS file, theme argType dropped, typed casts for the element button and link, title Components/Onboarding/Guidebanner, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import {
@@ -43,7 +43,7 @@ const ElementLink = GuidebannerElementLink as ComponentType<
 const storyClass = 'guidebanner-stories';
 
 export default {
-  title: 'Components/Guidebanner',
+  title: 'Components/Onboarding/Guidebanner',
   component: Guidebanner,
   tags: ['autodocs', 'Onboarding', 'ibm-products'],
   parameters: {
@@ -113,9 +113,9 @@ const Template: StoryFn<ComponentProps<typeof Guidebanner>> = ({
   );
 };
 
-export const collapsible: StoryFn<ComponentProps<typeof Guidebanner>> =
+export const Default: StoryFn<ComponentProps<typeof Guidebanner>> =
   Template.bind({});
-collapsible.args = {
+Default.args = {
   ...defaultProps,
   collapsible: true,
   open: true,
@@ -150,9 +150,9 @@ collapsible.args = {
   ),
 };
 
-export const manyInsights: StoryFn<ComponentProps<typeof Guidebanner>> =
+export const ManyInsights: StoryFn<ComponentProps<typeof Guidebanner>> =
   Template.bind({});
-manyInsights.args = {
+ManyInsights.args = {
   ...defaultProps,
   collapsible: true,
   open: false,
@@ -187,9 +187,9 @@ manyInsights.args = {
   ),
 };
 
-export const fewInsights: StoryFn<ComponentProps<typeof Guidebanner>> =
+export const FewInsights: StoryFn<ComponentProps<typeof Guidebanner>> =
   Template.bind({});
-fewInsights.args = {
+FewInsights.args = {
   ...defaultProps,
   collapsible: true,
   open: false,

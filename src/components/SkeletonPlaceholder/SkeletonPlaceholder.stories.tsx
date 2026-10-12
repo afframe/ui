@@ -21,7 +21,7 @@ type SkeletonPlaceholderStoryArgs = {
 };
 
 export default {
-  title: 'Components/Skeleton/SkeletonPlaceholder',
+  title: 'Components/Skeletons/SkeletonPlaceholder',
   component: SkeletonPlaceholder,
   tags: ['carbon'],
   argTypes: {

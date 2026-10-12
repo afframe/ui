@@ -64,6 +64,7 @@ export const Simple: Story = {
 };
 
 export const SimpleDark: Story = {
+  tags: ['!dev', '!autodocs'],
   parameters: upstreamA11y(),
   globals: { theme: 'dark' },
   render: () => <SimpleBarChart data={quarters} options={simpleOptions} />,

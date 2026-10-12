@@ -19,7 +19,7 @@ import './test.css';
 import mdx from './FluidPasswordInput.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidPasswordInput',
+  title: 'Components/Fluid Inputs/FluidPasswordInput',
   tags: ['carbon'],
   component: FluidPasswordInput,
   parameters: {

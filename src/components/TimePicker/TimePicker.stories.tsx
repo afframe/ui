@@ -7,12 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import { SelectItem, TimePicker, TimePickerSelect } from '../../index.js';
 import mdx from './TimePicker.mdx';
 
@@ -100,8 +100,8 @@ Default.argTypes = {
   },
 };
 
-export const _WithLayer: StoryFn = () => (
-  <WithLayer>
+export const WithLayer: StoryFn = () => (
+  <WithLayerTemplate>
     {(layer) => (
       <TimePicker id={`time-picker-${layer}`} labelText="Select a time">
         <TimePickerSelect id={`time-picker-select-${layer}-1`}>
@@ -114,5 +114,5 @@ export const _WithLayer: StoryFn = () => (
         </TimePickerSelect>
       </TimePicker>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );

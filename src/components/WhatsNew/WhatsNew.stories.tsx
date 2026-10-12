@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, icons from @afframe/ui icons, IBM's stable Tearsheet rewritten onto the Tearsheet from @afframe/ui (IBM's preview__Tearsheet: title in Tearsheet.HeaderContent, navigation in Tearsheet.NavigationBar, influencer in Tearsheet.Influencer, content in Tearsheet.MainContent, closeIconDescription on Tearsheet.Header), the pkg flag and the commented IBM CSS import dropped, the Labs prefix as the 'clabs' literal, typed refs for the Toc and ViewStack handles and typed ViewStack callbacks, ScrollGradient cast to a props type (IBM types it ref-only), story styles converted from SCSS to plain CSS, source tag, the Latest highlights sections at level 3 under the Tearsheet h2 title (heading-order), the listitem a11y rule disabled (Labs TocList), a play function that opens the Tearsheet, the example images replaced by a local Afframe illustration. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, icons from @afframe/ui icons, IBM's stable Tearsheet rewritten onto the Tearsheet from @afframe/ui (IBM's preview__Tearsheet: title in Tearsheet.HeaderContent, navigation in Tearsheet.NavigationBar, influencer in Tearsheet.Influencer, content in Tearsheet.MainContent, closeIconDescription on Tearsheet.Header), the pkg flag and the commented IBM CSS import dropped, the Labs prefix as the 'clabs' literal, typed refs for the Toc and ViewStack handles and typed ViewStack callbacks, ScrollGradient cast to a props type (IBM types it ref-only), story styles converted from SCSS to plain CSS, source tag, the Latest highlights sections at level 3 under the Tearsheet h2 title (heading-order), the listitem a11y rule disabled (Labs TocList), a play function that opens the Tearsheet, the example images replaced by a local Afframe illustration, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import {
@@ -53,7 +53,7 @@ const ScrollGradient = IbmScrollGradient as ComponentType<{
 }>;
 
 export default {
-  title: 'Patterns/WhatsNew',
+  title: 'Components/Onboarding/WhatsNew',
   tags: ['labs'],
   subcomponents: {
     TocList,
@@ -76,7 +76,7 @@ export default {
 /**
  * Default story for WhatsNew
  */
-export const WhatsNewPattern: StoryFn = () => {
+export const Pattern: StoryFn = () => {
   /* ************************************* */
   // INTERNAL STATE
   const [contentIndex, setContentIndex] = useState(0);
@@ -587,15 +587,14 @@ export const WhatsNewPattern: StoryFn = () => {
     </div>
   );
 };
-WhatsNewPattern.storyName = "What's new pattern";
 // The Labs TocList renders its TocItem li elements inside a nav, not a list.
-WhatsNewPattern.parameters = {
+Pattern.parameters = {
   a11y: { config: { rules: [{ id: 'listitem', enabled: false }] } },
 };
 
 // Opens the What's New center, so the a11y check (on document.body) also
 // covers the Tearsheet, which renders in a portal.
-WhatsNewPattern.play = async ({ canvas, userEvent }) => {
+Pattern.play = async ({ canvas, userEvent }) => {
   await userEvent.click(
     canvas.getByRole('button', { name: "Open What's New center" })
   );

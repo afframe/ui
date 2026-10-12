@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, empty-heading a11y rule disabled per story (upstream defect), commented-out styles import dropped, console.log fallback kept, the action boolean control split from the component props. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, empty-heading a11y rule disabled per story (upstream defect), commented-out styles import dropped, console.log fallback kept, the action boolean control split from the component props, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -18,7 +18,7 @@ import type { NoTagsEmptyStateProps } from '../../index.js';
 import mdx from './NoTagsEmptyState.mdx';
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/NoTagsEmptyState',
+  title: 'Components/Empty States/NoTagsEmptyState',
   component: NoTagsEmptyState,
   tags: ['ibm-products'],
   parameters: {
@@ -90,23 +90,23 @@ WithDarkModeIllustration.args = {
   illustrationTheme: 'dark',
 };
 
-export const withAction = Template.bind({});
-withAction.parameters = emptyHeading;
-withAction.args = {
+export const WithAction = Template.bind({});
+WithAction.parameters = emptyHeading;
+WithAction.args = {
   ...defaultStoryProps,
   action: false,
 };
 
-export const withActionIconButton = Template.bind({});
-withActionIconButton.parameters = emptyHeading;
-withActionIconButton.args = {
+export const WithActionIconButton = Template.bind({});
+WithActionIconButton.parameters = emptyHeading;
+WithActionIconButton.args = {
   ...defaultStoryProps,
   action: true,
 };
 
-export const withLink = Template.bind({});
-withLink.parameters = emptyHeading;
-withLink.args = {
+export const WithLink = Template.bind({});
+WithLink.parameters = emptyHeading;
+WithLink.args = {
   ...defaultStoryProps,
   link: {
     text: 'View documentation',
@@ -114,9 +114,9 @@ withLink.args = {
   },
 };
 
-export const withActionAndLink = Template.bind({});
-withActionAndLink.parameters = emptyHeading;
-withActionAndLink.args = {
+export const WithActionAndLink = Template.bind({});
+WithActionAndLink.parameters = emptyHeading;
+WithActionAndLink.args = {
   ...defaultStoryProps,
   action: true,
   link: {

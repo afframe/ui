@@ -48,7 +48,7 @@ function Harness({ onSubmit, initialName, extraFields }: HarnessProps) {
 }
 
 const meta = {
-  title: 'Components/Create and Edit/Create Side Panel',
+  title: 'Components/Create and Edit/CreateSidePanel',
   component: CreateSidePanel,
   tags: ['afframe'],
   parameters: {
@@ -95,5 +95,6 @@ export const LongForm: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

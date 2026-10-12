@@ -6,7 +6,7 @@ import { StatusIndicator } from './StatusIndicator.js';
 import mdx from './StatusIndicator.mdx';
 
 const meta = {
-  title: 'Components/Status Indicator',
+  title: 'Components/StatusIndicator',
   component: StatusIndicator,
   tags: ['afframe'],
   args: { kind: 'succeeded' },
@@ -60,7 +60,7 @@ const TagRow = () => (
   </div>
 );
 
-export const Icon: Story = { render: IconGrid };
+export const Default: Story = { render: IconGrid };
 
 export const Shape: Story = { render: ShapeGrid };
 
@@ -88,6 +88,7 @@ export const Compact: Story = {
 export const AsTag: Story = { render: TagRow };
 
 export const Dark: Story = {
+  tags: ['!dev', '!autodocs'],
   render: () => (
     <div style={{ display: 'grid', gap: '2rem' }}>
       <IconGrid />

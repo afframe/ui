@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, useMatchMedia and the TearsheetWithSteps example copied into the story folder, md breakpoint as a literal, props that IBM's HeaderContent ignores (open, titleIcon, titleIconPosition) dropped, icon-only triggers labelled with iconDescription (label is not a Button prop) and align as tooltipPosition, expandAriaLabel dropped (not a TruncatedText prop), single header actions passed as an array (the prop type wants an array), influencer trigger refs cast to the prop type, the missing summary panel setter in WithTabs declared, StackingTearsheet as a plain function so other stories can render it. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, useMatchMedia and the TearsheetWithSteps example copied into the story folder, md breakpoint as a literal, props that IBM's HeaderContent ignores (open, titleIcon, titleIconPosition) dropped, icon-only triggers labelled with iconDescription (label is not a Button prop) and align as tooltipPosition, expandAriaLabel dropped (not a TruncatedText prop), single header actions passed as an array (the prop type wants an array), influencer trigger refs cast to the prop type, the missing summary panel setter in WithTabs declared, StackingTearsheet as a plain function so other stories can render it, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type {
@@ -821,7 +821,7 @@ export const WithTabs: StoryFn<StoryArgs> = (
     </>
   );
 };
-export const withSteps: StoryFn<StoryArgs> = (
+export const WithSteps: StoryFn<StoryArgs> = (
   {
     decorator,
     variant,
@@ -861,7 +861,7 @@ export const withSteps: StoryFn<StoryArgs> = (
     </StepProvider>
   );
 };
-export const withStepsAndHorizontalProgressIndicator: StoryFn<StoryArgs> = (
+export const WithStepsAndHorizontalProgressIndicator: StoryFn<StoryArgs> = (
   {
     decorator,
     variant,
@@ -902,7 +902,7 @@ export const withStepsAndHorizontalProgressIndicator: StoryFn<StoryArgs> = (
     </StepProvider>
   );
 };
-export const narrowTearsheet: StoryFn<StoryArgs> = (
+export const Narrow: StoryFn<StoryArgs> = (
   {
     decorator,
     isFlush,
@@ -1179,7 +1179,7 @@ export const narrowTearsheet: StoryFn<StoryArgs> = (
     </>
   );
 };
-export const StackingTearsheet = (
+export const Stacking = (
   args: Partial<StackingArgs>,
   context?: StoryContext
 ) => {
@@ -1571,11 +1571,11 @@ export const StackingTearsheet = (
     </>
   );
 };
-export const stackingWithDifferentSizes = () => (
-  <StackingTearsheet variant={['wide', 'narrow', 'wide']} />
+export const StackingWithDifferentSizes = () => (
+  <Stacking variant={['wide', 'narrow', 'wide']} />
 );
-export const stackingNarrowTearsheets = () => (
-  <StackingTearsheet variant={['narrow', 'narrow', 'narrow']} />
+export const StackingNarrow = () => (
+  <Stacking variant={['narrow', 'narrow', 'narrow']} />
 );
 
 export const WithCustomFooterActions: StoryFn<StoryArgs> = (

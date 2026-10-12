@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Processing from @afframe/ui (styles ship in the package CSS, so the processing.scss import is dropped), unused useArgs calls removed, props typed locally, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Processing from @afframe/ui (styles ship in the package CSS, so the processing.scss import is dropped), unused useArgs calls removed, props typed locally, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -44,15 +44,15 @@ const linearNoLoopArgs = {
   loop: false,
 };
 
-export const LinearLoop: StoryFn<ProcessingProps> = (args) => {
+export const Default: StoryFn<ProcessingProps> = (args) => {
   return <Processing {...args}></Processing>;
 };
 
-LinearLoop.argTypes = {
+Default.argTypes = {
   ...sharedArgTypes,
 };
 
-LinearLoop.args = {
+Default.args = {
   ...linearArgs,
 };
 

@@ -19,7 +19,7 @@ const accents: AccentTagColor[] = [
 ];
 
 const meta = {
-  title: 'Components/Accent Tag',
+  title: 'Components/AccentTag',
   component: AccentTag,
   tags: ['afframe'],
   args: {
@@ -89,5 +89,6 @@ export const Disabled: Story = {
 
 export const Dark: Story = {
   ...Accents,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

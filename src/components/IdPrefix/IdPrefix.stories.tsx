@@ -15,7 +15,7 @@ import { IdPrefix, useIdPrefix } from '../../index.js';
 import mdx from './IdPrefix.mdx';
 
 export default {
-  title: 'Components/IdPrefix',
+  title: 'Utilities/IdPrefix',
   component: IdPrefix,
   tags: ['carbon'],
   args: {

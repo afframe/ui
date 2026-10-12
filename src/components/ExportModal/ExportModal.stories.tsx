@@ -27,7 +27,7 @@ function Harness(props: ExportModalProps) {
 }
 
 const meta = {
-  title: 'Components/Modals/Export Modal',
+  title: 'Components/ExportModal',
   component: ExportModal,
   tags: ['afframe'],
   args: {
@@ -96,5 +96,6 @@ export const Pending: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

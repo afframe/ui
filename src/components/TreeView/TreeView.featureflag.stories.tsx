@@ -200,7 +200,7 @@ function renderTree(nodes: Node[] | undefined): ReactNode {
 }
 
 export default {
-  title: 'Components/TreeView/Feature Flag',
+  title: 'Components/TreeView/Feature Flags',
   component: TreeView,
   subcomponents: {
     TreeNode,

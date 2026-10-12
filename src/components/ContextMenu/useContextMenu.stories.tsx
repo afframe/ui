@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Menu parts, CodeSnippet, lists and hooks from @afframe/ui (usePrefix is useCarbonPrefix), source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Menu parts, CodeSnippet, lists and hooks from @afframe/ui (usePrefix is useCarbonPrefix), source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef } from 'react';
@@ -76,7 +76,7 @@ const Text = () => (
   </div>
 );
 
-export const _useContextMenu: StoryFn = () => {
+export const UseContextMenu: StoryFn = () => {
   const onClick = action('onClick (MenuItem)');
   const onChange = action('onClick (MenuItemRadioGroup)');
 

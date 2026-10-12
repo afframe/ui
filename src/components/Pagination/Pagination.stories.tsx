@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, userEvent from storybook/test, totalItems omitted instead of set to undefined, NumberInput gets no size for xs (it has no xs size), em-dash in a comment replaced, reasons on the unused-vars eslint-disable lines, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, userEvent from storybook/test, totalItems omitted instead of set to undefined, NumberInput gets no size for xs (it has no xs size), em-dash in a comment replaced, reasons on the unused-vars eslint-disable lines, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -141,9 +141,7 @@ export const TooltipHover: StoryObj<typeof Pagination> = {
   },
 };
 
-export const MultiplePaginationComponents: StoryFn<typeof Pagination> = (
-  args
-) => {
+export const Multiple: StoryFn<typeof Pagination> = (args) => {
   return (
     <div>
       <Pagination {...args} />
@@ -152,11 +150,7 @@ export const MultiplePaginationComponents: StoryFn<typeof Pagination> = (
   );
 };
 
-MultiplePaginationComponents.storyName = 'Multiple Pagination components';
-
-export const PaginationWithCustomPageSizesLabel: StoryFn<typeof Pagination> = (
-  args
-) => {
+export const WithCustomPageSizesLabel: StoryFn<typeof Pagination> = (args) => {
   return (
     <div>
       <Pagination
@@ -173,15 +167,13 @@ export const PaginationWithCustomPageSizesLabel: StoryFn<typeof Pagination> = (
   );
 };
 
-PaginationWithCustomPageSizesLabel.storyName =
-  'Pagination with custom page sizes label';
-PaginationWithCustomPageSizesLabel.parameters = {
+WithCustomPageSizesLabel.parameters = {
   controls: {
     exclude: ['pageSizes'],
   },
 };
 
-export const PaginationUnknownPages: StoryFn<typeof Pagination> = (args) => {
+export const UnknownPages: StoryFn<typeof Pagination> = (args) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- props left out of the spread
   const { pageInputDisabled, pagesUnknown, totalItems, ...rest } = args;
 
@@ -192,8 +184,7 @@ export const PaginationUnknownPages: StoryFn<typeof Pagination> = (args) => {
   );
 };
 
-PaginationUnknownPages.storyName = 'Unknown pages and items';
-PaginationUnknownPages.parameters = {
+UnknownPages.parameters = {
   controls: {
     exclude: ['pageInputDisabled', 'pagesUnknown', 'totalItems'],
   },
@@ -217,7 +208,6 @@ export const WithoutPageSizes: StoryFn<typeof Pagination> = (args) => {
   );
 };
 
-WithoutPageSizes.storyName = 'Without page sizes and render page select';
 WithoutPageSizes.parameters = {
   controls: {
     exclude: ['pageSizes', 'itemsPerPageText', 'pageSizeInputDisabled'],
@@ -268,7 +258,6 @@ export const WithRenderPageSelect: StoryFn<typeof Pagination> = (args) => (
   />
 );
 
-WithRenderPageSelect.storyName = 'With custom page select (renderPageSelect)';
 WithRenderPageSelect.tags = ['!dev', '!autodocs']; // remove this to enable story
 WithRenderPageSelect.parameters = {
   chromatic: { disableSnapshot: true }, // remove this to enable snapshots

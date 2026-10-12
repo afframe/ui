@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -136,8 +136,6 @@ export const OverlayLoadingBehindModal: StoryFn<typeof Loading> = (args) => {
     </main>
   );
 };
-
-OverlayLoadingBehindModal.storyName = 'Overlay Loading Behind Modal';
 
 OverlayLoadingBehindModal.argTypes = {
   small: sharedArgTypes.small,

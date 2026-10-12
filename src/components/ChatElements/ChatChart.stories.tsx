@@ -22,7 +22,7 @@ const shares = [
 ];
 
 const meta: Meta<typeof ChatChart> = {
-  title: 'Components/Chat Elements/Chat Chart',
+  title: 'Components/AI/Chat Elements/ChatChart',
   component: ChatChart,
   tags: ['afframe'],
   parameters: {
@@ -57,7 +57,7 @@ const pie: ChatChartProps = {
   animations: false,
 };
 
-export const Bar: Story = {
+export const Default: Story = {
   args: {
     chart_type: 'bar',
     title: 'Revenue by region',
@@ -103,5 +103,6 @@ export const Echarts: Story = {
 
 export const Dark: Story = {
   ...Line,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

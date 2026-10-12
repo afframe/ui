@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { action } from 'storybook/actions';
@@ -600,7 +600,7 @@ const aiLabel = (
   </AILabel>
 );
 
-export const withAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
+export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
   args: {
     hasRoundedCorners: false,
   },

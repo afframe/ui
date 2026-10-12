@@ -30,7 +30,7 @@ type IconProps = ComponentProps<typeof Document>;
 type StoryArgs = Record<string, unknown>;
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Add and select/MultiAddSelect',
+  title: 'Components/MultiAddSelect',
   component: MultiAddSelect,
   tags: ['ibm-products'],
   parameters: {

@@ -25,7 +25,7 @@ import mdx from './AILabel.mdx';
 import './ailabel-story.css';
 
 export default {
-  title: 'Components/AILabel',
+  title: 'Components/AI/AILabel',
   component: AILabel,
   parameters: {
     docs: {

@@ -3,7 +3,7 @@ import * as stories from './Tearsheet.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, migration comparison with IBM's legacy Tearsheet removed (not part of @afframe/ui), internal usage guidelines link replaced by the source link, Controls replaced by ArgTypes, em-dashes replaced, source label added.
+// Modified by Afframe in 2026: Stackblitz actions removed, migration comparison with IBM's legacy Tearsheet removed (not part of @afframe/ui), internal usage guidelines link replaced by the source link, Controls replaced by ArgTypes, em-dashes replaced, source label added, the step flows link points to IBM's current page, story names unified.
 
 <Meta isTemplate />
 
@@ -320,10 +320,10 @@ To render tabs, wrap the entire Tearsheet in `<Tabs></Tabs>`. You can render
 
 By default Tearsheet doesn't provide stepping, but you easily realize it using
 the `<StepProvider>`
-[utility](https://ibm-products.carbondesignsystem.com/?path=/docs/patterns-step-flows--overview)
+[utility](https://ibm-products.carbondesignsystem.com/?path=/docs/utilities-step-flows--overview)
 as demonstrated below.
 
-<Canvas of={stories.withSteps} />
+<Canvas of={stories.WithSteps} />
 
 ## Narrow
 
@@ -334,7 +334,7 @@ center while revealing more of the UI behind it.
 A narrow tearsheet comprises 3 zones: Header, MainContent and Footer. You can
 optionally choose to open influencer and SummaryContent in side panels
 
-<Canvas of={stories.narrowTearsheet} />
+<Canvas of={stories.Narrow} />
 
 ## Stacking
 
@@ -350,7 +350,7 @@ Tearsheets. You can optionally specify a stackStepSize: sm (0.5rem), md
  <StackProvider>
 ```
 
-<Canvas of={stories.StackingTearsheet} />
+<Canvas of={stories.Stacking} />
 
 ## Component API
 

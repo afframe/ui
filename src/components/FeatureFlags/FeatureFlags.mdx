@@ -3,7 +3,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
-<Meta title="Components/FeatureFlags" />
+<Meta title="Getting Started/Feature Flags" />
 
 # Feature flags
 
@@ -35,6 +35,33 @@ only (`docs/feature-flags.md`).
 - `enable-enhanced-file-uploader`
 - `enable-treeview-controllable`
 - `enable-tile-contrast` (Sass only: Carbon React never reads it)
+
+## IBM Products flags
+
+IBM Products has its own flag API, separate from Carbon's, exported as
+`preview__FeatureFlags` with the hooks `preview__useFeatureFlag(name)` (one
+flag, a boolean) and `preview__useFeatureFlags()` (the flag scope, read with
+`.enabled(name)`). Afframe sets none of them. Two matter for the exported
+components:
+
+- `defaultPortalTargetBody`, on by IBM's default: `AboutModal` and the
+  overflow modal of `TagSet` render into `document.body`.
+- `enableSidepanelResizer`, off: turn it on to let the user resize a
+  `SidePanel`.
+
+```tsx
+import {
+  preview__FeatureFlags as IbmFeatureFlags,
+  SidePanel,
+} from '@afframe/ui';
+
+<IbmFeatureFlags enableSidepanelResizer>
+  <SidePanel>…</SidePanel>
+</IbmFeatureFlags>;
+```
+
+IBM's other flags (`enableDatagridUse*`) belong to IBM's Datagrid, which Afframe
+UI does not export; use `DataGrid` instead.
 
 ## More
 

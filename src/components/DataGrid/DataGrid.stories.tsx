@@ -28,7 +28,7 @@ import {
 } from './fixtures.js';
 
 const meta = {
-  title: 'Components/Data Grid',
+  title: 'Components/DataGrid',
   tags: ['afframe'],
   parameters: {
     ...afframeA11y,
@@ -51,7 +51,7 @@ const sortingColumns = sortingHelper.columns([
   sortingHelper.accessor('issued', { header: 'Issued' }),
 ]);
 
-export const Sorting: Story = {
+export const Default: Story = {
   render: () => (
     <DataGrid
       title="Invoices"
@@ -688,6 +688,7 @@ export const WithFilterPanel: Story = {
 };
 
 export const Dark: Story = {
-  ...Sorting,
+  ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

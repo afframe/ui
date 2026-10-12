@@ -87,7 +87,7 @@ const argTypes = {
 } satisfies ArgTypes<FileUploaderArgs>;
 
 export default {
-  title: 'Components/FileUploader/Feature Flag',
+  title: 'Components/FileUploader/Feature Flags',
   component: FileUploader,
   tags: ['carbon', '!autodocs'],
 } satisfies Meta<typeof FileUploader>;

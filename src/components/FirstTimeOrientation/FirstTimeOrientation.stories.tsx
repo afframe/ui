@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, ContentWrapper copied into the story folder (the package publishes no JavaScript for it), the removed interstitialAriaLabel prop renamed to IBM's ariaLabel, the pkg flag dropped (InterstitialScreen is released in IBM Products), the component Sass import dropped (the styles ship in the package CSS), story styles converted from SCSS to plain CSS, the heading-order a11y rule disabled (fixed h3 in the Labs WelcomeInterstitial), source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, ContentWrapper copied into the story folder (the package publishes no JavaScript for it), the removed interstitialAriaLabel prop renamed to IBM's ariaLabel, the pkg flag dropped (InterstitialScreen is released in IBM Products), the component Sass import dropped (the styles ship in the package CSS), story styles converted from SCSS to plain CSS, the heading-order a11y rule disabled (fixed h3 in the Labs WelcomeInterstitial), source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -23,7 +23,7 @@ import mdx from './FirstTimeOrientation.mdx';
 import './first-time-orientation-story.css';
 
 export default {
-  title: 'Patterns/FirstTimeOrientation',
+  title: 'Components/Onboarding/FirstTimeOrientation',
   tags: ['labs'],
   parameters: {
     docs: {
@@ -32,7 +32,7 @@ export default {
   },
 } satisfies Meta;
 
-export const FirstTimeOrientationStory: StoryFn = () => {
+export const Default: StoryFn = () => {
   const [showInterstitialModal, setShowInterstitialModal] = useState(true);
 
   const defaultProps = {
@@ -76,9 +76,8 @@ export const FirstTimeOrientationStory: StoryFn = () => {
     </div>
   );
 };
-FirstTimeOrientationStory.storyName = 'First-time orientation';
 // The Labs WelcomeInterstitial renders a fixed h3 below the InterstitialScreen
 // header, so a heading level is skipped.
-FirstTimeOrientationStory.parameters = {
+Default.parameters = {
   a11y: { config: { rules: [{ id: 'heading-order', enabled: false }] } },
 };

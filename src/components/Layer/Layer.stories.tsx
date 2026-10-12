@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as plain CSS, storyName instead of story.name, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as plain CSS, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './Layer-story.css';
@@ -21,7 +21,7 @@ interface LayerStoryArgs {
 }
 
 export default {
-  title: 'Components/Layer',
+  title: 'Layout/Layer',
   component: Layer,
   tags: ['carbon'],
   parameters: {
@@ -70,7 +70,7 @@ Default.args = {
 Default.argTypes = contentArgTypes;
 Default.parameters = contentParameters;
 
-export const withBackground: StoryFn<LayerStoryArgs> = ({ label }) => {
+export const WithBackground: StoryFn<LayerStoryArgs> = ({ label }) => {
   function TestComponent() {
     return (
       <div className="example-layer-test-component-no-background">{label}</div>
@@ -90,11 +90,11 @@ export const withBackground: StoryFn<LayerStoryArgs> = ({ label }) => {
   );
 };
 
-withBackground.args = {
+WithBackground.args = {
   label: 'Workspace settings',
 };
-withBackground.argTypes = contentArgTypes;
-withBackground.parameters = contentParameters;
+WithBackground.argTypes = contentArgTypes;
+WithBackground.parameters = contentParameters;
 
 export const CustomLevel: StoryFn<LayerStoryArgs> = ({ label, level }) => {
   function TestComponent() {
@@ -154,5 +154,3 @@ UseLayer.args = {
 };
 UseLayer.argTypes = contentArgTypes;
 UseLayer.parameters = contentParameters;
-
-UseLayer.storyName = 'useLayer';

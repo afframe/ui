@@ -91,7 +91,7 @@ function FlyoutHarness() {
 }
 
 const meta = {
-  title: 'Components/Filter Panel',
+  title: 'Components/FilterPanel',
   component: FilterPanel,
   tags: ['afframe'],
   parameters: {
@@ -124,10 +124,12 @@ export const FlyoutOpen: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };
 
 export const FlyoutOpenDark: Story = {
   ...FlyoutOpen,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

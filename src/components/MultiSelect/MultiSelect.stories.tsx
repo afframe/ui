@@ -7,13 +7,13 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript (ignored label prop dropped from FilterableWithAILabel), components and icons from @afframe/ui, AI label story styles as plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript (ignored label prop dropped from FilterableWithAILabel), components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useRef, useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { action } from 'storybook/actions';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import '../AILabel/ailabel-story.css';
 import {
   AILabel,
@@ -487,8 +487,8 @@ FilterableWithCustomSearch.parameters = {
   },
 };
 
-export const WithLayerMultiSelect: StoryFn<StoryArgs> = (args) => (
-  <WithLayer>
+export const WithLayer: StoryFn<StoryArgs> = (args) => (
+  <WithLayerTemplate>
     {(layer) => (
       <div style={{ width: 300 }}>
         <MultiSelect
@@ -503,11 +503,11 @@ export const WithLayerMultiSelect: StoryFn<StoryArgs> = (args) => (
         />
       </div>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
-WithLayerMultiSelect.args = { ...sharedArgs };
-export const _FilterableWithLayer: StoryFn<FilterableArgs> = (args) => (
-  <WithLayer>
+WithLayer.args = { ...sharedArgs };
+export const FilterableWithLayer: StoryFn<FilterableArgs> = (args) => (
+  <WithLayerTemplate>
     {(layer) => (
       <div style={{ width: 300 }}>
         <FilterableMultiSelect
@@ -521,20 +521,20 @@ export const _FilterableWithLayer: StoryFn<FilterableArgs> = (args) => (
         />
       </div>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
 
-_FilterableWithLayer.args = { ...sharedArgs };
+FilterableWithLayer.args = { ...sharedArgs };
 
-_FilterableWithLayer.argTypes = {
+FilterableWithLayer.argTypes = {
   ...filterableArgTypes,
 };
-_FilterableWithLayer.parameters = {
+FilterableWithLayer.parameters = {
   controls: {
     exclude: ['label'],
   },
 };
-export const _Controlled: StoryFn<StoryArgs> = (args) => {
+export const Controlled: StoryFn<StoryArgs> = (args) => {
   const [selectedItems, setSelectedItems] = useState(
     items.filter((item) => item.id === 'downshift-1-item-0')
   );
@@ -579,7 +579,7 @@ export const _Controlled: StoryFn<StoryArgs> = (args) => {
   );
 };
 
-_Controlled.args = { ...sharedArgs };
+Controlled.args = { ...sharedArgs };
 const itemsWithSelectAll: Item[] = [
   {
     id: 'downshift-1-item-0',
@@ -668,7 +668,7 @@ const aiLabel = (
   </AILabel>
 );
 
-export const withAILabel: StoryFn<StoryArgs> = (args) => (
+export const WithAILabel: StoryFn<StoryArgs> = (args) => (
   <div style={{ width: 400 }}>
     <MultiSelect
       label="Multiselect Label"
@@ -684,7 +684,7 @@ export const withAILabel: StoryFn<StoryArgs> = (args) => (
   </div>
 );
 
-withAILabel.args = { ...sharedArgs };
+WithAILabel.args = { ...sharedArgs };
 export const FilterableWithAILabel: StoryFn<FilterableArgs> = (args) => (
   <div style={{ width: 400 }}>
     <FilterableMultiSelect

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, icons from @afframe/ui icons, commented-out imports dropped, the examples typed as a non-empty list and the current example read once (the index type allows undefined), story styles converted from SCSS to plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, icons from @afframe/ui icons, commented-out imports dropped, the examples typed as a non-empty list and the current example read once (the index type allows undefined), story styles converted from SCSS to plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState, type ComponentProps } from 'react';
@@ -18,7 +18,7 @@ import mdx from './WhatsNew.mdx';
 import './whats-new-story.css';
 
 export default {
-  title: 'Patterns/WhatsNew',
+  title: 'Components/Onboarding/WhatsNew',
   component: Bubble,
   tags: ['labs'],
   subcomponents: {
@@ -34,7 +34,7 @@ export default {
 /**
  * Bubble component story for WhatsNew
  */
-export const BubbleStory: StoryFn<typeof Bubble> = () => {
+export const Default: StoryFn<typeof Bubble> = () => {
   /* ************************************* */
   // INTERNAL STATE
   const [shouldShowBubble, setShouldShowBubble] = useState(false);
@@ -153,4 +153,3 @@ export const BubbleStory: StoryFn<typeof Bubble> = () => {
     </div>
   );
 };
-BubbleStory.storyName = 'Bubble';

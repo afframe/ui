@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ScrollGradient from @afframe/ui cast to a props type (IBM types it ref-only), title Components/ScrollGradient, source tag, scss styles replaced by scroll-gradient-story.css, scrollable-region-focusable a11y rule disabled on both stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ScrollGradient from @afframe/ui cast to a props type (IBM types it ref-only), title Components/ScrollGradient, source tag, scss styles replaced by scroll-gradient-story.css, scrollable-region-focusable a11y rule disabled on both stories, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentType, CSSProperties, ReactNode } from 'react';
@@ -68,13 +68,13 @@ const TemplateBothAxis: StoryFn<typeof ScrollGradient> = (args) => {
   );
 };
 
-export const scrollGradientVertical = Template.bind({});
-scrollGradientVertical.args = {
+export const Default = Template.bind({});
+Default.args = {
   children: storyChildren,
 };
 
-export const scrollGradientXAndYAxis = TemplateBothAxis.bind({});
-scrollGradientXAndYAxis.args = {
+export const XAndYAxis = TemplateBothAxis.bind({});
+XAndYAxis.args = {
   children: <div style={{ width: '1500px' }}>{storyChildren}</div>,
 };
 
@@ -83,5 +83,5 @@ const scrollableRegionFocusable = {
     config: { rules: [{ id: 'scrollable-region-focusable', enabled: false }] },
   },
 };
-scrollGradientVertical.parameters = scrollableRegionFocusable;
-scrollGradientXAndYAxis.parameters = scrollableRegionFocusable;
+Default.parameters = scrollableRegionFocusable;
+XAndYAxis.parameters = scrollableRegionFocusable;

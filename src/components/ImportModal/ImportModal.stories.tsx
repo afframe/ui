@@ -33,7 +33,7 @@ const fileInput = (root: HTMLElement) => {
 };
 
 const meta = {
-  title: 'Components/Modals/Import Modal',
+  title: 'Components/ImportModal',
   component: ImportModal,
   tags: ['afframe'],
   args: {
@@ -108,5 +108,6 @@ export const Pending: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

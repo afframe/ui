@@ -17,7 +17,7 @@ One entry per Afframe or extras module and per subpath; the JSON lists its expor
 | ECharts              | component  | extras         | `@afframe/ui`                       | client  | [page](../src/components/ECharts/ECharts.mdx)                           |                    |
 | AIChat               | component  | extras         | `@afframe/ui`                       | client  | [page](../src/components/AIChat/AIChat.mdx)                             |                    |
 | format               | util       | afframe        | `@afframe/ui`, `@afframe/ui/format` | server  | [page](../src/format/Formatting.mdx)                                    |                    |
-| theme                | hook       | afframe        | `@afframe/ui`                       | client  |                                                                         |                    |
+| theme                | hook       | afframe        | `@afframe/ui`                       | client  | [page](../src/theme/Theming.mdx)                                        |                    |
 | messages             | util       | afframe        | `@afframe/ui`                       | server  |                                                                         |                    |
 | CreateModal          | component  | afframe        | `@afframe/ui`                       | client  | [page](../src/components/CreateModal/CreateModal.mdx)                   | yes, yes, yes, yes |
 | CreateSidePanel      | component  | afframe        | `@afframe/ui`                       | client  | [page](../src/components/CreateSidePanel/CreateSidePanel.mdx)           | yes, yes, yes, yes |

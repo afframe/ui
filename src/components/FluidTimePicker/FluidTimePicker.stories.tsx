@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; redundant labelText and placeholder removed from second picker (args supply them); skeleton className and isOnlyTwo passed explicitly. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; redundant labelText and placeholder removed from second picker (args supply them); skeleton className and isOnlyTwo passed explicitly, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -26,7 +26,7 @@ import styles from './fluid-time-picker-story.css?inline';
 import mdx from './FluidTimePicker.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidTimePicker',
+  title: 'Components/Fluid Inputs/FluidTimePicker',
   tags: ['carbon'],
   component: FluidTimePicker,
   decorators: [
@@ -48,17 +48,6 @@ export default {
     FluidTimePickerSkeleton,
   },
 } satisfies Meta<typeof FluidTimePicker>;
-
-export const Skeleton: StoryFn = () => {
-  return (
-    <div style={{ width: 300 }}>
-      <FluidTimePickerSkeleton className="" isOnlyTwo={false} />
-      <br />
-      <br />
-      <FluidTimePickerSkeleton className="" isOnlyTwo />
-    </div>
-  );
-};
 
 export const Default: StoryFn<
   Omit<FluidTimePickerProps, 'id'> & { defaultWidth?: number }
@@ -169,4 +158,15 @@ Default.parameters = {
   controls: {
     include: [...Object.keys(Default.argTypes)],
   },
+};
+
+export const Skeleton: StoryFn = () => {
+  return (
+    <div style={{ width: 300 }}>
+      <FluidTimePickerSkeleton className="" isOnlyTwo={false} />
+      <br />
+      <br />
+      <FluidTimePickerSkeleton className="" isOnlyTwo />
+    </div>
+  );
 };

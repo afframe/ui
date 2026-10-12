@@ -3,7 +3,7 @@ import * as ProfileStories from './Profile.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, code samples import from @afframe/ui, sample user name and email replaced with neutral placeholders, the theme settings package named as @afframe/ui, a stray code fence at the end removed.
+// Modified by Afframe in 2026: source label and source link added, code samples import from @afframe/ui, sample user name and email replaced with neutral placeholders, the theme settings package named as @afframe/ui, a stray code fence at the end removed, the UserAvatar and ThemeSettings links point to the pages here, story names unified.
 
 <Meta isTemplate />
 
@@ -47,7 +47,7 @@ The `Profile.Root` component is used to handle the composed components.
 
 The `Profile.UserInfo` goes inside the `Profile.Root` and requires a `name` prop
 and an optional `email` prop. It extends IBM Product’s
-[UserAvatar](https://ibm-products.carbondesignsystem.com/?path=/docs/components-useravatar--docs&globals=viewport:basic),
+[UserAvatar](?path=/docs/components-useravatar--overview),
 and supports all `UserAvatar` props. Here’s an example of how it can be used
 within `<Profile.Root>`:
 
@@ -62,7 +62,7 @@ within `<Profile.Root>`:
 In order to add the ThemeSwitcher to the Profile one can utilize the
 `ThemeSettings` and `ThemeSwitcher` components from `@afframe/ui`. More info on how to use the ThemeSwitcher
 can be found
-[here](https://labs.carbondesignsystem.com/?path=/docs/react_components-themesettings--overview).
+[here](?path=/docs/components-themesettings--overview).
 
 <Canvas of={ProfileStories.WithThemeSwitcher} />
 
@@ -71,14 +71,14 @@ can be found
 The `Profile.ReadOnly` goes inside the `Profile.Root` and accepts a list of
 items that contain objects with a label and title.
 
-<Canvas of={ProfileStories.withReadOnly} />
+<Canvas of={ProfileStories.ReadOnly} />
 
 ## With links
 
 In order to add links to the Profile one can utilize the `ContainedList` and
 `ContainedListItem` components from `@afframe/ui`.
 
-<Canvas of={ProfileStories.withLinks} />
+<Canvas of={ProfileStories.WithLinks} />
 
 ## Component API
 

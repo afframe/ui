@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; unsupported light argType removed; decorator passed by spread (missing from types). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; unsupported light argType removed; decorator passed by spread (missing from types), story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -30,7 +30,7 @@ import styles from './fluid-select-story.css?inline';
 import mdx from './FluidSelect.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidSelect',
+  title: 'Components/Fluid Inputs/FluidSelect',
   tags: ['carbon'],
   component: FluidSelect,
   subcomponents: {
@@ -161,7 +161,7 @@ Default.parameters = {
   controls: { include: [...sharedControls, 'defaultWidth'] },
 };
 
-export const withAILabel: StoryFn<
+export const WithAILabel: StoryFn<
   Partial<FluidSelectProps> & { defaultWidth?: number }
 > = (args) => {
   const { defaultWidth, ...selectArgs } = args;
@@ -216,17 +216,17 @@ export const withAILabel: StoryFn<
   );
 };
 
-withAILabel.args = {
+WithAILabel.args = {
   ...sharedArgs,
   defaultWidth: 400,
 };
 
-withAILabel.argTypes = {
+WithAILabel.argTypes = {
   ...sharedArgTypes,
   defaultWidth: widthArgType,
 };
 
-withAILabel.parameters = {
+WithAILabel.parameters = {
   controls: { include: [...sharedControls, 'defaultWidth'] },
 };
 

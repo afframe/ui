@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, commented-out styles import dropped, console.log fallback kept, the action boolean control split from the component props. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, commented-out styles import dropped, console.log fallback kept, the action boolean control split from the component props, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -18,7 +18,7 @@ import type { NotFoundEmptyStateProps } from '../../index.js';
 import mdx from './NotFoundEmptyState.mdx';
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/NotFoundEmptyState',
+  title: 'Components/Empty States/NotFoundEmptyState',
   component: NotFoundEmptyState,
   tags: ['ibm-products'],
   parameters: {
@@ -83,20 +83,20 @@ WithDarkModeIllustration.args = {
   illustrationTheme: 'dark',
 };
 
-export const withAction = Template.bind({});
-withAction.args = {
+export const WithAction = Template.bind({});
+WithAction.args = {
   ...defaultStoryProps,
   action: false,
 };
 
-export const withActionIconButton = Template.bind({});
-withActionIconButton.args = {
+export const WithActionIconButton = Template.bind({});
+WithActionIconButton.args = {
   ...defaultStoryProps,
   action: true,
 };
 
-export const withLink = Template.bind({});
-withLink.args = {
+export const WithLink = Template.bind({});
+WithLink.args = {
   ...defaultStoryProps,
   link: {
     text: 'View documentation',
@@ -104,8 +104,8 @@ withLink.args = {
   },
 };
 
-export const withActionAndLink = Template.bind({});
-withActionAndLink.args = {
+export const WithActionAndLink = Template.bind({});
+WithActionAndLink.args = {
   ...defaultStoryProps,
   action: true,
   link: {

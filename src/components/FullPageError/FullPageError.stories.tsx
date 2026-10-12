@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as a plain CSS file, template literals around props dropped, TODO comments dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as a plain CSS file, template literals around props dropped, TODO comments dropped, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -73,14 +73,12 @@ const Template: StoryFn<typeof FullPageError> = (args) => {
   );
 };
 
-export const fullPageError = Template.bind({});
-fullPageError.storyName = 'Default';
-fullPageError.args = {
+export const Default = Template.bind({});
+Default.args = {
   ...defaultProps,
 };
-export const fullPageError403 = Template.bind({});
-fullPageError403.storyName = '403';
-fullPageError403.args = {
+export const Error403 = Template.bind({});
+Error403.args = {
   ...defaultProps,
   title: 'Access denied',
   label: 'Error 403',
@@ -88,9 +86,8 @@ fullPageError403.args = {
     'You are not authorized to access the requested page. Please verify that you are logged in to the hosting environment and your access permissions are correct.',
   kind: '403',
 };
-export const fullPageError404 = Template.bind({});
-fullPageError404.storyName = '404';
-fullPageError404.args = {
+export const Error404 = Template.bind({});
+Error404.args = {
   ...defaultProps,
   title: 'Page not found',
   label: 'Error 404',

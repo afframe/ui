@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Components/TagOverflow, pkg.prefix as the 'c4p' literal, DisplayBox replaced by a div, story styles converted from SCSS to plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Components/TagOverflow, pkg.prefix as the 'c4p' literal, DisplayBox replaced by a div, story styles converted from SCSS to plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState, useRef, type ComponentType } from 'react';
@@ -84,31 +84,31 @@ const Template: StoryFn<StoryArgs> = (argsIn) => {
 };
 
 // Declaration of stories
-export const TagsWithOverflowCount = Template.bind({});
-TagsWithOverflowCount.args = {
+export const Default = Template.bind({});
+Default.args = {
   containerWidth: 250,
   items: fiveTags,
   onOverflowTagChange: (items) => console.log(items),
 };
-TagsWithOverflowCount.parameters = {
+Default.parameters = {
   chromatic: { disableSnapshot: true },
 };
 
-export const TagsWithTruncation = Template.bind({});
-TagsWithTruncation.args = {
+export const WithTruncation = Template.bind({});
+WithTruncation.args = {
   containerWidth: 300,
   items: longTags,
 };
 
-export const TagsWithOverflowModal = Template.bind({});
-TagsWithOverflowModal.args = {
+export const WithOverflowModal = Template.bind({});
+WithOverflowModal.args = {
   containerWidth: 500,
   items: tags,
   ...overflowAndModalStrings,
 };
 
-export const MultilineTags = Template.bind({});
-MultilineTags.args = {
+export const Multiline = Template.bind({});
+Multiline.args = {
   containerWidth: 500,
   items: tags,
   multiline: true,

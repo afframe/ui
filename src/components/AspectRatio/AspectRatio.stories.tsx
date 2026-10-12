@@ -16,7 +16,7 @@ import mdx from './AspectRatio.mdx';
 import './AspectRatio-story.css';
 
 export default {
-  title: 'Components/AspectRatio',
+  title: 'Layout/AspectRatio',
   component: AspectRatio,
   tags: ['carbon'],
   parameters: {

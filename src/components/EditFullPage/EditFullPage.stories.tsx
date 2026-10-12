@@ -61,7 +61,7 @@ function Harness(props: HarnessProps) {
 }
 
 const meta = {
-  title: 'Components/Create and Edit/Edit Full Page',
+  title: 'Components/Create and Edit/EditFullPage',
   component: EditFullPage,
   tags: ['afframe'],
   parameters: {
@@ -106,5 +106,6 @@ export const LongForm: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

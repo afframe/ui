@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2021, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, stories exported at their declaration. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, stories exported at their declaration, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -52,7 +52,7 @@ import mdx from './Toolbar.mdx';
 type ToolbarStoryProps = ComponentProps<typeof Toolbar>;
 
 export default {
-  title: 'Preview Candidate/Toolbar',
+  title: 'Preview/previewCandidate__Toolbar',
   component: Toolbar,
   tags: ['ibm-products'],
   parameters: {
@@ -67,7 +67,7 @@ export default {
   },
 } satisfies Meta<typeof Toolbar>;
 
-export function _Toolbar(args: ToolbarStoryProps) {
+export function Default(args: ToolbarStoryProps) {
   const dropdownItems = ['11', '12', '14', '16', '18'];
 
   const [selectedDropdownItem, setSelectedDropdownItem] = useState(
@@ -189,11 +189,11 @@ export function _Toolbar(args: ToolbarStoryProps) {
   );
 }
 
-_Toolbar.args = {
+Default.args = {
   vertical: false,
 };
 
-export function vertical(args: ToolbarStoryProps) {
+export function Vertical(args: ToolbarStoryProps) {
   return (
     <Toolbar {...args}>
       <ToolbarGroup>
@@ -263,6 +263,6 @@ export function vertical(args: ToolbarStoryProps) {
   );
 }
 
-vertical.args = {
+Vertical.args = {
   vertical: true,
 };

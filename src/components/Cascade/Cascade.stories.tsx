@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2021, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Cascade and Column from @afframe/ui, plain CSS file, the MDX page replaces the docs page component, keys added to the grid columns, tags. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Cascade and Column from @afframe/ui, plain CSS file, the MDX page replaces the docs page component, keys added to the grid columns, tags, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps, ReactNode } from 'react';
@@ -64,9 +64,9 @@ const GridTemplate: StoryFn<ComponentProps<typeof Cascade>> = (args) => {
   );
 };
 
-export const WithoutGrid: StoryFn<ComponentProps<typeof Cascade>> =
+export const Default: StoryFn<ComponentProps<typeof Cascade>> =
   DefaultTemplate.bind({});
-WithoutGrid.args = {};
+Default.args = {};
 
 export const WithGrid: StoryFn<ComponentProps<typeof Cascade>> =
   GridTemplate.bind({});

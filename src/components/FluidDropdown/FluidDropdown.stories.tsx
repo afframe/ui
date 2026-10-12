@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed items. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed items, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -25,7 +25,7 @@ import {
 import mdx from './FluidDropdown.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidDropdown',
+  title: 'Components/Fluid Inputs/FluidDropdown',
   tags: ['carbon'],
   component: FluidDropdown,
   decorators: [
@@ -224,7 +224,7 @@ Condensed.parameters = {
   controls: { include: sharedControls },
 };
 
-export const withAILabel: StoryFn<
+export const WithAILabel: StoryFn<
   Partial<FluidDropdownProps<unknown>> & { defaultWidth?: number }
 > = (args) => {
   const aiLabel = (
@@ -271,15 +271,15 @@ export const withAILabel: StoryFn<
   );
 };
 
-withAILabel.args = {
+WithAILabel.args = {
   ...sharedArgs,
 };
 
-withAILabel.argTypes = {
+WithAILabel.argTypes = {
   ...sharedArgTypes,
 };
 
-withAILabel.parameters = {
+WithAILabel.parameters = {
   controls: { include: sharedControls },
 };
 

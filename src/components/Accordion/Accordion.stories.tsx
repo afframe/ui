@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: components from @afframe/ui, source tag, styles from a plain CSS file, types on story args. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: components from @afframe/ui, source tag, styles from a plain CSS file, types on story args, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -24,7 +24,7 @@ import {
 } from '../../index.js';
 import type { AccordionItemProps } from '../../index.js';
 import mdx from './Accordion.mdx';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 
 type AccordionStoryArgs = ComponentProps<typeof Accordion> &
   Required<Pick<AccordionItemProps, 'onHeadingClick'>>;
@@ -234,11 +234,11 @@ Controlled.args = { ...sharedArgs };
 
 Controlled.argTypes = { ...sharedArgTypes };
 
-export const _WithLayer: StoryFn<AccordionStoryArgs> = (args) => {
+export const WithLayer: StoryFn<AccordionStoryArgs> = (args) => {
   const { onHeadingClick, ...restArgs } = args;
 
   return (
-    <WithLayer>
+    <WithLayerTemplate>
       <Accordion {...restArgs}>
         <AccordionItem title="Choose your plan" onHeadingClick={onHeadingClick}>
           <p>
@@ -269,13 +269,13 @@ export const _WithLayer: StoryFn<AccordionStoryArgs> = (args) => {
           </p>
         </AccordionItem>
       </Accordion>
-    </WithLayer>
+    </WithLayerTemplate>
   );
 };
 
-_WithLayer.args = { ...sharedArgs };
+WithLayer.args = { ...sharedArgs };
 
-_WithLayer.argTypes = { ...sharedArgTypes };
+WithLayer.argTypes = { ...sharedArgTypes };
 
 export const Skeleton: StoryFn<typeof AccordionSkeleton> = (args) => (
   <AccordionSkeleton open count={4} {...args} />

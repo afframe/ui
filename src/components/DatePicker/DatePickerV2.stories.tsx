@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title under Components/DatePicker, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Preview/preview__DatePicker, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -43,7 +43,7 @@ interface DatePickerStoryArgs {
 }
 
 export default {
-  title: 'Components/DatePicker/preview__DatePicker',
+  title: 'Preview/preview__DatePicker',
   component: DatePicker,
   tags: ['carbon'],
   subcomponents: {
@@ -285,7 +285,7 @@ Skeleton.parameters = {
   },
 };
 
-export const withAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
+export const WithAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -332,4 +332,4 @@ export const withAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
   );
 };
 
-withAILabel.argTypes = { ...sharedArgTypes };
+WithAILabel.argTypes = { ...sharedArgTypes };

@@ -3,7 +3,7 @@ import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import * as stories from './DataGrid.stories.js';
 
-const { Sorting, Dark } = composeStories(stories);
+const { Default, Dark } = composeStories(stories);
 
 async function snap(name: string) {
   await document.fonts.load('400 14px "IBM Plex Sans"');
@@ -14,7 +14,7 @@ async function snap(name: string) {
 }
 
 test.each([
-  ['data-grid-light', Sorting],
+  ['data-grid-light', Default],
   ['data-grid-dark', Dark],
 ] as const)('%s', async (name, story) => {
   await story.run();
@@ -22,7 +22,7 @@ test.each([
 });
 
 test('data-grid-focus', async () => {
-  await Sorting.run();
+  await Default.run();
   // The first tab stop is the first sortable header.
   await userEvent.tab();
   await snap('data-grid-focus');

@@ -18,7 +18,7 @@ import mdx from './IconIndicator.mdx';
 type IndicatorArgs = Omit<ComponentProps<typeof Indicator>, 'kind' | 'label'>;
 
 export default {
-  title: 'Preview/StatusIndicators/preview__IconIndicator',
+  title: 'Preview/preview__IconIndicator',
   component: Indicator,
   tags: ['carbon'],
   parameters: {

@@ -7,18 +7,18 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, AISkeletonText from @afframe/ui, eslint directive removed, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, AISkeletonText from @afframe/ui, eslint directive removed, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { AISkeletonText } from '../../index.js';
 
 export default {
-  title: 'Components/Skeleton/AISkeleton',
+  title: 'Components/Skeletons/AISkeleton',
   component: AISkeletonText,
   tags: ['carbon'],
 } satisfies Meta<typeof AISkeletonText>;
 
-export const _AISkeletonText: StoryFn<typeof AISkeletonText> = () => {
+export const Text: StoryFn<typeof AISkeletonText> = () => {
   return <AISkeletonText />;
 };

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Labs UI shell components, Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), title under Components/UI Shell/Labs, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Labs UI shell components, Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), title Components/UI Shell/HeaderPopover, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -25,7 +25,7 @@ import {
 import mdx from './HeaderPopover.mdx';
 
 export default {
-  title: 'Components/UI Shell/Labs/HeaderPopover',
+  title: 'Components/UI Shell/HeaderPopover',
   component: HeaderPopover,
   subcomponents: {
     HeaderPopoverActions,

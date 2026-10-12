@@ -24,7 +24,7 @@ import mdx from './SingleAddSelect.mdx';
 type StoryArgs = Record<string, unknown>;
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Add and select/SingleAddSelect',
+  title: 'Components/SingleAddSelect',
   component: SingleAddSelect,
   tags: ['ibm-products'],
   parameters: {

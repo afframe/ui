@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, the inner FeatureFlags wrapper, feature flag annotation and ClassPrefix wrapper removed (Afframe turns the flags on globally and its styles compile them), story stylesheet dropped, source tag, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, the inner FeatureFlags wrapper, feature flag annotation and ClassPrefix wrapper removed (Afframe turns the flags on globally and its styles compile them), story stylesheet dropped, source tag, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -87,7 +87,7 @@ export default {
   },
 } satisfies Meta;
 
-export const EnablePresence: StoryFn<ComposedModalStoryArgs> = (args) => {
+export const MountOnOpen: StoryFn<ComposedModalStoryArgs> = (args) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(true);
   const {
@@ -140,4 +140,3 @@ export const EnablePresence: StoryFn<ComposedModalStoryArgs> = (args) => {
     </>
   );
 };
-EnablePresence.storyName = 'enable-presence';

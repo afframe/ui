@@ -16,7 +16,7 @@ import { InlineNotification } from '../../index.js';
 import mdx from './Notification.mdx';
 
 export default {
-  title: 'Components/Notifications/Inline',
+  title: 'Components/Notifications/InlineNotification',
   component: InlineNotification,
   tags: ['carbon'],
   parameters: {

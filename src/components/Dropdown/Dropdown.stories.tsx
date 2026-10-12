@@ -7,11 +7,11 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript (titleText argType gets a type name), components and icons from @afframe/ui, AI label story styles as plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript (titleText argType gets a type name), components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import '../AILabel/ailabel-story.css';
 import {
   AILabel,
@@ -349,8 +349,8 @@ Inline.args = {
   type: 'inline',
 };
 
-export const _WithLayer: StoryFn<StoryArgs> = (args) => (
-  <WithLayer>
+export const WithLayer: StoryFn<StoryArgs> = (args) => (
+  <WithLayerTemplate>
     {(layer) => (
       <div style={{ width: 400 }}>
         <Dropdown
@@ -365,20 +365,20 @@ export const _WithLayer: StoryFn<StoryArgs> = (args) => (
         />
       </div>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
 
-_WithLayer.argTypes = {
+WithLayer.argTypes = {
   ...sharedArgTypes,
 };
 
-_WithLayer.args = {
+WithLayer.args = {
   ...sharedArgs,
   label: 'Option 1',
 };
 
 export const InlineWithLayer: StoryFn<StoryArgs> = (args) => (
-  <WithLayer>
+  <WithLayerTemplate>
     {(layer) => (
       <div style={{ width: 600 }}>
         <Dropdown
@@ -393,7 +393,7 @@ export const InlineWithLayer: StoryFn<StoryArgs> = (args) => (
         />
       </div>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
 
 InlineWithLayer.argTypes = {
@@ -425,7 +425,7 @@ Skeleton.parameters = {
   controls: { include: Object.keys(skeletonArgTypes) },
 };
 
-export const withAILabel: StoryFn<StoryArgs> = (args) => {
+export const WithAILabel: StoryFn<StoryArgs> = (args) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -504,11 +504,11 @@ export const withAILabel: StoryFn<StoryArgs> = (args) => {
   );
 };
 
-withAILabel.argTypes = {
+WithAILabel.argTypes = {
   ...sharedArgTypes,
 };
 
-withAILabel.args = {
+WithAILabel.args = {
   ...sharedArgs,
   label: 'Option 1',
 };

@@ -16,7 +16,7 @@ import { ActionableNotification } from '../../index.js';
 import mdx from './Notification.mdx';
 
 export default {
-  title: 'Components/Notifications/Actionable',
+  title: 'Components/Notifications/ActionableNotification',
   component: ActionableNotification,
   tags: ['carbon'],
   parameters: {

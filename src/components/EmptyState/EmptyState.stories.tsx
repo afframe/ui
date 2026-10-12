@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, illustration loaded by URL, console.log fallback kept, the action boolean control split from the component props. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, illustration loaded by URL, console.log fallback kept, the action boolean control split from the component props, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -23,7 +23,7 @@ const CustomIllustration = new URL(
 ).href;
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/EmptyState',
+  title: 'Components/Empty States/EmptyState',
   component: EmptyState,
   tags: ['ibm-products'],
   argTypes: {
@@ -130,20 +130,20 @@ WithCustomIllustration.args = {
   illustrationDescription: 'Test alt text',
 };
 
-export const withAction = Template.bind({});
-withAction.args = {
+export const WithAction = Template.bind({});
+WithAction.args = {
   ...emptyStateCommonProps,
   action: false,
 };
 
-export const withActionIconButton = Template.bind({});
-withActionIconButton.args = {
+export const WithActionIconButton = Template.bind({});
+WithActionIconButton.args = {
   ...emptyStateCommonProps,
   action: true,
 };
 
-export const withLink = Template.bind({});
-withLink.args = {
+export const WithLink = Template.bind({});
+WithLink.args = {
   ...emptyStateCommonProps,
   link: {
     text: 'View documentation',
@@ -152,8 +152,8 @@ withLink.args = {
   },
 };
 
-export const withActionAndLink = Template.bind({});
-withActionAndLink.args = {
+export const WithActionAndLink = Template.bind({});
+WithActionAndLink.args = {
   ...emptyStateCommonProps,
   action: true,
   link: {

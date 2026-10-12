@@ -4,7 +4,7 @@ import type { EChartOption } from './EChart.js';
 import mdx from './ECharts.mdx';
 
 const meta = {
-  title: 'Components/ECharts',
+  title: 'Components/Charts/EChart',
   component: EChart,
   tags: ['extras'],
   parameters: { docs: { page: mdx } },
@@ -98,9 +98,10 @@ const dataset: EChartOption = {
   series: [{ type: 'bar' }, { type: 'bar' }],
 };
 
-export const Bar: Story = { args: { option: bar } };
+export const Default: Story = { args: { option: bar } };
 
-export const BarDark: Story = {
+export const Dark: Story = {
+  tags: ['!dev', '!autodocs'],
   args: { option: bar },
   globals: { theme: 'dark' },
 };

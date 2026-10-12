@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, InlineTip components from @afframe/ui, plain CSS file, class string written inline instead of classnames, image URL resolved with new URL, story args typed for the action and media selectors, typed casts for the button and link, props built instead of null, tags. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, InlineTip components from @afframe/ui, plain CSS file, class string written inline instead of classnames, image URL resolved with new URL, story args typed for the action and media selectors, typed casts for the button and link, props built instead of null, tags, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type {
@@ -52,7 +52,7 @@ const ActionLink = InlineTipLink as ComponentType<
 >;
 
 export default {
-  title: 'Preview Candidate/Onboarding/InlineTip',
+  title: 'Preview/previewCandidate__InlineTip',
   component: InlineTip,
   tags: ['autodocs', 'Onboarding', 'ibm-products'],
   parameters: {
@@ -163,14 +163,14 @@ const Template: StoryFn<InlineTipArgs> = (args) => {
   );
 };
 
-export const inlineTip: StoryFn<InlineTipArgs> = Template.bind({});
-inlineTip.args = {
+export const Default: StoryFn<InlineTipArgs> = Template.bind({});
+Default.args = {
   narrow: false,
   ...defaultProps,
 };
 
-export const inlineTipNarrow: StoryFn<InlineTipArgs> = Template.bind({});
-inlineTipNarrow.args = {
+export const Narrow: StoryFn<InlineTipArgs> = Template.bind({});
+Narrow.args = {
   narrow: true,
   ...defaultProps,
 };

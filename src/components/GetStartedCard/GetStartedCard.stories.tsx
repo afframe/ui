@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, previewCandidate__GetStartedCard and useCarbonPrefix from @afframe/ui, icons from the icons entry, image URL resolved with new URL, tags. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, previewCandidate__GetStartedCard and useCarbonPrefix from @afframe/ui, icons from the icons entry, image URL resolved with new URL, tags, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -50,7 +50,7 @@ const defaultProps = {
 };
 
 export default {
-  title: 'Preview Candidate/Onboarding/GetStartedCard',
+  title: 'Preview/previewCandidate__GetStartedCard',
   component: GetStartedCard,
   tags: ['autodocs', 'Onboarding', 'ibm-products'],
   parameters: {
@@ -84,32 +84,32 @@ Default.args = {
   pictogram: (props?: IconProps) => <Crossroads size={32} {...props} />,
 };
 
-export const withSequence: StoryFn<GetStartedCardArgs> = Template.bind({});
-withSequence.args = {
+export const WithSequence: StoryFn<GetStartedCardArgs> = Template.bind({});
+WithSequence.args = {
   ...defaultProps,
   sequence: 3,
 };
 
-export const withMediaAndPictogram: StoryFn<GetStartedCardArgs> = Template.bind(
+export const WithMediaAndPictogram: StoryFn<GetStartedCardArgs> = Template.bind(
   {}
 );
-withMediaAndPictogram.args = {
+WithMediaAndPictogram.args = {
   ...defaultProps,
   pictogram: (props?: IconProps) => <Crossroads size={32} {...props} />,
   media: <img src={abstractImage} alt="abstract Image" />,
 };
 
-export const withMediaAndSequence: StoryFn<GetStartedCardArgs> = Template.bind(
+export const WithMediaAndSequence: StoryFn<GetStartedCardArgs> = Template.bind(
   {}
 );
-withMediaAndSequence.args = {
+WithMediaAndSequence.args = {
   ...defaultProps,
   sequence: 3,
   media: <img src={abstractImage} alt="abstract Image" />,
 };
 
-export const withDisabled: StoryFn<GetStartedCardArgs> = Template.bind({});
-withDisabled.args = {
+export const Disabled: StoryFn<GetStartedCardArgs> = Template.bind({});
+Disabled.args = {
   ...defaultProps,
   sequence: 3,
   disabled: true,

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, side panel decorator, feature flag wrapper and trigger helper inlined (feature flags through preview__FeatureFlags), header theme through Theme. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, side panel decorator, feature flag wrapper and trigger helper inlined (feature flags through preview__FeatureFlags), header theme through Theme, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Decorator, Meta, StoryFn } from '@storybook/react-vite';
@@ -917,8 +917,8 @@ const SlideInTemplate: StoryFn<StoryArgs> = (args, context) => {
   );
 };
 
-export const SlideOver = SlideOverTemplate.bind({});
-SlideOver.args = {
+export const Default = SlideOverTemplate.bind({});
+Default.args = {
   includeOverlay: true,
   actions: 0,
   ...defaultStoryProps,
@@ -946,8 +946,8 @@ WithActionToolbar.args = {
   ...defaultStoryProps,
 };
 
-export const PanelWithSecondStep = StepTemplate.bind({});
-PanelWithSecondStep.args = {
+export const WithSecondStep = StepTemplate.bind({});
+WithSecondStep.args = {
   actions: 0,
   includeOverlay: true,
   currentStep: 1,

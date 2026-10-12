@@ -13,7 +13,7 @@ const items = [
 ];
 
 const meta = {
-  title: 'Components/Description List',
+  title: 'Components/DescriptionList',
   component: DescriptionList,
   tags: ['afframe'],
   args: { 'aria-label': 'Invoice details', items },
@@ -82,5 +82,6 @@ export const EmptyValues: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

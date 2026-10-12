@@ -27,7 +27,7 @@ function Harness(props: RemoveModalProps) {
 }
 
 const meta = {
-  title: 'Components/Modals/Remove Modal',
+  title: 'Components/RemoveModal',
   component: RemoveModal,
   tags: ['afframe'],
   args: {
@@ -82,5 +82,6 @@ export const Pending: Story = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story body moved into a component, no PropTypes, AILabel story styles dropped, source tag, inline spacing as Carbon spacing tokens, spaced en-dashes in option and label text replaced with colons. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story body moved into a component, no PropTypes, AILabel story styles dropped, source tag, inline spacing as Carbon spacing tokens, spaced en-dashes in option and label text replaced with colons, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -664,18 +664,16 @@ Default.argTypes = {
   },
 };
 
-export const withAILabel: StoryFn<FormStoryArgs> = (args) => {
+export const WithAILabel: StoryFn<FormStoryArgs> = (args) => {
   const mergedArgs: FormStoryArgs = { ...args, size: 'md' };
   return <FormStory {...mergedArgs} />;
 };
 
-withAILabel.args = {
+WithAILabel.args = {
   aiLabel: true,
 };
 
-withAILabel.storyName = 'With AI Label';
-
-withAILabel.argTypes = {
+WithAILabel.argTypes = {
   size: {
     table: { disable: true },
   },
