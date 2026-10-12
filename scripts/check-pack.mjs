@@ -238,6 +238,15 @@ if (
 ) {
   problems.push('dist/styles.css must not carry the v12 field border');
 }
+// Carbon v11 markers: the bottom-border field and the pill tag.
+if (
+  !/\.cds--text-input\{font-size[^}]*border-block-end:1px solid var\(--cds-border-strong\)/.test(
+    styles
+  ) ||
+  !/\.cds--tag\{display:inline-flex;[^}]*border-radius:1rem/.test(styles)
+) {
+  problems.push('dist/styles.css must carry the Carbon v11 field and tag');
+}
 const contents = [
   {
     what: 'the dark theme',
