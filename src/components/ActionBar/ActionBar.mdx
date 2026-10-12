@@ -38,15 +38,6 @@ Each item is a Carbon `IconButton`: Tab moves between the items, Enter and Space
 activate the focused one, and its `label` is the accessible name and the tooltip
 shown on focus and hover.
 
-The overflow menu is a Carbon `OverflowMenu` with `OverflowMenuItem` children.
-In Afframe UI `enable-v12-release` turns on `enable-v12-overflowmenu`, and under
-it:
-
-- the trigger is named "Options", Carbon's default label; `overflowAriaLabel` is
-  not used;
-- the menu opens with focus on the menu itself, and the arrow keys do not reach
-  the items, so the overflow actions cannot be used by keyboard
-  (`docs/feature-flags.md`).
-
-Where keyboard users need every action, keep them all visible through the
-container width or `maxVisible`.
+The overflow menu is a Carbon `OverflowMenu` with `OverflowMenuItem` children:
+`overflowAriaLabel` names its trigger, Enter or Space opens it, and the arrow
+keys move between the items.
