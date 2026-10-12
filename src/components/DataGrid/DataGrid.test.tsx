@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
+import { iconButton } from '../MenuParts/menuTestUtils.js';
 import { DataGrid } from './DataGrid.js';
 import {
   dataGridColumnCustomization,
@@ -29,15 +30,6 @@ const sortColumns = sortHelper.columns([
   sortHelper.accessor('amount', { header: 'Amount', sortDescFirst: false }),
 ]);
 const few = invoices.slice(0, 5);
-
-/** A Carbon icon button, named by its tooltip (aria-labelledby). */
-function iconButton(name: string): HTMLButtonElement {
-  const tooltip = screen.getByText(name, { selector: '[role="tooltip"] *' });
-  const id = tooltip.closest('[role="tooltip"]')?.id;
-  const button = document.querySelector(`button[aria-labelledby="${id}"]`);
-  if (!(button instanceof HTMLButtonElement)) throw new Error(name);
-  return button;
-}
 
 const firstColumn = (index: number) =>
   screen

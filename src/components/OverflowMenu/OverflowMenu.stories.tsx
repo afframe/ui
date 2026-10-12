@@ -139,15 +139,14 @@ export const Default: StoryFn<typeof OverflowMenu> = (args) => (
   </OverflowMenu>
 );
 
-// Afframe: the 1.0.1 shape, `label` and MenuItem children. The Afframe
+// Afframe: the 1.0.x shape, `label` and MenuItem children. The Afframe
 // OverflowMenu turns on Carbon's newer menu for it, so the keyboard works.
-const menuLabel = { label: 'Row actions' };
 export const MenuItemsFrom101: StoryObj<typeof OverflowMenu> = {
   name: 'Menu items from 1.0.1',
   tags: ['afframe'],
   parameters: { ...afframeA11y },
   render: () => (
-    <OverflowMenu {...menuLabel} menuAlignment="bottom-start">
+    <OverflowMenu label="Row actions" menuAlignment="bottom-start">
       <MenuItem label="Edit" onClick={action('Edit')} />
       <MenuItem label="Duplicate" onClick={action('Duplicate')} />
       <MenuItemDivider />

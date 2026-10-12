@@ -36,6 +36,15 @@ test('keeps dynamic floating styles off in React', () => {
   expect(screen.getByText('false')).toBeTruthy();
 });
 
+test('leaves the v12 overflow menu flag off globally', () => {
+  render(
+    <AfframeProvider>
+      <Flag name="enable-v12-overflowmenu" />
+    </AfframeProvider>
+  );
+  expect(screen.getByText('false')).toBeTruthy();
+});
+
 test('renders actionable notifications without focus sentinels', () => {
   render(
     <AfframeProvider>

@@ -54,7 +54,7 @@ test('label={undefined} with OverflowMenuItem children stays on the v11 menu', a
   expect(onRename).toHaveBeenCalledOnce();
 });
 
-test('1.0.1 shape: label through a spread and MenuItem children name the trigger and work by keyboard', async () => {
+test('1.0.x shape: label through a spread and MenuItem children name the trigger and work by keyboard', async () => {
   const onDelete = vi.fn();
   const label = { label: 'Row actions' };
   render(
@@ -86,7 +86,7 @@ test('MenuItem children without a label take the newer menu too', async () => {
   expect(onDelete).toHaveBeenCalledOnce();
 });
 
-test('menuAlignment with MenuItem children takes the newer menu', async () => {
+test('menuAlignment reaches the newer menu without a warning', async () => {
   const onDelete = vi.fn();
   render(
     <AfframeProvider>
