@@ -37,6 +37,8 @@ One entry per Afframe or extras module and per subpath; the JSON lists its expor
 | HelpMenu             | component  | afframe | `@afframe/ui`                       | client  | [page](../src/components/HelpMenu/HelpMenu.mdx)                         | yes, yes, yes, yes |
 | ChatElements         | component  | afframe | `@afframe/ui`                       | client  | [page](../src/components/ChatElements/ChatElements.mdx)                 | yes, yes, yes, yes |
 | ControlledDatePicker | component  | afframe | `@afframe/ui`                       | client  | [page](../src/components/ControlledDatePicker/ControlledDatePicker.mdx) | yes, yes, yes, yes |
+| OverflowMenu         | component  | carbon  | `@afframe/ui`                       | client  | [page](../src/components/OverflowMenu/OverflowMenu.mdx)                 |                    |
+| DataTable            | component  | carbon  | `@afframe/ui`                       | client  | [page](../src/components/DataTable/DataTable.mdx)                       |                    |
 | icons                | foundation | carbon  | `@afframe/ui/icons`                 | server  | [page](../src/components/Icons/Icons.mdx)                               |                    |
 | pictograms           | foundation | carbon  | `@afframe/ui/pictograms`            | server  | [page](../src/components/Pictograms/Pictograms.mdx)                     |                    |
 | tokens               | foundation | carbon  | `@afframe/ui/tokens`                | server  | [page](../src/components/Tokens/Tokens.mdx)                             |                    |
@@ -160,7 +162,6 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | TableToolbar                       | component | carbon       | client  | stable            |                                                                       |
 | TableToolbarAction                 | component | carbon       | client  | stable            |                                                                       |
 | TableToolbarContent                | component | carbon       | client  | stable            |                                                                       |
-| TableToolbarMenu                   | component | carbon       | client  | stable            |                                                                       |
 | TableToolbarSearch                 | component | carbon       | client  | stable            |                                                                       |
 | StructuredListBody                 | component | carbon       | client  | stable            |                                                                       |
 | StructuredListCell                 | component | carbon       | client  | stable            |                                                                       |
@@ -250,7 +251,6 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | MenuItemRadioGroup                 | component | carbon       | client  | stable            |                                                                       |
 | MenuItemSelectable                 | component | carbon       | client  | stable            |                                                                       |
 | useContextMenu                     | hook      | carbon       | client  | stable            |                                                                       |
-| OverflowMenu                       | component | carbon       | client  | stable            | [page](../src/components/OverflowMenu/OverflowMenu.mdx)               |
 | OverflowMenuItem                   | component | carbon       | client  | stable            |                                                                       |
 | Link                               | component | carbon       | client  | stable            | [page](../src/components/Link/Link.mdx)                               |
 | Modal                              | component | carbon       | client  | stable            | [page](../src/components/Modal/Modal.mdx)                             |

@@ -7,11 +7,19 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 menu items added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
-import { OverflowMenu, OverflowMenuItem } from '../../index.js';
+import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { action } from 'storybook/actions';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { afframeA11y } from '../../../.storybook/afframeA11y.js';
+import {
+  MenuItem,
+  MenuItemDivider,
+  OverflowMenu,
+  OverflowMenuItem,
+} from '../../index.js';
 import type { OverflowMenuProps } from '../../index.js';
 import { Filter } from '../../icons.js';
 import mdx from './OverflowMenu.mdx';
@@ -130,3 +138,36 @@ export const Default: StoryFn<typeof OverflowMenu> = (args) => (
     <OverflowMenuItem hasDivider isDelete itemText="Delete app" />
   </OverflowMenu>
 );
+
+// Afframe: the 1.0.1 shape, `label` and MenuItem children. The Afframe
+// OverflowMenu turns on Carbon's newer menu for it, so the keyboard works.
+const menuLabel = { label: 'Row actions' };
+export const MenuItemsFrom101: StoryObj<typeof OverflowMenu> = {
+  name: 'Menu items from 1.0.1',
+  tags: ['afframe'],
+  parameters: { ...afframeA11y },
+  render: () => (
+    <OverflowMenu {...menuLabel} menuAlignment="bottom-start">
+      <MenuItem label="Edit" onClick={action('Edit')} />
+      <MenuItem label="Duplicate" onClick={action('Duplicate')} />
+      <MenuItemDivider />
+      <MenuItem label="Delete" kind="danger" onClick={action('Delete')} />
+    </OverflowMenu>
+  ),
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole('button');
+    trigger.focus();
+    await userEvent.keyboard('{Enter}');
+    // The menu renders in a portal on the body.
+    const body = within(document.body);
+    await waitFor(() =>
+      expect(body.getByRole('menuitem', { name: 'Edit' })).toHaveFocus()
+    );
+    await userEvent.keyboard('{ArrowDown}');
+    await expect(
+      body.getByRole('menuitem', { name: 'Duplicate' })
+    ).toHaveFocus();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(trigger).toHaveFocus());
+  },
+};
