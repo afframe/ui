@@ -105,8 +105,9 @@ function scan(dir, name) {
     wrapper,
     ...(wrapper && {
       wrapperParts: {
+        // The play test must sit in the same story export as the tag.
         afframeStory: code.some((text) =>
-          /tags: \['afframe'\][\s\S]*?\bplay\b/.test(text)
+          /tags: \['afframe'\](?:(?!\nexport )[\s\S])*?\bplay\b/.test(text)
         ),
         test: files.some((file) => /(?<!\.visual)\.test\.tsx?$/.test(file)),
         docs: Boolean(docs),
