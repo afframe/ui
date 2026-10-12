@@ -69,6 +69,7 @@ const required = [
   'dist/styles.css',
   'dist/charts.css',
   'dist/provider/AfframeProvider.js',
+  'dist/ibm-products/add-select-data.js',
   ...labsModules,
   ...familyModules,
   ...serverFamilies.map((name) => `dist/components/${name}/${name}.js`),
@@ -132,6 +133,7 @@ const familyImports = [...read('dist/index.js').matchAll(familyImport)].map(
 );
 const clientModules = [
   'dist/provider/AfframeProvider.js',
+  'dist/ibm-products/add-select-data.js',
   ...labsModules,
   ...new Set([...familyModules, ...familyImports]),
 ];

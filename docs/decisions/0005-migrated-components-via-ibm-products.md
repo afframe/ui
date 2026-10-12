@@ -4,7 +4,7 @@ Date: 2026-10-05
 
 ## Status
 
-Accepted
+Accepted. Amended by [ADR 0017](0017-ibm-declarations-for-untyped-exports.md): IBM's declarations are copied for exports IBM leaves untyped.
 
 ## Context
 

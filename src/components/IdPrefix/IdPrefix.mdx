@@ -1,0 +1,64 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as IdPrefixStories from './IdPrefix.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: Stackblitz import removed, source label added, title IdPrefix instead of Prefix, source and feedback links point to IdPrefix instead of ClassPrefix, source link pinned to v11.118.0, class prefix note added.
+
+<Meta isTemplate />
+
+# IdPrefix
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/IdPrefix)
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+The `IdPrefix` component is used to change the prefix applied to the
+automatically generated `id` attributes placed on certain DOM elements.
+
+<Canvas of={IdPrefixStories.Default} />
+
+This component is intended to be used in limited cases, primarily only if you
+have id conflicts when using v10 and v11 packages at the same time during
+migration.
+
+In React, you can use `IdPrefix` anywhere in your component tree and specify the
+prefix with the `prefix` prop. Most often it's used in the project root wrapping
+the entire project:
+
+```jsx
+import { IdPrefix } from '@afframe/ui';
+
+export default function MyApp() {
+  return (
+    <IdPrefix prefix="custom">
+      <Page />
+    </IdPrefix>
+  );
+}
+```
+
+`IdPrefix` changes ids only. `styles.css` is compiled with the `cds` class
+prefix (ADR 0006), so class prefixes other than `cds` are not supported.
+
+## Component API
+
+<ArgTypes />
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/react/src/components/IdPrefix/IdPrefix.mdx).

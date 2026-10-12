@@ -1,0 +1,50 @@
+import { ArgTypes, Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: source label added, source link pinned to v11.118.0, Afframe note on Tab in a modal dialog added.
+
+<Meta isTemplate />
+
+# Dialog
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/Dialog)
+
+{/* <!-- START doctoc generated TOC please keep comment here to allow auto update --> <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --> */}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+{/* <!-- END doctoc generated TOC please keep comment here to allow auto update --> */}
+
+## Overview
+
+The `Dialog` component is a primitive that wraps the native `<dialog>` and
+provides a composable api of related components that match the spec for Modals
+and non-modal dialogs as documented in the Dialog pattern.
+
+Chrome's built in focus wrap behavior includes the browser bar in the tab order.
+This is expected and consistent with `alert()` behavior.
+https://github.com/w3c/html/issues/1514#issuecomment-404097904
+
+In Afframe UI, `Dialog` is used as Carbon ships it. CreateModal, EditTearsheet
+and the discard dialog of the create and edit components keep Tab inside
+themselves (`enable-dialog-element` in `docs/feature-flags.md`); do the same if
+a modal `Dialog` must. Escape closes the native dialog without calling
+`onRequestClose` (`onCancel` and `onClose` fire), so a controlled `open` needs
+one of those to stay in sync.
+
+## Component API
+
+<ArgTypes />
+
+## Feedback
+
+Help us improve this component by providing feedback, asking questions on Slack,
+or updating this file on
+[GitHub](https://github.com/carbon-design-system/carbon/edit/main/packages/react/src/components/Dialog/Dialog.mdx).
