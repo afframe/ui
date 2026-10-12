@@ -1,4 +1,4 @@
-// Test helpers for the OverflowMenu and TableToolbarMenu wrappers. Not shipped.
+// Test helpers for menus: the OverflowMenu and TableToolbarMenu wrappers and the DataGrid row menu. Not shipped.
 import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
