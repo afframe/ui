@@ -49,7 +49,7 @@ A story that needs a Carbon flag changed (for example a flag Afframe UI leaves o
 
 Never set `test: 'todo'` for a whole story.
 
-Afframe-owned stories (tag `afframe`) also check axe's `target-size` rule (WCAG 2.5.8), which axe-core leaves off by default. They spread `afframeA11y` from `.storybook/afframeA11y.ts` into `parameters`; a `beforeEach` in `.storybook/preview.tsx` fails any story tagged `afframe` without it. Never set your own `a11y.config.rules` on an `afframe` story: the array replaces the shared parameter and the guard fails. Afframe-owned stories have no exceptions; fix the CSS instead.
+Afframe-owned stories (tag `afframe`) also check axe's `target-size` rule (WCAG 2.5.8), which axe-core leaves off by default. They spread `afframeA11y` from `.storybook/afframeA11y.ts` into `parameters`; a `beforeEach` in `.storybook/preview.tsx` fails any story tagged `afframe` without it. Never set your own `a11y.config.rules` on an `afframe` story: the array replaces the shared parameter and the guard fails. Afframe-owned stories have no exceptions; fix the CSS instead. An Afframe wrapper in a Carbon docs folder (`OverflowMenu`, `TableToolbarMenu`) needs a unit test and an `afframe` story with a play test, and no visual test, since it keeps Carbon's look (`pnpm registry --check` enforces it).
 
 ## Dependency pre-bundling
 

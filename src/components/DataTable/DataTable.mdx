@@ -383,8 +383,11 @@ or `menuAlignment` prop, or `MenuItem` and `MenuItemDivider` children placed
 directly or in one Fragment, switch that one menu to Carbon's newer menu. It
 renders Carbon's `Menu` with its v11 look and works by keyboard; `label` names
 the trigger and the menu. MenuItems inside your own wrapper component, or
-passed from a React Server Component, are not detected, so pass `label` there. The `TableToolbarMenu` types from Carbon omit `label`,
-the Afframe ones include it.
+passed from a React Server Component, are not detected, so pass `label` there.
+The `TableToolbarMenu` types from Carbon omit `label`, the Afframe ones include
+it.
+
+<Canvas id="components-datatable-toolbar--menu-items-from-101" />
 
 ```jsx
 import { MenuItem, MenuItemDivider, TableToolbarMenu } from '@afframe/ui';

@@ -1049,7 +1049,13 @@
       "storyTitle": "Components/OverflowMenu",
       "status": "stable",
       "exports": ["OverflowMenu"],
-      "types": ["OverflowMenuProps"]
+      "types": ["OverflowMenuProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
     },
     {
       "name": "TableToolbarMenu",
@@ -1062,7 +1068,13 @@
       "storyTitle": "Components/DataTable",
       "status": "stable",
       "exports": ["TableToolbarMenu"],
-      "types": ["TableToolbarMenuProps"]
+      "types": ["TableToolbarMenuProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
     },
     {
       "name": "icons",
