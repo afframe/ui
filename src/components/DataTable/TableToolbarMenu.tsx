@@ -11,8 +11,8 @@ export type TableToolbarMenuProps = CarbonTableToolbarMenuProps & {
 };
 
 /**
- * Carbon's `TableToolbarMenu`; `label` or MenuItem children switch on its
- * newer menu, where each `TableToolbarAction` renders a `MenuItem`.
+ * Carbon's `TableToolbarMenu`; `label`, `menuAlignment` or MenuItem children
+ * switch on its newer menu, where each `TableToolbarAction` renders a `MenuItem`.
  */
 export function TableToolbarMenu(props: TableToolbarMenuProps) {
   return withMenuShape(props, <CarbonTableToolbarMenu {...props} />);
