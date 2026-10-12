@@ -44,10 +44,15 @@ const renderable = ['forward_ref', 'memo', 'lazy'].map((type) =>
 const isComponent = (name, value) =>
   (typeof value === 'function' && /^[A-Z]/.test(baseName(name))) ||
   renderable.includes(value?.$$typeof);
+// A plain class (AddSelectData) is not a component; a React class component is.
+const isPlainClass = (value) =>
+  typeof value === 'function' &&
+  /^class\b/.test(Function.prototype.toString.call(value)) &&
+  !value.prototype?.isReactComponent;
 const kindOf = (name, value) =>
   /^use[A-Z]/.test(baseName(name))
     ? 'hook'
-    : isComponent(name, value)
+    : !isPlainClass(value) && isComponent(name, value)
       ? 'component'
       : typeof value === 'object' &&
           Object.keys(value ?? {}).length > 0 &&
@@ -262,6 +267,13 @@ for (const { from, star, names } of exportsOf(index)) {
     );
   } else if (dir === 'src/labs') {
     await listUpstream(collected, 'labs', runtime, pathToFileURL(file).href);
+  } else if (dir === 'src/ibm-products') {
+    await listUpstream(
+      collected,
+      'ibm-products',
+      runtime,
+      pathToFileURL(file).href
+    );
   } else {
     const name =
       dir === 'src' ? 'messages' : star ? dir.slice(4) : 'AfframeProvider';

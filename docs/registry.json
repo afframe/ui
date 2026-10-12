@@ -3434,6 +3434,14 @@
       "status": "preview"
     },
     {
+      "name": "BEACON_KIND",
+      "kind": "util",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable"
+    },
+    {
       "name": "ConditionBuilder",
       "kind": "component",
       "source": "ibm-products",
@@ -3441,6 +3449,22 @@
       "runtime": "client",
       "status": "preview-candidate",
       "docs": "src/components/ConditionBuilder/ConditionBuilder.mdx"
+    },
+    {
+      "name": "ConditionBuilderContext",
+      "kind": "util",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable"
+    },
+    {
+      "name": "getEmptyState",
+      "kind": "util",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable"
     },
     {
       "name": "EditInPlace",
@@ -3826,6 +3850,14 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview"
+    },
+    {
+      "name": "AddSelectData",
+      "kind": "util",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable"
     },
     {
       "name": "SideNavLabs",

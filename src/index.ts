@@ -597,7 +597,11 @@ export {
   preview__Coachmark as Coachmark,
   preview__CoachmarkBeacon as CoachmarkBeacon,
   preview__CoachmarkTagline as CoachmarkTagline,
+  // The type of CoachmarkBeacon's `kind` prop.
+  BEACON_KIND,
   previewCandidate__ConditionBuilder as ConditionBuilder,
+  ConditionBuilderContext,
+  getEmptyState,
   EditInPlace,
   FullPageError,
   previewCandidate__Guidebanner as Guidebanner,
@@ -617,6 +621,8 @@ export {
   preview__TruncatedText as TruncatedText,
   UserAvatar,
 } from '@carbon/ibm-products';
+// AddSelect's data helper, typed in src/ibm-products/ (IBM's types miss it).
+export * from './ibm-products/add-select-data.js';
 export type {
   preview__AddSelectProps as AddSelectProps,
   AddSelectComponentType,

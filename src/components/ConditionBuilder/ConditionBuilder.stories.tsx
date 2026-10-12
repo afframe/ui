@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (ConditionBuilder is previewCandidate__ConditionBuilder), icons from @afframe/ui icons, title Components/ConditionBuilder, getEmptyState, deprecatedProps and the variant constants copied locally because @afframe/ui does not export them, uuidv4() replaced by crypto.randomUUID(), story styles converted from SCSS to plain CSS, duplicate commented-out import removed, em-dashes replaced, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (ConditionBuilder is previewCandidate__ConditionBuilder), icons from @afframe/ui icons, title Components/ConditionBuilder, deprecatedProps and the variant constants copied locally because @afframe/ui does not export them, uuidv4() replaced by crypto.randomUUID(), story styles converted from SCSS to plain CSS, duplicate commented-out import removed, em-dashes replaced, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -17,6 +17,7 @@ import { Wikis } from '../../icons.js';
 import {
   Button,
   ConditionBuilder,
+  getEmptyState,
   type ConditionBuilderProps,
   type ConditionBuilderState,
 } from '../../index.js';
@@ -45,28 +46,6 @@ const HIERARCHICAL_VARIANT = 'Hierarchical';
 
 // The keys of IBM's deprecatedProps in ConditionBuilder.tsx (not exported).
 const deprecatedProps = ['initialState', 'getConditionState'];
-
-// Copied from IBM's ConditionBuilderProvider.tsx; @afframe/ui does not export
-// getEmptyState.
-const getEmptyState = (): ConditionBuilderState => ({
-  operator: 'or',
-  groups: [
-    {
-      groupOperator: 'and',
-      statement: 'ifAll',
-      id: crypto.randomUUID(),
-      conditions: [
-        {
-          property: undefined,
-          operator: '',
-          value: '',
-          popoverToOpen: 'propertyField',
-          id: crypto.randomUUID(),
-        },
-      ],
-    },
-  ],
-});
 
 export default {
   title: 'Components/ConditionBuilder',

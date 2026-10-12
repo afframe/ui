@@ -330,7 +330,10 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | Coachmark                          | component | ibm-products | client  | preview           | [page](../src/components/Coachmark/Coachmark.mdx)                     |
 | CoachmarkBeacon                    | component | ibm-products | client  | preview           |                                                                       |
 | CoachmarkTagline                   | component | ibm-products | client  | preview           |                                                                       |
+| BEACON_KIND                        | util      | ibm-products | client  | stable            |                                                                       |
 | ConditionBuilder                   | component | ibm-products | client  | preview-candidate | [page](../src/components/ConditionBuilder/ConditionBuilder.mdx)       |
+| ConditionBuilderContext            | util      | ibm-products | client  | stable            |                                                                       |
+| getEmptyState                      | util      | ibm-products | client  | stable            |                                                                       |
 | EditInPlace                        | component | ibm-products | client  | stable            |                                                                       |
 | FullPageError                      | component | ibm-products | client  | stable            | [page](../src/components/FullPageError/FullPageError.mdx)             |
 | Guidebanner                        | component | ibm-products | client  | preview-candidate | [page](../src/components/Guidebanner/Guidebanner.mdx)                 |
@@ -376,6 +379,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | preview__FeatureFlags              | component | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
 | preview__useFeatureFlag            | hook      | ibm-products | client  | preview           |                                                                       |
 | preview__useFeatureFlags           | hook      | ibm-products | client  | preview           |                                                                       |
+| AddSelectData                      | util      | ibm-products | client  | stable            |                                                                       |
 | SideNavLabs                        | component | labs         | client  | stable            |                                                                       |
 | SIDE_NAV_TYPE                      | util      | labs         | client  | stable            |                                                                       |
 | SideNavItemsLabs                   | component | labs         | client  | stable            |                                                                       |

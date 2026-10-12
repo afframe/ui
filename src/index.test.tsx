@@ -136,6 +136,18 @@ test('exports the subcomponents of the migrated compound components', () => {
   expect(ui.AddSelect.Body).toBeDefined();
 });
 
+test("exports IBM Products' AddSelect, Coachmark and ConditionBuilder helpers", () => {
+  expect(ui.AddSelectData).toBe(ibm.AddSelectData);
+  expect(ui.BEACON_KIND).toBe(ibm.BEACON_KIND);
+  expect(ui.ConditionBuilderContext).toBe(ibm.ConditionBuilderContext);
+  expect(ui.getEmptyState).toBe(ibm.getEmptyState);
+  const data = new ui.AddSelectData();
+  data.setItems([{ id: 'a', children: { entries: [{ id: 'b' }] } }]);
+  data.setSelectedItems('b');
+  expect(data.getItemParent('b')?.id).toBe('a');
+  expectTypeOf(data.getSelectedItems()).toEqualTypeOf<ui.AddSelectItem[]>();
+});
+
 test("does not export IBM Products' prefixed names of the migrated components", () => {
   const prefixed = Object.keys(ui).filter((name) =>
     /^(preview__(PageHeader|Tearsheet|AddSelect|Coachmark|TruncatedText)|previewCandidate__(BigNumber|ConditionBuilder|Guidebanner|Coachmark))/.test(
