@@ -5,9 +5,10 @@ import {
   TableToolbarAction,
   TableToolbarContent,
 } from '@carbon/react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { expect, test, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import {
   failOnConsoleError,
   iconButton,
@@ -57,5 +58,25 @@ test('v11 shape: TableToolbarAction children work by keyboard', async () => {
     </Toolbar>
   );
   await runSecondItem(iconButton('Table settings'), 'Export');
+  expect(onExport).toHaveBeenCalledOnce();
+});
+
+test('label with TableToolbarAction children takes the newer menu and works by keyboard', async () => {
+  const onExport = vi.fn();
+  render(
+    <Toolbar>
+      <TableToolbarMenu label="Table settings">
+        <TableToolbarAction onClick={() => undefined}>
+          Refresh
+        </TableToolbarAction>
+        <TableToolbarAction onClick={onExport}>Export</TableToolbarAction>
+      </TableToolbarMenu>
+    </Toolbar>
+  );
+  const trigger = iconButton('Table settings');
+  await userEvent.click(trigger);
+  expect(await screen.findByRole('menu')).toHaveClass('cds--menu');
+  await userEvent.keyboard('{Escape}');
+  await runSecondItem(trigger, 'Export');
   expect(onExport).toHaveBeenCalledOnce();
 });

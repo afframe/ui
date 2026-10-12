@@ -31,6 +31,27 @@ test('v11 items: iconDescription names the trigger, aria-label the menu, the key
   expect(onRename).toHaveBeenCalledOnce();
 });
 
+test('label={undefined} with OverflowMenuItem children stays on the v11 menu', async () => {
+  const onRename = vi.fn();
+  render(
+    <AfframeProvider>
+      <OverflowMenu label={undefined} iconDescription="Row actions">
+        <OverflowMenuItem itemText="Edit" />
+        <OverflowMenuItem itemText="Rename" onClick={onRename} />
+      </OverflowMenu>
+    </AfframeProvider>
+  );
+  const trigger = iconButton('Row actions');
+  trigger.focus();
+  await userEvent.keyboard('{Enter}');
+  expect(await screen.findByRole('menu')).toHaveClass(
+    'cds--overflow-menu-options'
+  );
+  await userEvent.keyboard('{Escape}');
+  await runSecondItem(trigger, 'Rename');
+  expect(onRename).toHaveBeenCalledOnce();
+});
+
 test('1.0.1 shape: label through a spread and MenuItem children name the trigger and work by keyboard', async () => {
   const onDelete = vi.fn();
   const label = { label: 'Row actions' };
@@ -60,6 +81,24 @@ test('MenuItem children without a label take the newer menu too', async () => {
     </AfframeProvider>
   );
   await runSecondItem(iconButton('Options'), 'Delete');
+  expect(onDelete).toHaveBeenCalledOnce();
+});
+
+test('menuAlignment with MenuItem children takes the newer menu', async () => {
+  const onDelete = vi.fn();
+  render(
+    <AfframeProvider>
+      <OverflowMenu menuAlignment="top-end">
+        <MenuItem label="Edit" />
+        <MenuItem label="Delete" onClick={onDelete} />
+      </OverflowMenu>
+    </AfframeProvider>
+  );
+  const trigger = iconButton('Options');
+  await userEvent.click(trigger);
+  expect(await screen.findByRole('menu')).toHaveClass('cds--menu');
+  await userEvent.keyboard('{Escape}');
+  await runSecondItem(trigger, 'Delete');
   expect(onDelete).toHaveBeenCalledOnce();
 });
 
