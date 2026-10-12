@@ -1,6 +1,6 @@
 # Feature flags
 
-Afframe UI runs stable Carbon v11 with the v12 flags off except `enable-focus-wrap-without-sentinels`, plus a few opt-in flags (ADR 0017). Carbon flags have two sides, and both must be set where Carbon reads the flag on that side:
+Afframe UI runs stable Carbon v11 with the v12 flags off except `enable-focus-wrap-without-sentinels`, plus a few opt-in flags (ADR 0018). Carbon flags have two sides, and both must be set where Carbon reads the flag on that side:
 
 - React: `AfframeProvider` renders Carbon's `<FeatureFlags>` around the app.
 - Sass: the styles build sets `$feature-flags` before Carbon's styles load. Styling changes come only from Sass.

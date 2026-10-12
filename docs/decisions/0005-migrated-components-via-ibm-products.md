@@ -4,7 +4,7 @@ Date: 2026-10-05
 
 ## Status
 
-Accepted. Amended by [ADR 0017](0017-carbon-v11-without-v12-flags.md): the IBM Products styles compile with Carbon's v11 styles, not v12. Amended by [ADR 0017](0017-ibm-declarations-for-untyped-exports.md): IBM's declarations are copied for exports IBM leaves untyped.
+Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the IBM Products styles compile with Carbon's v11 styles, not v12. Amended by [ADR 0017](0017-ibm-declarations-for-untyped-exports.md): IBM's declarations are copied for exports IBM leaves untyped.
 
 ## Context
 
@@ -12,7 +12,7 @@ IBM is moving a set of components from IBM Products into Carbon core for v12 (am
 
 ## Decision
 
-Use the IBM Products versions of these components, exported under Afframe names. The Afframe names stay backed by IBM Products; a later move to core is a new decision (ADR 0017). Resizer comes from `@carbon-labs/react-resizer`. OptionsTile is not included. No Carbon source is copied for this.
+Use the IBM Products versions of these components, exported under Afframe names. The Afframe names stay backed by IBM Products; a later move to core is a new decision (ADR 0018). Resizer comes from `@carbon-labs/react-resizer`. OptionsTile is not included. No Carbon source is copied for this.
 
 ## Consequences
 

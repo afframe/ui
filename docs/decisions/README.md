@@ -19,11 +19,11 @@ This directory holds the [architecture decision records](https://cognitect.com/b
 | ADR                                                         | Decision                                                     | Status                                                            |
 | ----------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------- |
 | [0001](0001-one-package-built-on-carbon.md)                 | One package built on Carbon React, one import path           | Accepted                                                          |
-| [0002](0002-stable-carbon-with-v12-flags.md)                | Stable Carbon v11 with the v12 feature flags on              | Superseded by [0017](0017-carbon-v11-without-v12-flags.md)        |
+| [0002](0002-stable-carbon-with-v12-flags.md)                | Stable Carbon v11 with the v12 feature flags on              | Superseded by [0018](0018-carbon-v11-without-v12-flags.md)        |
 | [0003](0003-upstream-as-exact-dependencies.md)              | Upstream packages as exact regular dependencies              | Accepted                                                          |
-| [0004](0004-scope-core-products-labs-extras.md)             | Scope: Carbon core, IBM Products, Labs and extras            | Accepted, amended by [0017](0017-carbon-v11-without-v12-flags.md) |
-| [0005](0005-migrated-components-via-ibm-products.md)        | Migrated components through IBM Products                     | Accepted, amended by [0017](0017-carbon-v11-without-v12-flags.md) |
-| [0006](0006-compiled-css-light-dark-plex.md)                | Compiled CSS, light and dark themes, IBM Plex                | Accepted, amended by [0017](0017-carbon-v11-without-v12-flags.md) |
+| [0004](0004-scope-core-products-labs-extras.md)             | Scope: Carbon core, IBM Products, Labs and extras            | Accepted, amended by [0018](0018-carbon-v11-without-v12-flags.md) |
+| [0005](0005-migrated-components-via-ibm-products.md)        | Migrated components through IBM Products                     | Accepted, amended by [0018](0018-carbon-v11-without-v12-flags.md) |
+| [0006](0006-compiled-css-light-dark-plex.md)                | Compiled CSS, light and dark themes, IBM Plex                | Accepted, amended by [0018](0018-carbon-v11-without-v12-flags.md) |
 | [0007](0007-telemetry-off.md)                               | IBM Telemetry off                                            | Accepted                                                          |
 | [0008](0008-component-docs-copied-from-carbon.md)           | Component docs copied from Carbon and extended               | Accepted                                                          |
 | [0009](0009-testing-and-accessibility.md)                   | Testing stack and accessibility target                       | Accepted                                                          |
@@ -34,5 +34,5 @@ This directory holds the [architecture decision records](https://cognitect.com/b
 | [0014](0014-overridable-strings-through-a-messages-prop.md) | Overridable strings through a messages prop                  | Accepted                                                          |
 | [0015](0015-carbon-charts-css-in-its-own-file.md)           | Carbon Charts CSS in its own file                            | Accepted                                                          |
 | [0016](0016-first-release-before-carbon-v12.md)             | First release before Carbon v12                              | Accepted                                                          |
-| [0017](0017-carbon-v11-without-v12-flags.md)                | Carbon v11 without the v12 feature flags                     | Accepted                                                          |
 | [0017](0017-ibm-declarations-for-untyped-exports.md)        | IBM's declarations for untyped IBM Products exports          | Accepted                                                          |
+| [0018](0018-carbon-v11-without-v12-flags.md)                | Carbon v11 without the v12 feature flags                     | Accepted                                                          |
