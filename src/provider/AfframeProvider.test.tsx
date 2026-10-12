@@ -17,25 +17,24 @@ function V12Flag() {
   return <p>{String(useFeatureFlag('enable-v12-release'))}</p>;
 }
 
-test('turns on the v12 flag in React', () => {
+test('leaves the v12 flag off in React', () => {
   render(
     <AfframeProvider>
       <V12Flag />
     </AfframeProvider>
   );
-  expect(screen.getByText('true')).toBeTruthy();
+  expect(screen.getByText('false')).toBeTruthy();
 });
 
-test('renders a text input with the v12 styles', () => {
+test('renders a text input with the v11 bottom border', () => {
   render(
     <AfframeProvider>
       <TextInput id="name" labelText="Name" />
     </AfframeProvider>
   );
   const style = getComputedStyle(screen.getByLabelText('Name'));
-  expect(style.backgroundImage).toContain(
-    'rgb(224, 224, 224) calc(100% - 4px), rgb(141, 141, 141) 100%'
-  );
+  expect(style.backgroundImage).toBe('none');
+  expect(style.borderBottom).toBe('1px solid rgb(141, 141, 141)');
 });
 
 test('light theme writes the white tokens on :root', () => {

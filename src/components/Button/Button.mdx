@@ -5,7 +5,7 @@ import * as ButtonStories from './Button.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components and icons from @afframe/ui, code samples import from @afframe/ui, inline spacing as Carbon spacing tokens, Sass samples dropped or rewritten as CSS custom properties, Sass flag note replaced (enable-v12-release is on in styles.css).
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components and icons from @afframe/ui, code samples import from @afframe/ui, inline spacing as Carbon spacing tokens, Sass samples dropped or rewritten as CSS custom properties, Sass flag note replaced (enable-v12-release is off in styles.css).
 
 <Meta isTemplate />
 
@@ -223,8 +223,8 @@ Per-corner properties inherit independently. If an ancestor sets
 still uses the inherited end-end value. Set that per-corner property on the
 descendant when you need to change that corner.
 
-`enable-v12-release` is on in `styles.css`, so buttons default to
-`$border-radius-max` and Carbon's context overrides apply.
+`enable-v12-release` is off in `styles.css`, so buttons keep the v11 square
+corners (radius `0`) unless an ancestor sets these properties.
 
 ## Danger Button
 

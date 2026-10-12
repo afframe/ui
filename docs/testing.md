@@ -31,8 +31,8 @@ Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.
 
 - Tests sit next to the component (`<Name>.test.tsx`, `<Name>.visual.test.tsx`).
 - Carbon, IBM Products and Labs components re-exported as they are need no Afframe unit tests; they render in Storybook, so the a11y check still runs on them.
-- Every included component renders under the v12 flags in Storybook; a visible break is recorded in `docs/feature-flags.md`.
-- `src/provider/AfframeProvider.test.tsx` proves the v12 render: the v12 flag is on in React, a Carbon `TextInput` gets the v12 field style from `styles.css`, and the dark theme applies.
+- Every included component renders under Afframe's flags in Storybook; a story that changes a flag is recorded in `docs/feature-flags.md`.
+- `src/provider/AfframeProvider.test.tsx` proves the v11 render: the v12 flag is off in React, a Carbon `TextInput` gets the v11 bottom border from `styles.css`, and the dark theme applies.
 - `src/provider/LabsStyles.test.tsx` proves that Labs CSS in `styles.css` leaves Carbon components and plain HTML as Carbon styles them: Carbon `SideNav`, a plain `del` and the `DatePicker` selected day, next to the Labs `SideNav`, `TextHighlighter` and `Calendar` with their Labs look.
 
 ## Accessibility

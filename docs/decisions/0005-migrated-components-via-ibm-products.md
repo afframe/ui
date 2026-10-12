@@ -4,7 +4,7 @@ Date: 2026-10-05
 
 ## Status
 
-Accepted
+Accepted. Amended by [ADR 0017](0017-carbon-v11-without-v12-flags.md): the IBM Products styles compile with Carbon's v11 styles, not v12.
 
 ## Context
 

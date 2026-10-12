@@ -7,18 +7,17 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), v12 toolbar menu story with a play test, keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
 import { useState } from 'react';
 import { action } from 'storybook/actions';
-import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
   Button,
   DataTable,
   MenuItem,
-  MenuItemDivider,
   NotFoundEmptyState,
   OverflowMenu,
   OverflowMenuItem,
@@ -573,112 +572,4 @@ WithOverflowMenu.play = async ({ canvasElement }) => {
   ).toHaveFocus();
   await userEvent.keyboard('{Escape}');
   await waitFor(() => expect(trigger).toHaveFocus());
-};
-
-// `TableToolbarMenu` types omit `label`, which the v12 overflow menu reads
-// for its accessible name, so it is passed through a spread.
-const toolbarMenuLabel = { label: 'Settings' };
-
-/**
- * Toolbar menu under the v12 flags: `MenuItem` children and a `label` on
- * `TableToolbarMenu` instead of `TableToolbarAction`.
- */
-export const ToolbarMenuWithMenuItems: StoryObj<
-  ToolbarStoryArgs & { onAction: (label: string) => void }
-> = {
-  args: { persistent: false, onAction: fn() },
-  argTypes: { ...sharedArgTypes, onAction: { control: false } },
-  render: ({ persistent, onAction, ...args }) => (
-    <DataTable rows={rows} headers={headers} {...args}>
-      {({
-        rows,
-        headers,
-        getHeaderProps,
-        getRowProps,
-        getTableProps,
-        getToolbarProps,
-        onInputChange,
-        getTableContainerProps,
-        getCellProps,
-      }) => (
-        <TableContainer
-          title="DataTable"
-          description="With a v12 toolbar menu"
-          {...getTableContainerProps()}>
-          <TableToolbar
-            {...(getToolbarProps() as Partial<TableToolbarProps>)}
-            aria-label="data table toolbar">
-            <TableToolbarContent>
-              <TableToolbarSearch
-                onChange={onInputChange}
-                persistent={persistent}
-              />
-              <TableToolbarMenu {...toolbarMenuLabel}>
-                <MenuItem
-                  label="Action 1"
-                  onClick={() => onAction('Action 1')}
-                />
-                <MenuItem
-                  label="Action 2"
-                  onClick={() => onAction('Action 2')}
-                />
-                <MenuItemDivider />
-                <MenuItem
-                  label="Action 3"
-                  onClick={() => onAction('Action 3')}
-                />
-              </TableToolbarMenu>
-              <Button onClick={action('Button click')}>Primary Button</Button>
-            </TableToolbarContent>
-          </TableToolbar>
-          <Table {...getTableProps()} aria-label="sample table">
-            <TableHead>
-              <TableRow>
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow {...getRowProps({ row })}>
-                  {row.cells.map((cell) => (
-                    <TableCell {...getCellProps({ cell })}>
-                      {cell.value}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </DataTable>
-  ),
-  play: async ({ args, canvasElement }) => {
-    const body = within(canvasElement.ownerDocument.body);
-    const trigger = toolbarMenuTrigger(canvasElement);
-
-    await userEvent.click(trigger);
-    const menu = await body.findByRole('menu', { name: 'Settings' });
-    const items = within(menu).getAllByRole('menuitem');
-    await expect(items.map((item) => item.textContent)).toEqual([
-      'Action 1',
-      'Action 2',
-      'Action 3',
-    ]);
-    await userEvent.click(items[1] as HTMLElement);
-    await expect(args.onAction).toHaveBeenCalledWith('Action 2');
-
-    trigger.focus();
-    await userEvent.keyboard('{Enter}');
-    await waitFor(() =>
-      expect(body.getByRole('menuitem', { name: 'Action 1' })).toHaveFocus()
-    );
-    await userEvent.keyboard('{ArrowDown}{Enter}');
-    await expect(args.onAction).toHaveBeenLastCalledWith('Action 2');
-  },
 };

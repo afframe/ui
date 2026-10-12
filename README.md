@@ -6,7 +6,7 @@ Afframe UI and design system.
 
 ## Status
 
-Carbon core and IBM Products components are re-exported from `@afframe/ui`, the migrated components under their Carbon v12 core names, with Carbon's icons, pictograms and tokens on their own subpaths and the upstream docs and stories copied into Storybook. Carbon Labs, the extras and the Afframe-owned components are included too; the folder list is in [docs/package-structure.md](docs/package-structure.md). Releases are published to GitHub Packages ([ADR 0016](docs/decisions/0016-first-release-before-carbon-v12.md)).
+Carbon core and IBM Products components are re-exported from `@afframe/ui`, the migrated components under the names they get in Carbon core, with Carbon's icons, pictograms and tokens on their own subpaths and the upstream docs and stories copied into Storybook. Carbon Labs, the extras and the Afframe-owned components are included too; the folder list is in [docs/package-structure.md](docs/package-structure.md). Releases are published to GitHub Packages ([ADR 0016](docs/decisions/0016-first-release-before-carbon-v12.md)).
 
 ## Usage
 

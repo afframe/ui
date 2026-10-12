@@ -4,7 +4,7 @@ Date: 2026-09-24
 
 ## Status
 
-Accepted. Amended by [ADR 0015](0015-carbon-charts-css-in-its-own-file.md): Carbon Charts CSS ships separately as `charts.css`.
+Accepted. Amended by [ADR 0015](0015-carbon-charts-css-in-its-own-file.md): Carbon Charts CSS ships separately as `charts.css`. Amended by [ADR 0017](0017-carbon-v11-without-v12-flags.md): the stylesheet compiles without the v12 flags, so the look is v11.
 
 ## Context
 

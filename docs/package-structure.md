@@ -83,7 +83,7 @@ Every docs page is marked with where its component comes from: `carbon`, `ibm-pr
 | `@afframe/ui/pictograms` | Carbon's pictograms (`@carbon/pictograms-react`) with Carbon's names                                                                                         |
 | `@afframe/ui/tokens`     | Carbon's JavaScript token values (`@carbon/themes`, `@carbon/motion`) with Carbon's names; the same tokens are CSS variables in `styles.css`                 |
 | `@afframe/ui/format`     | the formatting functions of `src/format/` alone, for server code and scripts that should not load the component entry                                        |
-| `@afframe/ui/styles.css` | the compiled stylesheet: Carbon, IBM Products, Labs and Afframe styles with the v12 flags on; themes `light`, `dark`, `system`                               |
+| `@afframe/ui/styles.css` | the compiled stylesheet: Carbon, IBM Products, Labs and Afframe styles with Afframe's flags; themes `light`, `dark`, `system`                                |
 | `@afframe/ui/charts.css` | the Carbon Charts styles; an app that renders Carbon Charts imports it after `styles.css`                                                                    |
 
 TypeScript types ship with the package. ESM only. Components have one entry, and there is no server entry for them: Carbon's `es/index.js` already starts with "use client" and `src/index.ts` has no directive, so server-safe code stays usable on the server.

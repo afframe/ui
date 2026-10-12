@@ -9,15 +9,14 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <SourceLabel name="afframe" />
 
-Afframe UI runs Carbon v11 with the v12 feature flags on. Consumers set
-nothing: `AfframeProvider` turns the flags on in React and `styles.css` is built
-with the same flags in Sass.
+Afframe UI runs Carbon v11 with the v12 feature flags off and a few opt-in
+flags on. Consumers set nothing: `AfframeProvider` turns the flags on in React
+and `styles.css` is built with the same flags in Sass.
 
 ## React flags
 
 `AfframeProvider` wraps the app in Carbon's `FeatureFlags` with:
 
-- `enableV12Release`
 - `enableDialogElement`
 - `enablePresence`
 - `enableEnhancedFileUploader`
@@ -27,7 +26,6 @@ with the same flags in Sass.
 
 `styles.css` is compiled with:
 
-- `enable-v12-release`
 - `enable-dialog-element`
 - `enable-presence`
 - `enable-enhanced-file-uploader`
@@ -36,5 +34,5 @@ with the same flags in Sass.
 
 ## More
 
-Why each flag is on, the rules around them and known v12 breaks:
+Why each flag is on and the rules around them:
 [docs/feature-flags.md](https://github.com/afframe/ui/blob/main/docs/feature-flags.md).

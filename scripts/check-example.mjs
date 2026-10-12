@@ -56,7 +56,7 @@ const pages = [
   },
 ];
 
-// Carbon v12 text input border, only present with the v12 flags compiled in.
+// Carbon v12 text input border, present only with the v12 flags compiled in.
 const v12Marker =
   /calc\(100% - 4px\),\s*var\(--cds-border-strong\)\s*100%\)\s*border-box/;
 const darkTheme =
@@ -261,7 +261,7 @@ for (const url of cssUrls) {
   if (font && !fontUrl) fontUrl = new URL(font, url).href;
 }
 
-check(v12Marker.test(css), 'CSS has the v12 text input border');
+check(!v12Marker.test(css), 'CSS has no v12 text input border');
 check(darkTheme.test(css), 'CSS has the dark theme on data-afframe-theme=dark');
 check(
   systemTheme.test(css),

@@ -6,7 +6,7 @@ Carbon, IBM Products, Carbon Labs and the other upstream packages are exact depe
 
 - Runs on a regular schedule. On-demand updates (security fixes, needed features) are normal PRs with the same review.
 - Carbon updates are grouped into one PR: `@carbon/*`, `@carbon-labs/*` and `@ibm/*` (such as `@ibm/plex`). The extras packages have their own group, `extras` (see Extras packages). `.github/dependabot.yml` lists every group.
-- Stable versions only. No `v12-alpha` or other pre-release versions (ADR 0002).
+- Stable versions only. No `v12-alpha` or other pre-release versions (ADR 0017).
 - Dependabot ignores `typescript` major updates (`.github/dependabot.yml`, ADR 0010).
 - Every install in CI runs with `IBM_TELEMETRY_DISABLED=true`.
 
@@ -14,7 +14,7 @@ Carbon, IBM Products, Carbon Labs and the other upstream packages are exact depe
 
 1. CI passes (unit and accessibility tests), and the release checks pass on the PR branch (`gh workflow run release-checks.yml --ref <branch>`): visual tests, the package check and the example app build.
 2. Check that IBM Products' peer range still accepts the new `@carbon/react`.
-3. Check `docs/feature-flags.md`: new v12 flags to turn on, workarounds a fix makes unnecessary.
+3. Check `docs/feature-flags.md`: workarounds a fix makes unnecessary. The v12 flags stay off (ADR 0017).
 4. Check copied Carbon docs and stories for upstream changes (ADR 0008). A newly copied `.mdx` page gets IBM's SPDX lines as `//` comments directly after its imports (`docs/developer-handbook.md`).
 5. On an IBM Products update: check the copied IBM Products docs and stories for upstream changes, and the canary list (`pkg.component` in the `AfframeProvider` module) for components that became gated or no longer are. Move `@carbon/ibm-products-styles` to the version released with it: both carry the same `gitHead` (`npm view <package>@<version> gitHead`).
 6. On a Carbon Labs update: compile the updated Labs Sass and compare it with the old version. A new or changed rule on a `cds--` class, a `flatpickr-` class or a plain element (`mark`, `del`, `ins` and the like) also styles Carbon components or plain HTML. Extend the Afframe overrides after the Labs `@use` lines in `src/styles/index.scss`, and the Labs versions named in their comments. `src/provider/LabsStyles.test.tsx` covers the known cases.
@@ -124,17 +124,16 @@ On an update:
 
 ## Moving to Carbon v12
 
-When Carbon v12 is stable:
+When Carbon v12 is stable and a new ADR adopts it:
 
 1. Move `@carbon/react`, `@carbon/styles` and related packages to v12, and IBM Products to the version that supports it.
-2. Remove the v12 flags from `AfframeProvider` and the Sass build.
-3. Switch the migrated components from IBM Products' `preview__` and `previewCandidate__` exports to Carbon core behind the same Afframe names (ADR 0005), and remove the IBM Products canary settings from the `AfframeProvider` module.
-4. Run Carbon's codemods (`@carbon/upgrade`) where they apply.
-5. Move the extras with Carbon: `@carbon/ai-chat` 2.x, which needs `@carbon/web-components` 3, and a Carbon Charts version that supports v12 (carbon-charts issue #2098). Drop the v12 `OverflowMenu` flag that `DataGrid` row actions set locally.
-6. Move the Afframe components off their IBM Products and preview imports: `StatusIndicator` uses Carbon's `preview__IconIndicator` and `preview__ShapeIndicator`, `EditTearsheet` uses IBM Products' `preview__Tearsheet`, and `CreateSidePanel` and `EditSidePanel` use IBM Products' `SidePanel`. Take the stable names when they land in core, and rerun those components' tests, play tests and visual tests.
-7. Recheck the header workarounds. `HelpMenu` and `EnvironmentSwitcher` render Carbon's `HeaderPanel` with `addFocusListeners={false}`, because in controlled mode its focus listeners close twice, reopen on a click on the action and never return focus; `HelpMenu` wraps `Switcher` in its own element, because `HeaderPanel`'s outside-click handler runs only for a direct `Switcher` child; `SwitcherItem`'s types lack `as`, `id` and `aria-describedby`. `LogoutBanner` sets `enableFocusWrapWithoutSentinels` locally on its `ActionableNotification`, which otherwise adds two tabbable focus sentinels. Drop each when v12 makes it unnecessary, and check that `HeaderGlobalAction`, `HeaderPanel`, `Switcher`, `SwitcherItem` and `SwitcherDivider` keep their names.
-8. Recheck `renderChatElement` against `@carbon/ai-chat` 2.x, since it relies on `renderUserDefinedResponse` and the `RenderUserDefinedState` type, and re-run the chat element comparison (above).
-9. Recheck the dialog workarounds once `enable-dialog-element` is default (`docs/feature-flags.md`): the own initial focus of the modals and the create and edit components, and the Tab wrap of CreateModal, EditTearsheet and the discard dialog. Drop one when Carbon or Chromium no longer needs it.
-10. Update the ADRs and docs this changes.
+2. Switch the migrated components from IBM Products' `preview__` and `previewCandidate__` exports to Carbon core behind the same Afframe names (ADR 0005), and remove the IBM Products canary settings from the `AfframeProvider` module.
+3. Run Carbon's codemods (`@carbon/upgrade`) where they apply.
+4. Move the extras with Carbon: `@carbon/ai-chat` 2.x, which needs `@carbon/web-components` 3, and a Carbon Charts version that supports v12 (carbon-charts issue #2098).
+5. Move the Afframe components off their IBM Products and preview imports: `StatusIndicator` uses Carbon's `preview__IconIndicator` and `preview__ShapeIndicator`, `EditTearsheet` uses IBM Products' `preview__Tearsheet`, and `CreateSidePanel` and `EditSidePanel` use IBM Products' `SidePanel`. Take the stable names when they land in core, and rerun those components' tests, play tests and visual tests.
+6. Recheck the header workarounds. `HelpMenu` and `EnvironmentSwitcher` render Carbon's `HeaderPanel` with `addFocusListeners={false}`, because in controlled mode its focus listeners close twice, reopen on a click on the action and never return focus; `HelpMenu` wraps `Switcher` in its own element, because `HeaderPanel`'s outside-click handler runs only for a direct `Switcher` child; `SwitcherItem`'s types lack `as`, `id` and `aria-describedby`. `LogoutBanner` sets `enableFocusWrapWithoutSentinels` locally on its `ActionableNotification`, which otherwise adds two tabbable focus sentinels. Drop each when v12 makes it unnecessary, and check that `HeaderGlobalAction`, `HeaderPanel`, `Switcher`, `SwitcherItem` and `SwitcherDivider` keep their names.
+7. Recheck `renderChatElement` against `@carbon/ai-chat` 2.x, since it relies on `renderUserDefinedResponse` and the `RenderUserDefinedState` type, and re-run the chat element comparison (above).
+8. Recheck the dialog workarounds once `enable-dialog-element` is default (`docs/feature-flags.md`): the own initial focus of the modals and the create and edit components, and the Tab wrap of CreateModal, EditTearsheet and the discard dialog. Drop one when Carbon or Chromium no longer needs it.
+9. Update the ADRs and docs this changes.
 
 The deprecated IBM Products components that Afframe replaces (CreateModal, CreateSidePanel, EditSidePanel, EditTearsheet, EditFullPage, RemoveModal, ImportModal, ExportModal, APIKeyModal, StatusIcon, StatusIndicator, DescriptionList) are not imported by Afframe code. IBM marks them deprecated with no removal version in 2.100.0; when an update removes them, only the excluded-pages table above changes.

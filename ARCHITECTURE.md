@@ -30,17 +30,17 @@ Name: `@afframe/ui`.
 
 Description: one import path, `@afframe/ui`, for every component. Icons, pictograms and JavaScript token values follow Carbon's own pattern (`@carbon/react/icons`): subpaths `@afframe/ui/icons`, `@afframe/ui/pictograms` and `@afframe/ui/tokens`, with Carbon's names. Carbon components are re-exported by name as they are; only components Afframe changes get an Afframe wrapper. The components IBM is moving from IBM Products into Carbon core are exported under Afframe names, backed by IBM Products until Carbon v12 is stable. Extras (Carbon Charts, ECharts with the Carbon theme, `@carbon/ai-chat`, TanStack data grid, onboarding, Labs) come through the same path and must tree-shake out of apps that do not use them: each extra family is its own `'use client'` module, and the AI chat loads lazily ([docs/package-structure.md](docs/package-structure.md)).
 
-Technologies: React, TypeScript, Carbon `@carbon/react` on the stable line with the v12 feature flags on (ADR 0002), Sass. Versions: `package.json`.
+Technologies: React, TypeScript, Carbon `@carbon/react` on the stable v11 line without the v12 feature flags (ADR 0017), Sass. Versions: `package.json`.
 
 Deployment: GitHub Packages (npm registry, `@afframe` scope), published from `v*` tags by `.github/workflows/release.yml` (ADR 0016).
 
 ### 3.2. AfframeProvider
 
-Wraps the consumer app once. Turns on the React side of the v12 flags (`<FeatureFlags enableV12Release>` plus the other enabled flags) and applies IBM Products package settings. UI strings are overridden per component through a `messages` prop (ADR 0014); amounts and dates come from the server-safe formatters in `src/format` (cs-CZ, Europe/Prague, CZK by default). Its module enables IBM Products' canary components (listed in [docs/feature-flags.md](docs/feature-flags.md)) at load, before the first render. It does not set the theme (see 3.3). It is a client component. Flags: [docs/feature-flags.md](docs/feature-flags.md).
+Wraps the consumer app once. Turns on the React side of the opt-in Carbon flags (`<FeatureFlags>`) and applies IBM Products package settings. UI strings are overridden per component through a `messages` prop (ADR 0014); amounts and dates come from the server-safe formatters in `src/format` (cs-CZ, Europe/Prague, CZK by default). Its module enables IBM Products' canary components (listed in [docs/feature-flags.md](docs/feature-flags.md)) at load, before the first render. It does not set the theme (see 3.3). It is a client component. Flags: [docs/feature-flags.md](docs/feature-flags.md).
 
 ### 3.3. Styles
 
-One Sass build compiles Carbon, IBM Products and Afframe styles with `$feature-flags: ('enable-v12-release': true)` into `dist/styles.css`. Consumers never touch Sass. Prefixes stay `cds` (Carbon) and `c4p` (IBM Products). Themes `light`, `dark` and `system` (follows the OS), chosen by `data-afframe-theme` on `<html>`. The app renders that attribute on the server and the CSS does the rest, so the theme does not flash. Carbon Charts CSS is compiled separately into `dist/charts.css`, which an app that renders charts imports as well. IBM Plex fonts ship in `dist/fonts/`, referenced by relative URLs.
+One Sass build compiles Carbon, IBM Products and Afframe styles with the same opt-in `$feature-flags` into `dist/styles.css`. Consumers never touch Sass. Prefixes stay `cds` (Carbon) and `c4p` (IBM Products). Themes `light`, `dark` and `system` (follows the OS), chosen by `data-afframe-theme` on `<html>`. The app renders that attribute on the server and the CSS does the rest, so the theme does not flash. Carbon Charts CSS is compiled separately into `dist/charts.css`, which an app that renders charts imports as well. IBM Plex fonts ship in `dist/fonts/`, referenced by relative URLs.
 
 ### 3.4. Storybook
 
@@ -77,7 +77,7 @@ Code Quality Tools: ESLint, Stylelint with `stylelint-plugin-carbon-tokens`, Pre
 
 ## 9. Known limits
 
-- Carbon v11 with the v12 flags until v12 ships as stable: issue #2.
+- Carbon v11 without the v12 flags; a move to v12 is a new decision once it ships as stable (ADR 0017).
 - Workarounds waiting for upstream fixes: issue #4.
 - Component limits: issue #9; client bundle size of the Carbon barrel: issue #8.
 - Open work: [GitHub issues](https://github.com/afframe/ui/issues).
@@ -96,7 +96,7 @@ IBM Products: `@carbon/ibm-products`, Carbon's product-pattern library (prefix `
 
 Carbon Labs: `@carbon-labs/*`, Carbon's experimental packages.
 
-v12 flags: Carbon feature flags (`enable-v12-release` and `enable-v12-*`) that turn on v12 behaviour inside v11.
+v12 flags: Carbon feature flags (`enable-v12-release` and `enable-v12-*`) that turn on v12 behaviour inside v11. Afframe UI leaves them off.
 
 Migrated components: the components IBM is moving from IBM Products into Carbon core for v12.
 

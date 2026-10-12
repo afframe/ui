@@ -10,7 +10,7 @@ import {
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, toolbar menu under the v12 flags section added, row overflow menu snippet uses MenuItem children.
+// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with v11 OverflowMenuItem children.
 
 <Meta isTemplate />
 
@@ -42,7 +42,6 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
   - [Multiple filters with batch updates](#multiple-filters-with-batch-updates)
 - [Batch actions](#batch-actions)
 - [Toolbar](#toolbar)
-  - [Toolbar menu under the v12 flags](#toolbar-menu-under-the-v12-flags)
   - [Overflow Menu](#overflow-menu)
 - [Text Wrapping Alignment](#text-wrapping-alignment)
   - [Table with `experimentalAutoAlign = true`](#table-with-experimentalautoalign--true)
@@ -375,36 +374,6 @@ _Note: press "Show code" above to view a code snippet of this example_
 
 <Canvas id="components-datatable-toolbar--default" />
 
-### Toolbar menu under the v12 flags
-
-Under the v12 flags (`enable-v12-overflowmenu`, turned on by
-`enable-v12-release`), `TableToolbarMenu` renders the v12 overflow menu with
-`iconDescription` as its label, and each `TableToolbarAction` renders a v12
-`MenuItem` (since `@carbon/react` 1.118.0,
-[PR #23375](https://github.com/carbon-design-system/carbon/pull/23375)). The
-`MenuItem` label is the text of the `TableToolbarAction` children, so give it
-plain text only.
-
-For dividers or other menu items, build the toolbar menu from `MenuItem` and
-`MenuItemDivider` children instead. A `label` overrides `iconDescription` as the
-accessible name of the menu and its trigger; the `TableToolbarMenu` types omit
-`label`, so pass it through a spread.
-
-<Canvas id="components-datatable-toolbar--toolbar-menu-with-menu-items" />
-
-```jsx
-import { MenuItem, MenuItemDivider, TableToolbarMenu } from '@afframe/ui';
-
-const toolbarMenuLabel = { label: 'Settings' };
-
-<TableToolbarMenu {...toolbarMenuLabel}>
-  <MenuItem label="Action 1" onClick={handleAction1} />
-  <MenuItem label="Action 2" onClick={handleAction2} />
-  <MenuItemDivider />
-  <MenuItem label="Action 3" onClick={handleAction3} />
-</TableToolbarMenu>;
-```
-
 ### Overflow Menu
 
 An overflow menu can be added to the toolbar table. To add an overflow menu,
@@ -412,15 +381,8 @@ simply add a `TableCell` with the class `cds--table-column-menu` (replace the
 prefix if you have added a custom prefix). Then add the overflow menu into the
 cell.
 
-Under the v12 flags, build the menu from `MenuItem` children and give
-`OverflowMenu` a `label`, as for the toolbar menu above: `OverflowMenuItem`
-children cannot be reached with the keyboard there. The `OverflowMenu` types
-omit `label` and `menuAlignment`, so pass them through a spread.
-
 ```jsx
-import { MenuItem, OverflowMenu } from '@afframe/ui';
-
-const rowMenuProps = { label: 'Row actions', menuAlignment: 'bottom-end' };
+import { OverflowMenu, OverflowMenuItem } from '@afframe/ui';
 
 <TableBody>
   {rows.map((row) => (
@@ -429,10 +391,10 @@ const rowMenuProps = { label: 'Row actions', menuAlignment: 'bottom-end' };
         <TableCell {...getCellProps({ cell })}>{cell.value}</TableCell>
       ))}
       <TableCell className="cds--table-column-menu">
-        <OverflowMenu size="sm" {...rowMenuProps}>
-          <MenuItem label="Action 1" />
-          <MenuItem label="Action 2" />
-          <MenuItem label="Action 3" />
+        <OverflowMenu size="sm" flipped>
+          <OverflowMenuItem itemText="Action 1" />
+          <OverflowMenuItem itemText="Action 2" />
+          <OverflowMenuItem itemText="Action 3" />
         </OverflowMenu>
       </TableCell>
     </TableRow>

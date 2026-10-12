@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, stories rendered with the v11 overflow menu (OverflowMenuItem children). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -19,7 +19,6 @@ import {
 } from '../../index.js';
 import type { OverflowMenuProps } from '../../index.js';
 import { Filter } from '../../icons.js';
-import { withV11OverflowMenu } from '../../../.storybook/templates/withV11OverflowMenu.js';
 import mdx from './OverflowMenu.mdx';
 
 const args: Partial<OverflowMenuProps> = {
@@ -99,7 +98,6 @@ export default {
   subcomponents: {
     OverflowMenuItem,
   },
-  decorators: [withV11OverflowMenu],
   parameters: {
     docs: {
       page: mdx,

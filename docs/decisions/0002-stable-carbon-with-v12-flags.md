@@ -4,7 +4,7 @@ Date: 2026-10-05
 
 ## Status
 
-Accepted
+Superseded by [ADR 0017](0017-carbon-v11-without-v12-flags.md).
 
 ## Context
 

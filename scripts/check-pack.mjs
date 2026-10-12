@@ -226,12 +226,15 @@ for (const path of files.filter((path) =>
 }
 
 const styles = read('dist/styles.css');
+// Carbon v12 text input border: present only with the v12 flags compiled in.
+if (
+  /calc\(100% - 4px\),\s*var\(--cds-border-strong\)\s*100%\)\s*border-box/.test(
+    styles
+  )
+) {
+  problems.push('dist/styles.css must not carry the v12 field border');
+}
 const contents = [
-  {
-    what: 'the v12 field border',
-    pattern:
-      /calc\(100% - 4px\),\s*var\(--cds-border-strong\)\s*100%\)\s*border-box/,
-  },
   {
     what: 'the dark theme',
     pattern:
