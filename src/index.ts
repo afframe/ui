@@ -1,8 +1,9 @@
 // Public entry of @afframe/ui. Carbon components are re-exported by name;
-// aliases and unstable parts are left out, `preview__` components without a
-// stable twin are in. IBM Products components that Carbon v12 moves into core
-// use their core names, the rest keep IBM's names. Of the names both packages
-// export, `ComboButton` is Carbon's and `usePrefix` is IBM Products'.
+// aliases, unstable parts and deprecated components (StaticNotification: use
+// Callout) are left out, `preview__` components without a stable twin are in.
+// IBM Products components that Carbon v12 moves into core use their core
+// names, the rest keep IBM's names. Of the names both packages export,
+// `ComboButton` is Carbon's and `usePrefix` is IBM Products'.
 export { AfframeProvider } from './provider/index.js';
 export type { AfframeTheme } from './provider/index.js';
 
@@ -473,7 +474,6 @@ export {
   ActionableNotification,
   InlineNotification,
   ToastNotification,
-  StaticNotification,
   Callout,
   NotificationActionButton,
   NotificationButton,
@@ -494,7 +494,6 @@ export type {
   ActionableNotificationProps,
   InlineNotificationProps,
   ToastNotificationProps,
-  StaticNotificationProps,
   CalloutProps,
   NotificationActionButtonProps,
   NotificationButtonProps,

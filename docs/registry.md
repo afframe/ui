@@ -274,7 +274,6 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | ActionableNotification             | component | carbon       | client  | stable            |                                                                       |
 | InlineNotification                 | component | carbon       | client  | stable            |                                                                       |
 | ToastNotification                  | component | carbon       | client  | stable            |                                                                       |
-| StaticNotification                 | component | carbon       | client  | stable            |                                                                       |
 | Callout                            | component | carbon       | client  | stable            |                                                                       |
 | NotificationActionButton           | component | carbon       | client  | stable            |                                                                       |
 | NotificationButton                 | component | carbon       | client  | stable            |                                                                       |
