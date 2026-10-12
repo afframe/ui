@@ -104,6 +104,26 @@ test('menuAlignment with MenuItem children takes the newer menu', async () => {
   expect(onDelete).toHaveBeenCalledOnce();
 });
 
+test('menuAlignment with OverflowMenuItem children stays on the v11 menu', async () => {
+  const onDelete = vi.fn();
+  render(
+    <AfframeProvider>
+      <OverflowMenu menuAlignment="top-end" iconDescription="Row actions">
+        <OverflowMenuItem itemText="Edit" />
+        <OverflowMenuItem itemText="Delete" onClick={onDelete} />
+      </OverflowMenu>
+    </AfframeProvider>
+  );
+  const trigger = iconButton('Row actions');
+  await userEvent.click(trigger);
+  expect(await screen.findByRole('menu')).toHaveClass(
+    'cds--overflow-menu-options'
+  );
+  await userEvent.keyboard('{Escape}');
+  await runSecondItem(trigger, 'Delete');
+  expect(onDelete).toHaveBeenCalledOnce();
+});
+
 test('the newer menu keeps the v11 look: no v12 menu border', async () => {
   render(
     <AfframeProvider>

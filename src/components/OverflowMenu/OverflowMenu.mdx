@@ -71,12 +71,12 @@ those forward. To modify the tooltip's alignment, you may make use of the
 
 Give the trigger its name with `iconDescription` and the menu its name with
 `aria-label`; the children are `OverflowMenuItem` with `itemText`. Code written
-for `@afframe/ui` 1.0.1 still works: a `label` or `menuAlignment` prop, or
+for `@afframe/ui` 1.0.1 still works: a `label` prop, or
 `MenuItem` children (also `MenuItemDivider`, `MenuItemGroup`,
 `MenuItemRadioGroup`, `MenuItemSelectable`) placed directly or in one Fragment,
 switch that one menu to Carbon's newer menu. It renders Carbon's `Menu` with its
 v11 look and works by keyboard; `label` names the trigger and the menu, and
-`menuAlignment` sets where it opens. MenuItems inside your own wrapper
+`menuAlignment` sets where it opens (the v11 menu ignores it). MenuItems inside your own wrapper
 component, or passed from a React Server Component, are not detected, so pass
 `label` there.
 

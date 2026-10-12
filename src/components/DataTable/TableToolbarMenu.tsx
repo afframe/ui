@@ -3,7 +3,7 @@ import {
   TableToolbarMenu as CarbonTableToolbarMenu,
   type TableToolbarMenuProps as CarbonTableToolbarMenuProps,
 } from '@carbon/react';
-import { withMenuShape } from '../MenuParts/menuShape.js';
+import { usesNewerMenu, withMenuShape } from '../MenuParts/menuShape.js';
 
 export type TableToolbarMenuProps = CarbonTableToolbarMenuProps & {
   /** Names the trigger and the menu. Given, the menu renders as Carbon's newer menu. */
@@ -11,9 +11,12 @@ export type TableToolbarMenuProps = CarbonTableToolbarMenuProps & {
 };
 
 /**
- * Carbon's `TableToolbarMenu`; `label`, `menuAlignment` or MenuItem children
- * switch on its newer menu, where each `TableToolbarAction` renders a `MenuItem`.
+ * Carbon's `TableToolbarMenu`; `label` or MenuItem children switch on its
+ * newer menu, where each `TableToolbarAction` renders a `MenuItem`.
  */
 export function TableToolbarMenu(props: TableToolbarMenuProps) {
-  return withMenuShape(props, <CarbonTableToolbarMenu {...props} />);
+  return withMenuShape(
+    usesNewerMenu(props),
+    <CarbonTableToolbarMenu {...props} />
+  );
 }
