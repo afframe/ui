@@ -16,7 +16,7 @@ import mdx from './Charts.mdx';
 import { alluvialLinks, upstreamA11y } from './upstreamA11y.js';
 
 const meta = {
-  title: 'Components/Charts/Flow and hierarchy',
+  title: 'Components/Charts/Flow and Hierarchy',
   tags: ['extras'],
   parameters: { docs: { page: mdx } },
 } satisfies Meta;

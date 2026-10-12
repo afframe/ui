@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Labs UI shell and theme settings components, Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), the docs entry and subcomponents as the Profile namespace parts, sample user name, email and instance name replaced with neutral placeholders, title under Components/UI Shell/Labs, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Labs UI shell and theme settings components, Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), the docs entry and subcomponents as the Profile namespace parts, sample user name, email and instance name replaced with neutral placeholders, title Components/UI Shell/Profile, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState, type ReactNode } from 'react';

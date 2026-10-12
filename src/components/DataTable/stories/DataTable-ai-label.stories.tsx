@@ -46,7 +46,7 @@ import '../../AILabel/ailabel-story.css';
 import './datatable-story.css';
 
 export default {
-  title: 'Components/DataTable/WithAILabel',
+  title: 'Components/DataTable/AI Label',
   component: DataTable,
   tags: ['carbon'],
   args: { ...dataTableArgs, radio: false },

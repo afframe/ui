@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Guidebanner components from @afframe/ui, plain CSS file, theme argType dropped, typed casts for the element button and link, title Components/Guidebanner. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Guidebanner components from @afframe/ui, plain CSS file, theme argType dropped, typed casts for the element button and link, title Components/Onboarding/Guidebanner. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import {

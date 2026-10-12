@@ -16,7 +16,7 @@ import { ToastNotification } from '../../index.js';
 import mdx from './Notification.mdx';
 
 export default {
-  title: 'Components/Notifications/Toast',
+  title: 'Components/Notifications/ToastNotification',
   component: ToastNotification,
   tags: ['carbon'],
   parameters: {

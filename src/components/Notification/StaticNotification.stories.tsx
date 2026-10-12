@@ -15,7 +15,7 @@ import { CodeSnippet, StaticNotification } from '../../index.js';
 import mdx from './StaticNotification.mdx';
 
 export default {
-  title: 'Preview/preview__StaticNotification',
+  title: 'Components/Notifications/StaticNotification',
   component: StaticNotification,
   tags: ['carbon'],
   parameters: {

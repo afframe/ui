@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Labs UI shell components from @afframe/ui under their Labs names (SideNavLabs and the rest of the Labs side nav set), Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), title under Components/UI Shell/Labs, a11y rule exceptions for the upstream treeview and rail panel markup, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Labs UI shell components from @afframe/ui under their Labs names (SideNavLabs and the rest of the Labs side nav set), Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), title Components/UI Shell/SideNavLabs, a11y rule exceptions for the upstream treeview and rail panel markup, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';

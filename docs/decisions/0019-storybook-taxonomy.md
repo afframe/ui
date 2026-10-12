@@ -21,11 +21,11 @@ The sidebar follows Carbon's Storybook layout, with Afframe's content merged int
 | Elements        | Tokens, icons, pictograms, IBM Plex                                                                                                                                                           |
 | Layout          | Grid, FlexGrid, Layer, Stack, AspectRatio, Heading, Section                                                                                                                                   |
 | Hooks           | React hooks                                                                                                                                                                                   |
-| Utilities       | Helpers without their own look (ActionBar, Cascade, ErrorBoundary, IdPrefix, TruncatedList)                                                                                                   |
-| Preview         | `preview__` exports and IBM Products' preview candidates                                                                                                                                      |
+| Utilities       | Helpers without their own look (ActionBar, Cascade, ErrorBoundary, IdPrefix)                                                                                                                  |
+| Preview         | `preview__` and `previewCandidate__` exports, under those names                                                                                                                               |
 
 - Sections come in this order; everything inside is sorted A to Z by path (`storySort` in `.storybook/preview.tsx`). Stories of one component keep their file order.
-- A component's title is its export name (`Components/DataGrid`, `Components/UI Shell/HelpMenu`). A family subfolder and a page that is not a component are in words.
+- A component's title is its export name (`Components/DataGrid`, `Components/UI Shell/HelpMenu`, `Preview/previewCandidate__Toolbar`). A page for a module with several exports takes the module name (`Components/AI/AIChat`). A family subfolder and a page that is not a component are in words, in Title Case.
 - Sub-pages of a component use the same words everywhere: `Feature Flags`, `Examples`, `Docs`.
 - Where a component comes from shows as the sidebar badge and the docs page label, not as a section.
 - Storybook's own onboarding checklist and release notes popup are off.

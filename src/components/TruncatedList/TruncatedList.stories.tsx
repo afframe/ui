@@ -21,7 +21,7 @@ const TruncatedList = previewCandidate__TruncatedList;
 const storyClass = 'truncated-list-stories';
 
 export default {
-  title: 'Utilities/TruncatedList',
+  title: 'Preview/previewCandidate__TruncatedList',
   component: TruncatedList,
   tags: ['ibm-products'],
   parameters: {

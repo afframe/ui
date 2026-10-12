@@ -45,15 +45,19 @@ const preview: Preview = {
           'Formatting',
           'Feature Flags',
         ];
+        // Unlisted names sort after the listed ones.
+        const rank = (list = [''], name = '') => {
+          const i = list.indexOf(name);
+          return i < 0 ? list.length : i;
+        };
         const key = (title = '') => {
           const [section, ...rest] = title.split('/');
-          const page =
-            section === 'Getting Started' ? start.indexOf(rest[0]) : 0;
-          const index = sections.indexOf(section);
+          const index = rank(sections, section);
           return {
-            index: index < 0 ? sections.length : index,
-            page,
-            path: rest.join('/'),
+            index,
+            page: section === 'Getting Started' ? rank(start, rest[0]) : 0,
+            // An unlisted section keeps its name, so two of them do not mix.
+            path: index === sections.length ? title : rest.join('/'),
           };
         };
         const ka = key(a.title);

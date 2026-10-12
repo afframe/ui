@@ -4,7 +4,7 @@ import type { EChartOption } from './EChart.js';
 import mdx from './ECharts.mdx';
 
 const meta = {
-  title: 'Components/Charts/ECharts',
+  title: 'Components/Charts/EChart',
   component: EChart,
   tags: ['extras'],
   parameters: { docs: { page: mdx } },

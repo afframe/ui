@@ -250,7 +250,7 @@
       "runtime": "client",
       "folder": "src/components/ECharts",
       "docs": "src/components/ECharts/ECharts.mdx",
-      "storyTitle": "Components/Charts/ECharts",
+      "storyTitle": "Components/Charts/EChart",
       "status": "stable",
       "exports": ["EChart"],
       "types": [
@@ -985,7 +985,7 @@
       "runtime": "client",
       "folder": "src/components/ChatElements",
       "docs": "src/components/ChatElements/ChatElements.mdx",
-      "storyTitle": "Components/AI/ChatElements",
+      "storyTitle": "Components/AI/Chat Elements",
       "status": "stable",
       "exports": [
         "ChatChart",

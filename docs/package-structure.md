@@ -72,7 +72,7 @@ Three internal folders hold shared code and are not exported, have no `index.ts`
 
 The Getting Started pages are `.storybook/Welcome.mdx`, `src/theme/Theming.mdx`, `src/format/Formatting.mdx` and `src/components/FeatureFlags/FeatureFlags.mdx`.
 
-Story titles, sections and sort order: ADR 0019. A component's title is its export name; a family of siblings shares a subfolder (`Components/Create and Edit/CreateModal`, `Components/UI Shell/HelpMenu`).
+Story titles, sections and sort order: ADR 0019.
 
 Every docs page is marked with where its component comes from: `carbon`, `ibm-products`, `labs`, `extras` or `afframe`. The stories file sets it as a Storybook tag (sidebar badge and tag filter), and the page shows it under the title with `<SourceLabel name="..." />` from `.storybook/`.
 

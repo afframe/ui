@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, InterstitialScreen, InterstitialScreenView, Button and ButtonSet from @afframe/ui, plain CSS file, literal c4p prefix, clamp written inline, launcher ref cast, step values defaulted and handleGotoStep called with ?. for the optional types, title Components/InterstitialScreen. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, InterstitialScreen, InterstitialScreenView, Button and ButtonSet from @afframe/ui, plain CSS file, literal c4p prefix, clamp written inline, launcher ref cast, step values defaulted and handleGotoStep called with ?. for the optional types, title Components/Onboarding/InterstitialScreen. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState, type ComponentProps, type RefObject } from 'react';
