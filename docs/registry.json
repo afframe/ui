@@ -1052,7 +1052,7 @@
       "types": ["OverflowMenuProps"]
     },
     {
-      "name": "DataTable",
+      "name": "TableToolbarMenu",
       "kind": "component",
       "source": "carbon",
       "import": ["@afframe/ui"],

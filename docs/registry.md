@@ -38,7 +38,7 @@ One entry per Afframe or extras module and per subpath; the JSON lists its expor
 | ChatElements         | component  | afframe | `@afframe/ui`                       | client  | [page](../src/components/ChatElements/ChatElements.mdx)                 | yes, yes, yes, yes |
 | ControlledDatePicker | component  | afframe | `@afframe/ui`                       | client  | [page](../src/components/ControlledDatePicker/ControlledDatePicker.mdx) | yes, yes, yes, yes |
 | OverflowMenu         | component  | carbon  | `@afframe/ui`                       | client  | [page](../src/components/OverflowMenu/OverflowMenu.mdx)                 |                    |
-| DataTable            | component  | carbon  | `@afframe/ui`                       | client  | [page](../src/components/DataTable/DataTable.mdx)                       |                    |
+| TableToolbarMenu     | component  | carbon  | `@afframe/ui`                       | client  | [page](../src/components/DataTable/DataTable.mdx)                       |                    |
 | icons                | foundation | carbon  | `@afframe/ui/icons`                 | server  | [page](../src/components/Icons/Icons.mdx)                               |                    |
 | pictograms           | foundation | carbon  | `@afframe/ui/pictograms`            | server  | [page](../src/components/Pictograms/Pictograms.mdx)                     |                    |
 | tokens               | foundation | carbon  | `@afframe/ui/tokens`                | server  | [page](../src/components/Tokens/Tokens.mdx)                             |                    |

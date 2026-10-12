@@ -260,12 +260,18 @@ for (const { from, star, names } of exportsOf(index)) {
   const dir = rel(dirname(file));
   const component = /^src\/components\/(\w+)$/.exec(dir)?.[1];
   if (component) {
-    family(
-      component,
-      folders.get(component.toLowerCase()) ?? {},
-      { runtime },
-      collected
+    const info = folders.get(component.toLowerCase()) ?? {};
+    // A wrapper module in an upstream docs folder (TableToolbarMenu in
+    // DataTable) is named after its export, not after the upstream folder.
+    const upstreamFolder = ['carbon', 'ibm-products', 'labs'].includes(
+      info.source
     );
+    const values = collected.filter((item) => !item.isType);
+    const name =
+      !upstreamFolder || values.some((item) => item.name === component)
+        ? component
+        : (values[0]?.name ?? component);
+    family(name, info, { runtime }, collected);
   } else if (dir === 'src/labs') {
     await listUpstream(collected, 'labs', runtime, pathToFileURL(file).href);
   } else if (dir === 'src/ibm-products') {
