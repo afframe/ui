@@ -8,7 +8,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: declarations generated with tsc from packages/ibm-products-utilities/src/utils/add-select/add-select-data.ts at tag @carbon/ibm-products@2.100.0, class renamed, run-time value taken from @carbon/ibm-products. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: declarations generated with tsc from packages/ibm-products-utilities/src/utils/add-select/add-select-data.ts at tag @carbon/ibm-products@2.100.0, class renamed, em-dashes replaced, run-time value taken from @carbon/ibm-products. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 // IBM Products' declarations import AddSelectData from
@@ -35,7 +35,7 @@ export interface ItemDetailEntry {
 /**
  * Item details metadata.
  *
- * **Preferred form** — labelled array consumed by `defaultContent()`:
+ * **Preferred form**: labelled array consumed by `defaultContent()`:
  * ```ts
  * itemDetails: [
  *   { label: 'Category', value: 'Analytics' },
@@ -43,7 +43,7 @@ export interface ItemDetailEntry {
  * ]
  * ```
  *
- * **Legacy form** — arbitrary record for custom renderers that access
+ * **Legacy form**: arbitrary record for custom renderers that access
  * named keys directly (e.g. `item.itemDetails.description`). Not rendered
  * by `defaultContent()`.
  */

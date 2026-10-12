@@ -4,7 +4,7 @@ Date: 2026-10-12
 
 ## Status
 
-Accepted. An exception to the no-copy rule of [ADR 0005](0005-migrated-components-via-ibm-products.md).
+Accepted. Amends [ADR 0005](0005-migrated-components-via-ibm-products.md).
 
 ## Context
 

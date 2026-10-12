@@ -597,7 +597,7 @@ export {
   preview__Coachmark as Coachmark,
   preview__CoachmarkBeacon as CoachmarkBeacon,
   preview__CoachmarkTagline as CoachmarkTagline,
-  // The type of CoachmarkBeacon's `kind` prop.
+  // Values of CoachmarkBeacon's `kind` prop.
   BEACON_KIND,
   previewCandidate__ConditionBuilder as ConditionBuilder,
   ConditionBuilderContext,
