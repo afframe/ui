@@ -2,7 +2,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, internal IBM guidelines link and unused imports removed, Data Utilities section removed (AddSelectData is not exported by @afframe/ui), pattern links point to the IBM source at the tag, em-dashes replaced.
+// Modified by Afframe in 2026: source label and source link added, internal IBM guidelines link and unused imports removed, Data Utilities samples import from @afframe/ui (AddSelectItem as a type, optional titles handled) and its API link points to the tag, pattern links point to the IBM source at the tag, em-dashes replaced.
 
 <Meta isTemplate />
 
@@ -17,6 +17,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 - [Overview](#overview)
 - [Component Hierarchy](#component-hierarchy)
 - [Subcomponents & Usage](#subcomponents--usage)
+- [Data Utilities](#data-utilities)
 - [Usage Patterns](#usage-patterns)
 - [Component API](#component-api)
 
@@ -162,6 +163,88 @@ item.
 - When users need more context before selecting
 
 **Component flow position**: Detailed item information
+
+## Data Utilities
+
+The AddSelect component system includes the **`AddSelectData`** utility class
+for managing hierarchical selection data. This framework-agnostic utility
+encapsulates data logic separate from UI components, enabling efficient data
+operations and state management.
+
+### AddSelectData Class
+
+The `AddSelectData` class is a lightweight utility for managing hierarchical
+data structures with built-in support for:
+
+- **Selection Management**: Track selected items with O(1) lookup performance
+- **Hierarchical Navigation**: Traverse parent-child relationships efficiently
+- **Search & Filter**: Built-in search with customizable options
+- **Sorting**: Sort items at any level with optional recursion
+- **Status Tracking**: Manage checked/unchecked/indeterminate states
+- **Performance Optimized**: Uses Maps and Sets for efficient operations
+
+### Import
+
+```tsx
+import { AddSelectData, type AddSelectItem } from '@afframe/ui';
+```
+
+### Basic Usage
+
+```jsx
+import { AddSelectData } from '@afframe/ui';
+
+// Initialize with hierarchical data
+const dataManager = new AddSelectData();
+dataManager.setItems(hierarchicalItems);
+
+// Select items
+dataManager.setSelectedItems(['item-1', 'item-2']);
+
+// Get selected items
+const selected = dataManager.getSelectedItems();
+
+// Search items
+const results = dataManager.search('query', {
+  caseSensitive: false,
+  searchFields: ['title', 'value'],
+});
+
+// Navigate hierarchy
+const children = dataManager.getItemChildren('parent-id');
+const parent = dataManager.getItemParent('child-id');
+const ancestors = dataManager.getItemParents('child-id');
+
+// Check selection status
+if (dataManager.isSelected('item-1')) {
+  console.log('Item is selected');
+}
+
+// Sort items
+dataManager.sort((a, b) => (a.title ?? '').localeCompare(b.title ?? ''), true);
+```
+
+### Key Features
+
+- **Framework Agnostic**: Works with React, Web Components, or vanilla
+  JavaScript
+- **Type Safe**: Full TypeScript support with comprehensive type definitions
+- **Efficient**: Optimized with caching, memoization, and efficient data
+  structures (Maps, Sets)
+- **Flexible**: Supports custom search fields, sorting, filtering, and
+  extensible data structures
+- **Comprehensive**: Covers all common hierarchical data operations (selection,
+  navigation, search, sort)
+
+### Complete API Reference
+
+For complete API documentation, detailed usage examples, and advanced patterns,
+see:
+
+**[AddSelectData API Documentation](https://github.com/carbon-design-system/ibm-products/blob/%40carbon%2Fibm-products%402.100.0/packages/ibm-products-utilities/src/utils/add-select/add-select-data.md)**
+
+The utility is designed to work seamlessly with AddSelect components but can
+also be used independently for any hierarchical data management needs.
 
 ## Usage Patterns
 

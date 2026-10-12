@@ -4,7 +4,7 @@ Date: 2026-10-05
 
 ## Status
 
-Accepted. Amended by [ADR 0017](0017-carbon-v11-without-v12-flags.md): the IBM Products styles compile with Carbon's v11 styles, not v12.
+Accepted. Amended by [ADR 0017](0017-carbon-v11-without-v12-flags.md): the IBM Products styles compile with Carbon's v11 styles, not v12. Amended by [ADR 0017](0017-ibm-declarations-for-untyped-exports.md): IBM's declarations are copied for exports IBM leaves untyped.
 
 ## Context
 

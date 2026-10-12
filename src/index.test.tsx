@@ -136,6 +136,64 @@ test('exports the subcomponents of the migrated compound components', () => {
   expect(ui.AddSelect.Body).toBeDefined();
 });
 
+test("exports IBM Products' AddSelect, Coachmark and ConditionBuilder helpers", () => {
+  expect(ui.AddSelectData).toBe(ibm.AddSelectData);
+  expect(ui.BEACON_KIND).toBe(ibm.BEACON_KIND);
+  expect(ui.ConditionBuilderContext).toBe(ibm.ConditionBuilderContext);
+  expect(ui.getEmptyState).toBe(ibm.getEmptyState);
+  const data = new ui.AddSelectData();
+  data.setItems([{ id: 'a', children: { entries: [{ id: 'b' }] } }]);
+  data.setSelectedItems('b');
+  expect(data.getItemParent('b')?.id).toBe('a');
+  expectTypeOf(data.getSelectedItems()).toEqualTypeOf<ui.AddSelectItem[]>();
+});
+
+// The AddSelectData declarations are copied (ADR 0017): an IBM update that
+// changes the class fails here until they are regenerated.
+test("AddSelectData's declarations match IBM's run-time methods", () => {
+  const declared = [
+    'setItems',
+    'getItems',
+    'getItem',
+    'setItem',
+    'getSelectedItems',
+    'setSelectedItems',
+    'getItemChildren',
+    'getItemParent',
+    'getItemParents',
+    'getItemStatus',
+    'setItemStatus',
+    'isSelected',
+    'search',
+    'sort',
+    'clearSelections',
+    'getItemDepth',
+    'hasChildren',
+    'getItemDescendants',
+    'hasSelectedDescendants',
+    'allDescendantsSelected',
+    'getAllDescendantIds',
+    'getTopLevelSelectedItems',
+  ] as const;
+  expectTypeOf<keyof ui.AddSelectData>().toEqualTypeOf<
+    (typeof declared)[number]
+  >();
+  const runtime = Object.getOwnPropertyNames(
+    ibm.AddSelectData.prototype
+  ).filter((name) => name !== 'constructor' && !name.startsWith('_'));
+  expect([...runtime].sort()).toEqual([...declared].sort());
+});
+
+test('exports the Carbon previews, IdPrefix, AboutModal and ActionBar as they are', () => {
+  expect(ui.preview__Card).toBe(carbon.preview__Card);
+  expect(ui.preview__Dialog).toBe(carbon.preview__Dialog);
+  expect(ui.preview_Layout).toBe(carbon.preview_Layout);
+  expect(ui.IdPrefix).toBe(carbon.IdPrefix);
+  expect(ui.useIdPrefix).toBe(carbon.useIdPrefix);
+  expect(ui.AboutModal).toBe(ibm.AboutModal);
+  expect(ui.ActionBar).toBe(ibm.ActionBar);
+});
+
 test("does not export IBM Products' prefixed names of the migrated components", () => {
   const prefixed = Object.keys(ui).filter((name) =>
     /^(preview__(PageHeader|Tearsheet|AddSelect|Coachmark|TruncatedText)|previewCandidate__(BigNumber|ConditionBuilder|Guidebanner|Coachmark))/.test(

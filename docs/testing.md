@@ -24,7 +24,7 @@ Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.
 | Project     | Runs                                                         | Fails on                                     |
 | ----------- | ------------------------------------------------------------ | -------------------------------------------- |
 | `unit`      | `src/**/*.test.{ts,tsx}`, with `styles.css` and `charts.css` | a failed assertion                           |
-| `storybook` | every story, as a test                                       | a render error or an accessibility violation |
+| `storybook` | every story not tagged `!test`, as a test                    | a render error or an accessibility violation |
 | `visual`    | `src/**/*.visual.test.tsx`                                   | a screenshot that differs from its baseline  |
 
 ## Rules

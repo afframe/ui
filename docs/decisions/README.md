@@ -35,3 +35,4 @@ This directory holds the [architecture decision records](https://cognitect.com/b
 | [0015](0015-carbon-charts-css-in-its-own-file.md)           | Carbon Charts CSS in its own file                            | Accepted                                                          |
 | [0016](0016-first-release-before-carbon-v12.md)             | First release before Carbon v12                              | Accepted                                                          |
 | [0017](0017-carbon-v11-without-v12-flags.md)                | Carbon v11 without the v12 feature flags                     | Accepted                                                          |
+| [0017](0017-ibm-declarations-for-untyped-exports.md)        | IBM's declarations for untyped IBM Products exports          | Accepted                                                          |

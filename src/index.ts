@@ -553,6 +553,8 @@ export {
   useFeatureFlag,
   useFeatureFlags,
   PrefixContext,
+  IdPrefix,
+  useIdPrefix,
   // The plain name is kept for IBM Products' usePrefix.
   usePrefix as useCarbonPrefix,
 } from '@carbon/react';
@@ -568,6 +570,7 @@ export type {
   SectionProps,
   GlobalThemeProps,
   FeatureFlagsProps,
+  IdPrefixProps,
 } from '@carbon/react';
 
 // Preview
@@ -576,12 +579,26 @@ export {
   preview__ShapeIndicator,
   preview__ChatButton,
   preview__ChatButtonSkeleton,
+  // Namespaces: render <preview__Card.Card>, <preview__Dialog.Dialog>.
+  preview__Card,
+  preview__Dialog,
+  // Import with an alias: JSX reads a lowercase tag as an HTML element.
+  preview_Layout,
 } from '@carbon/react';
 export type {
   IconIndicatorProps,
   ShapeIndicatorProps,
   ChatButtonProps,
   ChatButtonSkeletonProps,
+  DialogProps,
+  DialogHeaderProps,
+  DialogControlsProps,
+  DialogCloseButtonProps,
+  DialogTitleProps,
+  DialogSubtitleProps,
+  DialogBodyProps,
+  DialogFooterProps,
+  LayoutProps,
 } from '@carbon/react';
 
 // IBM Products: migrated components under their Carbon v12 core names
@@ -593,7 +610,11 @@ export {
   preview__Coachmark as Coachmark,
   preview__CoachmarkBeacon as CoachmarkBeacon,
   preview__CoachmarkTagline as CoachmarkTagline,
+  // Values of CoachmarkBeacon's `kind` prop.
+  BEACON_KIND,
   previewCandidate__ConditionBuilder as ConditionBuilder,
+  ConditionBuilderContext,
+  getEmptyState,
   EditInPlace,
   FullPageError,
   previewCandidate__Guidebanner as Guidebanner,
@@ -613,6 +634,11 @@ export {
   preview__TruncatedText as TruncatedText,
   UserAvatar,
 } from '@carbon/ibm-products';
+// AddSelect's data helper, typed in src/ibm-products/ (IBM's types miss it).
+export {
+  AddSelectData,
+  type AddSelectItem,
+} from './ibm-products/add-select-data.js';
 export type {
   preview__AddSelectProps as AddSelectProps,
   AddSelectComponentType,
@@ -688,6 +714,8 @@ export type PageHeaderBreadcrumbPageActionItem =
 
 // IBM Products: other components by IBM's names
 export {
+  AboutModal,
+  ActionBar,
   EmptyState,
   ErrorEmptyState,
   NoDataEmptyState,
@@ -717,6 +745,7 @@ export {
   StackProvider,
 } from '@carbon/ibm-products';
 export type {
+  AboutModalProps,
   EmptyStateProps,
   ErrorEmptyStateProps,
   NoDataEmptyStateProps,
