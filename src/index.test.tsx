@@ -148,6 +148,16 @@ test("exports IBM Products' AddSelect, Coachmark and ConditionBuilder helpers", 
   expectTypeOf(data.getSelectedItems()).toEqualTypeOf<ui.AddSelectItem[]>();
 });
 
+test('exports the Carbon previews, IdPrefix, AboutModal and ActionBar as they are', () => {
+  expect(ui.preview__Card).toBe(carbon.preview__Card);
+  expect(ui.preview__Dialog).toBe(carbon.preview__Dialog);
+  expect(ui.preview_Layout).toBe(carbon.preview_Layout);
+  expect(ui.IdPrefix).toBe(carbon.IdPrefix);
+  expect(ui.useIdPrefix).toBe(carbon.useIdPrefix);
+  expect(ui.AboutModal).toBe(ibm.AboutModal);
+  expect(ui.ActionBar).toBe(ibm.ActionBar);
+});
+
 test("does not export IBM Products' prefixed names of the migrated components", () => {
   const prefixed = Object.keys(ui).filter((name) =>
     /^(preview__(PageHeader|Tearsheet|AddSelect|Coachmark|TruncatedText)|previewCandidate__(BigNumber|ConditionBuilder|Guidebanner|Coachmark))/.test(

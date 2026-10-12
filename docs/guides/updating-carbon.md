@@ -131,6 +131,7 @@ When Carbon v12 is stable:
 1. Move `@carbon/react`, `@carbon/styles` and related packages to v12, and IBM Products to the version that supports it.
 2. Remove the v12 flags from `AfframeProvider` and the Sass build.
 3. Switch the migrated components from IBM Products' `preview__` and `previewCandidate__` exports to Carbon core behind the same Afframe names (ADR 0005), and remove the IBM Products canary settings from the `AfframeProvider` module.
+   Carbon's own preview re-exports (source `carbon`, status `preview` in `docs/registry.md`) keep Carbon's names: export the stable name next to the preview one when v12 ships it, and move the copied docs and stories to the stable name.
 4. Run Carbon's codemods (`@carbon/upgrade`) where they apply.
 5. Move the extras with Carbon: `@carbon/ai-chat` 2.x, which needs `@carbon/web-components` 3, and a Carbon Charts version that supports v12 (carbon-charts issue #2098). Drop the v12 `OverflowMenu` flag that `DataGrid` row actions set locally.
 6. Move the Afframe components off their IBM Products and preview imports: `StatusIndicator` uses Carbon's `preview__IconIndicator` and `preview__ShapeIndicator`, `EditTearsheet` uses IBM Products' `preview__Tearsheet`, and `CreateSidePanel` and `EditSidePanel` use IBM Products' `SidePanel`. Take the stable names when they land in core, and rerun those components' tests, play tests and visual tests.

@@ -318,11 +318,16 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | useFeatureFlag                     | hook      | carbon       | client  | stable            |                                                                       |
 | useFeatureFlags                    | hook      | carbon       | client  | stable            |                                                                       |
 | PrefixContext                      | util      | carbon       | client  | stable            |                                                                       |
+| IdPrefix                           | component | carbon       | client  | stable            | [page](../src/components/IdPrefix/IdPrefix.mdx)                       |
+| useIdPrefix                        | hook      | carbon       | client  | stable            |                                                                       |
 | useCarbonPrefix                    | hook      | carbon       | client  | stable            | [page](../src/components/useCarbonPrefix/useCarbonPrefix.mdx)         |
 | preview__IconIndicator             | component | carbon       | client  | preview           | [page](../src/components/IconIndicator/IconIndicator.mdx)             |
 | preview__ShapeIndicator            | component | carbon       | client  | preview           | [page](../src/components/ShapeIndicator/ShapeIndicator.mdx)           |
 | preview__ChatButton                | component | carbon       | client  | preview           |                                                                       |
 | preview__ChatButtonSkeleton        | component | carbon       | client  | preview           |                                                                       |
+| preview__Card                      | namespace | carbon       | client  | preview           | [page](../src/components/Card/Card.mdx)                               |
+| preview__Dialog                    | namespace | carbon       | client  | preview           | [page](../src/components/Dialog/Dialog.mdx)                           |
+| preview_Layout                     | component | carbon       | client  | preview           | [page](../src/components/Layout/Layout.mdx)                           |
 | AddSelect                          | component | ibm-products | client  | preview           | [page](../src/components/AddSelect/AddSelect.mdx)                     |
 | SingleAddSelect                    | component | ibm-products | client  | stable            | [page](../src/components/SingleAddSelect/SingleAddSelect.mdx)         |
 | MultiAddSelect                     | component | ibm-products | client  | stable            | [page](../src/components/MultiAddSelect/MultiAddSelect.mdx)           |
@@ -350,6 +355,8 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | Tearsheet                          | component | ibm-products | client  | preview           | [page](../src/components/Tearsheet/Tearsheet.mdx)                     |
 | TruncatedText                      | component | ibm-products | client  | preview           | [page](../src/components/TruncatedText/TruncatedText.mdx)             |
 | UserAvatar                         | component | ibm-products | client  | stable            | [page](../src/components/UserAvatar/UserAvatar.mdx)                   |
+| AboutModal                         | component | ibm-products | client  | stable            | [page](../src/components/AboutModal/AboutModal.mdx)                   |
+| ActionBar                          | component | ibm-products | client  | stable            | [page](../src/components/ActionBar/ActionBar.mdx)                     |
 | EmptyState                         | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/EmptyState.mdx)                   |
 | ErrorEmptyState                    | component | ibm-products | client  | stable            |                                                                       |
 | NoDataEmptyState                   | component | ibm-products | client  | stable            |                                                                       |

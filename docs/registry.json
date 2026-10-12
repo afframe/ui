@@ -3330,6 +3330,23 @@
       "status": "stable"
     },
     {
+      "name": "IdPrefix",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable",
+      "docs": "src/components/IdPrefix/IdPrefix.mdx"
+    },
+    {
+      "name": "useIdPrefix",
+      "kind": "hook",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable"
+    },
+    {
       "name": "useCarbonPrefix",
       "kind": "hook",
       "source": "carbon",
@@ -3371,6 +3388,33 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview"
+    },
+    {
+      "name": "preview__Card",
+      "kind": "namespace",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "preview",
+      "docs": "src/components/Card/Card.mdx"
+    },
+    {
+      "name": "preview__Dialog",
+      "kind": "namespace",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "preview",
+      "docs": "src/components/Dialog/Dialog.mdx"
+    },
+    {
+      "name": "preview_Layout",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "preview",
+      "docs": "src/components/Layout/Layout.mdx"
     },
     {
       "name": "AddSelect",
@@ -3604,6 +3648,24 @@
       "runtime": "client",
       "status": "stable",
       "docs": "src/components/UserAvatar/UserAvatar.mdx"
+    },
+    {
+      "name": "AboutModal",
+      "kind": "component",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable",
+      "docs": "src/components/AboutModal/AboutModal.mdx"
+    },
+    {
+      "name": "ActionBar",
+      "kind": "component",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable",
+      "docs": "src/components/ActionBar/ActionBar.mdx"
     },
     {
       "name": "EmptyState",

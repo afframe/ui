@@ -1,0 +1,31 @@
+/*
+ * Copyright IBM Corp. 2020, 2021
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2021
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefix as a literal, product logo size moved here from an inline style. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.c4p--about-modal__stories--logo {
+  inline-size: var(--cds-spacing-12);
+  block-size: var(--cds-spacing-12);
+}
+
+.c4p--about-modal__stories--tech-logo {
+  block-size: var(--cds-spacing-06);
+  inline-size: var(--cds-spacing-06);
+  margin-inline-end: var(--cds-spacing-03);
+}
+
+.c4p--about-modal__footer-label {
+  color: var(--cds-text-secondary);
+  font-size: var(--cds-label-01-font-size);
+  font-weight: var(--cds-label-01-font-weight);
+  letter-spacing: var(--cds-label-01-letter-spacing);
+  line-height: var(--cds-label-01-line-height);
+  margin-block-end: var(--cds-spacing-02);
+}

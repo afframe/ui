@@ -31,10 +31,11 @@ function usesClient(path) {
 const statusOf = (name) =>
   name.startsWith('previewCandidate__')
     ? 'preview-candidate'
-    : name.startsWith('preview__')
+    : name.startsWith('preview_')
       ? 'preview'
       : 'stable';
-const baseName = (name) => name.replace(/^[a-zA-Z]+__/, '');
+// Carbon's preview names start with `preview__` or `preview_`.
+const baseName = (name) => name.replace(/^(?:[a-zA-Z]+__|preview_)/, '');
 
 // Kind from the loaded value, not the name: a context or constant object is
 // a util even when capitalised; an object of components is a namespace.

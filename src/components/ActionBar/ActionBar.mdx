@@ -1,0 +1,52 @@
+import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as stories from './ActionBar.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: written from the upstream docs page component (StoryDocsPage) and the component's JSDoc, source label added, source link pinned to the tag, Afframe keyboard note.
+
+<Meta isTemplate />
+
+# ActionBar
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/ActionBar)
+
+`ActionBar` renders a row of icon-only ghost buttons. Each item in `actions` needs
+a `key`, a `renderIcon`, an `iconDescription` and a `label`, plus an optional
+`onClick`; other fields go to the Carbon `Button`. Items that do not fit the
+container width, or go past `maxVisible`, move into an overflow menu.
+
+Pass `renderIcon` as a function, `(props) => <Bee size={16} {...props} />`, not
+the icon component itself: the overflow menu renders anything that is not a
+function as a React child, and a Carbon icon component is an object, so the menu
+throws once an item overflows.
+
+<Canvas of={stories.Default} />
+
+Pick "A lot" in the `actions` control, or narrow `containerWidth`, to see the
+overflow menu.
+
+## Component API
+
+<Controls />
+
+## Keyboard and screen readers
+
+Each item is a Carbon `IconButton`: Tab moves between the items, Enter and Space
+activate the focused one, and its `label` is the accessible name and the tooltip
+shown on focus and hover.
+
+The overflow menu is a Carbon `OverflowMenu` with `OverflowMenuItem` children.
+In Afframe UI `enable-v12-release` turns on `enable-v12-overflowmenu`, and under
+it:
+
+- the trigger is named "Options", Carbon's default label; `overflowAriaLabel` is
+  not used;
+- the menu opens with focus on the menu itself, and the arrow keys do not reach
+  the items, so the overflow actions cannot be used by keyboard
+  (`docs/feature-flags.md`).
+
+Where keyboard users need every action, keep them all visible through the
+container width or `maxVisible`.

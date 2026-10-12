@@ -557,6 +557,8 @@ export {
   useFeatureFlag,
   useFeatureFlags,
   PrefixContext,
+  IdPrefix,
+  useIdPrefix,
   // The plain name is kept for IBM Products' usePrefix.
   usePrefix as useCarbonPrefix,
 } from '@carbon/react';
@@ -572,6 +574,7 @@ export type {
   SectionProps,
   GlobalThemeProps,
   FeatureFlagsProps,
+  IdPrefixProps,
 } from '@carbon/react';
 
 // Preview
@@ -580,12 +583,25 @@ export {
   preview__ShapeIndicator,
   preview__ChatButton,
   preview__ChatButtonSkeleton,
+  // Namespaces: render <preview__Card.Card>, <preview__Dialog.Dialog>.
+  preview__Card,
+  preview__Dialog,
+  preview_Layout,
 } from '@carbon/react';
 export type {
   IconIndicatorProps,
   ShapeIndicatorProps,
   ChatButtonProps,
   ChatButtonSkeletonProps,
+  DialogProps,
+  DialogHeaderProps,
+  DialogControlsProps,
+  DialogCloseButtonProps,
+  DialogTitleProps,
+  DialogSubtitleProps,
+  DialogBodyProps,
+  DialogFooterProps,
+  LayoutProps,
 } from '@carbon/react';
 
 // IBM Products: migrated components under their Carbon v12 core names
@@ -698,6 +714,8 @@ export type PageHeaderBreadcrumbPageActionItem =
 
 // IBM Products: other components by IBM's names
 export {
+  AboutModal,
+  ActionBar,
   EmptyState,
   ErrorEmptyState,
   NoDataEmptyState,
@@ -727,6 +745,7 @@ export {
   StackProvider,
 } from '@carbon/ibm-products';
 export type {
+  AboutModalProps,
   EmptyStateProps,
   ErrorEmptyStateProps,
   NoDataEmptyStateProps,
