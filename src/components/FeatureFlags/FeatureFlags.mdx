@@ -9,8 +9,8 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <SourceLabel name="afframe" />
 
-Afframe UI runs Carbon v11 with the v12 feature flags off and a few opt-in
-flags on. Consumers set nothing: `AfframeProvider` turns the flags on in React
+Afframe UI runs Carbon v11 with the v12 feature flags off except the focus
+wrap flag, and a few opt-in flags on. Consumers set nothing: `AfframeProvider` turns the flags on in React
 and `styles.css` is built with the same flags in Sass.
 
 ## React flags
@@ -18,6 +18,7 @@ and `styles.css` is built with the same flags in Sass.
 `AfframeProvider` wraps the app in Carbon's `FeatureFlags` with:
 
 - `enableDialogElement`
+- `enableFocusWrapWithoutSentinels` (React only)
 - `enablePresence`
 - `enableEnhancedFileUploader`
 - `enableTreeviewControllable`

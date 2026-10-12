@@ -300,7 +300,7 @@ test('the nav ignores children that are not forms, with a warning', async () => 
       .getAllByRole('button')
       .map((item) => item.textContent)
   ).toEqual(['One', 'Two']);
-  expect(warn).toHaveBeenCalled();
+  expect(warn).toHaveBeenCalledWith(expect.stringContaining('EditTearsheet:'));
   warn.mockRestore();
 });
 

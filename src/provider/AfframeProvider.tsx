@@ -19,6 +19,7 @@ export function AfframeProvider({ children }: { children?: ReactNode }) {
   return (
     <FeatureFlags
       enableDialogElement
+      enableFocusWrapWithoutSentinels
       enablePresence
       enableEnhancedFileUploader
       enableTreeviewControllable>

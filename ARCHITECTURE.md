@@ -28,9 +28,9 @@ Layout: [docs/package-structure.md](docs/package-structure.md).
 
 Name: `@afframe/ui`.
 
-Description: one import path, `@afframe/ui`, for every component. Icons, pictograms and JavaScript token values follow Carbon's own pattern (`@carbon/react/icons`): subpaths `@afframe/ui/icons`, `@afframe/ui/pictograms` and `@afframe/ui/tokens`, with Carbon's names. Carbon components are re-exported by name as they are; only components Afframe changes get an Afframe wrapper. The components IBM is moving from IBM Products into Carbon core are exported under Afframe names, backed by IBM Products until Carbon v12 is stable. Extras (Carbon Charts, ECharts with the Carbon theme, `@carbon/ai-chat`, TanStack data grid, onboarding, Labs) come through the same path and must tree-shake out of apps that do not use them: each extra family is its own `'use client'` module, and the AI chat loads lazily ([docs/package-structure.md](docs/package-structure.md)).
+Description: one import path, `@afframe/ui`, for every component. Icons, pictograms and JavaScript token values follow Carbon's own pattern (`@carbon/react/icons`): subpaths `@afframe/ui/icons`, `@afframe/ui/pictograms` and `@afframe/ui/tokens`, with Carbon's names. Carbon components are re-exported by name as they are; only components Afframe changes get an Afframe wrapper. The components IBM is moving from IBM Products into Carbon core are exported under Afframe names, backed by IBM Products (ADR 0005). Extras (Carbon Charts, ECharts with the Carbon theme, `@carbon/ai-chat`, TanStack data grid, onboarding, Labs) come through the same path and must tree-shake out of apps that do not use them: each extra family is its own `'use client'` module, and the AI chat loads lazily ([docs/package-structure.md](docs/package-structure.md)).
 
-Technologies: React, TypeScript, Carbon `@carbon/react` on the stable v11 line without the v12 feature flags (ADR 0017), Sass. Versions: `package.json`.
+Technologies: React, TypeScript, Carbon `@carbon/react` on the stable v11 line without the v12 feature flags except the focus wrap flag (ADR 0017), Sass. Versions: `package.json`.
 
 Deployment: GitHub Packages (npm registry, `@afframe` scope), published from `v*` tags by `.github/workflows/release.yml` (ADR 0016).
 
@@ -96,7 +96,7 @@ IBM Products: `@carbon/ibm-products`, Carbon's product-pattern library (prefix `
 
 Carbon Labs: `@carbon-labs/*`, Carbon's experimental packages.
 
-v12 flags: Carbon feature flags (`enable-v12-release` and `enable-v12-*`) that turn on v12 behaviour inside v11. Afframe UI leaves them off.
+v12 flags: Carbon feature flags (`enable-v12-release` and `enable-v12-*`) that turn on v12 behaviour inside v11. Afframe UI leaves them off, except `enable-focus-wrap-without-sentinels`.
 
 Migrated components: the components IBM is moving from IBM Products into Carbon core for v12.
 

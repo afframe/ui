@@ -18,9 +18,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 In Afframe UI, `AfframeProvider` turns on `enable-dialog-element` and
 `enable-presence` for the whole app, so the stories next to this page render
-without their own `FeatureFlags` wrapper. `enable-focus-wrap-without-sentinels`
-is off in Afframe UI and has no effect with the dialog element, so this page has
-no story for it.
+without their own `FeatureFlags` wrapper. `AfframeProvider` also turns on
+`enable-focus-wrap-without-sentinels` for `ActionableNotification`; it has no
+effect with the dialog element, so this page has no story for it, and in
+development `Modal` logs a harmless warning that both flags are on.
 
 ## `enable-focus-wrap-without-sentinels`
 

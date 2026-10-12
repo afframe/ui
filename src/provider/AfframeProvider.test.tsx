@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import type { ComponentType, ReactNode } from 'react';
 import { afterEach, expect, test } from 'vitest';
 import {
+  ActionableNotification,
   previewCandidate__Decorator,
   ScrollGradient,
   TextInput,
@@ -13,17 +14,41 @@ afterEach(() => {
   delete document.documentElement.dataset.afframeTheme;
 });
 
-function V12Flag() {
-  return <p>{String(useFeatureFlag('enable-v12-release'))}</p>;
+function Flag({ name }: { name: string }) {
+  return <p>{String(useFeatureFlag(name))}</p>;
 }
 
 test('leaves the v12 flag off in React', () => {
   render(
     <AfframeProvider>
-      <V12Flag />
+      <Flag name="enable-v12-release" />
     </AfframeProvider>
   );
   expect(screen.getByText('false')).toBeTruthy();
+});
+
+test('keeps dynamic floating styles off in React', () => {
+  render(
+    <AfframeProvider>
+      <Flag name="enable-v12-dynamic-floating-styles" />
+    </AfframeProvider>
+  );
+  expect(screen.getByText('false')).toBeTruthy();
+});
+
+test('renders actionable notifications without focus sentinels', () => {
+  render(
+    <AfframeProvider>
+      <ActionableNotification title="One" actionButtonLabel="Act" />
+      <ActionableNotification
+        title="Two"
+        actionButtonLabel="Act"
+        role="status"
+        inline
+      />
+    </AfframeProvider>
+  );
+  expect(screen.queryAllByText('Focus sentinel')).toHaveLength(0);
 });
 
 test('renders a text input with the v11 bottom border', () => {
