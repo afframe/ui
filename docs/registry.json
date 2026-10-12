@@ -2985,14 +2985,6 @@
       "status": "stable"
     },
     {
-      "name": "StaticNotification",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable"
-    },
-    {
       "name": "Callout",
       "kind": "component",
       "source": "carbon",
