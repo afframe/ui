@@ -59,6 +59,10 @@ Default.args = {
   size: 'md',
   disabled: false,
 };
+// The meta component is SelectableTag; show Tag's own controls here.
+Default.parameters = {
+  controls: { include: ['children', 'type', 'size', 'disabled'] },
+};
 
 Default.argTypes = {
   children: { control: 'text' },

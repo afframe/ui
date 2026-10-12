@@ -40,16 +40,24 @@ only (`docs/feature-flags.md`).
 
 IBM Products has its own flag API, separate from Carbon's, exported as
 `preview__FeatureFlags` with the hooks `preview__useFeatureFlag(name)` (one
-flag, a boolean) and `preview__useFeatureFlags()` (all of them). Afframe turns
-none of these on. The one that matters for the exported components is
-`enableSidepanelResizer`, which lets the user resize a `SidePanel`:
+flag, a boolean) and `preview__useFeatureFlags()` (the flag scope, read with
+`.enabled(name)`). Afframe sets none of them. Two matter for the exported
+components:
+
+- `defaultPortalTargetBody`, on by IBM's default: `AboutModal` and the
+  overflow modal of `TagSet` render into `document.body`.
+- `enableSidepanelResizer`, off: turn it on to let the user resize a
+  `SidePanel`.
 
 ```tsx
-import { preview__FeatureFlags as FeatureFlags, SidePanel } from '@afframe/ui';
+import {
+  preview__FeatureFlags as IbmFeatureFlags,
+  SidePanel,
+} from '@afframe/ui';
 
-<FeatureFlags enableSidepanelResizer>
+<IbmFeatureFlags enableSidepanelResizer>
   <SidePanel>…</SidePanel>
-</FeatureFlags>;
+</IbmFeatureFlags>;
 ```
 
 IBM's other flags (`enableDatagridUse*`) belong to IBM's Datagrid, which Afframe

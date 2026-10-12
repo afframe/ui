@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Checklist and TruncatedText from @afframe/ui, plain CSS file, the MDX page replaces the docs page component, the theme prop from getSelectedCarbonTheme dropped, task lists cast to the unexported kind enum, color-contrast disabled on Task states, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Checklist and TruncatedText from @afframe/ui, plain CSS file, the MDX page replaces the docs page component, the theme prop from getSelectedCarbonTheme dropped, task lists cast to the unexported kind enum, color-contrast disabled on TaskStates, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
