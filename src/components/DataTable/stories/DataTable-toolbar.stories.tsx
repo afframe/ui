@@ -566,7 +566,7 @@ WithOverflowMenu.play = async ({ canvasElement }) => {
   await waitFor(() => expect(trigger).toHaveFocus());
 };
 
-// Afframe: the 1.0.1 shape, `label` and MenuItem children. The Afframe
+// Afframe: the 1.0.x shape, `label` and MenuItem children. The Afframe
 // TableToolbarMenu turns on Carbon's newer menu for it, so the keyboard works.
 export const MenuItemsFrom101: StoryObj<typeof TableToolbarMenu> = {
   name: 'Toolbar menu items from 1.0.1',

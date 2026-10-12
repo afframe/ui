@@ -10,7 +10,7 @@ import {
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet imports from @afframe/ui, uses `itemText` and names the trigger and menu, section on the 1.0.1 toolbar menu items added.
+// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, section on the 1.0.x toolbar menu items added.
 
 <Meta isTemplate />
 
@@ -378,9 +378,10 @@ _Note: press "Show code" above to view a code snippet of this example_
 ### Toolbar menu items from 1.0.1
 
 `TableToolbarMenu` takes `TableToolbarAction` children and is named by
-`iconDescription`. Code written for `@afframe/ui` 1.0.1 still works: a `label`
-prop, or `MenuItem` and `MenuItemDivider` children placed
-directly or in one Fragment, switch that one menu to Carbon's newer menu. It
+`iconDescription`. Code written for `@afframe/ui` 1.0.x still works: a `label`
+prop, or `MenuItem` children (also `MenuItemDivider`, `MenuItemGroup`,
+`MenuItemRadioGroup`, `MenuItemSelectable`) placed directly or in one Fragment,
+switch that one menu to Carbon's newer menu. It
 renders Carbon's `Menu` with its v11 look and works by keyboard; `label` names
 the trigger and the menu. MenuItems inside your own wrapper component, or
 passed from a React Server Component, are not detected, so pass `label` there.

@@ -38,7 +38,7 @@ function hasMenuItems(children: ReactNode): boolean {
 }
 
 /**
- * Whether the caller uses the 1.0.1 shape: a `label` prop, or MenuItem children
+ * Whether the caller uses the 1.0.x shape: a `label` prop, or MenuItem children
  * placed directly or in one Fragment.
  */
 export function usesNewerMenu(props: {
@@ -48,10 +48,11 @@ export function usesNewerMenu(props: {
   return props.label !== undefined || hasMenuItems(props.children);
 }
 
-/** Renders `menu` with `enable-v12-overflowmenu` on when `newer` is set. */
-// That shape only works in Carbon's newer menu, which v12 makes the default.
-// The flag is scoped to this one menu: the v12 look is gated on
-// enable-v12-release, not on this flag.
+/**
+ * Renders `menu` with `enable-v12-overflowmenu` on when `newer` is set. That
+ * shape works only in Carbon's newer menu; the flag changes no look, because
+ * Carbon gates the v12 look on `enable-v12-release`.
+ */
 export function withMenuShape(
   newer: boolean,
   menu: ReactElement

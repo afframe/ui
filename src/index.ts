@@ -842,7 +842,7 @@ export * from './components/ChatElements/index.js';
 
 export * from './components/ControlledDatePicker/index.js';
 
-// Carbon's OverflowMenu and TableToolbarMenu, wrapped so the 1.0.1 menu shape
+// Carbon's OverflowMenu and TableToolbarMenu, wrapped so the 1.0.x menu shape
 // keeps working (docs/feature-flags.md).
 export * from './components/OverflowMenu/index.js';
 export * from './components/DataTable/index.js';
