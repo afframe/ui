@@ -265,6 +265,7 @@ test('opens a row action menu with the keyboard and runs an action', async () =>
   const trigger = iconButton('Actions for row 2026-0003');
   trigger.focus();
   await userEvent.keyboard('{Enter}');
+  await screen.findByRole('menu', { name: 'Actions for row 2026-0003' });
   const edit = await screen.findByRole('menuitem', { name: 'Edit' });
   expect(document.activeElement).toBe(edit);
   await userEvent.keyboard('{Escape}');

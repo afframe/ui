@@ -40,7 +40,7 @@ Wraps the consumer app once. Turns on the React side of the opt-in Carbon flags 
 
 ### 3.3. Styles
 
-One Sass build compiles Carbon, IBM Products and Afframe styles with the same opt-in `$feature-flags` into `dist/styles.css`. Consumers never touch Sass. Prefixes stay `cds` (Carbon) and `c4p` (IBM Products). Themes `light`, `dark` and `system` (follows the OS), chosen by `data-afframe-theme` on `<html>`. The app renders that attribute on the server and the CSS does the rest, so the theme does not flash. Carbon Charts CSS is compiled separately into `dist/charts.css`, which an app that renders charts imports as well. IBM Plex fonts ship in `dist/fonts/`, referenced by relative URLs.
+One Sass build compiles Carbon, IBM Products and Afframe styles with the Sass side of the opt-in flags (`docs/feature-flags.md`) into `dist/styles.css`. Consumers never touch Sass. Prefixes stay `cds` (Carbon) and `c4p` (IBM Products). Themes `light`, `dark` and `system` (follows the OS), chosen by `data-afframe-theme` on `<html>`. The app renders that attribute on the server and the CSS does the rest, so the theme does not flash. Carbon Charts CSS is compiled separately into `dist/charts.css`, which an app that renders charts imports as well. IBM Plex fonts ship in `dist/fonts/`, referenced by relative URLs.
 
 ### 3.4. Storybook
 

@@ -572,6 +572,7 @@ export function DataGrid<
                 {acting && (
                   <TableCell className="cds--table-column-menu">
                     <OverflowMenu
+                      aria-label={text.rowActions(rowLabel(row))}
                       iconDescription={text.rowActions(rowLabel(row))}
                       flipped
                       {...(menuSize && { size: menuSize })}>

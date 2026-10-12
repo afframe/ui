@@ -11,7 +11,8 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 Afframe UI runs Carbon v11 with the v12 feature flags off except the focus
 wrap flag, and a few opt-in flags on. Consumers set nothing: `AfframeProvider` turns the flags on in React
-and `styles.css` is built with the same flags in Sass.
+and `styles.css` is built with their Sass side; the two lists differ where
+Carbon reads a flag on one side only (`docs/feature-flags.md`).
 
 ## React flags
 

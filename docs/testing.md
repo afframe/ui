@@ -45,7 +45,7 @@ parameters: {
 },
 ```
 
-A story that needs a Carbon flag changed (for example v11 behaviour for one component) sets it with a `FeatureFlags` decorator on that story and gets a row there too.
+A story that needs a Carbon flag changed (for example a flag Afframe UI leaves off) sets it with a `FeatureFlags` decorator on that story and gets a row there too.
 
 Never set `test: 'todo'` for a whole story.
 
