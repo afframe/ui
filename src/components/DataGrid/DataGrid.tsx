@@ -3,9 +3,8 @@
 // markup. Carbon parts come from @carbon/react directly: importing the
 // package barrel here would be a cycle and would pull the other extras in.
 import {
-  FeatureFlags,
-  MenuItem,
   OverflowMenu,
+  OverflowMenuItem,
   Pagination,
   Table,
   TableBatchAction,
@@ -41,7 +40,6 @@ import {
   useId,
   useLayoutEffect,
   useState,
-  type ComponentType,
   type CSSProperties,
   type ElementType,
   type ReactNode,
@@ -139,15 +137,6 @@ export interface DataGridProps<
 type Grid<TData extends RowData> = ReactTable<StockFeatures, TData>;
 type GridColumn<TData extends RowData> = Column<StockFeatures, TData>;
 type GridRow<TData extends RowData> = Row<StockFeatures, TData>;
-
-// The v12 overflow menu (rendered under the flag below) takes `label` and
-// MenuItem children; Carbon's exported type describes the v11 one.
-const RowMenu = OverflowMenu as unknown as ComponentType<{
-  label: string;
-  menuAlignment: 'bottom-end';
-  size?: 'xs' | 'sm' | 'md' | 'lg';
-  children: ReactNode;
-}>;
 
 const initialRows = 20;
 const always = () => true;
@@ -582,22 +571,20 @@ export function DataGrid<
                 ))}
                 {acting && (
                   <TableCell className="cds--table-column-menu">
-                    {/* The v12 overflow menu everywhere, whatever the app's flags. */}
-                    <FeatureFlags enableV12Overflowmenu>
-                      <RowMenu
-                        label={text.rowActions(rowLabel(row))}
-                        menuAlignment="bottom-end"
-                        {...(menuSize && { size: menuSize })}>
-                        {rowActions.map((action) => (
-                          <MenuItem
-                            key={action.id}
-                            label={action.label}
-                            kind={action.danger ? 'danger' : 'default'}
-                            onClick={() => action.onClick(row.original)}
-                          />
-                        ))}
-                      </RowMenu>
-                    </FeatureFlags>
+                    <OverflowMenu
+                      aria-label={text.rowActions(rowLabel(row))}
+                      iconDescription={text.rowActions(rowLabel(row))}
+                      flipped
+                      {...(menuSize && { size: menuSize })}>
+                      {rowActions.map((action) => (
+                        <OverflowMenuItem
+                          key={action.id}
+                          itemText={action.label}
+                          isDelete={action.danger ?? false}
+                          onClick={() => action.onClick(row.original)}
+                        />
+                      ))}
+                    </OverflowMenu>
                   </TableCell>
                 )}
               </>

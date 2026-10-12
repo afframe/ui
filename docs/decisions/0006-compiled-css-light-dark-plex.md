@@ -4,17 +4,17 @@ Date: 2026-09-24
 
 ## Status
 
-Accepted. Amended by [ADR 0015](0015-carbon-charts-css-in-its-own-file.md): Carbon Charts CSS ships separately as `charts.css`.
+Accepted. Amended by [ADR 0015](0015-carbon-charts-css-in-its-own-file.md): Carbon Charts CSS ships separately as `charts.css`. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the stylesheet compiles without the v12 flags, so the look is v11.
 
 ## Context
 
-Carbon's styles are Sass. v12 styling compiles only from Sass with the v12 flag set; Carbon's precompiled CSS is v11-styled. If consumers compiled Carbon Sass themselves, each would have to repeat the flags, prefixes and font paths, and a second Sass configuration fails to compile.
+Carbon's styles are Sass. Afframe sets opt-in flags, prefixes, themes and font paths in the Sass build, so it stays. If consumers compiled Carbon Sass themselves, each would have to repeat that configuration, and a second Sass configuration fails to compile.
 
 ## Decision
 
-Afframe UI compiles one stylesheet and ships it: `@afframe/ui/styles.css`, covering Carbon, IBM Products and Afframe styles with the v12 flags on. Consumers do not use Sass. Prefixes stay `cds` and `c4p`. Two themes, `light` and `dark`, the two themes v12 ships, plus `system`, which follows the OS. The app sets `data-afframe-theme` on `<html>` in its server-rendered markup and the CSS does the rest, so the theme does not flash and needs no script. IBM Plex fonts (OFL-1.1) ship inside the package and are referenced by relative URLs.
+Afframe UI compiles one stylesheet and ships it: `@afframe/ui/styles.css`, covering Carbon, IBM Products and Afframe styles with Afframe's flags. Consumers do not use Sass. Prefixes stay `cds` and `c4p`. Two themes, `light` and `dark`, plus `system`, which follows the OS. The app sets `data-afframe-theme` on `<html>` in its server-rendered markup and the CSS does the rest, so the theme does not flash and needs no script. IBM Plex fonts (OFL-1.1) ship inside the package and are referenced by relative URLs.
 
-The look is native v12 as IBM ships it (rounded corners, full-border fields). Afframe visual changes go through Carbon's tokens in the Sass theme.
+The look is Carbon v11 as IBM ships it. Afframe visual changes go through Carbon's tokens in the Sass theme.
 
 ## Consequences
 

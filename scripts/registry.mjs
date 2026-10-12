@@ -1,7 +1,8 @@
 // Writes docs/registry.json and docs/registry.md from src/index.ts, the
 // subpath entries and a scan of src/components. `--check` writes nothing and
 // fails on drift, on an Afframe folder without stories, test, visual test or
-// docs page, and on an export whose module or docs page does not exist.
+// docs page, on a wrapper without an `afframe` story, test or docs page, and
+// on an export whose module or docs page does not exist.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -92,10 +93,25 @@ function scan(dir, name) {
   const source = ['afframe', 'extras', 'carbon', 'ibm-products', 'labs'].find(
     (tag) => tags.join(',').includes(`'${tag}'`)
   );
+  // An Afframe wrapper of an upstream component keeps the upstream folder and
+  // look, so it needs an `afframe` story with a play test, not a visual test.
+  const wrapper =
+    ['carbon', 'ibm-products', 'labs'].includes(source) &&
+    files.includes('index.ts');
   return {
     folder: rel(dir),
     source,
     owned: source === 'afframe' && files.includes('index.ts'),
+    wrapper,
+    ...(wrapper && {
+      wrapperParts: {
+        afframeStory: code.some((text) =>
+          /tags: \['afframe'\][\s\S]*?\bplay\b/.test(text)
+        ),
+        test: files.some((file) => /(?<!\.visual)\.test\.tsx?$/.test(file)),
+        docs: Boolean(docs),
+      },
+    }),
     docs: docs ? rel(join(dir, docs)) : null,
     storyTitle,
     parts: {
@@ -194,6 +210,7 @@ function family(name, info, fields, names) {
       exports: [],
       types: [],
       ...(info.owned && { parts: info.parts }),
+      ...(info.wrapper && { wrapper: true, parts: info.wrapperParts }),
       ...fields,
     };
     families.push(entry);
@@ -260,12 +277,14 @@ for (const { from, star, names } of exportsOf(index)) {
   const dir = rel(dirname(file));
   const component = /^src\/components\/(\w+)$/.exec(dir)?.[1];
   if (component) {
-    family(
-      component,
-      folders.get(component.toLowerCase()) ?? {},
-      { runtime },
-      collected
-    );
+    const info = folders.get(component.toLowerCase()) ?? {};
+    // A wrapper is named after its export (TableToolbarMenu, not DataTable).
+    const values = collected.filter((item) => !item.isType);
+    const name =
+      !info.wrapper || values.some((item) => item.name === component)
+        ? component
+        : (values[0]?.name ?? component);
+    family(name, info, { runtime }, collected);
   } else if (dir === 'src/labs') {
     await listUpstream(collected, 'labs', runtime, pathToFileURL(file).href);
   } else if (dir === 'src/ibm-products') {
@@ -355,14 +374,14 @@ const markdown = [
   '',
   '## Afframe families and subpaths',
   '',
-  'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. Afframe parts: stories, test, visual test, docs page.',
+  'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.',
   '',
   ...table(
     ['Family', 'Kind', 'Source', 'Import', 'Runtime', 'Docs', 'Afframe parts'],
     families.map((entry) => [
       entry.name,
       entry.kind,
-      entry.source ?? '',
+      entry.wrapper ? `${entry.source} wrapper` : (entry.source ?? ''),
       entry.import.map((path) => `\`${path}\``).join(', '),
       entry.runtime,
       link(entry.docs),

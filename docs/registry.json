@@ -1039,6 +1039,44 @@
       }
     },
     {
+      "name": "OverflowMenu",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/components/OverflowMenu",
+      "docs": "src/components/OverflowMenu/OverflowMenu.mdx",
+      "storyTitle": "Components/OverflowMenu",
+      "status": "stable",
+      "exports": ["OverflowMenu"],
+      "types": ["OverflowMenuProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
+    },
+    {
+      "name": "TableToolbarMenu",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/components/DataTable",
+      "docs": "src/components/DataTable/DataTable.mdx",
+      "storyTitle": "Components/DataTable",
+      "status": "stable",
+      "exports": ["TableToolbarMenu"],
+      "types": ["TableToolbarMenuProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
+    },
+    {
       "name": "icons",
       "kind": "foundation",
       "source": "carbon",
@@ -2030,14 +2068,6 @@
       "status": "stable"
     },
     {
-      "name": "TableToolbarMenu",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable"
-    },
-    {
       "name": "TableToolbarSearch",
       "kind": "component",
       "source": "carbon",
@@ -2763,15 +2793,6 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable"
-    },
-    {
-      "name": "OverflowMenu",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/OverflowMenu/OverflowMenu.mdx"
     },
     {
       "name": "OverflowMenuItem",

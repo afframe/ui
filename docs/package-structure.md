@@ -32,39 +32,41 @@ A component folder holds everything for that component, as in Carbon:
 | `_<name>.scss`           | styles, using Carbon tokens only                                                              |
 | `index.ts`               | the folder's exports                                                                          |
 
-Only Afframe-owned components get a full folder. A Carbon, IBM Products or Labs component that Afframe does not change is re-exported from `src/index.ts` as it is; its copied docs page and stories (`<Name>.mdx`, `<Name>.stories.tsx`) sit in a docs-only `src/components/<Name>/` folder. Docs-only folders: more than 70 Carbon components, the IBM Products components, the Labs components (UIShellLabs, WhatsNew, FirstTimeOrientation, Calendar, TagInput, TextHighlighter, ThemeSettings, Processing, Resizer), and the foundation pages `Icons`, `Pictograms`, `Plex` and `Tokens`.
+Only Afframe-owned components get a full folder; the Carbon docs folders `OverflowMenu` and `DataTable` also hold the `OverflowMenu` and `TableToolbarMenu` wrappers and keep their `carbon` label. The registry lists each wrapper under its export name, marked `wrapper`; its parts check asks for a unit test, a docs page and an `afframe` story with a play test, but no visual test, because it renders Carbon's look unchanged. A Carbon, IBM Products or Labs component that Afframe does not change is re-exported from `src/index.ts` as it is; its copied docs page and stories (`<Name>.mdx`, `<Name>.stories.tsx`) sit in a docs-only `src/components/<Name>/` folder. Docs-only folders: more than 70 Carbon components, the IBM Products components, the Labs components (UIShellLabs, WhatsNew, FirstTimeOrientation, Calendar, TagInput, TextHighlighter, ThemeSettings, Processing, Resizer), and the foundation pages `Icons`, `Pictograms`, `Plex` and `Tokens`.
 
 Folders with code:
 
-| Folder                 | What                                                                                                 | Label     |
-| ---------------------- | ---------------------------------------------------------------------------------------------------- | --------- |
-| `DataGrid`             | data grid on TanStack Table (`@tanstack/react-table`, `@tanstack/react-virtual`) and Carbon          | `afframe` |
-| `FilterPanel`          | filter panel and filter flyout, controlled                                                           | `afframe` |
-| `ControlledDatePicker` | Carbon's classic `DatePicker` with a controlled `open` prop, through its flatpickr instance          | `afframe` |
-| `Amount`               | an amount formatted by `src/format`, server-safe                                                     | `afframe` |
-| `AmountInput`          | money field on Carbon `NumberInput`                                                                  | `afframe` |
-| `Charts`               | Carbon Charts (`@carbon/charts-react`) by IBM's names, themed by `useCarbonTheme`                    | `extras`  |
-| `ECharts`              | `EChart`, a thin ECharts wrapper (`echarts/core`) with the Carbon theme (`@carbon/echarts-theme`)    | `extras`  |
-| `AIChat`               | IBM's AI chat (`@carbon/ai-chat`) by IBM's names                                                     | `extras`  |
-| `CreateModal`          | create form in a Carbon `Modal`                                                                      | `afframe` |
-| `CreateSidePanel`      | create form in IBM Products' `SidePanel`                                                             | `afframe` |
-| `EditSidePanel`        | edit form in IBM Products' `SidePanel`                                                               | `afframe` |
-| `EditTearsheet`        | edit form in IBM Products' `Tearsheet` (`preview__Tearsheet`), with `EditTearsheetForm`              | `afframe` |
-| `EditFullPage`         | edit form on a page, with a sticky action bar                                                        | `afframe` |
-| `RemoveModal`          | delete or remove confirmation, optionally by typing the name                                         | `afframe` |
-| `ImportModal`          | file or URL import, with its own file type and size checks                                           | `afframe` |
-| `ExportModal`          | export with a file name, format and optional password                                                | `afframe` |
-| `APIKeyModal`          | name and generate an API key, shown once; rename in edit mode                                        | `afframe` |
-| `StatusIndicator`      | status on Carbon's preview `IconIndicator` and `ShapeIndicator`, server-safe                         | `afframe` |
-| `DescriptionList`      | key and value list on Carbon's `StructuredList`, server-safe                                         | `afframe` |
-| `AccentTag`            | clickable Carbon `OperationalTag` with a tooltip and a coloured strip, sizes `md` (default) and `lg` | `afframe` |
-| `EnvironmentSwitcher`  | header action named by the current environment, with a panel of radio buttons to switch it           | `afframe` |
-| `HelpMenu`             | header help action with a panel of links and actions (Carbon `HeaderPanel` and `Switcher`)           | `afframe` |
-| `LogoutTile`           | signed-in user tile with the log-out action, for a header profile panel                              | `afframe` |
-| `LogoutBanner`         | session ending and signed-out banner on Carbon's `ActionableNotification`                            | `afframe` |
-| `ChatElements`         | chart renderer for `user_defined` items of IBM's AI chat, also usable alone                          | `afframe` |
+| Folder                 | What                                                                                                      | Label     |
+| ---------------------- | --------------------------------------------------------------------------------------------------------- | --------- |
+| `DataGrid`             | data grid on TanStack Table (`@tanstack/react-table`, `@tanstack/react-virtual`) and Carbon               | `afframe` |
+| `FilterPanel`          | filter panel and filter flyout, controlled                                                                | `afframe` |
+| `ControlledDatePicker` | Carbon's classic `DatePicker` with a controlled `open` prop, through its flatpickr instance               | `afframe` |
+| `Amount`               | an amount formatted by `src/format`, server-safe                                                          | `afframe` |
+| `AmountInput`          | money field on Carbon `NumberInput`                                                                       | `afframe` |
+| `Charts`               | Carbon Charts (`@carbon/charts-react`) by IBM's names, themed by `useCarbonTheme`                         | `extras`  |
+| `ECharts`              | `EChart`, a thin ECharts wrapper (`echarts/core`) with the Carbon theme (`@carbon/echarts-theme`)         | `extras`  |
+| `AIChat`               | IBM's AI chat (`@carbon/ai-chat`) by IBM's names                                                          | `extras`  |
+| `CreateModal`          | create form in a Carbon `Modal`                                                                           | `afframe` |
+| `CreateSidePanel`      | create form in IBM Products' `SidePanel`                                                                  | `afframe` |
+| `EditSidePanel`        | edit form in IBM Products' `SidePanel`                                                                    | `afframe` |
+| `EditTearsheet`        | edit form in IBM Products' `Tearsheet` (`preview__Tearsheet`), with `EditTearsheetForm`                   | `afframe` |
+| `EditFullPage`         | edit form on a page, with a sticky action bar                                                             | `afframe` |
+| `RemoveModal`          | delete or remove confirmation, optionally by typing the name                                              | `afframe` |
+| `ImportModal`          | file or URL import, with its own file type and size checks                                                | `afframe` |
+| `ExportModal`          | export with a file name, format and optional password                                                     | `afframe` |
+| `APIKeyModal`          | name and generate an API key, shown once; rename in edit mode                                             | `afframe` |
+| `StatusIndicator`      | status on Carbon's preview `IconIndicator` and `ShapeIndicator`, server-safe                              | `afframe` |
+| `DescriptionList`      | key and value list on Carbon's `StructuredList`, server-safe                                              | `afframe` |
+| `AccentTag`            | clickable Carbon `OperationalTag` with a tooltip and a coloured strip, sizes `md` (default) and `lg`      | `afframe` |
+| `EnvironmentSwitcher`  | header action named by the current environment, with a panel of radio buttons to switch it                | `afframe` |
+| `HelpMenu`             | header help action with a panel of links and actions (Carbon `HeaderPanel` and `Switcher`)                | `afframe` |
+| `LogoutTile`           | signed-in user tile with the log-out action, for a header profile panel                                   | `afframe` |
+| `LogoutBanner`         | session ending and signed-out banner on Carbon's `ActionableNotification`                                 | `afframe` |
+| `ChatElements`         | chart renderer for `user_defined` items of IBM's AI chat, also usable alone                               | `afframe` |
+| `OverflowMenu`         | Carbon's `OverflowMenu`, with Carbon's newer menu turned on for the 1.0.x shape (`docs/feature-flags.md`) | `carbon`  |
+| `DataTable`            | Carbon's `TableToolbarMenu`, wrapped the same way                                                         | `carbon`  |
 
-Two internal folders hold shared code and are not exported, have no `index.ts` and no docs page: `CreateEditFlow` (the create and edit flow behind the five create and edit components: dirty state, the discard dialog, the focus trap) and `ModalParts` (shared pieces of the four modals: pending and error state, initial focus and focus return, common messages).
+Three internal folders hold shared code and are not exported, have no `index.ts` and no docs page: `CreateEditFlow` (the create and edit flow behind the five create and edit components: dirty state, the discard dialog, the focus trap), `ModalParts` (shared pieces of the four modals: pending and error state, initial focus and focus return, common messages) and `MenuParts` (the 1.0.x menu shape check of the `OverflowMenu` and `TableToolbarMenu` wrappers).
 
 `src/components/HelpMenu/useHeaderPanel.ts` is internal too: the open state and focus handling of the two header actions, `HelpMenu` and `EnvironmentSwitcher`. Only its `HeaderPanelActionProps` type is exported, through the `HelpMenu` index. `EnvironmentSwitcher` imports its values from that file, the one shipped import of another family's file outside the chat element engines. `src/components/LogoutBanner/storyShells.tsx` holds the story scaffolds of the four header components (a Carbon `Header` and the Labs shell); it is stories-only, imports the `src/index.ts` barrel and ships nothing.
 
@@ -83,19 +85,19 @@ Every docs page is marked with where its component comes from: `carbon`, `ibm-pr
 | `@afframe/ui/pictograms` | Carbon's pictograms (`@carbon/pictograms-react`) with Carbon's names                                                                                         |
 | `@afframe/ui/tokens`     | Carbon's JavaScript token values (`@carbon/themes`, `@carbon/motion`) with Carbon's names; the same tokens are CSS variables in `styles.css`                 |
 | `@afframe/ui/format`     | the formatting functions of `src/format/` alone, for server code and scripts that should not load the component entry                                        |
-| `@afframe/ui/styles.css` | the compiled stylesheet: Carbon, IBM Products, Labs and Afframe styles with the v12 flags on; themes `light`, `dark`, `system`                               |
+| `@afframe/ui/styles.css` | the compiled stylesheet: Carbon, IBM Products, Labs and Afframe styles with Afframe's flags; themes `light`, `dark`, `system`                                |
 | `@afframe/ui/charts.css` | the Carbon Charts styles; an app that renders Carbon Charts imports it after `styles.css`                                                                    |
 
 TypeScript types ship with the package. ESM only. Components have one entry, and there is no server entry for them: Carbon's `es/index.js` already starts with "use client" and `src/index.ts` has no directive, so server-safe code stays usable on the server.
 
 ## Client and server-safe modules
 
-| Module                                                                                                                                                                                                                                                                                                                                                                                            | Kind                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| `src/format/`, `src/messages.ts`, `src/components/{Amount,StatusIndicator,DescriptionList}/`                                                                                                                                                                                                                                                                                                      | server-safe: no directive, no hooks, no browser globals |
-| `src/components/{DataGrid,FilterPanel,AmountInput,Charts,ECharts,AIChat}/`, `src/components/{CreateModal,CreateSidePanel,EditSidePanel,EditTearsheet,EditFullPage}/`, `src/components/{RemoveModal,ImportModal,ExportModal,APIKeyModal,AccentTag,ControlledDatePicker}/`, `src/components/{EnvironmentSwitcher,HelpMenu,LogoutTile,LogoutBanner,ChatElements}/`, `src/theme/use-afframe-theme.ts` | `'use client'`, one module per family                   |
+| Module                                                                                                                                                                                                                                                                                                                                                                                                                                        | Kind                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `src/format/`, `src/messages.ts`, `src/components/{Amount,StatusIndicator,DescriptionList}/`                                                                                                                                                                                                                                                                                                                                                  | server-safe: no directive, no hooks, no browser globals |
+| `src/components/{DataGrid,FilterPanel,AmountInput,Charts,ECharts,AIChat}/`, `src/components/{CreateModal,CreateSidePanel,EditSidePanel,EditTearsheet,EditFullPage}/`, `src/components/{RemoveModal,ImportModal,ExportModal,APIKeyModal,AccentTag,ControlledDatePicker}/`, `src/components/{EnvironmentSwitcher,HelpMenu,LogoutTile,LogoutBanner,ChatElements}/`, `src/components/{OverflowMenu,DataTable}/`, `src/theme/use-afframe-theme.ts` | `'use client'`, one module per family                   |
 
-In a client family every component file starts with `'use client'`, not only `index.ts`, and `index.ts` uses named re-exports only. The internal `CreateEditFlow` and `ModalParts` files are client code too and ship only inside the families that import them. Shipped code never imports the `src/index.ts` barrel (a circular import), a `src/labs/` module or a `@carbon-labs/*` package (Labs JavaScript would ship on every route), and does not import the client module of another family, so a route that uses one extra does not ship the others. The header components (`EnvironmentSwitcher`, `HelpMenu`, `LogoutTile`, `LogoutBanner`) therefore work in Carbon's `Header` and in the Labs shell without importing Labs. Charts and ECharts load statically with their module; `AIChat` loads `@carbon/ai-chat` with `import()` in the browser, because the library defines custom elements when it loads, and takes its values from `@carbon/ai-chat/server`.
+In a client family every component file starts with `'use client'`, not only `index.ts`, and `index.ts` uses named re-exports only. The internal `CreateEditFlow`, `ModalParts` and `MenuParts` files are client code too and ship only inside the families that import them. Shipped code never imports the `src/index.ts` barrel (a circular import), a `src/labs/` module or a `@carbon-labs/*` package (Labs JavaScript would ship on every route), and does not import the client module of another family, so a route that uses one extra does not ship the others. The header components (`EnvironmentSwitcher`, `HelpMenu`, `LogoutTile`, `LogoutBanner`) therefore work in Carbon's `Header` and in the Labs shell without importing Labs. Charts and ECharts load statically with their module; `AIChat` loads `@carbon/ai-chat` with `import()` in the browser, because the library defines custom elements when it loads, and takes its values from `@carbon/ai-chat/server`.
 
 The heavy families `Charts`, `ECharts`, `DataGrid` and `AIChat` never import one another, and `AIChat` never imports `ChatElements`. `ChatElements` is the one exception: it renders Charts and ECharts, and imports each only through that family's `index.js`, with `import()` when an element first renders, so a route that imports it ships neither until a message needs one. From `AIChat` it takes types only; it never imports `DataGrid`.
 

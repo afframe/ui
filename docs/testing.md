@@ -31,8 +31,8 @@ Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.
 
 - Tests sit next to the component (`<Name>.test.tsx`, `<Name>.visual.test.tsx`).
 - Carbon, IBM Products and Labs components re-exported as they are need no Afframe unit tests; they render in Storybook, so the a11y check still runs on them.
-- Every included component renders under the v12 flags in Storybook; a visible break is recorded in `docs/feature-flags.md`.
-- `src/provider/AfframeProvider.test.tsx` proves the v12 render: the v12 flag is on in React, a Carbon `TextInput` gets the v12 field style from `styles.css`, and the dark theme applies.
+- Every included component renders under Afframe's flags in Storybook; a story that changes a flag is recorded in `docs/feature-flags.md`.
+- `src/provider/AfframeProvider.test.tsx` proves the v11 render: the v12 release and floating styles flags are off in React, the focus wrap flag leaves no focus sentinels in `ActionableNotification`, a Carbon `TextInput` gets the v11 bottom border from `styles.css`, and the dark theme applies.
 - `src/provider/LabsStyles.test.tsx` proves that Labs CSS in `styles.css` leaves Carbon components and plain HTML as Carbon styles them: Carbon `SideNav`, a plain `del` and the `DatePicker` selected day, next to the Labs `SideNav`, `TextHighlighter` and `Calendar` with their Labs look.
 
 ## Accessibility
@@ -45,11 +45,11 @@ parameters: {
 },
 ```
 
-A story that needs a Carbon flag changed (for example v11 behaviour for one component) sets it with a `FeatureFlags` decorator on that story and gets a row there too.
+A story that needs a Carbon flag changed (for example a flag Afframe UI leaves off) sets it with a `FeatureFlags` decorator on that story and gets a row there too.
 
 Never set `test: 'todo'` for a whole story.
 
-Afframe-owned stories (tag `afframe`) also check axe's `target-size` rule (WCAG 2.5.8), which axe-core leaves off by default. They spread `afframeA11y` from `.storybook/afframeA11y.ts` into `parameters`; a `beforeEach` in `.storybook/preview.tsx` fails any story tagged `afframe` without it. Never set your own `a11y.config.rules` on an `afframe` story: the array replaces the shared parameter and the guard fails. Afframe-owned stories have no exceptions; fix the CSS instead.
+Afframe-owned stories (tag `afframe`) also check axe's `target-size` rule (WCAG 2.5.8), which axe-core leaves off by default. They spread `afframeA11y` from `.storybook/afframeA11y.ts` into `parameters`; a `beforeEach` in `.storybook/preview.tsx` fails any story tagged `afframe` without it. Never set your own `a11y.config.rules` on an `afframe` story: the array replaces the shared parameter and the guard fails. Afframe-owned stories have no exceptions; fix the CSS instead. An Afframe wrapper in a Carbon docs folder (`OverflowMenu`, `TableToolbarMenu`) needs a unit test and an `afframe` story with a play test, and no visual test, since it keeps Carbon's look (`pnpm registry --check` enforces it).
 
 ## Dependency pre-bundling
 
@@ -57,7 +57,7 @@ Afframe-owned stories (tag `afframe`) also check axe's `target-size` rule (WCAG 
 
 ## Visual baselines
 
-Visual tests call `toMatchScreenshot` on composed stories. They cover every Afframe-owned component and `AfframeProvider`, in light and dark, plus one focus state in light for each component with a focusable part (all but `Amount` and `AfframeProvider`; the test focuses a named element, so the screenshot is deterministic). `ChatChart` has no tab stop, so its focus test checks that one Tab leaves the story and focus stays on the page body. The internal `CreateEditFlow`, `ModalParts` and `useHeaderPanel` are covered through the components that use them. No Chromatic.
+Visual tests call `toMatchScreenshot` on composed stories. They cover every Afframe-owned component and `AfframeProvider`, in light and dark, plus one focus state in light for each component with a focusable part (all but `Amount` and `AfframeProvider`; the test focuses a named element, so the screenshot is deterministic). `ChatChart` has no tab stop, so its focus test checks that one Tab leaves the story and focus stays on the page body. The internal `CreateEditFlow`, `ModalParts`, `MenuParts` and `useHeaderPanel` are covered through the components that use them. No Chromatic.
 
 Baselines live in `src/<dir>/__screenshots__/<file>/<name>-chromium-linux.png` and are committed. Only the Linux renders count, since the release checks render them on the Linux runner in `.github/workflows/release-checks.yml`; macOS and Windows renders are gitignored.
 

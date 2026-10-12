@@ -216,7 +216,6 @@ export {
   TableToolbar,
   TableToolbarAction,
   TableToolbarContent,
-  TableToolbarMenu,
   TableToolbarSearch,
   StructuredListBody,
   StructuredListCell,
@@ -274,7 +273,6 @@ export type {
   TableSelectRowProps,
   TableToolbarProps,
   TableToolbarActionProps,
-  TableToolbarMenuProps,
   TableToolbarSearchProps,
   StructuredListBodyProps,
   StructuredListCellProps,
@@ -367,7 +365,6 @@ export {
   MenuItemRadioGroup,
   MenuItemSelectable,
   useContextMenu,
-  OverflowMenu,
   OverflowMenuItem,
   Link,
 } from '@carbon/react';
@@ -425,7 +422,6 @@ export type {
   MenuItemRadioGroupProps,
   MenuItemSelectableProps,
   ContextMenuProps,
-  OverflowMenuProps,
   OverflowMenuItemProps,
   LinkProps,
 } from '@carbon/react';
@@ -845,3 +841,8 @@ export * from './components/HelpMenu/index.js';
 export * from './components/ChatElements/index.js';
 
 export * from './components/ControlledDatePicker/index.js';
+
+// Carbon's OverflowMenu and TableToolbarMenu, wrapped so the 1.0.x menu shape
+// keeps working (docs/feature-flags.md).
+export * from './components/OverflowMenu/index.js';
+export * from './components/DataTable/index.js';

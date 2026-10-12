@@ -45,7 +45,7 @@ An app that renders Carbon Charts (`Charts`, or `ChatChart` with the Carbon Char
 
 Set the theme on `<html>` in the server-rendered root layout: `data-afframe-theme="light"`, `"dark"` or `"system"` (follows the OS). Without the attribute the theme is `light`. The type `AfframeTheme` lists the values. The CSS applies the theme, so it does not flash and needs no script.
 
-Wrap the app in `<AfframeProvider>`. It turns on the v12 flags. In Next.js App Router it is a client component placed inside the root layout. No Sass, no `transpilePackages`, no load-path settings.
+Wrap the app in `<AfframeProvider>`. It turns on the Carbon feature flags Afframe UI uses. In Next.js App Router it is a client component placed inside the root layout. No Sass, no `transpilePackages`, no load-path settings.
 
 ## 5. Use it
 
