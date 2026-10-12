@@ -12,11 +12,11 @@ IBM is moving a set of components from IBM Products into Carbon core for v12 (am
 
 ## Decision
 
-Use the IBM Products versions of these components, exported under Afframe names. When Carbon v12 is stable, switch the Afframe names to the core versions. Resizer comes from `@carbon-labs/react-resizer`. OptionsTile is not included. No Carbon source is copied for this.
+Use the IBM Products versions of these components, exported under Afframe names. The Afframe names stay backed by IBM Products; a later move to core is a new decision (ADR 0017). Resizer comes from `@carbon-labs/react-resizer`. OptionsTile is not included. No Carbon source is copied for this.
 
 ## Consequences
 
-The switch to core is internal to Afframe UI; consumers keep the same imports. Until then these components carry IBM Products' styling (prefix `c4p`), compiled together with Carbon's v12 styles. A component IBM Products does not export publicly (ActionSet) is not available until core ships it.
+These components carry IBM Products' styling (prefix `c4p`), compiled together with Carbon's v11 styles. A later move to core would be internal to Afframe UI; consumers keep the same imports. A component IBM Products does not export publicly (ActionSet) is not available until core ships it.
 
 The backing exports are IBM Products' newer implementations, the ones core takes over:
 

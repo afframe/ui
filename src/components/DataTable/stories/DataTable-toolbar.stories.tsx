@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, upstream v12 overflow menu branches removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -17,7 +17,6 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
   Button,
   DataTable,
-  MenuItem,
   NotFoundEmptyState,
   OverflowMenu,
   OverflowMenuItem,
@@ -33,7 +32,6 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
-  useFeatureFlag,
 } from '../../../index.js';
 import mdx from '../DataTable.mdx';
 import { dataTableArgs, dataTableArgTypes, headers, rows } from './shared.js';
@@ -429,7 +427,6 @@ export const WithOverflowMenu: StoryFn<ToolbarStoryArgs> = ({
   persistent,
   ...args
 }) => {
-  const enableV12OverflowMenu = useFeatureFlag('enable-v12-overflowmenu');
   const [searchValue, setSearchValue] = useState('');
 
   const filteredRows = rows.filter((row) => {
@@ -504,19 +501,11 @@ export const WithOverflowMenu: StoryFn<ToolbarStoryArgs> = ({
                         </TableCell>
                       ))}
                       <TableCell className="cds--table-column-menu">
-                        {enableV12OverflowMenu ? (
-                          <OverflowMenu label="Options">
-                            <MenuItem label="Stop app" />
-                            <MenuItem label="Restart app" />
-                            <MenuItem label="Rename app" />
-                          </OverflowMenu>
-                        ) : (
-                          <OverflowMenu size="sm" flipped>
-                            <OverflowMenuItem itemText="Stop app" />
-                            <OverflowMenuItem itemText="Restart app" />
-                            <OverflowMenuItem itemText="Rename app" />
-                          </OverflowMenu>
-                        )}
+                        <OverflowMenu size="sm" flipped>
+                          <OverflowMenuItem itemText="Stop app" />
+                          <OverflowMenuItem itemText="Restart app" />
+                          <OverflowMenuItem itemText="Rename app" />
+                        </OverflowMenu>
                       </TableCell>
                     </TableRow>
                   ))}

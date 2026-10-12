@@ -122,18 +122,4 @@ On an update:
 4. `scripts/check-example.mjs` finds each library's JavaScript by a marker string: `cds--cc--` (Carbon Charts), `_echarts_instance_` (ECharts), `afframe-data-grid` (the data grid), `cds-aichat-react` and `conversational_search` (AI chat). The absence checks on `/`, `/dark`, `/system`, `/labs`, `/afframe`, `/chat`, `/shell` and `/chat-elements` still pass if a marker disappears upstream; the presence checks catch it: on `/extras`, `conversational_search` on `/chat` and `/chat-elements`, every marker somewhere in the build output, and the lazy-chunk check on `/chat-elements`. That last check looks for the chunk file names in the route's client JavaScript, as Turbopack writes them; a change in the Next.js bundler or its chunk layout can break it. After an update, grep each new package for its marker and replace one that is gone.
 5. When a run reloads the browser mid-test, add the new dependency to `optimizeDeps.include` in `vitest.config.ts` (`docs/testing.md`).
 
-## Moving to Carbon v12
-
-When Carbon v12 is stable and a new ADR adopts it:
-
-1. Move `@carbon/react`, `@carbon/styles` and related packages to v12, and IBM Products to the version that supports it.
-2. Switch the migrated components from IBM Products' `preview__` and `previewCandidate__` exports to Carbon core behind the same Afframe names (ADR 0005), and remove the IBM Products canary settings from the `AfframeProvider` module.
-3. Run Carbon's codemods (`@carbon/upgrade`) where they apply.
-4. Move the extras with Carbon: `@carbon/ai-chat` 2.x, which needs `@carbon/web-components` 3, and a Carbon Charts version that supports v12 (carbon-charts issue #2098).
-5. Move the Afframe components off their IBM Products and preview imports: `StatusIndicator` uses Carbon's `preview__IconIndicator` and `preview__ShapeIndicator`, `EditTearsheet` uses IBM Products' `preview__Tearsheet`, and `CreateSidePanel` and `EditSidePanel` use IBM Products' `SidePanel`. Take the stable names when they land in core, and rerun those components' tests, play tests and visual tests.
-6. Recheck the header workarounds. `HelpMenu` and `EnvironmentSwitcher` render Carbon's `HeaderPanel` with `addFocusListeners={false}`, because in controlled mode its focus listeners close twice, reopen on a click on the action and never return focus; `HelpMenu` wraps `Switcher` in its own element, because `HeaderPanel`'s outside-click handler runs only for a direct `Switcher` child; `SwitcherItem`'s types lack `as`, `id` and `aria-describedby`. `LogoutBanner` sets `enableFocusWrapWithoutSentinels` locally on its `ActionableNotification`, which otherwise adds two tabbable focus sentinels. Drop each when v12 makes it unnecessary, and check that `HeaderGlobalAction`, `HeaderPanel`, `Switcher`, `SwitcherItem` and `SwitcherDivider` keep their names.
-7. Recheck `renderChatElement` against `@carbon/ai-chat` 2.x, since it relies on `renderUserDefinedResponse` and the `RenderUserDefinedState` type, and re-run the chat element comparison (above).
-8. Recheck the dialog workarounds once `enable-dialog-element` is default (`docs/feature-flags.md`): the own initial focus of the modals and the create and edit components, and the Tab wrap of CreateModal, EditTearsheet and the discard dialog. Drop one when Carbon or Chromium no longer needs it.
-9. Update the ADRs and docs this changes.
-
 The deprecated IBM Products components that Afframe replaces (CreateModal, CreateSidePanel, EditSidePanel, EditTearsheet, EditFullPage, RemoveModal, ImportModal, ExportModal, APIKeyModal, StatusIcon, StatusIndicator, DescriptionList) are not imported by Afframe code. IBM marks them deprecated with no removal version in 2.100.0; when an update removes them, only the excluded-pages table above changes.

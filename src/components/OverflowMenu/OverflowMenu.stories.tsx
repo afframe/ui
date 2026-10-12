@@ -7,16 +7,11 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
-import {
-  MenuItem,
-  OverflowMenu,
-  OverflowMenuItem,
-  useFeatureFlag,
-} from '../../index.js';
+import { OverflowMenu, OverflowMenuItem } from '../../index.js';
 import type { OverflowMenuProps } from '../../index.js';
 import { Filter } from '../../icons.js';
 import mdx from './OverflowMenu.mdx';
@@ -119,25 +114,12 @@ export default {
   argTypes,
 } satisfies Meta<typeof OverflowMenu>;
 
-export const RenderCustomIcon: StoryFn<typeof OverflowMenu> = (args) => {
-  const enableV12OverflowMenu = useFeatureFlag('enable-v12-overflowmenu');
-
-  return (
-    <OverflowMenu {...args} renderIcon={Filter}>
-      {enableV12OverflowMenu ? (
-        <>
-          <MenuItem label="Filter A" />
-          <MenuItem label="Filter B" />
-        </>
-      ) : (
-        <>
-          <OverflowMenuItem itemText="Filter A" />
-          <OverflowMenuItem itemText="Filter B" />
-        </>
-      )}
-    </OverflowMenu>
-  );
-};
+export const RenderCustomIcon: StoryFn<typeof OverflowMenu> = (args) => (
+  <OverflowMenu {...args} renderIcon={Filter}>
+    <OverflowMenuItem itemText="Filter A" />
+    <OverflowMenuItem itemText="Filter B" />
+  </OverflowMenu>
+);
 export const Default: StoryFn<typeof OverflowMenu> = (args) => (
   <OverflowMenu aria-label="overflow-menu" {...args}>
     <OverflowMenuItem itemText="Stop app" />
