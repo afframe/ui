@@ -3650,6 +3650,14 @@
       "docs": "src/components/UserAvatar/UserAvatar.mdx"
     },
     {
+      "name": "AddSelectData",
+      "kind": "util",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable"
+    },
+    {
       "name": "AboutModal",
       "kind": "component",
       "source": "ibm-products",
@@ -3912,14 +3920,6 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview"
-    },
-    {
-      "name": "AddSelectData",
-      "kind": "util",
-      "source": "ibm-products",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable"
     },
     {
       "name": "SideNavLabs",

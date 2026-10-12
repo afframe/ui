@@ -460,6 +460,8 @@ ModalFocusAndClose.play = async ({ canvas, userEvent }) => {
   await expect(toggle).toHaveFocus();
 
   // The story's open state is still true, so the first toggle only syncs it.
+  // If this fails after a Carbon update, Escape now calls onRequestClose:
+  // update the Escape note in Dialog.mdx and drop this step.
   await userEvent.click(toggle);
   await expect(dialog).not.toHaveAttribute('open');
   await userEvent.click(toggle);

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui (UserAvatar is IBM Products'), source tag, WithVideo kept out of the story tests, story styles as plain CSS, two upstream illustrations used for every image (IBM logo removed), console.log and alert as actions, type fixes (numeric icon sizes, iconDescription for the unknown label prop, the Next icon as a child, anchor props spread, explicit Disabled argTypes, truncate props default to false), dashes replaced. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui (UserAvatar is IBM Products'), source tag, WithVideo kept out of the story tests, YouTube embeds through youtube-nocookie.com without the share id, the WithVideo card whose video source is a YouTube page removed, rel on the new-tab link, story styles as plain CSS, two upstream illustrations used for every image (IBM logo removed), console.log and alert as actions, type fixes (numeric icon sizes, iconDescription for the unknown label prop, the Next icon as a child, anchor props spread, explicit Disabled argTypes, truncate props default to false), dashes replaced. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -369,7 +369,7 @@ export const Default: Story = {
                   width="100%"
                   height="100%"
                   style={{ position: 'absolute' }}
-                  src="https://www.youtube.com/embed/Veg7njIKUm4?si=B9yWeUzcFHI4ITD1&controls=0"
+                  src="https://www.youtube-nocookie.com/embed/Veg7njIKUm4?controls=0"
                   title="YouTube video player"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -466,7 +466,11 @@ export const Clickable: StoryFn<CardStoryArgs> = () => (
       <Card
         clickable
         as="a"
-        {...{ href: 'https://carbondesignsystem.com', target: '_blank' }}
+        {...{
+          href: 'https://carbondesignsystem.com',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+        }}
         aria-labelledby="clickable-title-carbon">
         <Card.Media ratio="16x9">
           <img src={illustration16x9} alt="" width="100%" />
@@ -1712,39 +1716,12 @@ export const WithVideo: StoryFn<CardStoryArgs> = () => (
   <Grid withRowGap>
     <Column lg={4} md={4} sm={4}>
       <Card>
-        <Card.Header>
-          <Card.Title description="Watch our latest feature walkthrough">
-            Product demo video
-          </Card.Title>
-        </Card.Header>
-        <Card.Media ratio="16x9">
-          <video
-            controls
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              position: 'absolute',
-            }}>
-            <source
-              src="https://www.youtube.com/watch?v=Veg7njIKUm4"
-              type="video/mp4"
-            />
-            <track kind="captions" />
-            Your browser does not support the video tag.
-          </video>
-        </Card.Media>
-        <Card.Body>Full walkthrough of the new pipeline builder.</Card.Body>
-      </Card>
-    </Column>
-    <Column lg={4} md={4} sm={4}>
-      <Card>
         <Card.Media ratio="16x9">
           <iframe
             width="100%"
             height="100%"
             style={{ position: 'absolute' }}
-            src="https://www.youtube.com/embed/Veg7njIKUm4?si=B9yWeUzcFHI4ITD1&amp;controls=0"
+            src="https://www.youtube-nocookie.com/embed/Veg7njIKUm4?controls=0"
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1767,7 +1744,7 @@ export const WithVideo: StoryFn<CardStoryArgs> = () => (
             width={'100%'}
             height={'100%'}
             style={{ position: 'absolute' }}
-            src="https://www.youtube.com/embed/Veg7njIKUm4?si=B9yWeUzcFHI4ITD1&amp;controls=0"
+            src="https://www.youtube-nocookie.com/embed/Veg7njIKUm4?controls=0"
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

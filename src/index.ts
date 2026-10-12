@@ -586,6 +586,7 @@ export {
   // Namespaces: render <preview__Card.Card>, <preview__Dialog.Dialog>.
   preview__Card,
   preview__Dialog,
+  // Import with an alias: JSX reads a lowercase tag as an HTML element.
   preview_Layout,
 } from '@carbon/react';
 export type {
@@ -638,7 +639,10 @@ export {
   UserAvatar,
 } from '@carbon/ibm-products';
 // AddSelect's data helper, typed in src/ibm-products/ (IBM's types miss it).
-export * from './ibm-products/add-select-data.js';
+export {
+  AddSelectData,
+  type AddSelectItem,
+} from './ibm-products/add-select-data.js';
 export type {
   preview__AddSelectProps as AddSelectProps,
   AddSelectComponentType,

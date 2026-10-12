@@ -355,6 +355,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | Tearsheet                          | component | ibm-products | client  | preview           | [page](../src/components/Tearsheet/Tearsheet.mdx)                     |
 | TruncatedText                      | component | ibm-products | client  | preview           | [page](../src/components/TruncatedText/TruncatedText.mdx)             |
 | UserAvatar                         | component | ibm-products | client  | stable            | [page](../src/components/UserAvatar/UserAvatar.mdx)                   |
+| AddSelectData                      | util      | ibm-products | client  | stable            |                                                                       |
 | AboutModal                         | component | ibm-products | client  | stable            | [page](../src/components/AboutModal/AboutModal.mdx)                   |
 | ActionBar                          | component | ibm-products | client  | stable            | [page](../src/components/ActionBar/ActionBar.mdx)                     |
 | EmptyState                         | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/EmptyState.mdx)                   |
@@ -386,7 +387,6 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | preview__FeatureFlags              | component | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
 | preview__useFeatureFlag            | hook      | ibm-products | client  | preview           |                                                                       |
 | preview__useFeatureFlags           | hook      | ibm-products | client  | preview           |                                                                       |
-| AddSelectData                      | util      | ibm-products | client  | stable            |                                                                       |
 | SideNavLabs                        | component | labs         | client  | stable            |                                                                       |
 | SIDE_NAV_TYPE                      | util      | labs         | client  | stable            |                                                                       |
 | SideNavItemsLabs                   | component | labs         | client  | stable            |                                                                       |

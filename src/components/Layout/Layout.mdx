@@ -3,7 +3,7 @@ import * as LayoutStories from './Layout.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz action removed, source label added, source link pinned to v11.118.0, LayoutConstraint section removed (@carbon/react 1.118.0 does not export LayoutConstraint).
+// Modified by Afframe in 2026: Stackblitz action removed, source label added, source link pinned to v11.118.0, LayoutConstraint section removed (@carbon/react 1.118.0 does not export LayoutConstraint), import line added to the sample.
 
 <Meta isTemplate />
 
@@ -43,6 +43,8 @@ Components that are explicitly passed a `size` to are unaffected by the layout
 context. Example:
 
 ```jsx
+import { preview_Layout as Layout, TextInput } from '@afframe/ui';
+
 <div>
   {/* This text input is always lg */}
   <TextInput size="lg" />
@@ -57,7 +59,7 @@ context. Example:
     {/* This text input will be sm */}
     <TextInput />
   </Layout>
-</div>
+</div>;
 ```
 
 <Canvas of={LayoutStories.Default} />

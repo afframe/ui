@@ -148,6 +148,42 @@ test("exports IBM Products' AddSelect, Coachmark and ConditionBuilder helpers", 
   expectTypeOf(data.getSelectedItems()).toEqualTypeOf<ui.AddSelectItem[]>();
 });
 
+// The AddSelectData declarations are copied (ADR 0017): an IBM update that
+// changes the class fails here until they are regenerated.
+test("AddSelectData's declarations match IBM's run-time methods", () => {
+  const declared = [
+    'setItems',
+    'getItems',
+    'getItem',
+    'setItem',
+    'getSelectedItems',
+    'setSelectedItems',
+    'getItemChildren',
+    'getItemParent',
+    'getItemParents',
+    'getItemStatus',
+    'setItemStatus',
+    'isSelected',
+    'search',
+    'sort',
+    'clearSelections',
+    'getItemDepth',
+    'hasChildren',
+    'getItemDescendants',
+    'hasSelectedDescendants',
+    'allDescendantsSelected',
+    'getAllDescendantIds',
+    'getTopLevelSelectedItems',
+  ] as const;
+  expectTypeOf<keyof ui.AddSelectData>().toEqualTypeOf<
+    (typeof declared)[number]
+  >();
+  const runtime = Object.getOwnPropertyNames(
+    ibm.AddSelectData.prototype
+  ).filter((name) => name !== 'constructor' && !name.startsWith('_'));
+  expect([...runtime].sort()).toEqual([...declared].sort());
+});
+
 test('exports the Carbon previews, IdPrefix, AboutModal and ActionBar as they are', () => {
   expect(ui.preview__Card).toBe(carbon.preview__Card);
   expect(ui.preview__Dialog).toBe(carbon.preview__Dialog);
