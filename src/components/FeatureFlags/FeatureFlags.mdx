@@ -36,6 +36,25 @@ only (`docs/feature-flags.md`).
 - `enable-treeview-controllable`
 - `enable-tile-contrast` (Sass only: Carbon React never reads it)
 
+## IBM Products flags
+
+IBM Products has its own flag API, separate from Carbon's, exported as
+`preview__FeatureFlags` with the hooks `preview__useFeatureFlag(name)` (one
+flag, a boolean) and `preview__useFeatureFlags()` (all of them). Afframe turns
+none of these on. The one that matters for the exported components is
+`enableSidepanelResizer`, which lets the user resize a `SidePanel`:
+
+```tsx
+import { preview__FeatureFlags as FeatureFlags, SidePanel } from '@afframe/ui';
+
+<FeatureFlags enableSidepanelResizer>
+  <SidePanel>…</SidePanel>
+</FeatureFlags>;
+```
+
+IBM's other flags (`enableDatagridUse*`) belong to IBM's Datagrid, which Afframe
+UI does not export; use `DataGrid` instead.
+
 ## More
 
 Why each flag is on and the rules around them:
