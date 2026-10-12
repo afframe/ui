@@ -25,7 +25,7 @@ import {
 import mdx from './TrialCountdown.mdx';
 
 export default {
-  title: 'Components/UI Shell/Labs/TrialCountdown',
+  title: 'Components/UI Shell/TrialCountdown',
   component: TrialCountdown,
   tags: ['labs'],
   parameters: {

@@ -129,7 +129,7 @@ interface DropdownItem {
 }
 
 export default {
-  title: 'Components/UI Shell/Labs/Overview',
+  title: 'Components/UI Shell/Examples',
   component: HeaderDivider,
   subcomponents: {
     HeaderDivider,

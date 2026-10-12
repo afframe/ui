@@ -25,7 +25,7 @@ import {
 import mdx from './FluidDropdown.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidDropdown',
+  title: 'Components/Fluid Inputs/FluidDropdown',
   tags: ['carbon'],
   component: FluidDropdown,
   decorators: [

@@ -17,7 +17,7 @@ import mdx from './SkeletonIcon.mdx';
 type SkeletonIconStoryArgs = { className: string; size: number };
 
 export default {
-  title: 'Components/Skeleton/SkeletonIcon',
+  title: 'Components/Skeletons/SkeletonIcon',
   component: SkeletonIcon,
   tags: ['carbon'],
   argTypes: {

@@ -11,7 +11,7 @@ function Controlled(props: AmountInputProps) {
 }
 
 const meta = {
-  title: 'Components/Amount Input',
+  title: 'Components/AmountInput',
   component: AmountInput,
   tags: ['afframe'],
   args: {

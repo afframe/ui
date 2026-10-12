@@ -18,7 +18,7 @@ import './whats-new-story.css';
 
 export default {
   component: Toc,
-  title: 'Patterns/WhatsNew',
+  title: 'Components/Onboarding/WhatsNew',
   tags: ['labs'],
   subcomponents: {
     TocList,

@@ -25,7 +25,7 @@ import styles from './fluid-text-area-story.css?inline';
 import mdx from './FluidTextArea.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidTextArea',
+  title: 'Components/Fluid Inputs/FluidTextArea',
   tags: ['carbon'],
   component: FluidTextArea,
   decorators: [

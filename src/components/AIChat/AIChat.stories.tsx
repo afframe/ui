@@ -212,7 +212,7 @@ function upstreamA11y(...rules: string[]) {
 }
 
 const meta = {
-  title: 'Components/AI Chat',
+  title: 'Components/AI/AIChat',
   component: ChatCustomElement,
   tags: ['extras'],
   parameters: {

@@ -41,7 +41,7 @@ const argTypes = {
 } satisfies ArgTypes;
 
 export default {
-  title: 'Components/Stack',
+  title: 'Layout/Stack',
   component: Stack,
   tags: ['carbon'],
   args,

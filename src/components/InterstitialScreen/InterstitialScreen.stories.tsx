@@ -44,7 +44,7 @@ const storyClass = 'interstitial-stories';
 const blockClass = 'c4p--interstitial-screen';
 
 export default {
-  title: 'Components/InterstitialScreen',
+  title: 'Components/Onboarding/InterstitialScreen',
   component: InterstitialScreen,
   tags: ['autodocs', 'Onboarding', 'ibm-products'],
   subcomponents: {

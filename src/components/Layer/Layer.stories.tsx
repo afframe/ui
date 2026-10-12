@@ -21,7 +21,7 @@ interface LayerStoryArgs {
 }
 
 export default {
-  title: 'Components/Layer',
+  title: 'Layout/Layer',
   component: Layer,
   tags: ['carbon'],
   parameters: {

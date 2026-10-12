@@ -18,7 +18,7 @@ import type { NotFoundEmptyStateProps } from '../../index.js';
 import mdx from './NotFoundEmptyState.mdx';
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/NotFoundEmptyState',
+  title: 'Components/Empty States/NotFoundEmptyState',
   component: NotFoundEmptyState,
   tags: ['ibm-products'],
   parameters: {

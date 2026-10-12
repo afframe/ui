@@ -24,7 +24,7 @@ import styles from './fluid-number-input-story.css?inline';
 import mdx from './FluidNumberInput.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidNumberInput',
+  title: 'Components/Fluid Inputs/FluidNumberInput',
   tags: ['carbon'],
   component: FluidNumberInput,
   decorators: [

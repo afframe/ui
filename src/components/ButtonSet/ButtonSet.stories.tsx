@@ -31,7 +31,7 @@ interface ButtonSetStoryArgs {
 }
 
 export default {
-  title: 'Components/Button/Set Of Buttons',
+  title: 'Components/ButtonSet',
   component: ButtonSet,
   subcomponents: { Button },
   tags: ['carbon'],

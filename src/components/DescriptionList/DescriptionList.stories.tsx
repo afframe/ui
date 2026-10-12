@@ -13,7 +13,7 @@ const items = [
 ];
 
 const meta = {
-  title: 'Components/Description List',
+  title: 'Components/DescriptionList',
   component: DescriptionList,
   tags: ['afframe'],
   args: { 'aria-label': 'Invoice details', items },

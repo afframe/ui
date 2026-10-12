@@ -41,7 +41,7 @@ function Stateful(props: EnvironmentSwitcherProps) {
 }
 
 const meta = {
-  title: 'Components/UI Shell/Afframe/Environment Switcher',
+  title: 'Components/UI Shell/EnvironmentSwitcher',
   component: EnvironmentSwitcher,
   tags: ['afframe'],
   args: {

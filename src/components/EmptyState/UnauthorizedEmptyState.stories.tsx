@@ -18,7 +18,7 @@ import type { UnauthorizedEmptyStateProps } from '../../index.js';
 import mdx from './UnauthorizedEmptyState.mdx';
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/UnauthorizedEmptyState',
+  title: 'Components/Empty States/UnauthorizedEmptyState',
   component: UnauthorizedEmptyState,
   tags: ['ibm-products'],
   parameters: {

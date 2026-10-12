@@ -10,7 +10,7 @@ import mdx from './LogoutBanner.mdx';
 import { CarbonShell, LabsShell } from './storyShells.js';
 
 const meta = {
-  title: 'Components/UI Shell/Afframe/Logout Banner',
+  title: 'Components/UI Shell/LogoutBanner',
   component: LogoutBanner,
   tags: ['afframe'],
   args: {

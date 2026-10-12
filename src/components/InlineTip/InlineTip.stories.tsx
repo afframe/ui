@@ -52,7 +52,7 @@ const ActionLink = InlineTipLink as ComponentType<
 >;
 
 export default {
-  title: 'Preview Candidate/Onboarding/InlineTip',
+  title: 'Preview/InlineTip',
   component: InlineTip,
   tags: ['autodocs', 'Onboarding', 'ibm-products'],
   parameters: {

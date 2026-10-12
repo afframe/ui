@@ -18,7 +18,7 @@ import type { NoDataEmptyStateProps } from '../../index.js';
 import mdx from './NoDataEmptyState.mdx';
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/NoDataEmptyState',
+  title: 'Components/Empty States/NoDataEmptyState',
   component: NoDataEmptyState,
   tags: ['ibm-products'],
   parameters: {

@@ -31,7 +31,7 @@ interface DropdownItem {
 }
 
 export default {
-  title: 'Components/UI Shell/Labs/SideNav',
+  title: 'Components/UI Shell/SideNavLabs',
   component: SideNavLabs,
   subcomponents: {
     SideNavLabs,

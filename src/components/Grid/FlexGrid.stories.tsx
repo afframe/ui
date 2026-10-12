@@ -56,7 +56,7 @@ const argTypes = {
 const gridContainerControls = ['align', 'fullWidth', 'withRowGap'];
 
 export default {
-  title: 'Components/FlexGrid',
+  title: 'Layout/FlexGrid',
   component: FlexGrid,
   subcomponents: {
     Row,

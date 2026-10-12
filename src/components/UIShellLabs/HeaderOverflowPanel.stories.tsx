@@ -84,7 +84,7 @@ interface HeaderRenderProps {
 }
 
 export default {
-  title: 'Components/UI Shell/Labs/HeaderOverflowPanel',
+  title: 'Components/UI Shell/HeaderOverflowPanel',
   component: HeaderOverflowPanel,
   tags: ['labs'],
   parameters: {

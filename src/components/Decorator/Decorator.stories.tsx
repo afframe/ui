@@ -53,7 +53,7 @@ const scoreOptions = {
 };
 
 export default {
-  title: 'Preview Candidate/Decorator',
+  title: 'Preview/Decorator',
   component: Decorator,
   tags: ['ibm-products'],
   parameters: {

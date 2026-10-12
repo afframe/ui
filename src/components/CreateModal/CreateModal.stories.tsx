@@ -44,7 +44,7 @@ function Harness({ onSubmit, initialName }: HarnessProps) {
 }
 
 const meta = {
-  title: 'Components/Create and Edit/Create Modal',
+  title: 'Components/Create and Edit/CreateModal',
   component: CreateModal,
   tags: ['afframe'],
   parameters: {

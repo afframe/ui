@@ -14,7 +14,7 @@ import type { Meta, StoryFn } from '@storybook/react-vite';
 import { AISkeletonPlaceholder } from '../../index.js';
 
 export default {
-  title: 'Components/Skeleton/AISkeleton',
+  title: 'Components/Skeletons/AISkeleton',
   component: AISkeletonPlaceholder,
   tags: ['carbon'],
 } satisfies Meta<typeof AISkeletonPlaceholder>;

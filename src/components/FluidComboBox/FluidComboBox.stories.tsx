@@ -25,7 +25,7 @@ import {
 import mdx from './FluidComboBox.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidComboBox',
+  title: 'Components/Fluid Inputs/FluidComboBox',
   tags: ['carbon'],
   component: FluidComboBox,
   parameters: {

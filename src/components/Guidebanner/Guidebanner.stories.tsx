@@ -43,7 +43,7 @@ const ElementLink = GuidebannerElementLink as ComponentType<
 const storyClass = 'guidebanner-stories';
 
 export default {
-  title: 'Components/Guidebanner',
+  title: 'Components/Onboarding/Guidebanner',
   component: Guidebanner,
   tags: ['autodocs', 'Onboarding', 'ibm-products'],
   parameters: {

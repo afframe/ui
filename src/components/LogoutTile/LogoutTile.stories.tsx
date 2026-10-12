@@ -33,7 +33,7 @@ function InCarbonHeader(props: LogoutTileProps) {
 }
 
 const meta = {
-  title: 'Components/UI Shell/Afframe/Logout Tile',
+  title: 'Components/UI Shell/LogoutTile',
   component: LogoutTile,
   tags: ['afframe'],
   args: {

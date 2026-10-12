@@ -50,7 +50,7 @@ const externalItems: HelpMenuItem[] = [
 ];
 
 const meta = {
-  title: 'Components/UI Shell/Afframe/Help Menu',
+  title: 'Components/UI Shell/HelpMenu',
   component: HelpMenu,
   tags: ['afframe'],
   args: { items, defaultOpen: true, onOpenChange: action('onOpenChange') },

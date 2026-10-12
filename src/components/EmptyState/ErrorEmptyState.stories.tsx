@@ -18,7 +18,7 @@ import type { ErrorEmptyStateProps } from '../../index.js';
 import mdx from './ErrorEmptyState.mdx';
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/ErrorEmptyState',
+  title: 'Components/Empty States/ErrorEmptyState',
   component: ErrorEmptyState,
   tags: ['ibm-products'],
   parameters: {

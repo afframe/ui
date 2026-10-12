@@ -53,7 +53,7 @@ const ScrollGradient = IbmScrollGradient as ComponentType<{
 }>;
 
 export default {
-  title: 'Patterns/WhatsNew',
+  title: 'Components/Onboarding/WhatsNew',
   tags: ['labs'],
   subcomponents: {
     TocList,

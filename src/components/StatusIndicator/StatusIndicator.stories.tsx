@@ -6,7 +6,7 @@ import { StatusIndicator } from './StatusIndicator.js';
 import mdx from './StatusIndicator.mdx';
 
 const meta = {
-  title: 'Components/Status Indicator',
+  title: 'Components/StatusIndicator',
   component: StatusIndicator,
   tags: ['afframe'],
   args: { kind: 'succeeded' },

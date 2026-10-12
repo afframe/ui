@@ -26,7 +26,7 @@ import styles from './fluid-time-picker-story.css?inline';
 import mdx from './FluidTimePicker.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidTimePicker',
+  title: 'Components/Fluid Inputs/FluidTimePicker',
   tags: ['carbon'],
   component: FluidTimePicker,
   decorators: [

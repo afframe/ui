@@ -18,7 +18,7 @@ import type { NoTagsEmptyStateProps } from '../../index.js';
 import mdx from './NoTagsEmptyState.mdx';
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/NoTagsEmptyState',
+  title: 'Components/Empty States/NoTagsEmptyState',
   component: NoTagsEmptyState,
   tags: ['ibm-products'],
   parameters: {

@@ -15,7 +15,7 @@ import { action } from 'storybook/actions';
 import { ActionableNotification } from '../../index.js';
 
 export default {
-  title: 'Components/Notifications/Actionable/Feature Flag',
+  title: 'Components/Notifications/Actionable/Feature Flags',
   component: ActionableNotification,
   tags: ['carbon', '!autodocs'],
   args: {

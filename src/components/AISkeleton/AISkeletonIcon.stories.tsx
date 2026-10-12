@@ -15,7 +15,7 @@ import { AISkeletonIcon } from '../../index.js';
 import mdx from './AISkeleton.mdx';
 
 export default {
-  title: 'Components/Skeleton/AISkeleton',
+  title: 'Components/Skeletons/AISkeleton',
   component: AISkeletonIcon,
   tags: ['carbon'],
   parameters: {

@@ -18,7 +18,7 @@ import mdx from './Heading.mdx';
 type HeadingStoryArgs = Pick<ComponentProps<typeof Section>, 'as' | 'level'>;
 
 export default {
-  title: 'Components/Heading',
+  title: 'Layout/Heading',
   component: Heading,
   subcomponents: {
     Section,

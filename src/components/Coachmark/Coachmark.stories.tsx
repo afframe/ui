@@ -25,7 +25,7 @@ import mdx from './Coachmark.mdx';
 import './coachmark-story.css';
 
 export default {
-  title: 'Components/Coachmark',
+  title: 'Components/Onboarding/Coachmark',
   component: Coachmark,
   subcomponents: {
     CoachmarkContent: Coachmark.Content,

@@ -23,7 +23,7 @@ import mdx from './FirstTimeOrientation.mdx';
 import './first-time-orientation-story.css';
 
 export default {
-  title: 'Patterns/FirstTimeOrientation',
+  title: 'Components/Onboarding/FirstTimeOrientation',
   tags: ['labs'],
   parameters: {
     docs: {

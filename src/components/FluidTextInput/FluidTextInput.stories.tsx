@@ -25,7 +25,7 @@ import styles from './fluid-text-input-story.css?inline';
 import mdx from './FluidTextInput.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidTextInput',
+  title: 'Components/Fluid Inputs/FluidTextInput',
   tags: ['carbon'],
   component: FluidTextInput,
   decorators: [

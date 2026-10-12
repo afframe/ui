@@ -21,7 +21,7 @@ import './non-linear-reading-story.css';
 const storyClass = 'non-linear-reading-stories';
 
 export default {
-  title: 'Preview Candidate/Onboarding/NonLinearReading',
+  title: 'Preview/NonLinearReading',
   component: NonLinearReading,
   tags: ['autodocs', 'Onboarding', 'ibm-products'],
   parameters: {

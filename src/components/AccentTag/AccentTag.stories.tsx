@@ -19,7 +19,7 @@ const accents: AccentTagColor[] = [
 ];
 
 const meta = {
-  title: 'Components/Accent Tag',
+  title: 'Components/AccentTag',
   component: AccentTag,
   tags: ['afframe'],
   args: {

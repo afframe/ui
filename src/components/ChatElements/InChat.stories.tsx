@@ -45,7 +45,7 @@ async function customSendMessage(
 }
 
 const meta = {
-  title: 'Components/Chat Elements/In chat',
+  title: 'Components/AI/ChatElements/In Chat',
   component: ChatCustomElement,
   // Tagged extras, not afframe: Afframe stories take no a11y exceptions, and
   // IBM's chat header AI label (cds-ai-label) has role="button" on its host

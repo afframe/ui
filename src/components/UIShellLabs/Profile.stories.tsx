@@ -46,7 +46,7 @@ type ThemeSetting = NonNullable<ComponentProps<typeof ThemeSwitcher>['value']>;
 type CarbonTheme = 'white' | 'g10' | 'g90' | 'g100';
 
 export default {
-  title: 'Components/UI Shell/Labs/Profile',
+  title: 'Components/UI Shell/Profile',
   component: Profile.Root,
   subcomponents: {
     'Profile.UserInfo': Profile.UserInfo,

@@ -15,7 +15,7 @@ import { SkeletonText } from '../../index.js';
 import mdx from './SkeletonText.mdx';
 
 export default {
-  title: 'Components/Skeleton/SkeletonText',
+  title: 'Components/Skeletons/SkeletonText',
   component: SkeletonText,
   tags: ['carbon'],
   parameters: {

@@ -61,7 +61,7 @@ function Harness(props: HarnessProps) {
 }
 
 const meta = {
-  title: 'Components/Create and Edit/Edit Full Page',
+  title: 'Components/Create and Edit/EditFullPage',
   component: EditFullPage,
   tags: ['afframe'],
   parameters: {

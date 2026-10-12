@@ -26,7 +26,7 @@ import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
 import mdx from './FluidMultiSelect.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidMultiSelect',
+  title: 'Components/Fluid Inputs/FluidMultiSelect',
   tags: ['carbon'],
   component: FluidMultiSelect,
   decorators: [

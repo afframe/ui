@@ -25,7 +25,7 @@ import {
 import mdx from './HeaderPopover.mdx';
 
 export default {
-  title: 'Components/UI Shell/Labs/HeaderPopover',
+  title: 'Components/UI Shell/HeaderPopover',
   component: HeaderPopover,
   subcomponents: {
     HeaderPopoverActions,

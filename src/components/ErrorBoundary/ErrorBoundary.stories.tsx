@@ -41,7 +41,7 @@ const argTypes = {
 } as const;
 
 export default {
-  title: 'Components/ErrorBoundary',
+  title: 'Utilities/ErrorBoundary',
   component: ErrorBoundary,
   tags: ['carbon'],
   parameters: {

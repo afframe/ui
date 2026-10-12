@@ -34,7 +34,7 @@ type ViewStackChange = {
 };
 
 export default {
-  title: 'Patterns/WhatsNew',
+  title: 'Components/Onboarding/WhatsNew',
   component: ViewStack,
   tags: ['labs'],
   subcomponents: {

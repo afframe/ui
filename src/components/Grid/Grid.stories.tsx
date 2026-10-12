@@ -57,7 +57,7 @@ const sharedArgTypes = {
 } satisfies ArgTypes;
 
 export default {
-  title: 'Components/Grid',
+  title: 'Layout/Grid',
   component: Grid,
   subcomponents: {
     Column,

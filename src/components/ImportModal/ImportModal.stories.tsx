@@ -33,7 +33,7 @@ const fileInput = (root: HTMLElement) => {
 };
 
 const meta = {
-  title: 'Components/Modals/Import Modal',
+  title: 'Components/ImportModal',
   component: ImportModal,
   tags: ['afframe'],
   args: {

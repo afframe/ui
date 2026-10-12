@@ -8,7 +8,7 @@ import { ControlledDatePicker } from './ControlledDatePicker.js';
 import mdx from './ControlledDatePicker.mdx';
 
 const meta = {
-  title: 'Components/Controlled Date Picker',
+  title: 'Components/ControlledDatePicker',
   component: ControlledDatePicker,
   tags: ['afframe'],
   args: {

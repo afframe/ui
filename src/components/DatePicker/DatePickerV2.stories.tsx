@@ -43,7 +43,7 @@ interface DatePickerStoryArgs {
 }
 
 export default {
-  title: 'Components/DatePicker/preview__DatePicker',
+  title: 'Preview/preview__DatePicker',
   component: DatePicker,
   tags: ['carbon'],
   subcomponents: {

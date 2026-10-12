@@ -5,7 +5,7 @@ import { AfframeProvider } from './AfframeProvider.js';
 import mdx from './AfframeProvider.mdx';
 
 const meta = {
-  title: 'Afframe/AfframeProvider',
+  title: 'Getting Started/AfframeProvider',
   component: AfframeProvider,
   tags: ['afframe'],
   parameters: {

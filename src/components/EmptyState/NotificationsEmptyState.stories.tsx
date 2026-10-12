@@ -18,7 +18,7 @@ import type { NotificationsEmptyStateProps } from '../../index.js';
 import mdx from './NotificationsEmptyState.mdx';
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/NotificationsEmptyState',
+  title: 'Components/Empty States/NotificationsEmptyState',
   component: NotificationsEmptyState,
   tags: ['ibm-products'],
   parameters: {

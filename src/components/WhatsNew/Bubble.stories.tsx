@@ -18,7 +18,7 @@ import mdx from './WhatsNew.mdx';
 import './whats-new-story.css';
 
 export default {
-  title: 'Patterns/WhatsNew',
+  title: 'Components/Onboarding/WhatsNew',
   component: Bubble,
   tags: ['labs'],
   subcomponents: {

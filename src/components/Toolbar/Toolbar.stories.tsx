@@ -52,7 +52,7 @@ import mdx from './Toolbar.mdx';
 type ToolbarStoryProps = ComponentProps<typeof Toolbar>;
 
 export default {
-  title: 'Preview Candidate/Toolbar',
+  title: 'Preview/Toolbar',
   component: Toolbar,
   tags: ['ibm-products'],
   parameters: {

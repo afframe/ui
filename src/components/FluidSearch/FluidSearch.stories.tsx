@@ -19,7 +19,7 @@ import {
 import mdx from './FluidSearch.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidSearch',
+  title: 'Components/Fluid Inputs/FluidSearch',
   tags: ['carbon'],
   component: FluidSearch,
   args: {

@@ -91,7 +91,7 @@ function FlyoutHarness() {
 }
 
 const meta = {
-  title: 'Components/Filter Panel',
+  title: 'Components/FilterPanel',
   component: FilterPanel,
   tags: ['afframe'],
   parameters: {

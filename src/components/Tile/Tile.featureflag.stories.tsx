@@ -44,7 +44,7 @@ import './tile-story.css';
 const radioTileGap = { style: { marginBottom: 'var(--cds-spacing-03)' } };
 
 export default {
-  title: 'Components/Tile/Feature Flag',
+  title: 'Components/Tile/Feature Flags',
   component: Tile,
   tags: ['carbon', '!autodocs'],
   subcomponents: {

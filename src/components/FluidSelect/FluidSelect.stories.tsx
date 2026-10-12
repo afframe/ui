@@ -30,7 +30,7 @@ import styles from './fluid-select-story.css?inline';
 import mdx from './FluidSelect.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidSelect',
+  title: 'Components/Fluid Inputs/FluidSelect',
   tags: ['carbon'],
   component: FluidSelect,
   subcomponents: {

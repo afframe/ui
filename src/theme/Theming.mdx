@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta title="Getting Started/Theming" />
+
+# Theming
+
+<SourceLabel name="afframe" />
+
+[Source code](https://github.com/afframe/ui/tree/main/src/theme)
+
+The theme is an attribute on `<html>`, rendered by the server:
+
+```html
+<html data-afframe-theme="system"></html>
+```
+
+| Value    | Carbon theme                 |
+| -------- | ---------------------------- |
+| `light`  | `white` (also when unset)    |
+| `dark`   | `g100`                       |
+| `system` | follows the OS colour scheme |
+
+`styles.css` applies the theme from the attribute, so the page does not flash
+and needs no script. To switch at runtime, change the attribute. The type
+`AfframeTheme` lists the values. The theme toolbar in this Storybook sets the
+same attribute.
+
+## In components
+
+Style your own markup with Carbon tokens as CSS variables
+(`var(--cds-layer-01)`, `var(--cds-text-primary)`); they follow the theme.
+Values: Elements, Tokens.
+
+Two hooks read the current scheme in client components, for libraries that
+take a theme name instead of CSS:
+
+```tsx
+import { useAfframeTheme, useCarbonTheme } from '@afframe/ui';
+
+useAfframeTheme(); // 'light' | 'dark'
+useCarbonTheme(); // 'white' | 'g100'
+```
+
+Both return the light value on the server and in the first client render.
+For a dark area inside a light page, use Carbon's `Theme` component
+(Components, Theme).

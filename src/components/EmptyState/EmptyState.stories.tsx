@@ -23,7 +23,7 @@ const CustomIllustration = new URL(
 ).href;
 
 export default {
-  title: 'Patterns/Prebuilt patterns/Empty states/EmptyState',
+  title: 'Components/Empty States/EmptyState',
   component: EmptyState,
   tags: ['ibm-products'],
   argTypes: {

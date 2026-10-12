@@ -27,7 +27,7 @@ function Harness(props: ExportModalProps) {
 }
 
 const meta = {
-  title: 'Components/Modals/Export Modal',
+  title: 'Components/ExportModal',
   component: ExportModal,
   tags: ['afframe'],
   args: {

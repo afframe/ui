@@ -27,7 +27,7 @@ function Harness(props: RemoveModalProps) {
 }
 
 const meta = {
-  title: 'Components/Modals/Remove Modal',
+  title: 'Components/RemoveModal',
   component: RemoveModal,
   tags: ['afframe'],
   args: {

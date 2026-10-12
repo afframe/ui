@@ -27,7 +27,7 @@ function Harness(props: APIKeyModalProps) {
 }
 
 const meta = {
-  title: 'Components/Modals/API Key Modal',
+  title: 'Components/APIKeyModal',
   component: APIKeyModal,
   tags: ['afframe'],
   args: {

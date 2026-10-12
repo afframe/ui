@@ -22,7 +22,7 @@ const shares = [
 ];
 
 const meta: Meta<typeof ChatChart> = {
-  title: 'Components/Chat Elements/Chat Chart',
+  title: 'Components/AI/ChatElements/ChatChart',
   component: ChatChart,
   tags: ['afframe'],
   parameters: {

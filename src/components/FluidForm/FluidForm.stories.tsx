@@ -70,7 +70,7 @@ interface FluidFormArgs extends FluidFormProps {
 }
 
 export default {
-  title: 'Components/Fluid Components/FluidForm',
+  title: 'Components/Fluid Inputs/FluidForm',
   tags: ['carbon'],
   component: FluidForm,
   parameters: {

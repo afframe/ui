@@ -28,7 +28,7 @@ import {
 } from './fixtures.js';
 
 const meta = {
-  title: 'Components/Data Grid',
+  title: 'Components/DataGrid',
   tags: ['afframe'],
   parameters: {
     ...afframeA11y,

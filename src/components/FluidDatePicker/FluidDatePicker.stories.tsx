@@ -27,7 +27,7 @@ import styles from './fluid-date-picker-story.css?inline';
 import mdx from './FluidDatePicker.mdx';
 
 export default {
-  title: 'Components/Fluid Components/FluidDatePicker',
+  title: 'Components/Fluid Inputs/FluidDatePicker',
   tags: ['carbon'],
   component: FluidDatePicker,
   decorators: [
