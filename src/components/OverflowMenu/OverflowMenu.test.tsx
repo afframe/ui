@@ -33,9 +33,11 @@ test('v11 items: iconDescription names the trigger, aria-label the menu, the key
 
 test('label={undefined} with OverflowMenuItem children stays on the v11 menu', async () => {
   const onRename = vi.fn();
+  // As a JavaScript caller or a project without exactOptionalPropertyTypes passes it.
+  const noLabel = { label: undefined } as object;
   render(
     <AfframeProvider>
-      <OverflowMenu label={undefined} iconDescription="Row actions">
+      <OverflowMenu {...noLabel} iconDescription="Row actions">
         <OverflowMenuItem itemText="Edit" />
         <OverflowMenuItem itemText="Rename" onClick={onRename} />
       </OverflowMenu>
