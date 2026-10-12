@@ -73,6 +73,11 @@ const items: Item[] = [
 ];
 
 const sharedArgTypes: ArgTypes = {
+  autoAlign: {
+    control: {
+      type: 'boolean',
+    },
+  },
   className: {
     control: {
       type: 'text',
@@ -88,6 +93,12 @@ const sharedArgTypes: ArgTypes = {
       type: 'boolean',
     },
   },
+  direction: {
+    control: {
+      type: 'select',
+    },
+    options: ['top', 'bottom'],
+  },
   invalid: {
     control: {
       type: 'boolean',
@@ -101,6 +112,20 @@ const sharedArgTypes: ArgTypes = {
   label: {
     control: {
       type: 'text',
+    },
+  },
+  onChange: {
+    action: 'onChange',
+  },
+  onInputChange: {
+    action: 'onInputChange',
+  },
+  onToggleClick: {
+    action: 'onToggleClick',
+  },
+  readOnly: {
+    control: {
+      type: 'boolean',
     },
   },
   titleText: {
@@ -120,12 +145,30 @@ const sharedArgTypes: ArgTypes = {
   },
 };
 
-export const Default: StoryFn<
-  Partial<FluidComboBoxProps<unknown>> & { defaultWidth?: number }
-> = (args) => {
-  const { defaultWidth, ...comboBoxArgs } = args;
+const sharedArgs = {
+  autoAlign: false,
+  className: 'test-class',
+  direction: 'bottom',
+  disabled: false,
+  invalid: false,
+  invalidText:
+    'Error message that is really long can wrap to more lines but should not be excessively long.',
+  isCondensed: false,
+  label: 'Choose an option',
+  readOnly: false,
+  titleText: 'Label',
+  warn: false,
+  warnText:
+    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+} satisfies Partial<FluidComboBoxProps<unknown>>;
+
+const sharedControls = Object.keys(sharedArgTypes);
+
+export const Default: StoryFn<Partial<FluidComboBoxProps<unknown>>> = (
+  args
+) => {
   return (
-    <div style={{ width: defaultWidth }}>
+    <div style={{ width: 400 }}>
       <FluidComboBox
         onChange={() => {}}
         id="default"
@@ -133,53 +176,62 @@ export const Default: StoryFn<
         label="Choose an option"
         items={items}
         itemToString={(item: unknown) => (item ? (item as Item).text : '')}
-        {...comboBoxArgs}
+        {...args}
       />
     </div>
   );
 };
 
 Default.args = {
-  defaultWidth: 400,
-  className: 'test-class',
-  isCondensed: false,
-  disabled: false,
-  invalid: false,
-  invalidText:
-    'Error message that is really long can wrap to more lines but should not be excessively long.',
-  label: 'Choose an option',
-  titleText: 'Label',
-  warn: false,
-  warnText:
-    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+  ...sharedArgs,
 };
 
 Default.argTypes = {
   ...sharedArgTypes,
-  defaultWidth: {
-    control: { type: 'range', min: 300, max: 800, step: 50 },
-  },
 };
 
-export const Condensed: StoryFn = () => {
+Default.parameters = {
+  controls: { include: sharedControls },
+};
+
+export const Condensed: StoryFn<Partial<FluidComboBoxProps<unknown>>> = (
+  args
+) => {
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: 400 }}>
       <FluidComboBox
         onChange={() => {}}
         id="default"
-        isCondensed
         titleText="Label"
         label="Choose an option"
         items={items}
         itemToString={(item: unknown) => (item ? (item as Item).text : '')}
+        {...args}
       />
     </div>
   );
 };
 
-export const withAILabel: StoryFn<
-  Partial<FluidComboBoxProps<unknown>> & { defaultWidth?: number }
-> = (args) => {
+Condensed.args = {
+  ...sharedArgs,
+  isCondensed: true,
+};
+
+Condensed.argTypes = {
+  ...sharedArgTypes,
+  isCondensed: {
+    ...sharedArgTypes.isCondensed,
+    table: { readonly: true },
+  },
+};
+
+Condensed.parameters = {
+  controls: { include: sharedControls },
+};
+
+export const withAILabel: StoryFn<Partial<FluidComboBoxProps<unknown>>> = (
+  args
+) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -211,7 +263,7 @@ export const withAILabel: StoryFn<
     </AILabel>
   );
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: 400 }}>
       <FluidComboBox
         onChange={() => {}}
         id="default"
@@ -226,8 +278,16 @@ export const withAILabel: StoryFn<
   );
 };
 
+withAILabel.args = {
+  ...sharedArgs,
+};
+
 withAILabel.argTypes = {
   ...sharedArgTypes,
+};
+
+withAILabel.parameters = {
+  controls: { include: sharedControls },
 };
 
 export const Skeleton: StoryFn = () => (

@@ -1,17 +1,17 @@
 /**
- * Copyright IBM Corp. 2022, 2025
+ * Copyright IBM Corp. 2022, 2026
  *
  * This source code is licensed under the Apache-2.0 license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2025
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
  * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from tile-story.css, inner WithFeatureFlags decorator removed (flags are on globally), inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import type { ReactNode } from 'react';
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { action } from 'storybook/actions';
+import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
 import { FolderOpen, Folders, View } from '../../icons.js';
 import {
   AILabel,
@@ -30,22 +30,15 @@ import {
   TileBelowTheFoldContent,
   TileGroup,
 } from '../../index.js';
+import type {
+  ClickableTileProps,
+  ExpandableTileProps,
+  RadioTileProps,
+  SelectableTileProps,
+  TileGroupProps,
+} from '../../index.js';
 import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
 import './tile-story.css';
-
-type TileStoryArgs = {
-  decorator?: ReactNode;
-  light?: boolean;
-  clicked?: boolean;
-  disabled?: boolean;
-  expanded?: boolean;
-  hasRoundedCorners?: boolean;
-  href?: string;
-  selected?: boolean;
-  tileCollapsedIconText?: string;
-  tileExpandedIconText?: string;
-  title?: string;
-};
 
 // RadioTile forwards style to its label but does not declare it in its props.
 const radioTileGap = { style: { marginBottom: 'var(--cds-spacing-03)' } };
@@ -70,11 +63,174 @@ export default {
       },
     },
   },
-} satisfies Meta<TileStoryArgs>;
+} satisfies Meta<typeof Tile>;
 
 const previewClassname = 'preview-tile';
 
-export const Clickable: StoryFn<TileStoryArgs> = (args) => {
+const clickableArgs: ClickableTileProps = {
+  clicked: false,
+  disabled: false,
+  href: 'https://www.carbondesignsystem.com/',
+  light: false,
+  rel: '',
+  title: '',
+  onClick: action('onClick'),
+  onKeyDown: action('onKeyDown'),
+};
+
+const clickableArgTypes: Partial<ArgTypes<ClickableTileProps>> = {
+  clicked: {
+    control: 'boolean',
+  },
+  disabled: {
+    control: 'boolean',
+  },
+  href: {
+    control: 'text',
+  },
+  light: {
+    control: 'boolean',
+  },
+  rel: {
+    control: 'text',
+  },
+  title: {
+    control: 'text',
+  },
+  onClick: {
+    action: 'onClick',
+  },
+  onKeyDown: {
+    action: 'onKeyDown',
+  },
+};
+
+const clickableControls = Object.keys(clickableArgTypes);
+
+const selectableArgs: SelectableTileProps = {
+  disabled: false,
+  light: false,
+  selected: false,
+  tabIndex: 0,
+  title: 'Selectable tile',
+  onChange: action('onChange'),
+  onClick: action('onClick'),
+  onKeyDown: action('onKeyDown'),
+};
+
+const selectableArgTypes: Partial<ArgTypes<SelectableTileProps>> = {
+  disabled: {
+    control: 'boolean',
+  },
+  light: {
+    control: 'boolean',
+  },
+  selected: {
+    control: 'boolean',
+  },
+  tabIndex: {
+    control: 'number',
+  },
+  title: {
+    control: 'text',
+  },
+  onChange: {
+    action: 'onChange',
+  },
+  onClick: {
+    action: 'onClick',
+  },
+  onKeyDown: {
+    action: 'onKeyDown',
+  },
+};
+
+const selectableControls = Object.keys(selectableArgTypes);
+
+type RadioStoryArgs = TileGroupProps<RadioTileProps['value']>;
+
+const radioArgs: RadioStoryArgs = {
+  disabled: false,
+  legend: 'Radio Tile Group',
+  name: 'radio tile group',
+  required: false,
+  valueSelected: 'radio-tile-2',
+  onChange: action('onChange'),
+};
+
+const radioArgTypes: Partial<ArgTypes<RadioStoryArgs>> = {
+  disabled: {
+    control: 'boolean',
+  },
+  legend: {
+    control: 'text',
+  },
+  name: {
+    control: 'text',
+  },
+  required: {
+    control: 'boolean',
+  },
+  valueSelected: {
+    control: 'select',
+    options: ['radio-tile-1', 'radio-tile-2', 'radio-tile-3'],
+  },
+  onChange: {
+    action: 'onChange',
+  },
+};
+
+const radioControls = Object.keys(radioArgTypes);
+
+const expandableArgs: ExpandableTileProps = {
+  expanded: false,
+  light: false,
+  tileCollapsedIconText: 'Interact to expand tile',
+  tileCollapsedLabel: '',
+  tileExpandedIconText: 'Interact to collapse tile',
+  tileExpandedLabel: '',
+  tileMaxHeight: 0,
+  tilePadding: 0,
+  onClick: action('onClick'),
+  onKeyUp: action('onKeyUp'),
+};
+
+const expandableArgTypes: Partial<ArgTypes<ExpandableTileProps>> = {
+  expanded: {
+    control: 'boolean',
+  },
+  light: {
+    control: 'boolean',
+  },
+  tileCollapsedIconText: {
+    control: 'text',
+  },
+  tileCollapsedLabel: {
+    control: 'text',
+  },
+  tileExpandedIconText: {
+    control: 'text',
+  },
+  tileExpandedLabel: {
+    control: 'text',
+  },
+  tileMaxHeight: {
+    control: 'number',
+  },
+  tilePadding: {
+    control: 'number',
+  },
+  onClick: {
+    action: 'onClick',
+  },
+  onKeyUp: {
+    action: 'onKeyUp',
+  },
+};
+
+const expandableControls = Object.keys(expandableArgTypes);
+
+export const Clickable: StoryFn<ClickableTileProps> = (args) => {
   return (
     <div className={previewClassname}>
       <ClickableTile
@@ -88,25 +244,23 @@ export const Clickable: StoryFn<TileStoryArgs> = (args) => {
 };
 
 Clickable.args = {
-  disabled: false,
+  ...clickableArgs,
 };
 
-Clickable.argTypes = {
-  disabled: {
-    control: {
-      type: 'boolean',
-    },
+Clickable.argTypes = clickableArgTypes;
+
+Clickable.parameters = {
+  controls: {
+    include: clickableControls,
   },
 };
 
-export const ClickableWithLayer: StoryFn = () => {
+export const ClickableWithLayer: StoryFn<ClickableTileProps> = (args) => {
   return (
     <WithLayer>
       {(layer) => (
         <div className={previewClassname}>
-          <ClickableTile
-            id={`clickable-tile-${layer}`}
-            href="https://www.carbondesignsystem.com/">
+          <ClickableTile id={`clickable-tile-${layer}`} {...args}>
             Clickable Tile
           </ClickableTile>
         </div>
@@ -115,7 +269,19 @@ export const ClickableWithLayer: StoryFn = () => {
   );
 };
 
-export const Selectable: StoryFn<TileStoryArgs> = (args) => {
+ClickableWithLayer.args = {
+  ...clickableArgs,
+};
+
+ClickableWithLayer.argTypes = clickableArgTypes;
+
+ClickableWithLayer.parameters = {
+  controls: {
+    include: clickableControls,
+  },
+};
+
+export const Selectable: StoryFn<SelectableTileProps> = (args) => {
   return (
     <div className={previewClassname}>
       <SelectableTile
@@ -130,18 +296,18 @@ export const Selectable: StoryFn<TileStoryArgs> = (args) => {
 };
 
 Selectable.args = {
-  disabled: false,
+  ...selectableArgs,
 };
 
-Selectable.argTypes = {
-  disabled: {
-    control: {
-      type: 'boolean',
-    },
+Selectable.argTypes = selectableArgTypes;
+
+Selectable.parameters = {
+  controls: {
+    include: selectableControls,
   },
 };
 
-export const MultiSelect: StoryFn<TileStoryArgs> = (args) => {
+export const MultiSelect: StoryFn<SelectableTileProps> = (args) => {
   return (
     <div
       role="group"
@@ -161,36 +327,28 @@ export const MultiSelect: StoryFn<TileStoryArgs> = (args) => {
 };
 
 MultiSelect.args = {
-  disabled: false,
+  ...selectableArgs,
 };
 
-MultiSelect.argTypes = {
-  disabled: {
-    control: {
-      type: 'boolean',
-    },
+MultiSelect.argTypes = selectableArgTypes;
+
+MultiSelect.parameters = {
+  controls: {
+    include: selectableControls,
   },
 };
 
-export const Radio: StoryFn<TileStoryArgs> = (args) => {
+export const Radio: StoryFn<RadioStoryArgs> = (args) => {
   return (
     <div className={previewClassname}>
-      <TileGroup legend="Radio Tile Group" name="radio tile group">
-        <RadioTile
-          id="radio-tile-1"
-          value="radio-tile-1"
-          {...radioTileGap}
-          {...args}>
+      <TileGroup {...args}>
+        <RadioTile id="radio-tile-1" value="radio-tile-1" {...radioTileGap}>
           Option 1
         </RadioTile>
-        <RadioTile
-          id="radio-tile-2"
-          value="radio-tile-2"
-          {...radioTileGap}
-          {...args}>
+        <RadioTile id="radio-tile-2" value="radio-tile-2" {...radioTileGap}>
           Option 2
         </RadioTile>
-        <RadioTile id="radio-tile-3" value="radio-tile-3" {...args} disabled>
+        <RadioTile id="radio-tile-3" value="radio-tile-3" disabled>
           Option 3
         </RadioTile>
       </TileGroup>
@@ -199,34 +357,30 @@ export const Radio: StoryFn<TileStoryArgs> = (args) => {
 };
 
 Radio.args = {
-  disabled: false,
+  ...radioArgs,
 };
 
-Radio.argTypes = {
-  disabled: {
-    control: {
-      type: 'boolean',
-    },
+Radio.argTypes = radioArgTypes;
+
+Radio.parameters = {
+  controls: {
+    include: radioControls,
   },
 };
 
-export const RadioWithLayer: StoryFn = () => {
+export const RadioWithLayer: StoryFn<RadioStoryArgs> = (args) => {
   return (
     <WithLayer>
       {(layer) => (
         <div className={previewClassname}>
-          <TileGroup
-            legend="Radio Tile Group"
-            name={`radio-tile-group-${layer}`}>
+          <TileGroup {...args}>
             <RadioTile
               id={`radio-tile-${layer}-1`}
-              value={`radio-tile-${layer}-1`}
+              value="radio-tile-1"
               {...radioTileGap}>
               Option 1
             </RadioTile>
-            <RadioTile
-              id={`radio-tile-${layer}-2`}
-              value={`radio-tile-${layer}-2`}>
+            <RadioTile id={`radio-tile-${layer}-2`} value="radio-tile-2">
               Option 2
             </RadioTile>
           </TileGroup>
@@ -236,12 +390,27 @@ export const RadioWithLayer: StoryFn = () => {
   );
 };
 
-export const Expandable: StoryFn = () => (
+RadioWithLayer.args = {
+  ...radioArgs,
+};
+
+RadioWithLayer.argTypes = {
+  ...radioArgTypes,
+  valueSelected: {
+    ...radioArgTypes.valueSelected,
+    options: ['radio-tile-1', 'radio-tile-2'],
+  },
+};
+
+RadioWithLayer.parameters = {
+  controls: {
+    include: radioControls,
+  },
+};
+
+export const Expandable: StoryFn<ExpandableTileProps> = (args) => (
   <div style={{ width: '400px' }} className={previewClassname}>
-    <ExpandableTile
-      id="expandable-tile-1"
-      tileCollapsedIconText="Interact to Expand tile"
-      tileExpandedIconText="Interact to Collapse tile">
+    <ExpandableTile id="expandable-tile-1" {...args}>
       <TileAboveTheFoldContent>
         <div style={{ height: '200px' }}>Above the fold content here</div>
       </TileAboveTheFoldContent>
@@ -252,12 +421,23 @@ export const Expandable: StoryFn = () => (
   </div>
 );
 
-export const ExpandableWithInteractive: StoryFn = () => (
+Expandable.args = {
+  ...expandableArgs,
+};
+
+Expandable.argTypes = expandableArgTypes;
+
+Expandable.parameters = {
+  controls: {
+    include: expandableControls,
+  },
+};
+
+export const ExpandableWithInteractive: StoryFn<ExpandableTileProps> = (
+  args
+) => (
   <div style={{ width: '400px' }} className={previewClassname}>
-    <ExpandableTile
-      id="expandable-tile-1"
-      tileCollapsedIconText="Interact to Expand tile"
-      tileExpandedIconText="Interact to Collapse tile">
+    <ExpandableTile id="expandable-tile-1" {...args}>
       <TileAboveTheFoldContent>
         <div style={{ height: '200px', width: '200px' }}>
           Above the fold content here
@@ -280,15 +460,24 @@ export const ExpandableWithInteractive: StoryFn = () => (
   </div>
 );
 
-export const ExpandableWithLayer: StoryFn = () => {
+ExpandableWithInteractive.args = {
+  ...expandableArgs,
+};
+
+ExpandableWithInteractive.argTypes = expandableArgTypes;
+
+ExpandableWithInteractive.parameters = {
+  controls: {
+    include: expandableControls,
+  },
+};
+
+export const ExpandableWithLayer: StoryFn<ExpandableTileProps> = (args) => {
   return (
     <WithLayer>
       {(layer) => (
         <div style={{ width: '400px' }} className={previewClassname}>
-          <ExpandableTile
-            id={`expandable-tile-${layer}`}
-            tileCollapsedIconText="Interact to Expand tile"
-            tileExpandedIconText="Interact to Collapse tile">
+          <ExpandableTile id={`expandable-tile-${layer}`} {...args}>
             <TileAboveTheFoldContent>
               <div style={{ height: '100px', width: '200px' }}>
                 Above the fold content here
@@ -311,6 +500,18 @@ export const ExpandableWithLayer: StoryFn = () => {
       )}
     </WithLayer>
   );
+};
+
+ExpandableWithLayer.args = {
+  ...expandableArgs,
+};
+
+ExpandableWithLayer.argTypes = expandableArgTypes;
+
+ExpandableWithLayer.parameters = {
+  controls: {
+    include: expandableControls,
+  },
 };
 
 const aiLabel = (
@@ -344,16 +545,18 @@ const aiLabel = (
   </AILabel>
 );
 
-export const _WithAILabel: StoryObj<TileStoryArgs> = {
+export const _WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
+  args: {
+    hasRoundedCorners: false,
+  },
   argTypes: {
     hasRoundedCorners: {
-      control: {
-        type: 'boolean',
-      },
+      control: 'boolean',
     },
-    decorator: {
-      description:
-        '**Experimental**: Provide a `decorator` component to be rendered inside the component',
+  },
+  parameters: {
+    controls: {
+      include: ['hasRoundedCorners'],
     },
   },
   render: (args) => (

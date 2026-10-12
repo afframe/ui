@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, TableToolbarAction story rendered with the v11 toolbar menu. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -17,6 +17,7 @@ import { action } from 'storybook/actions';
 import {
   Button,
   DataTable,
+  NotFoundEmptyState,
   Pagination,
   Table,
   TableBody,
@@ -33,7 +34,6 @@ import {
 } from '../../../index.js';
 import type { TableHeaderProps, TableToolbarProps } from '../../../index.js';
 import { dataTableArgs, dataTableArgTypes, headers } from './shared.js';
-import { withV11OverflowMenu } from '../../../../.storybook/templates/withV11OverflowMenu.js';
 import type { DataTableStoryArgs } from './shared.js';
 import mdx from '../DataTable.mdx';
 import './datatable-story.css';
@@ -116,15 +116,22 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => {
 
   const filteredRows = allRows.filter((row) => {
     const search = searchValue.trim().toLowerCase();
-
-    if (search === '') {
-      return true;
-    }
-
+    if (search === '') return true;
     return Object.values(row).some((value) =>
       String(value).toLowerCase().includes(search)
     );
   });
+
+  const showEmptyState = filteredRows.length === 0;
+
+  const handleSearchChange = (
+    event: '' | ChangeEvent<HTMLInputElement>,
+    value = ''
+  ) => {
+    action('toolbar search input')(event);
+    setSearchValue(value);
+    setPage(1);
+  };
 
   const handlePaginationChange = ({
     page,
@@ -137,23 +144,18 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => {
     setPageSize(pageSize);
   };
 
-  const handleSearchChange = (event: '' | ChangeEvent<HTMLInputElement>) => {
-    action('toolbar search input')(event);
-    setSearchValue((event as ChangeEvent<HTMLInputElement>).target.value);
-    setPage(1);
-  };
-
-  // Calculate the rows to display for the current page
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const paginatedRows = filteredRows.slice(startIndex, endIndex);
+  const paginatedRows = showEmptyState
+    ? []
+    : filteredRows.slice(startIndex, endIndex);
 
   return (
     <>
       <DataTable rows={paginatedRows} headers={headers} {...args}>
         {({
-          rows,
-          headers,
+          rows: tableRows,
+          headers: tableHeaders,
           getHeaderProps,
           getRowProps,
           getTableProps,
@@ -184,7 +186,7 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => {
             <Table {...getTableProps()} aria-label="paginated table">
               <TableHead>
                 <TableRow>
-                  {headers.map((header) => (
+                  {tableHeaders.map((header) => (
                     <TableHeader
                       {...(getHeaderProps({ header }) as TableHeaderProps)}>
                       {header.header}
@@ -193,32 +195,55 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow {...getRowProps({ row })}>
-                    {row.cells.map((cell) => (
-                      <TableCell {...getCellProps({ cell })}>
-                        {cell.value}
-                      </TableCell>
+                {showEmptyState
+                  ? null
+                  : tableRows.map((row) => (
+                      <TableRow {...getRowProps({ row })}>
+                        {row.cells.map((cell) => (
+                          <TableCell {...getCellProps({ cell })}>
+                            {cell.value}
+                          </TableCell>
+                        ))}
+                      </TableRow>
                     ))}
-                  </TableRow>
-                ))}
               </TableBody>
             </Table>
+            {showEmptyState && (
+              <div
+                style={{
+                  padding: 'var(--cds-spacing-07) var(--cds-spacing-05)',
+                }}>
+                <NotFoundEmptyState
+                  illustrationDescription="Not found illustration"
+                  title="No results match the current search"
+                  subtitle="Clear the search field to see all results, or try a different search term."
+                  action={{
+                    text: 'Clear search',
+                    kind: 'tertiary',
+                    onClick: () => {
+                      setSearchValue('');
+                      setPage(1);
+                    },
+                  }}
+                />
+              </div>
+            )}
           </TableContainer>
         )}
       </DataTable>
-      <Pagination
-        page={page}
-        pageSize={pageSize}
-        pageSizes={[10, 20, 30, 40, 50]}
-        totalItems={filteredRows.length}
-        onChange={handlePaginationChange}
-        size={paginationSize}
-      />
+      {!showEmptyState && (
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          pageSizes={[10, 20, 30, 40, 50]}
+          totalItems={filteredRows.length}
+          onChange={handlePaginationChange}
+          size={paginationSize}
+        />
+      )}
     </>
   );
 };
 
 Default.args = sharedArgs;
 Default.argTypes = sharedArgTypes;
-Default.decorators = [withV11OverflowMenu];

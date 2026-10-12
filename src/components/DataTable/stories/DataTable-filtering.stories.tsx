@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, TableToolbarAction story rendered with the v11 toolbar menu, unused imports removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, unused imports removed, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -16,6 +16,7 @@ import { action } from 'storybook/actions';
 import {
   Button,
   DataTable,
+  NotFoundEmptyState,
   Table,
   TableBody,
   TableCell,
@@ -31,7 +32,6 @@ import {
 } from '../../../index.js';
 import type { TableHeaderProps, TableToolbarProps } from '../../../index.js';
 import { dataTableArgs, dataTableArgTypes, rows, headers } from './shared.js';
-import { withV11OverflowMenu } from '../../../../.storybook/templates/withV11OverflowMenu.js';
 import type { DataTableStoryArgs } from './shared.js';
 import mdx from '../DataTable.mdx';
 import TableToolbarFilter from './examples/TableToolbarFilter.js';
@@ -66,6 +66,7 @@ export default {
 
 export const Default: StoryFn<DataTableStoryArgs> = (args) => {
   const [renderedRows, setRenderedRows] = useState(rows);
+  const [searchKey, setSearchKey] = useState(0);
 
   const handleTableFilter = (selectedCheckboxes: string[]) => {
     setRenderedRows([]);
@@ -97,14 +98,10 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => {
     }
   };
 
-  const handleOnResetFilter = () => {
-    setRenderedRows(rows);
-  };
-
   return (
     <DataTable rows={renderedRows} headers={headers} {...args}>
       {({
-        rows,
+        rows: tableRows,
         headers,
         getHeaderProps,
         getRowProps,
@@ -112,62 +109,91 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => {
         getToolbarProps,
         onInputChange,
         getCellProps,
-      }) => (
-        <TableContainer title="DataTable" description="With filtering">
-          <TableToolbar {...(getToolbarProps() as Partial<TableToolbarProps>)}>
-            <TableToolbarContent>
-              {/* pass in `onInputChange` change here to make filtering work */}
-              <TableToolbarSearch
-                onChange={(evt, value) => {
-                  action(`TableToolbarSearch - onChange ${value}`)(evt);
-                  onInputChange(evt);
-                }}
-              />
-              <TableToolbarFilter
-                onApplyFilter={handleTableFilter}
-                onResetFilter={handleOnResetFilter}
-              />
-              <TableToolbarMenu>
-                <TableToolbarAction onClick={action('Action 1 Click')}>
-                  Action 1
-                </TableToolbarAction>
-                <TableToolbarAction onClick={action('Action 2 Click')}>
-                  Action 2
-                </TableToolbarAction>
-                <TableToolbarAction onClick={action('Action 3 Click')}>
-                  Action 3
-                </TableToolbarAction>
-              </TableToolbarMenu>
-              <Button onClick={action('Button click')}>Primary Button</Button>
-            </TableToolbarContent>
-          </TableToolbar>
-          <Table {...getTableProps()} aria-label="sample table">
-            <TableHead>
-              <TableRow>
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow {...getRowProps({ row })}>
-                  {row.cells.map((cell) => (
-                    <TableCell {...getCellProps({ cell })}>
-                      {cell.value}
-                    </TableCell>
+      }) => {
+        const showEmptyState = tableRows.length === 0;
+
+        const handleOnResetFilter = () => {
+          setRenderedRows(rows);
+          onInputChange('');
+          setSearchKey((k) => k + 1);
+        };
+
+        return (
+          <TableContainer title="DataTable" description="With filtering">
+            <TableToolbar
+              {...(getToolbarProps() as Partial<TableToolbarProps>)}>
+              <TableToolbarContent>
+                {/* pass in `onInputChange` change here to make filtering work */}
+                <TableToolbarSearch
+                  key={searchKey}
+                  onChange={(evt, value) => {
+                    action(`TableToolbarSearch - onChange ${value}`)(evt);
+                    onInputChange(evt);
+                  }}
+                />
+                <TableToolbarFilter
+                  onApplyFilter={handleTableFilter}
+                  onResetFilter={handleOnResetFilter}
+                />
+                <TableToolbarMenu>
+                  <TableToolbarAction onClick={action('Action 1 Click')}>
+                    Action 1
+                  </TableToolbarAction>
+                  <TableToolbarAction onClick={action('Action 2 Click')}>
+                    Action 2
+                  </TableToolbarAction>
+                  <TableToolbarAction onClick={action('Action 3 Click')}>
+                    Action 3
+                  </TableToolbarAction>
+                </TableToolbarMenu>
+                <Button onClick={action('Button click')}>Primary Button</Button>
+              </TableToolbarContent>
+            </TableToolbar>
+            <Table {...getTableProps()} aria-label="sample table">
+              <TableHead>
+                <TableRow>
+                  {headers.map((header) => (
+                    <TableHeader
+                      {...(getHeaderProps({ header }) as TableHeaderProps)}>
+                      {header.header}
+                    </TableHeader>
                   ))}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+              </TableHead>
+              <TableBody>
+                {showEmptyState
+                  ? null
+                  : tableRows.map((row) => (
+                      <TableRow {...getRowProps({ row })}>
+                        {row.cells.map((cell) => (
+                          <TableCell {...getCellProps({ cell })}>
+                            {cell.value}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+              </TableBody>
+            </Table>
+            {showEmptyState && (
+              <div
+                style={{
+                  padding: 'var(--cds-spacing-07) var(--cds-spacing-05)',
+                }}>
+                <NotFoundEmptyState
+                  illustrationDescription="Not found illustration"
+                  title="No results match the current filter"
+                  subtitle="Clear the filter to see all results, or try a different search term."
+                  action={{
+                    text: 'Clear search',
+                    kind: 'tertiary',
+                    onClick: () => handleOnResetFilter(),
+                  }}
+                />
+              </div>
+            )}
+          </TableContainer>
+        );
+      }}
     </DataTable>
   );
 };
-
-Default.decorators = [withV11OverflowMenu];

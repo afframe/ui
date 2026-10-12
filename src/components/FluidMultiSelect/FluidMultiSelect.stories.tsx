@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; unsupported initialSelectedItem removed; label added to filterable story; typed items. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; label added to filterable story; typed items. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -29,6 +29,13 @@ export default {
   title: 'Components/Fluid Components/FluidMultiSelect',
   tags: ['carbon'],
   component: FluidMultiSelect,
+  decorators: [
+    (Story) => (
+      <div style={{ width: 400 }}>
+        <Story />
+      </div>
+    ),
+  ],
   parameters: {
     docs: {
       page: mdx,
@@ -73,45 +80,38 @@ const items: Item[] = [
   },
 ];
 
-export const Default: StoryFn<
-  Partial<FluidMultiSelectProps<unknown>> & { defaultWidth?: number }
-> = (args) => {
-  const { defaultWidth, ...multiSelectArgs } = args;
+export const Default: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
+  args
+) => {
   return (
-    <div style={{ width: defaultWidth }}>
-      <FluidMultiSelect
-        onChange={() => {}}
-        id="default"
-        titleText="Label"
-        label="Choose an option"
-        items={items}
-        itemToString={(item: unknown) => (item ? (item as Item).text : '')}
-        {...multiSelectArgs}
-      />
-    </div>
+    <FluidMultiSelect
+      id="default"
+      titleText="Label"
+      label="Choose an option"
+      items={items}
+      itemToString={(item: unknown) => (item ? (item as Item).text : '')}
+      {...args}
+    />
   );
 };
 
 const sharedArgTypes: ArgTypes = {
+  autoAlign: {
+    control: { type: 'boolean' },
+  },
   className: {
     control: {
       type: 'text',
-    },
-  },
-  isCondensed: {
-    control: {
-      type: 'boolean',
-    },
-  },
-  isFilterable: {
-    control: {
-      type: 'boolean',
     },
   },
   disabled: {
     control: {
       type: 'boolean',
     },
+  },
+  direction: {
+    control: { type: 'select' },
+    options: ['top', 'bottom'],
   },
   invalid: {
     control: {
@@ -128,6 +128,22 @@ const sharedArgTypes: ArgTypes = {
       type: 'text',
     },
   },
+  locale: {
+    control: { type: 'text' },
+  },
+  onChange: {
+    action: 'onChange',
+  },
+  onMenuChange: {
+    action: 'onMenuChange',
+  },
+  readOnly: {
+    control: { type: 'boolean' },
+  },
+  selectionFeedback: {
+    control: { type: 'select' },
+    options: ['top', 'fixed', 'top-after-reopen'],
+  },
   titleText: {
     control: {
       type: 'text',
@@ -143,86 +159,155 @@ const sharedArgTypes: ArgTypes = {
       type: 'text',
     },
   },
+  clearSelectionDescription: {
+    control: { type: 'text' },
+  },
+  clearSelectionText: {
+    control: { type: 'text' },
+  },
+  useTitleInItem: {
+    control: { type: 'boolean' },
+  },
 };
 
-Default.args = {
-  defaultWidth: 400,
+const sharedArgs = {
+  autoAlign: false,
   className: 'test-class',
-  isCondensed: false,
-  isFilterable: false,
+  clearSelectionDescription: 'Total items selected: ',
+  clearSelectionText: 'To clear selection, press Delete or Backspace.',
+  direction: 'bottom',
   disabled: false,
   invalid: false,
   invalidText:
     'Error message that is really long can wrap to more lines but should not be excessively long.',
   label: 'Choose an option',
+  locale: 'en',
+  readOnly: false,
+  selectionFeedback: 'top-after-reopen',
   titleText: 'Label',
+  useTitleInItem: false,
   warn: false,
   warnText:
     'Warning message that is really long can wrap to more lines but should not be excessively long.',
+} satisfies Partial<FluidMultiSelectProps<unknown>>;
+
+const filterableArgTypes: ArgTypes = {
+  ...sharedArgTypes,
+  isFilterable: {
+    control: { type: 'boolean' },
+    table: { readonly: true },
+  },
+  onInputValueChange: {
+    action: 'onInputValueChange',
+  },
+};
+const condensedArgTypes: ArgTypes = {
+  ...sharedArgTypes,
+  isCondensed: {
+    control: { type: 'boolean' },
+    table: { readonly: true },
+  },
+};
+Default.args = {
+  ...sharedArgs,
 };
 
 Default.argTypes = {
   ...sharedArgTypes,
-  defaultWidth: {
-    control: { type: 'range', min: 300, max: 800, step: 50 },
-  },
 };
 
-export const Filterable: StoryFn = () => {
+export const Filterable: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
+  args
+) => {
   return (
-    <div style={{ width: '400px' }}>
-      <FluidMultiSelect
-        isFilterable
-        onChange={() => {}}
-        id="default"
-        titleText="Label"
-        label="Choose an option"
-        items={items}
-        itemToString={(item: unknown) => (item ? (item as Item).text : '')}
-      />
-    </div>
+    <FluidMultiSelect
+      initialSelectedItems={items.slice(2, 3)}
+      id="default"
+      titleText="Label"
+      label="Choose an option"
+      items={items}
+      itemToString={(item: unknown) => (item ? (item as Item).text : '')}
+      {...args}
+    />
   );
 };
 
-export const _FilterableWithLayer: StoryFn = () => {
+Filterable.args = {
+  ...sharedArgs,
+  isFilterable: true,
+};
+
+Filterable.argTypes = {
+  ...filterableArgTypes,
+};
+
+Filterable.parameters = {
+  controls: {
+    include: Object.keys(filterableArgTypes),
+  },
+};
+
+export const _FilterableWithLayer: StoryFn<
+  Partial<FluidMultiSelectProps<unknown>>
+> = (args) => {
   return (
     <WithLayer>
       {(layer) => (
-        <div style={{ width: 300 }}>
-          <FluidMultiSelect
-            isFilterable
-            id={`carbon-multiselect-example-${layer}`}
-            titleText="Multiselect title"
-            label="Choose an option"
-            items={items}
-            itemToString={(item: unknown) => (item ? (item as Item).text : '')}
-            selectionFeedback="top-after-reopen"
-          />
-        </div>
+        <FluidMultiSelect
+          id={`carbon-multiselect-example-${layer}`}
+          titleText="Multiselect title"
+          label="Choose an option"
+          items={items}
+          itemToString={(item: unknown) => (item ? (item as Item).text : '')}
+          {...args}
+        />
       )}
     </WithLayer>
   );
 };
 
-export const Condensed: StoryFn = () => {
+_FilterableWithLayer.args = {
+  ...sharedArgs,
+  isFilterable: true,
+  titleText: 'Multiselect title',
+};
+
+_FilterableWithLayer.argTypes = Filterable.argTypes;
+_FilterableWithLayer.parameters = Filterable.parameters;
+
+export const Condensed: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
+  args
+) => {
   return (
-    <div style={{ width: '400px' }}>
-      <FluidMultiSelect
-        onChange={() => {}}
-        id="default"
-        isCondensed
-        titleText="Label"
-        label="Choose an option"
-        items={items}
-        itemToString={(item: unknown) => (item ? (item as Item).text : '')}
-      />
-    </div>
+    <FluidMultiSelect
+      id="default"
+      titleText="Label"
+      label="Choose an option"
+      items={items}
+      itemToString={(item: unknown) => (item ? (item as Item).text : '')}
+      {...args}
+    />
   );
 };
 
-export const withAILabel: StoryFn<
-  Partial<FluidMultiSelectProps<unknown>> & { defaultWidth?: number }
-> = (args) => {
+Condensed.args = {
+  ...sharedArgs,
+  isCondensed: true,
+};
+
+Condensed.argTypes = {
+  ...condensedArgTypes,
+};
+
+Condensed.parameters = {
+  controls: {
+    include: Object.keys(condensedArgTypes),
+  },
+};
+
+export const withAILabel: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
+  args
+) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -254,19 +339,21 @@ export const withAILabel: StoryFn<
     </AILabel>
   );
   return (
-    <div style={{ width: '400px' }}>
-      <FluidMultiSelect
-        onChange={() => {}}
-        id="default"
-        titleText="Label"
-        label="Choose an option"
-        items={items}
-        itemToString={(item: unknown) => (item ? (item as Item).text : '')}
-        decorator={aiLabel}
-        {...args}
-      />
-    </div>
+    <FluidMultiSelect
+      initialSelectedItems={items.slice(2, 3)}
+      id="default"
+      titleText="Label"
+      label="Choose an option"
+      items={items}
+      itemToString={(item: unknown) => (item ? (item as Item).text : '')}
+      decorator={aiLabel}
+      {...args}
+    />
   );
+};
+
+withAILabel.args = {
+  ...sharedArgs,
 };
 
 withAILabel.argTypes = {
@@ -274,9 +361,5 @@ withAILabel.argTypes = {
 };
 
 export const Skeleton: StoryFn = () => {
-  return (
-    <div style={{ width: 400 }}>
-      <FluidMultiSelectSkeleton />
-    </div>
-  );
+  return <FluidMultiSelectSkeleton />;
 };

@@ -7,18 +7,19 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, docs page and source tag added, TableToolbarAction story rendered with the v11 toolbar menu, expanded row heading h6 to h3 (axe heading-order), empty-table-header off. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, docs page and source tag added, expanded row heading h6 to h3 (axe heading-order), empty-table-header off, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './story.css';
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
-import { Component, Fragment } from 'react';
+import { Component, Fragment, useState } from 'react';
 import type { ReactNode } from 'react';
 import { action } from 'storybook/actions';
 import { Download, Save, TrashCan } from '../../../../icons.js';
 import {
   DataTable,
+  NotFoundEmptyState,
   Table,
   TableBatchAction,
   TableBatchActions,
@@ -42,6 +43,7 @@ import {
 } from '../../../../index.js';
 import type {
   TableHeaderProps,
+  TableToolbarSearchProps,
   TableSelectAllProps,
   TableSelectRowProps,
   TableToolbarProps,
@@ -52,14 +54,13 @@ import {
   dataTableArgTypes,
   headers,
 } from '../shared.js';
-import { withV11OverflowMenu } from '../../../../../.storybook/templates/withV11OverflowMenu.js';
 import type { DataTableStoryArgs } from '../shared.js';
 import mdx from '../../DataTable.mdx';
 
 type DynamicRow = { id: string; [key: string]: ReactNode };
 type DynamicHeader = { key: string; header: string };
 
-const rows: DynamicRow[] = [
+const initialRows: DynamicRow[] = [
   {
     id: 'a',
     name: 'Load Balancer 3',
@@ -116,6 +117,224 @@ const rows: DynamicRow[] = [
   },
 ];
 
+type DynamicRowsProps = {
+  args: DataTableStoryArgs;
+  searchValue: string;
+  onSearchChange: NonNullable<TableToolbarSearchProps['onChange']>;
+};
+
+const insertInRandomPosition = (array: DynamicRow[], element: DynamicRow) => {
+  const index = Math.floor(Math.random() * (array.length + 1));
+  return [...array.slice(0, index), element, ...array.slice(index)];
+};
+
+// Defined outside Default so React never remounts it on re-render
+class DynamicRows extends Component<
+  DynamicRowsProps,
+  { rows: DynamicRow[]; headers: DynamicHeader[]; id: number }
+> {
+  state = {
+    rows: initialRows,
+    headers: headers,
+    id: 0,
+  };
+
+  handleOnHeaderAdd = () => {
+    const length = this.state.headers.length;
+    const header = {
+      key: `header_${length}`,
+      header: `Header ${length}`,
+    };
+    this.setState((state) => ({
+      rows: state.rows.map((row) => ({ ...row, [header.key]: header.header })),
+      headers: state.headers.concat(header),
+    }));
+  };
+
+  handleOnRowAdd = () => {
+    this.setState((state) => {
+      const { id: _id, rows } = state;
+      const id = _id + 1;
+      const row: DynamicRow = {
+        id: '' + id,
+        name: `New Row ${id}`,
+        protocol: 'HTTP',
+        port: id * 100,
+        rule: id % 2 === 0 ? 'Round robin' : 'DNS delegation',
+        attached_groups: `Row ${id}'s VM Groups`,
+        status: 'Starting',
+      };
+      state.headers
+        .filter((header) => row[header.key] === undefined)
+        .forEach((header) => {
+          row[header.key] = header.header;
+        });
+      return { id, rows: insertInRandomPosition(rows, row) };
+    });
+  };
+
+  render() {
+    const { args, searchValue, onSearchChange } = this.props;
+
+    const filteredRows = this.state.rows.filter((row) => {
+      const q = searchValue.trim().toLowerCase();
+      if (!q) return true;
+      return Object.values(row).some(
+        (v) => typeof v === 'string' && v.toLowerCase().includes(q)
+      );
+    });
+    const showEmptyState = filteredRows.length === 0;
+
+    return (
+      <DataTable
+        {...args}
+        rows={showEmptyState ? [] : filteredRows}
+        headers={this.state.headers}>
+        {({
+          rows,
+          headers,
+          getExpandHeaderProps,
+          getHeaderProps,
+          getSelectionProps,
+          getToolbarProps,
+          getBatchActionProps,
+          getRowProps,
+          getExpandedRowProps,
+          selectedRows,
+          getTableProps,
+          getTableContainerProps,
+          getCellProps,
+        }) => {
+          const batchActionProps = getBatchActionProps();
+          return (
+            <TableContainer
+              title="DataTable"
+              description="Use the toolbar menu to add rows and headers"
+              {...getTableContainerProps()}>
+              <TableToolbar
+                {...(getToolbarProps() as Partial<TableToolbarProps>)}>
+                <TableBatchActions {...getBatchActionProps()}>
+                  <TableBatchAction
+                    renderIcon={TrashCan}
+                    iconDescription="Delete the selected rows"
+                    onClick={batchActionClick(
+                      selectedRows,
+                      action('Batch action click')
+                    )}
+                    tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}>
+                    Delete
+                  </TableBatchAction>
+                  <TableBatchAction
+                    renderIcon={Save}
+                    iconDescription="Save the selected rows"
+                    onClick={batchActionClick(
+                      selectedRows,
+                      action('Batch action click')
+                    )}
+                    tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}>
+                    Save
+                  </TableBatchAction>
+                  <TableBatchAction
+                    renderIcon={Download}
+                    iconDescription="Download the selected rows"
+                    onClick={batchActionClick(
+                      selectedRows,
+                      action('Batch action click')
+                    )}
+                    tabIndex={batchActionProps.shouldShowBatchActions ? 0 : -1}>
+                    Download
+                  </TableBatchAction>
+                </TableBatchActions>
+                <TableToolbarContent
+                  aria-hidden={batchActionProps.shouldShowBatchActions}>
+                  <TableToolbarSearch
+                    tabIndex={batchActionProps.shouldShowBatchActions ? -1 : 0}
+                    value={searchValue}
+                    onChange={onSearchChange}
+                  />
+                  <TableToolbarMenu
+                    tabIndex={batchActionProps.shouldShowBatchActions ? -1 : 0}>
+                    <TableToolbarAction onClick={this.handleOnRowAdd}>
+                      Add row
+                    </TableToolbarAction>
+                    <TableToolbarAction onClick={this.handleOnHeaderAdd}>
+                      Add header
+                    </TableToolbarAction>
+                  </TableToolbarMenu>
+                </TableToolbarContent>
+              </TableToolbar>
+              <Table {...getTableProps()} aria-label="sample table">
+                <TableHead>
+                  <TableRow>
+                    <TableExpandHeader {...getExpandHeaderProps()} />
+                    {args.radio ? (
+                      <th scope="col" />
+                    ) : (
+                      <TableSelectAll
+                        {...(getSelectionProps() as TableSelectAllProps)}
+                      />
+                    )}
+                    {headers.map((header) => (
+                      <TableHeader
+                        {...(getHeaderProps({ header }) as TableHeaderProps)}>
+                        {header.header}
+                      </TableHeader>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {showEmptyState
+                    ? null
+                    : rows.map((row) => (
+                        <Fragment key={row.id}>
+                          <TableExpandRow {...getRowProps({ row })}>
+                            <TableSelectRow
+                              {...(getSelectionProps({
+                                row,
+                              }) as TableSelectRowProps)}
+                            />
+                            {row.cells.map((cell) => (
+                              <TableCell {...getCellProps({ cell })}>
+                                {cell.value}
+                              </TableCell>
+                            ))}
+                          </TableExpandRow>
+                          <TableExpandedRow
+                            colSpan={headers.length + 3}
+                            className="demo-expanded-td"
+                            {...getExpandedRowProps({ row })}>
+                            <h3>Expandable row content</h3>
+                            <div>Description here</div>
+                          </TableExpandedRow>
+                        </Fragment>
+                      ))}
+                </TableBody>
+              </Table>
+              {showEmptyState && (
+                <div
+                  style={{
+                    padding: 'var(--cds-spacing-07) var(--cds-spacing-05)',
+                  }}>
+                  <NotFoundEmptyState
+                    illustrationDescription="Not found illustration"
+                    title="No results match the current search"
+                    subtitle="Clear the search field to see all results, or try a different search term."
+                    action={{
+                      text: 'Clear search',
+                      kind: 'tertiary',
+                      onClick: () => onSearchChange('', ''),
+                    }}
+                  />
+                </div>
+              )}
+            </TableContainer>
+          );
+        }}
+      </DataTable>
+    );
+  }
+}
+
 export default {
   title: 'Components/DataTable/Dynamic',
   component: DataTable,
@@ -130,211 +349,14 @@ export default {
 } satisfies Meta;
 
 export const Default: StoryFn<DataTableStoryArgs> = (args) => {
-  const insertInRandomPosition = (array: DynamicRow[], element: DynamicRow) => {
-    const index = Math.floor(Math.random() * (array.length + 1));
-    return [...array.slice(0, index), element, ...array.slice(index)];
-  };
-
-  class DynamicRows extends Component<
-    object,
-    { rows: DynamicRow[]; headers: DynamicHeader[]; id: number }
-  > {
-    state = {
-      rows,
-      headers: headers,
-      id: 0,
-    };
-
-    handleOnHeaderAdd = () => {
-      const length = this.state.headers.length;
-      const header = {
-        key: `header_${length}`,
-        header: `Header ${length}`,
-      };
-
-      this.setState((state) => {
-        const rows = state.rows.map((row) => {
-          return {
-            ...row,
-            [header.key]: header.header,
-          };
-        });
-        return {
-          rows,
-          headers: state.headers.concat(header),
-        };
-      });
-    };
-
-    handleOnRowAdd = () => {
-      this.setState((state) => {
-        const { id: _id, rows } = state;
-        const id = _id + 1;
-        const row: DynamicRow = {
-          id: '' + id,
-          name: `New Row ${id}`,
-          protocol: 'HTTP',
-          port: id * 100,
-          rule: id % 2 === 0 ? 'Round robin' : 'DNS delegation',
-          attached_groups: `Row ${id}'s VM Groups`,
-          status: 'Starting',
-        };
-
-        state.headers
-          .filter((header) => row[header.key] === undefined)
-          .forEach((header) => {
-            row[header.key] = header.header;
-          });
-
-        return {
-          id,
-          rows: insertInRandomPosition(rows, row),
-        };
-      });
-    };
-
-    render() {
-      return (
-        <DataTable
-          {...args}
-          rows={this.state.rows}
-          headers={this.state.headers}>
-          {({
-            rows,
-            headers,
-            getExpandHeaderProps,
-            getHeaderProps,
-            getSelectionProps,
-            getToolbarProps,
-            getBatchActionProps,
-            getRowProps,
-            getExpandedRowProps,
-            onInputChange,
-            selectedRows,
-            getTableProps,
-            getTableContainerProps,
-            getCellProps,
-          }) => {
-            const batchActionProps = getBatchActionProps();
-            return (
-              <TableContainer
-                title="DataTable"
-                description="Use the toolbar menu to add rows and headers"
-                {...getTableContainerProps()}>
-                <TableToolbar
-                  {...(getToolbarProps() as Partial<TableToolbarProps>)}>
-                  <TableBatchActions {...getBatchActionProps()}>
-                    <TableBatchAction
-                      renderIcon={TrashCan}
-                      iconDescription="Delete the selected rows"
-                      onClick={batchActionClick(
-                        selectedRows,
-                        action('Batch action click')
-                      )}
-                      tabIndex={
-                        batchActionProps.shouldShowBatchActions ? 0 : -1
-                      }>
-                      Delete
-                    </TableBatchAction>
-                    <TableBatchAction
-                      renderIcon={Save}
-                      iconDescription="Save the selected rows"
-                      onClick={batchActionClick(
-                        selectedRows,
-                        action('Batch action click')
-                      )}
-                      tabIndex={
-                        batchActionProps.shouldShowBatchActions ? 0 : -1
-                      }>
-                      Save
-                    </TableBatchAction>
-                    <TableBatchAction
-                      renderIcon={Download}
-                      iconDescription="Download the selected rows"
-                      onClick={batchActionClick(
-                        selectedRows,
-                        action('Batch action click')
-                      )}
-                      tabIndex={
-                        batchActionProps.shouldShowBatchActions ? 0 : -1
-                      }>
-                      Download
-                    </TableBatchAction>
-                  </TableBatchActions>
-                  <TableToolbarContent
-                    aria-hidden={batchActionProps.shouldShowBatchActions}>
-                    <TableToolbarSearch
-                      tabIndex={
-                        batchActionProps.shouldShowBatchActions ? -1 : 0
-                      }
-                      onChange={onInputChange}
-                    />
-                    <TableToolbarMenu
-                      tabIndex={
-                        batchActionProps.shouldShowBatchActions ? -1 : 0
-                      }>
-                      <TableToolbarAction onClick={this.handleOnRowAdd}>
-                        Add row
-                      </TableToolbarAction>
-                      <TableToolbarAction onClick={this.handleOnHeaderAdd}>
-                        Add header
-                      </TableToolbarAction>
-                    </TableToolbarMenu>
-                  </TableToolbarContent>
-                </TableToolbar>
-                <Table {...getTableProps()} aria-label="sample table">
-                  <TableHead>
-                    <TableRow>
-                      <TableExpandHeader {...getExpandHeaderProps()} />
-                      {args.radio ? (
-                        <th scope="col" />
-                      ) : (
-                        <TableSelectAll
-                          {...(getSelectionProps() as TableSelectAllProps)}
-                        />
-                      )}
-                      {headers.map((header) => (
-                        <TableHeader
-                          {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                          {header.header}
-                        </TableHeader>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row) => (
-                      <Fragment key={row.id}>
-                        <TableExpandRow {...getRowProps({ row })}>
-                          <TableSelectRow
-                            {...(getSelectionProps({
-                              row,
-                            }) as TableSelectRowProps)}
-                          />
-                          {row.cells.map((cell) => (
-                            <TableCell {...getCellProps({ cell })}>
-                              {cell.value}
-                            </TableCell>
-                          ))}
-                        </TableExpandRow>
-                        <TableExpandedRow
-                          colSpan={headers.length + 3}
-                          className="demo-expanded-td"
-                          {...getExpandedRowProps({ row })}>
-                          <h3>Expandable row content</h3>
-                          <div>Description here</div>
-                        </TableExpandedRow>
-                      </Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            );
-          }}
-        </DataTable>
-      );
-    }
-  }
-  return <DynamicRows />;
+  const [searchValue, setSearchValue] = useState('');
+  return (
+    <DynamicRows
+      args={args}
+      searchValue={searchValue}
+      onSearchChange={(_evt, value = '') => setSearchValue(value)}
+    />
+  );
 };
 
 Default.args = {
@@ -346,7 +368,6 @@ Default.args = {
   radio: false,
 };
 
-Default.decorators = [withV11OverflowMenu];
 Default.parameters = {
   a11y: {
     config: {

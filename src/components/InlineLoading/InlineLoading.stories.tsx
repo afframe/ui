@@ -13,7 +13,7 @@
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { useState } from 'react';
 import { action } from 'storybook/actions';
-import { Button, InlineLoading } from '../../index.js';
+import { Button, ButtonSet, InlineLoading } from '../../index.js';
 import mdx from './InlineLoading.mdx';
 
 export default {
@@ -108,7 +108,7 @@ export const UxExample: StoryFn<typeof InlineLoading> = () => {
   return (
     <MockSubmission>
       {({ handleSubmit, isSubmitting, success, description, ariaLive }) => (
-        <div style={{ display: 'flex', width: '300px' }}>
+        <ButtonSet style={{ width: '300px' }}>
           <Button kind="secondary" disabled={isSubmitting || success}>
             Cancel
           </Button>
@@ -122,7 +122,7 @@ export const UxExample: StoryFn<typeof InlineLoading> = () => {
           ) : (
             <Button onClick={handleSubmit}>Submit</Button>
           )}
-        </div>
+        </ButtonSet>
       )}
     </MockSubmission>
   );

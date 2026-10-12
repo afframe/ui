@@ -68,6 +68,38 @@ function renderTree({
   );
 }
 
+// Under enable-treeview-controllable, onSelect receives the selected IDs.
+type ControlledTreeViewArgs = Omit<TreeViewProps, 'onSelect'> & {
+  onSelect?: (selected: TreeViewProps['selected']) => void;
+};
+
+const sharedArgs = {
+  hideLabel: false,
+  label: 'Tree View',
+  multiselect: false,
+  onSelect: action('onSelect'),
+  size: 'sm',
+} satisfies Meta<typeof TreeView>['args'];
+
+const sharedArgTypes = {
+  hideLabel: {
+    control: { type: 'boolean' },
+  },
+  label: {
+    control: { type: 'text' },
+  },
+  multiselect: {
+    control: { type: 'boolean' },
+  },
+  onSelect: {
+    action: 'onSelect',
+  },
+  size: {
+    options: ['xs', 'sm'],
+    control: { type: 'select' },
+  },
+} satisfies Meta<typeof TreeView>['argTypes'];
+
 export default {
   title: 'Components/TreeView',
   component: TreeView,
@@ -79,12 +111,11 @@ export default {
       page: mdx,
     },
     controls: {
-      exclude: ['label'],
+      exclude: ['active', 'children', 'onActivate', 'selected'],
     },
   },
-  args: {
-    onSelect: action('onSelect'),
-  },
+  args: sharedArgs,
+  argTypes: sharedArgTypes,
   tags: ['carbon'],
 } satisfies Meta<typeof TreeView>;
 
@@ -271,20 +302,7 @@ export const Default: StoryFn<Partial<TreeViewProps>> = (args) => {
   );
 };
 
-Default.args = {
-  hideLabel: false,
-  multiselect: false,
-};
-
-Default.argTypes = {
-  active: { control: { type: 'text' } },
-  size: {
-    options: ['xs', 'sm'],
-    control: { type: 'select' },
-  },
-};
-
-export const WithIcons: StoryFn = () => {
+export const WithIcons: StoryFn<TreeViewProps> = (args) => {
   const nodes: Node[] = [
     {
       id: '1',
@@ -461,18 +479,18 @@ export const WithIcons: StoryFn = () => {
     ));
   }
   return (
-    <TreeView label="Tree View">
-      {renderTree({ nodes, withIcons: true })}
-    </TreeView>
+    <TreeView {...args}>{renderTree({ nodes, withIcons: true })}</TreeView>
   );
 };
 
 const TreeViewWithLinks = memo(
   ({
     setCurrentPage,
-  }: {
+    ...args
+  }: ControlledTreeViewArgs & {
     setCurrentPage: (page: string | undefined) => void;
   }) => {
+    const { onSelect, ...treeViewArgs } = args;
     const nodes: Node[] = [
       {
         id: '1',
@@ -655,12 +673,12 @@ const TreeViewWithLinks = memo(
 
     return (
       <TreeView
-        label="Tree View"
-        hideLabel
+        {...treeViewArgs}
         active={active as string | number}
         onActivate={setActive}
         selected={selected}
         onSelect={(ids: TreeViewProps['selected']) => {
+          onSelect?.(ids);
           setSelected(ids ?? []);
           setCurrentPage(findValue(nodes, ids?.[0]));
         }}>
@@ -686,19 +704,23 @@ function findValue(
   return undefined;
 }
 
-export const WithLinks: StoryFn = () => {
+export const WithLinks: StoryFn<ControlledTreeViewArgs> = (args) => {
   const [currentPage, setCurrentPage] = useState<string | undefined>(
     'Artificial Intelligence'
   );
 
   return (
     <div id="page-body">
-      <TreeViewWithLinks setCurrentPage={setCurrentPage} />
+      <TreeViewWithLinks {...args} setCurrentPage={setCurrentPage} />
       <main>
         <h3>The current page is: {currentPage}</h3>
       </main>
     </div>
   );
+};
+
+WithLinks.args = {
+  hideLabel: true,
 };
 
 WithLinks.play = async ({ canvasElement }) => {
@@ -712,7 +734,7 @@ WithLinks.play = async ({ canvasElement }) => {
   ).toHaveAttribute('aria-current', 'page');
 };
 
-export const WithControlledExpansion: StoryFn = () => {
+export const WithControlledExpansion: StoryFn<TreeViewProps> = (args) => {
   const nodes: Node[] = [
     {
       id: '1',
@@ -898,7 +920,7 @@ export const WithControlledExpansion: StoryFn = () => {
         &nbsp;
         <Button onClick={() => setExpanded(false)}>Collapse all</Button>
       </div>
-      <TreeView label="Tree View">{renderTree({ nodes, expanded })}</TreeView>
+      <TreeView {...args}>{renderTree({ nodes, expanded })}</TreeView>
     </>
   );
 };
@@ -907,9 +929,9 @@ const Nested = () => {
   return <TreeNode key={21} value="Nested" label="Nested" />;
 };
 
-export const WithComplexNesting: StoryFn<Partial<TreeViewProps>> = (args) => {
+export const WithComplexNesting: StoryFn<TreeViewProps> = (args) => {
   return (
-    <TreeView label="Tree View with Complex Nesting" {...args}>
+    <TreeView {...args}>
       <TreeNode id="1" value="A.I." label="A.I." isExpanded>
         {/* Pattern 1: A TreeNode wrapped in a simple <div> */}
         <div>
@@ -932,6 +954,7 @@ export const WithComplexNesting: StoryFn<Partial<TreeViewProps>> = (args) => {
 
 WithComplexNesting.args = {
   hideLabel: true,
+  label: 'Tree View with Complex Nesting',
   multiselect: true,
   selected: ['1-1'],
 };
