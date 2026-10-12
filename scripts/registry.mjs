@@ -1,7 +1,8 @@
 // Writes docs/registry.json and docs/registry.md from src/index.ts, the
 // subpath entries and a scan of src/components. `--check` writes nothing and
 // fails on drift, on an Afframe folder without stories, test, visual test or
-// docs page, on a wrapper without an `afframe` story, test or docs page, and on an export whose module or docs page does not exist.
+// docs page, on a wrapper without an `afframe` story, test or docs page, and
+// on an export whose module or docs page does not exist.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { pathToFileURL } from 'node:url';
