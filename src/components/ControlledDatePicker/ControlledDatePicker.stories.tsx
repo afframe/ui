@@ -40,7 +40,7 @@ function isCalendarOpen() {
 
 // The caller owns the state. The button opens the calendar and moves focus
 // to the input, so Escape and the calendar keys work from there.
-export const Controlled: Story = {
+export const Default: Story = {
   render: function Render(args) {
     const [open, setOpen] = useState(false);
     return (
@@ -169,5 +169,6 @@ export const Range: Story = {
 
 export const Dark: Story = {
   ...Open,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

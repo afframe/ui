@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, Carbon's internal useDocumentLang inlined, id added to the AI label story, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, Carbon's internal useDocumentLang inlined, id added to the AI label story, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState, useSyncExternalStore } from 'react';
@@ -182,7 +182,7 @@ Default.parameters = {
   },
 };
 
-export const withAILabel: StoryFn<NumberInputStoryArgs> = (args) => {
+export const WithAILabel: StoryFn<NumberInputStoryArgs> = (args) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -226,16 +226,16 @@ export const withAILabel: StoryFn<NumberInputStoryArgs> = (args) => {
   );
 };
 
-withAILabel.argTypes = { ...sharedArgTypes };
+WithAILabel.argTypes = { ...sharedArgTypes };
 
-withAILabel.args = {
+WithAILabel.args = {
   ...sharedArgs,
   invalidText: 'Number is not valid',
   max: reusableProps.max,
   min: reusableProps.min,
 };
 
-withAILabel.parameters = {
+WithAILabel.parameters = {
   controls: {
     include: sharedControls,
   },

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (ConditionBuilder is previewCandidate__ConditionBuilder), icons from @afframe/ui icons, title Components/ConditionBuilder, deprecatedProps and the variant constants copied locally because @afframe/ui does not export them, uuidv4() replaced by crypto.randomUUID(), story styles converted from SCSS to plain CSS, duplicate commented-out import removed, em-dashes replaced, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (ConditionBuilder is previewCandidate__ConditionBuilder), icons from @afframe/ui icons, title Components/ConditionBuilder, deprecatedProps and the variant constants copied locally because @afframe/ui does not export them, uuidv4() replaced by crypto.randomUUID(), story styles converted from SCSS to plain CSS, duplicate commented-out import removed, em-dashes replaced, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -293,66 +293,52 @@ const statementConfigCustom = [
   },
 ];
 
-export const conditionBuilder = ConditionBuilderTemplate.bind({});
-conditionBuilder.storyName = 'Condition Builder';
-conditionBuilder.args = {
+export const Default = ConditionBuilderTemplate.bind({});
+Default.args = {
   inputConfig: inputData,
   variant: NON_HIERARCHICAL_VARIANT,
 };
 
-export const conditionBuilderDynamicOptions = ConditionBuilderTemplate.bind({});
-conditionBuilderDynamicOptions.storyName = 'With dynamic options';
-conditionBuilderDynamicOptions.args = {
+export const WithDynamicOptions = ConditionBuilderTemplate.bind({});
+WithDynamicOptions.args = {
   inputConfig: inputDataDynamicOptions,
   getOptions: getOptions,
   variant: NON_HIERARCHICAL_VARIANT,
 };
 
-export const conditionBuilderWithInitialState = ConditionBuilderTemplate.bind(
-  {}
-);
-conditionBuilderWithInitialState.storyName = 'With initial state';
-conditionBuilderWithInitialState.args = {
+export const WithInitialState = ConditionBuilderTemplate.bind({});
+WithInitialState.args = {
   value: sampleDataStructure_nonHierarchical,
   inputConfig: inputData,
   variant: NON_HIERARCHICAL_VARIANT,
   translateWithId: translateWithId,
 };
 
-export const conditionBuilderWithCustomStatements =
-  ConditionBuilderTemplate.bind({});
-conditionBuilderWithCustomStatements.storyName =
-  'With Custom statement configuration';
-conditionBuilderWithCustomStatements.args = {
+export const WithCustomStatements = ConditionBuilderTemplate.bind({});
+WithCustomStatements.args = {
   inputConfig: inputData,
   variant: NON_HIERARCHICAL_VARIANT,
   translateWithId: translateWithId,
   statementConfigCustom: statementConfigCustom,
 };
 
-export const conditionBuilderWithCustomOperators =
-  ConditionBuilderTemplate.bind({});
-conditionBuilderWithCustomOperators.storyName =
-  'With Custom operator configuration';
-conditionBuilderWithCustomOperators.args = {
+export const WithCustomOperators = ConditionBuilderTemplate.bind({});
+WithCustomOperators.args = {
   value: initialStateWithCustomOperators,
   inputConfig: inputDataForCustomOperator,
   variant: NON_HIERARCHICAL_VARIANT,
   translateWithId: translateWithId,
 };
 
-export const conditionBuilderWithDisabledProperties =
-  ConditionBuilderTemplate.bind({});
-conditionBuilderWithDisabledProperties.storyName = 'With disabled properties';
-conditionBuilderWithDisabledProperties.args = {
+export const WithDisabledProperties = ConditionBuilderTemplate.bind({});
+WithDisabledProperties.args = {
   inputConfig: inputDataWithDisabledProperties,
 
   variant: NON_HIERARCHICAL_VARIANT,
 };
 
-export const conditionBuilderWithActions = ConditionBuilderTemplate.bind({});
-conditionBuilderWithActions.storyName = 'With Actions';
-conditionBuilderWithActions.args = {
+export const WithActions = ConditionBuilderTemplate.bind({});
+WithActions.args = {
   inputConfig: inputData,
   variant: NON_HIERARCHICAL_VARIANT,
   actions: actions,
@@ -361,28 +347,21 @@ conditionBuilderWithActions.args = {
   },
 };
 
-export const conditionBuilderHierarchical = ConditionBuilderTemplate.bind({});
-conditionBuilderHierarchical.storyName = 'Condition Builder (Hierarchical)';
-conditionBuilderHierarchical.args = {
+export const Hierarchical = ConditionBuilderTemplate.bind({});
+Hierarchical.args = {
   inputConfig: inputData,
   variant: HIERARCHICAL_VARIANT,
 };
-export const conditionBuilderWithInitialStateHierarchical =
-  ConditionBuilderTemplate.bind({});
-conditionBuilderWithInitialStateHierarchical.storyName =
-  'With initial state (Hierarchical)';
-conditionBuilderWithInitialStateHierarchical.args = {
+export const HierarchicalWithInitialState = ConditionBuilderTemplate.bind({});
+HierarchicalWithInitialState.args = {
   value: sampleDataStructure_Hierarchical,
   startActive: false,
   inputConfig: inputData,
   variant: HIERARCHICAL_VARIANT,
 };
 
-export const conditionBuilderWithActionsHierarchical =
-  ConditionBuilderTemplate.bind({});
-conditionBuilderWithActionsHierarchical.storyName =
-  'With Actions (Hierarchical)';
-conditionBuilderWithActionsHierarchical.args = {
+export const HierarchicalWithActions = ConditionBuilderTemplate.bind({});
+HierarchicalWithActions.args = {
   inputConfig: inputData,
   variant: HIERARCHICAL_VARIANT,
   actions: actions,
@@ -483,13 +462,10 @@ const ControlledHierarchicalTemplate: StoryFn<StoryArgs> = () => {
   );
 };
 
-export const conditionBuilderControlledHierarchical =
-  ControlledHierarchicalTemplate.bind({});
-conditionBuilderControlledHierarchical.storyName =
-  'Controlled mode: value + onChange (Hierarchical)';
+export const HierarchicalControlled = ControlledHierarchicalTemplate.bind({});
 // IBM's hierarchical groups render rowgroup and row roles without the
 // required children.
-conditionBuilderControlledHierarchical.parameters = {
+HierarchicalControlled.parameters = {
   a11y: {
     config: { rules: [{ id: 'aria-required-children', enabled: false }] },
   },

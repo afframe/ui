@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; label added to filterable story; typed items. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; label added to filterable story; typed items, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -247,7 +247,7 @@ Filterable.parameters = {
   },
 };
 
-export const _FilterableWithLayer: StoryFn<
+export const FilterableWithLayer: StoryFn<
   Partial<FluidMultiSelectProps<unknown>>
 > = (args) => {
   return (
@@ -266,14 +266,14 @@ export const _FilterableWithLayer: StoryFn<
   );
 };
 
-_FilterableWithLayer.args = {
+FilterableWithLayer.args = {
   ...sharedArgs,
   isFilterable: true,
   titleText: 'Multiselect title',
 };
 
-_FilterableWithLayer.argTypes = Filterable.argTypes;
-_FilterableWithLayer.parameters = Filterable.parameters;
+FilterableWithLayer.argTypes = Filterable.argTypes;
+FilterableWithLayer.parameters = Filterable.parameters;
 
 export const Condensed: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
   args
@@ -305,7 +305,7 @@ Condensed.parameters = {
   },
 };
 
-export const withAILabel: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
+export const WithAILabel: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
   args
 ) => {
   const aiLabel = (
@@ -352,11 +352,11 @@ export const withAILabel: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
   );
 };
 
-withAILabel.args = {
+WithAILabel.args = {
   ...sharedArgs,
 };
 
-withAILabel.argTypes = {
+WithAILabel.argTypes = {
   ...sharedArgTypes,
 };
 

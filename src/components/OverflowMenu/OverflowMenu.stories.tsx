@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 menu items added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 menu items added, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -122,12 +122,6 @@ export default {
   argTypes,
 } satisfies Meta<typeof OverflowMenu>;
 
-export const RenderCustomIcon: StoryFn<typeof OverflowMenu> = (args) => (
-  <OverflowMenu {...args} renderIcon={Filter}>
-    <OverflowMenuItem itemText="Filter A" />
-    <OverflowMenuItem itemText="Filter B" />
-  </OverflowMenu>
-);
 export const Default: StoryFn<typeof OverflowMenu> = (args) => (
   <OverflowMenu aria-label="overflow-menu" {...args}>
     <OverflowMenuItem itemText="Stop app" />
@@ -141,8 +135,15 @@ export const Default: StoryFn<typeof OverflowMenu> = (args) => (
 
 // Afframe: the 1.0.x shape, `label` and MenuItem children. The Afframe
 // OverflowMenu turns on Carbon's newer menu for it, so the keyboard works.
+
+export const RenderCustomIcon: StoryFn<typeof OverflowMenu> = (args) => (
+  <OverflowMenu {...args} renderIcon={Filter}>
+    <OverflowMenuItem itemText="Filter A" />
+    <OverflowMenuItem itemText="Filter B" />
+  </OverflowMenu>
+);
 export const MenuItemsFrom101: StoryObj<typeof OverflowMenu> = {
-  name: 'Menu items from 1.0.1',
+  name: 'Menu Items From 1.0.1',
   tags: ['afframe'],
   parameters: { ...afframeA11y },
   render: () => (

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, no PropTypes, source tag, title Layout/FlexGrid (upstream Elements/FlexGrid), story styles as plain CSS. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, no PropTypes, source tag, title Layout/FlexGrid (upstream Elements/FlexGrid), story styles as plain CSS, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './FlexGrid.stories.css';
@@ -75,6 +75,29 @@ export default {
   args,
   argTypes,
 } satisfies Meta<FlexGridArgs>;
+
+export const Default: StoryFn<FlexGridArgs> = (args) => {
+  return (
+    <div id="templates">
+      <FlexGrid {...args}>
+        <Row>
+          <Column>
+            <DemoContent>1/4</DemoContent>
+          </Column>
+          <Column>
+            <DemoContent>1/4</DemoContent>
+          </Column>
+          <Column>
+            <DemoContent>1/4</DemoContent>
+          </Column>
+          <Column>
+            <DemoContent>1/4</DemoContent>
+          </Column>
+        </Row>
+      </FlexGrid>
+    </div>
+  );
+};
 
 export const AutoColumns: StoryFn<FlexGridArgs> = (args) => {
   return (
@@ -434,29 +457,6 @@ MixedGutterModes.parameters = {
   controls: {
     include: gridContainerControls,
   },
-};
-
-export const Default: StoryFn<FlexGridArgs> = (args) => {
-  return (
-    <div id="templates">
-      <FlexGrid {...args}>
-        <Row>
-          <Column>
-            <DemoContent>1/4</DemoContent>
-          </Column>
-          <Column>
-            <DemoContent>1/4</DemoContent>
-          </Column>
-          <Column>
-            <DemoContent>1/4</DemoContent>
-          </Column>
-          <Column>
-            <DemoContent>1/4</DemoContent>
-          </Column>
-        </Row>
-      </FlexGrid>
-    </div>
-  );
 };
 
 export const WithRowGap: StoryFn<FlexGridArgs> = (args) => {

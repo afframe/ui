@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript checks enabled (@ts-nocheck removed, story args typed, optional props passed by conditional spread), components from @afframe/ui (AddSelect is preview__AddSelect), icons from @afframe/ui icons, title Components/AddSelect, unused hierarchicalItems removed, story styles converted from SCSS to plain CSS, em-dashes replaced, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript checks enabled (@ts-nocheck removed, story args typed, optional props passed by conditional spread), components from @afframe/ui (AddSelect is preview__AddSelect), icons from @afframe/ui icons, title Components/AddSelect, unused hierarchicalItems removed, story styles converted from SCSS to plain CSS, em-dashes replaced, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import {
@@ -246,8 +246,7 @@ const AddSelectBodyStory = (args: BodyArgs) => {
   );
 };
 
-export const AddSelectBody: StoryObj<BodyArgs> = {
-  name: 'AddSelect.Body',
+export const Default: StoryObj<BodyArgs> = {
   render: AddSelectBodyStory,
   // IBM's placeholder rows are plain divs inside the component's grid and rowgroup.
   parameters: {
@@ -485,8 +484,7 @@ const AddSelectColumnStory = (args: ColumnArgs) => {
   );
 };
 
-export const AddSelectColumn: StoryObj<ColumnArgs> = {
-  name: 'AddSelect.Column',
+export const Column: StoryObj<ColumnArgs> = {
   render: AddSelectColumnStory,
   // IBM nests the column rowgroup inside the body rowgroup.
   parameters: {
@@ -644,8 +642,7 @@ const AddSelectRowStory = (args: RowArgs) => {
   );
 };
 
-export const AddSelectRow: StoryObj<RowArgs> = {
-  name: 'AddSelect.Row',
+export const Row: StoryObj<RowArgs> = {
   render: AddSelectRowStory,
   // IBM nests the column rowgroup inside the body rowgroup.
   parameters: {
@@ -903,8 +900,7 @@ const AddSelectSelectionSummaryStory = (args: SummaryArgs) => {
   );
 };
 
-export const AddSelectSelectionSummary: StoryObj<SummaryArgs> = {
-  name: 'AddSelect.SelectionSummary',
+export const SelectionSummary: StoryObj<SummaryArgs> = {
   render: AddSelectSelectionSummaryStory,
   // IBM renders the remove IconButton inside the accordion heading button.
   parameters: {
@@ -1121,8 +1117,7 @@ const AddSelectSelectionSummaryItemStory = (args: SummaryItemArgs) => {
   );
 };
 
-export const AddSelectSelectionSummaryItem: StoryObj<SummaryItemArgs> = {
-  name: 'AddSelect.SelectionSummaryItem',
+export const SelectionSummaryItem: StoryObj<SummaryItemArgs> = {
   render: AddSelectSelectionSummaryItemStory,
   // IBM renders the remove IconButton inside the accordion heading button.
   parameters: {
@@ -1227,8 +1222,7 @@ const AddSelectItemPanelStory = (args: ItemPanelArgs) => {
   );
 };
 
-export const AddSelectItemPanel: StoryObj<ItemPanelArgs> = {
-  name: 'AddSelect.ItemPanel',
+export const ItemPanel: StoryObj<ItemPanelArgs> = {
   render: AddSelectItemPanelStory,
   args: {
     title: 'Item details',

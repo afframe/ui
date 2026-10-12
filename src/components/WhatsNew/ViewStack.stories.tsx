@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, the PlayingCard helper copied into the story folder, typed ViewStack ref and callback, the history list's name attribute as id (name is not an ol attribute, and the label points to it), story styles converted from SCSS to plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, the PlayingCard helper copied into the story folder, typed ViewStack ref and callback, the history list's name attribute as id (name is not an ol attribute, and the label points to it), story styles converted from SCSS to plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useCallback, useRef, useState } from 'react';
@@ -50,7 +50,7 @@ export default {
 /**
  * ViewStack component story for WhatsNew
  */
-export const ViewStackStory: StoryFn<typeof ViewStack> = () => {
+export const Stack: StoryFn<typeof ViewStack> = () => {
   /* ************************************* */
   // INTERNAL STATE
   const [currentViewIndex, setCurrentViewIndex] = useState(-1);
@@ -250,4 +250,3 @@ export const ViewStackStory: StoryFn<typeof ViewStack> = () => {
     </div>
   );
 };
-ViewStackStory.storyName = 'ViewStack';

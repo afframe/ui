@@ -96,5 +96,6 @@ export const InLabsShell: Story = {
 };
 
 export const Dark: Story = {
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

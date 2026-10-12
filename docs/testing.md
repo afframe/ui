@@ -57,7 +57,7 @@ Afframe-owned stories (tag `afframe`) also check axe's `target-size` rule (WCAG 
 
 ## Visual baselines
 
-Visual tests call `toMatchScreenshot` on composed stories. They cover every Afframe-owned component and `AfframeProvider`, in light and dark, plus one focus state in light for each component with a focusable part (all but `Amount` and `AfframeProvider`; the test focuses a named element, so the screenshot is deterministic). `ChatChart` has no tab stop, so its focus test checks that one Tab leaves the story and focus stays on the page body. The internal `CreateEditFlow`, `ModalParts`, `MenuParts` and `useHeaderPanel` are covered through the components that use them. No Chromatic.
+Visual tests call `toMatchScreenshot` on composed stories. They cover every Afframe-owned component and `AfframeProvider`, in light and dark (the dark stories are hidden from the sidebar, ADR 0019), plus one focus state in light for each component with a focusable part (all but `Amount` and `AfframeProvider`; the test focuses a named element, so the screenshot is deterministic). `ChatChart` has no tab stop, so its focus test checks that one Tab leaves the story and focus stays on the page body. The internal `CreateEditFlow`, `ModalParts`, `MenuParts` and `useHeaderPanel` are covered through the components that use them. No Chromatic.
 
 Baselines live in `src/<dir>/__screenshots__/<file>/<name>-chromium-linux.png` and are committed. Only the Linux renders count, since the release checks render them on the Linux runner in `.github/workflows/release-checks.yml`; macOS and Windows renders are gitignored.
 

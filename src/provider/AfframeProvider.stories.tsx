@@ -32,5 +32,6 @@ export const Default: StoryObj<typeof meta> = {
 
 export const Dark: StoryObj<typeof meta> = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

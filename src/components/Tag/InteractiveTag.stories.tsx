@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, styles from the shared story.css, selected passed as a boolean, control: false instead of the string 'false', inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, styles from the shared story.css, selected passed as a boolean, control: false instead of the string 'false', inline spacing as Carbon spacing tokens, Default story added, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -48,6 +48,39 @@ export default {
     },
   },
 } satisfies Meta<typeof SelectableTag>;
+
+export const Default: StoryFn<ComponentProps<typeof Tag>> = (args) => (
+  <Tag {...args} />
+);
+
+Default.args = {
+  children: 'Tag content',
+  type: 'gray',
+  size: 'md',
+  disabled: false,
+};
+
+Default.argTypes = {
+  children: { control: 'text' },
+  type: {
+    options: [
+      'red',
+      'magenta',
+      'purple',
+      'blue',
+      'cyan',
+      'teal',
+      'green',
+      'gray',
+      'cool-gray',
+      'warm-gray',
+      'high-contrast',
+      'outline',
+    ],
+    control: { type: 'select' },
+  },
+  size: { options: ['sm', 'md', 'lg'], control: { type: 'select' } },
+};
 
 export const Selectable: StoryFn<InteractiveArgs> = (args) => {
   const tags: TagItem[] = [

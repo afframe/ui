@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, previewCandidate__NonLinearReading and Theme from @afframe/ui, plain CSS file, the gradient wrapper uses the Theme component for the g100 theme, unused args parameter removed, tags. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, previewCandidate__NonLinearReading and Theme from @afframe/ui, plain CSS file, the gradient wrapper uses the Theme component for the g100 theme, unused args parameter removed, tags, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -46,7 +46,7 @@ export default {
 // just a pill for a keyword, expanding to show its definition.
 // Should always be shown in context with surrounding text.
 
-export const SingleLevel: StoryFn<typeof NonLinearReading> = () => {
+export const Default: StoryFn<typeof NonLinearReading> = () => {
   return (
     <div className={`${storyClass}__viewport`}>
       XDR Connect’s correlation

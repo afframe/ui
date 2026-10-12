@@ -7,12 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, noValidate (not a Slider prop) removed, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, noValidate (not a Slider prop) removed, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState } from 'react';
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import { Slider, SliderSkeleton } from '../../index.js';
 import type { SliderProps, SliderSkeletonProps } from '../../index.js';
 import mdx from './Slider.mdx';
@@ -193,18 +193,18 @@ Default.args = { ...sharedArgs };
 Default.argTypes = { ...sharedArgTypes };
 Default.parameters = singleHandleParameters;
 
-export const SliderWithHiddenInputs: StoryFn<typeof Slider> = (args) => (
+export const WithHiddenInputs: StoryFn<typeof Slider> = (args) => (
   <Slider {...args} />
 );
 
-SliderWithHiddenInputs.args = {
+WithHiddenInputs.args = {
   ...sharedArgs,
   hideTextInput: true,
 };
-SliderWithHiddenInputs.argTypes = hiddenInputArgTypes;
-SliderWithHiddenInputs.parameters = singleHandleParameters;
+WithHiddenInputs.argTypes = hiddenInputArgTypes;
+WithHiddenInputs.parameters = singleHandleParameters;
 
-export const SliderWithCustomValueLabel: StoryFn<typeof Slider> = (args) => (
+export const WithCustomValueLabel: StoryFn<typeof Slider> = (args) => (
   <Slider
     {...args}
     formatLabel={(value) => {
@@ -218,18 +218,18 @@ export const SliderWithCustomValueLabel: StoryFn<typeof Slider> = (args) => (
   />
 );
 
-SliderWithCustomValueLabel.args = {
+WithCustomValueLabel.args = {
   ...sharedArgs,
   hideTextInput: true,
   labelText: 'Storage usage',
   stepMultiplier: 50,
 };
-SliderWithCustomValueLabel.argTypes = {
+WithCustomValueLabel.argTypes = {
   ...hiddenInputArgTypes,
 };
-SliderWithCustomValueLabel.parameters = singleHandleParameters;
+WithCustomValueLabel.parameters = singleHandleParameters;
 
-export const ControlledSlider: StoryFn<typeof Slider> = (args) => {
+export const Controlled: StoryFn<typeof Slider> = (args) => {
   const [value, setValue] = useState(args.value);
 
   useEffect(() => {
@@ -254,21 +254,21 @@ export const ControlledSlider: StoryFn<typeof Slider> = (args) => {
   );
 };
 
-ControlledSlider.args = { ...sharedArgs, value: 87 };
-ControlledSlider.argTypes = { ...sharedArgTypes };
-ControlledSlider.parameters = singleHandleParameters;
+Controlled.args = { ...sharedArgs, value: 87 };
+Controlled.argTypes = { ...sharedArgTypes };
+Controlled.parameters = singleHandleParameters;
 
-export const _WithLayer: StoryFn<typeof Slider> = (args) => (
-  <WithLayer>
+export const WithLayer: StoryFn<typeof Slider> = (args) => (
+  <WithLayerTemplate>
     <Slider {...args} />
-  </WithLayer>
+  </WithLayerTemplate>
 );
 
-_WithLayer.args = { ...sharedArgs };
-_WithLayer.argTypes = { ...sharedArgTypes };
-_WithLayer.parameters = singleHandleParameters;
+WithLayer.args = { ...sharedArgs };
+WithLayer.argTypes = { ...sharedArgTypes };
+WithLayer.parameters = singleHandleParameters;
 
-export const ControlledSliderWithLayer: StoryFn<typeof Slider> = (args) => {
+export const ControlledWithLayer: StoryFn<typeof Slider> = (args) => {
   const [value, setValue] = useState(args.value);
 
   useEffect(() => {
@@ -276,7 +276,7 @@ export const ControlledSliderWithLayer: StoryFn<typeof Slider> = (args) => {
   }, [args.value]);
 
   return (
-    <WithLayer>
+    <WithLayerTemplate>
       <button type="button" onClick={() => setValue(randomValue(args))}>
         Randomize value
       </button>
@@ -289,34 +289,32 @@ export const ControlledSliderWithLayer: StoryFn<typeof Slider> = (args) => {
         }}
       />
       <p>Current value: {value}</p>
-    </WithLayer>
+    </WithLayerTemplate>
   );
 };
 
-ControlledSliderWithLayer.args = { ...sharedArgs, value: 87 };
-ControlledSliderWithLayer.argTypes = { ...sharedArgTypes };
-ControlledSliderWithLayer.parameters = singleHandleParameters;
+ControlledWithLayer.args = { ...sharedArgs, value: 87 };
+ControlledWithLayer.argTypes = { ...sharedArgTypes };
+ControlledWithLayer.parameters = singleHandleParameters;
 
-export const TwoHandleSlider: StoryFn<typeof Slider> = (args) => (
+export const TwoHandle: StoryFn<typeof Slider> = (args) => <Slider {...args} />;
+
+TwoHandle.args = { ...twoHandleArgs };
+TwoHandle.argTypes = { ...sharedArgTypes };
+TwoHandle.parameters = twoHandleParameters;
+
+export const TwoHandleWithHiddenInputs: StoryFn<typeof Slider> = (args) => (
   <Slider {...args} />
 );
 
-TwoHandleSlider.args = { ...twoHandleArgs };
-TwoHandleSlider.argTypes = { ...sharedArgTypes };
-TwoHandleSlider.parameters = twoHandleParameters;
-
-export const TwoHandleSliderWithHiddenInputs: StoryFn<typeof Slider> = (
-  args
-) => <Slider {...args} />;
-
-TwoHandleSliderWithHiddenInputs.args = {
+TwoHandleWithHiddenInputs.args = {
   ...twoHandleArgs,
   hideTextInput: true,
 };
-TwoHandleSliderWithHiddenInputs.argTypes = {
+TwoHandleWithHiddenInputs.argTypes = {
   ...hiddenInputArgTypes,
 };
-TwoHandleSliderWithHiddenInputs.parameters = twoHandleParameters;
+TwoHandleWithHiddenInputs.parameters = twoHandleParameters;
 
 const skeletonArgs: SliderSkeletonProps = {
   ariaLabel: 'Slider handle',

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Resizer from @afframe/ui (styles ship in the package CSS, so the resizer.scss import is dropped), icons from @afframe/ui icons, a null guard in the grid story's resize-end handler, an unused initial assignment of newFraction removed, tabIndex on the scrollable Four Panels right-top panel, eslint-disable comments for plugins this repo does not use removed, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Resizer from @afframe/ui (styles ship in the package CSS, so the resizer.scss import is dropped), icons from @afframe/ui icons, a null guard in the grid story's resize-end handler, an unused initial assignment of newFraction removed, tabIndex on the scrollable Four Panels right-top panel, eslint-disable comments for plugins this repo does not use removed, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 // cspell:ignore resizer
@@ -37,11 +37,11 @@ export default {
 } satisfies Meta<typeof Resizer>;
 
 /**
- * SinglePanelNoBoundaries example
+ * Single panel without boundaries
  *
  * @param {any} args - props from story controls
  */
-export const SinglePanelNoBoundaries: StoryFn<typeof Resizer> = (args) => (
+export const Default: StoryFn<typeof Resizer> = (args) => (
   <>
     <style>
       {`
@@ -981,7 +981,7 @@ const separatorWithoutValue = {
     config: { rules: [{ id: 'aria-required-attr', enabled: false }] },
   },
 };
-SinglePanelNoBoundaries.parameters = separatorWithoutValue;
+Default.parameters = separatorWithoutValue;
 SinglePanelBounded.parameters = separatorWithoutValue;
 SinglePanelOverlay.parameters = separatorWithoutValue;
 TwoPanelsHorizontal.parameters = separatorWithoutValue;

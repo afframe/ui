@@ -7,12 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import { FolderOpen, Folders, View } from '../../icons.js';
 import {
   AILabel,
@@ -123,6 +123,28 @@ const selectItems = (
   </>
 );
 
+export const Default: StoryFn<SelectStoryArgs> = (args) => {
+  return (
+    <div>
+      <Select id="select-1" {...args}>
+        {selectItems}
+      </Select>
+    </div>
+  );
+};
+
+Default.args = {
+  ...sharedArgs,
+};
+
+Default.argTypes = {
+  ...sharedArgTypes,
+};
+
+Default.parameters = {
+  controls: { include: sharedControls },
+};
+
 export const Inline: StoryFn<SelectStoryArgs> = (args) => {
   return (
     <div>
@@ -168,29 +190,29 @@ Skeleton.parameters = {
   controls: { include: ['hideLabel'] },
 };
 
-export const _WithLayer: StoryFn<SelectStoryArgs> = (args) => (
-  <WithLayer>
+export const WithLayer: StoryFn<SelectStoryArgs> = (args) => (
+  <WithLayerTemplate>
     {(layer) => (
       <Select id={`select-${layer}`} {...args}>
         {selectItems}
       </Select>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
 
-_WithLayer.args = {
+WithLayer.args = {
   ...sharedArgs,
 };
 
-_WithLayer.argTypes = {
+WithLayer.argTypes = {
   ...sharedArgTypes,
 };
 
-_WithLayer.parameters = {
+WithLayer.parameters = {
   controls: { include: sharedControls },
 };
 
-export const withAILabel: StoryFn<SelectStoryArgs> = (args) => {
+export const WithAILabel: StoryFn<SelectStoryArgs> = (args) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -231,36 +253,14 @@ export const withAILabel: StoryFn<SelectStoryArgs> = (args) => {
   );
 };
 
-withAILabel.args = {
+WithAILabel.args = {
   ...sharedArgs,
 };
 
-withAILabel.argTypes = {
+WithAILabel.argTypes = {
   ...sharedArgTypes,
 };
 
-withAILabel.parameters = {
-  controls: { include: sharedControls },
-};
-
-export const Default: StoryFn<SelectStoryArgs> = (args) => {
-  return (
-    <div>
-      <Select id="select-1" {...args}>
-        {selectItems}
-      </Select>
-    </div>
-  );
-};
-
-Default.args = {
-  ...sharedArgs,
-};
-
-Default.argTypes = {
-  ...sharedArgTypes,
-};
-
-Default.parameters = {
+WithAILabel.parameters = {
   controls: { include: sharedControls },
 };

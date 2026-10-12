@@ -5,7 +5,7 @@ import * as AISkeletonTextStories from './AISkeletonText.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, feedback link points to the edit page.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, feedback link points to the edit page, story names unified.
 
 <Meta isTemplate />
 
@@ -32,15 +32,15 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 #### AI Skeleton Icon
 
-<Canvas of={AISkeletonStories._AISkeletonIcon} />
+<Canvas of={AISkeletonStories.Default} />
 
 #### AI Skeleton Placeholder
 
-<Canvas of={AISkeletonPlaceholderStories._AISkeletonPlaceholder} />
+<Canvas of={AISkeletonPlaceholderStories.Placeholder} />
 
 #### AI Skeleton Text
 
-<Canvas of={AISkeletonTextStories._AISkeletonText} />
+<Canvas of={AISkeletonTextStories.Text} />
 
 ## Component API
 

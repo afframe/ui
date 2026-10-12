@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -80,23 +80,6 @@ export default {
   },
 } satisfies Meta<FluidSearchProps & { defaultWidth?: number }>;
 
-export const Skeleton: StoryFn<FluidSearchProps & { defaultWidth?: number }> = (
-  args
-) => {
-  const { defaultWidth } = args;
-  return (
-    <div style={{ width: defaultWidth }}>
-      <FluidSearchSkeleton />
-    </div>
-  );
-};
-
-Skeleton.parameters = {
-  controls: {
-    include: ['defaultWidth'],
-  },
-};
-
 export const Default: StoryFn<FluidSearchProps & { defaultWidth?: number }> = (
   args
 ) => {
@@ -117,4 +100,21 @@ Default.args = {
   placeholder: 'Prompt text',
   role: 'searchbox',
   type: 'search',
+};
+
+export const Skeleton: StoryFn<FluidSearchProps & { defaultWidth?: number }> = (
+  args
+) => {
+  const { defaultWidth } = args;
+  return (
+    <div style={{ width: defaultWidth }}>
+      <FluidSearchSkeleton />
+    </div>
+  );
+};
+
+Skeleton.parameters = {
+  controls: {
+    include: ['defaultWidth'],
+  },
 };

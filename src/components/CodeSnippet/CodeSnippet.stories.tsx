@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: scrollable-region-focusable disabled on the multi-line stories, argTypes typed and defaultValue summaries as strings, TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: scrollable-region-focusable disabled on the multi-line stories, argTypes typed and defaultValue summaries as strings, TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -194,6 +194,16 @@ const renderCodeSnippetWithLayer = ({ text, ...args }: SnippetArgs) => (
   </WithLayer>
 );
 
+export const Default: StoryObj<SnippetArgs> = {
+  args: {
+    ...codeSnippetArgs,
+    text: singlelineCode,
+  },
+  argTypes: variantArgTypes,
+  parameters: codeSnippetParameters,
+  render: renderCodeSnippet,
+};
+
 export const Inline: StoryObj<SnippetArgs> = {
   args: {
     ...codeSnippetArgs,
@@ -215,16 +225,6 @@ export const Multiline: StoryObj<SnippetArgs> = {
     ...codeSnippetParameters,
     ...scrollableRegionException,
   },
-  render: renderCodeSnippet,
-};
-
-export const Singleline: StoryObj<SnippetArgs> = {
-  args: {
-    ...codeSnippetArgs,
-    text: singlelineCode,
-  },
-  argTypes: variantArgTypes,
-  parameters: codeSnippetParameters,
   render: renderCodeSnippet,
 };
 

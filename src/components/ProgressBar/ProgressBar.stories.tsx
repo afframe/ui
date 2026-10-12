@@ -7,13 +7,13 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2021, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript (value omitted instead of null while not running, defaults for the destructured args), components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript (value omitted instead of null while not running, defaults for the destructured args), components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
 import { ProgressBar } from '../../index.js';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import mdx from './ProgressBar.mdx';
 
 export default {
@@ -191,18 +191,18 @@ Determinate.parameters = {
   },
 };
 
-export const _WithLayer: StoryFn<typeof ProgressBar> = (args) => (
-  <WithLayer>
+export const WithLayer: StoryFn<typeof ProgressBar> = (args) => (
+  <WithLayerTemplate>
     <ProgressBar {...args} />
-  </WithLayer>
+  </WithLayerTemplate>
 );
 
-_WithLayer.args = {
+WithLayer.args = {
   ...sharedArgs,
   helperText: '42 MB of 100 MB',
   value: 42,
 };
 
-_WithLayer.argTypes = {
+WithLayer.argTypes = {
   ...sharedArgTypes,
 };

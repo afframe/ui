@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args; datePickerType comes from args; unsupported skeleton props removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args; datePickerType comes from args; unsupported skeleton props removed, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -199,7 +199,7 @@ const LabelToggletip = () => (
   </span>
 );
 
-export const Simple: StoryFn<FluidDatePickerArgs> = (args) => {
+export const Default: StoryFn<FluidDatePickerArgs> = (args) => {
   const { defaultWidth, ...datePickerArgs } = args;
   return (
     <div className="fluid-date-picker-story" style={{ width: defaultWidth }}>
@@ -216,17 +216,17 @@ export const Simple: StoryFn<FluidDatePickerArgs> = (args) => {
   );
 };
 
-Simple.args = {
+Default.args = {
   ...sharedArgs,
   datePickerType: 'simple',
   defaultWidth: 288,
 };
-Simple.argTypes = {
+Default.argTypes = {
   ...sharedArgTypes,
   datePickerType: datePickerTypeArgType,
   defaultWidth: defaultWidthArgType,
 };
-Simple.parameters = sharedParameters;
+Default.parameters = sharedParameters;
 
 export const Single: StoryFn<FluidDatePickerArgs> = (args) => {
   const { defaultWidth, ...datePickerArgs } = args;

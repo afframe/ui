@@ -7,12 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, labelText literals that args always override removed, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, labelText literals that args always override removed, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import { FolderOpen, Folders, View } from '../../icons.js';
 import {
   AILabel,
@@ -155,8 +155,8 @@ Default.args = {
   enableCounter: true,
 };
 
-export const _WithLayer: StoryFn<typeof TextArea> = (args) => (
-  <WithLayer>
+export const WithLayer: StoryFn<typeof TextArea> = (args) => (
+  <WithLayerTemplate>
     {(layer) => (
       <TextArea
         helperText="Optional helper text"
@@ -165,11 +165,11 @@ export const _WithLayer: StoryFn<typeof TextArea> = (args) => (
         {...args}
       />
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
 
-_WithLayer.args = { helperText: 'Optional helper text' };
-export const withAILabel: StoryFn<typeof TextArea> = (args) => {
+WithLayer.args = { helperText: 'Optional helper text' };
+export const WithAILabel: StoryFn<typeof TextArea> = (args) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -212,7 +212,7 @@ export const withAILabel: StoryFn<typeof TextArea> = (args) => {
   );
 };
 
-withAILabel.args = { helperText: 'Optional helper text' };
+WithAILabel.args = { helperText: 'Optional helper text' };
 
 export const Skeleton: StoryFn<ComponentProps<typeof TextAreaSkeleton>> = (
   args

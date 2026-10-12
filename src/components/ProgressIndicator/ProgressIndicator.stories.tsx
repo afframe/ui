@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -32,29 +32,6 @@ export default {
     },
   },
 } satisfies Meta<typeof ProgressIndicator>;
-
-export const Interactive: StoryFn<typeof ProgressIndicator> = () => {
-  return (
-    <ProgressIndicator currentIndex={1} onChange={() => alert('Clicked')}>
-      <ProgressStep
-        label="Click me"
-        description="Step 1: Register an onChange event"
-      />
-      <ProgressStep
-        label="Really long label"
-        description="The progress indicator will listen for clicks on the steps"
-      />
-      <ProgressStep
-        label="Third step"
-        description="The progress indicator will listen for clicks on the steps"
-      />
-    </ProgressIndicator>
-  );
-};
-
-export const Skeleton: StoryFn<typeof ProgressIndicatorSkeleton> = () => {
-  return <ProgressIndicatorSkeleton />;
-};
 
 export const Default: StoryFn<typeof ProgressIndicator> = (args) => (
   <ProgressIndicator {...args}>
@@ -103,4 +80,27 @@ Default.argTypes = {
   vertical: {
     control: { type: 'boolean' },
   },
+};
+
+export const Interactive: StoryFn<typeof ProgressIndicator> = () => {
+  return (
+    <ProgressIndicator currentIndex={1} onChange={() => alert('Clicked')}>
+      <ProgressStep
+        label="Click me"
+        description="Step 1: Register an onChange event"
+      />
+      <ProgressStep
+        label="Really long label"
+        description="The progress indicator will listen for clicks on the steps"
+      />
+      <ProgressStep
+        label="Third step"
+        description="The progress indicator will listen for clicks on the steps"
+      />
+    </ProgressIndicator>
+  );
+};
+
+export const Skeleton: StoryFn<typeof ProgressIndicatorSkeleton> = () => {
+  return <ProgressIndicatorSkeleton />;
 };

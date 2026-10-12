@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, InterstitialScreen, InterstitialScreenView, Button and ButtonSet from @afframe/ui, plain CSS file, literal c4p prefix, clamp written inline, launcher ref cast, step values defaulted and handleGotoStep called with ?. for the optional types, title Components/Onboarding/InterstitialScreen. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, InterstitialScreen, InterstitialScreenView, Button and ButtonSet from @afframe/ui, plain CSS file, literal c4p prefix, clamp written inline, launcher ref cast, step values defaulted and handleGotoStep called with ?. for the optional types, title Components/Onboarding/InterstitialScreen, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState, type ComponentProps, type RefObject } from 'react';
@@ -157,7 +157,7 @@ const defaultProps = {
   headerSubTitle: 'Use case-specific sub title',
   ariaLabel: 'Interstitial Screen',
 };
-export const Modal: StoryFn = () => {
+export const Default: StoryFn = () => {
   const [showInterstitialScreen, setShowInterstitialScreen] = useState(true);
   const launcherButtonRef = useLauncherRef();
   return (
@@ -192,7 +192,7 @@ export const Modal: StoryFn = () => {
   );
 };
 
-export const ModalWithMultipleSteps: StoryFn = () => {
+export const WithMultipleSteps: StoryFn = () => {
   const [showInterstitialScreen, setShowInterstitialScreen] = useState(true);
   const launcherButtonRef = useLauncherRef();
   return (
@@ -366,7 +366,7 @@ export const WithAsynchronousActionCallback: StoryFn = () => {
     </>
   );
 };
-export const fullScreen: StoryFn = () => {
+export const FullScreen: StoryFn = () => {
   const [showInterstitialScreen, setShowInterstitialScreen] = useState(true);
   const launcherButtonRef = useLauncherRef();
 
@@ -403,7 +403,7 @@ export const fullScreen: StoryFn = () => {
   );
 };
 
-export const fullScreenWithMultipleSteps: StoryFn = () => {
+export const FullScreenWithMultipleSteps: StoryFn = () => {
   const [showInterstitialScreen, setShowInterstitialScreen] = useState(true);
   const launcherButtonRef = useLauncherRef();
 

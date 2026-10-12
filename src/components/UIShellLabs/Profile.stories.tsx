@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Labs UI shell and theme settings components, Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), the docs entry and subcomponents as the Profile namespace parts, sample user name, email and instance name replaced with neutral placeholders, title Components/UI Shell/Profile, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Labs UI shell and theme settings components, Carbon components and icons from @afframe/ui (styles ship in the package CSS, so the ui-shell.scss import is dropped), the docs entry and subcomponents as the Profile namespace parts, sample user name, email and instance name replaced with neutral placeholders, title Components/UI Shell/Profile, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState, type ReactNode } from 'react';
@@ -155,7 +155,7 @@ export const Default: StoryFn<typeof Profile.Root> = () => {
  * Story for Profile with read only items
  * @returns {React.ReactElement} The JSX for the story
  */
-export const withReadOnly: StoryFn<typeof Profile.Root> = () => (
+export const ReadOnly: StoryFn<typeof Profile.Root> = () => (
   <BaseProfile>
     <Profile.ReadOnly items={readOnlyItems} />
   </BaseProfile>
@@ -194,7 +194,7 @@ export const WithThemeSwitcher: StoryFn<typeof Profile.Root> = () => {
  * Story for Profile with links
  * @returns {React.ReactElement} The JSX for the story
  */
-export const withLinks: StoryFn<typeof Profile.Root> = () => {
+export const WithLinks: StoryFn<typeof Profile.Root> = () => {
   return (
     <Header aria-label="IBM Platform Name">
       <HeaderGlobalBar>

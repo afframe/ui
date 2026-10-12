@@ -3,7 +3,7 @@ import * as FileUploaderStories from './FileUploader.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions and their raw source imports removed, source label added.
+// Modified by Afframe in 2026: Stackblitz actions and their raw source imports removed, source label added, story names unified.
 
 <Meta isTemplate />
 
@@ -42,23 +42,21 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 #### Drag And Drop Upload Container Example Application
 
-<Canvas of={FileUploaderStories.DragAndDropUploadContainerExampleApplication} />
+<Canvas of={FileUploaderStories.DragAndDrop} />
 
 #### Drag And Drop Upload Single Container Example Application
 
-<Canvas
-  of={FileUploaderStories.DragAndDropUploadSingleContainerExampleApplication}
-/>
+<Canvas of={FileUploaderStories.DragAndDropSingle} />
 
 ## File
 
 #### File Uploader Drop Container
 
-<Canvas of={FileUploaderStories._FileUploaderDropContainer} />
+<Canvas of={FileUploaderStories.DropContainer} />
 
 #### File Uploader Item
 
-<Canvas of={FileUploaderStories._FileUploaderItem} />
+<Canvas of={FileUploaderStories.Item} />
 
 ## Skeleton state
 

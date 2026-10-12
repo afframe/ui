@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -159,76 +159,6 @@ export default {
   },
 } satisfies Meta<typeof FileUploader>;
 
-export const _FileUploaderItem: StoryFn<FileUploaderItemArgs> = (args) => {
-  return <FileUploaderItem {...args} />;
-};
-
-_FileUploaderItem.args = { ...fileUploaderItemArgs };
-_FileUploaderItem.argTypes = { ...fileUploaderItemArgTypes };
-
-// Remove all the props that don't apply to FileUploaderItem
-_FileUploaderItem.parameters = {
-  controls: {
-    include: Object.keys(fileUploaderItemArgTypes),
-  },
-};
-
-export const _FileUploaderDropContainer: StoryFn<
-  ComponentProps<typeof FileUploaderDropContainer>
-> = (args) => {
-  return <FileUploaderDropContainer {...args} />;
-};
-
-_FileUploaderDropContainer.args = { ...dropContainerArgs };
-_FileUploaderDropContainer.argTypes = { ...dropContainerArgTypes };
-_FileUploaderDropContainer.parameters = {
-  controls: { include: Object.keys(dropContainerArgTypes) },
-};
-
-export const DragAndDropUploadContainerExampleApplication: StoryFn<
-  ExampleDropContainerAppProps
-> = (args) => ExampleDropContainerApp(args);
-
-DragAndDropUploadContainerExampleApplication.args = {
-  ...dropContainerArgs,
-};
-DragAndDropUploadContainerExampleApplication.argTypes = {
-  ...dropContainerArgTypes,
-};
-DragAndDropUploadContainerExampleApplication.parameters = {
-  controls: { include: Object.keys(dropContainerArgTypes) },
-};
-
-export const DragAndDropUploadSingleContainerExampleApplication: StoryFn<
-  ExampleDropContainerAppProps
-> = (args) => ExampleDropContainerAppSingle(args);
-
-DragAndDropUploadSingleContainerExampleApplication.args = {
-  ...dropContainerArgs,
-  labelText: 'Drag and drop a file here or click to upload',
-  multiple: false,
-};
-DragAndDropUploadSingleContainerExampleApplication.argTypes = {
-  ...dropContainerArgTypes,
-  multiple: {
-    ...dropContainerArgTypes.multiple,
-    table: { readonly: true },
-  },
-};
-DragAndDropUploadSingleContainerExampleApplication.parameters = {
-  controls: { include: Object.keys(dropContainerArgTypes) },
-};
-
-export const Skeleton: StoryFn = () => {
-  return (
-    <div style={{ width: '500px' }}>
-      <FileUploaderSkeleton />
-    </div>
-  );
-};
-
-Skeleton.parameters = { controls: { disable: true } };
-
 export const Default: StoryFn<FileUploaderArgs> = (args) => {
   return (
     <div className="cds--file__container">
@@ -247,3 +177,72 @@ Default.argTypes = {
 Default.parameters = {
   controls: { include: Object.keys(fileUploaderArgTypes) },
 };
+
+export const Item: StoryFn<FileUploaderItemArgs> = (args) => {
+  return <FileUploaderItem {...args} />;
+};
+
+Item.args = { ...fileUploaderItemArgs };
+Item.argTypes = { ...fileUploaderItemArgTypes };
+
+// Remove all the props that don't apply to FileUploaderItem
+Item.parameters = {
+  controls: {
+    include: Object.keys(fileUploaderItemArgTypes),
+  },
+};
+
+export const DropContainer: StoryFn<
+  ComponentProps<typeof FileUploaderDropContainer>
+> = (args) => {
+  return <FileUploaderDropContainer {...args} />;
+};
+
+DropContainer.args = { ...dropContainerArgs };
+DropContainer.argTypes = { ...dropContainerArgTypes };
+DropContainer.parameters = {
+  controls: { include: Object.keys(dropContainerArgTypes) },
+};
+
+export const DragAndDrop: StoryFn<ExampleDropContainerAppProps> = (args) =>
+  ExampleDropContainerApp(args);
+
+DragAndDrop.args = {
+  ...dropContainerArgs,
+};
+DragAndDrop.argTypes = {
+  ...dropContainerArgTypes,
+};
+DragAndDrop.parameters = {
+  controls: { include: Object.keys(dropContainerArgTypes) },
+};
+
+export const DragAndDropSingle: StoryFn<ExampleDropContainerAppProps> = (
+  args
+) => ExampleDropContainerAppSingle(args);
+
+DragAndDropSingle.args = {
+  ...dropContainerArgs,
+  labelText: 'Drag and drop a file here or click to upload',
+  multiple: false,
+};
+DragAndDropSingle.argTypes = {
+  ...dropContainerArgTypes,
+  multiple: {
+    ...dropContainerArgTypes.multiple,
+    table: { readonly: true },
+  },
+};
+DragAndDropSingle.parameters = {
+  controls: { include: Object.keys(dropContainerArgTypes) },
+};
+
+export const Skeleton: StoryFn = () => {
+  return (
+    <div style={{ width: '500px' }}>
+      <FileUploaderSkeleton />
+    </div>
+  );
+};
+
+Skeleton.parameters = { controls: { disable: true } };

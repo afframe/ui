@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, commented-out imports and argTypes dropped, tabIndex on the scrollable TocSections, the listitem a11y rule disabled (the Labs TocList renders li elements in a nav), story styles converted from SCSS to plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, commented-out imports and argTypes dropped, tabIndex on the scrollable TocSections, the listitem a11y rule disabled (the Labs TocList renders li elements in a nav), story styles converted from SCSS to plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef } from 'react';
@@ -36,7 +36,7 @@ export default {
 /**
  * Toc component story for WhatsNew
  */
-export const TocStory: StoryFn<typeof Toc> = () => {
+export const TableOfContents: StoryFn<typeof Toc> = () => {
   /* ************************************* */
   // INTERNAL STATE
   /* ************************************* */
@@ -90,8 +90,7 @@ Praesent nec dapibus est. Mauris venenatis nulla id felis cursus tempor. Aenean 
     </div>
   );
 };
-TocStory.storyName = 'Table of contents';
 // The Labs TocList renders its TocItem li elements inside a nav, not a list.
-TocStory.parameters = {
+TableOfContents.parameters = {
   a11y: { config: { rules: [{ id: 'listitem', enabled: false }] } },
 };

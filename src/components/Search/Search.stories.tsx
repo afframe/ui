@@ -7,12 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, argType for the removed light prop dropped, unique labels per layer in the layer stories (a11y), source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, argType for the removed light prop dropped, unique labels per layer in the layer stories (a11y), source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import { ExpandableSearch, Search, SearchSkeleton } from '../../index.js';
 import mdx from './Search.mdx';
 
@@ -101,6 +101,16 @@ const expandableParameters = {
   },
 };
 
+export const Default: StoryFn<SearchStoryArgs> = ({
+  defaultWidth,
+  ...searchArgs
+}) => (
+  <div style={{ width: defaultWidth }}>
+    <Search id="search-default-1" {...searchArgs} />
+  </div>
+);
+Default.parameters = { ...defaultParameters };
+
 export const Expandable: StoryFn<SearchStoryArgs> = ({
   defaultWidth,
   ...searchArgs
@@ -111,11 +121,11 @@ export const Expandable: StoryFn<SearchStoryArgs> = ({
 );
 Expandable.parameters = { ...expandableParameters };
 
-export const _WithLayer: StoryFn<SearchStoryArgs> = ({
+export const WithLayer: StoryFn<SearchStoryArgs> = ({
   defaultWidth,
   ...searchArgs
 }) => (
-  <WithLayer>
+  <WithLayerTemplate>
     {(layer) => (
       <div style={{ width: defaultWidth }}>
         <Search
@@ -125,15 +135,15 @@ export const _WithLayer: StoryFn<SearchStoryArgs> = ({
         />
       </div>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
-_WithLayer.parameters = { ...defaultParameters };
+WithLayer.parameters = { ...defaultParameters };
 
 export const ExpandableWithLayer: StoryFn<SearchStoryArgs> = ({
   defaultWidth,
   ...searchArgs
 }) => (
-  <WithLayer>
+  <WithLayerTemplate>
     {(layer) => (
       <div style={{ marginTop: 'var(--cds-spacing-06)', width: defaultWidth }}>
         <ExpandableSearch
@@ -143,19 +153,9 @@ export const ExpandableWithLayer: StoryFn<SearchStoryArgs> = ({
         />
       </div>
     )}
-  </WithLayer>
+  </WithLayerTemplate>
 );
 ExpandableWithLayer.parameters = { ...expandableParameters };
-
-export const Default: StoryFn<SearchStoryArgs> = ({
-  defaultWidth,
-  ...searchArgs
-}) => (
-  <div style={{ width: defaultWidth }}>
-    <Search id="search-default-1" {...searchArgs} />
-  </div>
-);
-Default.parameters = { ...defaultParameters };
 
 export const Skeleton: StoryFn<
   Required<Pick<SearchStoryArgs, 'size' | 'defaultWidth'>>

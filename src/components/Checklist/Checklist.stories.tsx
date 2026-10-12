@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Checklist and TruncatedText from @afframe/ui, plain CSS file, the MDX page replaces the docs page component, the theme prop from getSelectedCarbonTheme dropped, task lists cast to the unexported kind enum, color-contrast disabled on Task states. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Checklist and TruncatedText from @afframe/ui, plain CSS file, the MDX page replaces the docs page component, the theme prop from getSelectedCarbonTheme dropped, task lists cast to the unexported kind enum, color-contrast disabled on Task states, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -111,8 +111,8 @@ const Template: StoryFn<ChecklistArgs> = (args) => {
   );
 };
 
-export const checklist: StoryFn<ChecklistArgs> = Template.bind({});
-checklist.args = {
+export const Default: StoryFn<ChecklistArgs> = Template.bind({});
+Default.args = {
   onClickViewAll: () => {
     action('view all')();
   },
@@ -144,9 +144,8 @@ checklist.args = {
   viewAllLabel: `View all (10)`,
 };
 
-export const taskStates: StoryFn<ChecklistArgs> = Template.bind({});
-taskStates.storyName = 'Task states';
-taskStates.args = {
+export const TaskStates: StoryFn<ChecklistArgs> = Template.bind({});
+TaskStates.args = {
   taskLists: [
     {
       title: 'Unchecked state',
@@ -211,6 +210,6 @@ taskStates.args = {
 
 // The disabled task label is a div with disabled text colour (1.7:1), IBM's
 // upstream styling.
-taskStates.parameters = {
+TaskStates.parameters = {
   a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
 };

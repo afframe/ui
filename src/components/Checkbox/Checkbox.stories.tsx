@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, AI label story styles as plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -303,7 +303,7 @@ Skeleton.parameters = {
   },
 };
 
-export const withAILabel: StoryFn<typeof CheckboxGroup> = ({
+export const WithAILabel: StoryFn<typeof CheckboxGroup> = ({
   readOnly,
   ...args
 }) => {
@@ -380,15 +380,15 @@ export const withAILabel: StoryFn<typeof CheckboxGroup> = ({
   );
 };
 
-withAILabel.args = {
+WithAILabel.args = {
   ...groupArgs,
   helperText: '',
   legendText: 'Group Label',
 };
 
-withAILabel.argTypes = { ...groupArgTypes };
+WithAILabel.argTypes = { ...groupArgTypes };
 
-withAILabel.parameters = {
+WithAILabel.parameters = {
   controls: {
     include: groupControls,
   },

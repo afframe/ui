@@ -6,7 +6,7 @@ import * as BubbleStories from './Bubble.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, Stackblitz links and unused imports removed, Meta as a plain template, getting started and the example import from @afframe/ui and use its Tearsheet (IBM's preview__Tearsheet API), the SCSS section points to the package CSS.
+// Modified by Afframe in 2026: source label and source link added, Stackblitz links and unused imports removed, Meta as a plain template, getting started and the example import from @afframe/ui and use its Tearsheet (IBM's preview__Tearsheet API), the SCSS section points to the package CSS, story names unified.
 
 <Meta isTemplate />
 
@@ -61,7 +61,7 @@ components:
 - `ViewStack`
 - `View`
 
-<Canvas of={WhatsNewStories.WhatsNewPattern} />
+<Canvas of={WhatsNewStories.Pattern} />
 
 ## Getting started
 
@@ -133,15 +133,15 @@ The Tearsheet and WhatsNew styles ship in the `@afframe/ui` package CSS.
 
 ### Toc API
 
-<ArgTypes of={TocStories.TocStory} />
+<ArgTypes of={TocStories.TableOfContents} />
 
 ### ViewStack API
 
-<ArgTypes of={ViewStackStories.ViewStackStory} />
+<ArgTypes of={ViewStackStories.Stack} />
 
 ### Bubble API
 
-<ArgTypes of={BubbleStories.BubbleStory} />
+<ArgTypes of={BubbleStories.Default} />
 
 ## Example usages
 

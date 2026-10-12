@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, BigNumber, Button and Edit from @afframe/ui, size options as literals, title Components/BigNumber, source tag, scss styles dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, BigNumber, Button and Edit from @afframe/ui, size options as literals, title Components/BigNumber, source tag, scss styles dropped, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -159,7 +159,7 @@ const Template: StoryFn<typeof BigNumber> = (args) => {
   return <BigNumber {...args} />;
 };
 
-export const bigNumber = Template.bind({});
-bigNumber.args = {
+export const Default = Template.bind({});
+Default.args = {
   ...defaultProps,
 };

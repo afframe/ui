@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, IconButton from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, IconButton from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -183,7 +183,7 @@ Default.parameters = {
   },
 };
 
-export const withBadgeIndicator: StoryFn<IconButtonStoryArgs> = (args) => {
+export const WithBadgeIndicator: StoryFn<IconButtonStoryArgs> = (args) => {
   return (
     <div style={{ margin: 'var(--cds-spacing-09)' }}>
       {/* The label comes from args (upstream also hardcodes one that args override). */}
@@ -194,7 +194,7 @@ export const withBadgeIndicator: StoryFn<IconButtonStoryArgs> = (args) => {
   );
 };
 
-withBadgeIndicator.args = {
+WithBadgeIndicator.args = {
   align: 'bottom',
   autoAlign: true,
   badgeCount: 4,
@@ -209,7 +209,7 @@ withBadgeIndicator.args = {
   leaveDelayMs: 100,
   size: 'lg',
 };
-withBadgeIndicator.argTypes = {
+WithBadgeIndicator.argTypes = {
   ...Default.argTypes,
   badgeCount: {
     control: {
@@ -226,7 +226,7 @@ withBadgeIndicator.argTypes = {
     control: false,
   },
 };
-withBadgeIndicator.parameters = {
+WithBadgeIndicator.parameters = {
   controls: {
     exclude: ['children'],
   },

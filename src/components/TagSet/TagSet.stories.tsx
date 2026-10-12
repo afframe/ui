@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, TagSet from @afframe/ui, tag types and the c4p prefix as literals, DisplayBox replaced by a div with tag-set-story.css, docs page is an MDX file, source tag, the invalid function control on onOverflowClick disabled. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, TagSet from @afframe/ui, tag types and the c4p prefix as literals, DisplayBox replaced by a div with tag-set-story.css, docs page is an MDX file, source tag, the invalid function control on onOverflowClick disabled, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps, ReactNode } from 'react';
@@ -221,8 +221,8 @@ const Template: StoryFn<TagSetStoryProps> = (argsIn) => {
   );
 };
 
-export const FiveTags = Template.bind({});
-FiveTags.args = {
+export const Default = Template.bind({});
+Default.args = {
   tags: tags,
   containerWidth: 500,
 };
@@ -234,8 +234,8 @@ ManyTags.args = {
   ...overflowAndModalStrings,
 };
 
-export const MultilineTags = Template.bind({});
-MultilineTags.args = {
+export const Multiline = Template.bind({});
+Multiline.args = {
   tags: manyTags,
   containerWidth: 500,
   multiline: true,

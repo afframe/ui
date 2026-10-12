@@ -89,5 +89,6 @@ export const Disabled: Story = {
 
 export const Dark: Story = {
   ...Accents,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

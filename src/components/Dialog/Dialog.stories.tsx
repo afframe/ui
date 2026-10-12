@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (preview__Dialog), source tag, the onRequestClose action is now called (upstream only created it), stray space in a Toggle open label removed, ModalFocusAndClose story (hidden from the sidebar and docs) with a play test for initial focus, the Close button and the Escape close request. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (preview__Dialog), source tag, the onRequestClose action is now called (upstream only created it), stray space in a Toggle open label removed, ModalFocusAndClose story (hidden from the sidebar and docs) with a play test for initial focus, the Close button and the Escape close request, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState } from 'react';
@@ -58,7 +58,7 @@ export default {
   },
 } satisfies Meta<typeof Dialog>;
 
-export const Modal: StoryFn<DialogProps> = ({ open: _open, ...args }) => {
+export const Default: StoryFn<DialogProps> = ({ open: _open, ...args }) => {
   const [open, setOpen] = useState(_open ?? false);
 
   function toggleDialog() {
@@ -167,7 +167,7 @@ export const Modal: StoryFn<DialogProps> = ({ open: _open, ...args }) => {
     </>
   );
 };
-Modal.args = {
+Default.args = {
   modal: true,
   open: true,
 };
@@ -437,9 +437,9 @@ DangerDialog.args = {
 };
 
 // Documents the current behaviour; Afframe does not change it. Kept out of the
-// sidebar and docs so the Modal story stays as upstream ships it.
-export const ModalFocusAndClose: StoryFn<DialogProps> = Modal.bind({});
-ModalFocusAndClose.args = { ...Modal.args };
+// sidebar and docs so the Default story stays as upstream ships it.
+export const ModalFocusAndClose: StoryFn<DialogProps> = Default.bind({});
+ModalFocusAndClose.args = { ...Default.args };
 ModalFocusAndClose.tags = ['!dev', '!autodocs'];
 ModalFocusAndClose.play = async ({ canvas, userEvent }) => {
   const dialog = canvas.getByRole<HTMLDialogElement>('dialog');

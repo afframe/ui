@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, classnames inlined, HeaderMenu docs entry uses the public HeaderMenu, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, classnames inlined, HeaderMenu docs entry uses the public HeaderMenu, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -242,7 +242,7 @@ export default {
   },
 } satisfies Meta<ComponentProps<typeof Header> & ShellStoryArgs>;
 
-export const FixedSideNav: StoryFn<ShellStoryArgs> = (args) => (
+export const Fixed: StoryFn<ShellStoryArgs> = (args) => (
   <>
     <Header aria-label={args.headerAriaLabel}>
       <SkipToContent />
@@ -303,19 +303,17 @@ export const FixedSideNav: StoryFn<ShellStoryArgs> = (args) => (
   </>
 );
 
-FixedSideNav.storyName = 'Fixed Side Nav';
-
-FixedSideNav.args = {
+Fixed.args = {
   ...headerArgs,
   ...sideNavArgs,
 };
 
-FixedSideNav.argTypes = {
+Fixed.argTypes = {
   ...headerArgTypes,
   ...sideNavArgTypes,
 };
 
-export const FixedSideNavWIcons: StoryFn<ShellStoryArgs> = (args) => (
+export const FixedWithIcons: StoryFn<ShellStoryArgs> = (args) => (
   <>
     <Header aria-label={args.headerAriaLabel}>
       <SkipToContent />
@@ -380,19 +378,17 @@ export const FixedSideNavWIcons: StoryFn<ShellStoryArgs> = (args) => (
   </>
 );
 
-FixedSideNavWIcons.storyName = 'Fixed Side Nav with Icons';
-
-FixedSideNavWIcons.args = {
+FixedWithIcons.args = {
   ...headerArgs,
   ...sideNavArgs,
 };
 
-FixedSideNavWIcons.argTypes = {
+FixedWithIcons.argTypes = {
   ...headerArgTypes,
   ...sideNavArgTypes,
 };
 
-export const FixedSideNavWDivider: StoryFn<ShellStoryArgs> = (args) => (
+export const FixedWithDivider: StoryFn<ShellStoryArgs> = (args) => (
   <>
     <Header aria-label={args.headerAriaLabel}>
       <SkipToContent />
@@ -454,19 +450,17 @@ export const FixedSideNavWDivider: StoryFn<ShellStoryArgs> = (args) => (
   </>
 );
 
-FixedSideNavWDivider.storyName = 'Fixed Side Nav with Divider';
-
-FixedSideNavWDivider.args = {
+FixedWithDivider.args = {
   ...headerArgs,
   ...sideNavArgs,
 };
 
-FixedSideNavWDivider.argTypes = {
+FixedWithDivider.argTypes = {
   ...headerArgTypes,
   ...sideNavArgTypes,
 };
 
-export const SideNavRailWHeader: StoryFn<ShellStoryArgs> = (args) => {
+export const RailWithHeader: StoryFn<ShellStoryArgs> = (args) => {
   const {
     enterDelayMs,
     headerAriaLabel,
@@ -597,7 +591,7 @@ export const SideNavRailWHeader: StoryFn<ShellStoryArgs> = (args) => {
   );
 };
 
-SideNavRailWHeader.argTypes = {
+RailWithHeader.argTypes = {
   ...headerArgTypes,
   ...sideNavAriaLabelArgType,
   isRail: {
@@ -632,7 +626,7 @@ SideNavRailWHeader.argTypes = {
   },
 };
 
-SideNavRailWHeader.args = {
+RailWithHeader.args = {
   ...headerArgs,
   enterDelayMs: 100,
   isFixedNav: false,
@@ -640,9 +634,7 @@ SideNavRailWHeader.args = {
   sideNavAriaLabel: sideNavArgs.sideNavAriaLabel,
 };
 
-SideNavRailWHeader.storyName = 'Side Nav Rail with Header';
-
-export const SideNavWLargeSideNavItems: StoryFn<ShellStoryArgs> = (args) => (
+export const WithLargeItems: StoryFn<ShellStoryArgs> = (args) => (
   <>
     <Header aria-label={args.headerAriaLabel}>
       <SkipToContent />
@@ -692,14 +684,12 @@ export const SideNavWLargeSideNavItems: StoryFn<ShellStoryArgs> = (args) => (
   </>
 );
 
-SideNavWLargeSideNavItems.storyName = 'Side Nav with Large Side Nav Items';
-
-SideNavWLargeSideNavItems.args = {
+WithLargeItems.args = {
   ...headerArgs,
   ...sideNavArgs,
 };
 
-SideNavWLargeSideNavItems.argTypes = {
+WithLargeItems.argTypes = {
   ...headerArgTypes,
   ...sideNavArgTypes,
 };

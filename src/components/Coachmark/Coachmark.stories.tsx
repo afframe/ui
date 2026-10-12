@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Coachmark from @afframe/ui, next/ stories only, plain CSS file, literal c4p prefix, control false for control null, Button label prop dropped, title Components/Onboarding/Coachmark. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Coachmark from @afframe/ui, next/ stories only, plain CSS file, literal c4p prefix, control false for control null, Button label prop dropped, title Components/Onboarding/Coachmark, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -219,8 +219,8 @@ const FloatingTemplate: StoryFn<typeof Coachmark> = (args, context) => {
   );
 };
 
-export const Tooltip: StoryFn<typeof Coachmark> = TooltipTemplate.bind({});
-Tooltip.args = {
+export const Default: StoryFn<typeof Coachmark> = TooltipTemplate.bind({});
+Default.args = {
   align: 'top',
 };
 

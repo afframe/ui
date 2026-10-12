@@ -3,7 +3,7 @@ import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import * as stories from './ControlledDatePicker.stories.js';
 
-const { Controlled, Dark, Open } = composeStories(stories);
+const { Default, Dark, Open } = composeStories(stories);
 
 // flatpickr marks today in the calendar: fix it for the screenshots through
 // the instance flatpickr keeps on its input.
@@ -42,10 +42,10 @@ test.each([
   await snapshot(name);
 });
 
-// The Controlled play function opens the calendar from the button, closes it
+// The Default play function opens the calendar from the button, closes it
 // with Escape and presses Shift+Tab back to the button.
 test('controlled-date-picker-focus', async () => {
-  await Controlled.run();
+  await Default.run();
   await expect
     .element(page.getByRole('button', { name: 'Choose due date' }))
     .toHaveFocus();

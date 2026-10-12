@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -638,7 +638,7 @@ const aiLabel = (
   </AILabel>
 );
 
-export const withAILabel: StoryObj<ModalStoryArgs> = {
+export const WithAILabel: StoryObj<ModalStoryArgs> = {
   render: ({ numberOfButtons, ...args }) => {
     const [open, setOpen] = useState(true);
     return (
@@ -682,4 +682,4 @@ export const withAILabel: StoryObj<ModalStoryArgs> = {
     );
   },
 };
-withAILabel.parameters = { ...sharedParameters };
+WithAILabel.parameters = { ...sharedParameters };

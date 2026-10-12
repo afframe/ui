@@ -226,5 +226,6 @@ export const InHeaderPopover: Story = {
 };
 
 export const Dark: Story = {
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -66,6 +66,26 @@ interface MockSubmissionState {
   description: string;
   ariaLive: 'off' | 'assertive';
 }
+
+export const Default: StoryFn<typeof InlineLoading> = (args) => (
+  <InlineLoading {...args} />
+);
+
+Default.args = {
+  description: 'Loading',
+  iconDescription: 'Loading data...',
+  status: 'active',
+  onSuccess: action('onSuccess'),
+  'aria-live': 'assertive',
+};
+
+Default.parameters = {
+  controls: {
+    exclude: ['successDelay'],
+  },
+};
+
+Default.argTypes = { ...sharedArgTypes };
 
 export const UxExample: StoryFn<typeof InlineLoading> = () => {
   function MockSubmission({
@@ -127,23 +147,3 @@ export const UxExample: StoryFn<typeof InlineLoading> = () => {
     </MockSubmission>
   );
 };
-
-export const Default: StoryFn<typeof InlineLoading> = (args) => (
-  <InlineLoading {...args} />
-);
-
-Default.args = {
-  description: 'Loading',
-  iconDescription: 'Loading data...',
-  status: 'active',
-  onSuccess: action('onSuccess'),
-  'aria-live': 'assertive',
-};
-
-Default.parameters = {
-  controls: {
-    exclude: ['successDelay'],
-  },
-};
-
-Default.argTypes = { ...sharedArgTypes };

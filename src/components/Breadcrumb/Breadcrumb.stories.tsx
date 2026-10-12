@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, upstream v12 overflow menu branches removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, upstream v12 overflow menu branches removed, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -79,9 +79,7 @@ Default.argTypes = {
   ...sharedArgTypes,
 };
 
-export const BreadcrumbWithOverflowMenu: StoryFn<typeof Breadcrumb> = (
-  args
-) => {
+export const WithOverflowMenu: StoryFn<typeof Breadcrumb> = (args) => {
   return (
     <Breadcrumb {...args} noTrailingSlash>
       <BreadcrumbItem>
@@ -100,15 +98,13 @@ export const BreadcrumbWithOverflowMenu: StoryFn<typeof Breadcrumb> = (
   );
 };
 
-BreadcrumbWithOverflowMenu.args = { ...sharedArgs };
+WithOverflowMenu.args = { ...sharedArgs };
 
-BreadcrumbWithOverflowMenu.argTypes = {
+WithOverflowMenu.argTypes = {
   ...sharedArgTypes,
 };
 
-export const BreadcrumbWithOverflowMenuSizeSmall: StoryFn<typeof Breadcrumb> = (
-  args
-) => {
+export const WithOverflowMenuSmall: StoryFn<typeof Breadcrumb> = (args) => {
   return (
     <Breadcrumb {...args} noTrailingSlash>
       <BreadcrumbItem>
@@ -127,7 +123,7 @@ export const BreadcrumbWithOverflowMenuSizeSmall: StoryFn<typeof Breadcrumb> = (
   );
 };
 
-BreadcrumbWithOverflowMenuSizeSmall.argTypes = {
+WithOverflowMenuSmall.argTypes = {
   ...sharedArgTypes,
 };
 
@@ -137,9 +133,9 @@ BreadcrumbWithOverflowMenuSizeSmall.argTypes = {
  * - Removed from the sidebar navigation
  * - Still be a tested variant
  */
-BreadcrumbWithOverflowMenuSizeSmall.tags = ['!dev', '!autodocs'];
+WithOverflowMenuSmall.tags = ['!dev', '!autodocs'];
 
-BreadcrumbWithOverflowMenuSizeSmall.args = {
+WithOverflowMenuSmall.args = {
   size: 'sm',
 };
 

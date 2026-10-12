@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, classnames inlined, HeaderMenu docs entry uses the public HeaderMenu, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, classnames inlined, HeaderMenu docs entry uses the public HeaderMenu, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -262,7 +262,7 @@ export default {
   },
 } satisfies Meta<ComponentProps<typeof Header> & ShellStoryArgs>;
 
-export const HeaderWNavigation: StoryFn<ShellStoryArgs> = (args) => (
+export const WithNavigation: StoryFn<ShellStoryArgs> = (args) => (
   <HeaderContainer
     render={({ isSideNavExpanded, onClickSideNavExpand }) => (
       <>
@@ -320,21 +320,19 @@ export const HeaderWNavigation: StoryFn<ShellStoryArgs> = (args) => (
   />
 );
 
-HeaderWNavigation.storyName = 'Header with Navigation';
-
-HeaderWNavigation.args = {
+WithNavigation.args = {
   ...headerArgs,
   ...navigationArgs,
   ...sideNavArgs,
 };
 
-HeaderWNavigation.argTypes = {
+WithNavigation.argTypes = {
   ...headerArgTypes,
   ...navigationArgTypes,
   ...sideNavArgTypes,
 };
 
-export const HeaderWNavigationAndActions: StoryFn<ShellStoryArgs> = (args) => (
+export const WithNavigationAndActions: StoryFn<ShellStoryArgs> = (args) => (
   <HeaderContainer
     render={({ isSideNavExpanded, onClickSideNavExpand }) => (
       <>
@@ -407,21 +405,19 @@ export const HeaderWNavigationAndActions: StoryFn<ShellStoryArgs> = (args) => (
   />
 );
 
-HeaderWNavigationAndActions.storyName = 'Header with Navigation and Actions';
-
-HeaderWNavigationAndActions.args = {
+WithNavigationAndActions.args = {
   ...headerArgs,
   ...navigationArgs,
   ...sideNavArgs,
 };
 
-HeaderWNavigationAndActions.argTypes = {
+WithNavigationAndActions.argTypes = {
   ...headerArgTypes,
   ...navigationArgTypes,
   ...sideNavArgTypes,
 };
 
-export const HeaderWNavigationActionsAndSideNav: StoryFn<ShellStoryArgs> = (
+export const WithNavigationActionsAndSideNav: StoryFn<ShellStoryArgs> = (
   args
 ) => (
   <HeaderContainer
@@ -551,22 +547,19 @@ export const HeaderWNavigationActionsAndSideNav: StoryFn<ShellStoryArgs> = (
   />
 );
 
-HeaderWNavigationActionsAndSideNav.storyName =
-  'Header with Navigation, Actions and Side Nav';
-
-HeaderWNavigationActionsAndSideNav.args = {
+WithNavigationActionsAndSideNav.args = {
   ...headerArgs,
   ...navigationArgs,
   ...sideNavArgs,
 };
 
-HeaderWNavigationActionsAndSideNav.argTypes = {
+WithNavigationActionsAndSideNav.argTypes = {
   ...headerArgTypes,
   ...navigationArgTypes,
   ...sideNavArgTypes,
 };
 
-export const HeaderWSideNav: StoryFn<ShellStoryArgs> = (args) => (
+export const WithSideNav: StoryFn<ShellStoryArgs> = (args) => (
   <HeaderContainer
     render={({ isSideNavExpanded, onClickSideNavExpand }) => (
       <>
@@ -644,19 +637,17 @@ export const HeaderWSideNav: StoryFn<ShellStoryArgs> = (args) => (
   />
 );
 
-HeaderWSideNav.storyName = 'Header with Side Nav';
-
-HeaderWSideNav.args = {
+WithSideNav.args = {
   ...headerArgs,
   ...sideNavArgs,
 };
 
-HeaderWSideNav.argTypes = {
+WithSideNav.argTypes = {
   ...headerArgTypes,
   ...sideNavArgTypes,
 };
 
-export const HeaderWActionsAndRightPanel: StoryFn<ShellStoryArgs> = (args) => {
+export const WithActionsAndRightPanel: StoryFn<ShellStoryArgs> = (args) => {
   // Add state to control panel expansion
   const [isPanelExpanded, setIsPanelExpanded] = useState(false);
 
@@ -716,9 +707,7 @@ export const HeaderWActionsAndRightPanel: StoryFn<ShellStoryArgs> = (args) => {
   );
 };
 
-HeaderWActionsAndRightPanel.storyName = 'Header with Actions and Right Panel';
-
-HeaderWActionsAndRightPanel.argTypes = {
+WithActionsAndRightPanel.argTypes = {
   ...headerArgTypes,
   badgeCount: {
     description:
@@ -729,12 +718,12 @@ HeaderWActionsAndRightPanel.argTypes = {
   },
 };
 
-HeaderWActionsAndRightPanel.args = {
+WithActionsAndRightPanel.args = {
   ...headerArgs,
   badgeCount: 4,
 };
 
-export const HeaderWActionsAndSwitcher: StoryFn<ShellStoryArgs> = (args) => (
+export const WithActionsAndSwitcher: StoryFn<ShellStoryArgs> = (args) => (
   <HeaderContainer
     render={({ isSideNavExpanded, onClickSideNavExpand }) => (
       <>
@@ -801,12 +790,10 @@ export const HeaderWActionsAndSwitcher: StoryFn<ShellStoryArgs> = (args) => (
   />
 );
 
-HeaderWActionsAndSwitcher.storyName = 'Header with Actions and Switcher';
-
-HeaderWActionsAndSwitcher.args = {
+WithActionsAndSwitcher.args = {
   ...headerArgs,
 };
 
-HeaderWActionsAndSwitcher.argTypes = {
+WithActionsAndSwitcher.argTypes = {
   ...headerArgTypes,
 };

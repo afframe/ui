@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: aria-required-children disabled on WithPersistentSearch, argTypes typed, TypeScript, components and icons from @afframe/ui, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: aria-required-children disabled on WithPersistentSearch, argTypes typed, TypeScript, components and icons from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState } from 'react';
@@ -25,7 +25,7 @@ import {
   Search,
   Tag,
 } from '../../index.js';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import mdx from './ContainedList.mdx';
 
 export default {
@@ -352,20 +352,20 @@ WithIcons.args = { ...sharedArgs };
 WithIcons.argTypes = sharedArgTypes;
 WithIcons.parameters = sharedParameters;
 
-export const _WithLayer: StoryFn<typeof ContainedList> = (args) => {
+export const WithLayer: StoryFn<typeof ContainedList> = (args) => {
   return (
-    <WithLayer>
+    <WithLayerTemplate>
       <ContainedList {...args}>
         <ContainedListItem>List item</ContainedListItem>
         <ContainedListItem>List item</ContainedListItem>
       </ContainedList>
-    </WithLayer>
+    </WithLayerTemplate>
   );
 };
 
-_WithLayer.args = { ...sharedArgs };
-_WithLayer.argTypes = sharedArgTypes;
-_WithLayer.parameters = sharedParameters;
+WithLayer.args = { ...sharedArgs };
+WithLayer.argTypes = sharedArgTypes;
+WithLayer.parameters = sharedParameters;
 
 export const UsageExamples: StoryFn<typeof ContainedList> = (args) => {
   const prefix = 'cds';

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -48,6 +48,16 @@ export default {
   argTypes,
 } satisfies Meta<typeof Stack>;
 
+export const Default: StoryFn<typeof Stack> = (args) => {
+  return (
+    <Stack {...args}>
+      <div>Item 1</div>
+      <div>Item 2</div>
+      <div>Item 3</div>
+    </Stack>
+  );
+};
+
 export const Horizontal: StoryFn<typeof Stack> = (args) => {
   return (
     <Stack {...args}>
@@ -69,14 +79,4 @@ Horizontal.argTypes = {
       readonly: true,
     },
   },
-};
-
-export const Default: StoryFn<typeof Stack> = (args) => {
-  return (
-    <Stack {...args}>
-      <div>Item 1</div>
-      <div>Item 2</div>
-      <div>Item 3</div>
-    </Stack>
-  );
 };

@@ -57,7 +57,7 @@ const pie: ChatChartProps = {
   animations: false,
 };
 
-export const Bar: Story = {
+export const Default: Story = {
   args: {
     chart_type: 'bar',
     title: 'Revenue by region',
@@ -103,5 +103,6 @@ export const Echarts: Story = {
 
 export const Dark: Story = {
   ...Line,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

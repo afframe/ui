@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, pkg.prefix as the 'c4p' literal, source tag, scss styles replaced by about-modal-story.css, opacity style hack removed, logos replaced by Carbon pictograms, IBM title, copyright and legal text replaced by neutral placeholders, getTitle branch fixed, link and content helpers shortened, propTypes assignment dropped, keyboard play test added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, pkg.prefix as the 'c4p' literal, source tag, scss styles replaced by about-modal-story.css, opacity style hack removed, logos replaced by Carbon pictograms, IBM title, copyright and legal text replaced by neutral placeholders, getTitle branch fixed, link and content helpers shortened, propTypes assignment dropped, keyboard play test added, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState, type ComponentType } from 'react';
@@ -184,8 +184,8 @@ Default.args = {
   ...commonArgs,
 };
 
-export const withAdditionalContent = Template.bind({});
-withAdditionalContent.args = {
+export const WithAdditionalContent = Template.bind({});
+WithAdditionalContent.args = {
   additionalInfo: 1,
   content: 2,
   links: 3,
@@ -194,7 +194,7 @@ withAdditionalContent.args = {
 };
 // Records current behaviour: AboutModal does not wrap Tab, so Tab from the
 // last link leaves the native dialog (docs/feature-flags.md).
-withAdditionalContent.play = async ({ canvasElement }) => {
+WithAdditionalContent.play = async ({ canvasElement }) => {
   const doc = canvasElement.ownerDocument;
   const dialog = await within(doc.body).findByRole('dialog', {
     name: 'About this product',

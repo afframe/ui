@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, Skeleton args typed loosely because upstream passes size md, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, Skeleton args typed loosely because upstream passes size md, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -165,7 +165,7 @@ Skeleton.argTypes = {
   },
 };
 
-export const withAILabel: StoryFn<TagStoryArgs> = (args) => {
+export const WithAILabel: StoryFn<TagStoryArgs> = (args) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -238,13 +238,13 @@ export const withAILabel: StoryFn<TagStoryArgs> = (args) => {
   );
 };
 
-withAILabel.args = {
+WithAILabel.args = {
   disabled: false,
   size: 'md',
   text: 'Tag content',
 };
 
-withAILabel.argTypes = {
+WithAILabel.argTypes = {
   children: {
     control: false,
   },
@@ -301,7 +301,7 @@ withAILabel.argTypes = {
   },
 };
 
-withAILabel.parameters = {
+WithAILabel.parameters = {
   controls: {
     exclude: ['filter'],
   },

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, previewCandidate__TruncatedList and ListItem from @afframe/ui, source tag, scss styles replaced by truncated-list-story.css (the top-alignment override of the centered root is dropped). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, previewCandidate__TruncatedList and ListItem from @afframe/ui, source tag, scss styles replaced by truncated-list-story.css (the top-alignment override of the centered root is dropped), story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -61,8 +61,8 @@ const Template: StoryFn<typeof TruncatedList> = (args) => {
   );
 };
 
-export const truncatedList = Template.bind({});
-truncatedList.args = {
+export const Default = Template.bind({});
+Default.args = {
   as: 'ul',
   collapsedItemsLimit: 3,
   expandedItemsLimit: 9,

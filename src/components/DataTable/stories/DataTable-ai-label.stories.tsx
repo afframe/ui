@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, deprecated TableSlugRow dropped from subcomponents, AILabel callout styles from AILabel/ailabel-story.css, docs page is DataTable.mdx, visually hidden text in empty header cells and expanded row heading h6 to h3 (axe empty-table-header, heading-order). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, deprecated TableSlugRow dropped from subcomponents, AILabel callout styles from AILabel/ailabel-story.css, docs page is DataTable.mdx, visually hidden text in empty header cells and expanded row heading h6 to h3 (axe empty-table-header, heading-order), story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -167,7 +167,7 @@ const aiLabel = (
   </AILabel>
 );
 
-export const AILabelWithSelection: StoryFn<DataTableStoryArgs> = (args) => (
+export const Default: StoryFn<DataTableStoryArgs> = (args) => (
   <DataTable rows={rows} headers={headers} {...args}>
     {({
       rows,
@@ -225,9 +225,7 @@ export const AILabelWithSelection: StoryFn<DataTableStoryArgs> = (args) => (
   </DataTable>
 );
 
-export const AILabelWithRadioSelection: StoryFn<DataTableStoryArgs> = (
-  args
-) => (
+export const WithRadioSelection: StoryFn<DataTableStoryArgs> = (args) => (
   <DataTable rows={rows} headers={headers} {...args}>
     {({
       rows,
@@ -285,12 +283,12 @@ export const AILabelWithRadioSelection: StoryFn<DataTableStoryArgs> = (
   </DataTable>
 );
 
-AILabelWithRadioSelection.args = { radio: true };
-AILabelWithRadioSelection.argTypes = {
+WithRadioSelection.args = { radio: true };
+WithRadioSelection.argTypes = {
   radio: { table: { readonly: true } },
 };
 
-export const AILabelWithSelectionAndExpansion: StoryFn<DataTableStoryArgs> = (
+export const WithSelectionAndExpansion: StoryFn<DataTableStoryArgs> = (
   args
 ) => (
   <DataTable rows={rows} headers={headers} {...args}>
@@ -365,7 +363,7 @@ export const AILabelWithSelectionAndExpansion: StoryFn<DataTableStoryArgs> = (
   </DataTable>
 );
 
-export const AILabelWithExpansion: StoryFn<DataTableStoryArgs> = (args) => (
+export const WithExpansion: StoryFn<DataTableStoryArgs> = (args) => (
   <DataTable rows={rows} headers={headers} {...args}>
     {({
       rows,
@@ -431,7 +429,7 @@ export const AILabelWithExpansion: StoryFn<DataTableStoryArgs> = (args) => (
   </DataTable>
 );
 
-AILabelWithExpansion.argTypes = { radio: { control: false } };
+WithExpansion.argTypes = { radio: { control: false } };
 
 export const ColumnAILabelWithSelectionAndExpansion: StoryFn<
   DataTableStoryArgs

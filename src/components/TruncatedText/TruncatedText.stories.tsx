@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, TruncatedText from @afframe/ui, title Components/TruncatedText, source tag, scss styles replaced by truncated-text-story.css. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, TruncatedText from @afframe/ui, title Components/TruncatedText, source tag, scss styles replaced by truncated-text-story.css, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -70,8 +70,8 @@ const Template: StoryFn<typeof TruncatedText> = (args) => {
   );
 };
 
-export const WithTooltip = Template.bind({});
-WithTooltip.args = { ...defaultProps };
+export const Default = Template.bind({});
+Default.args = { ...defaultProps };
 
 export const WithExpand = Template.bind({});
 WithExpand.args = { ...defaultProps, type: 'expand' };

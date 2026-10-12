@@ -354,6 +354,7 @@ export const Sidebar: Story = {
 };
 
 export const Dark: Story = {
+  tags: ['!dev', '!autodocs'],
   parameters: upstreamA11y(),
   args: { namespace: 'dark', onBeforeRender: welcome(greeting) },
   globals: { theme: 'dark' },

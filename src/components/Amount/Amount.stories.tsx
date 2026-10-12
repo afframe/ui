@@ -79,5 +79,6 @@ export const Fallback: Story = {
 
 export const Dark: Story = {
   ...Signs,
+  tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

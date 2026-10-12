@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, story styles as a plain CSS file, headshot loaded by URL, TODO comments dropped, `isDark` typed locally. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, story styles as a plain CSS file, headshot loaded by URL, TODO comments dropped, `isDark` typed locally, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -133,7 +133,6 @@ const ThemeTemplate: StoryFn<typeof UserAvatar> = (args) => {
   );
 };
 export const Default = ThemeTemplate.bind({});
-Default.storyName = 'Default';
 Default.args = {
   name: 'thomas j. watson',
   tooltipText: 'TW, Thomas J. Watson user profile',
@@ -141,7 +140,6 @@ Default.args = {
 };
 
 export const WithImage = Template.bind({});
-WithImage.storyName = 'WithImage';
 WithImage.args = {
   image: headshot,
   tooltipText: 'TW, Thomas J. Watson user profile',
