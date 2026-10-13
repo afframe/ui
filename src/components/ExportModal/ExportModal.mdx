@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as ExportModalStories from './ExportModal.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DialogChooser } from '../../../.storybook/DialogChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -20,6 +21,10 @@ ExportModal.
 The dialog does not create the file; `onExport` does.
 
 <Canvas of={ExportModalStories.Default} />
+
+## Which component to use
+
+<DialogChooser />
 
 ## Usage and props
 

@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as stories from './Tearsheet.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DialogChooser } from '../../../.storybook/DialogChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, migration comparison with IBM's legacy Tearsheet removed (not part of @afframe/ui), internal usage guidelines link replaced by the source link, Controls replaced by ArgTypes, em-dashes replaced, source label added, the step flows link points to IBM's current page, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, migration comparison with IBM's legacy Tearsheet removed (not part of @afframe/ui), internal usage guidelines link replaced by the source link, Controls replaced by ArgTypes, em-dashes replaced, source label added, the step flows link points to IBM's current page, story names unified, upstream table of contents removed, dialog chooser table added.
 
 <Meta isTemplate />
 
@@ -344,6 +345,10 @@ Tearsheets. You can optionally specify a stackStepSize: sm (0.5rem), md
 ```
 
 <Canvas of={stories.Stacking} />
+
+## Which component to use
+
+<DialogChooser />
 
 ## Component API
 
