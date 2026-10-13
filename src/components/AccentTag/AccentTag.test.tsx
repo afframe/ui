@@ -23,10 +23,10 @@ function tooltipOf(button: HTMLElement) {
 }
 
 test('Tab focuses the tag, the tooltip shows, Escape hides it and focus stays', async () => {
-  render(<AccentTag text="Overdue" accent="red" tooltip="Due 30. 9. 2026" />);
+  render(<AccentTag text="Overdue" accent="red" tooltip="Due 30.09.2026" />);
   const tag = screen.getByRole('button', { name: 'Overdue' });
   const tooltip = tooltipOf(tag);
-  expect(tooltip).toHaveTextContent('Due 30. 9. 2026');
+  expect(tooltip).toHaveTextContent('Due 30.09.2026');
   expect(tooltip).toHaveAttribute('role', 'tooltip');
   await userEvent.tab();
   expect(document.activeElement).toBe(tag);
@@ -172,7 +172,7 @@ test('every accent draws a 4 px inline-start strip in its own colour', () => {
 });
 
 test('the tooltip opens on hover and stays open while it is hovered', async () => {
-  render(<AccentTag text="Overdue" accent="red" tooltip="Due 30. 9. 2026" />);
+  render(<AccentTag text="Overdue" accent="red" tooltip="Due 30.09.2026" />);
   const tag = screen.getByRole('button', { name: 'Overdue' });
   const tooltip = tooltipOf(tag);
   if (!tooltip) throw new Error('missing tooltip');

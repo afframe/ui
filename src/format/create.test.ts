@@ -26,7 +26,7 @@ test('app defaults apply, options per call win', () => {
   expect(format.formatDate('2026-10-07T02:30:00Z')).toBe('Oct 6, 2026');
   expect(format.civilDateIn(Date.UTC(2026, 9, 7, 2, 30))).toBe('2026-10-06');
   expect(format.formatDate('2026-10-07T02:30:00Z', { locale: 'cs-CZ' })).toBe(
-    `6. 10. 2026`
+    `06.10.2026`
   );
 });
 
