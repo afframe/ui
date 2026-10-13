@@ -130,9 +130,7 @@ test('focus stays in the dialog while tabbing', async () => {
   for (let index = 0; index < 6; index += 1) {
     await userEvent.tab();
     const element = active();
-    // Past the last control the browser may move focus out of the page
-    // (body); it never lands on the page behind the modal.
-    expect(element === document.body || dialog.contains(element)).toBe(true);
+    expect(dialog.contains(element)).toBe(true);
     expect(element).not.toBe(launcher());
   }
 });

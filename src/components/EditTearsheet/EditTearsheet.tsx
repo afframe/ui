@@ -12,7 +12,6 @@ import {
   FlowForm,
   useCreateEditFlow,
   useInitialFocus,
-  wrapTabInDialog,
 } from '../CreateEditFlow/CreateEditFlow.js';
 import type { CreateEditFlowMessages } from '../CreateEditFlow/CreateEditFlow.js';
 
@@ -199,73 +198,69 @@ export function EditTearsheet({
 
   return (
     <>
-      {/* Tab wrap for the native dialog; Tearsheet takes no onKeyDown. */}
-      <div className="afframe-edit-tearsheet-root" onKeyDown={wrapTabInDialog}>
-        <Tearsheet
-          open={open}
-          // false: ComposedModal would otherwise close itself, while the
-          // flow may keep it open (dirty, submitting).
-          onClose={() => {
-            flow.requestClose();
-            return false;
-          }}
-          preventCloseOnClickOutside
-          influencerWidth={influencerWidths[influencerWidth]}
-          className={['afframe-edit-tearsheet', className]
-            .filter(Boolean)
-            .join(' ')}>
-          <Tearsheet.Header
-            closeIconDescription={text.closeTearsheet}
-            // Reaches Carbon's ModalHeader, whose hidden close button is named too.
-            {...{ iconDescription: text.closeTearsheet }}>
-            <Tearsheet.HeaderContent
-              title={title}
-              {...(label ? { label } : {})}
-              {...(description ? { description } : {})}
-            />
-          </Tearsheet.Header>
-          <Tearsheet.Influencer
-            influencerPanelAriaLabel={text.sectionsNavLabel}>
-            <nav
-              aria-label={text.sectionsNavLabel}
-              className="afframe-edit-tearsheet-nav">
-              <ul>
-                {forms.map((form, index) => (
-                  <li key={form.id}>
-                    <button
-                      type="button"
-                      className="afframe-edit-tearsheet-nav-item"
-                      aria-current={index === active ? 'true' : undefined}
-                      onClick={() => select(index)}>
-                      <span>{form.title}</span>
-                      {form.invalid && (
-                        <WarningFilled
-                          role="img"
-                          aria-hidden={false}
-                          aria-label={text.sectionInvalid(form.title)}
-                          className="afframe-edit-tearsheet-nav-invalid"
-                        />
-                      )}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </Tearsheet.Influencer>
-          <Tearsheet.Body>
-            <Tearsheet.MainContent>
-              <FlowForm
-                flow={{ ...flow, submit: async () => submit() }}
-                submitDisabled={submitDisabled}
-                aria-label={title}>
-                {formElements}
-                <FlowError error={flow.error} messages={text} />
-              </FlowForm>
-            </Tearsheet.MainContent>
-          </Tearsheet.Body>
-          <Tearsheet.Footer actions={actions} />
-        </Tearsheet>
-      </div>
+      <Tearsheet
+        open={open}
+        // false: ComposedModal would otherwise close itself, while the
+        // flow may keep it open (dirty, submitting).
+        onClose={() => {
+          flow.requestClose();
+          return false;
+        }}
+        preventCloseOnClickOutside
+        influencerWidth={influencerWidths[influencerWidth]}
+        className={['afframe-edit-tearsheet', className]
+          .filter(Boolean)
+          .join(' ')}>
+        <Tearsheet.Header
+          closeIconDescription={text.closeTearsheet}
+          // Reaches Carbon's ModalHeader, whose hidden close button is named too.
+          {...{ iconDescription: text.closeTearsheet }}>
+          <Tearsheet.HeaderContent
+            title={title}
+            {...(label ? { label } : {})}
+            {...(description ? { description } : {})}
+          />
+        </Tearsheet.Header>
+        <Tearsheet.Influencer influencerPanelAriaLabel={text.sectionsNavLabel}>
+          <nav
+            aria-label={text.sectionsNavLabel}
+            className="afframe-edit-tearsheet-nav">
+            <ul>
+              {forms.map((form, index) => (
+                <li key={form.id}>
+                  <button
+                    type="button"
+                    className="afframe-edit-tearsheet-nav-item"
+                    aria-current={index === active ? 'true' : undefined}
+                    onClick={() => select(index)}>
+                    <span>{form.title}</span>
+                    {form.invalid && (
+                      <WarningFilled
+                        role="img"
+                        aria-hidden={false}
+                        aria-label={text.sectionInvalid(form.title)}
+                        className="afframe-edit-tearsheet-nav-invalid"
+                      />
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </Tearsheet.Influencer>
+        <Tearsheet.Body>
+          <Tearsheet.MainContent>
+            <FlowForm
+              flow={{ ...flow, submit: async () => submit() }}
+              submitDisabled={submitDisabled}
+              aria-label={title}>
+              {formElements}
+              <FlowError error={flow.error} messages={text} />
+            </FlowForm>
+          </Tearsheet.MainContent>
+        </Tearsheet.Body>
+        <Tearsheet.Footer actions={actions} />
+      </Tearsheet>
       <DiscardDialog flow={flow} messages={text} />
     </>
   );

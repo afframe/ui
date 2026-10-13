@@ -250,7 +250,7 @@ test('focus stays in the dialog while tabbing', async () => {
   for (let index = 0; index < 8; index += 1) {
     await userEvent.tab();
     const element = active();
-    expect(element === document.body || dialog.contains(element)).toBe(true);
+    expect(dialog.contains(element)).toBe(true);
   }
 });
 

@@ -9,7 +9,6 @@ import {
   FlowForm,
   useCreateEditFlow,
   useInitialFocus,
-  wrapTabInDialog,
 } from '../CreateEditFlow/CreateEditFlow.js';
 import type { CreateEditFlowMessages } from '../CreateEditFlow/CreateEditFlow.js';
 
@@ -79,41 +78,38 @@ export function CreateModal({
 
   return (
     <>
-      {/* Modal drops its own onKeyDown prop; Tab wrap listens here. */}
-      <div className="afframe-create-modal-root" onKeyDown={wrapTabInDialog}>
-        <Modal
-          open={open}
-          size={size}
-          className={['afframe-create-modal', className]
-            .filter(Boolean)
-            .join(' ')}
-          modalHeading={title}
-          primaryButtonText={text.create}
-          secondaryButtonText={text.cancel}
-          closeButtonLabel={text.closeIconDescription}
-          primaryButtonDisabled={submitDisabled}
-          loadingStatus={flow.submitting ? 'active' : 'inactive'}
-          loadingDescription={text.submitting}
-          loadingIconDescription={text.submitting}
-          onRequestClose={flow.requestClose}
-          onRequestSubmit={() => {
-            if (!submitDisabled) void flow.submit();
-          }}>
-          {subtitle && (
-            <p className="afframe-create-modal-subtitle">{subtitle}</p>
-          )}
-          {description && (
-            <p className="afframe-create-modal-description">{description}</p>
-          )}
-          <FlowForm
-            flow={flow}
-            submitDisabled={submitDisabled}
-            aria-label={title}>
-            {children}
-            <FlowError error={flow.error} messages={text} />
-          </FlowForm>
-        </Modal>
-      </div>
+      <Modal
+        open={open}
+        size={size}
+        className={['afframe-create-modal', className]
+          .filter(Boolean)
+          .join(' ')}
+        modalHeading={title}
+        primaryButtonText={text.create}
+        secondaryButtonText={text.cancel}
+        closeButtonLabel={text.closeIconDescription}
+        primaryButtonDisabled={submitDisabled}
+        loadingStatus={flow.submitting ? 'active' : 'inactive'}
+        loadingDescription={text.submitting}
+        loadingIconDescription={text.submitting}
+        onRequestClose={flow.requestClose}
+        onRequestSubmit={() => {
+          if (!submitDisabled) void flow.submit();
+        }}>
+        {subtitle && (
+          <p className="afframe-create-modal-subtitle">{subtitle}</p>
+        )}
+        {description && (
+          <p className="afframe-create-modal-description">{description}</p>
+        )}
+        <FlowForm
+          flow={flow}
+          submitDisabled={submitDisabled}
+          aria-label={title}>
+          {children}
+          <FlowError error={flow.error} messages={text} />
+        </FlowForm>
+      </Modal>
       <DiscardDialog flow={flow} messages={text} />
     </>
   );

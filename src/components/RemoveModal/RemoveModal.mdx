@@ -107,8 +107,8 @@ any), Cancel, the confirm button.
 | Escape | anywhere       | Closes the dialog, except while the action runs.                  |
 
 Focus is trapped by the browser's modal dialog: the page behind it is inert,
-so Tab never reaches it. Past the last control the browser may move focus to
-its own interface before returning to the first control.
+so Tab never reaches it. `AfframeProvider` wraps Tab from the last control to
+the first, so focus does not leave for the browser's own interface.
 
 On close, focus returns to `launcherRef`. Without it, or when that element is
 gone, focus returns to the element that had focus before the dialog opened;

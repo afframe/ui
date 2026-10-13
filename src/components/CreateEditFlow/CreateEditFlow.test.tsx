@@ -9,7 +9,6 @@ import {
   FlowError,
   FlowForm,
   useCreateEditFlow,
-  wrapTabInDialog,
 } from './CreateEditFlow.js';
 import type { CreateEditFlowMessages } from './CreateEditFlow.js';
 
@@ -365,28 +364,6 @@ test('any thenable counts as an async submit', async () => {
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect(screen.getByRole('button', { name: 'Busy' })).toBeTruthy();
-});
-
-test('Tab wrap counts a radio group by its active stop and skips inert content', async () => {
-  render(
-    <div onKeyDown={wrapTabInDialog}>
-      <dialog open>
-        <button type="button">First</button>
-        <input type="radio" name="r" aria-label="A" />
-        <input type="radio" name="r" aria-label="B" defaultChecked />
-        <input type="radio" name="r" aria-label="C" />
-        <div inert>
-          <button type="button">Hidden</button>
-        </div>
-      </dialog>
-    </div>
-  );
-  const b = screen.getByRole('radio', { name: 'B' });
-  b.focus();
-  await userEvent.tab();
-  expect(active()).toBe(screen.getByRole('button', { name: 'First' }));
-  await userEvent.tab({ shift: true });
-  expect(active()).toBe(b);
 });
 
 test('errorText shows the details of a rejection', async () => {

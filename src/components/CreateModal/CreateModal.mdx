@@ -90,7 +90,8 @@ from a client component.
 On open, focus moves to the primary focus target (by default the first form
 control). Focus order: the close icon, the form fields, Cancel, Create. Tab
 and Shift+Tab stay inside the modal (the native dialog element makes the page
-behind it inert; Tab after Create wraps to the close icon).
+behind it inert, and `AfframeProvider` wraps Tab after Create to the close
+icon).
 
 | Key    | Where                 | Action                                                                                   |
 | ------ | --------------------- | ---------------------------------------------------------------------------------------- |

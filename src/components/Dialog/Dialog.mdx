@@ -2,7 +2,7 @@ import { ArgTypes, Meta } from '@storybook/addon-docs/blocks';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, source link pinned to v11.118.0, Afframe note on Tab in a modal dialog added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: source label added, source link pinned to v11.118.0, Afframe note on Tab in a modal dialog added (the provider's Tab wrap), upstream Feedback section and table of contents removed.
 
 <Meta isTemplate />
 
@@ -22,10 +22,9 @@ Chrome's built in focus wrap behavior includes the browser bar in the tab order.
 This is expected and consistent with `alert()` behavior.
 https://github.com/w3c/html/issues/1514#issuecomment-404097904
 
-In Afframe UI, `Dialog` is used as Carbon ships it. CreateModal, EditTearsheet
-and the discard dialog of the create and edit components keep Tab inside
-themselves (`enable-dialog-element` in `docs/feature-flags.md`); do the same if
-a modal `Dialog` must. Escape closes the native dialog without calling
+In Afframe UI, `Dialog` is used as Carbon ships it. Under `AfframeProvider`, Tab
+stays inside a modal `Dialog`: Tab from the last control wraps to the first,
+not to the browser bar. A non-modal `Dialog` keeps the browser default. Escape closes the native dialog without calling
 `onRequestClose` (`onCancel` and `onClose` fire), so a controlled `open` needs
 one of those to stay in sync.
 

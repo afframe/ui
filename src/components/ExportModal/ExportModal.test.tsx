@@ -204,7 +204,7 @@ test('focus stays in the dialog while tabbing; reopening resets the form', async
   for (let index = 0; index < 8; index += 1) {
     await userEvent.tab();
     const element = active();
-    expect(element === document.body || dialog.contains(element)).toBe(true);
+    expect(dialog.contains(element)).toBe(true);
   }
   await userEvent.clear(nameField());
   await userEvent.type(nameField(), 'changed');

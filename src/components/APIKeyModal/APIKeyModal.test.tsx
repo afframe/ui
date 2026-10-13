@@ -273,7 +273,7 @@ test('nameRequired false allows an empty name; focus stays in the dialog', async
   for (let index = 0; index < 6; index += 1) {
     await userEvent.tab();
     const element = active();
-    expect(element === document.body || dialog.contains(element)).toBe(true);
+    expect(dialog.contains(element)).toBe(true);
   }
 });
 

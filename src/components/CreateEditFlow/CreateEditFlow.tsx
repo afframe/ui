@@ -288,50 +288,6 @@ const textInputTypes = new Set([
   'week',
 ]);
 
-const tabbableSelector =
-  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-/**
- * A Tab stop: rendered, not inert, and for a radio group only its active
- * radio (the checked one, else the first).
- */
-function isTabStop(element: HTMLElement, root: Element): boolean {
-  if (element.getClientRects().length === 0 || element.closest('[inert]'))
-    return false;
-  if (!(element instanceof HTMLInputElement) || element.type !== 'radio')
-    return true;
-  if (!element.name) return true;
-  const group = [
-    ...root.querySelectorAll<HTMLInputElement>(
-      `input[type="radio"][name="${CSS.escape(element.name)}"]`
-    ),
-  ];
-  return element === (group.find((radio) => radio.checked) ?? group[0]);
-}
-
-/**
- * Keeps Tab inside the modal dialog the event came from: Chromium lets Tab
- * leave a native modal dialog for the browser's own controls.
- */
-export function wrapTabInDialog(event: KeyboardEvent<HTMLElement>) {
-  if (event.key !== 'Tab' || !(event.target instanceof Element)) return;
-  const dialog = event.target.closest('dialog');
-  if (!dialog) return;
-  const tabbables = [
-    ...dialog.querySelectorAll<HTMLElement>(tabbableSelector),
-  ].filter((element) => isTabStop(element, dialog));
-  const first = tabbables[0];
-  const last = tabbables[tabbables.length - 1];
-  if (!first || !last) return;
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
 /**
  * An Escape that should close the surface: not already handled (a field or
  * Carbon control called preventDefault) and not from inside an expanded
@@ -483,7 +439,6 @@ export function DiscardDialog({
       className="afframe-create-edit-discard"
       onKeyDown={(event) => {
         if (event.key === 'Escape') event.stopPropagation();
-        wrapTabInDialog(event);
       }}>
       <Modal
         open={discardOpen}
