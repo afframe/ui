@@ -263,7 +263,7 @@ importers:
         specifier: 1.105.1
         version: 1.105.1
       tabbable:
-        specifier: ^6.5.0
+        specifier: 6.5.0
         version: 6.5.0
     devDependencies:
       '@carbon/ibm-products-styles':

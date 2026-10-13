@@ -100,7 +100,7 @@
     "prop-types": "15.8.1",
     "react-is": "19.3.0",
     "sass": "1.105.1",
-    "tabbable": "^6.5.0"
+    "tabbable": "6.5.0"
   },
   "peerDependencies": {
     "@types/react": "^19",
