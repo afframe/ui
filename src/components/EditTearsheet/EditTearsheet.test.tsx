@@ -320,8 +320,8 @@ test('the current nav item resets on open and stays in range when forms shrink',
   warn.mockRestore();
 });
 
-// Two tall forms and a short last one, in a scrolling tearsheet.
-function TallSheet() {
+// Three forms in a scrolling tearsheet; those in `tall` are taller than it.
+function TallSheet({ tall = ['One', 'Two'] }: { tall?: string[] }) {
   return (
     <AfframeProvider>
       <EditTearsheet
@@ -335,7 +335,7 @@ function TallSheet() {
               {`${title} field`}
               <input />
             </label>
-            {title !== 'Three' && <div style={{ blockSize: '150vh' }} />}
+            {tall.includes(title) && <div style={{ blockSize: '150vh' }} />}
           </EditTearsheetForm>
         ))}
       </EditTearsheet>
@@ -343,8 +343,8 @@ function TallSheet() {
   );
 }
 
-async function openTallSheet() {
-  render(<TallSheet />);
+async function openTallSheet(tall?: string[]) {
+  render(<TallSheet {...(tall ? { tall } : {})} />);
   await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
   await waitFor(() =>
     expect(active()).toBe(screen.getByRole('textbox', { name: 'One field' }))
@@ -389,6 +389,22 @@ test('a nav click does not mark the forms its scroll passes', async () => {
   expect(root.scrollTop).toBeGreaterThan(0);
   expect(currentItem()).toBe('Three');
   expect([...seen]).toEqual(['Three']);
+});
+
+test('a clicked form stays current after the scroll; user scrolling moves it', async () => {
+  // Two cannot scroll to the top: the scroll ends with Three in full view.
+  const root = await openTallSheet(['One']);
+  const ended = new Promise((resolve) =>
+    root.addEventListener('scrollend', resolve, { once: true })
+  );
+  await userEvent.click(within(nav()).getByRole('button', { name: 'Two' }));
+  await ended;
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  expect(root.scrollTop).toBeGreaterThan(0);
+  expect(currentItem()).toBe('Two');
+  root.dispatchEvent(new WheelEvent('wheel', { bubbles: true }));
+  root.scrollTop = 0;
+  await waitFor(() => expect(currentItem()).toBe('One'));
 });
 
 test('ref and rest props reach the root', async () => {

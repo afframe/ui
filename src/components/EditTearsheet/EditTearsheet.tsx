@@ -149,8 +149,8 @@ function formInView(root: HTMLElement, sections: HTMLElement[]): number {
   return index;
 }
 
-// Fallback end of a nav click's scroll: no scrollend fires when nothing scrolls.
-const programmaticScrollMs = 1000;
+// Input that can start a user scroll; it ends a nav click's pin.
+const userScrollEvents = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
 
 /** A multi-form edit in IBM's tearsheet, with a side navigation of the forms. Controlled by `open`. */
 export function EditTearsheet({
@@ -203,23 +203,29 @@ export function EditTearsheet({
   }, [open]);
   const active = Math.min(current, forms.length - 1);
 
-  // The nav follows scrolling. Updates pause while a nav click scrolls, so
-  // the forms passed on the way do not flash as current.
-  const rootRef = useRef<HTMLElement | null>(null);
-  const programmatic = useRef<() => void>(undefined);
+  // The nav follows scrolling. A nav click pins its form until the user
+  // scrolls: the passed forms must not flash as current, and the scroll's
+  // end may still match another form (a short one never reaches the top).
+  // The observers can report after scrollend, so that event cannot unpin.
+  const pinned = useRef(false);
   const formIds = forms.map((form) => form.id).join(' ');
   useEffect(() => {
     const container = flow.containerRef.current;
     const root = open && container ? scrollParent(container) : null;
     if (!root) return;
-    rootRef.current = root;
     const sections = formIds
       .split(' ')
       .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => section !== null);
     const update = () => {
-      if (!programmatic.current) setCurrent(formInView(root, sections));
+      if (!pinned.current) setCurrent(formInView(root, sections));
     };
+    const unpin = () => {
+      pinned.current = false;
+    };
+    userScrollEvents.forEach((type) =>
+      root.addEventListener(type, unpin, { passive: true })
+    );
     // One observer per edge that changes the answer: a form's top crossing
     // the upper third, and the last form coming fully into view.
     const crossing = new IntersectionObserver(update, {
@@ -233,8 +239,8 @@ export function EditTearsheet({
     return () => {
       crossing.disconnect();
       end.disconnect();
-      programmatic.current?.();
-      rootRef.current = null;
+      userScrollEvents.forEach((type) => root.removeEventListener(type, unpin));
+      unpin();
     };
   }, [open, formIds, flow.containerRef]);
 
@@ -242,18 +248,7 @@ export function EditTearsheet({
     const form = forms[index];
     if (!form) return;
     setCurrent(index);
-    programmatic.current?.();
-    const root = rootRef.current;
-    if (root) {
-      const resume = () => {
-        clearTimeout(timer);
-        root.removeEventListener('scrollend', resume);
-        programmatic.current = undefined;
-      };
-      const timer = setTimeout(resume, programmaticScrollMs);
-      root.addEventListener('scrollend', resume);
-      programmatic.current = resume;
-    }
+    pinned.current = true;
     focusForm(form.id);
     onFormChange?.(index);
   };
