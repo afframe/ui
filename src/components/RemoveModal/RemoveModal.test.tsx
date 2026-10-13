@@ -324,3 +324,33 @@ test('ref and rest props reach the root', async () => {
     expect(active()).toBe(screen.getByRole('button', { name: 'Cancel' }))
   );
 });
+
+test('resourceName is needed only to confirm by typing', async () => {
+  const noop = () => undefined;
+  // Type-level: `confirmByTyping` true requires the name it asks for.
+  // @ts-expect-error resourceName is missing
+  const typed: RemoveModalProps = {
+    open: true,
+    confirmByTyping: true,
+    title: 'T',
+    description: 'D',
+    onClose: noop,
+    onConfirm: noop,
+  };
+  void typed;
+  render(
+    <AfframeProvider>
+      <RemoveModal
+        open
+        title="Delete the draft?"
+        description="Deleting it is permanent."
+        onClose={noop}
+        onConfirm={noop}
+      />
+    </AfframeProvider>
+  );
+  await until(() =>
+    expect(active()).toBe(screen.getByRole('button', { name: 'Cancel' }))
+  );
+  expect(screen.queryByRole('textbox')).toBeNull();
+});

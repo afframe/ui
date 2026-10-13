@@ -41,8 +41,6 @@ interface RemoveModalOwnProps {
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<RemoveModalMessages>;
   className?: string;
-  /** Name of the thing being deleted or removed. */
-  resourceName: string;
   /** Runs the action; a rejected promise keeps the dialog open with an alert. */
   onConfirm: () => void | Promise<void>;
   /** Picks the danger button text. Default `delete`. */
@@ -53,23 +51,41 @@ interface RemoveModalOwnProps {
   label?: ReactNode;
   /** What happens to the resource; a string renders as a paragraph. */
   description: ReactNode;
-  /** `true`: the user types `resourceName`; a string: the user types that phrase. */
-  confirmByTyping?: boolean | string;
 }
 
+/** `resourceName` is required only when the user types it to confirm. */
+type RemoveModalConfirmProps =
+  | {
+      /** The user types `resourceName` to confirm. */
+      confirmByTyping: true;
+      /** Name of the thing being deleted or removed. */
+      resourceName: string;
+    }
+  | {
+      /** A string: the user types that phrase to confirm. */
+      confirmByTyping?: false | string;
+      /** Name of the thing being deleted or removed. */
+      resourceName?: string;
+    };
+
 /** The rest go to Carbon Modal's root `div`. */
-export interface RemoveModalProps
+interface RemoveModalBaseProps
   extends
     RemoveModalOwnProps,
     Omit<
       HTMLAttributes<HTMLDivElement>,
-      keyof RemoveModalOwnProps | ModalRootAttribute
+      | keyof RemoveModalOwnProps
+      | 'confirmByTyping'
+      | 'resourceName'
+      | ModalRootAttribute
     > {
   /** Carbon Modal's root `div`; null while closed. */
   ref?: Ref<HTMLDivElement> | undefined;
   // Carbon types it without `undefined`.
   id?: string;
 }
+
+export type RemoveModalProps = RemoveModalBaseProps & RemoveModalConfirmProps;
 
 export function RemoveModal({
   open,

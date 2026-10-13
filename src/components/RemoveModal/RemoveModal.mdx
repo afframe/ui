@@ -39,7 +39,6 @@ const launcherRef = useRef<HTMLButtonElement>(null);
   open={open}
   onClose={() => setOpen(false)}
   launcherRef={launcherRef}
-  resourceName="Invoice 2026-001"
   title="Delete Invoice 2026-001?"
   description="Deleting Invoice 2026-001 is permanent and cannot be undone."
   onConfirm={() => api.deleteInvoice(id)}
@@ -56,6 +55,8 @@ const launcherRef = useRef<HTMLButtonElement>(null);
 - `description` (required): what happens to the resource. A string renders
   as a paragraph; any other node as given.
 - `kind`: `delete` (default) or `remove`; picks the danger button text.
+- `resourceName`: the name of the item. Required with `confirmByTyping` set
+  to `true`, which asks the user to type it; optional otherwise.
 - `confirmByTyping`: `true` asks the user to type `resourceName`; a string
   asks for that phrase. The confirm button stays disabled until the typed text
   equals the phrase exactly; the match is case-sensitive and spaces count.

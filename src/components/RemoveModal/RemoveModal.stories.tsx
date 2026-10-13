@@ -33,7 +33,6 @@ const meta = {
   args: {
     open: true,
     onClose: () => undefined,
-    resourceName: 'Invoice 2026-001',
     title: 'Delete Invoice 2026-001?',
     description: 'Deleting Invoice 2026-001 is permanent and cannot be undone.',
     onConfirm: () => Promise.resolve(),
@@ -59,6 +58,7 @@ export const Default: Story = {
 export const WithTypedConfirmation: Story = {
   args: {
     confirmByTyping: true,
+    resourceName: 'Invoice 2026-001',
     kind: 'remove',
     label: 'Customers',
     title: 'Remove Invoice 2026-001?',
