@@ -1,0 +1,24 @@
+.demo-type-sets {
+  display: grid;
+  gap: var(--cds-spacing-07);
+  color: var(--cds-text-primary);
+}
+
+.demo-type-table {
+  border-collapse: collapse;
+}
+
+.demo-type-table caption {
+  padding-block: var(--cds-spacing-03);
+  font-size: var(--cds-heading-02-font-size);
+  font-weight: var(--cds-heading-02-font-weight);
+  text-align: start;
+}
+
+.demo-type-table th,
+.demo-type-table td {
+  padding: var(--cds-spacing-03) var(--cds-spacing-05);
+  border-block-end: 1px solid var(--cds-border-subtle);
+  text-align: start;
+  vertical-align: baseline;
+}
