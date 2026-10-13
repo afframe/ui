@@ -1,7 +1,7 @@
 'use client';
 // Ref helpers for the dialog roots (React 19 passes `ref` as a plain prop).
 // Carbon's useMergedRefs is not public.
-import { useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Ref, RefCallback, RefObject } from 'react';
 
 /** Sets one ref to `node`; returns what undoes it. */
@@ -41,21 +41,32 @@ export function useObjectRef<T>(ref: Ref<T> | undefined): RefObject<T | null> {
   const latest = useRef(ref);
   // Set during render: IBM's node attaches before this component's effects run.
   latest.current = ref;
-  const [object] = useState(() => {
+  const [state] = useState(() => {
     let value: T | null = null;
+    let bound: Ref<T> | undefined;
     let undo: (() => void) | undefined;
+    const bind = () => {
+      undo?.();
+      bound = latest.current;
+      undo = value === null ? undefined : assignRef(bound, value);
+    };
     return {
-      get current() {
-        return value;
+      object: {
+        get current() {
+          return value;
+        },
+        set current(node: T | null) {
+          value = node;
+          bind();
+        },
       },
-      set current(node: T | null) {
-        value = node;
-        undo?.();
-        undo = node === null ? undefined : assignRef(latest.current, node);
+      rebind: () => {
+        if (value !== null && bound !== latest.current) bind();
       },
     };
   });
-  return object;
+  useLayoutEffect(state.rebind, [ref, state]);
+  return state.object;
 }
 
 /**
