@@ -40,3 +40,19 @@ test('create-side-panel-focus', async () => {
   expect(document.activeElement?.id).toBe('create-side-panel-email');
   await snapshot('create-side-panel-focus');
 });
+
+test('create-side-panel-narrow', async () => {
+  await page.viewport(375, 768);
+  try {
+    await Default.run();
+    await expect
+      .poll(() => document.activeElement?.id)
+      .toBe('create-side-panel-name');
+    await Promise.all(
+      document.getAnimations().map((animation) => animation.finished)
+    );
+    await snapshot('create-side-panel-narrow');
+  } finally {
+    await page.viewport(1024, 768);
+  }
+});
