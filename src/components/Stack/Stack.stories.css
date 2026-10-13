@@ -1,7 +1,7 @@
 /* Bordered items, so the gap between them shows. */
 .demo-stack-item {
   padding: var(--cds-spacing-03) var(--cds-spacing-05);
-  border: 1px solid var(--cds-border-strong-01);
-  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-strong);
+  background: var(--cds-layer);
   color: var(--cds-text-primary);
 }
