@@ -58,6 +58,8 @@ export default defineConfig({
       '@carbon/ai-chat',
       '@carbon/ai-chat/server',
       '@carbon/echarts-theme',
+      '@carbon/layout',
+      '@carbon/type',
     ],
   },
   test: {
