@@ -72,6 +72,8 @@ const required = [
   'dist/charts.css',
   'dist/provider/AfframeProvider.js',
   'dist/ibm-products/add-select-data.js',
+  'dist/ibm-products/scroll-gradient.js',
+  'dist/ibm-products/decorator.js',
   ...labsModules,
   ...familyModules,
   ...serverFamilies.map((name) => `dist/components/${name}/${name}.js`),
@@ -136,6 +138,8 @@ const familyImports = [...read('dist/index.js').matchAll(familyImport)].map(
 const clientModules = [
   'dist/provider/AfframeProvider.js',
   'dist/ibm-products/add-select-data.js',
+  'dist/ibm-products/scroll-gradient.js',
+  'dist/ibm-products/decorator.js',
   ...labsModules,
   ...new Set([...familyModules, ...familyImports]),
 ];

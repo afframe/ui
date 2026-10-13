@@ -3740,15 +3740,6 @@
       "docs": "src/components/PageHeader/PageHeader.mdx"
     },
     {
-      "name": "ScrollGradient",
-      "kind": "component",
-      "source": "ibm-products",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/ScrollGradient/ScrollGradient.mdx"
-    },
-    {
       "name": "SidePanel",
       "kind": "component",
       "source": "ibm-products",
@@ -3792,6 +3783,24 @@
       "runtime": "client",
       "status": "stable",
       "docs": "src/components/UserAvatar/UserAvatar.mdx"
+    },
+    {
+      "name": "ScrollGradient",
+      "kind": "component",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable",
+      "docs": "src/components/ScrollGradient/ScrollGradient.mdx"
+    },
+    {
+      "name": "previewCandidate__Decorator",
+      "kind": "component",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "preview-candidate",
+      "docs": "src/components/Decorator/Decorator.mdx"
     },
     {
       "name": "AddSelectData",
@@ -3994,15 +4003,6 @@
       "runtime": "client",
       "status": "preview-candidate",
       "docs": "src/components/SearchBar/SearchBar.mdx"
-    },
-    {
-      "name": "previewCandidate__Decorator",
-      "kind": "component",
-      "source": "ibm-products",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "preview-candidate",
-      "docs": "src/components/Decorator/Decorator.mdx"
     },
     {
       "name": "previewCandidate__TruncatedList",

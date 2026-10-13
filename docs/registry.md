@@ -348,12 +348,13 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | InterstitialScreenView             | component | ibm-products | client  | stable            | [page](../src/components/InterstitialScreen/InterstitialScreen.mdx)   |
 | NotificationsPanel                 | component | ibm-products | client  | stable            | [page](../src/components/NotificationsPanel/NotificationsPanel.mdx)   |
 | PageHeader                         | namespace | ibm-products | client  | preview           | [page](../src/components/PageHeader/PageHeader.mdx)                   |
-| ScrollGradient                     | component | ibm-products | client  | stable            | [page](../src/components/ScrollGradient/ScrollGradient.mdx)           |
 | SidePanel                          | component | ibm-products | client  | stable            | [page](../src/components/SidePanel/SidePanel.mdx)                     |
 | TagOverflow                        | component | ibm-products | client  | stable            | [page](../src/components/TagOverflow/TagOverflow.mdx)                 |
 | Tearsheet                          | component | ibm-products | client  | preview           | [page](../src/components/Tearsheet/Tearsheet.mdx)                     |
 | TruncatedText                      | component | ibm-products | client  | preview           | [page](../src/components/TruncatedText/TruncatedText.mdx)             |
 | UserAvatar                         | component | ibm-products | client  | stable            | [page](../src/components/UserAvatar/UserAvatar.mdx)                   |
+| ScrollGradient                     | component | ibm-products | client  | stable            | [page](../src/components/ScrollGradient/ScrollGradient.mdx)           |
+| previewCandidate__Decorator        | component | ibm-products | client  | preview-candidate | [page](../src/components/Decorator/Decorator.mdx)                     |
 | AddSelectData                      | util      | ibm-products | client  | stable            |                                                                       |
 | AboutModal                         | component | ibm-products | client  | stable            | [page](../src/components/AboutModal/AboutModal.mdx)                   |
 | ActionBar                          | component | ibm-products | client  | stable            | [page](../src/components/ActionBar/ActionBar.mdx)                     |
@@ -377,7 +378,6 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | previewCandidate__ToolbarButton    | component | ibm-products | client  | preview-candidate |                                                                       |
 | previewCandidate__ToolbarGroup     | component | ibm-products | client  | preview-candidate |                                                                       |
 | previewCandidate__SearchBar        | component | ibm-products | client  | preview-candidate | [page](../src/components/SearchBar/SearchBar.mdx)                     |
-| previewCandidate__Decorator        | component | ibm-products | client  | preview-candidate | [page](../src/components/Decorator/Decorator.mdx)                     |
 | previewCandidate__TruncatedList    | component | ibm-products | client  | preview-candidate | [page](../src/components/TruncatedList/TruncatedList.mdx)             |
 | previewCandidate__NonLinearReading | component | ibm-products | client  | preview-candidate | [page](../src/components/NonLinearReading/NonLinearReading.mdx)       |
 | usePrefix                          | hook      | ibm-products | client  | stable            |                                                                       |
