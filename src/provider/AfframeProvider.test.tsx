@@ -1,14 +1,7 @@
 import { useFeatureFlag } from '@carbon/react';
 import { act, render, screen } from '@testing-library/react';
-import type { ComponentType, ReactNode } from 'react';
 import { afterEach, expect, test } from 'vitest';
-import {
-  ActionableNotification,
-  previewCandidate__Decorator,
-  ScrollGradient,
-  TextInput,
-  useTheme,
-} from '../index.js';
+import { ActionableNotification, TextInput, useTheme } from '../index.js';
 import { AfframeProvider } from './AfframeProvider.js';
 
 afterEach(() => {
@@ -103,27 +96,6 @@ test('dark theme sets the g100 background', () => {
   expect(getComputedStyle(document.body).backgroundColor).toBe(
     'rgb(22, 22, 22)'
   );
-});
-
-test('renders the canary gated IBM Products components, not the placeholder', () => {
-  // IBM types both as ref-only components; the props come from their propTypes.
-  const Gradient = ScrollGradient as ComponentType<{ children: ReactNode }>;
-  const Decorator = previewCandidate__Decorator as ComponentType<{
-    label: string;
-    value: string;
-  }>;
-  const { container } = render(
-    <AfframeProvider>
-      <Gradient>
-        <p>Scrolled content</p>
-      </Gradient>
-      <Decorator label="Owner" value="Afframe" />
-    </AfframeProvider>
-  );
-  expect(screen.getByText('Scrolled content')).toBeTruthy();
-  expect(screen.getByText('Afframe')).toBeTruthy();
-  expect(container.querySelector('.c4p--canary')).toBeNull();
-  expect(container.textContent).not.toContain('is not ready yet');
 });
 
 function CarbonTheme() {

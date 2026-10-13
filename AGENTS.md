@@ -8,7 +8,7 @@
 | `src/icons.ts`, `pictograms.ts`, `tokens.ts` | Subpath entries with Carbon's names                                                            |
 | `src/components/<Name>/`                     | Afframe-owned components, and docs-only folders for copied Carbon, IBM Products and Labs pages |
 | `src/labs/`                                  | One `'use client'` module per Carbon Labs package                                              |
-| `src/ibm-products/`                          | IBM Products exports whose upstream types are missing, with IBM's declarations                 |
+| `src/ibm-products/`                          | IBM Products exports that need own modules: missing types, canary settings                     |
 | `src/provider/`, `src/theme/`                | `AfframeProvider`, feature flags, theme helpers                                                |
 | `src/format/`                                | Server-safe amount, number and date formatters                                                 |
 | `src/styles/`                                | Sass sources of `styles.css` and `charts.css`                                                  |
