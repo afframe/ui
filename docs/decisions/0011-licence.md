@@ -22,7 +22,7 @@ The package ships both licence texts in `LICENSES/` and the OFL-1.1 text with th
 
 ## Amendment 2026-10-13: source label
 
-The source label on a docs page names where the component comes from, not who wrote the page. The page's licence still comes from its own SPDX header. A Carbon component documented by an Afframe-written page (Tokens, Pictograms, Typography) is labelled `carbon` and keeps the PolyForm header. `scripts/check-licence-labels.mjs` therefore requires an IBM source label (`carbon`, `ibm-products`, `labs`) and an IBM copyright on every Apache-2.0 page, and accepts any source label on a PolyForm page.
+The source label on a docs page names where the component comes from, not who wrote the page. The page's licence still comes from its own SPDX header. A Carbon component documented by an Afframe-written page (Tokens, Pictograms, Typography) is labelled `carbon` and keeps the PolyForm header. `scripts/check-licence-labels.mjs` therefore requires an IBM source label (`carbon`, `ibm-products`, `labs`) and an IBM copyright on every Apache-2.0 page except `extras` pages, which it skips, and accepts any source label on a PolyForm page that carries no IBM copyright.
 
 ## Consequences
 

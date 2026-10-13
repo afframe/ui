@@ -64,7 +64,7 @@ const kindOf = (name, value) =>
 
 // A folder's docs page, story title, source tag and Afframe parts.
 function scan(dir, name) {
-  const files = readdirSync(dir);
+  const files = readdirSync(dir).sort();
   const stories = [
     ...files,
     ...(files.includes('stories')
@@ -141,9 +141,9 @@ const docsByName = new Map();
 const storyFiles = [];
 for (const name of readdirSync(componentsDir).sort()) {
   const dir = join(componentsDir, name);
-  for (const file of readdirSync(dir).filter((f) =>
-    f.endsWith('.stories.tsx')
-  )) {
+  for (const file of readdirSync(dir)
+    .filter((f) => f.endsWith('.stories.tsx'))
+    .sort()) {
     storyFiles.push({ dir, file, main: file === `${name}.stories.tsx` });
   }
 }

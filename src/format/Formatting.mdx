@@ -97,10 +97,11 @@ string throws a `RangeError`, including a timestamp without `Z` or an offset.
 | `civilDateToLocalDate(date)`            | A local `Date` at midnight, for Carbon's `DatePicker`.        |
 | `localDateToCivilDate(date)`            | The civil date of a local `Date` that `DatePicker` returns.   |
 
-In Czech (`cs-CZ`, `cs`) a date with a numeric month always prints as
-`dd.mm.yyyy`: zero-padded day and month, dots, no spaces, a four-digit year
+In Czech (any `cs` tag: `cs`, `cs-CZ`) a date with a numeric day, month and
+year always prints as `dd.mm.yyyy`: zero-padded day and month, dots, no spaces, a four-digit year
 (`07.10.2026`, `07.10.2026 12:05`, `01.10.2026 – 31.10.2026`). Text months
-(`dateStyle: 'long'`: `7. října 2026`) and other locales print as Intl does.
+(`dateStyle: 'long'`: `7. října 2026`), dates without a day and other locales
+print as Intl does.
 
 Options for `formatDate` and `formatDateRange` are Intl `DateTimeFormat`
 options plus `locale`. Node and browsers can differ in Intl's spaces, so both

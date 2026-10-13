@@ -16,7 +16,9 @@ Wrap the app once, near the root. The provider turns on the Carbon feature
 flags Afframe UI uses in React; the stylesheet carries their Sass side
 ([Feature Flags](?path=/docs/getting-started-feature-flags--overview)). It also
 renders Carbon's `GlobalTheme` with the theme on `<html>`, so Carbon's
-`useTheme()` reports `white` or `g100`.
+`useTheme()` reports `white` or `g100`. A `GlobalTheme` of the app above the
+provider is replaced; one inside it wins for its subtree and can disagree with
+the page's CSS theme, so leave it out.
 
 ```tsx
 import '@afframe/ui/styles.css';

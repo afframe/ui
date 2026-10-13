@@ -46,14 +46,18 @@ function plainSpaces(text: string): string {
 
 // Czech dates print as dd.mm.yyyy (07.10.2026), not Intl's `7. 10. 2026` or
 // `07.10.26`: one shape in every table, field and range.
-const czech = /^cs(?:-CZ)?$/i;
+// Any Czech tag: cs, cs-CZ, cs-Latn-CZ, cs-CZ-u-nu-latn.
+const czech = /^cs(?:-|$)/i;
 
 function czechOptions(
   options: Intl.DateTimeFormatOptions
 ): Intl.DateTimeFormatOptions {
   const { dateStyle, year } = options;
   if (dateStyle === 'short') return { ...options, dateStyle: 'medium' };
-  if (year === '2-digit') return { ...options, year: 'numeric' };
+  // Only a full date gets the four-digit year; month and year alone keep Intl.
+  if (year === '2-digit' && options.day) {
+    return { ...options, year: 'numeric' };
+  }
   return options;
 }
 

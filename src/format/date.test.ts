@@ -314,6 +314,14 @@ test('prints every numeric Czech date as dd.mm.yyyy', () => {
     })
   ).toBe('středa 07.10.2026');
   expect(formatDate('2026-10-07', { locale: 'cs' })).toBe('07.10.2026');
+  expect(formatDate('2026-10-07', { locale: 'cs-Latn-CZ' })).toBe('07.10.2026');
+  expect(formatDate('2026-10-07', { locale: 'cs-CZ-u-nu-latn' })).toBe(
+    '07.10.2026'
+  );
+  // Without a day, a two-digit year stays as Intl prints it.
+  expect(
+    formatDate('2026-10-07', { month: 'numeric', year: '2-digit' })
+  ).not.toContain('2026');
   // Text months and other locales print as Intl does.
   expect(formatDate('2026-10-07', { dateStyle: 'long' })).toBe('7. října 2026');
   expect(formatDate('2026-10-07', { locale: 'de-DE' })).toBe('07.10.2026');

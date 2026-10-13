@@ -100,7 +100,17 @@ for (const page of pages) {
         `${page}: label "${label}" needs a copyright by ${ibm.copyright}`
       );
     }
-  } else if (licences !== afframe) {
+  } else if (licences === afframe) {
+    // An Afframe page may name any upstream source, but copied IBM text must
+    // keep IBM's licence.
+    if (
+      (file.copyrights ?? []).some((entry) =>
+        entry.value.includes(ibm.copyright)
+      )
+    ) {
+      problems.push(`${page}: an IBM copyright needs ${ibm.licence}`);
+    }
+  } else {
     problems.push(
       `${page}: needs ${ibm.licence} or ${afframe}, has ${licences || 'none'}`
     );
