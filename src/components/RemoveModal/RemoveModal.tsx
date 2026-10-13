@@ -6,7 +6,7 @@ import { Modal, TextInput, usePrefix } from '@carbon/react';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { FlowError } from '../FlowParts/FlowParts.js';
+import { FlowDescription, FlowError } from '../FlowParts/FlowParts.js';
 import { defaultTaskModalMessages } from '../FlowParts/messages.js';
 import type { FlowMessages } from '../FlowParts/messages.js';
 import { useMergedRefs } from '../FlowParts/refs.js';
@@ -180,7 +180,7 @@ export function RemoveModal({
         ref={dialog.containerRef}
         tabIndex={-1}
         className="afframe-modal-body">
-        {typeof description === 'string' ? <p>{description}</p> : description}
+        <FlowDescription description={description} />
         {phrase !== undefined && (
           <TextInput
             ref={inputRef}
