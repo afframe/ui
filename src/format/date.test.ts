@@ -335,4 +335,18 @@ test('prints Czech range ends as dd.mm.yyyy', () => {
   expect(
     formatDateRange('2026-10-07T08:00:00Z', '2026-10-08T09:00:00Z', time)
   ).toBe(`07.10.2026 10:00${space}${dash}${space}08.10.2026 11:00`);
+  // Intl collapses these to `1.–31. 10. 2026`; each end keeps the asked style.
+  expect(
+    formatDateRange('2026-10-01', '2026-10-31', { dateStyle: 'long' })
+  ).toBe(`1. října 2026${space}${dash}${space}31. října 2026`);
+  expect(
+    formatDateRange('2026-10-01', '2026-10-01', { dateStyle: 'long' })
+  ).toBe('1. října 2026');
+  // No year: not a dd.mm.yyyy date, so Intl's day and month stay.
+  expect(
+    formatDateRange('2026-10-01', '2026-10-31', {
+      day: 'numeric',
+      month: 'numeric',
+    })
+  ).toBe(`1. 10.${space}${dash}${space}31. 10.`);
 });
