@@ -16,6 +16,10 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-05;
+}
+
+// Focus parks on the form while pending; it shows no ring of its own.
+.afframe-create-edit-form:focus {
   outline: none;
 }
 
