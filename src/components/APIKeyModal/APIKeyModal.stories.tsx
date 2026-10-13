@@ -56,7 +56,7 @@ export const Default: Story = {
   },
 };
 
-export const GenerateSuccess: Story = {
+export const Success: Story = {
   play: async ({ canvas, userEvent }) => {
     await userEvent.type(
       await canvas.findByRole('textbox', { name: 'Name' }),
@@ -88,7 +88,7 @@ export const Edit: Story = {
   },
 };
 
-export const Pending: Story = {
+export const Generating: Story = {
   args: { onGenerate: () => new Promise<string>(() => undefined) },
   play: async ({ canvas, userEvent }) => {
     await userEvent.type(

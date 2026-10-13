@@ -85,7 +85,7 @@ export const Success: Story = {
   },
 };
 
-export const Pending: Story = {
+export const Exporting: Story = {
   args: { onExport: () => new Promise<void>(() => undefined) },
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(

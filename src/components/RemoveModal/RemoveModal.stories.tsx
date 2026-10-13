@@ -60,7 +60,7 @@ export const WithTypedConfirmation: Story = {
     confirmByTyping: true,
     resourceName: 'Invoice 2026-001',
     kind: 'remove',
-    label: 'Customers',
+    label: 'Invoice',
     title: 'Remove Invoice 2026-001?',
     description:
       'Invoice 2026-001 will be removed. It can be added again later.',
@@ -77,7 +77,7 @@ export const WithTypedConfirmation: Story = {
   },
 };
 
-export const Pending: Story = {
+export const Removing: Story = {
   args: { onConfirm: () => new Promise<void>(() => undefined) },
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(

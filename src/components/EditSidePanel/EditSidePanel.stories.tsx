@@ -1,53 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useRef, useState } from 'react';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import { Button } from '../../index.js';
 import {
-  clickPrimary,
-  pendingSubmit,
-  playDirty,
-  playFocusNotObscured,
-  playRejected,
-  rejectSubmit,
-  useCustomerForm,
+  exampleCustomer,
+  flowHarnessArgTypes,
+  flowRender,
+  flowStories,
 } from '../FlowParts/storyForm.js';
+import type { FlowHarnessArgs } from '../FlowParts/storyForm.js';
 import { EditSidePanel } from './EditSidePanel.js';
 import type { EditSidePanelProps } from './EditSidePanel.js';
 import mdx from './EditSidePanel.mdx';
-
-type HarnessProps = Pick<EditSidePanelProps, 'onSubmit'> & {
-  initialName?: string;
-  extraFields?: number;
-};
-
-// Opens on load; the launcher reopens it.
-function Harness({
-  onSubmit,
-  initialName = 'Acme Trading',
-  extraFields,
-}: HarnessProps) {
-  const [open, setOpen] = useState(true);
-  const form = useCustomerForm('edit-side-panel', initialName, extraFields);
-  const launcherRef = useRef<HTMLButtonElement>(null);
-  return (
-    <>
-      <Button ref={launcherRef} onClick={() => setOpen(true)}>
-        Edit customer
-      </Button>
-      <EditSidePanel
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={onSubmit}
-        launcherRef={launcherRef}
-        title="Edit customer"
-        description="Changes apply to new invoices."
-        isDirty={form.isDirty}
-        submitDisabled={form.submitDisabled}>
-        {form.fields}
-      </EditSidePanel>
-    </>
-  );
-}
 
 const meta = {
   title: 'Components/Create and Edit/EditSidePanel',
@@ -58,41 +20,33 @@ const meta = {
     layout: 'fullscreen',
     docs: { page: mdx, story: { inline: false, iframeHeight: 640 } },
   },
+  argTypes: flowHarnessArgTypes,
   args: {
     open: true,
     title: 'Edit customer',
+    description: 'Changes apply to new invoices.',
     onClose: () => undefined,
-    onSubmit: () => undefined,
+    onSubmit: (): void => undefined,
+    initialName: exampleCustomer.name,
   },
-} satisfies Meta<typeof EditSidePanel>;
+  render: flowRender(EditSidePanel, 'edit-side-panel', 'Edit customer'),
+} satisfies Meta<EditSidePanelProps & FlowHarnessArgs>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Harness onSubmit={() => undefined} />,
-};
+const stories = flowStories('Save', 14);
 
-export const WithValidationError: Story = {
-  render: () => <Harness onSubmit={rejectSubmit} />,
-  play: playRejected('Save'),
-};
+export const Default: Story = {};
 
-export const Dirty: Story = {
-  render: () => <Harness onSubmit={() => undefined} />,
-  play: playDirty,
-};
+export const WithError: Story = stories.WithError;
 
-export const Submitting: Story = {
-  render: () => <Harness onSubmit={pendingSubmit} />,
-  play: clickPrimary('Save'),
-};
+export const Dirty: Story = stories.Dirty;
 
-export const LongForm: Story = {
-  render: () => <Harness extraFields={14} onSubmit={() => undefined} />,
-  play: playFocusNotObscured('Note 14'),
-};
+export const Submitting: Story = stories.Submitting;
+
+export const LongForm: Story = stories.LongForm;
 
 export const Dark: Story = {
   ...Default,

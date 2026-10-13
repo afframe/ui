@@ -3,39 +3,23 @@ import { useRef, useState } from 'react';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { Button } from '../../index.js';
 import {
-  clickPrimary,
-  pendingSubmit,
-  playDirty,
-  playFocusNotObscured,
-  playRejected,
-  rejectSubmit,
+  exampleCustomer,
+  flowHarnessArgTypes,
+  flowStories,
   useCustomerForm,
 } from '../FlowParts/storyForm.js';
+import type { FlowHarnessArgs } from '../FlowParts/storyForm.js';
 import { EditFullPage } from './EditFullPage.js';
 import type { EditFullPageProps } from './EditFullPage.js';
 import mdx from './EditFullPage.mdx';
 
-type HarnessProps = Pick<EditFullPageProps, 'onSubmit'> & {
-  extraFields?: number;
-};
+type Args = EditFullPageProps & FlowHarnessArgs;
 
-function EditForm({
-  onSubmit,
-  extraFields,
-  onClose,
-  launcherRef,
-}: HarnessProps & {
-  onClose: () => void;
-  launcherRef: React.RefObject<HTMLButtonElement | null>;
-}) {
-  const form = useCustomerForm('edit-full-page', 'Acme Trading', extraFields);
+function EditForm({ initialName, extraFields, ...props }: Args) {
+  const form = useCustomerForm('edit-full-page', initialName, extraFields);
   return (
     <EditFullPage
-      title="Acme Trading"
-      description="Changes apply to new invoices."
-      onClose={onClose}
-      onSubmit={onSubmit}
-      launcherRef={launcherRef}
+      {...props}
       isDirty={form.isDirty}
       submitDisabled={form.submitDisabled}>
       {form.fields}
@@ -43,8 +27,9 @@ function EditForm({
   );
 }
 
+// Owns the edit mode and the demo form; the rest comes from the args.
 // Starts in edit mode; Edit returns to it after leaving.
-function Harness(props: HarnessProps) {
+function Harness(props: Args) {
   const [editing, setEditing] = useState(true);
   const launcherRef = useRef<HTMLButtonElement>(null);
   return editing ? (
@@ -69,40 +54,32 @@ const meta = {
     layout: 'fullscreen',
     docs: { page: mdx },
   },
+  argTypes: flowHarnessArgTypes,
   args: {
-    title: 'Acme Trading',
+    title: exampleCustomer.name,
+    description: 'Changes apply to new invoices.',
     onClose: () => undefined,
-    onSubmit: () => undefined,
+    onSubmit: (): void => undefined,
+    initialName: exampleCustomer.name,
   },
-} satisfies Meta<typeof EditFullPage>;
+  render: (args) => <Harness {...args} />,
+} satisfies Meta<Args>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Harness onSubmit={() => undefined} />,
-};
+const stories = flowStories('Save', 20);
 
-export const Dirty: Story = {
-  render: () => <Harness onSubmit={() => undefined} />,
-  play: playDirty,
-};
+export const Default: Story = {};
 
-export const WithValidationError: Story = {
-  render: () => <Harness onSubmit={rejectSubmit} />,
-  play: playRejected('Save'),
-};
+export const Dirty: Story = stories.Dirty;
 
-export const Submitting: Story = {
-  render: () => <Harness onSubmit={pendingSubmit} />,
-  play: clickPrimary('Save'),
-};
+export const WithError: Story = stories.WithError;
 
-export const LongForm: Story = {
-  render: () => <Harness extraFields={20} onSubmit={() => undefined} />,
-  play: playFocusNotObscured('Note 20'),
-};
+export const Submitting: Story = stories.Submitting;
+
+export const LongForm: Story = stories.LongForm;
 
 export const Dark: Story = {
   ...Default,

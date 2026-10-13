@@ -1,47 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useRef, useState } from 'react';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import { Button } from '../../index.js';
 import {
-  clickPrimary,
-  pendingSubmit,
-  playDirty,
-  playRejected,
-  rejectSubmit,
-  useCustomerForm,
+  exampleCustomer,
+  flowHarnessArgTypes,
+  flowRender,
+  flowStories,
 } from '../FlowParts/storyForm.js';
+import type { FlowHarnessArgs } from '../FlowParts/storyForm.js';
 import { CreateModal } from './CreateModal.js';
 import type { CreateModalProps } from './CreateModal.js';
 import mdx from './CreateModal.mdx';
-
-type HarnessProps = Pick<CreateModalProps, 'onSubmit'> & {
-  initialName?: string;
-};
-
-// Opens on load; the launcher reopens it.
-function Harness({ onSubmit, initialName }: HarnessProps) {
-  const [open, setOpen] = useState(true);
-  const form = useCustomerForm('create-modal', initialName);
-  const launcherRef = useRef<HTMLButtonElement>(null);
-  return (
-    <>
-      <Button ref={launcherRef} onClick={() => setOpen(true)}>
-        New customer
-      </Button>
-      <CreateModal
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={onSubmit}
-        launcherRef={launcherRef}
-        title="New customer"
-        description="The customer appears in the invoice form once created."
-        isDirty={form.isDirty}
-        submitDisabled={form.submitDisabled}>
-        {form.fields}
-      </CreateModal>
-    </>
-  );
-}
 
 const meta = {
   title: 'Components/Create and Edit/CreateModal',
@@ -52,36 +20,30 @@ const meta = {
     layout: 'padded',
     docs: { page: mdx, story: { inline: false, iframeHeight: 560 } },
   },
+  argTypes: flowHarnessArgTypes,
   args: {
     open: true,
     title: 'New customer',
+    description: 'The customer appears in the invoice form once created.',
     onClose: () => undefined,
-    onSubmit: () => undefined,
+    onSubmit: (): void => undefined,
   },
-} satisfies Meta<typeof CreateModal>;
+  render: flowRender(CreateModal, 'create-modal', 'New customer'),
+} satisfies Meta<CreateModalProps & FlowHarnessArgs>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Harness onSubmit={() => undefined} />,
-};
+const stories = flowStories('Create', 14, exampleCustomer.name);
 
-export const WithValidationError: Story = {
-  render: () => <Harness initialName="Acme Trading" onSubmit={rejectSubmit} />,
-  play: playRejected('Create'),
-};
+export const Default: Story = {};
 
-export const Dirty: Story = {
-  render: () => <Harness initialName="Acme" onSubmit={() => undefined} />,
-  play: playDirty,
-};
+export const WithError: Story = stories.WithError;
 
-export const Submitting: Story = {
-  render: () => <Harness initialName="Acme Trading" onSubmit={pendingSubmit} />,
-  play: clickPrimary('Create'),
-};
+export const Dirty: Story = stories.Dirty;
+
+export const Submitting: Story = stories.Submitting;
 
 export const Dark: Story = {
   ...Default,

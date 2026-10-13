@@ -1,49 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useRef, useState } from 'react';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import { Button } from '../../index.js';
 import {
-  clickPrimary,
-  pendingSubmit,
-  playDirty,
-  playFocusNotObscured,
-  playRejected,
-  rejectSubmit,
-  useCustomerForm,
+  exampleCustomer,
+  flowHarnessArgTypes,
+  flowRender,
+  flowStories,
 } from '../FlowParts/storyForm.js';
+import type { FlowHarnessArgs } from '../FlowParts/storyForm.js';
 import { CreateSidePanel } from './CreateSidePanel.js';
 import type { CreateSidePanelProps } from './CreateSidePanel.js';
 import mdx from './CreateSidePanel.mdx';
-
-type HarnessProps = Pick<CreateSidePanelProps, 'onSubmit'> & {
-  initialName?: string;
-  extraFields?: number;
-};
-
-// Opens on load; the launcher reopens it.
-function Harness({ onSubmit, initialName, extraFields }: HarnessProps) {
-  const [open, setOpen] = useState(true);
-  const form = useCustomerForm('create-side-panel', initialName, extraFields);
-  const launcherRef = useRef<HTMLButtonElement>(null);
-  return (
-    <>
-      <Button ref={launcherRef} onClick={() => setOpen(true)}>
-        New customer
-      </Button>
-      <CreateSidePanel
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={onSubmit}
-        launcherRef={launcherRef}
-        title="New customer"
-        description="Customers appear in the invoice form once created."
-        isDirty={form.isDirty}
-        submitDisabled={form.submitDisabled}>
-        {form.fields}
-      </CreateSidePanel>
-    </>
-  );
-}
 
 const meta = {
   title: 'Components/Create and Edit/CreateSidePanel',
@@ -54,41 +20,32 @@ const meta = {
     layout: 'fullscreen',
     docs: { page: mdx, story: { inline: false, iframeHeight: 640 } },
   },
+  argTypes: flowHarnessArgTypes,
   args: {
     open: true,
     title: 'New customer',
+    description: 'Customers appear in the invoice form once created.',
     onClose: () => undefined,
-    onSubmit: () => undefined,
+    onSubmit: (): void => undefined,
   },
-} satisfies Meta<typeof CreateSidePanel>;
+  render: flowRender(CreateSidePanel, 'create-side-panel', 'New customer'),
+} satisfies Meta<CreateSidePanelProps & FlowHarnessArgs>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Harness onSubmit={() => undefined} />,
-};
+const stories = flowStories('Create', 14, exampleCustomer.name);
 
-export const WithValidationError: Story = {
-  render: () => <Harness initialName="Acme Trading" onSubmit={rejectSubmit} />,
-  play: playRejected('Create'),
-};
+export const Default: Story = {};
 
-export const Dirty: Story = {
-  render: () => <Harness initialName="Acme" onSubmit={() => undefined} />,
-  play: playDirty,
-};
+export const WithError: Story = stories.WithError;
 
-export const Submitting: Story = {
-  render: () => <Harness initialName="Acme Trading" onSubmit={pendingSubmit} />,
-  play: clickPrimary('Create'),
-};
+export const Dirty: Story = stories.Dirty;
 
-export const LongForm: Story = {
-  render: () => <Harness extraFields={14} onSubmit={() => undefined} />,
-  play: playFocusNotObscured('Note 14'),
-};
+export const Submitting: Story = stories.Submitting;
+
+export const LongForm: Story = stories.LongForm;
 
 export const Dark: Story = {
   ...Default,

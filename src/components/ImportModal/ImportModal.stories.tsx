@@ -66,7 +66,7 @@ export const Default: Story = {
   },
 };
 
-export const WithErrors: Story = {
+export const WithValidationError: Story = {
   args: { multiple: true },
   play: async ({ canvas, canvasElement, userEvent }) => {
     await canvas.findByRole('dialog');
@@ -94,7 +94,7 @@ export const WithUrl: Story = {
   },
 };
 
-export const Pending: Story = {
+export const Importing: Story = {
   args: { onImport: () => new Promise<void>(() => undefined) },
   play: async ({ canvas, canvasElement, userEvent }) => {
     await canvas.findByRole('dialog');

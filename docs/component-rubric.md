@@ -33,7 +33,7 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 
 - A playground story with controls for every prop that matters.
 - One story per meaningful variant and state, named consistently across components.
-- Realistic Czech business example data.
+- Realistic, country-neutral business example data.
 
 ## Docs (ADR 0008)
 
