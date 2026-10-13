@@ -40,9 +40,7 @@ function Harness({
         onSubmit={onSubmit}
         launcherRef={launcherRef}
         title="Edit customer"
-        subtitle="Changes apply to new invoices."
-        formTitle="Contact"
-        formDescription="Billing contact for this customer."
+        description="Changes apply to new invoices."
         isDirty={form.isDirty}
         submitDisabled={form.submitDisabled}>
         {form.fields}
@@ -63,7 +61,6 @@ const meta = {
   args: {
     open: true,
     title: 'Edit customer',
-    formTitle: 'Contact',
     onClose: () => undefined,
     onSubmit: () => undefined,
   },

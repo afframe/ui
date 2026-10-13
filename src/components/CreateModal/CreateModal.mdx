@@ -47,6 +47,8 @@ const [name, setName] = useState('');
 </CreateModal>;
 ```
 
+- `title` heads the modal and names the form; `label` (small text above the
+  title) and `description` (above the form) are optional.
 - `isDirty`: the app compares the field state with the initial values. When
   true, Escape, the close icon and Cancel ask "Discard changes?" first, unless
   `confirmDiscard` is false.
@@ -58,10 +60,13 @@ const [name, setName] = useState('');
 - `selectorPrimaryFocus`: the element focused on open. Default
   `[data-modal-primary-focus]`; without a match, the first form control.
 - `size`: `sm`, `md` (default) or `lg`.
-- A rejection shows `messages.submitError`. To show details from the
+- A rejection shows `messages.error`. To show details from the
   rejection reason, set `messages.errorText` (a function, so from a client
   component). To mark fields, set `invalid` on them before rejecting: focus then goes to
   the first invalid field instead of the alert.
+- `ref` and any other HTML attributes (`id`, `data-*`, `style`) go to Carbon
+  Modal's root `div`, where `className` lands too. The ref is `null` while
+  the modal is closed. The discard dialog renders beside it, never inside.
 
 <ArgTypes of={CreateModalStories} />
 
@@ -71,19 +76,19 @@ const [name, setName] = useState('');
 `defaultCreateModalMessages`. All strings except the optional `errorText` function, which is set
 from a client component.
 
-| Key                    | Default                                    |
-| ---------------------- | ------------------------------------------ |
-| `create`               | Create                                     |
-| `cancel`               | Cancel                                     |
-| `submitting`           | Creating                                   |
-| `submitError`          | The changes could not be saved. Try again. |
-| `errorText`            | not set: `submitError` is shown            |
-| `errorIconDescription` | Error                                      |
-| `discardTitle`         | Discard changes?                           |
-| `discardBody`          | Your changes will be lost.                 |
-| `discard`              | Discard                                    |
-| `keepEditing`          | Keep editing                               |
-| `closeIconDescription` | Close                                      |
+| Key                    | Default                                                 |
+| ---------------------- | ------------------------------------------------------- |
+| `create`               | Create                                                  |
+| `cancel`               | Cancel                                                  |
+| `pending`              | Creating                                                |
+| `error`                | The changes could not be saved. Try again.              |
+| `errorText`            | not set: `error` is shown                               |
+| `errorIconDescription` | Error                                                   |
+| `discardTitle`         | Discard changes?                                        |
+| `discardBody`          | Your changes will be lost.                              |
+| `discard`              | Discard                                                 |
+| `keepEditing`          | Keep editing                                            |
+| `closeIconDescription` | Close (the modal's and the discard dialog's close icon) |
 
 ## Keyboard and screen reader behaviour
 
@@ -108,8 +113,8 @@ Screen readers announce:
 
 - the modal as a dialog named by its title, and the form named by the title;
 - while submitting, the form as busy and the primary button's loading text
-  (`submitting`);
-- a rejected submit as an alert with `submitError` (or `errorText(error)`). Focus moves to the first
+  (`pending`);
+- a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
   `discardBody`.

@@ -31,6 +31,7 @@ import { ImportModal } from '@afframe/ui';
   onClose={() => setOpen(false)}
   launcherRef={launcherRef}
   title="Import invoices"
+  description="Add a CSV or Excel file."
   accept={['.csv', '.xlsx']}
   maxFileSize={5_000_000}
   onImport={(files) => api.importInvoices(files)}
@@ -41,7 +42,7 @@ import { ImportModal } from '@afframe/ui';
   Cancel, the close icon, Escape, and after a successful import.
 - `onImport(files)`: called with the valid files. It may return a promise:
   while it runs the buttons and the drop area are disabled and closing waits;
-  if it rejects, the dialog stays open with the `importFailed` alert.
+  if it rejects, the dialog stays open with the `error` alert.
 - `onImportUrl(url)`: when set, a URL field and an Import from URL button
   appear. Import also uses the URL when no file is listed.
 - `accept`: file extensions (`.csv`) or MIME types (`text/csv`, `image/*`).
@@ -49,9 +50,13 @@ import { ImportModal } from '@afframe/ui';
 - `maxFileSize`: the largest accepted file in bytes.
 - `multiple`: allow more than one file (default `false`: a new file replaces
   the listed one).
-- `title`, `description`: replace the default heading and text.
+- `title` (required): the heading. `label` (small text above it) and
+  `description` (above the drop area) are optional.
 - `locale`: the locale of file sizes (default `cs-CZ`).
 - `messages`: overrides for the strings below.
+- `ref` and any other HTML attributes (`id`, `data-*`, `style`) go to Carbon
+  Modal's root `div`, where `className` lands too. The ref is `null` while
+  the dialog is closed.
 
 A click on the page behind the dialog does not close it.
 
@@ -83,12 +88,10 @@ A click on the page behind the dialog does not close it.
 `messages?: Partial<ImportModalMessages>`; defaults in
 `defaultImportModalMessages`. Function keys take the values shown; override
 them from a client component (a function cannot cross from a server
-component).
+component). The title and description are props, not messages.
 
 | Key                    | Default                                                          |
 | ---------------------- | ---------------------------------------------------------------- |
-| `title`                | Import                                                           |
-| `description`          | Add a file to import.                                            |
 | `dropLabel`            | File                                                             |
 | `browseLabel`          | Drag and drop a file here or click to browse                     |
 | `requirements`         | Accepted: `accept`. Maximum size: `limit`.                       |
@@ -99,12 +102,12 @@ component).
 | `removeFile`           | Remove file (Carbon adds " - `file name`")                       |
 | `invalidType`          | `name` is not an accepted file type. Use `accept`.               |
 | `tooLarge`             | `name` is larger than `limit`.                                   |
-| `importFailed`         | The import failed. Try again.                                    |
 | `fileAdded`            | `name` added.                                                    |
 | `extraFilesIgnored`    | Only one file can be imported; `count` other files were ignored. |
 | `cancel`               | Cancel                                                           |
 | `pending`              | Working                                                          |
-| `genericError`         | Something went wrong. Try again. (not used here)                 |
+| `error`                | The import failed. Try again.                                    |
+| `errorText`            | not set: `error` is shown                                        |
 | `errorIconDescription` | Error                                                            |
 | `closeIconDescription` | Close                                                            |
 
@@ -149,4 +152,4 @@ Screen readers announce:
   with `role="alert"`), so it is not repeated in the status region;
 - each remove button as "Remove file - `file name`";
 - the spinner text (`pending`) while an import runs, and a failure as an alert
-  (`importFailed`).
+  (`error`).

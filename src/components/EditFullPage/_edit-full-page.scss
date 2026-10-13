@@ -14,6 +14,14 @@
   gap: $spacing-05;
 }
 
+.afframe-edit-full-page-label {
+  @include type.type-style('label-01');
+
+  // Sits close to the title, inside the body's gap.
+  margin-block-end: -$spacing-04;
+  color: $text-secondary;
+}
+
 .afframe-edit-full-page-title {
   @include type.type-style('heading-04');
 

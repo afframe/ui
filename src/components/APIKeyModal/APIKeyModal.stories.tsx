@@ -33,6 +33,7 @@ const meta = {
   args: {
     open: true,
     onClose: () => undefined,
+    title: 'Generate an API key',
     // Fixed demo value, not a real key.
     onGenerate: () => Promise.resolve('demo_key_0123456789abcdef'),
     showDownload: true,
@@ -79,7 +80,12 @@ export const WithSteps: Story = {
 };
 
 export const Edit: Story = {
-  args: { mode: 'edit', apiKeyName: 'CI pipeline', onSave: () => undefined },
+  args: {
+    mode: 'edit',
+    title: 'Edit API key',
+    apiKeyName: 'CI pipeline',
+    onSave: () => undefined,
+  },
 };
 
 export const Pending: Story = {

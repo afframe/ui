@@ -36,9 +36,7 @@ function Harness({ onSubmit, initialName, extraFields }: HarnessProps) {
         onSubmit={onSubmit}
         launcherRef={launcherRef}
         title="New customer"
-        subtitle="Customers appear in the invoice form once created."
-        formTitle="Contact"
-        formDescription="Billing contact for this customer."
+        description="Customers appear in the invoice form once created."
         isDirty={form.isDirty}
         submitDisabled={form.submitDisabled}>
         {form.fields}
@@ -59,7 +57,6 @@ const meta = {
   args: {
     open: true,
     title: 'New customer',
-    formTitle: 'Contact',
     onClose: () => undefined,
     onSubmit: () => undefined,
   },

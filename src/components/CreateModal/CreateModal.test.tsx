@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
@@ -153,7 +153,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
   await launch();
   await userEvent.click(screen.getByRole('button', { name: 'Create' }));
   expect((await screen.findByRole('alert')).textContent).toContain(
-    defaultCreateModalMessages.submitError
+    defaultCreateModalMessages.error
   );
   expect(onClose).not.toHaveBeenCalled();
   expect(screen.getByRole('dialog', { name: 'Item A' })).toBeTruthy();
@@ -185,8 +185,27 @@ test('messages replace the busy state strings too', async () => {
   );
   await launch();
   await userEvent.click(screen.getByRole('button', { name: s.create }));
-  await waitFor(() =>
-    expect(document.body.textContent).toContain(s.submitting)
-  );
+  await waitFor(() => expect(document.body.textContent).toContain(s.pending));
   expect(englishLeft()).toEqual([]);
+});
+
+test('ref and rest props reach the root', async () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <AfframeProvider>
+      <CreateModal
+        ref={ref}
+        data-testid="root"
+        open
+        title="Customer"
+        label="Customers"
+        onClose={() => undefined}
+        onSubmit={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const root = await screen.findByTestId('root');
+  expect(ref.current).toBe(root);
+  expect(root.classList).toContain('afframe-create-modal');
+  expect(screen.getByText('Customers')).toBeTruthy();
 });

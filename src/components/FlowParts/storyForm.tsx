@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { expect, screen, userEvent, waitFor } from 'storybook/test';
 import { TextInput } from '../../index.js';
-import { defaultCreateEditFlowMessages } from './messages.js';
+import { defaultFormFlowMessages } from './messages.js';
 
 const duplicateError = 'A customer with this name already exists.';
 
@@ -57,7 +57,7 @@ export const clickPrimary = (name: string) => async () => {
 /** Clicks the primary button and waits for the error notification. */
 export const playRejected = (name: string) => async () => {
   await clickPrimary(name)();
-  await screen.findByText(defaultCreateEditFlowMessages.submitError, {
+  await screen.findByText(defaultFormFlowMessages.error, {
     selector: '.cds--inline-notification__title',
   });
 };

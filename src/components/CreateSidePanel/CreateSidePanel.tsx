@@ -1,6 +1,6 @@
 'use client';
 import { resolveMessages } from '../../messages.js';
-import { defaultCreateEditFlowMessages } from '../FlowParts/messages.js';
+import { defaultFormFlowMessages } from '../FlowParts/messages.js';
 import { FlowSidePanel } from '../FlowParts/FlowSidePanel.js';
 import type {
   FlowSidePanelBaseProps,
@@ -13,10 +13,9 @@ export interface CreateSidePanelMessages extends FlowSidePanelMessages {
 }
 
 export const defaultCreateSidePanelMessages: CreateSidePanelMessages = {
-  ...defaultCreateEditFlowMessages,
-  submitting: 'Creating',
+  ...defaultFormFlowMessages,
+  pending: 'Creating',
   create: 'Create',
-  closePanel: 'Close panel',
 };
 
 export interface CreateSidePanelProps extends FlowSidePanelBaseProps {

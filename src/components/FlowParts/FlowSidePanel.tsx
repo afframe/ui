@@ -3,32 +3,34 @@
 // EditSidePanel. Not exported.
 import { SidePanel } from '@carbon/ibm-products';
 import { InlineLoading } from '@carbon/react';
-import { useId } from 'react';
-import type { ComponentProps, ReactNode, RefObject } from 'react';
+import type {
+  ComponentProps,
+  HTMLAttributes,
+  ReactNode,
+  Ref,
+  RefObject,
+} from 'react';
 import { DiscardDialog, FlowError, FlowForm } from './FlowParts.js';
-import type { CreateEditFlowMessages } from './messages.js';
+import type { DiscardMessages, FlowMessages } from './messages.js';
+import { useObjectRef } from './refs.js';
 import { firstControlSelector, isCloseEscape, useFlow } from './useFlow.js';
 
 type SidePanelProps = ComponentProps<typeof SidePanel>;
 
-export interface FlowSidePanelMessages extends CreateEditFlowMessages {
-  /** Close icon of the panel. */
-  closePanel: string;
-}
+export type FlowSidePanelMessages = FlowMessages & DiscardMessages;
 
-/** Props both side panels share; the docs pages list them. */
-export interface FlowSidePanelBaseProps {
+interface FlowSidePanelOwnProps {
   open: boolean;
   /** Called after a successful submit, Discard, or a close of a clean form. */
   onClose: () => void;
   /** A returned promise keeps the panel busy until it settles. */
   onSubmit: () => void | Promise<void>;
-  /** Panel heading. */
+  /** Panel heading; also names the panel and its form. */
   title: string;
-  subtitle?: ReactNode;
-  /** Heading of the form inside the panel; names the form. */
-  formTitle: string;
-  formDescription?: ReactNode;
+  /** Small text above the title. A string: IBM SidePanel renders only strings here. */
+  label?: string;
+  /** Text under the title. */
+  description?: ReactNode;
   /** Default `md`. */
   size?: SidePanelProps['size'];
   /** Default `right`. */
@@ -48,6 +50,28 @@ export interface FlowSidePanelBaseProps {
   className?: string;
 }
 
+/**
+ * Props both side panels share; the docs pages list them. The rest go to
+ * IBM's `aside`, which sets `aria-label`, `onKeyDown` and the animation
+ * handlers itself.
+ */
+export interface FlowSidePanelBaseProps
+  extends
+    FlowSidePanelOwnProps,
+    Omit<
+      HTMLAttributes<HTMLElement>,
+      | keyof FlowSidePanelOwnProps
+      | 'aria-label'
+      | 'onKeyDown'
+      | 'onAnimationStart'
+      | 'onAnimationEnd'
+    > {
+  /** The panel's `aside`; null while closed. */
+  ref?: Ref<HTMLElement> | undefined;
+  /** Default IBM's literal `c4p--side-panel`; IBM types it without `undefined`. */
+  id?: string;
+}
+
 const primaryFocusSelector = firstControlSelector
   .split(', ')
   .map((selector) => `.afframe-create-edit-form ${selector}`)
@@ -58,9 +82,8 @@ export function FlowSidePanel({
   onClose,
   onSubmit,
   title,
-  subtitle,
-  formTitle,
-  formDescription,
+  label,
+  description,
   size = 'md',
   placement = 'right',
   slideIn = false,
@@ -72,21 +95,24 @@ export function FlowSidePanel({
   launcherRef,
   children,
   className,
+  ref,
   primaryLabel,
   text,
+  ...rest
 }: FlowSidePanelBaseProps & {
   isDirty?: boolean;
   primaryLabel: string;
   text: FlowSidePanelMessages;
 }) {
-  const id = useId();
+  // IBM uses its ref as an object (focus trap, exit animation).
+  const panelRef = useObjectRef<HTMLElement>(ref);
   const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
     isDirty,
     confirmDiscard,
     launcherRef,
-    messages: { error: text.submitError, errorText: text.errorText },
+    messages: { error: text.error, errorText: text.errorText },
   });
   const submit = async () => {
     if (await flow.run(onSubmit)) flow.close();
@@ -100,8 +126,8 @@ export function FlowSidePanel({
       // with no text and an English icon name, so the label carries ours.
       label: (flow.pending ? (
         <InlineLoading
-          description={text.submitting}
-          iconDescription={text.submitting}
+          description={text.pending}
+          iconDescription={text.pending}
         />
       ) : (
         primaryLabel
@@ -126,9 +152,13 @@ export function FlowSidePanel({
           if (slideIn && isCloseEscape(event)) flow.requestClose();
         }}>
         <SidePanel
+          {...rest}
+          // IBM types its ref as a div; the node is its aside.
+          ref={panelRef as RefObject<HTMLDivElement>}
           open={open}
           title={title}
-          {...(subtitle ? { subtitle } : {})}
+          {...(label ? { labelText: label } : {})}
+          {...(description ? { subtitle: description } : {})}
           size={size}
           placement={placement}
           includeOverlay={!slideIn}
@@ -140,7 +170,7 @@ export function FlowSidePanel({
             : { slideIn: false as const })}
           {...(decorator ? { decorator } : {})}
           selectorPrimaryFocus={primaryFocusSelector}
-          closeIconDescription={text.closePanel}
+          closeIconDescription={text.closeIconDescription}
           onRequestClose={flow.requestClose}
           actions={actions}
           className={['afframe-flow-side-panel', className]
@@ -150,17 +180,7 @@ export function FlowSidePanel({
             flow={flow}
             onSubmit={() => void submit()}
             submitDisabled={submitDisabled}
-            aria-labelledby={`${id}-form-title`}>
-            <h3
-              id={`${id}-form-title`}
-              className="afframe-flow-side-panel-title">
-              {formTitle}
-            </h3>
-            {formDescription && (
-              <p className="afframe-flow-side-panel-description">
-                {formDescription}
-              </p>
-            )}
+            aria-label={title}>
             {children}
             <FlowError
               error={flow.error}

@@ -4,11 +4,11 @@ import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import { DiscardDialog, FlowError, FlowForm } from './FlowParts.js';
-import { defaultCreateEditFlowMessages } from './messages.js';
-import type { CreateEditFlowMessages } from './messages.js';
+import { defaultFormFlowMessages } from './messages.js';
+import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useFlow } from './useFlow.js';
 
-const messages = defaultCreateEditFlowMessages;
+const messages = defaultFormFlowMessages;
 
 function Surface({
   open,
@@ -29,7 +29,7 @@ function Surface({
   launcherRef?: React.RefObject<HTMLElement | null>;
   submitDisabled?: boolean;
   windowEscape?: boolean;
-  surfaceMessages?: CreateEditFlowMessages;
+  surfaceMessages?: FlowMessages & DiscardMessages;
 }) {
   const flow = useFlow<HTMLFormElement>({
     open,
@@ -38,7 +38,7 @@ function Surface({
     ...(confirmDiscard === undefined ? {} : { confirmDiscard }),
     launcherRef,
     messages: {
-      error: surfaceMessages.submitError,
+      error: surfaceMessages.error,
       errorText: surfaceMessages.errorText,
     },
   });
@@ -94,7 +94,7 @@ function Harness(props: {
   removeLauncher?: boolean;
   noLauncherRef?: boolean;
   closeRef?: { current: () => void };
-  surfaceMessages?: CreateEditFlowMessages;
+  surfaceMessages?: FlowMessages & DiscardMessages;
 }) {
   const [open, setOpen] = useState(false);
   if (props.closeRef) props.closeRef.current = () => setOpen(false);
@@ -212,7 +212,7 @@ test('rejected submit keeps the surface open and focuses the alert', async () =>
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   const alert = await screen.findByRole('alert');
-  expect(alert.textContent).toContain(messages.submitError);
+  expect(alert.textContent).toContain(messages.error);
   expect(alert.textContent).not.toContain('Name is taken');
   expect(onClose).not.toHaveBeenCalled();
   await waitFor(() =>
@@ -224,7 +224,7 @@ test('rejected submit keeps the surface open and focuses the alert', async () =>
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect((await screen.findByRole('alert')).textContent).toContain(
-    messages.submitError
+    messages.error
   );
 });
 

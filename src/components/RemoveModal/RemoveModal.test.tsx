@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
@@ -26,6 +26,8 @@ function Harness({
       </button>
       <RemoveModal
         resourceName="Invoice 2026-001"
+        title="Delete Invoice 2026-001?"
+        description="Deleting Invoice 2026-001 is permanent and cannot be undone."
         onConfirm={onConfirm}
         {...props}
         {...(useLauncherRef ? { launcherRef } : {})}
@@ -231,6 +233,8 @@ test('overridden messages replace every English default', async () => {
   );
   renderHarness({
     messages,
+    title: 'Heading',
+    description: 'Body',
     confirmByTyping: true,
     onConfirm: () => Promise.reject(new Error('no')),
   });
@@ -241,7 +245,7 @@ test('overridden messages replace every English default', async () => {
   await userEvent.clear(input);
   await userEvent.type(input, 'Invoice 2026-001');
   await userEvent.click(dangerButton('[[confirm]]', '[[dangerDescription]]'));
-  await until(() => expect(screen.getByText('[[genericError]]')).toBeTruthy());
+  await until(() => expect(screen.getByText('[[error]]')).toBeTruthy());
   await userEvent.clear(input);
   await userEvent.type(input, 'x');
   await userEvent.tab();
@@ -269,7 +273,7 @@ test('overridden messages replace every English default', async () => {
   const leftover = visible.replace(/\[\[\w+\]\]/g, '');
   for (const word of english) expect(leftover).not.toContain(word);
   expect(visible).toContain('[[mismatch]]');
-  expect(visible).toContain('[[genericError]]');
+  expect(visible).toContain('[[error]]');
   expect(visible).toContain('[[dangerDescription]]');
 });
 
@@ -294,4 +298,29 @@ test('an empty confirmation phrase keeps the confirm button disabled and warns',
     expect.stringContaining('RemoveModal: confirmByTyping')
   );
   warn.mockRestore();
+});
+
+test('ref and rest props reach the root', async () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <AfframeProvider>
+      <RemoveModal
+        ref={ref}
+        data-testid="root"
+        open
+        title="Delete Invoice 2026-001?"
+        description="Deleting it is permanent."
+        resourceName="Invoice 2026-001"
+        onClose={() => undefined}
+        onConfirm={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const root = await screen.findByTestId('root');
+  expect(ref.current).toBe(root);
+  expect(root.classList).toContain('afframe-remove-modal');
+  // The internal ref still works: Cancel gets the initial focus.
+  await until(() =>
+    expect(active()).toBe(screen.getByRole('button', { name: 'Cancel' }))
+  );
 });

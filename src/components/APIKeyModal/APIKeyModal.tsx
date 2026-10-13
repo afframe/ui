@@ -11,16 +11,15 @@ import {
 } from '@carbon/react';
 import { Download } from '@carbon/icons-react';
 import { useEffect, useId, useRef, useState } from 'react';
-import type { ReactNode, RefObject } from 'react';
+import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
 import { FlowError, FlowStatus } from '../FlowParts/FlowParts.js';
-import { defaultModalPartsMessages } from '../FlowParts/messages.js';
-import type { ModalPartsMessages } from '../FlowParts/messages.js';
+import { defaultTaskModalMessages } from '../FlowParts/messages.js';
+import type { FlowMessages } from '../FlowParts/messages.js';
+import type { ModalRootAttribute } from '../FlowParts/refs.js';
 import { useFlow } from '../FlowParts/useFlow.js';
 
-export interface APIKeyModalMessages extends ModalPartsMessages {
-  generateTitle: string;
-  editTitle: string;
+export interface APIKeyModalMessages extends FlowMessages {
   nameLabel: string;
   nameHelper: string;
   generate: string;
@@ -32,6 +31,8 @@ export interface APIKeyModalMessages extends ModalPartsMessages {
   hideKey: string;
   /** Accessible name of the copy button. */
   copy: string;
+  /** Copy button feedback until the clipboard answers. */
+  copying: string;
   /** Copy button feedback and the announcement after a copy. */
   copied: string;
   /** Announced when the clipboard refused the key. */
@@ -46,9 +47,7 @@ export interface APIKeyModalMessages extends ModalPartsMessages {
 }
 
 export const defaultAPIKeyModalMessages: APIKeyModalMessages = {
-  ...defaultModalPartsMessages,
-  generateTitle: 'Generate an API key',
-  editTitle: 'Edit API key',
+  ...defaultTaskModalMessages,
   nameLabel: 'Name',
   nameHelper: 'A name helps you tell your keys apart.',
   generate: 'Generate',
@@ -57,6 +56,7 @@ export const defaultAPIKeyModalMessages: APIKeyModalMessages = {
   showKey: 'Show key',
   hideKey: 'Hide key',
   copy: 'Copy key',
+  copying: 'Copying',
   copied: 'Copied',
   copyFailed: 'The key could not be copied. Select it and copy it by hand.',
   storeWarning:
@@ -74,7 +74,7 @@ export interface APIKeyModalStep {
   valid?: boolean;
 }
 
-interface APIKeyModalBaseProps {
+interface APIKeyModalOwnProps {
   open: boolean;
   onClose: () => void;
   /** Focus target on close; default the element focused before opening. */
@@ -93,6 +93,30 @@ interface APIKeyModalBaseProps {
   downloadFileType?: 'txt' | 'json';
   /** Custom steps shown before the name step, with Previous and Next. */
   steps?: APIKeyModalStep[];
+  /** Modal heading; pick one per `mode`. */
+  title: string;
+  /** Small text above the title. */
+  label?: ReactNode;
+  /** Text above the content. */
+  description?: ReactNode;
+}
+
+/** The rest go to Carbon Modal's root `div`. */
+interface APIKeyModalBaseProps
+  extends
+    APIKeyModalOwnProps,
+    Omit<
+      HTMLAttributes<HTMLDivElement>,
+      | keyof APIKeyModalOwnProps
+      | ModalRootAttribute
+      | 'mode'
+      | 'onGenerate'
+      | 'onSave'
+    > {
+  /** Carbon Modal's root `div`; null while closed. */
+  ref?: Ref<HTMLDivElement> | undefined;
+  // Carbon types it without `undefined`.
+  id?: string;
 }
 
 /** `mode` decides which callback is required. */
@@ -190,6 +214,9 @@ function KeyView({
 
 export function APIKeyModal(props: APIKeyModalProps) {
   const {
+    mode = 'generate',
+    onGenerate,
+    onSave,
     open,
     onClose,
     launcherRef,
@@ -201,8 +228,11 @@ export function APIKeyModal(props: APIKeyModalProps) {
     downloadFileName = 'apikey',
     downloadFileType = 'txt',
     steps = [],
+    title,
+    label,
+    description,
+    ...rest
   } = props;
-  const mode = props.mode ?? 'generate';
   const text = resolveMessages(defaultAPIKeyModalMessages, messages);
   const id = useId();
   const nameRef = useRef<HTMLInputElement>(null);
@@ -231,7 +261,7 @@ export function APIKeyModal(props: APIKeyModalProps) {
     open,
     onClose,
     launcherRef,
-    messages: { error: text.genericError },
+    messages: { error: text.error, errorText: text.errorText },
     initialFocus: (): HTMLElement | null =>
       nameStep === 0 ? nameRef.current : dialog.containerRef.current,
   });
@@ -263,8 +293,8 @@ export function APIKeyModal(props: APIKeyModalProps) {
   const generate = async () => {
     let key: string | undefined;
     const ok = await dialog.run(async () => {
-      if (props.mode === 'edit') return;
-      const generated = await props.onGenerate(trimmed);
+      if (!onGenerate) return;
+      const generated = await onGenerate(trimmed);
       // An empty key would show an empty success view: treat it as a failure.
       if (typeof generated !== 'string' || generated === '') {
         throw new Error('onGenerate resolved without a key');
@@ -279,18 +309,17 @@ export function APIKeyModal(props: APIKeyModalProps) {
   };
 
   const save = async () => {
-    if (props.mode !== 'edit') return;
-    const { onSave } = props;
+    if (!onSave) return;
     if (await dialog.run(() => onSave(trimmed))) dialog.close();
   };
 
   // The copy button shows its feedback on click, before the clipboard
-  // answers: it says `pending` until the result, then the same text as the
+  // answers: it says `copying` until the result, then the same text as the
   // live region.
   const [copyFeedback, setCopyFeedback] = useState(text.copied);
   const copy = async () => {
     if (apiKey === null) return;
-    setCopyFeedback(text.pending);
+    setCopyFeedback(text.copying);
     let result = text.copied;
     try {
       await navigator.clipboard.writeText(apiKey);
@@ -319,11 +348,13 @@ export function APIKeyModal(props: APIKeyModalProps) {
 
   return (
     <Modal
+      {...rest}
       open={open}
       size="sm"
       preventCloseOnClickOutside
       className={['afframe-api-key-modal', className].filter(Boolean).join(' ')}
-      modalHeading={mode === 'edit' ? text.editTitle : text.generateTitle}
+      modalHeading={title}
+      {...(label ? { modalLabel: label } : {})}
       primaryButtonText={primary.text}
       primaryButtonDisabled={primary.disabled}
       {...(succeeded
@@ -342,6 +373,7 @@ export function APIKeyModal(props: APIKeyModalProps) {
         ref={dialog.containerRef}
         tabIndex={-1}
         className="afframe-modal-body">
+        {description && <p>{description}</p>}
         {succeeded ? (
           <KeyView
             id={`${id}-key`}

@@ -4,13 +4,6 @@
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
 
-.afframe-create-modal-subtitle {
-  @include type.type-style('body-01');
-
-  margin-block-end: $spacing-03;
-  color: $text-primary;
-}
-
 .afframe-create-modal-description {
   @include type.type-style('body-01');
 

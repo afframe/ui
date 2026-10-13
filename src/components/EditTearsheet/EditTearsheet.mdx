@@ -74,6 +74,10 @@ const [vat, setVat] = useState(customer.vat);
 - `submitDisabled`: disables Save and Enter.
 - `launcherRef`: where focus goes on close. Without it, or when it is gone,
   focus returns to the element that had focus when the tearsheet opened.
+- `ref` and any other HTML attributes (`id`, `data-*`, `style`) go to the
+  tearsheet's root `div` (Carbon ComposedModal's, portaled to `body`), where
+  `className` lands too. IBM names the dialog itself. The ref is `null` while
+  the tearsheet is closed; the discard dialog renders beside it, never inside.
 
 Below the `md` breakpoint IBM's tearsheet moves the navigation into a closed
 side panel; use the full width layout for multi-form edits.
@@ -86,22 +90,21 @@ side panel; use the full width layout for multi-form edits.
 `defaultEditTearsheetMessages`. `sectionInvalid` and the optional `errorText` are functions: override them
 from a client component (server components can pass only the string keys).
 
-| Key                    | Default                                    |
-| ---------------------- | ------------------------------------------ |
-| `save`                 | Save                                       |
-| `cancel`               | Cancel                                     |
-| `sectionsNavLabel`     | Sections                                   |
-| `sectionInvalid`       | `title` has errors                         |
-| `closeTearsheet`       | Close                                      |
-| `submitting`           | Saving                                     |
-| `submitError`          | The changes could not be saved. Try again. |
-| `errorText`            | not set: `submitError` is shown            |
-| `errorIconDescription` | Error                                      |
-| `discardTitle`         | Discard changes?                           |
-| `discardBody`          | Your changes will be lost.                 |
-| `discard`              | Discard                                    |
-| `keepEditing`          | Keep editing                               |
-| `closeIconDescription` | Close (the discard dialog's close icon)    |
+| Key                    | Default                                                     |
+| ---------------------- | ----------------------------------------------------------- |
+| `save`                 | Save                                                        |
+| `cancel`               | Cancel                                                      |
+| `sectionsNavLabel`     | Sections                                                    |
+| `sectionInvalid`       | `title` has errors                                          |
+| `pending`              | Saving                                                      |
+| `error`                | The changes could not be saved. Try again.                  |
+| `errorText`            | not set: `error` is shown                                   |
+| `errorIconDescription` | Error                                                       |
+| `discardTitle`         | Discard changes?                                            |
+| `discardBody`          | Your changes will be lost.                                  |
+| `discard`              | Discard                                                     |
+| `keepEditing`          | Keep editing                                                |
+| `closeIconDescription` | Close (the tearsheet's and the discard dialog's close icon) |
 
 ## Keyboard and screen reader behaviour
 
@@ -129,8 +132,8 @@ Screen readers announce:
   named `sectionsNavLabel`, the current item with `aria-current`; an invalid
   form's error icon as an image named `sectionInvalid(title)`;
 - each form as a region named by its heading;
-- while saving, the form as busy and Save's loading text (`submitting`);
-- a rejected submit as an alert with `submitError` (or `errorText(error)`). Focus moves to the first
+- while saving, the form as busy and Save's loading text (`pending`);
+- a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
   `discardBody`.

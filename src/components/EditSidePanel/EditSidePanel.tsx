@@ -1,6 +1,6 @@
 'use client';
 import { resolveMessages } from '../../messages.js';
-import { defaultCreateEditFlowMessages } from '../FlowParts/messages.js';
+import { defaultFormFlowMessages } from '../FlowParts/messages.js';
 import { FlowSidePanel } from '../FlowParts/FlowSidePanel.js';
 import type {
   FlowSidePanelBaseProps,
@@ -13,9 +13,8 @@ export interface EditSidePanelMessages extends FlowSidePanelMessages {
 }
 
 export const defaultEditSidePanelMessages: EditSidePanelMessages = {
-  ...defaultCreateEditFlowMessages,
+  ...defaultFormFlowMessages,
   save: 'Save',
-  closePanel: 'Close panel',
 };
 
 export interface EditSidePanelProps extends FlowSidePanelBaseProps {

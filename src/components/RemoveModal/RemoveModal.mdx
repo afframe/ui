@@ -40,6 +40,8 @@ const launcherRef = useRef<HTMLButtonElement>(null);
   onClose={() => setOpen(false)}
   launcherRef={launcherRef}
   resourceName="Invoice 2026-001"
+  title="Delete Invoice 2026-001?"
+  description="Deleting Invoice 2026-001 is permanent and cannot be undone."
   onConfirm={() => api.deleteInvoice(id)}
 />;
 ```
@@ -50,17 +52,21 @@ const launcherRef = useRef<HTMLButtonElement>(null);
   the confirm button shows a spinner with the `pending` message, and Escape,
   Cancel and the close icon do nothing. If it rejects, the dialog stays open
   and shows an error alert; the user can try again.
-- `kind`: `delete` or `remove`; changes the default title and button text
-  only.
-- `title`, `body`: replace the default heading and body.
+- `title` (required): the heading, for example "Delete Invoice 2026-001?".
+- `description` (required): what happens to the resource. A string renders
+  as a paragraph; any other node as given.
+- `kind`: `delete` (default) or `remove`; picks the danger button text.
 - `confirmByTyping`: `true` asks the user to type `resourceName`; a string
   asks for that phrase. The confirm button stays disabled until the typed text
   equals the phrase exactly; the match is case-sensitive and spaces count.
   An empty phrase (`confirmByTyping=""`, or `true` with an empty
   `resourceName`) keeps the confirm button disabled and logs a warning.
-- `label`: a small label above the title (for example the item type).
+- `label`: small text above the title (for example the item type).
 - `launcherRef`: the element that gets focus back on close.
 - `messages`: overrides for the strings below.
+- `ref` and any other HTML attributes (`id`, `data-*`, `style`) go to Carbon
+  Modal's root `div`, where `className` lands too. The ref is `null` while
+  the dialog is closed.
 
 A click on the page behind the dialog does not close it.
 
@@ -71,21 +77,20 @@ A click on the page behind the dialog does not close it.
 `messages?: Partial<RemoveModalMessages>`; defaults in
 `defaultRemoveModalMessages`. Keys that are functions take the values shown;
 override them from a client component (a function cannot cross from a server
-component), or pass `title` and `body` as props.
+component). The title and description are props, not messages.
 
-| Key                    | Default                                                  |
-| ---------------------- | -------------------------------------------------------- |
-| `title`                | Delete `name`? / Remove `name`?                          |
-| `body`                 | Deleting `name` is permanent and cannot be undone. / ... |
-| `confirm`              | Delete / Remove                                          |
-| `typeToConfirm`        | Type `phrase` to confirm                                 |
-| `mismatch`             | The text does not match.                                 |
-| `dangerDescription`    | Danger                                                   |
-| `cancel`               | Cancel                                                   |
-| `pending`              | Working                                                  |
-| `genericError`         | Something went wrong. Try again.                         |
-| `errorIconDescription` | Error                                                    |
-| `closeIconDescription` | Close                                                    |
+| Key                    | Default                          |
+| ---------------------- | -------------------------------- |
+| `confirm`              | Delete / Remove                  |
+| `typeToConfirm`        | Type `phrase` to confirm         |
+| `mismatch`             | The text does not match.         |
+| `dangerDescription`    | Danger                           |
+| `cancel`               | Cancel                           |
+| `pending`              | Working                          |
+| `error`                | Something went wrong. Try again. |
+| `errorText`            | not set: `error` is shown        |
+| `errorIconDescription` | Error                            |
+| `closeIconDescription` | Close                            |
 
 ## Examples
 
@@ -128,4 +133,4 @@ Screen readers announce:
 - the text field by its label, and the mismatch message after the field loses
   focus with text that does not match;
 - the spinner text (`pending`) while the action runs;
-- a failure as an alert with `genericError`.
+- a failure as an alert with `error`.

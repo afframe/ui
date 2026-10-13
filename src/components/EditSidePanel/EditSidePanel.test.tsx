@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
@@ -35,7 +35,6 @@ function Harness({ onClose, ...props }: HarnessProps) {
       <EditSidePanel
         open={open}
         title="Panel A"
-        formTitle="Form A"
         launcherRef={launcherRef}
         onSubmit={props.onSubmit ?? (() => undefined)}
         onClose={() => {
@@ -73,7 +72,7 @@ test('opens on the first field and Escape closes back to the launcher', async ()
   render(<Harness onClose={onClose} />);
   expect(screen.queryByRole('form')).toBeNull();
   await launch();
-  expect(screen.getByRole('form', { name: 'Form A' })).toBeTruthy();
+  expect(screen.getByRole('form', { name: 'Panel A' })).toBeTruthy();
   await userEvent.keyboard('{Escape}');
   expect(onClose).toHaveBeenCalledTimes(1);
   await waitFor(() => expect(active()).toBe(launcher()));
@@ -141,7 +140,7 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText(defaults.submitting).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(defaults.pending).length).toBeGreaterThan(0);
   await userEvent.keyboard('{Escape}');
   expect(onClose).not.toHaveBeenCalled();
   resolve();
@@ -159,7 +158,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
   await launch();
   await userEvent.click(screen.getByRole('button', { name: primary }));
   expect((await screen.findByRole('alert')).textContent).toContain(
-    defaults.submitError
+    defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
   expect(screen.getByRole('form')).toBeTruthy();
@@ -190,8 +189,32 @@ test('messages replace the busy state strings too', async () => {
   );
   await launch();
   await userEvent.click(screen.getByRole('button', { name: s.save }));
-  await waitFor(() =>
-    expect(document.body.textContent).toContain(s.submitting)
-  );
+  await waitFor(() => expect(document.body.textContent).toContain(s.pending));
   expect(englishLeft(defaults)).toEqual([]);
+});
+
+test('ref and rest props reach the aside', async () => {
+  const ref = createRef<HTMLElement>();
+  render(
+    <AfframeProvider>
+      <EditSidePanel
+        ref={ref}
+        data-testid="root"
+        id="edit-customer"
+        open
+        title="Edit customer"
+        label="Customers"
+        description="Changes apply to new invoices."
+        onClose={() => undefined}
+        onSubmit={() => undefined}>
+        <input aria-label="Name" />
+      </EditSidePanel>
+    </AfframeProvider>
+  );
+  const root = await screen.findByTestId('root');
+  expect(root.tagName).toBe('ASIDE');
+  expect(ref.current).toBe(root);
+  expect(root.id).toBe('edit-customer');
+  expect(screen.getByText('Customers')).toBeTruthy();
+  expect(screen.getByText('Changes apply to new invoices.')).toBeTruthy();
 });

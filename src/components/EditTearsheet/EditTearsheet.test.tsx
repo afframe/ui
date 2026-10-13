@@ -5,7 +5,7 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
@@ -208,7 +208,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
   await launch();
   await userEvent.click(screen.getByRole('button', { name: defaults.save }));
   expect((await screen.findByRole('alert')).textContent).toContain(
-    defaults.submitError
+    defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
 });
@@ -253,9 +253,7 @@ test('messages replace the busy state strings too', async () => {
   );
   await launch();
   await userEvent.click(screen.getByRole('button', { name: s.save }));
-  await waitFor(() =>
-    expect(document.body.textContent).toContain(s.submitting)
-  );
+  await waitFor(() => expect(document.body.textContent).toContain(s.pending));
   expect(
     englishLeft({
       ...defaults,
@@ -320,4 +318,26 @@ test('the current nav item resets on open and stays in range when forms shrink',
   await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
   expect(currentItem()).toBe('One');
   warn.mockRestore();
+});
+
+test('ref and rest props reach the root', async () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <AfframeProvider>
+      <EditTearsheet
+        ref={ref}
+        data-testid="root"
+        open
+        title="Customer"
+        onClose={() => undefined}
+        onSubmit={() => undefined}>
+        <EditTearsheetForm id="ref-general" title="General">
+          <input aria-label="Name" />
+        </EditTearsheetForm>
+      </EditTearsheet>
+    </AfframeProvider>
+  );
+  const root = await screen.findByTestId('root');
+  expect(ref.current).toBe(root);
+  expect(root.classList).toContain('afframe-edit-tearsheet');
 });

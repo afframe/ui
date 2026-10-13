@@ -33,6 +33,7 @@ const meta = {
   args: {
     open: true,
     onClose: () => undefined,
+    title: 'Export',
     filename: 'invoices-2026',
     formats: [
       { extension: 'csv', description: 'Spreadsheet' },

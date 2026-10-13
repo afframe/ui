@@ -2,9 +2,11 @@
 
 Date: 2026-10-07
 
+Amended: 2026-10-13
+
 ## Status
 
-Accepted. Refines [ADR 0012](0012-i18n-ready-english-czk.md).
+Accepted, amended 2026-10-13 (content props). Refines [ADR 0012](0012-i18n-ready-english-czk.md).
 
 ## Context
 
@@ -16,6 +18,10 @@ ADR 0012 requires every user-facing string of an Afframe-owned component to be o
 - A message is a string, or a function when the string needs a value (for example a count).
 - Messages cover accessible names, `aria-label`s, tooltips, empty and loading states, and the strings Carbon takes as props. Numbers, currencies and dates are not messages; they come from the formatters.
 - Formatting defaults: locale `cs-CZ`, time zone `Europe/Prague`, currency `CZK`, amounts as numbers rounded to the currency's minor digits. Each is overridable per call or per component. The values live in `src/format/defaults.ts`.
+
+## Amendment 2026-10-13: content props
+
+Titles and descriptions are content props, not messages. They name what the component shows, so the caller always sets them and they have no English default: the nine Afframe dialogs and flows take `title` (required), `label` and `description` as props. Messages keep the fixed interface strings (buttons, accessible names, states, errors).
 
 ## Consequences
 

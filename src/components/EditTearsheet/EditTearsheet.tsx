@@ -3,30 +3,34 @@ import { WarningFilled } from '@carbon/icons-react';
 import { preview__Tearsheet as Tearsheet } from '@carbon/ibm-products';
 import { InlineLoading } from '@carbon/react';
 import { Children, isValidElement, useEffect, useState } from 'react';
-import type { ReactElement, ReactNode, RefObject } from 'react';
+import type {
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  Ref,
+  RefObject,
+} from 'react';
 import { resolveMessages } from '../../messages.js';
 import { DiscardDialog, FlowError, FlowForm } from '../FlowParts/FlowParts.js';
-import { defaultCreateEditFlowMessages } from '../FlowParts/messages.js';
-import type { CreateEditFlowMessages } from '../FlowParts/messages.js';
+import { defaultFormFlowMessages } from '../FlowParts/messages.js';
+import type { DiscardMessages, FlowMessages } from '../FlowParts/messages.js';
+import type { ModalRootAttribute } from '../FlowParts/refs.js';
 import { useFlow } from '../FlowParts/useFlow.js';
 
-export interface EditTearsheetMessages extends CreateEditFlowMessages {
+export interface EditTearsheetMessages extends FlowMessages, DiscardMessages {
   /** Primary button. */
   save: string;
   /** Name of the side navigation that lists the forms. */
   sectionsNavLabel: string;
   /** Accessible name of the error icon on an invalid form's nav item. */
   sectionInvalid: (title: string) => string;
-  /** Close icon of the tearsheet. */
-  closeTearsheet: string;
 }
 
 export const defaultEditTearsheetMessages: EditTearsheetMessages = {
-  ...defaultCreateEditFlowMessages,
+  ...defaultFormFlowMessages,
   save: 'Save',
   sectionsNavLabel: 'Sections',
   sectionInvalid: (title) => `${title} has errors`,
-  closeTearsheet: 'Close',
 };
 
 export interface EditTearsheetFormProps {
@@ -65,7 +69,7 @@ export function EditTearsheetForm({
   );
 }
 
-export interface EditTearsheetProps {
+interface EditTearsheetOwnProps {
   open: boolean;
   /** Called after a successful submit, Discard, or a close of a clean form. */
   onClose: () => void;
@@ -89,6 +93,21 @@ export interface EditTearsheetProps {
   /** The forms: `EditTearsheetForm` elements. */
   children?: ReactNode;
   className?: string;
+}
+
+/**
+ * The rest go to the tearsheet's root `div` (Carbon ComposedModal's), which
+ * IBM names itself.
+ */
+export interface EditTearsheetProps
+  extends
+    EditTearsheetOwnProps,
+    Omit<
+      HTMLAttributes<HTMLDivElement>,
+      keyof EditTearsheetOwnProps | ModalRootAttribute | 'aria-labelledby'
+    > {
+  /** The tearsheet's root `div`; null while closed. */
+  ref?: Ref<HTMLDivElement> | undefined;
 }
 
 const influencerWidths = { narrow: '16rem', wide: '20rem' } as const;
@@ -116,6 +135,7 @@ export function EditTearsheet({
   messages,
   children,
   className,
+  ...rest
 }: EditTearsheetProps) {
   const text = resolveMessages(defaultEditTearsheetMessages, messages);
   const [current, setCurrent] = useState(0);
@@ -125,7 +145,7 @@ export function EditTearsheet({
     isDirty,
     confirmDiscard,
     launcherRef,
-    messages: { error: text.submitError, errorText: text.errorText },
+    messages: { error: text.error, errorText: text.errorText },
   });
 
   // Only EditTearsheetForm children are rendered and listed.
@@ -178,8 +198,8 @@ export function EditTearsheet({
       // with no text and an English icon name, so the label carries ours.
       label: (flow.pending ? (
         <InlineLoading
-          description={text.submitting}
-          iconDescription={text.submitting}
+          description={text.pending}
+          iconDescription={text.pending}
         />
       ) : (
         text.save
@@ -192,6 +212,7 @@ export function EditTearsheet({
   return (
     <>
       <Tearsheet
+        {...rest}
         open={open}
         // false: ComposedModal would otherwise close itself, while the
         // flow may keep it open (dirty, submitting).
@@ -205,9 +226,9 @@ export function EditTearsheet({
           .filter(Boolean)
           .join(' ')}>
         <Tearsheet.Header
-          closeIconDescription={text.closeTearsheet}
+          closeIconDescription={text.closeIconDescription}
           // Reaches Carbon's ModalHeader, whose hidden close button is named too.
-          {...{ iconDescription: text.closeTearsheet }}>
+          {...{ iconDescription: text.closeIconDescription }}>
           <Tearsheet.HeaderContent
             title={title}
             {...(label ? { label } : {})}

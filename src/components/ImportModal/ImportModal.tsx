@@ -11,17 +11,16 @@ import {
   usePrefix,
 } from '@carbon/react';
 import { useId, useRef, useState } from 'react';
-import type { RefObject } from 'react';
+import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
 import { FlowError, FlowStatus } from '../FlowParts/FlowParts.js';
-import { defaultModalPartsMessages } from '../FlowParts/messages.js';
-import type { ModalPartsMessages } from '../FlowParts/messages.js';
+import { defaultTaskModalMessages } from '../FlowParts/messages.js';
+import type { FlowMessages } from '../FlowParts/messages.js';
+import type { ModalRootAttribute } from '../FlowParts/refs.js';
 import { useFlow } from '../FlowParts/useFlow.js';
 import { formatFileSize } from './fileSize.js';
 
-export interface ImportModalMessages extends ModalPartsMessages {
-  title: string;
-  description: string;
+export interface ImportModalMessages extends FlowMessages {
   /** Label above the drop area. */
   dropLabel: string;
   /** Text of the drop area button. */
@@ -38,8 +37,6 @@ export interface ImportModalMessages extends ModalPartsMessages {
   invalidType: (name: string, accept: string[]) => string;
   /** `limit` is the formatted maximum size. */
   tooLarge: (name: string, limit: string) => string;
-  /** Alert when `onImport` or `onImportUrl` rejects. */
-  importFailed: string;
   /** Announced when a valid file is added. */
   fileAdded: (name: string) => string;
   /** Shown and announced when files beyond the first are dropped without `multiple`. */
@@ -47,9 +44,8 @@ export interface ImportModalMessages extends ModalPartsMessages {
 }
 
 export const defaultImportModalMessages: ImportModalMessages = {
-  ...defaultModalPartsMessages,
-  title: 'Import',
-  description: 'Add a file to import.',
+  ...defaultTaskModalMessages,
+  error: 'The import failed. Try again.',
   dropLabel: 'File',
   browseLabel: 'Drag and drop a file here or click to browse',
   requirements: (accept, limit) =>
@@ -67,13 +63,12 @@ export const defaultImportModalMessages: ImportModalMessages = {
   invalidType: (name, accept) =>
     `${name} is not an accepted file type. Use ${accept.join(', ')}.`,
   tooLarge: (name, limit) => `${name} is larger than ${limit}.`,
-  importFailed: 'The import failed. Try again.',
   fileAdded: (name) => `${name} added.`,
   extraFilesIgnored: (count) =>
     `Only one file can be imported; ${count} other ${count === 1 ? 'file was' : 'files were'} ignored.`,
 };
 
-export interface ImportModalProps {
+interface ImportModalOwnProps {
   open: boolean;
   onClose: () => void;
   /** Focus target on close; default the element focused before opening. */
@@ -89,12 +84,28 @@ export interface ImportModalProps {
   onImport: (files: File[]) => void | Promise<void>;
   /** When set, a URL field and button are shown. */
   onImportUrl?: (url: string) => void | Promise<void>;
-  /** Heading; default `messages.title`. */
-  title?: string;
-  /** Text under the heading; default `messages.description`. */
-  description?: string;
+  /** Modal heading. */
+  title: string;
+  /** Small text above the title. */
+  label?: ReactNode;
+  /** Text above the drop area. */
+  description?: ReactNode;
   /** Locale of the file sizes; default the package locale (cs-CZ). */
   locale?: string;
+}
+
+/** The rest go to Carbon Modal's root `div`. */
+export interface ImportModalProps
+  extends
+    ImportModalOwnProps,
+    Omit<
+      HTMLAttributes<HTMLDivElement>,
+      keyof ImportModalOwnProps | ModalRootAttribute
+    > {
+  /** Carbon Modal's root `div`; null while closed. */
+  ref?: Ref<HTMLDivElement> | undefined;
+  // Carbon types it without `undefined`.
+  id?: string;
 }
 
 interface Item {
@@ -148,8 +159,10 @@ export function ImportModal({
   onImport,
   onImportUrl,
   title,
+  label,
   description,
   locale,
+  ...rest
 }: ImportModalProps) {
   const text = resolveMessages(defaultImportModalMessages, messages);
   const prefix = usePrefix();
@@ -178,7 +191,7 @@ export function ImportModal({
     open,
     onClose,
     launcherRef,
-    messages: { error: text.importFailed },
+    messages: { error: text.error, errorText: text.errorText },
     initialFocus: () => dropRef.current,
   });
 
@@ -266,11 +279,13 @@ export function ImportModal({
 
   return (
     <Modal
+      {...rest}
       open={open}
       size="sm"
       preventCloseOnClickOutside
       className={['afframe-import-modal', className].filter(Boolean).join(' ')}
-      modalHeading={title ?? text.title}
+      modalHeading={title}
+      {...(label ? { modalLabel: label } : {})}
       primaryButtonText={text.import}
       secondaryButtonText={text.cancel}
       primaryButtonDisabled={!(canImportFiles || (!hasInvalid && canImportUrl))}
@@ -284,7 +299,7 @@ export function ImportModal({
         ref={dialog.containerRef}
         tabIndex={-1}
         className="afframe-modal-body">
-        <p>{description ?? text.description}</p>
+        {description && <p>{description}</p>}
         <div
           className="afframe-import-modal-drop"
           onDropCapture={(event) => {

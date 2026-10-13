@@ -41,6 +41,7 @@ const meta = {
     onClose: () => undefined,
     onImport: () => Promise.resolve(),
     title: 'Import invoices',
+    description: 'Add a file to import.',
     accept: ['.csv', '.xlsx'],
     maxFileSize: 5_000_000,
     locale: 'en-GB',

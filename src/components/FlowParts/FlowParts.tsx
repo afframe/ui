@@ -3,8 +3,9 @@
 // form, the error alert, the polite live region and the discard dialog.
 import { InlineNotification, Modal, usePrefix } from '@carbon/react';
 import { useEffect, useRef } from 'react';
-import type { FormEvent, KeyboardEvent, ReactNode } from 'react';
-import type { CreateEditFlowMessages } from './messages.js';
+import type { FormEvent, FormHTMLAttributes, KeyboardEvent, Ref } from 'react';
+import type { DiscardMessages, FlowMessages } from './messages.js';
+import { useMergedRefs } from './refs.js';
 import type { Flow } from './useFlow.js';
 
 const textInputTypes = new Set([
@@ -22,15 +23,19 @@ const textInputTypes = new Set([
   'week',
 ]);
 
-export interface FlowFormProps {
+/** Attributes FlowForm sets itself; a root `form` leaves them out of its props. */
+export type FlowFormOwnAttribute =
+  'noValidate' | 'aria-busy' | 'onKeyDown' | 'onFocus' | 'onSubmit';
+
+export interface FlowFormProps extends Omit<
+  FormHTMLAttributes<HTMLFormElement>,
+  FlowFormOwnAttribute
+> {
   flow: Flow<HTMLFormElement>;
   /** Called on Enter in a single-line input and on a submit button. */
   onSubmit: () => void;
   submitDisabled?: boolean;
-  className?: string;
-  children?: ReactNode;
-  'aria-labelledby'?: string;
-  'aria-label'?: string;
+  ref?: Ref<HTMLFormElement> | undefined;
 }
 
 /**
@@ -44,8 +49,10 @@ export function FlowForm({
   submitDisabled = false,
   className,
   children,
+  ref,
   ...rest
 }: FlowFormProps) {
+  const formRef = useMergedRefs(flow.containerRef, ref);
   const submit = () => {
     if (!submitDisabled && !flow.pending) onSubmit();
   };
@@ -65,7 +72,7 @@ export function FlowForm({
   return (
     <form
       {...rest}
-      ref={flow.containerRef}
+      ref={formRef}
       noValidate
       aria-busy={flow.pending || undefined}
       className={['afframe-create-edit-form', className]
@@ -141,14 +148,7 @@ export function DiscardDialog({
   messages,
 }: {
   flow: Pick<Flow, 'discardOpen' | 'keepEditing' | 'confirmDiscard'>;
-  messages: Pick<
-    CreateEditFlowMessages,
-    | 'discardTitle'
-    | 'discardBody'
-    | 'discard'
-    | 'keepEditing'
-    | 'closeIconDescription'
-  >;
+  messages: DiscardMessages & Pick<FlowMessages, 'closeIconDescription'>;
 }) {
   const prefix = usePrefix();
   const ref = useRef<HTMLDivElement>(null);
