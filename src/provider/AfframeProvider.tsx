@@ -1,16 +1,8 @@
 'use client';
 
-import { pkg } from '@carbon/ibm-products';
 import { FeatureFlags, GlobalTheme } from '@carbon/react';
 import type { ReactNode } from 'react';
 import { useCarbonTheme } from '../theme/use-afframe-theme.js';
-
-// Module scope: IBM's canary gate decides at first render, and a settings-only
-// module could be dropped by bundlers through `sideEffects`.
-pkg._silenceWarnings(true);
-pkg.component.ScrollGradient = true;
-pkg.component.Decorator = true;
-pkg._silenceWarnings(false);
 
 export interface AfframeProviderProps {
   /** The app, or the part of it that uses Afframe UI components. */

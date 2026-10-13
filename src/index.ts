@@ -625,14 +625,15 @@ export {
   NotificationsPanel,
   // A namespace: render <PageHeader.Root>, a bare <PageHeader> renders nothing.
   preview__PageHeader as PageHeader,
-  // Canary gated: enabled in the AfframeProvider module.
-  ScrollGradient,
   SidePanel,
   TagOverflow,
   preview__Tearsheet as Tearsheet,
   preview__TruncatedText as TruncatedText,
   UserAvatar,
 } from '@carbon/ibm-products';
+// Canary gated in IBM Products: their modules turn the setting on.
+export { ScrollGradient } from './ibm-products/scroll-gradient.js';
+export { previewCandidate__Decorator } from './ibm-products/decorator.js';
 // AddSelect's data helper, typed in src/ibm-products/ (IBM's types miss it).
 export {
   AddSelectData,
@@ -735,8 +736,6 @@ export {
   previewCandidate__ToolbarButton,
   previewCandidate__ToolbarGroup,
   previewCandidate__SearchBar,
-  // Canary gated: enabled in the AfframeProvider module.
-  previewCandidate__Decorator,
   previewCandidate__TruncatedList,
   previewCandidate__NonLinearReading,
   // IBM Products' usePrefix ('c4p'); Carbon's is useCarbonPrefix.

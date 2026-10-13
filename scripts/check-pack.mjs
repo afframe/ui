@@ -72,6 +72,8 @@ const required = [
   'dist/charts.css',
   'dist/provider/AfframeProvider.js',
   'dist/ibm-products/add-select-data.js',
+  'dist/ibm-products/scroll-gradient.js',
+  'dist/ibm-products/decorator.js',
   ...labsModules,
   ...familyModules,
   ...serverFamilies.map((name) => `dist/components/${name}/${name}.js`),
@@ -136,6 +138,8 @@ const familyImports = [...read('dist/index.js').matchAll(familyImport)].map(
 const clientModules = [
   'dist/provider/AfframeProvider.js',
   'dist/ibm-products/add-select-data.js',
+  'dist/ibm-products/scroll-gradient.js',
+  'dist/ibm-products/decorator.js',
   ...labsModules,
   ...new Set([...familyModules, ...familyImports]),
 ];
@@ -146,6 +150,27 @@ for (const path of clientModules) {
   }
   if (/^\s*export\s*\*/m.test(code)) {
     problems.push(`${path} must not use export *`);
+  }
+}
+
+// IBM's canary components render a placeholder unless their module turns the
+// setting on, and the barrel must take them from that module.
+for (const [name, setting, file] of [
+  ['ScrollGradient', 'ScrollGradient', 'scroll-gradient'],
+  ['previewCandidate__Decorator', 'Decorator', 'decorator'],
+]) {
+  const path = `dist/ibm-products/${file}.js`;
+  if (!read(path).includes(`pkg.component.${setting} = true`)) {
+    problems.push(`${path} must turn on pkg.component.${setting}`);
+  }
+  if (
+    !new RegExp(
+      `import\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*["']\\./ibm-products/${file}\\.js["']`
+    ).test(read('dist/index.js'))
+  ) {
+    problems.push(
+      `dist/index.js must import ${name} from ./ibm-products/${file}.js`
+    );
   }
 }
 

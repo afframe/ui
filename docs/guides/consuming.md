@@ -45,7 +45,7 @@ An app that renders Carbon Charts (`Charts`, or `ChatChart` with the Carbon Char
 
 Set the theme on `<html>` in the server-rendered root layout with `data-afframe-theme`. Values, runtime switching and the theme hooks: the Theming docs page (`src/theme/Theming.mdx`).
 
-Wrap the app in `<AfframeProvider>`. It turns on the Carbon feature flags Afframe UI uses. In Next.js App Router it is a client component placed inside the root layout. No Sass, no `transpilePackages`, no load-path settings.
+Wrap the app in `<AfframeProvider>`. It turns on the Carbon feature flags Afframe UI uses. Without it, modals show in the page even while closed, with no backdrop. In Next.js App Router it is a client component placed inside the root layout. No Sass, no `transpilePackages`, no load-path settings.
 
 ## 5. Use it
 
