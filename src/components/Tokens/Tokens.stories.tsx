@@ -15,7 +15,7 @@ const sample = [
 
 const meta = {
   title: 'Elements/Tokens',
-  tags: ['afframe'],
+  tags: ['carbon'],
   parameters: {
     ...afframeA11y,
     docs: {

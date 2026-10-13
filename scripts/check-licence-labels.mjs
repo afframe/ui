@@ -1,7 +1,8 @@
 // Checks the output of `reuse lint --json` (stdin, or a file path argument):
 // the project is REUSE compliant, every src/**/*.mdx page takes its copyright
 // and licence from its own header (never the REUSE.toml fallback), and the
-// page's <SourceLabel name="..."> agrees with that licence.
+// page's <SourceLabel name="..."> agrees with that licence: an IBM page names
+// an IBM source; an Afframe page may name any source (ADR 0011).
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
@@ -29,13 +30,10 @@ for (const [key, value] of Object.entries(report.non_compliant ?? {})) {
     problems.push(`reuse lint ${key}: ${entries.join(', ')}`);
 }
 
-const ibm = { licences: ['Apache-2.0'], copyright: 'IBM Corp.' };
-const expected = {
-  carbon: ibm,
-  'ibm-products': ibm,
-  labs: ibm,
-  afframe: { licences: ['PolyForm-Noncommercial-1.0.0'] },
-};
+const ibmSources = ['carbon', 'ibm-products', 'labs'];
+const labels = [...ibmSources, 'extras', 'afframe'];
+const ibm = { licence: 'Apache-2.0', copyright: 'IBM Corp.' };
+const afframe = 'PolyForm-Noncommercial-1.0.0';
 
 const reported = new Map((report.files ?? []).map((file) => [file.path, file]));
 const pages = execFileSync(
@@ -79,26 +77,32 @@ for (const page of pages) {
   });
 
   const label = /<SourceLabel\s+name="([^"]+)"/.exec(text)?.[1];
-  const rule = expected[label];
   if (label === 'extras') continue;
-  if (!rule) {
+  if (!labels.includes(label)) {
     problems.push(`${page}: unknown or missing SourceLabel "${label}"`);
     continue;
   }
-  const licences = (file.spdx_expressions ?? []).map((entry) => entry.value);
-  if (licences.join(' ') !== rule.licences.join(' ')) {
+  const licences = (file.spdx_expressions ?? [])
+    .map((entry) => entry.value)
+    .join(' ');
+  if (licences === ibm.licence) {
+    if (!ibmSources.includes(label)) {
+      problems.push(
+        `${page}: an ${ibm.licence} page needs label ${ibmSources.join(', ')}, has "${label}"`
+      );
+    }
+    if (
+      !(file.copyrights ?? []).some((entry) =>
+        entry.value.includes(ibm.copyright)
+      )
+    ) {
+      problems.push(
+        `${page}: label "${label}" needs a copyright by ${ibm.copyright}`
+      );
+    }
+  } else if (licences !== afframe) {
     problems.push(
-      `${page}: label "${label}" needs ${rule.licences.join(', ')}, has ${licences.join(', ') || 'none'}`
-    );
-  }
-  if (
-    rule.copyright &&
-    !(file.copyrights ?? []).some((entry) =>
-      entry.value.includes(rule.copyright)
-    )
-  ) {
-    problems.push(
-      `${page}: label "${label}" needs a copyright by ${rule.copyright}`
+      `${page}: needs ${ibm.licence} or ${afframe}, has ${licences || 'none'}`
     );
   }
 }

@@ -16,7 +16,7 @@ const sample = { Airplane, Analytics, Bee, Cloud, Globe, Rocket };
 const meta = {
   title: 'Elements/Pictograms',
   component: Bee,
-  tags: ['afframe'],
+  tags: ['carbon'],
   parameters: {
     ...afframeA11y,
     docs: {
