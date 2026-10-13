@@ -266,6 +266,27 @@ test('ref and rest props reach the form', () => {
   expect(screen.getByText('Customers')).toBeTruthy();
 });
 
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <EditFullPage
+        title="Customer"
+        description={list}
+        onClose={() => undefined}
+        onSubmit={() => undefined}>
+        <input aria-label="Name" />
+      </EditFullPage>
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
+});
+
 // Below Carbon's md breakpoint the two buttons share the width.
 test.each([320, 375])('at %ipx both buttons stay on screen', async (width) => {
   await page.viewport(width, 640);

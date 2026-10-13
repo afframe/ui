@@ -3,7 +3,12 @@ import { Button, ButtonSet, InlineLoading } from '@carbon/react';
 import { useEffect, useId } from 'react';
 import type { FormHTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { DiscardDialog, FlowError, FlowForm } from '../FlowParts/FlowParts.js';
+import {
+  DiscardDialog,
+  FlowDescription,
+  FlowError,
+  FlowForm,
+} from '../FlowParts/FlowParts.js';
 import type { FlowFormOwnAttribute } from '../FlowParts/FlowParts.js';
 import { defaultFormFlowMessages } from '../FlowParts/messages.js';
 import type { DiscardMessages, FlowMessages } from '../FlowParts/messages.js';
@@ -129,11 +134,10 @@ export function EditFullPage({
               className="afframe-edit-full-page-title">
               {title}
             </Heading>
-            {description && (
-              <p className="afframe-edit-full-page-description">
-                {description}
-              </p>
-            )}
+            <FlowDescription
+              description={description}
+              className="afframe-edit-full-page-description"
+            />
             {children}
             <FlowError
               error={flow.error}

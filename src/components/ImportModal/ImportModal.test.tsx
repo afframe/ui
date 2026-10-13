@@ -370,3 +370,24 @@ test('ref and rest props reach the root', async () => {
   expect(root.classList).toContain('afframe-import-modal');
   expect(screen.getByText('Invoices')).toBeTruthy();
 });
+
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <ImportModal
+        open
+        title="Import"
+        description={list}
+        onClose={() => undefined}
+        onImport={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
+});

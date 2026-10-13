@@ -375,3 +375,26 @@ test('ref and rest props reach the root', async () => {
   expect(root.classList).toContain('afframe-export-modal');
   expect(screen.getByText('Exports the filtered invoices.')).toBeTruthy();
 });
+
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <ExportModal
+        open
+        title="Export"
+        description={list}
+        filename="invoices"
+        formats={formats}
+        onClose={() => undefined}
+        onExport={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
+});

@@ -3,7 +3,13 @@
 // form, the error alert, the polite live region and the discard dialog.
 import { InlineNotification, Modal, usePrefix } from '@carbon/react';
 import { useEffect, useRef } from 'react';
-import type { FormEvent, FormHTMLAttributes, KeyboardEvent, Ref } from 'react';
+import type {
+  FormEvent,
+  FormHTMLAttributes,
+  KeyboardEvent,
+  ReactNode,
+  Ref,
+} from 'react';
 import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useMergedRefs } from './refs.js';
 import type { Flow } from './useFlow.js';
@@ -92,6 +98,18 @@ export function FlowForm({
       {children}
     </form>
   );
+}
+
+/** A surface's description: a string becomes a paragraph, any other node renders as given. */
+export function FlowDescription({
+  description,
+  className,
+}: {
+  description: ReactNode;
+  className?: string | undefined;
+}) {
+  if (typeof description !== 'string') return description;
+  return description ? <p className={className}>{description}</p> : null;
 }
 
 /** The error alert; focusable for error focus. Render it inside `containerRef`. */

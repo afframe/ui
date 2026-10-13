@@ -423,3 +423,24 @@ test('ref and rest props reach the root', async () => {
   expect(root.classList).toContain('afframe-api-key-modal');
   expect(screen.getByText('Keys can read invoices.')).toBeTruthy();
 });
+
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <APIKeyModal
+        open
+        title="Generate an API key"
+        description={list}
+        onClose={() => undefined}
+        onGenerate={() => Promise.resolve(KEY)}
+      />
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
+});

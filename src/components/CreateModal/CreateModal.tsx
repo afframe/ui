@@ -2,7 +2,12 @@
 import { Modal } from '@carbon/react';
 import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { DiscardDialog, FlowError, FlowForm } from '../FlowParts/FlowParts.js';
+import {
+  DiscardDialog,
+  FlowDescription,
+  FlowError,
+  FlowForm,
+} from '../FlowParts/FlowParts.js';
 import { defaultFormFlowMessages } from '../FlowParts/messages.js';
 import type { DiscardMessages, FlowMessages } from '../FlowParts/messages.js';
 import { useFlow } from '../FlowParts/useFlow.js';
@@ -117,9 +122,10 @@ export function CreateModal({
         onRequestSubmit={() => {
           if (!submitDisabled && !flow.pending) void submit();
         }}>
-        {description && (
-          <p className="afframe-create-modal-description">{description}</p>
-        )}
+        <FlowDescription
+          description={description}
+          className="afframe-create-modal-description"
+        />
         <FlowForm
           flow={flow}
           onSubmit={() => void submit()}

@@ -13,7 +13,11 @@ import {
 import { useId, useRef, useState } from 'react';
 import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { FlowError, FlowStatus } from '../FlowParts/FlowParts.js';
+import {
+  FlowDescription,
+  FlowError,
+  FlowStatus,
+} from '../FlowParts/FlowParts.js';
 import { defaultTaskModalMessages } from '../FlowParts/messages.js';
 import type { FlowMessages } from '../FlowParts/messages.js';
 import type { ModalRootAttribute } from '../FlowParts/refs.js';
@@ -299,7 +303,7 @@ export function ImportModal({
         ref={dialog.containerRef}
         tabIndex={-1}
         className="afframe-modal-body">
-        {description && <p>{description}</p>}
+        <FlowDescription description={description} />
         <div
           className="afframe-import-modal-drop"
           onDropCapture={(event) => {

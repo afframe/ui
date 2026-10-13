@@ -209,3 +209,24 @@ test('ref and rest props reach the root', async () => {
   expect(root.classList).toContain('afframe-create-modal');
   expect(screen.getByText('Customers')).toBeTruthy();
 });
+
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <CreateModal
+        open
+        title="Customer"
+        description={list}
+        onClose={() => undefined}
+        onSubmit={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
+});
