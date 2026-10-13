@@ -3,7 +3,7 @@ import * as IconsStories from './Icons.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, import path note added, links pinned to v11.118.0, feedback link points to the edit page.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, import path note added, links pinned to v11.118.0, feedback link points to the edit page, searchable icon gallery added.
 
 <Meta isTemplate />
 
@@ -36,6 +36,10 @@ import { Bee, Edit } from '@afframe/ui/icons';
 ```
 
 <Canvas of={IconsStories.Default} />
+
+Search every icon by name; click one to copy its import:
+
+<Canvas of={IconsStories.Gallery} />
 
 This guide demonstrates how to make icons scale using `rem` units, without
 requiring any changes to the component’s default configuration. In Carbon, icons
