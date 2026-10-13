@@ -20,9 +20,9 @@ renders Carbon's `GlobalTheme` with the theme on `<html>`, so Carbon's
 provider is replaced; one inside it wins for its subtree and can disagree with
 the page's CSS theme, so leave it out.
 
-Without the provider, Carbon, IBM Products and Afframe modals render inline in
-the page with no backdrop: the stylesheet expects the native `dialog` element
-that only the provider's flag turns on.
+Without the provider, Carbon modals, and the Afframe modals built on them, show
+in the page even while closed, with no backdrop: the stylesheet expects the
+native `dialog` element that only the provider's flag turns on.
 
 ```tsx
 import '@afframe/ui/styles.css';

@@ -6,11 +6,13 @@ import {
 } from '@carbon/ibm-products';
 
 // IBM renders a placeholder for a canary component until its setting is on.
-// Module scope, beside the export: the setting runs whenever the component is
-// imported, with or without AfframeProvider. A local binding, not a re-export,
-// so bundlers cannot skip this module through `sideEffects`.
-pkg._silenceWarnings(true);
-pkg.component.ScrollGradient = true;
-pkg._silenceWarnings(false);
+// The export's own initializer turns it on, so a bundler that keeps the export
+// keeps the setting, whether it skips whole modules or single statements.
+function enable() {
+  pkg._silenceWarnings(true);
+  pkg.component.ScrollGradient = true;
+  pkg._silenceWarnings(false);
+  return CanaryScrollGradient;
+}
 
-export const ScrollGradient = CanaryScrollGradient;
+export const ScrollGradient = enable();

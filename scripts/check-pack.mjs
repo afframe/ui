@@ -153,6 +153,27 @@ for (const path of clientModules) {
   }
 }
 
+// IBM's canary components render a placeholder unless their module turns the
+// setting on, and the barrel must take them from that module.
+for (const [name, setting, file] of [
+  ['ScrollGradient', 'ScrollGradient', 'scroll-gradient'],
+  ['previewCandidate__Decorator', 'Decorator', 'decorator'],
+]) {
+  const path = `dist/ibm-products/${file}.js`;
+  if (!read(path).includes(`pkg.component.${setting} = true`)) {
+    problems.push(`${path} must turn on pkg.component.${setting}`);
+  }
+  if (
+    !new RegExp(
+      `import\\s*\\{[^}]*\\b${name}\\b[^}]*\\}\\s*from\\s*["']\\./ibm-products/${file}\\.js["']`
+    ).test(read('dist/index.js'))
+  ) {
+    problems.push(
+      `dist/index.js must import ${name} from ./ibm-products/${file}.js`
+    );
+  }
+}
+
 // Component files never import the barrel (circular import) or a Labs module
 // or package (Labs JS would ship on every route using the component).
 // Relative specifiers are resolved, so `../index.js` from a subfolder passes.

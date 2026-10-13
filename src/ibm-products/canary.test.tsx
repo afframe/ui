@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import type { ComponentType, ReactNode } from 'react';
 import { expect, test } from 'vitest';
-import { previewCandidate__Decorator, ScrollGradient } from '../index.js';
+import { previewCandidate__Decorator } from './decorator.js';
+import { ScrollGradient } from './scroll-gradient.js';
 
 test('renders the canary gated IBM Products components without the provider', () => {
   // IBM types both as ref-only components; the props come from their propTypes.
