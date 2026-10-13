@@ -71,6 +71,8 @@ export function FlowForm({
   };
   return (
     <form
+      // Focus parks here while pending (useFlow).
+      tabIndex={-1}
       {...rest}
       ref={formRef}
       noValidate

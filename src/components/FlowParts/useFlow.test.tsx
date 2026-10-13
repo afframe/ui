@@ -19,6 +19,7 @@ function Surface({
   launcherRef,
   submitDisabled,
   windowEscape = false,
+  disableWhilePending = false,
   surfaceMessages = messages,
 }: {
   open: boolean;
@@ -29,6 +30,7 @@ function Surface({
   launcherRef?: React.RefObject<HTMLElement | null>;
   submitDisabled?: boolean;
   windowEscape?: boolean;
+  disableWhilePending?: boolean;
   surfaceMessages?: FlowMessages & DiscardMessages;
 }) {
   const flow = useFlow<HTMLFormElement>({
@@ -75,7 +77,10 @@ function Surface({
         <button type="button" onClick={requestClose}>
           Close
         </button>
-        <button type="button" onClick={() => void submit()}>
+        <button
+          type="button"
+          disabled={disableWhilePending && flow.pending}
+          onClick={() => void submit()}>
           {flow.pending ? 'Busy' : 'Save'}
         </button>
       </FlowForm>
@@ -91,6 +96,7 @@ function Harness(props: {
   confirmDiscard?: boolean;
   submitDisabled?: boolean;
   windowEscape?: boolean;
+  disableWhilePending?: boolean;
   removeLauncher?: boolean;
   noLauncherRef?: boolean;
   closeRef?: { current: () => void };
@@ -126,6 +132,7 @@ function Harness(props: {
           : { confirmDiscard: props.confirmDiscard })}
         {...(props.submitDisabled ? { submitDisabled: true } : {})}
         {...(props.windowEscape ? { windowEscape: true } : {})}
+        {...(props.disableWhilePending ? { disableWhilePending: true } : {})}
         {...(props.surfaceMessages
           ? { surfaceMessages: props.surfaceMessages }
           : {})}
@@ -199,6 +206,25 @@ test('async submit is busy, ignores close requests, then closes', async () => {
   expect(onClose).not.toHaveBeenCalled();
   resolve();
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+});
+
+test('focus stays in the form while the clicked button is disabled by pending', async () => {
+  render(
+    <Harness
+      onSubmit={() => new Promise<void>(() => undefined)}
+      disableWhilePending
+    />
+  );
+  await openSurface();
+  screen.getByRole('button', { name: 'Save' }).focus();
+  await userEvent.keyboard('{Enter}');
+  const busy = screen.getByRole('button', { name: 'Busy' });
+  expect(busy.hasAttribute('disabled')).toBe(true);
+  const form = screen.getByRole('form');
+  await waitFor(() => expect(active()).toBe(form));
+  // Not a tab stop, and no focus ring on the form itself.
+  expect(form.tabIndex).toBe(-1);
+  expect(getComputedStyle(form).outlineStyle).toBe('none');
 });
 
 test('rejected submit keeps the surface open and focuses the alert', async () => {

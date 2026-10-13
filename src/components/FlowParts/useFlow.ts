@@ -29,7 +29,10 @@ export interface FlowOptions {
 }
 
 export interface Flow<T extends HTMLElement = HTMLElement> {
-  /** The form or dialog body: initial focus, focus while pending, error focus. */
+  /**
+   * The form or dialog body: initial focus, focus while pending, error
+   * focus. Give it tabIndex -1 so it can hold focus while pending.
+   */
   containerRef: RefObject<T | null>;
   /** True while an action runs: buttons are disabled and closing waits. */
   pending: boolean;
