@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified, prop descriptions from Carbon's prop docs. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified, prop descriptions from Carbon's prop docs, Default with neutral business data, its launcher ref and an initial field, Danger and Passive story names. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -40,6 +40,7 @@ import {
 import type { ModalProps } from '../../index.js';
 import { View, FolderOpen, Folders } from '../../icons.js';
 import mdx from './Modal.mdx';
+import { autofocus } from '../../../.storybook/autofocus.js';
 
 type ModalStoryArgs = Partial<ModalProps> & { numberOfButtons?: string };
 
@@ -322,15 +323,19 @@ export const Default: StoryFn<ModalStoryArgs> = ({
   ...args
 }) => {
   const [open, setOpen] = useState(true);
+  const launcher = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Launch modal</Button>
+      <Button ref={launcher} onClick={() => setOpen(true)}>
+        Launch modal
+      </Button>
       <Modal
+        launcherButtonRef={launcher}
         onRequestClose={(e) => {
           action('onRequestClose')(e);
           setOpen(false);
         }}
-        modalHeading="Add a custom domain"
+        modalHeading="Add a supplier"
         primaryButtonText="Add"
         secondaryButtonText="Cancel"
         aria-label="Modal content"
@@ -338,21 +343,21 @@ export const Default: StoryFn<ModalStoryArgs> = ({
         {...args}
         {...modalFooter(numberOfButtons)}>
         <p style={{ marginBottom: 'var(--cds-spacing-07)' }}>
-          Custom domains direct requests for your apps in this Cloud Foundry
-          organization to a URL that you own. A custom domain can be a shared
-          domain, a shared subdomain, or a shared domain and host.
+          Suppliers appear in purchase orders and incoming invoices. You can
+          change their details later.
         </p>
         <TextInput
           data-modal-primary-focus
+          ref={autofocus}
           id="text-input-1"
-          labelText="Domain name"
-          placeholder="For example, GitHub.com"
+          labelText="Company name"
+          placeholder="For example, Northwind Supplies Ltd"
           style={{ marginBottom: 'var(--cds-spacing-06)' }}
         />
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
-          <Select id="select-1" defaultValue="us-south" labelText="Region">
-            <SelectItem value="us-south" text="US South" />
-            <SelectItem value="us-east" text="US East" />
+          <Select id="select-1" defaultValue="30" labelText="Payment terms">
+            <SelectItem value="14" text="14 days" />
+            <SelectItem value="30" text="30 days" />
           </Select>
         </div>
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
@@ -360,29 +365,29 @@ export const Default: StoryFn<ModalStoryArgs> = ({
             allowCustomValue
             autoAlign={true}
             id="carbon-combobox"
-            items={['Viewer', 'Editor', 'Manager']}
+            items={['Materials', 'Services', 'Logistics']}
             onChange={action('onChange')}
-            titleText="Permissions (Example of Floating UI)"
+            titleText="Category (Example of Floating UI)"
           />
         </div>
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
           <Dropdown
             autoAlign={true}
             id="default"
-            titleText="TLS (Example of Floating UI)"
-            label="Option 1"
+            titleText="Currency (Example of Floating UI)"
+            label="Choose a currency"
             items={[
               {
                 id: 'option-0',
-                text: '1.0',
+                text: 'EUR',
               },
               {
                 id: 'option-1',
-                text: '1.1',
+                text: 'USD',
               },
               {
                 id: 'option-2',
-                text: '1.2',
+                text: 'GBP',
               },
             ]}
             itemToString={(item) => (item ? item.text : '')}
@@ -391,30 +396,30 @@ export const Default: StoryFn<ModalStoryArgs> = ({
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
           <MultiSelect
             id="test"
-            label="Choose options"
-            titleText="Mapping domain"
+            label="Choose channels"
+            titleText="Order channels"
             autoAlign
             items={[
               {
                 id: 'downshift-1-item-0',
-                text: 'Cloud Foundry',
+                text: 'Email',
               },
               {
                 id: 'downshift-1-item-1',
-                text: 'Kubernetes Ingress',
+                text: 'Supplier portal',
               },
               {
                 id: 'downshift-1-item-2',
-                text: 'VPC Load Balancer',
+                text: 'EDI',
               },
             ]}
             itemToString={(item) => (item ? item.text : '')}
           />
         </div>
-        <CheckboxGroup legendText="Terms of Agreement">
+        <CheckboxGroup legendText="Terms">
           <Checkbox
             id="checkbox-label-1"
-            labelText="I confirm domain ownership and accept IBM service terms and applicable charges."
+            labelText="The supplier accepts our purchase terms."
           />
         </CheckboxGroup>
       </Modal>
@@ -488,7 +493,7 @@ export const FullWidth: StoryFn<ModalStoryArgs> = ({
 
 FullWidth.parameters = { ...sharedParameters };
 
-export const DangerModal: StoryFn<ModalStoryArgs> = ({
+export const Danger: StoryFn<ModalStoryArgs> = ({
   numberOfButtons,
   ...args
 }) => {
@@ -517,7 +522,7 @@ export const DangerModal: StoryFn<ModalStoryArgs> = ({
   );
 };
 
-DangerModal.parameters = { ...sharedParameters };
+Danger.parameters = { ...sharedParameters };
 
 export const WithScrollingContent: StoryFn<ModalStoryArgs> = ({
   numberOfButtons,
@@ -675,7 +680,7 @@ export const WithStateManager: StoryFn<ModalStoryArgs> = ({
 
 WithStateManager.parameters = { ...sharedParameters };
 
-export const PassiveModal: StoryFn<ModalStoryArgs> = ({
+export const Passive: StoryFn<ModalStoryArgs> = ({
   numberOfButtons,
   ...args
 }) => {
@@ -695,7 +700,7 @@ export const PassiveModal: StoryFn<ModalStoryArgs> = ({
   );
 };
 
-PassiveModal.parameters = {
+Passive.parameters = {
   controls: {
     include: [
       'aria-label',

@@ -7,10 +7,10 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, pkg.prefix as the 'c4p' literal, source tag, scss styles replaced by about-modal-story.css, opacity style hack removed, logos replaced by Carbon pictograms, IBM title, copyright and legal text replaced by neutral placeholders, getTitle branch fixed, link and content helpers shortened, propTypes assignment dropped, keyboard play test added, story names unified, play test asserts the provider's Tab wrap. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, pkg.prefix as the 'c4p' literal, source tag, scss styles replaced by about-modal-story.css, opacity style hack removed, logos replaced by Carbon pictograms, IBM title, copyright and legal text replaced by neutral placeholders, getTitle branch fixed, link and content helpers shortened, propTypes assignment dropped, keyboard play test added, story names unified, play test asserts the provider's Tab wrap, launcher ref for focus return. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import { useState, type ComponentType } from 'react';
+import { useRef, useState, type ComponentType } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { AboutModal, Button, Link, type AboutModalProps } from '../../index.js';
@@ -145,12 +145,18 @@ const getAdditionalInfo = (value: number) =>
 const Template: StoryFn<StoryArgs> = (args, context) => {
   const { title, content, additionalInfo, links } = args;
   const [open, setOpen] = useState(context.viewMode !== 'docs');
+  const launcher = useRef<HTMLButtonElement>(null);
+  // AboutModal passes other props to its ComposedModal; its type omits them.
+  const composedModalProps = { launcherButtonRef: launcher };
 
   return (
     <main>
-      <Button onClick={() => setOpen(true)}>{'Open Modal'}</Button>
+      <Button ref={launcher} onClick={() => setOpen(true)}>
+        {'Open Modal'}
+      </Button>
       <AboutModal
         {...args}
+        {...composedModalProps}
         title={getTitle(title)}
         links={getLinks(links)}
         additionalInfo={getAdditionalInfo(additionalInfo)}
