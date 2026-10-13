@@ -24,8 +24,13 @@ export function wrapTabInModalDialog(event: KeyboardEvent) {
   if (!(target instanceof Element)) return;
   // Everything outside the top modal dialog is inert, so the dialog around
   // the focused element is the top one; document order is not top-layer order.
-  const dialog = target.closest('dialog:modal');
-  if (!dialog) return;
+  const dialog = target.closest('dialog[open]');
+  // Selector engines without `:modal` (jsdom) throw on it.
+  try {
+    if (!dialog?.matches(':modal')) return;
+  } catch {
+    return;
+  }
   const stops = tabbable(dialog);
   const first = stops[0];
   const last = stops[stops.length - 1];

@@ -12,6 +12,7 @@ import {
   TextInput,
 } from '../index.js';
 import { AfframeProvider } from './AfframeProvider.js';
+import { wrapTabInModalDialog } from './wrapTabInModalDialog.js';
 
 afterEach(settleAndCleanup);
 
@@ -182,4 +183,51 @@ test('without the provider Tab is not wrapped', async () => {
   screen.getByRole('button', { name: 'Last' }).focus();
   await userEvent.tab();
   expect(active()).not.toBe(screen.getByRole('button', { name: 'First' }));
+});
+
+test('an engine without :modal leaves Tab alone instead of throwing', () => {
+  render(
+    <NativeDialog>
+      <button type="button">Only</button>
+    </NativeDialog>
+  );
+  // Like jsdom: the selector engine rejects `:modal`.
+  const reject = (selectors: string) => {
+    if (selectors.includes(':modal'))
+      throw new DOMException(`'${selectors}' is not valid`, 'SyntaxError');
+  };
+  const { closest, matches } = Element.prototype;
+  vi.spyOn(Element.prototype, 'closest').mockImplementation(function (
+    this: Element,
+    selectors: string
+  ) {
+    reject(selectors);
+    return closest.call(this, selectors);
+  });
+  vi.spyOn(Element.prototype, 'matches').mockImplementation(function (
+    this: Element,
+    selectors: string
+  ) {
+    reject(selectors);
+    return matches.call(this, selectors);
+  });
+  const button = screen.getByRole('button', { name: 'Only' });
+  let outcome: unknown = 'not run';
+  button.addEventListener('keydown', (event) => {
+    try {
+      wrapTabInModalDialog(event);
+      outcome = event.defaultPrevented;
+    } catch (error) {
+      outcome = error;
+    }
+  });
+  button.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      key: 'Tab',
+      bubbles: true,
+      cancelable: true,
+    })
+  );
+  vi.restoreAllMocks();
+  expect(outcome).toBe(false);
 });
