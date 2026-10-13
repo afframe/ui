@@ -2,7 +2,7 @@
 import { WarningFilled } from '@carbon/icons-react';
 import { preview__Tearsheet as Tearsheet } from '@carbon/ibm-products';
 import { InlineLoading } from '@carbon/react';
-import { Children, isValidElement, useEffect, useState } from 'react';
+import { Children, isValidElement, useEffect, useRef, useState } from 'react';
 import type {
   HTMLAttributes,
   ReactElement,
@@ -118,6 +118,40 @@ function focusForm(id: string) {
   heading?.focus();
 }
 
+/** The nearest ancestor that scrolls: IBM's main content area. */
+function scrollParent(element: HTMLElement): HTMLElement | null {
+  for (let node = element.parentElement; node; node = node.parentElement) {
+    const { overflowY } = getComputedStyle(node);
+    if (overflowY === 'auto' || overflowY === 'scroll') return node;
+  }
+  return null;
+}
+
+/**
+ * The form in view: the last one whose top has passed the upper third of
+ * `root`, or the last form once it shows in full after a scroll, since a
+ * short last form never reaches that line.
+ */
+function formInView(root: HTMLElement, sections: HTMLElement[]): number {
+  const box = root.getBoundingClientRect();
+  const last = sections.at(-1);
+  if (
+    root.scrollTop > 0 &&
+    last &&
+    last.getBoundingClientRect().bottom <= box.bottom + 1
+  )
+    return sections.length - 1;
+  const line = box.top + root.clientHeight / 3;
+  let index = 0;
+  sections.forEach((section, i) => {
+    if (section.getBoundingClientRect().top <= line) index = i;
+  });
+  return index;
+}
+
+// Fallback end of a nav click's scroll: no scrollend fires when nothing scrolls.
+const programmaticScrollMs = 1000;
+
 /** A multi-form edit in IBM's tearsheet, with a side navigation of the forms. Controlled by `open`. */
 export function EditTearsheet({
   open,
@@ -169,10 +203,57 @@ export function EditTearsheet({
   }, [open]);
   const active = Math.min(current, forms.length - 1);
 
+  // The nav follows scrolling. Updates pause while a nav click scrolls, so
+  // the forms passed on the way do not flash as current.
+  const rootRef = useRef<HTMLElement | null>(null);
+  const programmatic = useRef<() => void>(undefined);
+  const formIds = forms.map((form) => form.id).join(' ');
+  useEffect(() => {
+    const container = flow.containerRef.current;
+    const root = open && container ? scrollParent(container) : null;
+    if (!root) return;
+    rootRef.current = root;
+    const sections = formIds
+      .split(' ')
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+    const update = () => {
+      if (!programmatic.current) setCurrent(formInView(root, sections));
+    };
+    // One observer per edge that changes the answer: a form's top crossing
+    // the upper third, and the last form coming fully into view.
+    const crossing = new IntersectionObserver(update, {
+      root,
+      rootMargin: '0px 0px -66.67% 0px',
+    });
+    sections.forEach((section) => crossing.observe(section));
+    const end = new IntersectionObserver(update, { root, threshold: 1 });
+    const last = sections.at(-1);
+    if (last) end.observe(last);
+    return () => {
+      crossing.disconnect();
+      end.disconnect();
+      programmatic.current?.();
+      rootRef.current = null;
+    };
+  }, [open, formIds, flow.containerRef]);
+
   const select = (index: number) => {
     const form = forms[index];
     if (!form) return;
     setCurrent(index);
+    programmatic.current?.();
+    const root = rootRef.current;
+    if (root) {
+      const resume = () => {
+        clearTimeout(timer);
+        root.removeEventListener('scrollend', resume);
+        programmatic.current = undefined;
+      };
+      const timer = setTimeout(resume, programmaticScrollMs);
+      root.addEventListener('scrollend', resume);
+      programmatic.current = resume;
+    }
     focusForm(form.id);
     onFormChange?.(index);
   };

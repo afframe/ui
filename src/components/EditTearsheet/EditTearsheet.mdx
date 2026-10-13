@@ -14,7 +14,9 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 `EditTearsheet` edits a record with several forms (sections) in IBM
 Products' tearsheet (`preview__Tearsheet`). A side navigation lists the
-forms; choosing one scrolls to it and moves focus to its heading. It replaces
+forms; choosing one scrolls to it and moves focus to its heading. The current
+item follows scrolling: it is the form whose top has passed the upper third of
+the tearsheet, or the last form once it shows in full after scrolling. It replaces
 IBM Products' deprecated EditTearsheet. It shares its submit, cancel, discard
 and focus behaviour with `CreateModal`, `CreateSidePanel`, `EditSidePanel`
 and `EditFullPage`.
@@ -60,7 +62,8 @@ const [vat, setVat] = useState(customer.vat);
 - `title`, `label` (above the title) and `description` head the tearsheet.
 - `influencerWidth`: `narrow` (default, 16rem) or `wide` (20rem) side
   navigation.
-- `onFormChange(index)`: called when a form is chosen in the navigation.
+- `onFormChange(index)`: called when a form is chosen in the navigation, not
+  when scrolling moves the current item.
 - Only `EditTearsheetForm` children are rendered; other children are left
   out with a console warning.
 - `EditTearsheetForm`: `id` (unique in the page), `title` (a level 3
@@ -129,7 +132,7 @@ margin the size of the footer (the `LongForm` story checks it).
 Screen readers announce:
 
 - the tearsheet as a dialog named by its title; the navigation as a landmark
-  named `sectionsNavLabel`, the current item with `aria-current`; an invalid
+  named `sectionsNavLabel`, the item of the form in view with `aria-current`; an invalid
   form's error icon as an image named `sectionInvalid(title)`;
 - each form as a region named by its heading;
 - while saving, the form as busy and Save's loading text (`pending`);

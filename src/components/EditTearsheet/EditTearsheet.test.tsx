@@ -320,6 +320,77 @@ test('the current nav item resets on open and stays in range when forms shrink',
   warn.mockRestore();
 });
 
+// Two tall forms and a short last one, in a scrolling tearsheet.
+function TallSheet() {
+  return (
+    <AfframeProvider>
+      <EditTearsheet
+        open
+        title="Sheet C"
+        onClose={() => undefined}
+        onSubmit={() => undefined}>
+        {['One', 'Two', 'Three'].map((title) => (
+          <EditTearsheetForm key={title} id={`tall-${title}`} title={title}>
+            <label>
+              {`${title} field`}
+              <input />
+            </label>
+            {title !== 'Three' && <div style={{ blockSize: '150vh' }} />}
+          </EditTearsheetForm>
+        ))}
+      </EditTearsheet>
+    </AfframeProvider>
+  );
+}
+
+async function openTallSheet() {
+  render(<TallSheet />);
+  await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
+  await waitFor(() =>
+    expect(active()).toBe(screen.getByRole('textbox', { name: 'One field' }))
+  );
+  let root = screen.getByRole('form').parentElement;
+  while (root && getComputedStyle(root).overflowY !== 'auto')
+    root = root.parentElement;
+  if (!root) throw new Error('no scroll container');
+  return root;
+}
+
+test('the current nav item follows scrolling', async () => {
+  const root = await openTallSheet();
+  expect(currentItem()).toBe('One');
+  const two = document.getElementById('tall-Two');
+  root.scrollTop +=
+    (two?.getBoundingClientRect().top ?? 0) - root.getBoundingClientRect().top;
+  await waitFor(() => expect(currentItem()).toBe('Two'));
+  // Three is short: its top never reaches the line, so the end selects it.
+  root.scrollTop = root.scrollHeight;
+  await waitFor(() => expect(currentItem()).toBe('Three'));
+  root.scrollTop = 0;
+  await waitFor(() => expect(currentItem()).toBe('One'));
+});
+
+test('a nav click does not mark the forms its scroll passes', async () => {
+  const root = await openTallSheet();
+  root.style.scrollBehavior = 'smooth';
+  const seen = new Set<string>();
+  const record = new MutationObserver(() => {
+    const item = currentItem();
+    if (item) seen.add(item);
+  });
+  record.observe(nav(), { attributes: true, subtree: true });
+  const ended = new Promise((resolve) =>
+    root.addEventListener('scrollend', resolve, { once: true })
+  );
+  await userEvent.click(within(nav()).getByRole('button', { name: 'Three' }));
+  await ended;
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  record.disconnect();
+  expect(root.scrollTop).toBeGreaterThan(0);
+  expect(currentItem()).toBe('Three');
+  expect([...seen]).toEqual(['Three']);
+});
+
 test('ref and rest props reach the root', async () => {
   const ref = createRef<HTMLDivElement>();
   render(
