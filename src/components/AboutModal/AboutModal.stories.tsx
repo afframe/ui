@@ -31,7 +31,7 @@ type StoryArgs = Omit<
 };
 
 export default {
-  title: 'Components/AboutModal',
+  title: 'Components/Task Dialogs/AboutModal',
   component: AboutModal as unknown as ComponentType<StoryArgs>,
   tags: ['ibm-products'],
   parameters: {

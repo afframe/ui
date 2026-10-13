@@ -2,9 +2,11 @@
 
 Date: 2026-10-12
 
+Amended: 2026-10-13
+
 ## Status
 
-Accepted
+Accepted, amended 2026-10-13 (Task Dialogs family)
 
 ## Context
 
@@ -14,15 +16,15 @@ Copied docs pages kept the top-level section of the Storybook they came from. Th
 
 The sidebar follows Carbon's Storybook layout, with Afframe's content merged into it.
 
-| Section         | Holds                                                                                                                                                                                         |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Getting Started | Welcome, Theming, AfframeProvider, Formatting, Feature Flags, in this order                                                                                                                   |
-| Components      | Every component; a family of siblings shares a subfolder (`Create and Edit`, `Empty States`, `Fluid Inputs`, `Notifications`, `Skeletons`, `UI Shell`, `Charts`, `Onboarding`, `AI`, `Cards`) |
-| Elements        | Tokens, typography, icons, pictograms, IBM Plex                                                                                                                                               |
-| Layout          | Grid, FlexGrid, Layer, Stack, AspectRatio, Heading (covers Section)                                                                                                                           |
-| Hooks           | React hooks                                                                                                                                                                                   |
-| Utilities       | Helpers without their own look (ActionBar, Cascade, ErrorBoundary, IdPrefix)                                                                                                                  |
-| Preview         | `preview__` and `previewCandidate__` exports, under those names                                                                                                                               |
+| Section         | Holds                                                                                                                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Getting Started | Welcome, Theming, AfframeProvider, Formatting, Feature Flags, in this order                                                                                                                                   |
+| Components      | Every component; a family of siblings shares a subfolder (`Create and Edit`, `Task Dialogs`, `Empty States`, `Fluid Inputs`, `Notifications`, `Skeletons`, `UI Shell`, `Charts`, `Onboarding`, `AI`, `Cards`) |
+| Elements        | Tokens, typography, icons, pictograms, IBM Plex                                                                                                                                                               |
+| Layout          | Grid, FlexGrid, Layer, Stack, AspectRatio, Heading (covers Section)                                                                                                                                           |
+| Hooks           | React hooks                                                                                                                                                                                                   |
+| Utilities       | Helpers without their own look (ActionBar, Cascade, ErrorBoundary, IdPrefix)                                                                                                                                  |
+| Preview         | `preview__` and `previewCandidate__` exports, under those names                                                                                                                                               |
 
 - Sections come in this order; everything inside is sorted A to Z by path (`storySort` in `.storybook/preview.tsx`). Stories of one component keep their file order.
 - A component's title is its export name (`Components/DataGrid`, `Components/UI Shell/HelpMenu`, `Preview/previewCandidate__Toolbar`). A page for a module with several exports takes the module name (`Components/AI/AIChat`). A family subfolder and a page that is not a component are in words, in Title Case.
