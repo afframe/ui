@@ -1,4 +1,5 @@
 // EditFullPage styles, Carbon tokens only.
+@use '@carbon/styles/scss/breakpoint';
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
@@ -41,6 +42,17 @@
   border-block-start: 1px solid $border-subtle;
   background: $background;
   inset-block-end: 0;
+}
+
+// Narrow screens: the buttons share the width, like a fluid ButtonSet.
+// Carbon's buttons do not shrink and cap at 196px, which pushed Cancel off
+// the left edge.
+@include breakpoint.breakpoint-down('md') {
+  /* stylelint-disable-next-line selector-class-pattern -- Carbon's BEM class name */
+  .afframe-edit-full-page-actions .cds--btn {
+    flex: 1 1 0;
+    max-inline-size: none;
+  }
 }
 
 // Keeps a focused field clear of the sticky action bar (WCAG 2.4.11).

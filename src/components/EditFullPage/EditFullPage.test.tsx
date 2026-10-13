@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { createRef, useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import { englishLeft, sentinelMessages } from '../FlowParts/flowTestUtils.js';
 import { defaultEditFullPageMessages, EditFullPage } from './EditFullPage.js';
@@ -264,4 +264,23 @@ test('ref and rest props reach the form', () => {
   expect(screen.getByTestId('root')).toBe(form);
   expect(ref.current).toBe(form);
   expect(screen.getByText('Customers')).toBeTruthy();
+});
+
+// Below Carbon's md breakpoint the two buttons share the width.
+test.each([320, 375])('at %ipx both buttons stay on screen', async (width) => {
+  await page.viewport(width, 640);
+  try {
+    render(<Harness />);
+    const cancel = screen
+      .getByRole('button', { name: defaults.cancel })
+      .getBoundingClientRect();
+    const save = screen
+      .getByRole('button', { name: defaults.save })
+      .getBoundingClientRect();
+    expect(cancel.left).toBeGreaterThanOrEqual(0);
+    expect(save.right).toBeLessThanOrEqual(width);
+    expect(Math.round(cancel.width)).toBe(Math.round(save.width));
+  } finally {
+    await page.viewport(1024, 768);
+  }
 });
