@@ -3,7 +3,7 @@ import * as IdPrefixStories from './IdPrefix.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz import removed, source label added, title IdPrefix instead of Prefix, source and feedback links point to IdPrefix instead of ClassPrefix, source link pinned to v11.118.0, class prefix note added.
+// Modified by Afframe in 2026: Stackblitz import removed, source label added, title IdPrefix instead of Prefix, source and feedback links point to IdPrefix instead of ClassPrefix, source link pinned to v11.118.0, class prefix note added, v10/v11 migration note replaced by when Afframe apps need it.
 
 <Meta isTemplate />
 
@@ -30,9 +30,9 @@ automatically generated `id` attributes placed on certain DOM elements.
 
 <Canvas of={IdPrefixStories.Default} />
 
-This component is intended to be used in limited cases, primarily only if you
-have id conflicts when using v10 and v11 packages at the same time during
-migration.
+Most apps never need it. Use it when two React roots or micro-frontends render
+Carbon components on one page, so their generated ids could collide: give each
+root its own prefix. `useIdPrefix` reads the current prefix.
 
 In React, you can use `IdPrefix` anywhere in your component tree and specify the
 prefix with the `prefix` prop. Most often it's used in the project root wrapping
