@@ -42,39 +42,57 @@ const themes = {
 
 type GlobalsEvent = { globals?: { theme?: AfframeTheme } };
 
-// The store is not in Storybook's public types; the first render reads the
-// toolbar value from it, later changes come as channel events.
-function initialTheme(context: DocsContainerProps['context']): AfframeTheme {
-  const store = (
-    context as unknown as {
-      store?: { userGlobals?: { globals?: { theme?: AfframeTheme } } };
-    }
-  ).store;
-  return store?.userGlobals?.globals?.theme ?? 'light';
+// The store is not in Storybook's public types, and MDX-only pages have no
+// story context to read the toolbar value from. A change in its shape falls
+// back to light.
+function currentTheme(context: DocsContainerProps['context']): AfframeTheme {
+  const { store } = context as unknown as {
+    store?: { userGlobals?: { get?(): { theme?: AfframeTheme } | undefined } };
+  };
+  return store?.userGlobals?.get?.()?.theme ?? 'light';
+}
+
+// Canvases with `inline: false` render iframe.html in their own iframe, which
+// gets no toolbar globals. Storybook builds that URL from PREVIEW_URL and keeps
+// its query, so new iframes open in the current theme.
+function setIframeTheme(theme: AfframeTheme) {
+  (globalThis as { PREVIEW_URL?: string }).PREVIEW_URL =
+    `iframe.html?globals=theme:${theme}`;
 }
 
 /**
  * Docs pages follow the theme toolbar: sets `data-afframe-theme` (MDX-only
- * pages render no story, so the story decorator never runs there) and picks
- * the light or dark docs theme.
+ * pages render no story, so the story decorator never runs there), passes the
+ * theme to iframe canvases and picks the light or dark docs theme.
  */
 export function ThemedDocsContainer({
   context,
   children,
 }: PropsWithChildren<DocsContainerProps>) {
-  const [theme, setTheme] = useState(() => initialTheme(context));
+  const [theme, setTheme] = useState(() => currentTheme(context));
   document.documentElement.dataset.afframeTheme = theme;
+  setIframeTheme(theme);
   useEffect(() => {
     const update = ({ globals }: GlobalsEvent) => {
       if (globals?.theme) setTheme(globals.theme);
     };
     context.channel.on(GLOBALS_UPDATED, update);
     context.channel.on(SET_GLOBALS, update);
+    // Globals set between the first render and these listeners.
+    setTheme(currentTheme(context));
     return () => {
       context.channel.off(GLOBALS_UPDATED, update);
       context.channel.off(SET_GLOBALS, update);
     };
-  }, [context.channel]);
+  }, [context]);
+  // Iframes that already loaded keep their URL, so a toolbar change reaches
+  // them through their own document.
+  useEffect(() => {
+    for (const frame of document.querySelectorAll('iframe')) {
+      const root = frame.contentDocument?.documentElement;
+      if (root) root.dataset.afframeTheme = theme;
+    }
+  }, [theme]);
   return (
     <DocsContainer context={context} theme={themes[useColorScheme()]}>
       {children}

@@ -32,7 +32,7 @@ Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.
 - Tests sit next to the component (`<Name>.test.tsx`, `<Name>.visual.test.tsx`).
 - Carbon, IBM Products and Labs components re-exported as they are need no Afframe unit tests; they render in Storybook, so the a11y check still runs on them.
 - Every included component renders under Afframe's flags in Storybook; a story that changes a flag is recorded in `docs/feature-flags.md`.
-- `src/provider/AfframeProvider.test.tsx` proves the v11 render: the v12 release and floating styles flags are off in React, the focus wrap flag leaves no focus sentinels in `ActionableNotification`, a Carbon `TextInput` gets the v11 bottom border from `styles.css`, and the dark theme applies.
+- `src/provider/AfframeProvider.test.tsx` proves the v11 render: the v12 release and floating styles flags are off in React, the focus wrap flag leaves no focus sentinels in `ActionableNotification`, a Carbon `TextInput` gets the v11 bottom border from `styles.css`, and the dark theme applies. `src/provider/wrapTabInModalDialog.test.tsx` covers the provider's Tab wrap: Carbon `Modal` both ways, the discard dialog over `EditTearsheet`, a radio group and inert content, focus parked on a content wrapper, nested providers, and non-modal dialogs left alone.
 - `src/provider/LabsStyles.test.tsx` proves that Labs CSS in `styles.css` leaves Carbon components and plain HTML as Carbon styles them: Carbon `SideNav`, a plain `del` and the `DatePicker` selected day, next to the Labs `SideNav`, `TextHighlighter` and `Calendar` with their Labs look.
 
 ## Accessibility
@@ -57,7 +57,7 @@ Afframe-owned stories (tag `afframe`) also check axe's `target-size` rule (WCAG 
 
 ## Visual baselines
 
-Visual tests call `toMatchScreenshot` on composed stories. They cover every Afframe-owned component and `AfframeProvider`, in light and dark (the dark stories are hidden from the sidebar, ADR 0019), plus one focus state in light for each component with a focusable part (all but `Amount` and `AfframeProvider`; the test focuses a named element, so the screenshot is deterministic). `ChatChart` has no tab stop, so its focus test checks that one Tab leaves the story and focus stays on the page body. The internal `CreateEditFlow`, `ModalParts`, `MenuParts` and `useHeaderPanel` are covered through the components that use them. No Chromatic.
+Visual tests call `toMatchScreenshot` on composed stories. They cover every Afframe-owned component and `AfframeProvider`, in light and dark (the dark stories are hidden from the sidebar, ADR 0019), plus one focus state in light for each component with a focusable part (all but `Amount` and `AfframeProvider`; the test focuses a named element, so the screenshot is deterministic). `ChatChart` has no tab stop, so its focus test checks that one Tab leaves the story and focus stays on the page body. `FlowParts/useFlow.test.tsx` tests the shared dialog engine directly; `MenuParts` and `useHeaderPanel` are covered through the components that use them. No Chromatic.
 
 Baselines live in `src/<dir>/__screenshots__/<file>/<name>-chromium-linux.png` and are committed. Only the Linux renders count, since the release checks render them on the Linux runner in `.github/workflows/release-checks.yml`; macOS and Windows renders are gitignored.
 

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified, prop descriptions from Carbon's prop docs, Default with neutral business data, its launcher ref and an initial field, Danger and Passive story names. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -40,6 +40,7 @@ import {
 import type { ModalProps } from '../../index.js';
 import { View, FolderOpen, Folders } from '../../icons.js';
 import mdx from './Modal.mdx';
+import { autofocus } from '../../../.storybook/autofocus.js';
 
 type ModalStoryArgs = Partial<ModalProps> & { numberOfButtons?: string };
 
@@ -58,18 +59,201 @@ export default {
       page: mdx,
     },
   },
+  // Carbon's prop docs, written out: the generated props table misses most of
+  // Modal's props (carbon#19624).
   argTypes: {
+    alert: {
+      description:
+        'Specify whether the Modal is displaying an alert, error or warning; should go hand in hand with the danger prop.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
     'aria-label': {
       control: 'text',
+      description: 'Required props for the accessibility label of the header',
+      table: { type: { summary: 'string' } },
     },
-    modalHeading: {
-      control: 'text',
+    children: {
+      description: 'Provide the contents of your Modal',
+      table: { type: { summary: 'ReactNode' } },
     },
-    modalLabel: {
-      control: 'text',
+    className: {
+      description:
+        'Specify an optional className to be applied to the modal root node',
+      table: { type: { summary: 'string' } },
+    },
+    closeButtonLabel: {
+      description:
+        'Specify label for the close button of the modal; defaults to close',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: "'Close'" },
+      },
+    },
+    danger: {
+      description: 'Specify whether the Modal is for dangerous actions',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     dangerDescription: {
       control: 'text',
+      description:
+        'Specify the message read by screen readers for the danger primary button. Defaults to an empty string; provide localized text to opt in.',
+      table: { type: { summary: 'string' } },
+    },
+    decorator: {
+      description:
+        'Experimental: Provide a decorator component to be rendered inside the `Modal` component',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    hasScrollingContent: {
+      description: 'Specify whether the modal contains scrolling content',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    id: {
+      description: 'Specify the DOM element ID of the top-level node.',
+      table: { type: { summary: 'string' } },
+    },
+    isFullWidth: {
+      description:
+        'Specify whether or not the Modal content should have any inner padding.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    launcherButtonRef: {
+      description: 'Provide a ref to return focus to once the modal is closed.',
+      table: { type: { summary: 'RefObject<HTMLElement | null>' } },
+    },
+    loadingDescription: {
+      description: 'Specify the description for the loading text',
+      table: { type: { summary: 'string' } },
+    },
+    loadingIconDescription: {
+      description: 'Specify the description for the loading text',
+      table: { type: { summary: 'string' } },
+    },
+    loadingStatus: {
+      description: 'Specify loading status',
+      table: {
+        type: { summary: "'inactive' | 'active' | 'finished' | 'error'" },
+        defaultValue: { summary: "'inactive'" },
+      },
+    },
+    modalAriaLabel: {
+      description:
+        'Specify a label to be read by screen readers on the modal root node',
+      table: { type: { summary: 'string' } },
+    },
+    modalHeading: {
+      control: 'text',
+      description: 'Specify the content of the modal header title.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    modalLabel: {
+      control: 'text',
+      description: 'Specify the content of the modal header label.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    onKeyDown: {
+      action: 'onKeyDown',
+      description: 'Specify a handler for keypresses. Deprecated: unused.',
+      table: { type: { summary: 'React.KeyboardEventHandler<HTMLElement>' } },
+    },
+    onLoadingSuccess: {
+      description:
+        'Specify an optional handler to be invoked when loading is successful',
+      table: { type: { summary: '() => void' } },
+    },
+    onRequestClose: {
+      description:
+        'Specify a handler for closing modal. The handler should care of closing modal, e.g. changing `open` prop.',
+      table: { type: { summary: 'React.ReactEventHandler<HTMLElement>' } },
+    },
+    onRequestSubmit: {
+      action: 'onRequestSubmit',
+      description:
+        'Specify a handler for "submitting" modal. The handler should care of closing modal, e.g. changing `open` prop, if necessary.',
+      table: { type: { summary: 'React.ReactEventHandler<HTMLElement>' } },
+    },
+    onSecondarySubmit: {
+      description:
+        'Specify a handler for the secondary button. Useful if separate handler from `onRequestClose` is desirable',
+      table: { type: { summary: 'React.ReactEventHandler<HTMLElement>' } },
+    },
+    open: {
+      description: 'Specify whether the Modal is currently open',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    passiveModal: {
+      description: 'Specify whether the modal should be button-less',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    preventCloseOnClickOutside: {
+      control: 'boolean',
+      description: 'Prevent closing on click outside of modal',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    primaryButtonDisabled: {
+      description: 'Specify whether the Button should be disabled, or not',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    primaryButtonText: {
+      control: 'text',
+      description: 'Specify the text for the primary button',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    secondaryButtonText: {
+      description: 'Specify the text for the secondary button',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    secondaryButtons: {
+      description: 'Specify an array of config objects for secondary buttons',
+      table: { type: { summary: 'ModalSecondaryButton[]' } },
+    },
+    selectorPrimaryFocus: {
+      description:
+        'Specify a CSS selector that matches the DOM element that should be focused when the Modal opens',
+      table: { type: { summary: 'string' } },
+    },
+    selectorsFloatingMenus: {
+      description:
+        'Specify CSS selectors that match DOM elements working as floating menus. Focusing on those elements won\'t trigger "focus-wrap" behavior',
+      table: { type: { summary: 'string[]' } },
+    },
+    shouldSubmitOnEnter: {
+      description: 'Specify if Enter key should be used as "submit" action',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    size: {
+      description: 'Specify the size variant.',
+      table: {
+        type: { summary: "'xs' | 'sm' | 'md' | 'lg'" },
+        defaultValue: { summary: "'md'" },
+      },
     },
     numberOfButtons: {
       description: 'Count of Footer Buttons',
@@ -79,19 +263,6 @@ export default {
         type: 'inline-radio',
         labels: Object.keys(buttons),
       },
-    },
-    onKeyDown: {
-      action: 'onKeyDown',
-    },
-    onRequestSubmit: {
-      action: 'onRequestSubmit',
-    },
-
-    preventCloseOnClickOutside: {
-      control: 'boolean',
-    },
-    primaryButtonText: {
-      control: 'text',
     },
   },
 } satisfies Meta<ModalStoryArgs>;
@@ -152,15 +323,19 @@ export const Default: StoryFn<ModalStoryArgs> = ({
   ...args
 }) => {
   const [open, setOpen] = useState(true);
+  const launcher = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Launch modal</Button>
+      <Button ref={launcher} onClick={() => setOpen(true)}>
+        Launch modal
+      </Button>
       <Modal
+        launcherButtonRef={launcher}
         onRequestClose={(e) => {
           action('onRequestClose')(e);
           setOpen(false);
         }}
-        modalHeading="Add a custom domain"
+        modalHeading="Add a supplier"
         primaryButtonText="Add"
         secondaryButtonText="Cancel"
         aria-label="Modal content"
@@ -168,21 +343,21 @@ export const Default: StoryFn<ModalStoryArgs> = ({
         {...args}
         {...modalFooter(numberOfButtons)}>
         <p style={{ marginBottom: 'var(--cds-spacing-07)' }}>
-          Custom domains direct requests for your apps in this Cloud Foundry
-          organization to a URL that you own. A custom domain can be a shared
-          domain, a shared subdomain, or a shared domain and host.
+          Suppliers appear in purchase orders and incoming invoices. You can
+          change their details later.
         </p>
         <TextInput
           data-modal-primary-focus
+          ref={autofocus}
           id="text-input-1"
-          labelText="Domain name"
-          placeholder="For example, GitHub.com"
+          labelText="Company name"
+          placeholder="For example, Northwind Supplies Ltd"
           style={{ marginBottom: 'var(--cds-spacing-06)' }}
         />
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
-          <Select id="select-1" defaultValue="us-south" labelText="Region">
-            <SelectItem value="us-south" text="US South" />
-            <SelectItem value="us-east" text="US East" />
+          <Select id="select-1" defaultValue="30" labelText="Payment terms">
+            <SelectItem value="14" text="14 days" />
+            <SelectItem value="30" text="30 days" />
           </Select>
         </div>
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
@@ -190,29 +365,29 @@ export const Default: StoryFn<ModalStoryArgs> = ({
             allowCustomValue
             autoAlign={true}
             id="carbon-combobox"
-            items={['Viewer', 'Editor', 'Manager']}
+            items={['Materials', 'Services', 'Logistics']}
             onChange={action('onChange')}
-            titleText="Permissions (Example of Floating UI)"
+            titleText="Category (Example of Floating UI)"
           />
         </div>
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
           <Dropdown
             autoAlign={true}
             id="default"
-            titleText="TLS (Example of Floating UI)"
-            label="Option 1"
+            titleText="Currency (Example of Floating UI)"
+            label="Choose a currency"
             items={[
               {
                 id: 'option-0',
-                text: '1.0',
+                text: 'EUR',
               },
               {
                 id: 'option-1',
-                text: '1.1',
+                text: 'USD',
               },
               {
                 id: 'option-2',
-                text: '1.2',
+                text: 'GBP',
               },
             ]}
             itemToString={(item) => (item ? item.text : '')}
@@ -221,30 +396,30 @@ export const Default: StoryFn<ModalStoryArgs> = ({
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
           <MultiSelect
             id="test"
-            label="Choose options"
-            titleText="Mapping domain"
+            label="Choose channels"
+            titleText="Order channels"
             autoAlign
             items={[
               {
                 id: 'downshift-1-item-0',
-                text: 'Cloud Foundry',
+                text: 'Email',
               },
               {
                 id: 'downshift-1-item-1',
-                text: 'Kubernetes Ingress',
+                text: 'Supplier portal',
               },
               {
                 id: 'downshift-1-item-2',
-                text: 'VPC Load Balancer',
+                text: 'EDI',
               },
             ]}
             itemToString={(item) => (item ? item.text : '')}
           />
         </div>
-        <CheckboxGroup legendText="Terms of Agreement">
+        <CheckboxGroup legendText="Terms">
           <Checkbox
             id="checkbox-label-1"
-            labelText="I confirm domain ownership and accept IBM service terms and applicable charges."
+            labelText="The supplier accepts our purchase terms."
           />
         </CheckboxGroup>
       </Modal>
@@ -318,7 +493,7 @@ export const FullWidth: StoryFn<ModalStoryArgs> = ({
 
 FullWidth.parameters = { ...sharedParameters };
 
-export const DangerModal: StoryFn<ModalStoryArgs> = ({
+export const Danger: StoryFn<ModalStoryArgs> = ({
   numberOfButtons,
   ...args
 }) => {
@@ -347,7 +522,7 @@ export const DangerModal: StoryFn<ModalStoryArgs> = ({
   );
 };
 
-DangerModal.parameters = { ...sharedParameters };
+Danger.parameters = { ...sharedParameters };
 
 export const WithScrollingContent: StoryFn<ModalStoryArgs> = ({
   numberOfButtons,
@@ -505,7 +680,7 @@ export const WithStateManager: StoryFn<ModalStoryArgs> = ({
 
 WithStateManager.parameters = { ...sharedParameters };
 
-export const PassiveModal: StoryFn<ModalStoryArgs> = ({
+export const Passive: StoryFn<ModalStoryArgs> = ({
   numberOfButtons,
   ...args
 }) => {
@@ -525,7 +700,7 @@ export const PassiveModal: StoryFn<ModalStoryArgs> = ({
   );
 };
 
-PassiveModal.parameters = {
+Passive.parameters = {
   controls: {
     include: [
       'aria-label',

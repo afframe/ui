@@ -1,12 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
-import {
-  englishLeft,
-  sentinelMessages,
-} from '../CreateEditFlow/flowTestUtils.js';
+import { englishLeft, sentinelMessages } from '../FlowParts/flowTestUtils.js';
 import { defaultEditFullPageMessages, EditFullPage } from './EditFullPage.js';
 import type { EditFullPageProps } from './EditFullPage.js';
 
@@ -159,7 +156,7 @@ test('Enter submits once; async submit is busy, then leaves', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText(defaults.submitting).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(defaults.pending).length).toBeGreaterThan(0);
   await userEvent.keyboard('{Escape}');
   expect(onClose).not.toHaveBeenCalled();
   resolve();
@@ -177,7 +174,7 @@ test('a rejected submit stays with an alert and no onClose', async () => {
   await mounted();
   await userEvent.click(screen.getByRole('button', { name: defaults.save }));
   expect((await screen.findByRole('alert')).textContent).toContain(
-    defaults.submitError
+    defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
 });
@@ -230,9 +227,7 @@ test('messages replace the busy state strings too', async () => {
   );
   await mounted();
   await userEvent.click(screen.getByRole('button', { name: s.save }));
-  await waitFor(() =>
-    expect(document.body.textContent).toContain(s.submitting)
-  );
+  await waitFor(() => expect(document.body.textContent).toContain(s.pending));
   expect(englishLeft(defaults)).toEqual([]);
 });
 
@@ -248,4 +243,65 @@ test('Escape works from Save; not when handled or inside an expanded control', a
   screen.getByRole('button', { name: defaults.save }).focus();
   await userEvent.keyboard('{Escape}');
   expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('ref and rest props reach the form', () => {
+  const ref = createRef<HTMLFormElement>();
+  render(
+    <AfframeProvider>
+      <EditFullPage
+        ref={ref}
+        data-testid="root"
+        title="Customer"
+        label="Customers"
+        onClose={() => undefined}
+        onSubmit={() => undefined}>
+        <input aria-label="Name" />
+      </EditFullPage>
+    </AfframeProvider>
+  );
+  const form = screen.getByRole('form', { name: 'Customer' });
+  expect(screen.getByTestId('root')).toBe(form);
+  expect(ref.current).toBe(form);
+  expect(screen.getByText('Customers')).toBeTruthy();
+});
+
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <EditFullPage
+        title="Customer"
+        description={list}
+        onClose={() => undefined}
+        onSubmit={() => undefined}>
+        <input aria-label="Name" />
+      </EditFullPage>
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
+});
+
+// Below Carbon's md breakpoint the two buttons share the width.
+test.each([320, 375])('at %ipx both buttons stay on screen', async (width) => {
+  await page.viewport(width, 640);
+  try {
+    render(<Harness />);
+    const cancel = screen
+      .getByRole('button', { name: defaults.cancel })
+      .getBoundingClientRect();
+    const save = screen
+      .getByRole('button', { name: defaults.save })
+      .getBoundingClientRect();
+    expect(cancel.left).toBeGreaterThanOrEqual(0);
+    expect(save.right).toBeLessThanOrEqual(width);
+    expect(Math.round(cancel.width)).toBe(Math.round(save.width));
+  } finally {
+    await page.viewport(1024, 768);
+  }
 });

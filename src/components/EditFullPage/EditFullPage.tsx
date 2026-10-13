@@ -1,37 +1,41 @@
 'use client';
 import { Button, ButtonSet, InlineLoading } from '@carbon/react';
 import { useEffect, useId } from 'react';
-import type { ReactNode, RefObject } from 'react';
+import type { FormHTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
 import {
-  defaultCreateEditFlowMessages,
   DiscardDialog,
+  FlowDescription,
   FlowError,
   FlowForm,
-  isCloseEscape,
-  useCreateEditFlow,
-  useInitialFocus,
-} from '../CreateEditFlow/CreateEditFlow.js';
-import type { CreateEditFlowMessages } from '../CreateEditFlow/CreateEditFlow.js';
+} from '../FlowParts/FlowParts.js';
+import type { FlowFormOwnAttribute } from '../FlowParts/FlowParts.js';
+import { defaultFormFlowMessages } from '../FlowParts/messages.js';
+import type { DiscardMessages, FlowMessages } from '../FlowParts/messages.js';
+import { isCloseEscape, useFlow } from '../FlowParts/useFlow.js';
 
-export interface EditFullPageMessages extends CreateEditFlowMessages {
+export interface EditFullPageMessages extends FlowMessages, DiscardMessages {
   /** Primary button. */
   save: string;
 }
 
 export const defaultEditFullPageMessages: EditFullPageMessages = {
-  ...defaultCreateEditFlowMessages,
+  ...defaultFormFlowMessages,
   save: 'Save',
 };
 
-export interface EditFullPageProps {
+interface EditFullPageOwnProps {
   /** Leaves edit mode: after a successful submit, Discard, or Cancel on a clean form. */
   onClose: () => void;
   /** A returned promise keeps the page busy until it settles. */
   onSubmit: () => void | Promise<void>;
+  /** Page heading; also names the form. */
   title: string;
   /** Level of the title heading. Default 2. */
   headingLevel?: 2 | 3;
+  /** Small text above the title. */
+  label?: ReactNode;
+  /** Text under the title. */
   description?: ReactNode;
   submitDisabled?: boolean;
   isDirty?: boolean;
@@ -46,12 +50,25 @@ export interface EditFullPageProps {
   className?: string;
 }
 
+/** The rest go to the `form`. */
+export interface EditFullPageProps
+  extends
+    EditFullPageOwnProps,
+    Omit<
+      FormHTMLAttributes<HTMLFormElement>,
+      keyof EditFullPageOwnProps | FlowFormOwnAttribute | 'aria-labelledby'
+    > {
+  /** The `form`. */
+  ref?: Ref<HTMLFormElement> | undefined;
+}
+
 /** A page-level edit form with a sticky Cancel and Save bar. */
 export function EditFullPage({
   onClose,
   onSubmit,
   title,
   headingLevel = 2,
+  label,
   description,
   submitDisabled = false,
   isDirty = false,
@@ -61,22 +78,24 @@ export function EditFullPage({
   messages,
   children,
   className,
+  ...rest
 }: EditFullPageProps) {
   const text = resolveMessages(defaultEditFullPageMessages, messages);
   const id = useId();
-  const flow = useCreateEditFlow({
+  const flow = useFlow<HTMLFormElement>({
     open: true,
     onClose: () => {
       onClose();
       // The app usually unmounts the page; focus the launcher once it is back.
       setTimeout(() => launcherRef?.current?.focus());
     },
-    onSubmit,
     isDirty,
     confirmDiscard,
-    messages: text,
+    messages: { error: text.error, errorText: text.errorText },
   });
-  useInitialFocus(true, flow.formRef);
+  const submit = async () => {
+    if (await flow.run(onSubmit)) flow.close();
+  };
 
   // Only while dirty; the browser shows its own text, which cannot be set.
   useEffect(() => {
@@ -100,41 +119,46 @@ export function EditFullPage({
           if (isCloseEscape(event)) flow.requestClose();
         }}>
         <FlowForm
+          {...rest}
           flow={flow}
+          onSubmit={() => void submit()}
           submitDisabled={submitDisabled}
           aria-labelledby={`${id}-title`}
           className={['afframe-edit-full-page', className]
             .filter(Boolean)
             .join(' ')}>
           <div className="afframe-edit-full-page-body">
+            {label && <p className="afframe-edit-full-page-label">{label}</p>}
             <Heading
               id={`${id}-title`}
               className="afframe-edit-full-page-title">
               {title}
             </Heading>
-            {description && (
-              <p className="afframe-edit-full-page-description">
-                {description}
-              </p>
-            )}
+            <FlowDescription
+              description={description}
+              className="afframe-edit-full-page-description"
+            />
             {children}
-            <FlowError error={flow.error} messages={text} />
+            <FlowError
+              error={flow.error}
+              iconDescription={text.errorIconDescription}
+            />
           </div>
           <ButtonSet className="afframe-edit-full-page-actions">
             <Button
               kind="secondary"
-              disabled={flow.submitting}
+              disabled={flow.pending}
               onClick={flow.requestClose}>
               {text.cancel}
             </Button>
             <Button
               kind="primary"
               type="submit"
-              disabled={submitDisabled || flow.submitting}>
-              {flow.submitting ? (
+              disabled={submitDisabled || flow.pending}>
+              {flow.pending ? (
                 <InlineLoading
-                  description={text.submitting}
-                  iconDescription={text.submitting}
+                  description={text.pending}
+                  iconDescription={text.pending}
                 />
               ) : (
                 text.save

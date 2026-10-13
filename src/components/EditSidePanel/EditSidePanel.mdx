@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as EditSidePanelStories from './EditSidePanel.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DialogChooser } from '../../../.storybook/DialogChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -18,6 +19,10 @@ It shares its submit, cancel, discard and focus behaviour with `CreateModal`,
 `CreateSidePanel`, `EditTearsheet` and `EditFullPage`.
 
 <Canvas of={EditSidePanelStories.Default} />
+
+## Which component to use
+
+<DialogChooser />
 
 ## Usage and props
 
@@ -46,7 +51,6 @@ const [name, setName] = useState(customer.name);
   onSubmit={() => api.updateCustomer(customer.id, { name })}
   launcherRef={launcherRef}
   title="Edit customer"
-  formTitle="Contact"
   isDirty={name !== customer.name}
   submitDisabled={name.trim() === ''}>
   <TextInput id="name" labelText="Name" value={name} onChange={...} />
@@ -55,8 +59,9 @@ const [name, setName] = useState(customer.name);
 
 Reset the field state from the saved values when the panel opens again.
 
-- `title` and `subtitle` head the panel; `formTitle` (a level 3 heading) and
-  `formDescription` head the form and name it.
+- `title` heads the panel and names it and its form; `label` (small text
+  above the title, a string) and `description` (under the title) are
+  optional.
 - `placement` (`right`, the default, or `left`), `size` (`xs` to `2xl`,
   default `md`) and `slideIn` with `pageContentSelector` (the page content the
   panel pushes aside; no overlay then) are passed to `SidePanel`.
@@ -64,8 +69,12 @@ Reset the field state from the saved values when the panel opens again.
 - When `isDirty` is true, Escape, the close icon, Cancel and an overlay click
   ask "Discard changes?" first, unless `confirmDiscard` is false.
 - `submitDisabled`: disables Save and Enter.
-- `launcherRef`: where focus goes on close when the element that had focus
-  when the panel opened is gone.
+- `launcherRef`: where focus goes on close. Without it, or when it is gone,
+  focus returns to the element that had focus when the panel opened.
+- `ref` and any other HTML attributes (`id`, `data-*`, `style`) go to IBM
+  SidePanel's `aside`, where `className` lands too. IBM sets `aria-label` and
+  `onKeyDown` itself. The ref is `null` while the panel is closed; the discard
+  dialog renders beside it, never inside.
 
 <ArgTypes of={EditSidePanelStories} />
 
@@ -75,20 +84,19 @@ Reset the field state from the saved values when the panel opens again.
 `defaultEditSidePanelMessages`. All strings except the optional `errorText` function,
 which is set from a client component.
 
-| Key                    | Default                                    |
-| ---------------------- | ------------------------------------------ |
-| `save`                 | Save                                       |
-| `cancel`               | Cancel                                     |
-| `closePanel`           | Close panel                                |
-| `submitting`           | Saving                                     |
-| `submitError`          | The changes could not be saved. Try again. |
-| `errorText`            | not set: `submitError` is shown            |
-| `errorIconDescription` | Error                                      |
-| `discardTitle`         | Discard changes?                           |
-| `discardBody`          | Your changes will be lost.                 |
-| `discard`              | Discard                                    |
-| `keepEditing`          | Keep editing                               |
-| `closeIconDescription` | Close (the discard dialog's close icon)    |
+| Key                    | Default                                                 |
+| ---------------------- | ------------------------------------------------------- |
+| `save`                 | Save                                                    |
+| `cancel`               | Cancel                                                  |
+| `pending`              | Saving                                                  |
+| `error`                | The changes could not be saved. Try again.              |
+| `errorText`            | not set: `error` is shown                               |
+| `errorIconDescription` | Error                                                   |
+| `discardTitle`         | Discard changes?                                        |
+| `discardBody`          | Your changes will be lost.                              |
+| `discard`              | Discard                                                 |
+| `keepEditing`          | Keep editing                                            |
+| `closeIconDescription` | Close (the panel's and the discard dialog's close icon) |
 
 ## Keyboard and screen reader behaviour
 
@@ -105,8 +113,8 @@ open list or menu inside the panel takes it.
 | Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                |
 | Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.    |
 
-On close, focus returns to the element that had focus when the panel opened,
-else to `launcherRef`, else to the page body.
+On close, focus returns to `launcherRef`, else to the element that had focus
+when the panel opened, else to the page body.
 
 A focused field never sits under the action bar: fields keep a scroll margin
 the size of the bar (the `LongForm` story checks it).
@@ -114,16 +122,16 @@ the size of the bar (the `LongForm` story checks it).
 Screen readers announce:
 
 - the panel as a complementary region named by `title`, and the form named
-  by `formTitle`;
-- while saving, the form as busy and Save's loading text (`submitting`);
-- a rejected submit as an alert with `submitError` (or `errorText(error)`). Focus moves to the first
+  by `title` too;
+- while saving, the form as busy and Save's loading text (`pending`);
+- a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
   `discardBody`.
 
 ## Stories
 
-<Canvas of={EditSidePanelStories.WithValidationError} />
+<Canvas of={EditSidePanelStories.WithError} />
 
 <Canvas of={EditSidePanelStories.Dirty} />
 

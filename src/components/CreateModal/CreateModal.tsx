@@ -1,37 +1,40 @@
 'use client';
 import { Modal } from '@carbon/react';
-import type { ReactNode, RefObject } from 'react';
+import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
 import {
-  defaultCreateEditFlowMessages,
   DiscardDialog,
+  FlowDescription,
   FlowError,
   FlowForm,
-  useCreateEditFlow,
-  useInitialFocus,
-  wrapTabInDialog,
-} from '../CreateEditFlow/CreateEditFlow.js';
-import type { CreateEditFlowMessages } from '../CreateEditFlow/CreateEditFlow.js';
+} from '../FlowParts/FlowParts.js';
+import { defaultFormFlowMessages } from '../FlowParts/messages.js';
+import type { DiscardMessages, FlowMessages } from '../FlowParts/messages.js';
+import { useFlow } from '../FlowParts/useFlow.js';
+import type { ModalRootAttribute } from '../FlowParts/refs.js';
 
-export interface CreateModalMessages extends CreateEditFlowMessages {
+export interface CreateModalMessages extends FlowMessages, DiscardMessages {
   /** Primary button. */
   create: string;
 }
 
 export const defaultCreateModalMessages: CreateModalMessages = {
-  ...defaultCreateEditFlowMessages,
-  submitting: 'Creating',
+  ...defaultFormFlowMessages,
+  pending: 'Creating',
   create: 'Create',
 };
 
-export interface CreateModalProps {
+interface CreateModalOwnProps {
   open: boolean;
   /** Called after a successful submit, Discard, or a close of a clean form. */
   onClose: () => void;
   /** A returned promise keeps the modal busy until it settles. */
   onSubmit: () => void | Promise<void>;
+  /** Modal heading; also names the form. */
   title: string;
-  subtitle?: ReactNode;
+  /** Small text above the title. */
+  label?: ReactNode;
+  /** Text above the form. */
   description?: ReactNode;
   size?: 'sm' | 'md' | 'lg';
   /** Element focused on open; defaults to `[data-modal-primary-focus]`, else the first form control. */
@@ -40,11 +43,25 @@ export interface CreateModalProps {
   isDirty?: boolean;
   /** Ask before discarding a dirty form. Default true. */
   confirmDiscard?: boolean;
-  /** Focus target on close when the element that opened the modal is gone. */
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<CreateModalMessages>;
   children?: ReactNode;
   className?: string;
+}
+
+/** The rest go to Carbon Modal's root `div`. */
+export interface CreateModalProps
+  extends
+    CreateModalOwnProps,
+    Omit<
+      HTMLAttributes<HTMLDivElement>,
+      keyof CreateModalOwnProps | ModalRootAttribute
+    > {
+  /** Carbon Modal's root `div`; null while closed. */
+  ref?: Ref<HTMLDivElement> | undefined;
+  // Carbon types it without `undefined`.
+  id?: string;
 }
 
 /** A small create form in a Carbon modal. Controlled by `open`. */
@@ -53,7 +70,7 @@ export function CreateModal({
   onClose,
   onSubmit,
   title,
-  subtitle,
+  label,
   description,
   size = 'md',
   selectorPrimaryFocus = '[data-modal-primary-focus]',
@@ -64,56 +81,63 @@ export function CreateModal({
   messages,
   children,
   className,
+  ...rest
 }: CreateModalProps) {
   const text = resolveMessages(defaultCreateModalMessages, messages);
-  const flow = useCreateEditFlow({
+  const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
-    onSubmit,
     isDirty,
     confirmDiscard,
-    ...(launcherRef ? { launcherRef } : {}),
-    messages: text,
+    launcherRef,
+    messages: { error: text.error, errorText: text.errorText },
+    initialFocus: (): HTMLElement | null | undefined =>
+      flow.containerRef.current?.querySelector<HTMLElement>(
+        selectorPrimaryFocus
+      ),
   });
-  useInitialFocus(open, flow.formRef, selectorPrimaryFocus);
+  const submit = async () => {
+    if (await flow.run(onSubmit)) flow.close();
+  };
 
   return (
     <>
-      {/* Modal drops its own onKeyDown prop; Tab wrap listens here. */}
-      <div className="afframe-create-modal-root" onKeyDown={wrapTabInDialog}>
-        <Modal
-          open={open}
-          size={size}
-          className={['afframe-create-modal', className]
-            .filter(Boolean)
-            .join(' ')}
-          modalHeading={title}
-          primaryButtonText={text.create}
-          secondaryButtonText={text.cancel}
-          closeButtonLabel={text.closeIconDescription}
-          primaryButtonDisabled={submitDisabled}
-          loadingStatus={flow.submitting ? 'active' : 'inactive'}
-          loadingDescription={text.submitting}
-          loadingIconDescription={text.submitting}
-          onRequestClose={flow.requestClose}
-          onRequestSubmit={() => {
-            if (!submitDisabled) void flow.submit();
-          }}>
-          {subtitle && (
-            <p className="afframe-create-modal-subtitle">{subtitle}</p>
-          )}
-          {description && (
-            <p className="afframe-create-modal-description">{description}</p>
-          )}
-          <FlowForm
-            flow={flow}
-            submitDisabled={submitDisabled}
-            aria-label={title}>
-            {children}
-            <FlowError error={flow.error} messages={text} />
-          </FlowForm>
-        </Modal>
-      </div>
+      <Modal
+        {...rest}
+        open={open}
+        size={size}
+        className={['afframe-create-modal', className]
+          .filter(Boolean)
+          .join(' ')}
+        modalHeading={title}
+        {...(label ? { modalLabel: label } : {})}
+        primaryButtonText={text.create}
+        secondaryButtonText={text.cancel}
+        closeButtonLabel={text.closeIconDescription}
+        primaryButtonDisabled={submitDisabled}
+        loadingStatus={flow.pending ? 'active' : 'inactive'}
+        loadingDescription={text.pending}
+        loadingIconDescription={text.pending}
+        onRequestClose={flow.requestClose}
+        onRequestSubmit={() => {
+          if (!submitDisabled && !flow.pending) void submit();
+        }}>
+        <FlowDescription
+          description={description}
+          className="afframe-create-modal-description"
+        />
+        <FlowForm
+          flow={flow}
+          onSubmit={() => void submit()}
+          submitDisabled={submitDisabled}
+          aria-label={title}>
+          {children}
+          <FlowError
+            error={flow.error}
+            iconDescription={text.errorIconDescription}
+          />
+        </FlowForm>
+      </Modal>
       <DiscardDialog flow={flow} messages={text} />
     </>
   );

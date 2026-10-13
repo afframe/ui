@@ -27,12 +27,13 @@ function Harness(props: ExportModalProps) {
 }
 
 const meta = {
-  title: 'Components/ExportModal',
+  title: 'Components/Task Dialogs/ExportModal',
   component: ExportModal,
   tags: ['afframe'],
   args: {
     open: true,
     onClose: () => undefined,
+    title: 'Export',
     filename: 'invoices-2026',
     formats: [
       { extension: 'csv', description: 'Spreadsheet' },
@@ -84,7 +85,7 @@ export const Success: Story = {
   },
 };
 
-export const Pending: Story = {
+export const Exporting: Story = {
   args: { onExport: () => new Promise<void>(() => undefined) },
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(

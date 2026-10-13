@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
@@ -29,6 +29,7 @@ function Harness({
         Open
       </button>
       <ExportModal
+        title="Export"
         filename="invoices-2026"
         formats={formats}
         onExport={onExport}
@@ -188,7 +189,9 @@ test('pending: Escape ignored; rejection keeps it open with an alert', async () 
   reject(new Error('no'));
   const alert = await screen.findByText('Something went wrong. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
-  await until(() => expect(active()).toBe(exportButton()));
+  await until(() =>
+    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+  );
   await userEvent.keyboard('{Escape}');
   await until(() => expect(onClose).toHaveBeenCalledTimes(1));
   await until(() => expect(active()).toBe(launcher()));
@@ -204,7 +207,7 @@ test('focus stays in the dialog while tabbing; reopening resets the form', async
   for (let index = 0; index < 8; index += 1) {
     await userEvent.tab();
     const element = active();
-    expect(element === document.body || dialog.contains(element)).toBe(true);
+    expect(dialog.contains(element)).toBe(true);
   }
   await userEvent.clear(nameField());
   await userEvent.type(nameField(), 'changed');
@@ -224,6 +227,7 @@ test('overridden messages replace every English default', async () => {
   let reject: (error: Error) => void = () => undefined;
   renderHarness({
     messages,
+    title: 'Heading',
     password: { required: true },
     onExport: () =>
       new Promise<void>((_, fail) => {
@@ -248,10 +252,10 @@ test('overridden messages replace every English default', async () => {
   );
   await userEvent.click(screen.getByRole('button', { name: '[[export]]' }));
   await until(() =>
-    expect(screen.getAllByText('[[exporting]]').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('[[pending]]').length).toBeGreaterThan(0)
   );
   reject(new Error('no'));
-  await screen.findByText('[[genericError]]');
+  await screen.findByText('[[error]]');
   const visible = [
     dialog.textContent ?? '',
     ...[...dialog.querySelectorAll('[aria-label],[title],[placeholder]')].map(
@@ -281,6 +285,7 @@ test('a success that resolves after the parent closed the dialog is dropped', as
   let resolve: () => void = () => undefined;
   const onClose = vi.fn();
   const props = {
+    title: 'Export',
     filename: 'invoices-2026',
     formats,
     onClose,
@@ -318,7 +323,12 @@ test('closing before the success delay ends calls onClose once', async () => {
 
 test('when the formats change and lose the selected one, the first is selected', async () => {
   const onExport = vi.fn();
-  const props = { filename: 'report', onClose: () => undefined, onExport };
+  const props = {
+    title: 'Export',
+    filename: 'report',
+    onClose: () => undefined,
+    onExport,
+  };
   const { rerender } = render(
     <AfframeProvider>
       <ExportModal {...props} formats={formats} open />
@@ -341,4 +351,50 @@ test('when the formats change and lose the selected one, the first is selected',
     filename: 'report',
     extension: 'json',
   });
+});
+
+test('ref and rest props reach the root', async () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <AfframeProvider>
+      <ExportModal
+        ref={ref}
+        data-testid="root"
+        open
+        title="Export"
+        description="Exports the filtered invoices."
+        filename="invoices"
+        formats={formats}
+        onClose={() => undefined}
+        onExport={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const root = await screen.findByTestId('root');
+  expect(ref.current).toBe(root);
+  expect(root.classList).toContain('afframe-export-modal');
+  expect(screen.getByText('Exports the filtered invoices.')).toBeTruthy();
+});
+
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <ExportModal
+        open
+        title="Export"
+        description={list}
+        filename="invoices"
+        formats={formats}
+        onClose={() => undefined}
+        onExport={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
 });

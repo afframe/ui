@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as EditFullPageStories from './EditFullPage.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DialogChooser } from '../../../.storybook/DialogChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -20,6 +21,10 @@ behaviour with `CreateModal`, `CreateSidePanel`, `EditSidePanel` and
 `EditTearsheet`.
 
 <Canvas of={EditFullPageStories.Default} />
+
+## Which component to use
+
+<DialogChooser />
 
 ## Usage and props
 
@@ -57,7 +62,8 @@ editing ? (
 ```
 
 - `title` with `headingLevel` (2, the default, or 3) heads the form and names
-  it through `aria-labelledby`; `description` follows the heading.
+  it through `aria-labelledby`; `label` (small text above the heading) and
+  `description` (after it) are optional.
 - `isDirty`: when true, Escape and Cancel ask "Discard changes?" first,
   unless `confirmDiscard` is false.
 - `warnOnLeave` (default true): while `isDirty`, a `beforeunload` handler asks
@@ -67,6 +73,8 @@ editing ? (
 - `submitDisabled`: disables Save and Enter.
 - `launcherRef`: focused after leaving edit mode, for example the Edit button
   that replaces the form.
+- `ref` and any other HTML attributes (`id`, `data-*`, `style`) go to the
+  `form`, where `className` lands too. The discard dialog renders beside it.
 
 <ArgTypes of={EditFullPageStories} />
 
@@ -80,9 +88,9 @@ which is set from a client component.
 | ---------------------- | ------------------------------------------ |
 | `save`                 | Save                                       |
 | `cancel`               | Cancel                                     |
-| `submitting`           | Saving                                     |
-| `submitError`          | The changes could not be saved. Try again. |
-| `errorText`            | not set: `submitError` is shown            |
+| `pending`              | Saving                                     |
+| `error`                | The changes could not be saved. Try again. |
+| `errorText`            | not set: `error` is shown                  |
 | `errorIconDescription` | Error                                      |
 | `discardTitle`         | Discard changes?                           |
 | `discardBody`          | Your changes will be lost.                 |
@@ -111,8 +119,8 @@ margin the size of the bar (the `LongForm` story checks it).
 Screen readers announce:
 
 - the form named by its heading;
-- while saving, the form as busy and Save's loading text (`submitting`);
-- a rejected submit as an alert with `submitError` (or `errorText(error)`). Focus moves to the first
+- while saving, the form as busy and Save's loading text (`pending`);
+- a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
   `discardBody`.
@@ -121,7 +129,7 @@ Screen readers announce:
 
 <Canvas of={EditFullPageStories.Dirty} />
 
-<Canvas of={EditFullPageStories.WithValidationError} />
+<Canvas of={EditFullPageStories.WithError} />
 
 <Canvas of={EditFullPageStories.Submitting} />
 

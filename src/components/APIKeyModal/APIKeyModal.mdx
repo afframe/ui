@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as APIKeyModalStories from './APIKeyModal.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DialogChooser } from '../../../.storybook/DialogChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -18,6 +19,10 @@ Carbon modal. It replaces IBM Products' deprecated APIKeyModal.
 
 <Canvas of={APIKeyModalStories.Default} />
 
+## Which component to use
+
+<DialogChooser />
+
 ## Usage and props
 
 ```tsx
@@ -27,6 +32,7 @@ import { APIKeyModal } from '@afframe/ui';
   open={open}
   onClose={() => setOpen(false)}
   launcherRef={launcherRef}
+  title="Generate an API key"
   onGenerate={(name) => api.createKey(name)} // resolves with the key
   showDownload
 />;
@@ -36,6 +42,9 @@ import { APIKeyModal } from '@afframe/ui';
   Cancel, Done, the close icon and Escape, and after a successful save.
 - `mode`: `generate` (default) or `edit`. The props type is a union on
   `mode`: generate mode requires `onGenerate`, edit mode requires `onSave`.
+- `title` (required): the heading; pick it per mode, for example "Generate an
+  API key" or "Edit API key". `label` (small text above it) and
+  `description` (above the content) are optional.
 - `onGenerate(name)`: generate mode; resolves with the key. While it runs the
   buttons are disabled and closing waits. If it rejects or resolves with an
   empty key, the dialog stays on the name step with an alert. A key that
@@ -50,6 +59,9 @@ import { APIKeyModal } from '@afframe/ui';
 - `steps`: optional steps before the name step, each `{ title, content,
 valid }`; `valid: false` disables Next.
 - `messages`: overrides for the strings below.
+- `ref` and any other HTML attributes (`id`, `data-*`, `style`) go to Carbon
+  Modal's root `div`, where `className` lands too. The ref is `null` while
+  the dialog is closed.
 
 The flow: the steps (if any), the name field, Generate, then the success view.
 Closing from the success view needs no confirmation.
@@ -76,12 +88,12 @@ A click on the page behind the dialog does not close it.
 ## Messages
 
 `messages?: Partial<APIKeyModalMessages>`; defaults in
-`defaultAPIKeyModalMessages`. All keys are strings.
+`defaultAPIKeyModalMessages`. All keys are strings except the optional
+`errorText` function, which is set from a client component. The title and
+description are props, not messages.
 
 | Key                    | Default                                                                                |
 | ---------------------- | -------------------------------------------------------------------------------------- |
-| `generateTitle`        | Generate an API key                                                                    |
-| `editTitle`            | Edit API key                                                                           |
 | `nameLabel`            | Name                                                                                   |
 | `nameHelper`           | A name helps you tell your keys apart.                                                 |
 | `generate`             | Generate                                                                               |
@@ -90,6 +102,7 @@ A click on the page behind the dialog does not close it.
 | `showKey`              | Show key                                                                               |
 | `hideKey`              | Hide key                                                                               |
 | `copy`                 | Copy key                                                                               |
+| `copying`              | Copying (copy button feedback until the clipboard answers)                             |
 | `copied`               | Copied                                                                                 |
 | `copyFailed`           | The key could not be copied. Select it and copy it by hand.                            |
 | `storeWarning`         | Store this key now in a safe place. It is not shown again after you close this dialog. |
@@ -99,19 +112,20 @@ A click on the page behind the dialog does not close it.
 | `done`                 | Done                                                                                   |
 | `cancel`               | Cancel                                                                                 |
 | `pending`              | Working                                                                                |
-| `genericError`         | Something went wrong. Try again.                                                       |
+| `error`                | Something went wrong. Try again.                                                       |
+| `errorText`            | not set: `error` is shown                                                              |
 | `errorIconDescription` | Error                                                                                  |
 | `closeIconDescription` | Close                                                                                  |
 
 ## Examples
 
-<Canvas of={APIKeyModalStories.GenerateSuccess} />
+<Canvas of={APIKeyModalStories.Success} />
 
 <Canvas of={APIKeyModalStories.WithSteps} />
 
 <Canvas of={APIKeyModalStories.Edit} />
 
-<Canvas of={APIKeyModalStories.Pending} />
+<Canvas of={APIKeyModalStories.Generating} />
 
 ## Keyboard and screen reader behaviour
 
@@ -135,8 +149,8 @@ Download, Done.
 
 Focus is trapped by the browser's modal dialog: the page behind it is inert.
 On close, focus returns to `launcherRef`, else to the element focused before
-the dialog opened, else to the page body. After a failure, focus returns to
-the button that started it.
+the dialog opened, else to the page body. After a failure, focus moves to the first invalid field, else to the error
+alert.
 
 Screen readers announce:
 
@@ -144,8 +158,8 @@ Screen readers announce:
 - the key field by `keyLabel`, described by `storeWarning`;
 - the toggle as `showKey`, then `hideKey` while the key shows;
 - the copy button by `copy`; after a copy, `copied` (or `copyFailed`) through
-  a polite status region. The button's own feedback shows `pending` until the
+  a polite status region. The button's own feedback shows `copying` until the
   clipboard answers, then the same text;
 - a step's content as a section named by the step title;
 - `pending` while the key is generated, and a failure as an alert with
-  `genericError`.
+  `error`.

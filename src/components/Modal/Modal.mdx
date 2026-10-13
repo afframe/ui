@@ -3,9 +3,10 @@ import { CodeSnippet, InlineNotification } from '../../index.js';
 import * as ModalStories from './Modal.stories';
 import './Modal.stories.css';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DialogChooser } from '../../../.storybook/DialogChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components from @afframe/ui, story styles as plain CSS, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components from @afframe/ui, story styles as plain CSS, upstream Feedback section and table of contents removed, dialog chooser table added, props table TODO resolved in the stories.
 
 <Meta isTemplate />
 
@@ -28,11 +29,13 @@ text.
 
 <Canvas of={ModalStories.WithStateManager} />
 
+## Which component to use
+
+<DialogChooser />
+
 ## Component API
 
 <ArgTypes />
-
-{/* TODO: https://github.com/carbon-design-system/carbon/issues/19624 */}
 
 ## Opening/closing modal
 

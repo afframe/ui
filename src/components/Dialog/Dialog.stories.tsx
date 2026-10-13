@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (preview__Dialog), source tag, the onRequestClose action is now called (upstream only created it), stray space in a Toggle open label removed, ModalFocusAndClose story (hidden from the sidebar and docs) with a play test for initial focus, the Close button and the Escape close request, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (preview__Dialog), source tag, the onRequestClose action is now called (upstream only created it), stray space in a Toggle open label removed, ModalFocusAndClose story (hidden from the sidebar and docs) with a play test for initial focus, the Close button and the Escape close request, story names unified, Default with neutral business data and open state synced on Escape, Passive and Danger story names. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState } from 'react';
@@ -83,10 +83,15 @@ export const Default: StoryFn<DialogProps> = ({ open: _open, ...args }) => {
       <Button type="button" onClick={toggleDialog}>
         Toggle open
       </Button>
-      <Dialog {...args} open={open} onRequestClose={handleRequestClose}>
+      {/* Escape closes the native dialog without onRequestClose. */}
+      <Dialog
+        {...args}
+        open={open}
+        onRequestClose={handleRequestClose}
+        onClose={closeDialog}>
         <DialogHeader>
-          <DialogSubtitle>Configure dialog settings</DialogSubtitle>
-          <DialogTitle id="title">Modal Dialog Example</DialogTitle>
+          <DialogSubtitle>Suppliers</DialogSubtitle>
+          <DialogTitle id="title">Edit supplier</DialogTitle>
           <DialogControls>
             <DialogCloseButton onClick={closeDialog} />
           </DialogControls>
@@ -94,65 +99,25 @@ export const Default: StoryFn<DialogProps> = ({ open: _open, ...args }) => {
         <DialogBody>
           <VStack>
             <p>
-              Elit hic at labore culpa itaque fugiat. Consequuntur iure autem
-              autem officiis dolores facilis nulla earum! Neque quia nemo sequi
-              assumenda ratione officia Voluptate beatae eligendi placeat nemo
-              laborum, ratione.
+              Changes apply to new purchase orders. Orders already sent keep the
+              details they were sent with.
             </p>
             <p>
-              Elit hic at labore culpa itaque fugiat. Consequuntur iure autem
-              autem officiis dolores facilis nulla earum! Neque quia nemo sequi
-              assumenda ratione officia Voluptate beatae eligendi placeat nemo
-              laborum, ratione.
+              Payment terms set the due date of incoming invoices from this
+              supplier. Reminders go out three days before the due date.
             </p>
             <TextInput
               id="dialog-text-input"
-              labelText="Name"
-              placeholder="Enter your name"
+              labelText="Company name"
+              placeholder="For example, Northwind Supplies Ltd"
             />
             <Select
               id="dialog-select"
-              labelText="Region"
-              defaultValue="us-south">
-              <SelectItem value="us-south" text="US South" />
-              <SelectItem value="us-east" text="US East" />
+              labelText="Payment terms"
+              defaultValue="30">
+              <SelectItem value="14" text="14 days" />
+              <SelectItem value="30" text="30 days" />
             </Select>
-            <p>
-              Elit hic at labore culpa itaque fugiat. Consequuntur iure autem
-              autem officiis dolores facilis nulla earum! Neque quia nemo sequi
-              assumenda ratione officia Voluptate beatae eligendi placeat nemo
-              laborum, ratione.
-            </p>
-            <p>
-              Elit hic at labore culpa itaque fugiat. Consequuntur iure autem
-              autem officiis dolores facilis nulla earum! Neque quia nemo sequi
-              assumenda ratione officia Voluptate beatae eligendi placeat nemo
-              laborum, ratione.
-            </p>
-            <p>
-              Elit hic at labore culpa itaque fugiat. Consequuntur iure autem
-              autem officiis dolores facilis nulla earum! Neque quia nemo sequi
-              assumenda ratione officia Voluptate beatae eligendi placeat nemo
-              laborum, ratione.
-            </p>
-            <p>
-              Elit hic at labore culpa itaque fugiat. Consequuntur iure autem
-              autem officiis dolores facilis nulla earum! Neque quia nemo sequi
-              assumenda ratione officia Voluptate beatae eligendi placeat nemo
-              laborum, ratione.
-            </p>
-            <p>
-              Elit hic at labore culpa itaque fugiat. Consequuntur iure autem
-              autem officiis dolores facilis nulla earum! Neque quia nemo sequi
-              assumenda ratione officia Voluptate beatae eligendi placeat nemo
-              laborum, ratione.
-            </p>
-            <p>
-              Elit hic at labore culpa itaque fugiat. Consequuntur iure autem
-              autem officiis dolores facilis nulla earum! Neque quia nemo sequi
-              assumenda ratione officia Voluptate beatae eligendi placeat nemo
-              laborum, ratione.
-            </p>
           </VStack>
         </DialogBody>
         <DialogFooter>
@@ -358,10 +323,7 @@ WithScrollingContent.args = {
   open: true,
 };
 
-export const PassiveDialog: StoryFn<DialogProps> = ({
-  open: _open,
-  ...args
-}) => {
+export const Passive: StoryFn<DialogProps> = ({ open: _open, ...args }) => {
   const [open, setOpen] = useState(_open ?? false);
 
   function toggleDialog() {
@@ -401,7 +363,7 @@ export const PassiveDialog: StoryFn<DialogProps> = ({
   );
 };
 
-export const DangerDialog: StoryFn<DialogProps> = (args) => {
+export const Danger: StoryFn<DialogProps> = (args) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -432,7 +394,7 @@ export const DangerDialog: StoryFn<DialogProps> = (args) => {
   );
 };
 
-DangerDialog.args = {
+Danger.args = {
   modal: true,
 };
 
@@ -454,16 +416,11 @@ ModalFocusAndClose.play = async ({ canvas, userEvent }) => {
   await waitFor(() => expect(close()).toHaveFocus());
   // A user-event Escape is untrusted, so the browser ignores it. requestClose()
   // runs the close request a real Escape starts: the native dialog closes and
-  // focus returns to the opener without calling onRequestClose.
+  // focus returns to the opener. onClose syncs the story's open state, so one
+  // toggle reopens it.
   dialog.requestClose();
   await waitFor(() => expect(dialog).not.toHaveAttribute('open'));
   await expect(toggle).toHaveFocus();
-
-  // The story's open state is still true, so the first toggle only syncs it.
-  // If this fails after a Carbon update, Escape now calls onRequestClose:
-  // update the Escape note in Dialog.mdx and drop this step.
-  await userEvent.click(toggle);
-  await expect(dialog).not.toHaveAttribute('open');
   await userEvent.click(toggle);
   await waitFor(() => expect(dialog).toHaveAttribute('open'));
 };

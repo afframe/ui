@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ComposedModal parts and form parts from @afframe/ui, icons from @afframe/ui/icons, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ComposedModal parts and form parts from @afframe/ui, icons from @afframe/ui/icons, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), source tag, inline spacing as Carbon spacing tokens, story names unified, descriptions for the story-arg props, Default with neutral business data, its launcher ref and an initial field, preventCloseOnClickOutside on by default (a footer is present), Passive story name. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -42,6 +42,7 @@ import type {
 } from '../../index.js';
 import { View, FolderOpen, Folders } from '../../icons.js';
 import mdx from './ComposedModal.mdx';
+import { autofocus } from '../../../.storybook/autofocus.js';
 
 // Header and footer controls; the meta args give each one a value.
 interface ComposedModalStoryControls {
@@ -102,28 +103,66 @@ export default {
     preventCloseOnClickOutside: { control: 'boolean' },
     'aria-label': { control: 'text' },
     selectorPrimaryFocus: { control: 'text' },
-    label: { control: 'text' },
-    title: { control: 'text' },
-    iconDescription: { control: 'text' },
-    primaryButtonText: { control: 'text' },
-    secondaryButtonText: { control: 'text' },
-    primaryButtonDisabled: { control: 'boolean' },
+    label: {
+      control: 'text',
+      description: 'Specify an optional label to be displayed (ModalHeader)',
+      table: { type: { summary: 'string' } },
+    },
+    title: {
+      control: 'text',
+      description: 'Specify an optional title to be displayed (ModalHeader)',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    iconDescription: {
+      control: 'text',
+      description:
+        'Specify a description for the close icon that can be read by screen readers (ModalHeader)',
+      table: { type: { summary: 'string' } },
+    },
+    primaryButtonText: {
+      control: 'text',
+      description: 'Specify the text for the primary button (ModalFooter)',
+      table: { type: { summary: 'string' } },
+    },
+    secondaryButtonText: {
+      control: 'text',
+      description: 'Specify the text for the secondary button (ModalFooter)',
+      table: { type: { summary: 'string' } },
+    },
+    primaryButtonDisabled: {
+      control: 'boolean',
+      description:
+        'Specify whether the primary button should be disabled (ModalFooter)',
+      table: { type: { summary: 'boolean' } },
+    },
     loadingStatus: {
       control: 'select',
       options: ['inactive', 'active', 'finished', 'error'],
+      description: 'Loading status of the primary button (ModalFooter)',
+      table: {
+        type: { summary: "'inactive' | 'active' | 'finished' | 'error'" },
+      },
     },
-    loadingDescription: { control: 'text' },
-    loadingIconDescription: { control: 'text' },
+    loadingDescription: {
+      control: 'text',
+      description: 'Specify the description for the loading text (ModalFooter)',
+      table: { type: { summary: 'string' } },
+    },
+    loadingIconDescription: {
+      control: 'text',
+      description: 'Specify the description for the loading icon (ModalFooter)',
+      table: { type: { summary: 'string' } },
+    },
     onClose: { action: 'onClose' },
     onKeyDown: { action: 'onKeyDown' },
   },
   args: {
     danger: false,
     isFullWidth: false,
-    preventCloseOnClickOutside: false,
+    preventCloseOnClickOutside: true,
     'aria-label': 'Composed Modal',
-    label: 'Account resources',
-    title: 'Add a custom domain',
+    label: 'Suppliers',
+    title: 'Add a supplier',
     iconDescription: 'Close the modal',
     primaryButtonText: 'Add',
     secondaryButtonText: 'Cancel',
@@ -136,10 +175,11 @@ export default {
 
 export const Default: StoryFn<ComposedModalStoryArgs> = (args) => {
   const [open, setOpen] = useState(true);
+  const launcher = useRef<HTMLButtonElement>(null);
   const {
     iconDescription = 'Close the modal',
-    label = 'Account resources',
-    title = 'Add a custom domain',
+    label = 'Suppliers',
+    title = 'Add a supplier',
     primaryButtonText = 'Add',
     secondaryButtonText = 'Cancel',
     primaryButtonDisabled = false,
@@ -150,8 +190,14 @@ export const Default: StoryFn<ComposedModalStoryArgs> = (args) => {
   } = args;
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Launch composed modal</Button>
-      <ComposedModal {...modalArgs} open={open} onClose={() => setOpen(false)}>
+      <Button ref={launcher} onClick={() => setOpen(true)}>
+        Launch composed modal
+      </Button>
+      <ComposedModal
+        {...modalArgs}
+        launcherButtonRef={launcher}
+        open={open}
+        onClose={() => setOpen(false)}>
         <ModalHeader
           label={label}
           title={title}
@@ -159,20 +205,20 @@ export const Default: StoryFn<ComposedModalStoryArgs> = (args) => {
         />
         <ModalBody>
           <p style={{ marginBottom: 'var(--cds-spacing-05)' }}>
-            Custom domains direct requests for your apps in this Cloud Foundry
-            organization to a URL that you own. A custom domain can be a shared
-            domain, a shared subdomain, or a shared domain and host.
+            Suppliers appear in purchase orders and incoming invoices. You can
+            change their details later.
           </p>
           <TextInput
             data-modal-primary-focus
+            ref={autofocus}
             id="text-input-1"
-            labelText="Domain name"
-            placeholder="e.g. github.com"
+            labelText="Company name"
+            placeholder="For example, Northwind Supplies Ltd"
             style={{ marginBottom: 'var(--cds-spacing-05)' }}
           />
-          <Select id="select-1" defaultValue="us-south" labelText="Region">
-            <SelectItem value="us-south" text="US South" />
-            <SelectItem value="us-east" text="US East" />
+          <Select id="select-1" defaultValue="30" labelText="Payment terms">
+            <SelectItem value="14" text="14 days" />
+            <SelectItem value="30" text="30 days" />
           </Select>
         </ModalBody>
         <ModalFooter
@@ -293,7 +339,7 @@ FullWidth.argTypes = {
   },
 };
 
-export const PassiveModal: StoryFn<ComposedModalStoryArgs> = (args) => {
+export const Passive: StoryFn<ComposedModalStoryArgs> = (args) => {
   const [open, setOpen] = useState(true);
   const {
     iconDescription = 'Close the modal',
@@ -316,10 +362,10 @@ export const PassiveModal: StoryFn<ComposedModalStoryArgs> = (args) => {
   );
 };
 
-PassiveModal.args = {
+Passive.args = {
   title: 'You have been successfully signed out',
 };
-PassiveModal.parameters = {
+Passive.parameters = {
   controls: {
     include: [
       'aria-label',

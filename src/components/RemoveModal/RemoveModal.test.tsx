@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
@@ -26,6 +26,8 @@ function Harness({
       </button>
       <RemoveModal
         resourceName="Invoice 2026-001"
+        title="Delete Invoice 2026-001?"
+        description="Deleting Invoice 2026-001 is permanent and cannot be undone."
         onConfirm={onConfirm}
         {...props}
         {...(useLauncherRef ? { launcherRef } : {})}
@@ -130,9 +132,7 @@ test('focus stays in the dialog while tabbing', async () => {
   for (let index = 0; index < 6; index += 1) {
     await userEvent.tab();
     const element = active();
-    // Past the last control the browser may move focus out of the page
-    // (body); it never lands on the page behind the modal.
-    expect(element === document.body || dialog.contains(element)).toBe(true);
+    expect(dialog.contains(element)).toBe(true);
     expect(element).not.toBe(launcher());
   }
 });
@@ -218,7 +218,9 @@ test('pending: buttons disabled, Escape ignored; rejection keeps it open with an
     'Something went wrong. Try again.'
   );
   expect(dialogRole()).not.toBeNull();
-  await until(() => expect(active()).toBe(dangerButton('Delete')));
+  await until(() =>
+    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+  );
   expect(onClose).not.toHaveBeenCalled();
 });
 
@@ -231,6 +233,8 @@ test('overridden messages replace every English default', async () => {
   );
   renderHarness({
     messages,
+    title: 'Heading',
+    description: 'Body',
     confirmByTyping: true,
     onConfirm: () => Promise.reject(new Error('no')),
   });
@@ -241,7 +245,7 @@ test('overridden messages replace every English default', async () => {
   await userEvent.clear(input);
   await userEvent.type(input, 'Invoice 2026-001');
   await userEvent.click(dangerButton('[[confirm]]', '[[dangerDescription]]'));
-  await until(() => expect(screen.getByText('[[genericError]]')).toBeTruthy());
+  await until(() => expect(screen.getByText('[[error]]')).toBeTruthy());
   await userEvent.clear(input);
   await userEvent.type(input, 'x');
   await userEvent.tab();
@@ -269,7 +273,7 @@ test('overridden messages replace every English default', async () => {
   const leftover = visible.replace(/\[\[\w+\]\]/g, '');
   for (const word of english) expect(leftover).not.toContain(word);
   expect(visible).toContain('[[mismatch]]');
-  expect(visible).toContain('[[genericError]]');
+  expect(visible).toContain('[[error]]');
   expect(visible).toContain('[[dangerDescription]]');
 });
 
@@ -294,4 +298,59 @@ test('an empty confirmation phrase keeps the confirm button disabled and warns',
     expect.stringContaining('RemoveModal: confirmByTyping')
   );
   warn.mockRestore();
+});
+
+test('ref and rest props reach the root', async () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <AfframeProvider>
+      <RemoveModal
+        ref={ref}
+        data-testid="root"
+        open
+        title="Delete Invoice 2026-001?"
+        description="Deleting it is permanent."
+        resourceName="Invoice 2026-001"
+        onClose={() => undefined}
+        onConfirm={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const root = await screen.findByTestId('root');
+  expect(ref.current).toBe(root);
+  expect(root.classList).toContain('afframe-remove-modal');
+  // The internal ref still works: Cancel gets the initial focus.
+  await until(() =>
+    expect(active()).toBe(screen.getByRole('button', { name: 'Cancel' }))
+  );
+});
+
+test('resourceName is needed only to confirm by typing', async () => {
+  const noop = () => undefined;
+  // Type-level: `confirmByTyping` true requires the name it asks for.
+  // @ts-expect-error resourceName is missing
+  const typed: RemoveModalProps = {
+    open: true,
+    confirmByTyping: true,
+    title: 'T',
+    description: 'D',
+    onClose: noop,
+    onConfirm: noop,
+  };
+  void typed;
+  render(
+    <AfframeProvider>
+      <RemoveModal
+        open
+        title="Delete the draft?"
+        description="Deleting it is permanent."
+        onClose={noop}
+        onConfirm={noop}
+      />
+    </AfframeProvider>
+  );
+  await until(() =>
+    expect(active()).toBe(screen.getByRole('button', { name: 'Cancel' }))
+  );
+  expect(screen.queryByRole('textbox')).toBeNull();
 });

@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
-import { formatFileSize } from '../ModalParts/fileSize.js';
+import { formatFileSize } from './fileSize.js';
 import { defaultImportModalMessages, ImportModal } from './ImportModal.js';
 import type { ImportModalProps } from './ImportModal.js';
 
@@ -24,6 +24,8 @@ function Harness({
         Open
       </button>
       <ImportModal
+        title="Import"
+        description="Add a file to import."
         onImport={onImport}
         {...props}
         launcherRef={launcherRef}
@@ -201,8 +203,10 @@ test('URL path: field and button only with onImportUrl; rejection shows an alert
   // Carbon's TextInput also renders an empty counter alert; find by text.
   const alert = await screen.findByText('The import failed. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
-  await until(() => expect(active()).toBe(urlButton));
-  await userEvent.keyboard('{Enter}');
+  await until(() =>
+    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+  );
+  await userEvent.click(urlButton);
   await until(() => expect(screen.queryByRole('dialog')).toBeNull());
 });
 
@@ -250,7 +254,7 @@ test('focus stays in the dialog while tabbing', async () => {
   for (let index = 0; index < 8; index += 1) {
     await userEvent.tab();
     const element = active();
-    expect(element === document.body || dialog.contains(element)).toBe(true);
+    expect(dialog.contains(element)).toBe(true);
   }
 });
 
@@ -263,6 +267,8 @@ test('overridden messages replace every English default', async () => {
   );
   renderHarness({
     messages,
+    title: 'Heading',
+    description: 'Body',
     accept: ['.csv'],
     maxFileSize: 1000,
     multiple: true,
@@ -281,7 +287,7 @@ test('overridden messages replace every English default', async () => {
     'https://example.com'
   );
   await userEvent.click(screen.getByRole('button', { name: '[[urlButton]]' }));
-  await until(() => expect(screen.getByText('[[importFailed]]')).toBeTruthy());
+  await until(() => expect(screen.getByText('[[error]]')).toBeTruthy());
   const visible = [
     dialog.textContent ?? '',
     ...[...dialog.querySelectorAll('[aria-label],[title],[placeholder]')].map(
@@ -342,4 +348,46 @@ test('single mode: dropping several files keeps the first and says the rest were
     )
   ).toBeTruthy();
   expect(screen.getAllByRole('listitem')).toHaveLength(1);
+});
+
+test('ref and rest props reach the root', async () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <AfframeProvider>
+      <ImportModal
+        ref={ref}
+        data-testid="root"
+        open
+        title="Import"
+        label="Invoices"
+        onClose={() => undefined}
+        onImport={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const root = await screen.findByTestId('root');
+  expect(ref.current).toBe(root);
+  expect(root.classList).toContain('afframe-import-modal');
+  expect(screen.getByText('Invoices')).toBeTruthy();
+});
+
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <ImportModal
+        open
+        title="Import"
+        description={list}
+        onClose={() => undefined}
+        onImport={() => undefined}
+      />
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
 });

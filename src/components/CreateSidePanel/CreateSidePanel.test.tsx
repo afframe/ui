@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { useRef, useState } from 'react';
+import type { Ref } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
@@ -7,7 +8,7 @@ import {
   englishLeft,
   sentinelMessages,
   tabbables,
-} from '../CreateEditFlow/flowTestUtils.js';
+} from '../FlowParts/flowTestUtils.js';
 import {
   CreateSidePanel,
   defaultCreateSidePanelMessages,
@@ -22,7 +23,7 @@ type HarnessProps = Partial<
     CreateSidePanelProps,
     'onSubmit' | 'submitDisabled' | 'isDirty' | 'messages' | 'onClose'
   >
-> & { extra?: boolean; slideIn?: boolean };
+> & { extra?: boolean; slideIn?: boolean; panelRef?: Ref<HTMLElement> };
 
 function Harness({ onClose, ...props }: HarnessProps) {
   const [open, setOpen] = useState(false);
@@ -35,7 +36,8 @@ function Harness({ onClose, ...props }: HarnessProps) {
       <CreateSidePanel
         open={open}
         title="Panel A"
-        formTitle="Form A"
+        data-testid="panel"
+        {...(props.panelRef ? { ref: props.panelRef } : {})}
         launcherRef={launcherRef}
         onSubmit={props.onSubmit ?? (() => undefined)}
         onClose={() => {
@@ -89,7 +91,7 @@ test('opens on the first field and Escape closes back to the launcher', async ()
   render(<Harness onClose={onClose} />);
   expect(screen.queryByRole('form')).toBeNull();
   await launch();
-  expect(screen.getByRole('form', { name: 'Form A' })).toBeTruthy();
+  expect(screen.getByRole('form', { name: 'Panel A' })).toBeTruthy();
   await userEvent.keyboard('{Escape}');
   expect(onClose).toHaveBeenCalledTimes(1);
   await waitFor(() => expect(active()).toBe(launcher()));
@@ -157,7 +159,7 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText(defaults.submitting).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(defaults.pending).length).toBeGreaterThan(0);
   await userEvent.keyboard('{Escape}');
   expect(onClose).not.toHaveBeenCalled();
   resolve();
@@ -175,7 +177,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
   await launch();
   await userEvent.click(screen.getByRole('button', { name: primary }));
   expect((await screen.findByRole('alert')).textContent).toContain(
-    defaults.submitError
+    defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
   expect(screen.getByRole('form')).toBeTruthy();
@@ -206,9 +208,7 @@ test('messages replace the busy state strings too', async () => {
   );
   await launch();
   await userEvent.click(screen.getByRole('button', { name: s.create }));
-  await waitFor(() =>
-    expect(document.body.textContent).toContain(s.submitting)
-  );
+  await waitFor(() => expect(document.body.textContent).toContain(s.pending));
   expect(englishLeft(defaults)).toEqual([]);
 });
 
@@ -245,4 +245,25 @@ test('slideIn: Escape closes, except when handled or inside an expanded control'
   // A plain field (a collapsed combo is the same case): closes.
   await pressEscapeIn(fieldA());
   expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('a callback ref gets the aside; the focus trap and the exit still work', async () => {
+  const nodes: (HTMLElement | null)[] = [];
+  render(<Harness panelRef={(node) => void nodes.push(node)} />);
+  await launch();
+  const panel = screen.getByTestId('panel');
+  expect(panel.tagName).toBe('ASIDE');
+  expect(nodes.at(-1)).toBe(panel);
+  // IBM's trap reads its ref as an object: Tab still wraps.
+  const order = tabbables(panel);
+  order[order.length - 1]?.focus();
+  await userEvent.tab();
+  expect(active()).toBe(order[0]);
+  await userEvent.tab({ shift: true });
+  expect(active()).toBe(order[order.length - 1]);
+  // IBM's exit animation reads it too: the panel unmounts and the ref clears.
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(screen.queryByTestId('panel')).toBeNull());
+  expect(nodes.at(-1)).toBeNull();
+  await waitFor(() => expect(active()).toBe(launcher()));
 });

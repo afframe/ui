@@ -27,13 +27,14 @@ function Harness(props: RemoveModalProps) {
 }
 
 const meta = {
-  title: 'Components/RemoveModal',
+  title: 'Components/Task Dialogs/RemoveModal',
   component: RemoveModal,
   tags: ['afframe'],
   args: {
     open: true,
     onClose: () => undefined,
-    resourceName: 'Invoice 2026-001',
+    title: 'Delete Invoice 2026-001?',
+    description: 'Deleting Invoice 2026-001 is permanent and cannot be undone.',
     onConfirm: () => Promise.resolve(),
   },
   render: (args) => <Harness {...args} />,
@@ -55,7 +56,15 @@ export const Default: Story = {
 };
 
 export const WithTypedConfirmation: Story = {
-  args: { confirmByTyping: true, kind: 'remove', label: 'Customers' },
+  args: {
+    confirmByTyping: true,
+    resourceName: 'Invoice 2026-001',
+    kind: 'remove',
+    label: 'Invoice',
+    title: 'Remove Invoice 2026-001?',
+    description:
+      'Invoice 2026-001 will be removed. It can be added again later.',
+  },
   play: async ({ canvas, userEvent }) => {
     const input = await canvas.findByRole('textbox', {
       name: 'Type Invoice 2026-001 to confirm',
@@ -68,7 +77,7 @@ export const WithTypedConfirmation: Story = {
   },
 };
 
-export const Pending: Story = {
+export const Removing: Story = {
   args: { onConfirm: () => new Promise<void>(() => undefined) },
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(

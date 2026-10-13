@@ -2,7 +2,7 @@
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
 
-.afframe-export-modal .afframe-modal-status {
+.afframe-export-modal .afframe-flow-status {
   @include type.type-style('body-compact-01');
 
   margin: 0;

@@ -27,12 +27,13 @@ function Harness(props: APIKeyModalProps) {
 }
 
 const meta = {
-  title: 'Components/APIKeyModal',
+  title: 'Components/Task Dialogs/APIKeyModal',
   component: APIKeyModal,
   tags: ['afframe'],
   args: {
     open: true,
     onClose: () => undefined,
+    title: 'Generate an API key',
     // Fixed demo value, not a real key.
     onGenerate: () => Promise.resolve('demo_key_0123456789abcdef'),
     showDownload: true,
@@ -55,7 +56,7 @@ export const Default: Story = {
   },
 };
 
-export const GenerateSuccess: Story = {
+export const Success: Story = {
   play: async ({ canvas, userEvent }) => {
     await userEvent.type(
       await canvas.findByRole('textbox', { name: 'Name' }),
@@ -79,10 +80,15 @@ export const WithSteps: Story = {
 };
 
 export const Edit: Story = {
-  args: { mode: 'edit', apiKeyName: 'CI pipeline', onSave: () => undefined },
+  args: {
+    mode: 'edit',
+    title: 'Edit API key',
+    apiKeyName: 'CI pipeline',
+    onSave: () => undefined,
+  },
 };
 
-export const Pending: Story = {
+export const Generating: Story = {
   args: { onGenerate: () => new Promise<string>(() => undefined) },
   play: async ({ canvas, userEvent }) => {
     await userEvent.type(

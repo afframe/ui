@@ -36,7 +36,7 @@ Deployment: GitHub Packages (npm registry, `@afframe` scope), published from `v*
 
 ### 3.2. AfframeProvider
 
-Wraps the consumer app once. Turns on the React side of the opt-in Carbon flags (`<FeatureFlags>`) and keeps Carbon's `GlobalTheme` in step with the page theme. UI strings are overridden per component through a `messages` prop (ADR 0014); amounts and dates come from the server-safe formatters in `src/format` (cs-CZ, Europe/Prague, CZK by default). It does not set the theme (see 3.3). It is a client component. Flags: [docs/feature-flags.md](docs/feature-flags.md).
+Wraps the consumer app once. Turns on the React side of the opt-in Carbon flags (`<FeatureFlags>`) and keeps Carbon's `GlobalTheme` in step with the page theme. A `document` keydown listener keeps Tab inside whichever modal `dialog` has focus (`src/provider/wrapTabInModalDialog.ts`). UI strings are overridden per component through a `messages` prop (ADR 0014); amounts and dates come from the server-safe formatters in `src/format` (cs-CZ, Europe/Prague, CZK by default). It does not set the theme (see 3.3). It is a client component. Flags: [docs/feature-flags.md](docs/feature-flags.md).
 
 ### 3.3. Styles
 

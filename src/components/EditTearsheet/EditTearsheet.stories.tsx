@@ -1,67 +1,40 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useRef, useState } from 'react';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import { Button, TextInput } from '../../index.js';
+import { TextInput } from '../../index.js';
 import {
-  clickPrimary,
-  pendingSubmit,
-  playDirty,
-  playFocusNotObscured,
-  playRejected,
-  rejectSubmit,
-  useCustomerForm,
-} from '../CreateEditFlow/storyForm.js';
+  exampleCustomer,
+  flowHarnessArgTypes,
+  flowRender,
+  flowStories,
+} from '../FlowParts/storyForm.js';
+import type { FlowHarnessArgs } from '../FlowParts/storyForm.js';
 import { EditTearsheet, EditTearsheetForm } from './EditTearsheet.js';
 import type { EditTearsheetProps } from './EditTearsheet.js';
 import mdx from './EditTearsheet.mdx';
 
-type HarnessProps = Pick<EditTearsheetProps, 'onSubmit'> & {
-  invalidBilling?: boolean;
-  extraFields?: number;
-};
-
-// Opens on load; the launcher reopens it.
-function Harness({
-  onSubmit,
-  invalidBilling = false,
-  extraFields,
-}: HarnessProps) {
-  const [open, setOpen] = useState(true);
-  const form = useCustomerForm('edit-tearsheet', 'Acme Trading', extraFields);
-  const launcherRef = useRef<HTMLButtonElement>(null);
-  return (
-    <>
-      <Button ref={launcherRef} onClick={() => setOpen(true)}>
-        Edit customer
-      </Button>
-      <EditTearsheet
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={onSubmit}
-        launcherRef={launcherRef}
-        label="Customer"
-        title="Acme Trading"
-        description="Changes apply to new invoices."
-        isDirty={form.isDirty}
-        submitDisabled={form.submitDisabled}>
-        <EditTearsheetForm id="edit-tearsheet-contact" title="Contact">
-          {form.fields}
-        </EditTearsheetForm>
-        <EditTearsheetForm
-          id="edit-tearsheet-billing"
-          title="Billing"
-          description="Used on every invoice for this customer."
-          invalid={invalidBilling}>
-          <TextInput
-            id="edit-tearsheet-vat"
-            labelText="VAT number"
-            defaultValue="CZ12345678"
-          />
-        </EditTearsheetForm>
-      </EditTearsheet>
-    </>
-  );
-}
+// An array, not a fragment: EditTearsheet lists only direct form children.
+const renderSheet = (invalidBilling: boolean) =>
+  flowRender(EditTearsheet, 'edit-tearsheet', 'Edit customer', (fields) => [
+    <EditTearsheetForm
+      key="contact"
+      id="edit-tearsheet-contact"
+      title="Contact">
+      {fields}
+    </EditTearsheetForm>,
+    <EditTearsheetForm
+      key="billing"
+      id="edit-tearsheet-billing"
+      title="Billing"
+      description="Used on every invoice for this customer."
+      invalid={invalidBilling}>
+      <TextInput
+        id="edit-tearsheet-billing-email"
+        labelText="Billing email"
+        type="email"
+        defaultValue={exampleCustomer.billingEmail}
+      />
+    </EditTearsheetForm>,
+  ]);
 
 const meta = {
   title: 'Components/Create and Edit/EditTearsheet',
@@ -73,45 +46,36 @@ const meta = {
     layout: 'fullscreen',
     docs: { page: mdx, story: { inline: false, iframeHeight: 720 } },
   },
+  argTypes: flowHarnessArgTypes,
   args: {
     open: true,
-    title: 'Acme Trading',
+    label: 'Customer',
+    title: exampleCustomer.name,
+    description: 'Changes apply to new invoices.',
     onClose: () => undefined,
-    onSubmit: () => undefined,
+    onSubmit: (): void => undefined,
+    initialName: exampleCustomer.name,
   },
-} satisfies Meta<typeof EditTearsheet>;
+  render: renderSheet(false),
+} satisfies Meta<EditTearsheetProps & FlowHarnessArgs>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => <Harness onSubmit={() => undefined} />,
-};
+const stories = flowStories('Save', 14);
 
-export const WithValidationError: Story = {
-  render: () => <Harness onSubmit={rejectSubmit} />,
-  play: playRejected('Save'),
-};
+export const Default: Story = {};
 
-export const WithInvalidSection: Story = {
-  render: () => <Harness invalidBilling onSubmit={() => undefined} />,
-};
+export const WithError: Story = stories.WithError;
 
-export const Dirty: Story = {
-  render: () => <Harness onSubmit={() => undefined} />,
-  play: playDirty,
-};
+export const WithInvalidSection: Story = { render: renderSheet(true) };
 
-export const Submitting: Story = {
-  render: () => <Harness onSubmit={pendingSubmit} />,
-  play: clickPrimary('Save'),
-};
+export const Dirty: Story = stories.Dirty;
 
-export const LongForm: Story = {
-  render: () => <Harness extraFields={14} onSubmit={() => undefined} />,
-  play: playFocusNotObscured('Note 14'),
-};
+export const Submitting: Story = stories.Submitting;
+
+export const LongForm: Story = stories.LongForm;
 
 export const Dark: Story = {
   ...Default,

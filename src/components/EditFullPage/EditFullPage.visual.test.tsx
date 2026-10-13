@@ -33,3 +33,14 @@ test('edit-full-page-focus', async () => {
   expect(document.activeElement?.textContent).toBe('Save');
   await snapshot('edit-full-page-focus');
 });
+
+// Below md the two buttons share the width; Cancel must stay on screen.
+test('edit-full-page-narrow', async () => {
+  await page.viewport(375, 768);
+  try {
+    await Default.run();
+    await snapshot('edit-full-page-narrow');
+  } finally {
+    await page.viewport(1024, 768);
+  }
+});

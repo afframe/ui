@@ -3,17 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
-import {
-  defaultCreateEditFlowMessages,
-  DiscardDialog,
-  FlowError,
-  FlowForm,
-  useCreateEditFlow,
-  wrapTabInDialog,
-} from './CreateEditFlow.js';
-import type { CreateEditFlowMessages } from './CreateEditFlow.js';
+import { DiscardDialog, FlowError, FlowForm } from './FlowParts.js';
+import { defaultFormFlowMessages } from './messages.js';
+import type { DiscardMessages, FlowMessages } from './messages.js';
+import { useFlow } from './useFlow.js';
 
-const messages = defaultCreateEditFlowMessages;
+const messages = defaultFormFlowMessages;
 
 function Surface({
   open,
@@ -24,6 +19,7 @@ function Surface({
   launcherRef,
   submitDisabled,
   windowEscape = false,
+  disableWhilePending = false,
   surfaceMessages = messages,
 }: {
   open: boolean;
@@ -34,17 +30,23 @@ function Surface({
   launcherRef?: React.RefObject<HTMLElement | null>;
   submitDisabled?: boolean;
   windowEscape?: boolean;
-  surfaceMessages?: CreateEditFlowMessages;
+  disableWhilePending?: boolean;
+  surfaceMessages?: FlowMessages & DiscardMessages;
 }) {
-  const flow = useCreateEditFlow({
+  const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
-    onSubmit,
     isDirty,
     ...(confirmDiscard === undefined ? {} : { confirmDiscard }),
-    ...(launcherRef ? { launcherRef } : {}),
-    messages: surfaceMessages,
+    launcherRef,
+    messages: {
+      error: surfaceMessages.error,
+      errorText: surfaceMessages.errorText,
+    },
   });
+  const submit = async () => {
+    if (await flow.run(onSubmit)) flow.close();
+  };
   const { requestClose } = flow;
   // Like IBM SidePanel: a window Escape listener that calls requestClose.
   useEffect(() => {
@@ -60,6 +62,7 @@ function Surface({
     <>
       <FlowForm
         flow={flow}
+        onSubmit={() => void submit()}
         aria-label="Surface"
         {...(submitDisabled ? { submitDisabled } : {})}>
         <label>
@@ -67,12 +70,18 @@ function Surface({
           <input name="name" />
         </label>
         <textarea aria-label="Notes" />
-        <FlowError error={flow.error} messages={messages} />
+        <FlowError
+          error={flow.error}
+          iconDescription={messages.errorIconDescription}
+        />
         <button type="button" onClick={requestClose}>
           Close
         </button>
-        <button type="button" onClick={() => void flow.submit()}>
-          {flow.submitting ? 'Busy' : 'Save'}
+        <button
+          type="button"
+          disabled={disableWhilePending && flow.pending}
+          onClick={() => void submit()}>
+          {flow.pending ? 'Busy' : 'Save'}
         </button>
       </FlowForm>
       <DiscardDialog flow={flow} messages={messages} />
@@ -87,9 +96,11 @@ function Harness(props: {
   confirmDiscard?: boolean;
   submitDisabled?: boolean;
   windowEscape?: boolean;
+  disableWhilePending?: boolean;
   removeLauncher?: boolean;
+  noLauncherRef?: boolean;
   closeRef?: { current: () => void };
-  surfaceMessages?: CreateEditFlowMessages;
+  surfaceMessages?: FlowMessages & DiscardMessages;
 }) {
   const [open, setOpen] = useState(false);
   if (props.closeRef) props.closeRef.current = () => setOpen(false);
@@ -108,7 +119,7 @@ function Harness(props: {
       <div data-testid="blank">Blank area</div>
       <Surface
         open={open}
-        launcherRef={launcherRef}
+        {...(props.noLauncherRef ? {} : { launcherRef })}
         onSubmit={props.onSubmit ?? (() => undefined)}
         onClose={() => {
           props.onClose?.();
@@ -121,6 +132,7 @@ function Harness(props: {
           : { confirmDiscard: props.confirmDiscard })}
         {...(props.submitDisabled ? { submitDisabled: true } : {})}
         {...(props.windowEscape ? { windowEscape: true } : {})}
+        {...(props.disableWhilePending ? { disableWhilePending: true } : {})}
         {...(props.surfaceMessages
           ? { surfaceMessages: props.surfaceMessages }
           : {})}
@@ -138,12 +150,21 @@ async function openSurface() {
   return launcher;
 }
 
-test('sync submit closes and returns focus to the element that opened it', async () => {
+test('sync submit closes and returns focus to launcherRef', async () => {
   const onClose = vi.fn();
   render(<Harness onClose={onClose} />);
-  const launcher = await openSurface();
+  await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect(onClose).toHaveBeenCalledTimes(1);
+  await waitFor(() =>
+    expect(active()).toBe(screen.getByRole('button', { name: 'Fallback' }))
+  );
+});
+
+test('without launcherRef, focus returns to the element that opened it', async () => {
+  render(<Harness noLauncherRef />);
+  const launcher = await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   await waitFor(() => expect(active()).toBe(launcher));
 });
 
@@ -187,6 +208,25 @@ test('async submit is busy, ignores close requests, then closes', async () => {
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
 });
 
+test('focus stays in the form while the clicked button is disabled by pending', async () => {
+  render(
+    <Harness
+      onSubmit={() => new Promise<void>(() => undefined)}
+      disableWhilePending
+    />
+  );
+  await openSurface();
+  screen.getByRole('button', { name: 'Save' }).focus();
+  await userEvent.keyboard('{Enter}');
+  const busy = screen.getByRole('button', { name: 'Busy' });
+  expect(busy.hasAttribute('disabled')).toBe(true);
+  const form = screen.getByRole('form');
+  await waitFor(() => expect(active()).toBe(form));
+  // Not a tab stop, and no focus ring on the form itself.
+  expect(form.tabIndex).toBe(-1);
+  expect(getComputedStyle(form).outlineStyle).toBe('none');
+});
+
 test('rejected submit keeps the surface open and focuses the alert', async () => {
   const onClose = vi.fn();
   const { unmount } = render(
@@ -198,7 +238,7 @@ test('rejected submit keeps the surface open and focuses the alert', async () =>
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   const alert = await screen.findByRole('alert');
-  expect(alert.textContent).toContain(messages.submitError);
+  expect(alert.textContent).toContain(messages.error);
   expect(alert.textContent).not.toContain('Name is taken');
   expect(onClose).not.toHaveBeenCalled();
   await waitFor(() =>
@@ -210,7 +250,7 @@ test('rejected submit keeps the surface open and focuses the alert', async () =>
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect((await screen.findByRole('alert')).textContent).toContain(
-    messages.submitError
+    messages.error
   );
 });
 
@@ -287,7 +327,7 @@ test('Keep editing returns focus to the field; Discard calls onClose', async () 
   expect(onClose).toHaveBeenCalledTimes(1);
 });
 
-test('focus falls back to launcherRef when the opening element is gone', async () => {
+test('focus goes to launcherRef when the opening element is gone', async () => {
   render(<Harness removeLauncher />);
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
@@ -350,7 +390,7 @@ test('a parent close during a pending submit: no late onClose, and the next open
 });
 
 test('focus return stops once the user clicks elsewhere', async () => {
-  render(<Harness />);
+  render(<Harness noLauncherRef />);
   const launcher = await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   await waitFor(() => expect(active()).toBe(launcher));
@@ -365,28 +405,6 @@ test('any thenable counts as an async submit', async () => {
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect(screen.getByRole('button', { name: 'Busy' })).toBeTruthy();
-});
-
-test('Tab wrap counts a radio group by its active stop and skips inert content', async () => {
-  render(
-    <div onKeyDown={wrapTabInDialog}>
-      <dialog open>
-        <button type="button">First</button>
-        <input type="radio" name="r" aria-label="A" />
-        <input type="radio" name="r" aria-label="B" defaultChecked />
-        <input type="radio" name="r" aria-label="C" />
-        <div inert>
-          <button type="button">Hidden</button>
-        </div>
-      </dialog>
-    </div>
-  );
-  const b = screen.getByRole('radio', { name: 'B' });
-  b.focus();
-  await userEvent.tab();
-  expect(active()).toBe(screen.getByRole('button', { name: 'First' }));
-  await userEvent.tab({ shift: true });
-  expect(active()).toBe(b);
 });
 
 test('errorText shows the details of a rejection', async () => {

@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as ExportModalStories from './ExportModal.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DialogChooser } from '../../../.storybook/DialogChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -21,6 +22,10 @@ The dialog does not create the file; `onExport` does.
 
 <Canvas of={ExportModalStories.Default} />
 
+## Which component to use
+
+<DialogChooser />
+
 ## Usage and props
 
 ```tsx
@@ -30,6 +35,7 @@ import { ExportModal } from '@afframe/ui';
   open={open}
   onClose={() => setOpen(false)}
   launcherRef={launcherRef}
+  title="Export invoices"
   filename="invoices-2026"
   formats={[
     { extension: 'csv', description: 'Spreadsheet' },
@@ -52,7 +58,7 @@ import { ExportModal } from '@afframe/ui';
   `extension` is the selected format's value as given; `password` is present
   only when the field is shown and filled. It may return a promise: while it
   runs the buttons are disabled, the Export button shows a spinner with
-  `exporting`, and closing waits. If it rejects, the dialog stays open with an
+  `pending`, and closing waits. If it rejects, the dialog stays open with an
   alert.
 - `password`: `true` shows an optional password field with a show/hide
   toggle; `{ required: true }` makes it required (Export stays disabled until
@@ -64,7 +70,12 @@ import { ExportModal } from '@afframe/ui';
   message is shown and announced, and the dialog closes 1.5 seconds later
   (Carbon's success delay for inline loading). With `false` it stays open with
   Export disabled until it is reopened.
+- `title` (required): the heading. `label` (small text above it) and
+  `description` (above the file name) are optional.
 - `messages`: overrides for the strings below.
+- `ref` and any other HTML attributes (`id`, `data-*`, `style`) go to Carbon
+  Modal's root `div`, where `className` lands too. The ref is `null` while
+  the dialog is closed.
 
 The password is never written to an HTML attribute (the field is not
 controlled by React) and is cleared on success and on every open.
@@ -77,11 +88,11 @@ A click on the page behind the dialog does not close it.
 
 `messages?: Partial<ExportModalMessages>`; defaults in
 `defaultExportModalMessages`. `success` is a function; override it from a
-client component (a function cannot cross from a server component).
+client component (a function cannot cross from a server component). The
+title and description are props, not messages.
 
 | Key                    | Default                                                    |
 | ---------------------- | ---------------------------------------------------------- |
-| `title`                | Export                                                     |
 | `filenameLabel`        | File name                                                  |
 | `formatLegend`         | Format                                                     |
 | `passwordLabel`        | Password                                                   |
@@ -89,12 +100,12 @@ client component (a function cannot cross from a server component).
 | `hidePassword`         | Hide password                                              |
 | `passwordRequired`     | Enter a password.                                          |
 | `export`               | Export                                                     |
-| `exporting`            | Exporting                                                  |
 | `success`              | `filename` was exported.                                   |
 | `invalidFilename`      | Enter a name without these characters: \ / : \* ? " < > \| |
 | `cancel`               | Cancel                                                     |
-| `pending`              | Working (not used here; `exporting` replaces it)           |
-| `genericError`         | Something went wrong. Try again.                           |
+| `pending`              | Exporting                                                  |
+| `error`                | Something went wrong. Try again.                           |
+| `errorText`            | not set: `error` is shown                                  |
 | `errorIconDescription` | Error                                                      |
 | `closeIconDescription` | Close                                                      |
 
@@ -104,7 +115,7 @@ client component (a function cannot cross from a server component).
 
 <Canvas of={ExportModalStories.Success} />
 
-<Canvas of={ExportModalStories.Pending} />
+<Canvas of={ExportModalStories.Exporting} />
 
 ## Keyboard and screen reader behaviour
 
@@ -122,8 +133,8 @@ Cancel, Export.
 
 Focus is trapped by the browser's modal dialog: the page behind it is inert.
 On close, focus returns to `launcherRef`, else to the element focused before
-the dialog opened, else to the page body. After a failed export, focus returns
-to Export.
+the dialog opened, else to the page body. After a failed export, focus moves to the first invalid field, else to the error
+alert.
 
 Screen readers announce:
 
@@ -135,4 +146,4 @@ Screen readers announce:
 - `exporting` while the export runs;
 - the success message through a status region (`role="status"`), before the
   dialog closes;
-- a failure as an alert with `genericError`.
+- a failure as an alert with `error`.

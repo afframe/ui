@@ -2,7 +2,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, Afframe note on the flags it turns on and the focus wrap flag.
+// Modified by Afframe in 2026: source label added, Afframe note on the flags it turns on and the focus wrap flag, duplicate enable-presence section removed, focus wrap under AfframeProvider.
 
 <Meta title="Components/Modal/Feature Flags" name="Flag details" />
 
@@ -53,29 +53,15 @@ To enable the flag, use the `FeatureFlags` component and set the prop:
 
 `Modal` supports the `enable-dialog-element` feature flag. When enabled, Modal
 will use the native `<dialog>` element instead of `role="dialog"`. With the
-`<dialog>` element, the browser natively controls the focus wrap behavior. This
+`<dialog>` element, Carbon leaves focus wrap to the browser. Under
+`AfframeProvider`, the provider wraps Tab inside every modal dialog
+([Feature Flags](?path=/docs/getting-started-feature-flags--overview)). This
 means that:
 
 - The DOM no longer includes the "sentinel nodes" previously needed for the
   Modal to manage focus wrap.
 - `enable-focus-wrap-without-sentinels` has no effect and can be removed when
   using `enable-dialog-element`
-
-## `enable-presence`
-
-`Modal` supports the `enable-presence` feature flag. When enabled, Modal will
-not be mounted until opened and unmounted when closed. CSS transitions are
-replaced with animations.
-
-### Enabling the flag
-
-To enable the flag, use the `FeatureFlags` component and set the prop:
-
-```js
-<FeatureFlags enableDialogElement enablePresence>
-  <Modal ... />
-</FeatureFlags>
-```
 
 ## `enable-presence`
 

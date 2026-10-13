@@ -20,6 +20,13 @@ renders Carbon's `GlobalTheme` with the theme on `<html>`, so Carbon's
 provider is replaced; one inside it wins for its subtree and can disagree with
 the page's CSS theme, so leave it out.
 
+The provider also keeps Tab inside modal dialogs. Chromium lets Tab leave a
+native modal dialog for the browser bar; under the provider, Tab from the last
+control of any modal `dialog` (Carbon `Modal`, `ComposedModal`, `Dialog`, IBM's
+Tearsheet and the Afframe dialogs) wraps to the first, and Shift+Tab from the
+first wraps to the last. Non-modal dialogs and IBM's `SidePanel` keep their own
+behaviour. A Tab handler of the app that calls `preventDefault` wins.
+
 Without the provider, Carbon modals, and the Afframe modals built on them, show
 in the page even while closed, with no backdrop: the stylesheet expects the
 native `dialog` element that only the provider's flag turns on.

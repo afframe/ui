@@ -4,20 +4,18 @@
 // behaviour reference only.
 import { Modal, TextInput, usePrefix } from '@carbon/react';
 import { useEffect, useId, useRef, useState } from 'react';
-import type { ReactNode, RefObject } from 'react';
+import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { ModalError } from '../ModalParts/ModalFeedback.js';
-import { defaultModalPartsMessages } from '../ModalParts/messages.js';
-import type { ModalPartsMessages } from '../ModalParts/messages.js';
-import { useModalBase } from '../ModalParts/useModalBase.js';
+import { FlowDescription, FlowError } from '../FlowParts/FlowParts.js';
+import { defaultTaskModalMessages } from '../FlowParts/messages.js';
+import type { FlowMessages } from '../FlowParts/messages.js';
+import { useMergedRefs } from '../FlowParts/refs.js';
+import type { ModalRootAttribute } from '../FlowParts/refs.js';
+import { useFlow } from '../FlowParts/useFlow.js';
 
 export type RemoveModalKind = 'delete' | 'remove';
 
-export interface RemoveModalMessages extends ModalPartsMessages {
-  /** Default heading. */
-  title: (kind: RemoveModalKind, name: string) => string;
-  /** Default body text. */
-  body: (kind: RemoveModalKind, name: string) => string;
+export interface RemoveModalMessages extends FlowMessages {
   /** Danger button text. */
   confirm: (kind: RemoveModalKind) => string;
   /** Label of the typed confirmation field. */
@@ -29,38 +27,65 @@ export interface RemoveModalMessages extends ModalPartsMessages {
 }
 
 export const defaultRemoveModalMessages: RemoveModalMessages = {
-  ...defaultModalPartsMessages,
-  title: (kind, name) => `${kind === 'delete' ? 'Delete' : 'Remove'} ${name}?`,
-  body: (kind, name) =>
-    kind === 'delete'
-      ? `Deleting ${name} is permanent and cannot be undone.`
-      : `${name} will be removed. It can be added again later.`,
+  ...defaultTaskModalMessages,
   confirm: (kind) => (kind === 'delete' ? 'Delete' : 'Remove'),
   typeToConfirm: (phrase) => `Type ${phrase} to confirm`,
   mismatch: 'The text does not match.',
   dangerDescription: 'Danger',
 };
 
-export interface RemoveModalProps {
+interface RemoveModalOwnProps {
   open: boolean;
   onClose: () => void;
-  /** Element that gets focus back on close (default: the element focused before opening). */
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<RemoveModalMessages>;
   className?: string;
-  /** Name of the thing being deleted or removed. */
-  resourceName: string;
   /** Runs the action; a rejected promise keeps the dialog open with an alert. */
   onConfirm: () => void | Promise<void>;
-  /** Changes the default title and button text only. Default `delete`. */
+  /** Picks the danger button text. Default `delete`. */
   kind?: RemoveModalKind;
-  title?: string;
-  body?: ReactNode;
-  /** `true`: the user types `resourceName`; a string: the user types that phrase. */
-  confirmByTyping?: boolean | string;
-  /** Small label above the title. */
-  label?: string;
+  /** Modal heading. */
+  title: string;
+  /** Small text above the title. */
+  label?: ReactNode;
+  /** What happens to the resource; a string renders as a paragraph. */
+  description: ReactNode;
 }
+
+/** `resourceName` is required only when the user types it to confirm. */
+type RemoveModalConfirmProps =
+  | {
+      /** The user types `resourceName` to confirm. */
+      confirmByTyping: true;
+      /** Name of the thing being deleted or removed. */
+      resourceName: string;
+    }
+  | {
+      /** A string: the user types that phrase to confirm. */
+      confirmByTyping?: false | string;
+      /** Name of the thing being deleted or removed. */
+      resourceName?: string;
+    };
+
+/** The rest go to Carbon Modal's root `div`. */
+interface RemoveModalBaseProps
+  extends
+    RemoveModalOwnProps,
+    Omit<
+      HTMLAttributes<HTMLDivElement>,
+      | keyof RemoveModalOwnProps
+      | 'confirmByTyping'
+      | 'resourceName'
+      | ModalRootAttribute
+    > {
+  /** Carbon Modal's root `div`; null while closed. */
+  ref?: Ref<HTMLDivElement> | undefined;
+  // Carbon types it without `undefined`.
+  id?: string;
+}
+
+export type RemoveModalProps = RemoveModalBaseProps & RemoveModalConfirmProps;
 
 export function RemoveModal({
   open,
@@ -72,14 +97,17 @@ export function RemoveModal({
   onConfirm,
   kind = 'delete',
   title,
-  body,
-  confirmByTyping = false,
   label,
+  description,
+  confirmByTyping = false,
+  ref,
+  ...rest
 }: RemoveModalProps) {
   const text = resolveMessages(defaultRemoveModalMessages, messages);
   const prefix = usePrefix();
   const inputId = useId();
   const modalRef = useRef<HTMLDivElement>(null);
+  const rootRef = useMergedRefs(modalRef, ref);
   const inputRef = useRef<HTMLInputElement>(null);
   const phrase =
     typeof confirmByTyping === 'string'
@@ -98,10 +126,11 @@ export function RemoveModal({
     }
   }
 
-  const dialog = useModalBase({
+  const dialog = useFlow({
     open,
     onClose,
     launcherRef,
+    messages: { error: text.error, errorText: text.errorText },
     initialFocus: () =>
       phrase === undefined
         ? modalRef.current?.querySelector<HTMLElement>(
@@ -122,20 +151,21 @@ export function RemoveModal({
   const matches = phrase === undefined || (!emptyPhrase && typed === phrase);
   const confirm = async () => {
     if (!matches || dialog.pending) return;
-    if (await dialog.run(onConfirm)) onClose();
+    if (await dialog.run(onConfirm)) dialog.close();
   };
 
   return (
     <Modal
-      ref={modalRef}
+      {...rest}
+      ref={rootRef}
       open={open}
       size="sm"
       danger
       alert
       preventCloseOnClickOutside
       className={['afframe-remove-modal', className].filter(Boolean).join(' ')}
-      modalHeading={title ?? text.title(kind, resourceName)}
-      {...(label === undefined ? {} : { modalLabel: label })}
+      modalHeading={title}
+      {...(label ? { modalLabel: label } : {})}
       primaryButtonText={text.confirm(kind)}
       secondaryButtonText={text.cancel}
       primaryButtonDisabled={!matches}
@@ -144,11 +174,13 @@ export function RemoveModal({
       loadingStatus={dialog.pending ? 'active' : 'inactive'}
       loadingDescription={text.pending}
       loadingIconDescription={text.pending}
-      launcherButtonRef={dialog.returnFocusRef}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => void confirm()}>
-      <div ref={dialog.bodyRef} tabIndex={-1} className="afframe-modal-body">
-        {body ?? <p>{text.body(kind, resourceName)}</p>}
+      <div
+        ref={dialog.containerRef}
+        tabIndex={-1}
+        className="afframe-modal-body">
+        <FlowDescription description={description} />
         {phrase !== undefined && (
           <TextInput
             ref={inputRef}
@@ -166,9 +198,8 @@ export function RemoveModal({
             onBlur={() => setBlurred(true)}
           />
         )}
-        <ModalError
-          show={dialog.failed}
-          title={text.genericError}
+        <FlowError
+          error={dialog.error}
           iconDescription={text.errorIconDescription}
         />
       </div>

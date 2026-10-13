@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { useRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
@@ -27,6 +27,7 @@ function Harness({ onClose, ...props }: HarnessProps) {
       <APIKeyModal
         // Test props mix both modes; each test passes a valid combination.
         {...({
+          title: 'Generate an API key',
           onGenerate: () => Promise.resolve(KEY),
           ...props,
           launcherRef,
@@ -208,7 +209,9 @@ test('pending and rejection: stays on the name step with an alert', async () => 
   const alert = await screen.findByText('Something went wrong. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
   expect(nameField().value).toBe('CI');
-  await until(() => expect(active()).toBe(button('Generate')));
+  await until(() =>
+    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+  );
   await userEvent.click(screen.getByLabelText('Close', { selector: 'button' }));
   await until(() => expect(onClose).toHaveBeenCalledTimes(1));
 });
@@ -253,7 +256,12 @@ test('steps: valid steps lead to the name field', async () => {
 
 test('edit mode saves the name and closes', async () => {
   const onSave = vi.fn();
-  renderHarness({ mode: 'edit', onSave, apiKeyName: 'Old name' });
+  renderHarness({
+    mode: 'edit',
+    title: 'Edit API key',
+    onSave,
+    apiKeyName: 'Old name',
+  });
   await open();
   expect(screen.getByRole('dialog', { name: 'Edit API key' })).toBeTruthy();
   expect(nameField().value).toBe('Old name');
@@ -273,7 +281,7 @@ test('nameRequired false allows an empty name; focus stays in the dialog', async
   for (let index = 0; index < 6; index += 1) {
     await userEvent.tab();
     const element = active();
-    expect(element === document.body || dialog.contains(element)).toBe(true);
+    expect(dialog.contains(element)).toBe(true);
   }
 });
 
@@ -282,7 +290,7 @@ test('overridden messages replace every English default', async () => {
   const messages = Object.fromEntries(
     Object.keys(defaultAPIKeyModalMessages).map((key) => [key, `[[${key}]]`])
   );
-  renderHarness({ messages, showDownload: true });
+  renderHarness({ messages, title: 'Heading', showDownload: true });
   launcher().focus();
   await userEvent.keyboard('{Enter}');
   const dialog = await screen.findByRole('dialog');
@@ -323,6 +331,7 @@ test('overridden messages replace every English default', async () => {
 test('a key that resolves after the parent closed the dialog is dropped', async () => {
   let resolve: (key: string) => void = () => undefined;
   const props = {
+    title: 'Generate an API key',
     onClose: () => undefined,
     onGenerate: () =>
       new Promise<string>((done) => {
@@ -392,4 +401,46 @@ test('generate mode requires onGenerate (type check)', () => {
     <APIKeyModal open={false} onClose={() => undefined} />
   );
   expect(element).toBeTruthy();
+});
+
+test('ref and rest props reach the root', async () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <AfframeProvider>
+      <APIKeyModal
+        ref={ref}
+        data-testid="root"
+        open
+        title="Generate an API key"
+        description="Keys can read invoices."
+        onClose={() => undefined}
+        onGenerate={() => Promise.resolve(KEY)}
+      />
+    </AfframeProvider>
+  );
+  const root = await screen.findByTestId('root');
+  expect(ref.current).toBe(root);
+  expect(root.classList).toContain('afframe-api-key-modal');
+  expect(screen.getByText('Keys can read invoices.')).toBeTruthy();
+});
+
+test('a description node renders as given, not inside a paragraph', async () => {
+  const list = (
+    <ul>
+      <li>One rule</li>
+    </ul>
+  );
+  render(
+    <AfframeProvider>
+      <APIKeyModal
+        open
+        title="Generate an API key"
+        description={list}
+        onClose={() => undefined}
+        onGenerate={() => Promise.resolve(KEY)}
+      />
+    </AfframeProvider>
+  );
+  const item = await screen.findByText('One rule');
+  expect(item.closest('p')).toBeNull();
 });

@@ -2,37 +2,35 @@
 import { WarningFilled } from '@carbon/icons-react';
 import { preview__Tearsheet as Tearsheet } from '@carbon/ibm-products';
 import { InlineLoading } from '@carbon/react';
-import { Children, isValidElement, useEffect, useState } from 'react';
-import type { ReactElement, ReactNode, RefObject } from 'react';
+import { Children, isValidElement, useEffect, useRef, useState } from 'react';
+import type {
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  Ref,
+  RefObject,
+} from 'react';
 import { resolveMessages } from '../../messages.js';
-import {
-  defaultCreateEditFlowMessages,
-  DiscardDialog,
-  FlowError,
-  FlowForm,
-  useCreateEditFlow,
-  useInitialFocus,
-  wrapTabInDialog,
-} from '../CreateEditFlow/CreateEditFlow.js';
-import type { CreateEditFlowMessages } from '../CreateEditFlow/CreateEditFlow.js';
+import { DiscardDialog, FlowError, FlowForm } from '../FlowParts/FlowParts.js';
+import { defaultFormFlowMessages } from '../FlowParts/messages.js';
+import type { DiscardMessages, FlowMessages } from '../FlowParts/messages.js';
+import type { ModalRootAttribute } from '../FlowParts/refs.js';
+import { useFlow } from '../FlowParts/useFlow.js';
 
-export interface EditTearsheetMessages extends CreateEditFlowMessages {
+export interface EditTearsheetMessages extends FlowMessages, DiscardMessages {
   /** Primary button. */
   save: string;
   /** Name of the side navigation that lists the forms. */
   sectionsNavLabel: string;
   /** Accessible name of the error icon on an invalid form's nav item. */
   sectionInvalid: (title: string) => string;
-  /** Close icon of the tearsheet. */
-  closeTearsheet: string;
 }
 
 export const defaultEditTearsheetMessages: EditTearsheetMessages = {
-  ...defaultCreateEditFlowMessages,
+  ...defaultFormFlowMessages,
   save: 'Save',
   sectionsNavLabel: 'Sections',
   sectionInvalid: (title) => `${title} has errors`,
-  closeTearsheet: 'Close',
 };
 
 export interface EditTearsheetFormProps {
@@ -71,7 +69,7 @@ export function EditTearsheetForm({
   );
 }
 
-export interface EditTearsheetProps {
+interface EditTearsheetOwnProps {
   open: boolean;
   /** Called after a successful submit, Discard, or a close of a clean form. */
   onClose: () => void;
@@ -89,12 +87,27 @@ export interface EditTearsheetProps {
   isDirty?: boolean;
   /** Ask before discarding a dirty form. Default true. */
   confirmDiscard?: boolean;
-  /** Focus target on close when the element that opened it is gone. */
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<EditTearsheetMessages>;
   /** The forms: `EditTearsheetForm` elements. */
   children?: ReactNode;
   className?: string;
+}
+
+/**
+ * The rest go to the tearsheet's root `div` (Carbon ComposedModal's), which
+ * IBM names itself.
+ */
+export interface EditTearsheetProps
+  extends
+    EditTearsheetOwnProps,
+    Omit<
+      HTMLAttributes<HTMLDivElement>,
+      keyof EditTearsheetOwnProps | ModalRootAttribute | 'aria-labelledby'
+    > {
+  /** The tearsheet's root `div`; null while closed. */
+  ref?: Ref<HTMLDivElement> | undefined;
 }
 
 const influencerWidths = { narrow: '16rem', wide: '20rem' } as const;
@@ -104,6 +117,40 @@ function focusForm(id: string) {
   heading?.scrollIntoView({ block: 'start' });
   heading?.focus();
 }
+
+/** The nearest ancestor that scrolls: IBM's main content area. */
+function scrollParent(element: HTMLElement): HTMLElement | null {
+  for (let node = element.parentElement; node; node = node.parentElement) {
+    const { overflowY } = getComputedStyle(node);
+    if (overflowY === 'auto' || overflowY === 'scroll') return node;
+  }
+  return null;
+}
+
+/**
+ * The form in view: the last one whose top has passed the upper third of
+ * `root`, or the last form once it shows in full after a scroll, since a
+ * short last form never reaches that line.
+ */
+function formInView(root: HTMLElement, sections: HTMLElement[]): number {
+  const box = root.getBoundingClientRect();
+  const last = sections.at(-1);
+  if (
+    root.scrollTop > 0 &&
+    last &&
+    last.getBoundingClientRect().bottom <= box.bottom + 1
+  )
+    return sections.length - 1;
+  const line = box.top + root.clientHeight / 3;
+  let index = 0;
+  sections.forEach((section, i) => {
+    if (section.getBoundingClientRect().top <= line) index = i;
+  });
+  return index;
+}
+
+// Input that can start a user scroll; it ends a nav click's pin.
+const userScrollEvents = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
 
 /** A multi-form edit in IBM's tearsheet, with a side navigation of the forms. Controlled by `open`. */
 export function EditTearsheet({
@@ -122,19 +169,18 @@ export function EditTearsheet({
   messages,
   children,
   className,
+  ...rest
 }: EditTearsheetProps) {
   const text = resolveMessages(defaultEditTearsheetMessages, messages);
   const [current, setCurrent] = useState(0);
-  const flow = useCreateEditFlow({
+  const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
-    onSubmit,
     isDirty,
     confirmDiscard,
-    ...(launcherRef ? { launcherRef } : {}),
-    messages: text,
+    launcherRef,
+    messages: { error: text.error, errorText: text.errorText },
   });
-  useInitialFocus(open, flow.formRef);
 
   // Only EditTearsheetForm children are rendered and listed.
   const all = Children.toArray(children);
@@ -157,26 +203,68 @@ export function EditTearsheet({
   }, [open]);
   const active = Math.min(current, forms.length - 1);
 
+  // The nav follows scrolling. A nav click pins its form until the user
+  // scrolls: the passed forms must not flash as current, and the scroll's
+  // end may still match another form (a short one never reaches the top).
+  // The observers can report after scrollend, so that event cannot unpin.
+  const pinned = useRef(false);
+  const formIds = forms.map((form) => form.id).join(' ');
+  useEffect(() => {
+    const container = flow.containerRef.current;
+    const root = open && container ? scrollParent(container) : null;
+    if (!root) return;
+    const sections = formIds
+      .split(' ')
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+    const update = () => {
+      if (!pinned.current) setCurrent(formInView(root, sections));
+    };
+    const unpin = () => {
+      pinned.current = false;
+    };
+    userScrollEvents.forEach((type) =>
+      root.addEventListener(type, unpin, { passive: true })
+    );
+    // One observer per edge that changes the answer: a form's top crossing
+    // the upper third, and the last form coming fully into view.
+    const crossing = new IntersectionObserver(update, {
+      root,
+      rootMargin: '0px 0px -66.67% 0px',
+    });
+    sections.forEach((section) => crossing.observe(section));
+    const end = new IntersectionObserver(update, { root, threshold: 1 });
+    const last = sections.at(-1);
+    if (last) end.observe(last);
+    return () => {
+      crossing.disconnect();
+      end.disconnect();
+      userScrollEvents.forEach((type) => root.removeEventListener(type, unpin));
+      unpin();
+    };
+  }, [open, formIds, flow.containerRef]);
+
   const select = (index: number) => {
     const form = forms[index];
     if (!form) return;
     setCurrent(index);
+    pinned.current = true;
     focusForm(form.id);
     onFormChange?.(index);
   };
 
   // Save stays enabled with invalid forms; it focuses the first one instead.
-  const submit = () => {
+  const submit = async () => {
     const invalid = forms.findIndex((form) => form.invalid);
     if (invalid >= 0) select(invalid);
-    else void flow.submit();
+    else if (await flow.run(onSubmit)) flow.close();
   };
 
   const actions = [
     {
       kind: 'secondary' as const,
       label: text.cancel,
-      disabled: flow.submitting,
+      disabled: flow.pending,
       onClick: flow.requestClose,
     },
     {
@@ -184,88 +272,89 @@ export function EditTearsheet({
       // Cast kept: ActionSet types `label` as a string but renders any node
       // as the button content. Its own `loading` flag adds an InlineLoading
       // with no text and an English icon name, so the label carries ours.
-      label: (flow.submitting ? (
+      label: (flow.pending ? (
         <InlineLoading
-          description={text.submitting}
-          iconDescription={text.submitting}
+          description={text.pending}
+          iconDescription={text.pending}
         />
       ) : (
         text.save
       )) as unknown as string,
-      disabled: submitDisabled || flow.submitting,
-      onClick: submit,
+      disabled: submitDisabled || flow.pending,
+      onClick: () => void submit(),
     },
   ];
 
   return (
     <>
-      {/* Tab wrap for the native dialog; Tearsheet takes no onKeyDown. */}
-      <div className="afframe-edit-tearsheet-root" onKeyDown={wrapTabInDialog}>
-        <Tearsheet
-          open={open}
-          // false: ComposedModal would otherwise close itself, while the
-          // flow may keep it open (dirty, submitting).
-          onClose={() => {
-            flow.requestClose();
-            return false;
-          }}
-          preventCloseOnClickOutside
-          influencerWidth={influencerWidths[influencerWidth]}
-          className={['afframe-edit-tearsheet', className]
-            .filter(Boolean)
-            .join(' ')}>
-          <Tearsheet.Header
-            closeIconDescription={text.closeTearsheet}
-            // Reaches Carbon's ModalHeader, whose hidden close button is named too.
-            {...{ iconDescription: text.closeTearsheet }}>
-            <Tearsheet.HeaderContent
-              title={title}
-              {...(label ? { label } : {})}
-              {...(description ? { description } : {})}
-            />
-          </Tearsheet.Header>
-          <Tearsheet.Influencer
-            influencerPanelAriaLabel={text.sectionsNavLabel}>
-            <nav
-              aria-label={text.sectionsNavLabel}
-              className="afframe-edit-tearsheet-nav">
-              <ul>
-                {forms.map((form, index) => (
-                  <li key={form.id}>
-                    <button
-                      type="button"
-                      className="afframe-edit-tearsheet-nav-item"
-                      aria-current={index === active ? 'true' : undefined}
-                      onClick={() => select(index)}>
-                      <span>{form.title}</span>
-                      {form.invalid && (
-                        <WarningFilled
-                          role="img"
-                          aria-hidden={false}
-                          aria-label={text.sectionInvalid(form.title)}
-                          className="afframe-edit-tearsheet-nav-invalid"
-                        />
-                      )}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </Tearsheet.Influencer>
-          <Tearsheet.Body>
-            <Tearsheet.MainContent>
-              <FlowForm
-                flow={{ ...flow, submit: async () => submit() }}
-                submitDisabled={submitDisabled}
-                aria-label={title}>
-                {formElements}
-                <FlowError error={flow.error} messages={text} />
-              </FlowForm>
-            </Tearsheet.MainContent>
-          </Tearsheet.Body>
-          <Tearsheet.Footer actions={actions} />
-        </Tearsheet>
-      </div>
+      <Tearsheet
+        {...rest}
+        open={open}
+        // false: ComposedModal would otherwise close itself, while the
+        // flow may keep it open (dirty, submitting).
+        onClose={() => {
+          flow.requestClose();
+          return false;
+        }}
+        preventCloseOnClickOutside
+        influencerWidth={influencerWidths[influencerWidth]}
+        className={['afframe-edit-tearsheet', className]
+          .filter(Boolean)
+          .join(' ')}>
+        <Tearsheet.Header
+          closeIconDescription={text.closeIconDescription}
+          // Reaches Carbon's ModalHeader, whose hidden close button is named too.
+          {...{ iconDescription: text.closeIconDescription }}>
+          <Tearsheet.HeaderContent
+            title={title}
+            {...(label ? { label } : {})}
+            {...(description ? { description } : {})}
+          />
+        </Tearsheet.Header>
+        <Tearsheet.Influencer influencerPanelAriaLabel={text.sectionsNavLabel}>
+          <nav
+            aria-label={text.sectionsNavLabel}
+            className="afframe-edit-tearsheet-nav">
+            <ul>
+              {forms.map((form, index) => (
+                <li key={form.id}>
+                  <button
+                    type="button"
+                    className="afframe-edit-tearsheet-nav-item"
+                    aria-current={index === active ? 'true' : undefined}
+                    onClick={() => select(index)}>
+                    <span>{form.title}</span>
+                    {form.invalid && (
+                      <WarningFilled
+                        role="img"
+                        aria-hidden={false}
+                        aria-label={text.sectionInvalid(form.title)}
+                        className="afframe-edit-tearsheet-nav-invalid"
+                      />
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </Tearsheet.Influencer>
+        <Tearsheet.Body>
+          <Tearsheet.MainContent>
+            <FlowForm
+              flow={flow}
+              onSubmit={() => void submit()}
+              submitDisabled={submitDisabled}
+              aria-label={title}>
+              {formElements}
+              <FlowError
+                error={flow.error}
+                iconDescription={text.errorIconDescription}
+              />
+            </FlowForm>
+          </Tearsheet.MainContent>
+        </Tearsheet.Body>
+        <Tearsheet.Footer actions={actions} />
+      </Tearsheet>
       <DiscardDialog flow={flow} messages={text} />
     </>
   );

@@ -10,15 +10,19 @@ import {
   TextInput,
 } from '@carbon/react';
 import { useEffect, useId, useRef, useState } from 'react';
-import type { RefObject } from 'react';
+import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { ModalError, ModalStatus } from '../ModalParts/ModalFeedback.js';
-import { defaultModalPartsMessages } from '../ModalParts/messages.js';
-import type { ModalPartsMessages } from '../ModalParts/messages.js';
-import { useModalBase } from '../ModalParts/useModalBase.js';
+import {
+  FlowDescription,
+  FlowError,
+  FlowStatus,
+} from '../FlowParts/FlowParts.js';
+import { defaultTaskModalMessages } from '../FlowParts/messages.js';
+import type { FlowMessages } from '../FlowParts/messages.js';
+import type { ModalRootAttribute } from '../FlowParts/refs.js';
+import { useFlow } from '../FlowParts/useFlow.js';
 
-export interface ExportModalMessages extends ModalPartsMessages {
-  title: string;
+export interface ExportModalMessages extends FlowMessages {
   filenameLabel: string;
   formatLegend: string;
   passwordLabel: string;
@@ -30,8 +34,6 @@ export interface ExportModalMessages extends ModalPartsMessages {
   passwordRequired: string;
   /** Primary button. */
   export: string;
-  /** Spinner text while `onExport` runs. */
-  exporting: string;
   /** Announced when the export succeeded; `filename` includes the extension. */
   success: (filename: string) => string;
   /** Shown when the name is empty or has a character from \ / : * ? " < > | */
@@ -39,8 +41,8 @@ export interface ExportModalMessages extends ModalPartsMessages {
 }
 
 export const defaultExportModalMessages: ExportModalMessages = {
-  ...defaultModalPartsMessages,
-  title: 'Export',
+  ...defaultTaskModalMessages,
+  pending: 'Exporting',
   filenameLabel: 'File name',
   formatLegend: 'Format',
   passwordLabel: 'Password',
@@ -48,7 +50,6 @@ export const defaultExportModalMessages: ExportModalMessages = {
   hidePassword: 'Hide password',
   passwordRequired: 'Enter a password.',
   export: 'Export',
-  exporting: 'Exporting',
   success: (filename) => `${filename} was exported.`,
   invalidFilename: 'Enter a name without these characters: \\ / : * ? " < > |',
 };
@@ -66,9 +67,10 @@ export interface ExportRequest {
   password?: string;
 }
 
-export interface ExportModalProps {
+interface ExportModalOwnProps {
   open: boolean;
   onClose: () => void;
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<ExportModalMessages>;
   className?: string;
@@ -86,6 +88,26 @@ export interface ExportModalProps {
   validate?: (filename: string) => string | undefined;
   /** Default true: close after the success message has been announced. */
   closeOnSuccess?: boolean;
+  /** Modal heading. */
+  title: string;
+  /** Small text above the title. */
+  label?: ReactNode;
+  /** Text above the file name. */
+  description?: ReactNode;
+}
+
+/** The rest go to Carbon Modal's root `div`. */
+export interface ExportModalProps
+  extends
+    ExportModalOwnProps,
+    Omit<
+      HTMLAttributes<HTMLDivElement>,
+      keyof ExportModalOwnProps | ModalRootAttribute
+    > {
+  /** Carbon Modal's root `div`; null while closed. */
+  ref?: Ref<HTMLDivElement> | undefined;
+  // Carbon types it without `undefined`.
+  id?: string;
 }
 
 /** Time the success message stays before the dialog closes (Carbon's InlineLoading success delay). */
@@ -110,6 +132,10 @@ export function ExportModal({
   password,
   validate,
   closeOnSuccess = true,
+  title,
+  label,
+  description,
+  ...rest
 }: ExportModalProps) {
   const text = resolveMessages(defaultExportModalMessages, messages);
   const id = useId();
@@ -138,10 +164,11 @@ export function ExportModal({
     }
   }
 
-  const dialog = useModalBase({
+  const dialog = useFlow({
     open,
     onClose,
     launcherRef,
+    messages: { error: text.error, errorText: text.errorText },
     initialFocus: () => nameRef.current,
   });
 
@@ -181,22 +208,27 @@ export function ExportModal({
 
   return (
     <Modal
+      {...rest}
       open={open}
       size="sm"
       preventCloseOnClickOutside
       className={['afframe-export-modal', className].filter(Boolean).join(' ')}
-      modalHeading={text.title}
+      modalHeading={title}
+      {...(label ? { modalLabel: label } : {})}
       primaryButtonText={text.export}
       secondaryButtonText={text.cancel}
       primaryButtonDisabled={!canExport}
       closeButtonLabel={text.closeIconDescription}
       loadingStatus={dialog.pending ? 'active' : 'inactive'}
-      loadingDescription={text.exporting}
-      loadingIconDescription={text.exporting}
-      launcherButtonRef={dialog.returnFocusRef}
+      loadingDescription={text.pending}
+      loadingIconDescription={text.pending}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => void submit()}>
-      <div ref={dialog.bodyRef} tabIndex={-1} className="afframe-modal-body">
+      <div
+        ref={dialog.containerRef}
+        tabIndex={-1}
+        className="afframe-modal-body">
+        <FlowDescription description={description} />
         <TextInput
           ref={nameRef}
           id={`${id}-name`}
@@ -247,10 +279,9 @@ export function ExportModal({
             onBlur={() => setSecretTouched(true)}
           />
         )}
-        <ModalStatus message={succeeded} visible />
-        <ModalError
-          show={dialog.failed}
-          title={text.genericError}
+        <FlowStatus message={succeeded} visible />
+        <FlowError
+          error={dialog.error}
           iconDescription={text.errorIconDescription}
         />
       </div>

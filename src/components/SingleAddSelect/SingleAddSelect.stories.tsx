@@ -7,10 +7,10 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, docs page converted to MDX, commented-out imports removed, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, docs page converted to MDX, commented-out imports removed, source tag, open state synced on Escape, launcher ref for focus return. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import {
   Button,
@@ -145,18 +145,29 @@ const defaultProps = {
 
 const Template: StoryFn<StoryArgs> = (args, context) => {
   const [open, setOpen] = useState(context?.viewMode !== 'docs');
+  const launcher = useRef<HTMLButtonElement>(null);
+  // AddSelect passes other props to its Tearsheet; its type omits them.
+  const tearsheetProps = { launcherButtonRef: launcher };
 
+  // IBM's AddSelect does not pass onClose to its tearsheet, so Escape closes
+  // the dialog without it; the keydown reaches here through the portal.
   return (
-    <>
+    <div
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') setOpen(false);
+      }}>
       <SingleAddSelect
         {...(args as unknown as SingleAddSelectProps)}
+        {...tearsheetProps}
         open={open}
         onClose={() => setOpen(false)}
       />
       {args?.noTearsheet === false && (
-        <Button onClick={() => setOpen(true)}>Launch AddSelect</Button>
+        <Button ref={launcher} onClick={() => setOpen(true)}>
+          Launch AddSelect
+        </Button>
       )}
-    </>
+    </div>
   );
 };
 

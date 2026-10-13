@@ -33,7 +33,7 @@ const fileInput = (root: HTMLElement) => {
 };
 
 const meta = {
-  title: 'Components/ImportModal',
+  title: 'Components/Task Dialogs/ImportModal',
   component: ImportModal,
   tags: ['afframe'],
   args: {
@@ -41,6 +41,7 @@ const meta = {
     onClose: () => undefined,
     onImport: () => Promise.resolve(),
     title: 'Import invoices',
+    description: 'Add a file to import.',
     accept: ['.csv', '.xlsx'],
     maxFileSize: 5_000_000,
     locale: 'en-GB',
@@ -65,7 +66,7 @@ export const Default: Story = {
   },
 };
 
-export const WithErrors: Story = {
+export const WithValidationError: Story = {
   args: { multiple: true },
   play: async ({ canvas, canvasElement, userEvent }) => {
     await canvas.findByRole('dialog');
@@ -93,7 +94,7 @@ export const WithUrl: Story = {
   },
 };
 
-export const Pending: Story = {
+export const Importing: Story = {
   args: { onImport: () => new Promise<void>(() => undefined) },
   play: async ({ canvas, canvasElement, userEvent }) => {
     await canvas.findByRole('dialog');
