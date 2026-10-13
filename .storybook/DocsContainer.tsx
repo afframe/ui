@@ -43,12 +43,13 @@ const themes = {
 type GlobalsEvent = { globals?: { theme?: AfframeTheme } };
 
 // The store is not in Storybook's public types, and MDX-only pages have no
-// story context to read the toolbar value from.
+// story context to read the toolbar value from. A change in its shape falls
+// back to light.
 function currentTheme(context: DocsContainerProps['context']): AfframeTheme {
   const { store } = context as unknown as {
-    store: { userGlobals: { get(): { theme?: AfframeTheme } } };
+    store?: { userGlobals?: { get?(): { theme?: AfframeTheme } | undefined } };
   };
-  return store.userGlobals.get().theme ?? 'light';
+  return store?.userGlobals?.get?.()?.theme ?? 'light';
 }
 
 // Canvases with `inline: false` render iframe.html in their own iframe, which
