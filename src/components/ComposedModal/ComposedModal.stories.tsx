@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ComposedModal parts and form parts from @afframe/ui, icons from @afframe/ui/icons, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ComposedModal parts and form parts from @afframe/ui, icons from @afframe/ui/icons, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), source tag, inline spacing as Carbon spacing tokens, story names unified, descriptions for the story-arg props. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -102,18 +102,56 @@ export default {
     preventCloseOnClickOutside: { control: 'boolean' },
     'aria-label': { control: 'text' },
     selectorPrimaryFocus: { control: 'text' },
-    label: { control: 'text' },
-    title: { control: 'text' },
-    iconDescription: { control: 'text' },
-    primaryButtonText: { control: 'text' },
-    secondaryButtonText: { control: 'text' },
-    primaryButtonDisabled: { control: 'boolean' },
+    label: {
+      control: 'text',
+      description: 'Specify an optional label to be displayed (ModalHeader)',
+      table: { type: { summary: 'string' } },
+    },
+    title: {
+      control: 'text',
+      description: 'Specify an optional title to be displayed (ModalHeader)',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    iconDescription: {
+      control: 'text',
+      description:
+        'Specify a description for the close icon that can be read by screen readers (ModalHeader)',
+      table: { type: { summary: 'string' } },
+    },
+    primaryButtonText: {
+      control: 'text',
+      description: 'Specify the text for the primary button (ModalFooter)',
+      table: { type: { summary: 'string' } },
+    },
+    secondaryButtonText: {
+      control: 'text',
+      description: 'Specify the text for the secondary button (ModalFooter)',
+      table: { type: { summary: 'string' } },
+    },
+    primaryButtonDisabled: {
+      control: 'boolean',
+      description:
+        'Specify whether the primary button should be disabled (ModalFooter)',
+      table: { type: { summary: 'boolean' } },
+    },
     loadingStatus: {
       control: 'select',
       options: ['inactive', 'active', 'finished', 'error'],
+      description: 'Loading status of the primary button (ModalFooter)',
+      table: {
+        type: { summary: "'inactive' | 'active' | 'finished' | 'error'" },
+      },
     },
-    loadingDescription: { control: 'text' },
-    loadingIconDescription: { control: 'text' },
+    loadingDescription: {
+      control: 'text',
+      description: 'Specify the description for the loading text (ModalFooter)',
+      table: { type: { summary: 'string' } },
+    },
+    loadingIconDescription: {
+      control: 'text',
+      description: 'Specify the description for the loading icon (ModalFooter)',
+      table: { type: { summary: 'string' } },
+    },
     onClose: { action: 'onClose' },
     onKeyDown: { action: 'onKeyDown' },
   },

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified, prop descriptions from Carbon's prop docs. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -58,18 +58,201 @@ export default {
       page: mdx,
     },
   },
+  // Carbon's prop docs, written out: the generated props table misses most of
+  // Modal's props (carbon#19624).
   argTypes: {
+    alert: {
+      description:
+        'Specify whether the Modal is displaying an alert, error or warning; should go hand in hand with the danger prop.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
     'aria-label': {
       control: 'text',
+      description: 'Required props for the accessibility label of the header',
+      table: { type: { summary: 'string' } },
     },
-    modalHeading: {
-      control: 'text',
+    children: {
+      description: 'Provide the contents of your Modal',
+      table: { type: { summary: 'ReactNode' } },
     },
-    modalLabel: {
-      control: 'text',
+    className: {
+      description:
+        'Specify an optional className to be applied to the modal root node',
+      table: { type: { summary: 'string' } },
+    },
+    closeButtonLabel: {
+      description:
+        'Specify label for the close button of the modal; defaults to close',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: "'Close'" },
+      },
+    },
+    danger: {
+      description: 'Specify whether the Modal is for dangerous actions',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     dangerDescription: {
       control: 'text',
+      description:
+        'Specify the message read by screen readers for the danger primary button. Defaults to an empty string; provide localized text to opt in.',
+      table: { type: { summary: 'string' } },
+    },
+    decorator: {
+      description:
+        'Experimental: Provide a decorator component to be rendered inside the `Modal` component',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    hasScrollingContent: {
+      description: 'Specify whether the modal contains scrolling content',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    id: {
+      description: 'Specify the DOM element ID of the top-level node.',
+      table: { type: { summary: 'string' } },
+    },
+    isFullWidth: {
+      description:
+        'Specify whether or not the Modal content should have any inner padding.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    launcherButtonRef: {
+      description: 'Provide a ref to return focus to once the modal is closed.',
+      table: { type: { summary: 'RefObject<HTMLElement | null>' } },
+    },
+    loadingDescription: {
+      description: 'Specify the description for the loading text',
+      table: { type: { summary: 'string' } },
+    },
+    loadingIconDescription: {
+      description: 'Specify the description for the loading text',
+      table: { type: { summary: 'string' } },
+    },
+    loadingStatus: {
+      description: 'Specify loading status',
+      table: {
+        type: { summary: "'inactive' | 'active' | 'finished' | 'error'" },
+        defaultValue: { summary: "'inactive'" },
+      },
+    },
+    modalAriaLabel: {
+      description:
+        'Specify a label to be read by screen readers on the modal root node',
+      table: { type: { summary: 'string' } },
+    },
+    modalHeading: {
+      control: 'text',
+      description: 'Specify the content of the modal header title.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    modalLabel: {
+      control: 'text',
+      description: 'Specify the content of the modal header label.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    onKeyDown: {
+      action: 'onKeyDown',
+      description: 'Specify a handler for keypresses. Deprecated: unused.',
+      table: { type: { summary: 'React.KeyboardEventHandler<HTMLElement>' } },
+    },
+    onLoadingSuccess: {
+      description:
+        'Specify an optional handler to be invoked when loading is successful',
+      table: { type: { summary: '() => void' } },
+    },
+    onRequestClose: {
+      description:
+        'Specify a handler for closing modal. The handler should care of closing modal, e.g. changing `open` prop.',
+      table: { type: { summary: 'React.ReactEventHandler<HTMLElement>' } },
+    },
+    onRequestSubmit: {
+      action: 'onRequestSubmit',
+      description:
+        'Specify a handler for "submitting" modal. The handler should care of closing modal, e.g. changing `open` prop, if necessary.',
+      table: { type: { summary: 'React.ReactEventHandler<HTMLElement>' } },
+    },
+    onSecondarySubmit: {
+      description:
+        'Specify a handler for the secondary button. Useful if separate handler from `onRequestClose` is desirable',
+      table: { type: { summary: 'React.ReactEventHandler<HTMLElement>' } },
+    },
+    open: {
+      description: 'Specify whether the Modal is currently open',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    passiveModal: {
+      description: 'Specify whether the modal should be button-less',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    preventCloseOnClickOutside: {
+      control: 'boolean',
+      description: 'Prevent closing on click outside of modal',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    primaryButtonDisabled: {
+      description: 'Specify whether the Button should be disabled, or not',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    primaryButtonText: {
+      control: 'text',
+      description: 'Specify the text for the primary button',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    secondaryButtonText: {
+      description: 'Specify the text for the secondary button',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    secondaryButtons: {
+      description: 'Specify an array of config objects for secondary buttons',
+      table: { type: { summary: 'ModalSecondaryButton[]' } },
+    },
+    selectorPrimaryFocus: {
+      description:
+        'Specify a CSS selector that matches the DOM element that should be focused when the Modal opens',
+      table: { type: { summary: 'string' } },
+    },
+    selectorsFloatingMenus: {
+      description:
+        'Specify CSS selectors that match DOM elements working as floating menus. Focusing on those elements won\'t trigger "focus-wrap" behavior',
+      table: { type: { summary: 'string[]' } },
+    },
+    shouldSubmitOnEnter: {
+      description: 'Specify if Enter key should be used as "submit" action',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    size: {
+      description: 'Specify the size variant.',
+      table: {
+        type: { summary: "'xs' | 'sm' | 'md' | 'lg'" },
+        defaultValue: { summary: "'md'" },
+      },
     },
     numberOfButtons: {
       description: 'Count of Footer Buttons',
@@ -79,19 +262,6 @@ export default {
         type: 'inline-radio',
         labels: Object.keys(buttons),
       },
-    },
-    onKeyDown: {
-      action: 'onKeyDown',
-    },
-    onRequestSubmit: {
-      action: 'onRequestSubmit',
-    },
-
-    preventCloseOnClickOutside: {
-      control: 'boolean',
-    },
-    primaryButtonText: {
-      control: 'text',
     },
   },
 } satisfies Meta<ModalStoryArgs>;
