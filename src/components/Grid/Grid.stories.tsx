@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, title Layout/Grid (upstream Elements/Grid), story styles as plain CSS. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, ref description, title Layout/Grid (upstream Elements/Grid), story styles as plain CSS. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './Grid.stories.css';
@@ -53,6 +53,10 @@ const sharedArgTypes = {
   },
   withRowGap: {
     control: 'boolean',
+  },
+  ref: {
+    control: false,
+    description: 'Ref to the root element.',
   },
 } satisfies ArgTypes;
 

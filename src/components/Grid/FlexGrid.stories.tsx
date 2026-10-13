@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, no PropTypes, source tag, title Layout/FlexGrid (upstream Elements/FlexGrid), story styles as plain CSS, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, no PropTypes, source tag, ref description, title Layout/FlexGrid (upstream Elements/FlexGrid), story styles as plain CSS, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './FlexGrid.stories.css';
@@ -50,6 +50,10 @@ const argTypes = {
   },
   withRowGap: {
     control: { type: 'boolean' },
+  },
+  ref: {
+    control: false,
+    description: 'Ref to the root element.',
   },
 } satisfies ArgTypes;
 

@@ -1,9 +1,10 @@
 import { Canvas, ArgTypes, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as HeadingStories from './Heading.stories';
+import { Heading, Section } from '../../index.js';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, props tables for Heading and Section.
 
 <Meta isTemplate />
 
@@ -45,7 +46,13 @@ component in that `Section` will use the correct heading level.
 
 ## Component API
 
-<ArgTypes of={HeadingStories.Default} />
+### Heading
+
+<ArgTypes of={Heading} />
+
+### Section
+
+<ArgTypes of={Section} />
 
 ### Section as
 
