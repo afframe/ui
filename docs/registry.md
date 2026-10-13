@@ -47,7 +47,7 @@ One entry per Afframe or extras module and per subpath; the JSON lists its expor
 
 ## Carbon, IBM Products and Labs
 
-One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links only a folder of exactly the export name.
+One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories list it as `component` or `subcomponents`, else a page named in the alias map in `scripts/registry.mjs`.
 
 | Export                             | Kind      | Source       | Runtime | Status            | Docs                                                                  |
 | ---------------------------------- | --------- | ------------ | ------- | ----------------- | --------------------------------------------------------------------- |
@@ -56,7 +56,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | SecondaryButton                    | component | carbon       | client  | stable            |                                                                       |
 | DangerButton                       | component | carbon       | client  | stable            |                                                                       |
 | ButtonSet                          | component | carbon       | client  | stable            |                                                                       |
-| ButtonSkeleton                     | component | carbon       | client  | stable            |                                                                       |
+| ButtonSkeleton                     | component | carbon       | client  | stable            | [page](../src/components/Button/Button.mdx)                           |
 | ButtonKinds                        | util      | carbon       | client  | stable            |                                                                       |
 | ButtonSizes                        | util      | carbon       | client  | stable            |                                                                       |
 | ButtonTooltipAlignments            | util      | carbon       | client  | stable            |                                                                       |
@@ -73,74 +73,74 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | FormLabel                          | component | carbon       | client  | stable            | [page](../src/components/FormLabel/FormLabel.mdx)                     |
 | FormContext                        | util      | carbon       | client  | stable            |                                                                       |
 | TextInput                          | component | carbon       | client  | stable            | [page](../src/components/TextInput/TextInput.mdx)                     |
-| TextInputSkeleton                  | component | carbon       | client  | stable            |                                                                       |
-| PasswordInput                      | component | carbon       | client  | stable            |                                                                       |
+| TextInputSkeleton                  | component | carbon       | client  | stable            | [page](../src/components/TextInput/TextInput.mdx)                     |
+| PasswordInput                      | component | carbon       | client  | stable            | [page](../src/components/TextInput/TextInput.mdx)                     |
 | ControlledPasswordInput            | component | carbon       | client  | stable            |                                                                       |
 | TextArea                           | component | carbon       | client  | stable            | [page](../src/components/TextArea/TextArea.mdx)                       |
-| TextAreaSkeleton                   | component | carbon       | client  | stable            |                                                                       |
+| TextAreaSkeleton                   | component | carbon       | client  | stable            | [page](../src/components/TextArea/TextArea.mdx)                       |
 | NumberInput                        | component | carbon       | client  | stable            | [page](../src/components/NumberInput/NumberInput.mdx)                 |
-| NumberInputSkeleton                | component | carbon       | client  | stable            |                                                                       |
+| NumberInputSkeleton                | component | carbon       | client  | stable            | [page](../src/components/NumberInput/NumberInput.mdx)                 |
 | validateNumberSeparators           | util      | carbon       | client  | stable            |                                                                       |
 | Select                             | component | carbon       | client  | stable            | [page](../src/components/Select/Select.mdx)                           |
-| SelectItem                         | component | carbon       | client  | stable            |                                                                       |
-| SelectItemGroup                    | component | carbon       | client  | stable            |                                                                       |
-| SelectSkeleton                     | component | carbon       | client  | stable            |                                                                       |
+| SelectItem                         | component | carbon       | client  | stable            | [page](../src/components/Select/Select.mdx)                           |
+| SelectItemGroup                    | component | carbon       | client  | stable            | [page](../src/components/Select/Select.mdx)                           |
+| SelectSkeleton                     | component | carbon       | client  | stable            | [page](../src/components/Select/Select.mdx)                           |
 | ComboBox                           | component | carbon       | client  | stable            | [page](../src/components/ComboBox/ComboBox.mdx)                       |
 | Dropdown                           | component | carbon       | client  | stable            | [page](../src/components/Dropdown/Dropdown.mdx)                       |
-| DropdownSkeleton                   | component | carbon       | client  | stable            |                                                                       |
+| DropdownSkeleton                   | component | carbon       | client  | stable            | [page](../src/components/Dropdown/Dropdown.mdx)                       |
 | MultiSelect                        | component | carbon       | client  | stable            | [page](../src/components/MultiSelect/MultiSelect.mdx)                 |
-| FilterableMultiSelect              | component | carbon       | client  | stable            |                                                                       |
+| FilterableMultiSelect              | component | carbon       | client  | stable            | [page](../src/components/MultiSelect/MultiSelect.mdx)                 |
 | Checkbox                           | component | carbon       | client  | stable            | [page](../src/components/Checkbox/Checkbox.mdx)                       |
-| CheckboxGroup                      | component | carbon       | client  | stable            |                                                                       |
-| CheckboxSkeleton                   | component | carbon       | client  | stable            |                                                                       |
+| CheckboxGroup                      | component | carbon       | client  | stable            | [page](../src/components/Checkbox/Checkbox.mdx)                       |
+| CheckboxSkeleton                   | component | carbon       | client  | stable            | [page](../src/components/Checkbox/Checkbox.mdx)                       |
 | InlineCheckbox                     | component | carbon       | client  | stable            |                                                                       |
 | RadioButton                        | component | carbon       | client  | stable            | [page](../src/components/RadioButton/RadioButton.mdx)                 |
-| RadioButtonGroup                   | component | carbon       | client  | stable            |                                                                       |
-| RadioButtonSkeleton                | component | carbon       | client  | stable            |                                                                       |
+| RadioButtonGroup                   | component | carbon       | client  | stable            | [page](../src/components/RadioButton/RadioButton.mdx)                 |
+| RadioButtonSkeleton                | component | carbon       | client  | stable            | [page](../src/components/RadioButton/RadioButton.mdx)                 |
 | Toggle                             | component | carbon       | client  | stable            | [page](../src/components/Toggle/Toggle.mdx)                           |
 | ToggleSkeleton                     | component | carbon       | client  | stable            |                                                                       |
 | ToggleSmallSkeleton                | component | carbon       | client  | stable            |                                                                       |
 | Search                             | component | carbon       | client  | stable            | [page](../src/components/Search/Search.mdx)                           |
-| ExpandableSearch                   | component | carbon       | client  | stable            |                                                                       |
-| SearchSkeleton                     | component | carbon       | client  | stable            |                                                                       |
+| ExpandableSearch                   | component | carbon       | client  | stable            | [page](../src/components/Search/Search.mdx)                           |
+| SearchSkeleton                     | component | carbon       | client  | stable            | [page](../src/components/Search/Search.mdx)                           |
 | DatePicker                         | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
-| DatePickerInput                    | component | carbon       | client  | stable            |                                                                       |
-| DatePickerSkeleton                 | component | carbon       | client  | stable            |                                                                       |
+| DatePickerInput                    | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
+| DatePickerSkeleton                 | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
 | preview__DatePicker                | namespace | carbon       | client  | preview           | [page](../src/components/DatePicker/DatePicker.mdx)                   |
 | TimePicker                         | component | carbon       | client  | stable            | [page](../src/components/TimePicker/TimePicker.mdx)                   |
-| TimePickerSelect                   | component | carbon       | client  | stable            |                                                                       |
+| TimePickerSelect                   | component | carbon       | client  | stable            | [page](../src/components/TimePicker/TimePicker.mdx)                   |
 | FileUploader                       | component | carbon       | client  | stable            | [page](../src/components/FileUploader/FileUploader.mdx)               |
-| FileUploaderButton                 | component | carbon       | client  | stable            |                                                                       |
-| FileUploaderDropContainer          | component | carbon       | client  | stable            |                                                                       |
-| FileUploaderItem                   | component | carbon       | client  | stable            |                                                                       |
-| FileUploaderSkeleton               | component | carbon       | client  | stable            |                                                                       |
+| FileUploaderButton                 | component | carbon       | client  | stable            | [page](../src/components/FileUploader/FileUploader.mdx)               |
+| FileUploaderDropContainer          | component | carbon       | client  | stable            | [page](../src/components/FileUploader/FileUploader.mdx)               |
+| FileUploaderItem                   | component | carbon       | client  | stable            | [page](../src/components/FileUploader/FileUploader.mdx)               |
+| FileUploaderSkeleton               | component | carbon       | client  | stable            | [page](../src/components/FileUploader/FileUploader.mdx)               |
 | Filename                           | component | carbon       | client  | stable            |                                                                       |
 | Slider                             | component | carbon       | client  | stable            | [page](../src/components/Slider/Slider.mdx)                           |
-| SliderSkeleton                     | component | carbon       | client  | stable            |                                                                       |
+| SliderSkeleton                     | component | carbon       | client  | stable            | [page](../src/components/Slider/Slider.mdx)                           |
 | FluidForm                          | component | carbon       | client  | stable            | [page](../src/components/FluidForm/FluidForm.mdx)                     |
 | FluidComboBox                      | component | carbon       | client  | stable            | [page](../src/components/FluidComboBox/FluidComboBox.mdx)             |
-| FluidComboBoxSkeleton              | component | carbon       | client  | stable            |                                                                       |
+| FluidComboBoxSkeleton              | component | carbon       | client  | stable            | [page](../src/components/FluidComboBox/FluidComboBox.mdx)             |
 | FluidDatePicker                    | component | carbon       | client  | stable            | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)         |
 | FluidDatePickerInput               | component | carbon       | client  | stable            |                                                                       |
-| FluidDatePickerSkeleton            | component | carbon       | client  | stable            |                                                                       |
+| FluidDatePickerSkeleton            | component | carbon       | client  | stable            | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)         |
 | FluidDropdown                      | component | carbon       | client  | stable            | [page](../src/components/FluidDropdown/FluidDropdown.mdx)             |
-| FluidDropdownSkeleton              | component | carbon       | client  | stable            |                                                                       |
+| FluidDropdownSkeleton              | component | carbon       | client  | stable            | [page](../src/components/FluidDropdown/FluidDropdown.mdx)             |
 | FluidMultiSelect                   | component | carbon       | client  | stable            | [page](../src/components/FluidMultiSelect/FluidMultiSelect.mdx)       |
-| FluidMultiSelectSkeleton           | component | carbon       | client  | stable            |                                                                       |
+| FluidMultiSelectSkeleton           | component | carbon       | client  | stable            | [page](../src/components/FluidMultiSelect/FluidMultiSelect.mdx)       |
 | FluidNumberInput                   | component | carbon       | client  | stable            | [page](../src/components/FluidNumberInput/FluidNumberInput.mdx)       |
-| FluidNumberInputSkeleton           | component | carbon       | client  | stable            |                                                                       |
-| FluidPasswordInput                 | component | carbon       | client  | stable            |                                                                       |
+| FluidNumberInputSkeleton           | component | carbon       | client  | stable            | [page](../src/components/FluidNumberInput/FluidNumberInput.mdx)       |
+| FluidPasswordInput                 | component | carbon       | client  | stable            | [page](../src/components/FluidTextInput/FluidPasswordInput.mdx)       |
 | FluidSearch                        | component | carbon       | client  | stable            | [page](../src/components/FluidSearch/FluidSearch.mdx)                 |
-| FluidSearchSkeleton                | component | carbon       | client  | stable            |                                                                       |
+| FluidSearchSkeleton                | component | carbon       | client  | stable            | [page](../src/components/FluidSearch/FluidSearch.mdx)                 |
 | FluidSelect                        | component | carbon       | client  | stable            | [page](../src/components/FluidSelect/FluidSelect.mdx)                 |
-| FluidSelectSkeleton                | component | carbon       | client  | stable            |                                                                       |
+| FluidSelectSkeleton                | component | carbon       | client  | stable            | [page](../src/components/FluidSelect/FluidSelect.mdx)                 |
 | FluidTextArea                      | component | carbon       | client  | stable            | [page](../src/components/FluidTextArea/FluidTextArea.mdx)             |
-| FluidTextAreaSkeleton              | component | carbon       | client  | stable            |                                                                       |
+| FluidTextAreaSkeleton              | component | carbon       | client  | stable            | [page](../src/components/FluidTextArea/FluidTextArea.mdx)             |
 | FluidTextInput                     | component | carbon       | client  | stable            | [page](../src/components/FluidTextInput/FluidTextInput.mdx)           |
-| FluidTextInputSkeleton             | component | carbon       | client  | stable            |                                                                       |
+| FluidTextInputSkeleton             | component | carbon       | client  | stable            | [page](../src/components/FluidTextInput/FluidTextInput.mdx)           |
 | FluidTimePicker                    | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)         |
-| FluidTimePickerSelect              | component | carbon       | client  | stable            |                                                                       |
-| FluidTimePickerSkeleton            | component | carbon       | client  | stable            |                                                                       |
+| FluidTimePickerSelect              | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)         |
+| FluidTimePickerSkeleton            | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)         |
 | DataTable                          | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                     |
 | DataTableSkeleton                  | component | carbon       | client  | stable            |                                                                       |
 | Table                              | component | carbon       | client  | stable            |                                                                       |
@@ -163,126 +163,126 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | TableToolbarAction                 | component | carbon       | client  | stable            |                                                                       |
 | TableToolbarContent                | component | carbon       | client  | stable            |                                                                       |
 | TableToolbarSearch                 | component | carbon       | client  | stable            |                                                                       |
-| StructuredListBody                 | component | carbon       | client  | stable            |                                                                       |
-| StructuredListCell                 | component | carbon       | client  | stable            |                                                                       |
-| StructuredListHead                 | component | carbon       | client  | stable            |                                                                       |
-| StructuredListInput                | component | carbon       | client  | stable            |                                                                       |
-| StructuredListRow                  | component | carbon       | client  | stable            |                                                                       |
+| StructuredListBody                 | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)           |
+| StructuredListCell                 | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)           |
+| StructuredListHead                 | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)           |
+| StructuredListInput                | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)           |
+| StructuredListRow                  | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)           |
 | StructuredListSkeleton             | component | carbon       | client  | stable            |                                                                       |
-| StructuredListWrapper              | component | carbon       | client  | stable            |                                                                       |
+| StructuredListWrapper              | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)           |
 | Tag                                | component | carbon       | client  | stable            | [page](../src/components/Tag/Tag.mdx)                                 |
 | DismissibleTag                     | component | carbon       | client  | stable            |                                                                       |
 | OperationalTag                     | component | carbon       | client  | stable            |                                                                       |
-| SelectableTag                      | component | carbon       | client  | stable            |                                                                       |
+| SelectableTag                      | component | carbon       | client  | stable            | [page](../src/components/Tag/Tag.mdx)                                 |
 | TagSkeleton                        | component | carbon       | client  | stable            |                                                                       |
 | Tile                               | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                               |
-| ClickableTile                      | component | carbon       | client  | stable            |                                                                       |
-| ExpandableTile                     | component | carbon       | client  | stable            |                                                                       |
-| SelectableTile                     | component | carbon       | client  | stable            |                                                                       |
-| RadioTile                          | component | carbon       | client  | stable            |                                                                       |
-| TileGroup                          | component | carbon       | client  | stable            |                                                                       |
-| TileAboveTheFoldContent            | component | carbon       | client  | stable            |                                                                       |
-| TileBelowTheFoldContent            | component | carbon       | client  | stable            |                                                                       |
+| ClickableTile                      | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                               |
+| ExpandableTile                     | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                               |
+| SelectableTile                     | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                               |
+| RadioTile                          | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                               |
+| TileGroup                          | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                               |
+| TileAboveTheFoldContent            | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                               |
+| TileBelowTheFoldContent            | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                               |
 | Accordion                          | component | carbon       | client  | stable            | [page](../src/components/Accordion/Accordion.mdx)                     |
-| AccordionItem                      | component | carbon       | client  | stable            |                                                                       |
-| AccordionSkeleton                  | component | carbon       | client  | stable            |                                                                       |
+| AccordionItem                      | component | carbon       | client  | stable            | [page](../src/components/Accordion/Accordion.mdx)                     |
+| AccordionSkeleton                  | component | carbon       | client  | stable            | [page](../src/components/Accordion/Accordion.mdx)                     |
 | CodeSnippet                        | component | carbon       | client  | stable            | [page](../src/components/CodeSnippet/CodeSnippet.mdx)                 |
 | CodeSnippetSkeleton                | component | carbon       | client  | stable            |                                                                       |
 | OrderedList                        | component | carbon       | client  | stable            | [page](../src/components/OrderedList/OrderedList.mdx)                 |
 | UnorderedList                      | component | carbon       | client  | stable            | [page](../src/components/UnorderedList/UnorderedList.mdx)             |
-| ListItem                           | component | carbon       | client  | stable            |                                                                       |
+| ListItem                           | component | carbon       | client  | stable            | [page](../src/components/OrderedList/OrderedList.mdx)                 |
 | ContainedList                      | component | carbon       | client  | stable            | [page](../src/components/ContainedList/ContainedList.mdx)             |
-| ContainedListItem                  | component | carbon       | client  | stable            |                                                                       |
+| ContainedListItem                  | component | carbon       | client  | stable            | [page](../src/components/ContainedList/ContainedList.mdx)             |
 | AspectRatio                        | component | carbon       | client  | stable            | [page](../src/components/AspectRatio/AspectRatio.mdx)                 |
 | TreeView                           | component | carbon       | client  | stable            | [page](../src/components/TreeView/TreeView.mdx)                       |
-| TreeNode                           | component | carbon       | client  | stable            |                                                                       |
-| Header                             | component | carbon       | client  | stable            |                                                                       |
+| TreeNode                           | component | carbon       | client  | stable            | [page](../src/components/TreeView/TreeView.mdx)                       |
+| Header                             | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | HeaderContainer                    | component | carbon       | client  | stable            |                                                                       |
-| HeaderGlobalAction                 | component | carbon       | client  | stable            |                                                                       |
-| HeaderGlobalBar                    | component | carbon       | client  | stable            |                                                                       |
-| HeaderMenu                         | component | carbon       | client  | stable            |                                                                       |
-| HeaderMenuButton                   | component | carbon       | client  | stable            |                                                                       |
-| HeaderMenuItem                     | component | carbon       | client  | stable            |                                                                       |
-| HeaderName                         | component | carbon       | client  | stable            |                                                                       |
-| HeaderNavigation                   | component | carbon       | client  | stable            |                                                                       |
-| HeaderPanel                        | component | carbon       | client  | stable            |                                                                       |
-| HeaderSideNavItems                 | component | carbon       | client  | stable            |                                                                       |
-| SkipToContent                      | component | carbon       | client  | stable            |                                                                       |
-| Content                            | component | carbon       | client  | stable            |                                                                       |
-| SideNav                            | component | carbon       | client  | stable            |                                                                       |
+| HeaderGlobalAction                 | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| HeaderGlobalBar                    | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| HeaderMenu                         | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| HeaderMenuButton                   | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| HeaderMenuItem                     | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| HeaderName                         | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| HeaderNavigation                   | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| HeaderPanel                        | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| HeaderSideNavItems                 | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| SkipToContent                      | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| Content                            | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| SideNav                            | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | SideNavDetails                     | component | carbon       | client  | stable            |                                                                       |
-| SideNavDivider                     | component | carbon       | client  | stable            |                                                                       |
+| SideNavDivider                     | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | SideNavFooter                      | component | carbon       | client  | stable            |                                                                       |
 | SideNavHeader                      | component | carbon       | client  | stable            |                                                                       |
 | SideNavIcon                        | component | carbon       | client  | stable            |                                                                       |
 | SideNavItem                        | component | carbon       | client  | stable            |                                                                       |
-| SideNavItems                       | component | carbon       | client  | stable            |                                                                       |
-| SideNavLink                        | component | carbon       | client  | stable            |                                                                       |
+| SideNavItems                       | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| SideNavLink                        | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | SideNavLinkText                    | component | carbon       | client  | stable            |                                                                       |
-| SideNavMenu                        | component | carbon       | client  | stable            |                                                                       |
-| SideNavMenuItem                    | component | carbon       | client  | stable            |                                                                       |
+| SideNavMenu                        | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| SideNavMenuItem                    | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | SideNavSwitcher                    | component | carbon       | client  | stable            |                                                                       |
-| Switcher                           | component | carbon       | client  | stable            |                                                                       |
-| SwitcherDivider                    | component | carbon       | client  | stable            |                                                                       |
-| SwitcherItem                       | component | carbon       | client  | stable            |                                                                       |
+| Switcher                           | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| SwitcherDivider                    | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
+| SwitcherItem                       | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | Breadcrumb                         | component | carbon       | client  | stable            | [page](../src/components/Breadcrumb/Breadcrumb.mdx)                   |
-| BreadcrumbItem                     | component | carbon       | client  | stable            |                                                                       |
-| BreadcrumbSkeleton                 | component | carbon       | client  | stable            |                                                                       |
+| BreadcrumbItem                     | component | carbon       | client  | stable            | [page](../src/components/Breadcrumb/Breadcrumb.mdx)                   |
+| BreadcrumbSkeleton                 | component | carbon       | client  | stable            | [page](../src/components/Breadcrumb/Breadcrumb.mdx)                   |
 | Tabs                               | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
-| Tab                                | component | carbon       | client  | stable            |                                                                       |
-| TabList                            | component | carbon       | client  | stable            |                                                                       |
-| TabListVertical                    | component | carbon       | client  | stable            |                                                                       |
-| TabPanel                           | component | carbon       | client  | stable            |                                                                       |
-| TabPanels                          | component | carbon       | client  | stable            |                                                                       |
+| Tab                                | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
+| TabList                            | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
+| TabListVertical                    | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
+| TabPanel                           | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
+| TabPanels                          | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
 | TabContent                         | component | carbon       | client  | stable            |                                                                       |
-| TabsVertical                       | component | carbon       | client  | stable            |                                                                       |
+| TabsVertical                       | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
 | TabsSkeleton                       | component | carbon       | client  | stable            |                                                                       |
 | IconTab                            | component | carbon       | client  | stable            |                                                                       |
 | ContentSwitcher                    | component | carbon       | client  | stable            | [page](../src/components/ContentSwitcher/ContentSwitcher.mdx)         |
-| Switch                             | component | carbon       | client  | stable            |                                                                       |
-| IconSwitch                         | component | carbon       | client  | stable            |                                                                       |
+| Switch                             | component | carbon       | client  | stable            | [page](../src/components/ContentSwitcher/ContentSwitcher.mdx)         |
+| IconSwitch                         | component | carbon       | client  | stable            | [page](../src/components/ContentSwitcher/ContentSwitcher.mdx)         |
 | Pagination                         | component | carbon       | client  | stable            | [page](../src/components/Pagination/Pagination.mdx)                   |
 | PaginationSkeleton                 | component | carbon       | client  | stable            |                                                                       |
 | PaginationNav                      | component | carbon       | client  | stable            | [page](../src/components/PaginationNav/PaginationNav.mdx)             |
 | Menu                               | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
-| MenuItem                           | component | carbon       | client  | stable            |                                                                       |
-| MenuItemDivider                    | component | carbon       | client  | stable            |                                                                       |
-| MenuItemGroup                      | component | carbon       | client  | stable            |                                                                       |
-| MenuItemRadioGroup                 | component | carbon       | client  | stable            |                                                                       |
-| MenuItemSelectable                 | component | carbon       | client  | stable            |                                                                       |
+| MenuItem                           | component | carbon       | client  | stable            | [page](../src/components/ComboButton/ComboButton.mdx)                 |
+| MenuItemDivider                    | component | carbon       | client  | stable            | [page](../src/components/ComboButton/ComboButton.mdx)                 |
+| MenuItemGroup                      | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
+| MenuItemRadioGroup                 | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
+| MenuItemSelectable                 | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
 | useContextMenu                     | hook      | carbon       | client  | stable            |                                                                       |
-| OverflowMenuItem                   | component | carbon       | client  | stable            |                                                                       |
+| OverflowMenuItem                   | component | carbon       | client  | stable            | [page](../src/components/OverflowMenu/OverflowMenu.mdx)               |
 | Link                               | component | carbon       | client  | stable            | [page](../src/components/Link/Link.mdx)                               |
 | Modal                              | component | carbon       | client  | stable            | [page](../src/components/Modal/Modal.mdx)                             |
 | ComposedModal                      | component | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.mdx)             |
-| ModalHeader                        | component | carbon       | client  | stable            |                                                                       |
-| ModalBody                          | component | carbon       | client  | stable            |                                                                       |
-| ModalFooter                        | component | carbon       | client  | stable            |                                                                       |
+| ModalHeader                        | component | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.mdx)             |
+| ModalBody                          | component | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.mdx)             |
+| ModalFooter                        | component | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.mdx)             |
 | ModalPresence                      | component | carbon       | client  | stable            |                                                                       |
 | ComposedModalPresence              | component | carbon       | client  | stable            |                                                                       |
 | withModalPresence                  | util      | carbon       | client  | stable            |                                                                       |
 | withComposedModalPresence          | util      | carbon       | client  | stable            |                                                                       |
 | Popover                            | component | carbon       | client  | stable            | [page](../src/components/Popover/Popover.mdx)                         |
-| PopoverContent                     | component | carbon       | client  | stable            |                                                                       |
+| PopoverContent                     | component | carbon       | client  | stable            | [page](../src/components/Popover/Popover.mdx)                         |
 | Tooltip                            | component | carbon       | client  | stable            | [page](../src/components/Tooltip/Tooltip.mdx)                         |
-| DefinitionTooltip                  | component | carbon       | client  | stable            |                                                                       |
+| DefinitionTooltip                  | component | carbon       | client  | stable            | [page](../src/components/Tooltip/DefinitionTooltip.mdx)               |
 | Toggletip                          | component | carbon       | client  | stable            | [page](../src/components/Toggletip/Toggletip.mdx)                     |
-| ToggletipActions                   | component | carbon       | client  | stable            |                                                                       |
-| ToggletipButton                    | component | carbon       | client  | stable            |                                                                       |
-| ToggletipContent                   | component | carbon       | client  | stable            |                                                                       |
-| ToggletipLabel                     | component | carbon       | client  | stable            |                                                                       |
-| ActionableNotification             | component | carbon       | client  | stable            |                                                                       |
-| InlineNotification                 | component | carbon       | client  | stable            |                                                                       |
-| ToastNotification                  | component | carbon       | client  | stable            |                                                                       |
-| Callout                            | component | carbon       | client  | stable            |                                                                       |
+| ToggletipActions                   | component | carbon       | client  | stable            | [page](../src/components/Toggletip/Toggletip.mdx)                     |
+| ToggletipButton                    | component | carbon       | client  | stable            | [page](../src/components/Toggletip/Toggletip.mdx)                     |
+| ToggletipContent                   | component | carbon       | client  | stable            | [page](../src/components/Toggletip/Toggletip.mdx)                     |
+| ToggletipLabel                     | component | carbon       | client  | stable            | [page](../src/components/Toggletip/Toggletip.mdx)                     |
+| ActionableNotification             | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
+| InlineNotification                 | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
+| ToastNotification                  | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
+| Callout                            | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
 | NotificationActionButton           | component | carbon       | client  | stable            |                                                                       |
 | NotificationButton                 | component | carbon       | client  | stable            |                                                                       |
 | Loading                            | component | carbon       | client  | stable            | [page](../src/components/Loading/Loading.mdx)                         |
 | InlineLoading                      | component | carbon       | client  | stable            | [page](../src/components/InlineLoading/InlineLoading.mdx)             |
 | ProgressBar                        | component | carbon       | client  | stable            | [page](../src/components/ProgressBar/ProgressBar.mdx)                 |
 | ProgressIndicator                  | component | carbon       | client  | stable            | [page](../src/components/ProgressIndicator/ProgressIndicator.mdx)     |
-| ProgressStep                       | component | carbon       | client  | stable            |                                                                       |
-| ProgressIndicatorSkeleton          | component | carbon       | client  | stable            |                                                                       |
+| ProgressStep                       | component | carbon       | client  | stable            | [page](../src/components/ProgressIndicator/ProgressIndicator.mdx)     |
+| ProgressIndicatorSkeleton          | component | carbon       | client  | stable            | [page](../src/components/ProgressIndicator/ProgressIndicator.mdx)     |
 | SkeletonIcon                       | component | carbon       | client  | stable            | [page](../src/components/SkeletonIcon/SkeletonIcon.mdx)               |
 | SkeletonPlaceholder                | component | carbon       | client  | stable            | [page](../src/components/SkeletonPlaceholder/SkeletonPlaceholder.mdx) |
 | SkeletonText                       | component | carbon       | client  | stable            | [page](../src/components/SkeletonText/SkeletonText.mdx)               |
@@ -292,33 +292,33 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | AILabel                            | component | carbon       | client  | stable            | [page](../src/components/AILabel/AILabel.mdx)                         |
 | AILabelActions                     | component | carbon       | client  | stable            |                                                                       |
 | AILabelContent                     | component | carbon       | client  | stable            |                                                                       |
-| AISkeletonIcon                     | component | carbon       | client  | stable            |                                                                       |
-| AISkeletonPlaceholder              | component | carbon       | client  | stable            |                                                                       |
-| AISkeletonText                     | component | carbon       | client  | stable            |                                                                       |
+| AISkeletonIcon                     | component | carbon       | client  | stable            | [page](../src/components/AISkeleton/AISkeleton.mdx)                   |
+| AISkeletonPlaceholder              | component | carbon       | client  | stable            | [page](../src/components/AISkeleton/AISkeleton.mdx)                   |
+| AISkeletonText                     | component | carbon       | client  | stable            | [page](../src/components/AISkeleton/AISkeleton.mdx)                   |
 | Grid                               | component | carbon       | client  | stable            | [page](../src/components/Grid/Grid.mdx)                               |
-| Column                             | component | carbon       | client  | stable            |                                                                       |
-| ColumnHang                         | component | carbon       | client  | stable            |                                                                       |
-| FlexGrid                           | component | carbon       | client  | stable            |                                                                       |
-| Row                                | component | carbon       | client  | stable            |                                                                       |
-| GridSettings                       | component | carbon       | client  | stable            |                                                                       |
+| Column                             | component | carbon       | client  | stable            | [page](../src/components/Grid/Grid.mdx)                               |
+| ColumnHang                         | component | carbon       | client  | stable            | [page](../src/components/Grid/Grid.mdx)                               |
+| FlexGrid                           | component | carbon       | client  | stable            | [page](../src/components/Grid/FlexGrid.mdx)                           |
+| Row                                | component | carbon       | client  | stable            | [page](../src/components/Grid/FlexGrid.mdx)                           |
+| GridSettings                       | component | carbon       | client  | stable            | [page](../src/components/Grid/Grid.mdx)                               |
 | Layer                              | component | carbon       | client  | stable            | [page](../src/components/Layer/Layer.mdx)                             |
-| useLayer                           | hook      | carbon       | client  | stable            |                                                                       |
-| Stack                              | component | carbon       | client  | stable            |                                                                       |
-| HStack                             | component | carbon       | client  | stable            |                                                                       |
-| VStack                             | component | carbon       | client  | stable            |                                                                       |
-| Section                            | component | carbon       | client  | stable            |                                                                       |
+| useLayer                           | hook      | carbon       | client  | stable            | [page](../src/components/Layer/Layer.mdx)                             |
+| Stack                              | component | carbon       | client  | stable            | [page](../src/components/Stack/Stack.mdx)                             |
+| HStack                             | component | carbon       | client  | stable            | [page](../src/components/Stack/Stack.mdx)                             |
+| VStack                             | component | carbon       | client  | stable            | [page](../src/components/Stack/Stack.mdx)                             |
+| Section                            | component | carbon       | client  | stable            | [page](../src/components/Heading/Heading.mdx)                         |
 | Heading                            | component | carbon       | client  | stable            | [page](../src/components/Heading/Heading.mdx)                         |
 | Theme                              | component | carbon       | client  | stable            | [page](../src/components/Theme/Theme.mdx)                             |
-| GlobalTheme                        | component | carbon       | client  | stable            |                                                                       |
-| ThemeContext                       | util      | carbon       | client  | stable            |                                                                       |
-| useTheme                           | hook      | carbon       | client  | stable            |                                                                       |
-| usePrefersDarkScheme               | hook      | carbon       | client  | stable            |                                                                       |
+| GlobalTheme                        | component | carbon       | client  | stable            | [page](../src/components/Theme/Theme.mdx)                             |
+| ThemeContext                       | util      | carbon       | client  | stable            | [page](../src/components/Theme/Theme.mdx)                             |
+| useTheme                           | hook      | carbon       | client  | stable            | [page](../src/components/Theme/Theme.mdx)                             |
+| usePrefersDarkScheme               | hook      | carbon       | client  | stable            | [page](../src/components/Theme/Theme.mdx)                             |
 | FeatureFlags                       | component | carbon       | client  | stable            | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
-| useFeatureFlag                     | hook      | carbon       | client  | stable            |                                                                       |
-| useFeatureFlags                    | hook      | carbon       | client  | stable            |                                                                       |
-| PrefixContext                      | util      | carbon       | client  | stable            |                                                                       |
+| useFeatureFlag                     | hook      | carbon       | client  | stable            | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
+| useFeatureFlags                    | hook      | carbon       | client  | stable            | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
+| PrefixContext                      | util      | carbon       | client  | stable            | [page](../src/components/useCarbonPrefix/useCarbonPrefix.mdx)         |
 | IdPrefix                           | component | carbon       | client  | stable            | [page](../src/components/IdPrefix/IdPrefix.mdx)                       |
-| useIdPrefix                        | hook      | carbon       | client  | stable            |                                                                       |
+| useIdPrefix                        | hook      | carbon       | client  | stable            | [page](../src/components/IdPrefix/IdPrefix.mdx)                       |
 | useCarbonPrefix                    | hook      | carbon       | client  | stable            | [page](../src/components/useCarbonPrefix/useCarbonPrefix.mdx)         |
 | preview__IconIndicator             | component | carbon       | client  | preview           | [page](../src/components/IconIndicator/IconIndicator.mdx)             |
 | preview__ShapeIndicator            | component | carbon       | client  | preview           | [page](../src/components/ShapeIndicator/ShapeIndicator.mdx)           |
@@ -332,8 +332,8 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | MultiAddSelect                     | component | ibm-products | client  | stable            | [page](../src/components/MultiAddSelect/MultiAddSelect.mdx)           |
 | BigNumber                          | component | ibm-products | client  | preview-candidate | [page](../src/components/BigNumber/BigNumber.mdx)                     |
 | Coachmark                          | component | ibm-products | client  | preview           | [page](../src/components/Coachmark/Coachmark.mdx)                     |
-| CoachmarkBeacon                    | component | ibm-products | client  | preview           |                                                                       |
-| CoachmarkTagline                   | component | ibm-products | client  | preview           |                                                                       |
+| CoachmarkBeacon                    | component | ibm-products | client  | preview           | [page](../src/components/Coachmark/Coachmark.mdx)                     |
+| CoachmarkTagline                   | component | ibm-products | client  | preview           | [page](../src/components/Coachmark/Coachmark.mdx)                     |
 | BEACON_KIND                        | util      | ibm-products | client  | stable            |                                                                       |
 | ConditionBuilder                   | component | ibm-products | client  | preview-candidate | [page](../src/components/ConditionBuilder/ConditionBuilder.mdx)       |
 | ConditionBuilderContext            | util      | ibm-products | client  | stable            |                                                                       |
@@ -345,7 +345,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | GuidebannerElementButton           | component | ibm-products | client  | preview-candidate |                                                                       |
 | GuidebannerElementLink             | component | ibm-products | client  | preview-candidate |                                                                       |
 | InterstitialScreen                 | component | ibm-products | client  | stable            | [page](../src/components/InterstitialScreen/InterstitialScreen.mdx)   |
-| InterstitialScreenView             | component | ibm-products | client  | stable            |                                                                       |
+| InterstitialScreenView             | component | ibm-products | client  | stable            | [page](../src/components/InterstitialScreen/InterstitialScreen.mdx)   |
 | NotificationsPanel                 | component | ibm-products | client  | stable            | [page](../src/components/NotificationsPanel/NotificationsPanel.mdx)   |
 | PageHeader                         | namespace | ibm-products | client  | preview           | [page](../src/components/PageHeader/PageHeader.mdx)                   |
 | ScrollGradient                     | component | ibm-products | client  | stable            | [page](../src/components/ScrollGradient/ScrollGradient.mdx)           |
@@ -358,12 +358,12 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | AboutModal                         | component | ibm-products | client  | stable            | [page](../src/components/AboutModal/AboutModal.mdx)                   |
 | ActionBar                          | component | ibm-products | client  | stable            | [page](../src/components/ActionBar/ActionBar.mdx)                     |
 | EmptyState                         | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/EmptyState.mdx)                   |
-| ErrorEmptyState                    | component | ibm-products | client  | stable            |                                                                       |
-| NoDataEmptyState                   | component | ibm-products | client  | stable            |                                                                       |
-| NoTagsEmptyState                   | component | ibm-products | client  | stable            |                                                                       |
-| NotFoundEmptyState                 | component | ibm-products | client  | stable            |                                                                       |
-| NotificationsEmptyState            | component | ibm-products | client  | stable            |                                                                       |
-| UnauthorizedEmptyState             | component | ibm-products | client  | stable            |                                                                       |
+| ErrorEmptyState                    | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/ErrorEmptyState.mdx)              |
+| NoDataEmptyState                   | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/NoDataEmptyState.mdx)             |
+| NoTagsEmptyState                   | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/NoTagsEmptyState.mdx)             |
+| NotFoundEmptyState                 | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/NotFoundEmptyState.mdx)           |
+| NotificationsEmptyState            | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/NotificationsEmptyState.mdx)      |
+| UnauthorizedEmptyState             | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/UnauthorizedEmptyState.mdx)       |
 | TagSet                             | component | ibm-products | client  | stable            | [page](../src/components/TagSet/TagSet.mdx)                           |
 | ProductiveCard                     | component | ibm-products | client  | stable            | [page](../src/components/ProductiveCard/ProductiveCard.mdx)           |
 | ExpressiveCard                     | component | ibm-products | client  | stable            | [page](../src/components/ExpressiveCard/ExpressiveCard.mdx)           |
@@ -381,48 +381,48 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | previewCandidate__TruncatedList    | component | ibm-products | client  | preview-candidate | [page](../src/components/TruncatedList/TruncatedList.mdx)             |
 | previewCandidate__NonLinearReading | component | ibm-products | client  | preview-candidate | [page](../src/components/NonLinearReading/NonLinearReading.mdx)       |
 | usePrefix                          | hook      | ibm-products | client  | stable            |                                                                       |
-| StackProvider                      | component | ibm-products | client  | stable            |                                                                       |
+| StackProvider                      | component | ibm-products | client  | stable            | [page](../src/components/Tearsheet/Tearsheet.mdx)                     |
 | themeSets                          | util      | labs         | server  | stable            |                                                                       |
 | preview__FeatureFlags              | component | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
-| preview__useFeatureFlag            | hook      | ibm-products | client  | preview           |                                                                       |
-| preview__useFeatureFlags           | hook      | ibm-products | client  | preview           |                                                                       |
-| SideNavLabs                        | component | labs         | client  | stable            |                                                                       |
+| preview__useFeatureFlag            | hook      | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
+| preview__useFeatureFlags           | hook      | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
+| SideNavLabs                        | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
 | SIDE_NAV_TYPE                      | util      | labs         | client  | stable            |                                                                       |
-| SideNavItemsLabs                   | component | labs         | client  | stable            |                                                                       |
-| SideNavLinkLabs                    | component | labs         | client  | stable            |                                                                       |
+| SideNavItemsLabs                   | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
+| SideNavLinkLabs                    | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
 | SideNavLinkPopover                 | component | labs         | client  | stable            |                                                                       |
-| SideNavMenuLabs                    | component | labs         | client  | stable            |                                                                       |
-| SideNavMenuItemLabs                | component | labs         | client  | stable            |                                                                       |
-| SideNavSlot                        | component | labs         | client  | stable            |                                                                       |
-| SideNavTitle                       | component | labs         | client  | stable            |                                                                       |
+| SideNavMenuLabs                    | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
+| SideNavMenuItemLabs                | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
+| SideNavSlot                        | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
+| SideNavTitle                       | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
 | HeaderContainerLabs                | component | labs         | client  | stable            |                                                                       |
-| HeaderDivider                      | component | labs         | client  | stable            |                                                                       |
-| HeaderOverflowPanel                | component | labs         | client  | stable            |                                                                       |
-| HeaderPopover                      | component | labs         | client  | stable            |                                                                       |
-| HeaderPopoverActions               | component | labs         | client  | stable            |                                                                       |
-| HeaderPopoverButton                | component | labs         | client  | stable            |                                                                       |
-| HeaderPopoverContent               | component | labs         | client  | stable            |                                                                       |
+| HeaderDivider                      | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/UIShell.mdx)                     |
+| HeaderOverflowPanel                | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/HeaderOverflowPanel.mdx)         |
+| HeaderPopover                      | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/HeaderPopover.mdx)               |
+| HeaderPopoverActions               | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/HeaderPopover.mdx)               |
+| HeaderPopoverButton                | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/HeaderPopover.mdx)               |
+| HeaderPopoverContent               | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/HeaderPopover.mdx)               |
 | SharkFinIcon                       | component | labs         | client  | stable            |                                                                       |
-| TrialCountdown                     | component | labs         | client  | stable            |                                                                       |
-| Profile                            | namespace | labs         | client  | stable            |                                                                       |
-| Bubble                             | component | labs         | client  | stable            |                                                                       |
-| BubbleHeader                       | component | labs         | client  | stable            |                                                                       |
-| Toc                                | component | labs         | client  | stable            |                                                                       |
-| TocItem                            | component | labs         | client  | stable            |                                                                       |
-| TocList                            | component | labs         | client  | stable            |                                                                       |
-| TocSection                         | component | labs         | client  | stable            |                                                                       |
-| TocSections                        | component | labs         | client  | stable            |                                                                       |
-| ViewStack                          | component | labs         | client  | stable            |                                                                       |
-| View                               | component | labs         | client  | stable            |                                                                       |
+| TrialCountdown                     | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/TrialCountdown.mdx)              |
+| Profile                            | namespace | labs         | client  | stable            | [page](../src/components/UIShellLabs/Profile.mdx)                     |
+| Bubble                             | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
+| BubbleHeader                       | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
+| Toc                                | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
+| TocItem                            | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
+| TocList                            | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
+| TocSection                         | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
+| TocSections                        | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
+| ViewStack                          | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
+| View                               | component | labs         | client  | stable            | [page](../src/components/WhatsNew/WhatsNew.mdx)                       |
 | WelcomeInterstitial                | component | labs         | client  | stable            |                                                                       |
 | PersonalizationInterstitial        | component | labs         | client  | stable            |                                                                       |
 | Calendar                           | component | labs         | client  | stable            | [page](../src/components/Calendar/Calendar.mdx)                       |
 | TagInput                           | component | labs         | client  | stable            | [page](../src/components/TagInput/TagInput.mdx)                       |
 | ThemeSettings                      | component | labs         | client  | stable            | [page](../src/components/ThemeSettings/ThemeSettings.mdx)             |
-| ThemeSwitcher                      | component | labs         | client  | stable            |                                                                       |
-| ThemeSetDropdown                   | component | labs         | client  | stable            |                                                                       |
-| ThemeMenuComplement                | component | labs         | client  | stable            |                                                                       |
-| useThemeSetting                    | hook      | labs         | client  | stable            |                                                                       |
+| ThemeSwitcher                      | component | labs         | client  | stable            | [page](../src/components/ThemeSettings/ThemeSettings.mdx)             |
+| ThemeSetDropdown                   | component | labs         | client  | stable            | [page](../src/components/ThemeSettings/ThemeSettings.mdx)             |
+| ThemeMenuComplement                | component | labs         | client  | stable            | [page](../src/components/ThemeSettings/ThemeSettings.mdx)             |
+| useThemeSetting                    | hook      | labs         | client  | stable            | [page](../src/components/ThemeSettings/ThemeSettings.mdx)             |
 | Processing                         | component | labs         | client  | stable            | [page](../src/components/Processing/Processing.mdx)                   |
 | Resizer                            | component | labs         | client  | stable            | [page](../src/components/Resizer/Resizer.mdx)                         |
 | TextHighlighter                    | component | labs         | client  | stable            | [page](../src/components/TextHighlighter/TextHighlighter.mdx)         |

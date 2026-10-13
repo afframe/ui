@@ -89,6 +89,10 @@ function scan(dir, name) {
   const docs = files.includes(`${name}.mdx`)
     ? `${name}.mdx`
     : files.find((file) => file.endsWith('.mdx'));
+  // A page with no stories names itself in <Meta title="...">.
+  storyTitle ??= docs
+    ? (/<Meta\s[^>]*title="([^"]+)"/.exec(read(join(dir, docs)))?.[1] ?? null)
+    : null;
   const tags = code.map((text) => /^\s+tags: \[([^\]]*)\]/m.exec(text)?.[1]);
   const source = ['afframe', 'extras', 'carbon', 'ibm-products', 'labs'].find(
     (tag) => tags.join(',').includes(`'${tag}'`)
@@ -129,6 +133,63 @@ const folders = new Map(
     .sort()
     .map((name) => [name.toLowerCase(), scan(join(componentsDir, name), name)])
 );
+
+// Docs pages of exports without a folder of their own: a stories meta's
+// `component` and `subcomponents` point to the page the stories file uses;
+// a folder's main stories file wins over the others.
+const docsByName = new Map();
+const storyFiles = [];
+for (const name of readdirSync(componentsDir).sort()) {
+  const dir = join(componentsDir, name);
+  for (const file of readdirSync(dir).filter((f) =>
+    f.endsWith('.stories.tsx')
+  )) {
+    storyFiles.push({ dir, file, main: file === `${name}.stories.tsx` });
+  }
+}
+storyFiles.sort((a, b) => Number(b.main) - Number(a.main));
+for (const pass of ['component', 'subcomponents']) {
+  for (const { dir, file } of storyFiles) {
+    const code = read(join(dir, file));
+    const page = /import\s+\w+\s+from\s+'\.\/([^']+\.mdx)'/.exec(code)?.[1];
+    const docs = page
+      ? rel(join(dir, page))
+      : folders.get(rel(dir).split('/').pop().toLowerCase())?.docs;
+    if (!docs) continue;
+    const names =
+      pass === 'component'
+        ? [/^\s+component:\s*(\w+)/m.exec(code)?.[1]]
+        : (/^\s+subcomponents:\s*\{([^}]*)\}/m.exec(code)?.[1] ?? '')
+            .split(',')
+            .map((item) => item.split(':')[0].trim());
+    for (const name of names.filter(Boolean)) {
+      if (!docsByName.has(name)) docsByName.set(name, docs);
+    }
+  }
+}
+// Hooks, contexts and helpers documented on another export's page.
+const docsAliases = {
+  ColumnHang: 'Grid/Grid.mdx',
+  GridSettings: 'Grid/Grid.mdx',
+  HStack: 'Stack/Stack.mdx',
+  VStack: 'Stack/Stack.mdx',
+  useLayer: 'Layer/Layer.mdx',
+  useIdPrefix: 'IdPrefix/IdPrefix.mdx',
+  useFeatureFlag: 'FeatureFlags/FeatureFlags.mdx',
+  useFeatureFlags: 'FeatureFlags/FeatureFlags.mdx',
+  PrefixContext: 'useCarbonPrefix/useCarbonPrefix.mdx',
+  useTheme: 'Theme/Theme.mdx',
+  usePrefersDarkScheme: 'Theme/Theme.mdx',
+  ThemeContext: 'Theme/Theme.mdx',
+  useThemeSetting: 'ThemeSettings/ThemeSettings.mdx',
+};
+for (const [name, page] of Object.entries(docsAliases)) {
+  if (!docsByName.has(name)) docsByName.set(name, `src/components/${page}`);
+}
+const docsOf = (name) =>
+  folders.get(baseName(name).toLowerCase())?.docs ??
+  docsByName.get(name) ??
+  docsByName.get(baseName(name));
 
 // Export statements of a module: `export { a, b as c } from 'x'`,
 // `export * from 'x'`, and local declarations.
@@ -226,8 +287,7 @@ const upstream = [];
 async function listUpstream(names, source, runtime, specifier) {
   const module = await import(specifier);
   for (const { name, original } of names.filter((item) => !item.isType)) {
-    // Docs only from a folder of exactly the export's name.
-    const docs = folders.get(baseName(name).toLowerCase())?.docs;
+    const docs = docsOf(name);
     // A wrapper module already exports the alias; a package, the original.
     const value = module[specifier.startsWith('file:') ? name : original];
     if (value === undefined) {
@@ -394,7 +454,7 @@ const markdown = [
   '',
   '## Carbon, IBM Products and Labs',
   '',
-  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links only a folder of exactly the export name.',
+  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories list it as `component` or `subcomponents`, else a page named in the alias map in `scripts/registry.mjs`.',
   '',
   ...table(
     ['Export', 'Kind', 'Source', 'Runtime', 'Status', 'Docs'],
