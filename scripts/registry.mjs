@@ -182,6 +182,7 @@ const docsAliases = {
   usePrefersDarkScheme: 'Theme/Theme.mdx',
   ThemeContext: 'Theme/Theme.mdx',
   useThemeSetting: 'ThemeSettings/ThemeSettings.mdx',
+  ThemeSetDropdown: 'ThemeSettings/ThemeSettings.mdx',
 };
 for (const [name, page] of Object.entries(docsAliases)) {
   if (!docsByName.has(name)) docsByName.set(name, `src/components/${page}`);
