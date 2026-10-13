@@ -13,7 +13,7 @@ src/
 ├── labs/<package>.ts      # Carbon Labs exports, one 'use client' module per Labs package
 ├── components/<Name>/     # Afframe-owned components and extras, or docs-only folders for re-exported components
 ├── format/                # business formatting: amounts, numbers, dates, date-range presets (server-safe)
-├── theme/                 # useAfframeTheme and useCarbonTheme ('use client')
+├── theme/                 # useColorScheme, useCarbonTheme and the theme types ('use client')
 ├── messages.ts            # resolveMessages, for each component's messages prop (ADR 0014)
 ├── provider/              # AfframeProvider
 └── styles/                # Sass entries for styles.css and charts.css

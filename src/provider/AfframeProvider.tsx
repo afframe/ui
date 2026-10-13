@@ -11,9 +11,6 @@ pkg.component.ScrollGradient = true;
 pkg.component.Decorator = true;
 pkg._silenceWarnings(false);
 
-/** Value of the `data-afframe-theme` attribute the consumer sets on `<html>`. */
-export type AfframeTheme = 'light' | 'dark' | 'system';
-
 /** Turns on the Carbon feature flags in React (docs/feature-flags.md). */
 export function AfframeProvider({ children }: { children?: ReactNode }) {
   return (

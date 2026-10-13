@@ -38,10 +38,10 @@ Two hooks read the current scheme in client components, for libraries that
 take a theme name instead of CSS:
 
 ```tsx
-import { useAfframeTheme, useCarbonTheme } from '@afframe/ui';
+import { useColorScheme, useCarbonTheme } from '@afframe/ui';
 
-useAfframeTheme(); // 'light' | 'dark'
-useCarbonTheme(); // 'white' | 'g100'
+useColorScheme(); // 'light' | 'dark', type ColorScheme
+useCarbonTheme(); // 'white' | 'g100', type AfframeCarbonTheme
 ```
 
 Both return the light value on the server and during hydration.

@@ -1,11 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, expect, test, vi } from 'vitest';
-import { useAfframeTheme, useCarbonTheme } from './use-afframe-theme.js';
+import { useColorScheme, useCarbonTheme } from './use-afframe-theme.js';
 
 function Probe() {
   return (
     <p>
-      {useAfframeTheme()} {useCarbonTheme()}
+      {useColorScheme()} {useCarbonTheme()}
     </p>
   );
 }

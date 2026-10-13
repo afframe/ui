@@ -310,7 +310,7 @@ test('exports the sub-part props types', () => {
 });
 
 test('exports the format helpers', () => {
-  expect(ui.useAfframeTheme).toBeTypeOf('function');
+  expect(ui.useColorScheme).toBeTypeOf('function');
   expect(ui.useCarbonTheme).toBeTypeOf('function');
   expect(ui.resolveMessages).toBeTypeOf('function');
   expect(ui.formatAmount).toBeTypeOf('function');

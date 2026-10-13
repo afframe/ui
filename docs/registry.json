@@ -11,7 +11,7 @@
       "storyTitle": "Getting Started/AfframeProvider",
       "status": "stable",
       "exports": ["AfframeProvider"],
-      "types": ["AfframeTheme"]
+      "types": []
     },
     {
       "name": "DataGrid",
@@ -617,8 +617,8 @@
       "docs": "src/theme/Theming.mdx",
       "storyTitle": null,
       "status": "stable",
-      "exports": ["useAfframeTheme", "useCarbonTheme"],
-      "types": ["AfframeColorScheme", "AfframeCarbonTheme"]
+      "exports": ["useColorScheme", "useCarbonTheme"],
+      "types": ["AfframeTheme", "ColorScheme", "AfframeCarbonTheme"]
     },
     {
       "name": "messages",

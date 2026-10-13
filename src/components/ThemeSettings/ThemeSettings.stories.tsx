@@ -44,12 +44,12 @@ export default {
 } satisfies Meta<typeof ThemeSettings>;
 
 /**
- * useAfframeTheme - the theme setting as the Storybook theme global, which the
+ * useThemeGlobal - the theme setting as the Storybook theme global, which the
  * preview writes to `data-afframe-theme` on `<html>` (light, dark or system)
  *
  * @returns {[ThemeSetting, function]}
  */
-const useAfframeTheme = (): [ThemeSetting, (value: ThemeSetting) => void] => {
+const useThemeGlobal = (): [ThemeSetting, (value: ThemeSetting) => void] => {
   const [globals, updateGlobals] = useGlobals();
   return [
     globals.theme as ThemeSetting,
@@ -84,7 +84,7 @@ const createActionHandler = <T,>(
  * Default story for ThemeSettings
  */
 export const Default: StoryFn<typeof ThemeSettings> = () => {
-  const [themeSetting, setThemeSetting] = useAfframeTheme();
+  const [themeSetting, setThemeSetting] = useThemeGlobal();
   const handleThemeSetting = createActionHandler(
     'ThemeSwitcher',
     'onChange',
@@ -107,7 +107,7 @@ Default.parameters = {
  * WithMenuComplement story for ThemeSettings
  */
 export const WithMenuComplement: StoryFn<typeof ThemeSettings> = () => {
-  const [themeSetting, setThemeSetting] = useAfframeTheme();
+  const [themeSetting, setThemeSetting] = useThemeGlobal();
   const [themeMenuComplement, setThemeMenuComplement] = useState(false);
 
   const handleThemeSetting = createActionHandler(
@@ -143,7 +143,7 @@ WithMenuComplement.parameters = {
  * WithThemeSet story for ThemeSettings
  */
 export const WithThemeSet: StoryFn<typeof ThemeSettings> = () => {
-  const [themeSetting, setThemeSetting] = useAfframeTheme();
+  const [themeSetting, setThemeSetting] = useThemeGlobal();
   const [themeSet, setThemeSet] = useState<ThemeSet>('white/g100');
 
   const handleThemeSetting = createActionHandler(
@@ -180,7 +180,7 @@ WithThemeSet.parameters = {
  * Complete story for ThemeSettings
  */
 export const Complete: StoryFn<typeof ThemeSettings> = () => {
-  const [themeSetting, setThemeSetting] = useAfframeTheme();
+  const [themeSetting, setThemeSetting] = useThemeGlobal();
   const [themeMenuComplement, setThemeMenuComplement] = useState(false);
   const [themeSet, setThemeSet] = useState<ThemeSet>('white/g100');
 
@@ -231,7 +231,7 @@ const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
  * InContext story for ThemeSettings
  */
 export const InContext: StoryFn<typeof ThemeSettings> = () => {
-  const [themeSetting, setThemeSetting] = useAfframeTheme();
+  const [themeSetting, setThemeSetting] = useThemeGlobal();
   const [themeMenuComplement, setThemeMenuComplement] = useState(false);
   const [themeSet, setThemeSet] = useState<ThemeSet>('white/g100');
   const [systemDark, setSystemDark] = useState(mediaQueryList.matches);
@@ -309,7 +309,7 @@ export const InContext: StoryFn<typeof ThemeSettings> = () => {
  * InContext story for ThemeSettings
  */
 export const InContextUseThemeSetting: StoryFn<typeof ThemeSettings> = () => {
-  const [themeSetting, setThemeSetting] = useAfframeTheme();
+  const [themeSetting, setThemeSetting] = useThemeGlobal();
   const [themeMenuComplement, setThemeMenuComplement] = useState(false);
   const [themeSet, setThemeSet] = useState<ThemeSet>('white/g100');
   const theme = useThemeSetting(themeSetting, themeSet, false);
