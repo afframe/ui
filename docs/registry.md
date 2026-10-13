@@ -245,8 +245,8 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | PaginationSkeleton                 | component | carbon       | client  | stable            |                                                                       |
 | PaginationNav                      | component | carbon       | client  | stable            | [page](../src/components/PaginationNav/PaginationNav.mdx)             |
 | Menu                               | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
-| MenuItem                           | component | carbon       | client  | stable            | [page](../src/components/ComboButton/ComboButton.mdx)                 |
-| MenuItemDivider                    | component | carbon       | client  | stable            | [page](../src/components/ComboButton/ComboButton.mdx)                 |
+| MenuItem                           | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
+| MenuItemDivider                    | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
 | MenuItemGroup                      | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
 | MenuItemRadioGroup                 | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
 | MenuItemSelectable                 | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |

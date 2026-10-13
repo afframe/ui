@@ -2839,7 +2839,7 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
-      "docs": "src/components/ComboButton/ComboButton.mdx"
+      "docs": "src/components/Menu/Menu.mdx"
     },
     {
       "name": "MenuItemDivider",
@@ -2848,7 +2848,7 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
-      "docs": "src/components/ComboButton/ComboButton.mdx"
+      "docs": "src/components/Menu/Menu.mdx"
     },
     {
       "name": "MenuItemGroup",

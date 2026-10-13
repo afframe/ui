@@ -163,7 +163,16 @@ for (const pass of ['component', 'subcomponents']) {
             .split(',')
             .map((item) => item.split(':')[0].trim());
     for (const name of names.filter(Boolean)) {
-      if (!docsByName.has(name)) docsByName.set(name, docs);
+      const current = docsByName.get(name);
+      // Of several pages, the one whose folder starts the export name wins
+      // (MenuItem: Menu, not ComboButton).
+      const folder = (path) => path?.split('/').at(-2) ?? '';
+      if (
+        !current ||
+        (name.startsWith(folder(docs)) && !name.startsWith(folder(current)))
+      ) {
+        docsByName.set(name, docs);
+      }
     }
   }
 }
