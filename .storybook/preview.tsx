@@ -4,6 +4,7 @@ import type { AfframeTheme } from '../src/index.js';
 import '../dist/styles.css';
 import '../dist/charts.css';
 import './preview.css';
+import { ThemedDocsContainer } from './DocsContainer.js';
 
 const preview: Preview = {
   // Every component gets a docs page, listed first (ADR 0008).
@@ -23,6 +24,8 @@ const preview: Preview = {
   parameters: {
     // Accessibility violations fail the Vitest run.
     a11y: { test: 'error' },
+    // Docs pages follow the theme toolbar (DocsContainer.tsx).
+    docs: { container: ThemedDocsContainer },
     options: {
       // Sections in a fixed order, Getting Started pages in reading order,
       // everything else A to Z by path. Stories of one component keep their
