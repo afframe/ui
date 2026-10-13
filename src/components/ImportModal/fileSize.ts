@@ -6,14 +6,17 @@ const units = ['byte', 'kilobyte', 'megabyte', 'gigabyte'] as const;
 export function formatFileSize(bytes: number, locale?: string): string {
   let value = bytes;
   let unit = 0;
-  while (value >= 1000 && unit < units.length - 1) {
+  const digits = () => (unit === 0 ? 0 : 1);
+  // Compare the rounded value, so 999 960 bytes reads "1 MB", not "1 000 kB".
+  const shown = () => Math.round(value * 10 ** digits()) / 10 ** digits();
+  while (shown() >= 1000 && unit < units.length - 1) {
     value /= 1000;
     unit += 1;
   }
   return formatNumber(value, {
     style: 'unit',
     unit: units[unit],
-    maximumFractionDigits: unit === 0 ? 0 : 1,
+    maximumFractionDigits: digits(),
     ...(locale === undefined ? {} : { locale }),
   });
 }
