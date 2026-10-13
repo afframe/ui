@@ -3,6 +3,7 @@
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/utilities/focus-outline' as *;
 
 .afframe-create-modal-description {
   @include type.type-style('body-01');
@@ -18,8 +19,7 @@
 }
 
 .afframe-flow-error:focus {
-  outline: 2px solid $focus;
-  outline-offset: 2px;
+  @include focus-outline('outline');
 }
 
 .afframe-flow-error > * {

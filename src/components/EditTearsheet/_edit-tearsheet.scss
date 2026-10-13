@@ -2,6 +2,7 @@
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/utilities/focus-outline' as *;
 
 .afframe-edit-tearsheet-nav ul {
   padding: 0;
@@ -17,6 +18,9 @@
   justify-content: space-between;
   padding: $spacing-04 $spacing-05;
   border: 0;
+
+  // Carbon has no token for it; its side nav and vertical tabs mark the
+  // current item with the same 3px literal (_side-nav.scss, _tabs.scss).
   border-inline-start: 3px solid transparent;
   background: transparent;
   block-size: $spacing-09;
@@ -33,8 +37,7 @@
 }
 
 .afframe-edit-tearsheet-nav-item:focus {
-  outline: 2px solid $focus;
-  outline-offset: -2px;
+  @include focus-outline('outline');
 }
 
 .afframe-edit-tearsheet-nav-item[aria-current='true'] {
