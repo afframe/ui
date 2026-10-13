@@ -4,7 +4,7 @@ import { Heading, Section } from '../../index.js';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, props tables for Heading and Section.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, props tables for Heading and Section, the page also covers Section.
 
 <Meta isTemplate />
 
@@ -39,7 +39,8 @@ where the heading level needs to be different.
 
 To help address this, the `Heading` component will automatically infer the
 appropriate heading level without you having to manually specify it. To do this,
-you use the `Section` component for each section of your page. Every `Heading`
+you use the `Section` component for each section of your page; this page
+documents `Section` too. Every `Heading`
 component in that `Section` will use the correct heading level.
 
 <Canvas of={HeadingStories.Default} />
