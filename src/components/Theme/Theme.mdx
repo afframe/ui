@@ -3,7 +3,7 @@ import * as ThemeStories from './Theme.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, code samples import from @afframe/ui, Sass setup replaced by the Afframe theme model (styles.css and data-afframe-theme), global theme set by AfframeProvider instead of by hand.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, code samples import from @afframe/ui, Sass setup replaced by the Afframe theme model (styles.css and data-afframe-theme), global theme set by AfframeProvider instead of by hand, inline theme sample fixed, second canvas shows every theme.
 
 <Meta isTemplate />
 
@@ -67,18 +67,18 @@ import { Theme } from '@afframe/ui';
 
 function ExamplePage() {
   return (
-    <GlobalTheme theme="white">
+    <>
       <h1>Page title</h1>
-      <p>Display in the white theme</p>
+      <p>Display in the page theme</p>
       <Theme theme="g100">
         <p>Display in the g100 theme</p>
       </Theme>
-    <GlobalTheme>
+    </>
   );
 }
 ```
 
-<Canvas of={ThemeStories.Default} />
+<Canvas of={ThemeStories.AllThemes} />
 
 ## Getting the current theme in a component
 
