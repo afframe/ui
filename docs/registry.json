@@ -11,7 +11,7 @@
       "storyTitle": "Getting Started/AfframeProvider",
       "status": "stable",
       "exports": ["AfframeProvider"],
-      "types": ["AfframeTheme"]
+      "types": ["AfframeProviderProps"]
     },
     {
       "name": "DataGrid",
@@ -572,7 +572,7 @@
       "runtime": "server",
       "folder": "src/format",
       "docs": "src/format/Formatting.mdx",
-      "storyTitle": null,
+      "storyTitle": "Getting Started/Formatting",
       "status": "stable",
       "exports": [
         "defaultLocale",
@@ -615,10 +615,10 @@
       "runtime": "client",
       "folder": "src/theme",
       "docs": "src/theme/Theming.mdx",
-      "storyTitle": null,
+      "storyTitle": "Getting Started/Theming",
       "status": "stable",
-      "exports": ["useAfframeTheme", "useCarbonTheme"],
-      "types": ["AfframeColorScheme", "AfframeCarbonTheme"]
+      "exports": ["useColorScheme", "useCarbonTheme"],
+      "types": ["AfframeTheme", "ColorScheme", "AfframeCarbonTheme"]
     },
     {
       "name": "messages",
@@ -1190,7 +1190,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Button/Button.mdx"
     },
     {
       "name": "ButtonKinds",
@@ -1334,7 +1335,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/TextInput/TextInput.mdx"
     },
     {
       "name": "PasswordInput",
@@ -1342,7 +1344,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/TextInput/TextInput.mdx"
     },
     {
       "name": "ControlledPasswordInput",
@@ -1367,7 +1370,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/TextArea/TextArea.mdx"
     },
     {
       "name": "NumberInput",
@@ -1384,7 +1388,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/NumberInput/NumberInput.mdx"
     },
     {
       "name": "validateNumberSeparators",
@@ -1409,7 +1414,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Select/Select.mdx"
     },
     {
       "name": "SelectItemGroup",
@@ -1417,7 +1423,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Select/Select.mdx"
     },
     {
       "name": "SelectSkeleton",
@@ -1425,7 +1432,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Select/Select.mdx"
     },
     {
       "name": "ComboBox",
@@ -1451,7 +1459,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Dropdown/Dropdown.mdx"
     },
     {
       "name": "MultiSelect",
@@ -1468,7 +1477,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/MultiSelect/MultiSelect.mdx"
     },
     {
       "name": "Checkbox",
@@ -1485,7 +1495,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Checkbox/Checkbox.mdx"
     },
     {
       "name": "CheckboxSkeleton",
@@ -1493,7 +1504,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Checkbox/Checkbox.mdx"
     },
     {
       "name": "InlineCheckbox",
@@ -1518,7 +1530,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/RadioButton/RadioButton.mdx"
     },
     {
       "name": "RadioButtonSkeleton",
@@ -1526,7 +1539,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/RadioButton/RadioButton.mdx"
     },
     {
       "name": "Toggle",
@@ -1568,7 +1582,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Search/Search.mdx"
     },
     {
       "name": "SearchSkeleton",
@@ -1576,7 +1591,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Search/Search.mdx"
     },
     {
       "name": "DatePicker",
@@ -1593,7 +1609,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DatePicker/DatePicker.mdx"
     },
     {
       "name": "DatePickerSkeleton",
@@ -1601,7 +1618,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DatePicker/DatePicker.mdx"
     },
     {
       "name": "preview__DatePicker",
@@ -1627,7 +1645,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/TimePicker/TimePicker.mdx"
     },
     {
       "name": "FileUploader",
@@ -1644,7 +1663,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FileUploader/FileUploader.mdx"
     },
     {
       "name": "FileUploaderDropContainer",
@@ -1652,7 +1672,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FileUploader/FileUploader.mdx"
     },
     {
       "name": "FileUploaderItem",
@@ -1660,7 +1681,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FileUploader/FileUploader.mdx"
     },
     {
       "name": "FileUploaderSkeleton",
@@ -1668,7 +1690,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FileUploader/FileUploader.mdx"
     },
     {
       "name": "Filename",
@@ -1693,7 +1716,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Slider/Slider.mdx"
     },
     {
       "name": "FluidForm",
@@ -1719,7 +1743,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidComboBox/FluidComboBox.mdx"
     },
     {
       "name": "FluidDatePicker",
@@ -1744,7 +1769,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidDatePicker/FluidDatePicker.mdx"
     },
     {
       "name": "FluidDropdown",
@@ -1761,7 +1787,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidDropdown/FluidDropdown.mdx"
     },
     {
       "name": "FluidMultiSelect",
@@ -1778,7 +1805,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidMultiSelect/FluidMultiSelect.mdx"
     },
     {
       "name": "FluidNumberInput",
@@ -1795,7 +1823,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidNumberInput/FluidNumberInput.mdx"
     },
     {
       "name": "FluidPasswordInput",
@@ -1803,7 +1832,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidTextInput/FluidPasswordInput.mdx"
     },
     {
       "name": "FluidSearch",
@@ -1820,7 +1850,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidSearch/FluidSearch.mdx"
     },
     {
       "name": "FluidSelect",
@@ -1837,7 +1868,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidSelect/FluidSelect.mdx"
     },
     {
       "name": "FluidTextArea",
@@ -1854,7 +1886,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidTextArea/FluidTextArea.mdx"
     },
     {
       "name": "FluidTextInput",
@@ -1871,7 +1904,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidTextInput/FluidTextInput.mdx"
     },
     {
       "name": "FluidTimePicker",
@@ -1888,7 +1922,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidTimePicker/FluidTimePicker.mdx"
     },
     {
       "name": "FluidTimePickerSkeleton",
@@ -1896,7 +1931,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidTimePicker/FluidTimePicker.mdx"
     },
     {
       "name": "DataTable",
@@ -2081,7 +2117,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StructuredList/StructuredList.mdx"
     },
     {
       "name": "StructuredListCell",
@@ -2089,7 +2126,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StructuredList/StructuredList.mdx"
     },
     {
       "name": "StructuredListHead",
@@ -2097,7 +2135,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StructuredList/StructuredList.mdx"
     },
     {
       "name": "StructuredListInput",
@@ -2105,7 +2144,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StructuredList/StructuredList.mdx"
     },
     {
       "name": "StructuredListRow",
@@ -2113,7 +2153,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StructuredList/StructuredList.mdx"
     },
     {
       "name": "StructuredListSkeleton",
@@ -2129,7 +2170,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StructuredList/StructuredList.mdx"
     },
     {
       "name": "Tag",
@@ -2162,7 +2204,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tag/Tag.mdx"
     },
     {
       "name": "TagSkeleton",
@@ -2187,7 +2230,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tile/Tile.mdx"
     },
     {
       "name": "ExpandableTile",
@@ -2195,7 +2239,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tile/Tile.mdx"
     },
     {
       "name": "SelectableTile",
@@ -2203,7 +2248,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tile/Tile.mdx"
     },
     {
       "name": "RadioTile",
@@ -2211,7 +2257,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tile/Tile.mdx"
     },
     {
       "name": "TileGroup",
@@ -2219,7 +2266,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tile/Tile.mdx"
     },
     {
       "name": "TileAboveTheFoldContent",
@@ -2227,7 +2275,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tile/Tile.mdx"
     },
     {
       "name": "TileBelowTheFoldContent",
@@ -2235,7 +2284,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tile/Tile.mdx"
     },
     {
       "name": "Accordion",
@@ -2252,7 +2302,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Accordion/Accordion.mdx"
     },
     {
       "name": "AccordionSkeleton",
@@ -2260,7 +2311,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Accordion/Accordion.mdx"
     },
     {
       "name": "CodeSnippet",
@@ -2303,7 +2355,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/OrderedList/OrderedList.mdx"
     },
     {
       "name": "ContainedList",
@@ -2320,7 +2373,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ContainedList/ContainedList.mdx"
     },
     {
       "name": "AspectRatio",
@@ -2346,7 +2400,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/TreeView/TreeView.mdx"
     },
     {
       "name": "Header",
@@ -2354,7 +2409,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderContainer",
@@ -2370,7 +2426,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderGlobalBar",
@@ -2378,7 +2435,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderMenu",
@@ -2386,7 +2444,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderMenuButton",
@@ -2394,7 +2453,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderMenuItem",
@@ -2402,7 +2462,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderName",
@@ -2410,7 +2471,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderNavigation",
@@ -2418,7 +2480,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderPanel",
@@ -2426,7 +2489,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderSideNavItems",
@@ -2434,7 +2498,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SkipToContent",
@@ -2442,7 +2507,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "Content",
@@ -2450,7 +2516,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SideNav",
@@ -2458,7 +2525,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SideNavDetails",
@@ -2474,7 +2542,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SideNavFooter",
@@ -2514,7 +2583,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SideNavLink",
@@ -2522,7 +2592,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SideNavLinkText",
@@ -2538,7 +2609,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SideNavMenuItem",
@@ -2546,7 +2618,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SideNavSwitcher",
@@ -2562,7 +2635,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SwitcherDivider",
@@ -2570,7 +2644,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "SwitcherItem",
@@ -2578,7 +2653,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "Breadcrumb",
@@ -2595,7 +2671,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Breadcrumb/Breadcrumb.mdx"
     },
     {
       "name": "BreadcrumbSkeleton",
@@ -2603,7 +2680,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Breadcrumb/Breadcrumb.mdx"
     },
     {
       "name": "Tabs",
@@ -2620,7 +2698,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
       "name": "TabList",
@@ -2628,7 +2707,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
       "name": "TabListVertical",
@@ -2636,7 +2716,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
       "name": "TabPanel",
@@ -2644,7 +2725,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
       "name": "TabPanels",
@@ -2652,7 +2734,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
       "name": "TabContent",
@@ -2668,7 +2751,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
       "name": "TabsSkeleton",
@@ -2701,7 +2785,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ContentSwitcher/ContentSwitcher.mdx"
     },
     {
       "name": "IconSwitch",
@@ -2709,7 +2794,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ContentSwitcher/ContentSwitcher.mdx"
     },
     {
       "name": "Pagination",
@@ -2752,7 +2838,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Menu/Menu.mdx"
     },
     {
       "name": "MenuItemDivider",
@@ -2760,7 +2847,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Menu/Menu.mdx"
     },
     {
       "name": "MenuItemGroup",
@@ -2768,7 +2856,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Menu/Menu.mdx"
     },
     {
       "name": "MenuItemRadioGroup",
@@ -2776,7 +2865,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Menu/Menu.mdx"
     },
     {
       "name": "MenuItemSelectable",
@@ -2784,7 +2874,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Menu/Menu.mdx"
     },
     {
       "name": "useContextMenu",
@@ -2800,7 +2891,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/OverflowMenu/OverflowMenu.mdx"
     },
     {
       "name": "Link",
@@ -2835,7 +2927,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ComposedModal/ComposedModal.mdx"
     },
     {
       "name": "ModalBody",
@@ -2843,7 +2936,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ComposedModal/ComposedModal.mdx"
     },
     {
       "name": "ModalFooter",
@@ -2851,7 +2945,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ComposedModal/ComposedModal.mdx"
     },
     {
       "name": "ModalPresence",
@@ -2900,7 +2995,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Popover/Popover.mdx"
     },
     {
       "name": "Tooltip",
@@ -2917,7 +3013,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tooltip/DefinitionTooltip.mdx"
     },
     {
       "name": "Toggletip",
@@ -2934,7 +3031,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Toggletip/Toggletip.mdx"
     },
     {
       "name": "ToggletipButton",
@@ -2942,7 +3040,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Toggletip/Toggletip.mdx"
     },
     {
       "name": "ToggletipContent",
@@ -2950,7 +3049,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Toggletip/Toggletip.mdx"
     },
     {
       "name": "ToggletipLabel",
@@ -2958,7 +3058,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Toggletip/Toggletip.mdx"
     },
     {
       "name": "ActionableNotification",
@@ -2966,7 +3067,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Notification/Notification.mdx"
     },
     {
       "name": "InlineNotification",
@@ -2974,7 +3076,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Notification/Notification.mdx"
     },
     {
       "name": "ToastNotification",
@@ -2982,7 +3085,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Notification/Notification.mdx"
     },
     {
       "name": "Callout",
@@ -2990,7 +3094,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Notification/Notification.mdx"
     },
     {
       "name": "NotificationActionButton",
@@ -3050,7 +3155,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ProgressIndicator/ProgressIndicator.mdx"
     },
     {
       "name": "ProgressIndicatorSkeleton",
@@ -3058,7 +3164,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ProgressIndicator/ProgressIndicator.mdx"
     },
     {
       "name": "SkeletonIcon",
@@ -3143,7 +3250,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/AISkeleton/AISkeleton.mdx"
     },
     {
       "name": "AISkeletonPlaceholder",
@@ -3151,7 +3259,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/AISkeleton/AISkeleton.mdx"
     },
     {
       "name": "AISkeletonText",
@@ -3159,7 +3268,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/AISkeleton/AISkeleton.mdx"
     },
     {
       "name": "Grid",
@@ -3176,7 +3286,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Grid/Grid.mdx"
     },
     {
       "name": "ColumnHang",
@@ -3184,7 +3295,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Grid/Grid.mdx"
     },
     {
       "name": "FlexGrid",
@@ -3192,7 +3304,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Grid/FlexGrid.mdx"
     },
     {
       "name": "Row",
@@ -3200,7 +3313,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Grid/FlexGrid.mdx"
     },
     {
       "name": "GridSettings",
@@ -3208,7 +3322,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Grid/Grid.mdx"
     },
     {
       "name": "Layer",
@@ -3225,7 +3340,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Layer/Layer.mdx"
     },
     {
       "name": "Stack",
@@ -3233,7 +3349,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Stack/Stack.mdx"
     },
     {
       "name": "HStack",
@@ -3241,7 +3358,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Stack/Stack.mdx"
     },
     {
       "name": "VStack",
@@ -3249,7 +3367,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Stack/Stack.mdx"
     },
     {
       "name": "Section",
@@ -3257,7 +3376,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Heading/Heading.mdx"
     },
     {
       "name": "Heading",
@@ -3283,7 +3403,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Theme/Theme.mdx"
     },
     {
       "name": "ThemeContext",
@@ -3291,7 +3412,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Theme/Theme.mdx"
     },
     {
       "name": "useTheme",
@@ -3299,7 +3421,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Theme/Theme.mdx"
     },
     {
       "name": "usePrefersDarkScheme",
@@ -3307,7 +3430,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Theme/Theme.mdx"
     },
     {
       "name": "FeatureFlags",
@@ -3324,7 +3448,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FeatureFlags/FeatureFlags.mdx"
     },
     {
       "name": "useFeatureFlags",
@@ -3332,7 +3457,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FeatureFlags/FeatureFlags.mdx"
     },
     {
       "name": "PrefixContext",
@@ -3340,7 +3466,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/useCarbonPrefix/useCarbonPrefix.mdx"
     },
     {
       "name": "IdPrefix",
@@ -3357,7 +3484,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/IdPrefix/IdPrefix.mdx"
     },
     {
       "name": "useCarbonPrefix",
@@ -3480,7 +3608,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview"
+      "status": "preview",
+      "docs": "src/components/Coachmark/Coachmark.mdx"
     },
     {
       "name": "CoachmarkTagline",
@@ -3488,7 +3617,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview"
+      "status": "preview",
+      "docs": "src/components/Coachmark/Coachmark.mdx"
     },
     {
       "name": "BEACON_KIND",
@@ -3588,7 +3718,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/InterstitialScreen/InterstitialScreen.mdx"
     },
     {
       "name": "NotificationsPanel",
@@ -3703,7 +3834,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/EmptyState/ErrorEmptyState.mdx"
     },
     {
       "name": "NoDataEmptyState",
@@ -3711,7 +3843,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/EmptyState/NoDataEmptyState.mdx"
     },
     {
       "name": "NoTagsEmptyState",
@@ -3719,7 +3852,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/EmptyState/NoTagsEmptyState.mdx"
     },
     {
       "name": "NotFoundEmptyState",
@@ -3727,7 +3861,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/EmptyState/NotFoundEmptyState.mdx"
     },
     {
       "name": "NotificationsEmptyState",
@@ -3735,7 +3870,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/EmptyState/NotificationsEmptyState.mdx"
     },
     {
       "name": "UnauthorizedEmptyState",
@@ -3743,7 +3879,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/EmptyState/UnauthorizedEmptyState.mdx"
     },
     {
       "name": "TagSet",
@@ -3899,7 +4036,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tearsheet/Tearsheet.mdx"
     },
     {
       "name": "themeSets",
@@ -3924,7 +4062,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview"
+      "status": "preview",
+      "docs": "src/components/FeatureFlags/FeatureFlags.mdx"
     },
     {
       "name": "preview__useFeatureFlags",
@@ -3932,7 +4071,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview"
+      "status": "preview",
+      "docs": "src/components/FeatureFlags/FeatureFlags.mdx"
     },
     {
       "name": "SideNavLabs",
@@ -3940,7 +4080,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
       "name": "SIDE_NAV_TYPE",
@@ -3956,7 +4097,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
       "name": "SideNavLinkLabs",
@@ -3964,7 +4106,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
       "name": "SideNavLinkPopover",
@@ -3980,7 +4123,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
       "name": "SideNavMenuItemLabs",
@@ -3988,7 +4132,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
       "name": "SideNavSlot",
@@ -3996,7 +4141,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
       "name": "SideNavTitle",
@@ -4004,7 +4150,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
       "name": "HeaderContainerLabs",
@@ -4020,7 +4167,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/UIShell.mdx"
     },
     {
       "name": "HeaderOverflowPanel",
@@ -4028,7 +4176,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/HeaderOverflowPanel.mdx"
     },
     {
       "name": "HeaderPopover",
@@ -4036,7 +4185,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/HeaderPopover.mdx"
     },
     {
       "name": "HeaderPopoverActions",
@@ -4044,7 +4194,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/HeaderPopover.mdx"
     },
     {
       "name": "HeaderPopoverButton",
@@ -4052,7 +4203,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/HeaderPopover.mdx"
     },
     {
       "name": "HeaderPopoverContent",
@@ -4060,7 +4212,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/HeaderPopover.mdx"
     },
     {
       "name": "SharkFinIcon",
@@ -4076,7 +4229,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/TrialCountdown.mdx"
     },
     {
       "name": "Profile",
@@ -4084,7 +4238,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/Profile.mdx"
     },
     {
       "name": "Bubble",
@@ -4092,7 +4247,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "BubbleHeader",
@@ -4100,7 +4256,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "Toc",
@@ -4108,7 +4265,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "TocItem",
@@ -4116,7 +4274,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "TocList",
@@ -4124,7 +4283,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "TocSection",
@@ -4132,7 +4292,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "TocSections",
@@ -4140,7 +4301,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "ViewStack",
@@ -4148,7 +4310,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "View",
@@ -4156,7 +4319,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/WhatsNew/WhatsNew.mdx"
     },
     {
       "name": "WelcomeInterstitial",
@@ -4207,7 +4371,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ThemeSettings/ThemeSettings.mdx"
     },
     {
       "name": "ThemeSetDropdown",
@@ -4215,7 +4380,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ThemeSettings/ThemeSettings.mdx"
     },
     {
       "name": "ThemeMenuComplement",
@@ -4223,7 +4389,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ThemeSettings/ThemeSettings.mdx"
     },
     {
       "name": "useThemeSetting",
@@ -4231,7 +4398,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ThemeSettings/ThemeSettings.mdx"
     },
     {
       "name": "Processing",

@@ -9,6 +9,7 @@ Index of the `docs/` folder. The project overview is the root [README.md](../REA
 | [registry.md](registry.md)                             | Every public export family, generated; data in [registry.json](registry.json)   |
 | [testing.md](testing.md)                               | Test stack, Vitest projects, accessibility checks and visual baselines          |
 | [feature-flags.md](feature-flags.md)                   | Carbon flags Afframe turns on and accessibility exceptions                      |
+| [component-rubric.md](component-rubric.md)             | What a finished component has: look, behaviour, API, variations, docs, upkeep   |
 | [guides/consuming.md](guides/consuming.md)             | How an Afframe repo installs and uses `@afframe/ui`                             |
 | [guides/updating-carbon.md](guides/updating-carbon.md) | How Carbon and other upstream updates arrive and get reviewed                   |
 | [guides/accessibility.md](guides/accessibility.md)     | Accessibility target and how it is checked                                      |

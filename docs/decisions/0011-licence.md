@@ -2,11 +2,11 @@
 
 Date: 2026-10-05
 
-Amended: 2026-10-07
+Amended: 2026-10-07, 2026-10-13
 
 ## Status
 
-Accepted
+Accepted, amended 2026-10-13 (source label)
 
 ## Context
 
@@ -19,6 +19,10 @@ The PolyForm Noncommercial License 1.0.0 governs the project. Carbon-derived par
 In `.mdx`, the header lines are `//` comments directly after the last `import` line of the first import block. reuse parses JSX `{/* */}` one-liners only under some Python hash seeds, so those pages fell back to `REUSE.toml` at random. Afframe-written pages declare their own licence in the same place. CI runs `reuse lint --json` through `scripts/check-licence-labels.mjs`: a page whose licence comes from `REUSE.toml`, or whose source label disagrees with its licence, fails the build.
 
 The package ships both licence texts in `LICENSES/` and the OFL-1.1 text with the fonts; the root `LICENSE` is a symlink, which npm and pnpm do not pack. `dist/styles.css` opens with a `/*!` banner naming IBM's Apache-2.0 styles, Afframe's PolyForm additions and the OFL-1.1 fonts. The IBM Plex fonts are redistributed unmodified: the OFL reserves the name "Plex", so subset or re-encoded fonts would have to drop it.
+
+## Amendment 2026-10-13: source label
+
+The source label on a docs page names where the component comes from, not who wrote the page. The page's licence still comes from its own SPDX header. A Carbon component documented by an Afframe-written page (Tokens, Pictograms, Typography) is labelled `carbon` and keeps the PolyForm header. `scripts/check-licence-labels.mjs` therefore requires an IBM source label (`carbon`, `ibm-products`, `labs`) and an IBM copyright on every Apache-2.0 page except `extras` pages, which it skips, and accepts any source label on a PolyForm page that carries no IBM copyright.
 
 ## Consequences
 

@@ -18,19 +18,19 @@ const dash = String.fromCodePoint(0x2013);
 
 test('formats an instant in Prague time', () => {
   // 22:30 UTC on 6 October is 00:30 on 7 October in Prague (CEST).
-  expect(formatDate(new Date('2026-10-06T22:30:00Z'))).toBe('7. 10. 2026');
+  expect(formatDate(new Date('2026-10-06T22:30:00Z'))).toBe('07.10.2026');
   expect(
     formatDate(Date.parse('2026-10-06T22:30:00Z'), { timeZone: 'UTC' })
-  ).toBe('6. 10. 2026');
+  ).toBe('06.10.2026');
   expect(
     formatDate(new Date('2026-10-06T22:30:00Z'), { locale: 'en-GB' })
   ).toBe('7 Oct 2026');
 });
 
 test('formats a civil date as that day in every zone', () => {
-  expect(formatDate('2026-10-07')).toBe('7. 10. 2026');
+  expect(formatDate('2026-10-07')).toBe('07.10.2026');
   expect(formatDate('2026-10-07', { timeZone: 'Pacific/Honolulu' })).toBe(
-    '7. 10. 2026'
+    '07.10.2026'
   );
   expect(formatDate('2026-10-07', { dateStyle: 'long' })).toBe('7. října 2026');
   expect(() => formatDate('2026-02-30')).toThrow(RangeError);
@@ -39,10 +39,10 @@ test('formats a civil date as that day in every zone', () => {
 });
 
 test('formats ISO timestamps with Z or an offset as instants', () => {
-  expect(formatDate('2026-10-06T22:30:00Z')).toBe('7. 10. 2026');
-  expect(formatDate('2026-10-07T00:30+02:00')).toBe('7. 10. 2026');
+  expect(formatDate('2026-10-06T22:30:00Z')).toBe('07.10.2026');
+  expect(formatDate('2026-10-07T00:30+02:00')).toBe('07.10.2026');
   expect(formatDate('2026-10-06T22:30:00.500Z', { timeZone: 'UTC' })).toBe(
-    '6. 10. 2026'
+    '06.10.2026'
   );
   // PostgreSQL timestamptz in JSON: microseconds and an offset.
   expect(
@@ -98,7 +98,7 @@ test('formats a date range', () => {
   expect(formatDateRange('2026-10-01', '2026-10-31')).toBe(
     `01.10.2026${space}${dash}${space}31.10.2026`
   );
-  expect(formatDateRange('2026-10-07', '2026-10-07')).toBe('7. 10. 2026');
+  expect(formatDateRange('2026-10-07', '2026-10-07')).toBe('07.10.2026');
   expect(formatDateRange('2026-10-01', '2026-10-31', { locale: 'en-GB' })).toBe(
     `1${space}${dash}${space}31 Oct 2026`
   );
@@ -288,4 +288,73 @@ describe('date-range presets', () => {
       getDateRangePreset('lastMonth', { now: new Date('2024-03-15T12:00:00Z') })
     ).toEqual({ start: '2024-02-01', end: '2024-02-29' });
   });
+});
+
+test('prints every numeric Czech date as dd.mm.yyyy', () => {
+  expect(formatDate('2026-10-07', { dateStyle: 'short' })).toBe('07.10.2026');
+  expect(
+    formatDate('2026-10-07', {
+      day: 'numeric',
+      month: 'numeric',
+      year: '2-digit',
+    })
+  ).toBe('07.10.2026');
+  expect(
+    formatDate('2026-10-07T10:05:00Z', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    })
+  ).toBe('07.10.2026 12:05');
+  expect(
+    formatDate('2026-10-07', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    })
+  ).toBe('středa 07.10.2026');
+  expect(formatDate('2026-10-07', { locale: 'cs' })).toBe('07.10.2026');
+  expect(formatDate('2026-10-07', { locale: 'cs-Latn-CZ' })).toBe('07.10.2026');
+  expect(formatDate('2026-10-07', { locale: 'cs-CZ-u-nu-latn' })).toBe(
+    '07.10.2026'
+  );
+  // Without a day, a two-digit year stays as Intl prints it.
+  expect(
+    formatDate('2026-10-07', { month: 'numeric', year: '2-digit' })
+  ).not.toContain('2026');
+  // Text months and other locales print as Intl does.
+  expect(formatDate('2026-10-07', { dateStyle: 'long' })).toBe('7. října 2026');
+  expect(formatDate('2026-10-07', { locale: 'de-DE' })).toBe('07.10.2026');
+  expect(formatDate('2026-10-07', { locale: 'sk-SK' })).toBe('7. 10. 2026');
+});
+
+test('prints Czech range ends as dd.mm.yyyy', () => {
+  expect(formatDateRange('2026-10-01', '2026-10-01')).toBe('01.10.2026');
+  expect(formatDateRange('2025-12-01', '2026-01-31')).toBe(
+    `01.12.2025${space}${dash}${space}31.01.2026`
+  );
+  expect(
+    formatDateRange('2026-10-01', '2026-10-31', { dateStyle: 'short' })
+  ).toBe(`01.10.2026${space}${dash}${space}31.10.2026`);
+  const time = { dateStyle: 'medium', timeStyle: 'short' } as const;
+  expect(
+    formatDateRange('2026-10-07T08:00:00Z', '2026-10-07T09:00:00Z', time)
+  ).toBe(`07.10.2026 10:00${dash}11:00`);
+  expect(
+    formatDateRange('2026-10-07T08:00:00Z', '2026-10-08T09:00:00Z', time)
+  ).toBe(`07.10.2026 10:00${space}${dash}${space}08.10.2026 11:00`);
+  // Intl collapses these to `1.–31. 10. 2026`; each end keeps the asked style.
+  expect(
+    formatDateRange('2026-10-01', '2026-10-31', { dateStyle: 'long' })
+  ).toBe(`1. října 2026${space}${dash}${space}31. října 2026`);
+  expect(
+    formatDateRange('2026-10-01', '2026-10-01', { dateStyle: 'long' })
+  ).toBe('1. října 2026');
+  // No year: not a dd.mm.yyyy date, so Intl's day and month stay.
+  expect(
+    formatDateRange('2026-10-01', '2026-10-31', {
+      day: 'numeric',
+      month: 'numeric',
+    })
+  ).toBe(`1. 10.${space}${dash}${space}31. 10.`);
 });

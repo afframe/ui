@@ -1,5 +1,5 @@
 import { useFeatureFlag } from '@carbon/react';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import type { ComponentType, ReactNode } from 'react';
 import { afterEach, expect, test } from 'vitest';
 import {
@@ -7,6 +7,7 @@ import {
   previewCandidate__Decorator,
   ScrollGradient,
   TextInput,
+  useTheme,
 } from '../index.js';
 import { AfframeProvider } from './AfframeProvider.js';
 
@@ -123,4 +124,22 @@ test('renders the canary gated IBM Products components, not the placeholder', ()
   expect(screen.getByText('Afframe')).toBeTruthy();
   expect(container.querySelector('.c4p--canary')).toBeNull();
   expect(container.textContent).not.toContain('is not ready yet');
+});
+
+function CarbonTheme() {
+  return <p>{useTheme().theme}</p>;
+}
+
+test('keeps Carbon useTheme in step with data-afframe-theme', async () => {
+  document.documentElement.dataset.afframeTheme = 'dark';
+  render(
+    <AfframeProvider>
+      <CarbonTheme />
+    </AfframeProvider>
+  );
+  expect(screen.getByText('g100')).toBeTruthy();
+  act(() => {
+    document.documentElement.dataset.afframeTheme = 'light';
+  });
+  expect(await screen.findByText('white')).toBeTruthy();
 });

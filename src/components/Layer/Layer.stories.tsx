@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as plain CSS, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as plain CSS, inline spacing as Carbon spacing tokens, story names unified, prop descriptions for the docs table. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './Layer-story.css';
@@ -24,6 +24,34 @@ export default {
   title: 'Layout/Layer',
   component: Layer,
   tags: ['carbon'],
+  // Docgen finds no props on Layer's polymorphic type; Carbon's prop docs.
+  argTypes: {
+    as: {
+      description:
+        'Specify a custom component or element to be rendered as the top-level element in the component',
+      table: {
+        type: { summary: 'ElementType' },
+        defaultValue: { summary: "'div'" },
+      },
+    },
+    className: {
+      description:
+        'Provide a custom className to be applied to the containing node',
+      table: { type: { summary: 'string' } },
+    },
+    level: {
+      description:
+        'Specify the layer level and override any existing levels based on hierarchy',
+      table: { type: { summary: '0 | 1 | 2' } },
+    },
+    withBackground: {
+      description: 'Applies a css background-color set to $layer-background',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+  },
   parameters: {
     controls: {
       hideNoControlsWarning: true,

@@ -5,7 +5,7 @@
 // names, the rest keep IBM's names. Of the names both packages export,
 // `ComboButton` is Carbon's and `usePrefix` is IBM Products'.
 export { AfframeProvider } from './provider/index.js';
-export type { AfframeTheme } from './provider/index.js';
+export type { AfframeProviderProps } from './provider/index.js';
 
 // Actions
 export {

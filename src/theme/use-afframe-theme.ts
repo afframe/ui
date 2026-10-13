@@ -1,7 +1,11 @@
 'use client';
 import { useSyncExternalStore } from 'react';
 
-export type AfframeColorScheme = 'light' | 'dark';
+/** Value of the `data-afframe-theme` attribute the consumer sets on `<html>`. */
+export type AfframeTheme = 'light' | 'dark' | 'system';
+/** The colour scheme the page shows: `system` resolved to light or dark. */
+export type ColorScheme = 'light' | 'dark';
+/** The Carbon theme for a colour scheme. */
 export type AfframeCarbonTheme = 'white' | 'g100';
 
 const darkQuery = '(prefers-color-scheme: dark)';
@@ -21,7 +25,7 @@ function subscribe(onChange: () => void): () => void {
   };
 }
 
-function getSnapshot(): AfframeColorScheme {
+function getSnapshot(): ColorScheme {
   const theme = document.documentElement.dataset.afframeTheme;
   if (theme === 'dark') return 'dark';
   if (theme === 'system') {
@@ -30,16 +34,16 @@ function getSnapshot(): AfframeColorScheme {
   return 'light';
 }
 
-function getServerSnapshot(): AfframeColorScheme {
+function getServerSnapshot(): ColorScheme {
   return 'light';
 }
 
 /** The page's colour scheme: `light` on the server and the first client render. */
-export function useAfframeTheme(): AfframeColorScheme {
+export function useColorScheme(): ColorScheme {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
 /** The Carbon theme for the page's colour scheme: light is `white`, dark is `g100`. */
 export function useCarbonTheme(): AfframeCarbonTheme {
-  return useAfframeTheme() === 'dark' ? 'g100' : 'white';
+  return useColorScheme() === 'dark' ? 'g100' : 'white';
 }

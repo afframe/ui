@@ -1,0 +1,11 @@
+.demo-format-table {
+  border-collapse: collapse;
+  color: var(--cds-text-primary);
+}
+
+.demo-format-table th,
+.demo-format-table td {
+  padding: var(--cds-spacing-03) var(--cds-spacing-05);
+  border-block-end: 1px solid var(--cds-border-subtle-01);
+  text-align: start;
+}

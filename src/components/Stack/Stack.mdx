@@ -1,0 +1,60 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as StackStories from './Stack.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# Stack
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/Stack)
+&nbsp;|&nbsp;
+[Spacing](https://carbondesignsystem.com/elements/spacing/overview/)
+
+`Stack` lays its children out in one direction with a gap from Carbon's spacing
+scale. `gap` takes a step of the scale, 1 to 12 (`gap={5}` is
+`var(--cds-spacing-05)`, 1rem), or any CSS length. Use it for vertical rhythm in
+forms and panels and for rows of buttons or tags; use `Grid` or `FlexGrid` for
+page columns.
+
+```jsx
+import { Stack } from '@afframe/ui';
+
+<Stack gap={5}>
+  <TextInput id="name" labelText="Company name" />
+  <TextInput id="ico" labelText="IČO" />
+</Stack>;
+```
+
+<Canvas of={StackStories.Default} />
+
+## Horizontal
+
+`orientation="horizontal"` lays the children out in a row.
+
+<Canvas of={StackStories.Horizontal} />
+
+## HStack and VStack
+
+`HStack` is `Stack` with `orientation="horizontal"`, `VStack` with
+`orientation="vertical"`; both take the other props.
+
+```jsx
+import { HStack, VStack } from '@afframe/ui';
+
+<VStack gap={6}>
+  <HStack gap={3}>
+    <Button kind="secondary">Cancel</Button>
+    <Button>Save</Button>
+  </HStack>
+</VStack>;
+```
+
+<Canvas of={StackStories.HStackAndVStack} />
+
+## Component API
+
+<ArgTypes />

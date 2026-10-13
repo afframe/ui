@@ -32,18 +32,84 @@ same attribute.
 
 Style your own markup with Carbon tokens as CSS variables
 (`var(--cds-layer-01)`, `var(--cds-text-primary)`); they follow the theme.
-Values: Elements, Tokens.
+Values: [Tokens](?path=/docs/elements-tokens--overview).
 
 Two hooks read the current scheme in client components, for libraries that
 take a theme name instead of CSS:
 
 ```tsx
-import { useAfframeTheme, useCarbonTheme } from '@afframe/ui';
+import { useColorScheme, useCarbonTheme } from '@afframe/ui';
 
-useAfframeTheme(); // 'light' | 'dark'
-useCarbonTheme(); // 'white' | 'g100'
+useColorScheme(); // 'light' | 'dark', type ColorScheme
+useCarbonTheme(); // 'white' | 'g100', type AfframeCarbonTheme
 ```
 
 Both return the light value on the server and during hydration.
+`AfframeProvider` passes `useCarbonTheme()` to Carbon's `GlobalTheme`, so
+Carbon's `useTheme()` reports the same theme.
 For a dark area inside a light page, use Carbon's `Theme` component
-(Components, Theme).
+([Theme](?path=/docs/components-theme--overview)).
+
+## Let users pick the theme
+
+Carbon Labs' `ThemeSwitcher` offers light, system and dark, the three values of
+`data-afframe-theme`
+([ThemeSettings](?path=/docs/components-themesettings--overview)). Write the
+choice to the attribute and to a cookie; the root layout reads the cookie, so
+the server renders the right theme and the page does not flash.
+
+```tsx
+// app/theme-switch.tsx
+'use client';
+import { useState } from 'react';
+import { ThemeSettings, ThemeSwitcher, type AfframeTheme } from '@afframe/ui';
+
+export function ThemeSwitch({ initial }: { initial: AfframeTheme }) {
+  const [theme, setTheme] = useState(initial);
+  return (
+    <ThemeSettings>
+      <ThemeSwitcher
+        value={theme}
+        onChange={(next: AfframeTheme) => {
+          setTheme(next);
+          document.documentElement.dataset.afframeTheme = next;
+          document.cookie = `afframe-theme=${next}; path=/; max-age=31536000; samesite=lax`;
+        }}
+      />
+    </ThemeSettings>
+  );
+}
+```
+
+```tsx
+// app/layout.tsx
+import '@afframe/ui/styles.css';
+import { AfframeProvider, type AfframeTheme } from '@afframe/ui';
+import { cookies } from 'next/headers';
+import type { ReactNode } from 'react';
+import { ThemeSwitch } from './theme-switch';
+
+const themes: AfframeTheme[] = ['light', 'dark', 'system'];
+
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const saved = (await cookies()).get('afframe-theme')?.value;
+  const theme = themes.find((value) => value === saved) ?? 'system';
+  return (
+    <html lang="en" data-afframe-theme={theme}>
+      <body>
+        <AfframeProvider>
+          <ThemeSwitch initial={theme} />
+          {children}
+        </AfframeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+Reading the cookie makes the layout render per request. A toggle or any other
+control works the same way: set the attribute and the cookie.

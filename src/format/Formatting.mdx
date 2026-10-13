@@ -1,9 +1,10 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as FormattingStories from './Formatting.stories';
 import { SourceLabel } from '../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
-<Meta title="Getting Started/Formatting" />
+<Meta isTemplate />
 
 # Formatting
 
@@ -23,14 +24,18 @@ import { formatAmount, formatDate, getDateRangePreset } from '@afframe/ui';
 
 formatAmount(1234.5); // '1 234,50 Kč' (U+00A0 spaces)
 formatAmount(1234.5, { currency: 'EUR', locale: 'en-GB' }); // '€1,234.50'
-formatDate(new Date('2026-10-06T22:30:00Z')); // '7. 10. 2026' (Prague)
+formatDate(new Date('2026-10-06T22:30:00Z')); // '07.10.2026' (Prague)
 getDateRangePreset('thisMonth'); // { start: '2026-10-01', end: '2026-10-31' }
 ```
 
+<Canvas of={FormattingStories.Examples} />
+
 ## App-wide defaults
 
-`createFormat({ locale, currency, timeZone, weekStartsOn })` returns the same
-functions with the app's defaults; options per call still win. Create it once
+`createFormat({ locale, currency, timeZone, weekStartsOn })` returns the
+formatters that take a default (`formatAmount`, `roundAmount`, `formatNumber`,
+`formatDate`, `formatDateRange`, `civilDateIn`, `startOfDayIn`,
+`getDateRangePreset`) with the app's defaults; options per call still win. Create it once
 in a module and import that module wherever the app formats. It is a plain
 function, so it works in server and client components (a React context would
 not reach server components). For `Amount`, pass `format.locale` and
@@ -84,13 +89,19 @@ string throws a `RangeError`, including a timestamp without `Z` or an offset.
 
 | Function                                | Returns                                                       |
 | --------------------------------------- | ------------------------------------------------------------- |
-| `formatDate(value, options?)`           | Default medium style: `7. 10. 2026`.                          |
+| `formatDate(value, options?)`           | `07.10.2026`.                                                 |
 | `formatDateRange(start, end, options?)` | `01.10.2026 – 31.10.2026`; spaces around the dash are U+0020. |
 | `civilDateIn(instant, timeZone?)`       | The civil date of an instant in a zone.                       |
 | `startOfDayIn(date, timeZone?)`         | The instant a civil date starts in a zone.                    |
 | `addDays(date, days)`                   | A civil date moved by whole days.                             |
 | `civilDateToLocalDate(date)`            | A local `Date` at midnight, for Carbon's `DatePicker`.        |
 | `localDateToCivilDate(date)`            | The civil date of a local `Date` that `DatePicker` returns.   |
+
+In Czech (any `cs` tag: `cs`, `cs-CZ`) a date with a numeric day, month and
+year always prints as `dd.mm.yyyy`: zero-padded day and month, dots, no spaces, a four-digit year
+(`07.10.2026`, `07.10.2026 12:05`, `01.10.2026 – 31.10.2026`). Text months
+(`dateStyle: 'long'`: `7. října 2026`), dates without a day and other locales
+print as Intl does.
 
 Options for `formatDate` and `formatDateRange` are Intl `DateTimeFormat`
 options plus `locale`. Node and browsers can differ in Intl's spaces, so both

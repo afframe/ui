@@ -1,0 +1,37 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TypographyStories from './Typography.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# Typography
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/type)
+&nbsp;|&nbsp;
+[Type sets](https://carbondesignsystem.com/elements/typography/type-sets/)
+
+Carbon's type tokens set font size, weight, line height and letter spacing
+together, in IBM Plex. `styles.css` carries each one as custom properties named
+after the token:
+
+```css
+.invoice-title {
+  font-size: var(--cds-heading-03-font-size);
+  font-weight: var(--cds-heading-03-font-weight);
+  line-height: var(--cds-heading-03-line-height);
+  letter-spacing: var(--cds-heading-03-letter-spacing);
+}
+```
+
+Use the productive sets (utility, body, heading) in the app; the expressive set
+is for marketing and larger editorial pages. Fluid tokens grow with the
+viewport. The table shows the base size; the sample column uses the custom
+properties, so it shows what the stylesheet renders.
+
+<Canvas of={TypographyStories.Default} />
+
+The typeface itself: [IBM Plex](?path=/docs/elements-ibm-plex--overview).

@@ -16,3 +16,22 @@
   block-size: 2rem;
   border: 1px solid var(--cds-border-strong);
 }
+
+.demo-token-groups {
+  display: grid;
+  gap: var(--cds-spacing-07);
+}
+
+.demo-token-table caption {
+  padding-block: var(--cds-spacing-03);
+  font-size: var(--cds-heading-02-font-size);
+  font-weight: var(--cds-heading-02-font-weight);
+  text-align: start;
+  text-transform: capitalize;
+}
+
+.demo-token-bar {
+  display: block;
+  block-size: var(--cds-spacing-05);
+  background: var(--cds-interactive);
+}

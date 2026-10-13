@@ -8,7 +8,7 @@ import mdx from './DescriptionList.mdx';
 const items = [
   { term: 'Invoice', description: 'FV-2026-0042' },
   { term: 'Supplier', description: 'Northwind Studio s.r.o.' },
-  { term: 'Issued', description: '7. 10. 2026' },
+  { term: 'Issued', description: '07.10.2026' },
   { term: 'Total', description: <Amount value={12500} /> },
 ];
 

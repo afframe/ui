@@ -3,7 +3,7 @@ import * as ThemeSettingsStories from './ThemeSettings.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, Stackblitz links and the unused ArgTypes import removed, note on Afframe themes added, the example imports from @afframe/ui, so the install and SCSS steps are dropped (its styles ship in the package CSS), typo fixed (there for their).
+// Modified by Afframe in 2026: source label and source link added, Stackblitz links and the unused ArgTypes import removed, note on Afframe themes added, the example imports from @afframe/ui, so the install and SCSS steps are dropped (its styles ship in the package CSS), typo fixed (there for their), example and note limited to the white/g100 theme set.
 
 <Meta isTemplate />
 
@@ -35,12 +35,12 @@ This is a Theme Settings component, the main part of which offers the options
 `light`, `system` and `dark` to the user. If choosing `system` the user should
 expect their current system settings to dictate the current theming.
 
-<Canvas of={ThemeSettingsStories.InContextUseThemeSetting} />
+<Canvas of={ThemeSettingsStories.InContext} />
 
 Afframe's themes are light (white) and dark (g100), set with
 `data-afframe-theme` on `<html>`; in these stories the switcher sets it. The
-g10 and g90 theme sets are not part of Afframe's themes: they apply only inside
-a Carbon `Theme` zone.
+stories use the `white/g100` theme set only; to wire the switcher into an app,
+see [Theming](?path=/docs/getting-started-theming--overview).
 
 ## Getting started
 
@@ -68,7 +68,6 @@ import {
   Theme,
   ThemeSettings,
   ThemeMenuComplement,
-  ThemeSetDropdown,
   ThemeSwitcher,
   useThemeSetting,
 } from '@afframe/ui';
@@ -76,7 +75,7 @@ import {
 function App() {
   const [themeSetting, setThemeSetting] = useState(`system`);
   const [themeMenuComplement, setThemeMenuComplement] = useState(false);
-  const [themeSet, setThemeSet] = useState('white/g100');
+  const themeSet = 'white/g100';
   const theme = useThemeSetting(themeSetting, themeSet, false);
   const themeHeader = useThemeSetting(
     themeSetting,
@@ -101,13 +100,6 @@ function App() {
             labelText="Complement menu theme"
             checked={themeMenuComplement}
             onChange={setThemeMenuComplement}
-          />
-          <ThemeSetDropdown
-            id="theme-dropdown"
-            label="Theme set"
-            titleText="Theme set"
-            value={themeSet}
-            onChange={setThemeSet}
           />
         </ThemeSettings>
       </Theme>

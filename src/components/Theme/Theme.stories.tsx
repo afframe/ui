@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as plain CSS, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as plain CSS, story names unified, prop descriptions, a Default story that uses the theme control. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './Theme-story.css';
@@ -16,8 +16,10 @@ import type { ComponentProps, ReactNode } from 'react';
 
 import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import {
+  Button,
   GlobalTheme,
   Theme,
+  TextInput,
   usePrefersDarkScheme,
   useTheme,
   VStack,
@@ -45,6 +47,33 @@ export default {
   args: {
     theme: 'g10',
   },
+  // Carbon's prop docs; docgen reads none from Theme's polymorphic type.
+  argTypes: {
+    theme: {
+      control: 'select',
+      options: ['white', 'g10', 'g90', 'g100'],
+      description: 'Specify the theme',
+      table: { type: { summary: "'white' | 'g10' | 'g90' | 'g100'" } },
+    },
+    as: {
+      control: false,
+      description:
+        'Specify a custom component or element to be rendered as the top-level element in the component',
+      table: {
+        type: { summary: 'ElementType' },
+        defaultValue: { summary: "'div'" },
+      },
+    },
+    children: {
+      control: false,
+      description: 'Provide child elements to be rendered inside of `Theme`',
+    },
+    className: {
+      control: false,
+      description:
+        'Provide a custom class name to be used on the outermost element rendered by the component',
+    },
+  },
 } satisfies Meta<typeof Theme>;
 
 const ThemeText = ({
@@ -69,7 +98,20 @@ const ThemeText = ({
   );
 };
 
-export const Default: StoryFn<typeof Theme> = () => {
+export const Default: StoryFn<typeof Theme> = ({ theme }) => {
+  return (
+    <Theme theme={theme ?? 'white'}>
+      <section className="theme-section">
+        <VStack gap={5}>
+          <TextInput id="theme-default-name" labelText="Company name" />
+          <Button>Save</Button>
+        </VStack>
+      </section>
+    </Theme>
+  );
+};
+
+export const AllThemes: StoryFn<typeof Theme> = () => {
   return (
     <>
       <Theme theme="g100">
@@ -87,6 +129,8 @@ export const Default: StoryFn<typeof Theme> = () => {
     </>
   );
 };
+
+AllThemes.parameters = { controls: { disable: true } };
 
 export const UseTheme: StoryFn<typeof Theme> = () => {
   return (
