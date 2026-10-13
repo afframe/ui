@@ -10,7 +10,7 @@ import {
   playRejected,
   rejectSubmit,
   useCustomerForm,
-} from '../CreateEditFlow/storyForm.js';
+} from '../FlowParts/storyForm.js';
 import { CreateSidePanel } from './CreateSidePanel.js';
 import type { CreateSidePanelProps } from './CreateSidePanel.js';
 import mdx from './CreateSidePanel.mdx';

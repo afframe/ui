@@ -5,16 +5,9 @@ import { SidePanel } from '@carbon/ibm-products';
 import { InlineLoading } from '@carbon/react';
 import { useId } from 'react';
 import type { ComponentProps, ReactNode, RefObject } from 'react';
-import {
-  DiscardDialog,
-  firstControlSelector,
-  FlowError,
-  FlowForm,
-  isCloseEscape,
-  useCreateEditFlow,
-  useInitialFocus,
-} from './CreateEditFlow.js';
-import type { CreateEditFlowMessages } from './CreateEditFlow.js';
+import { DiscardDialog, FlowError, FlowForm } from './FlowParts.js';
+import type { CreateEditFlowMessages } from './messages.js';
+import { firstControlSelector, isCloseEscape, useFlow } from './useFlow.js';
 
 type SidePanelProps = ComponentProps<typeof SidePanel>;
 
@@ -49,7 +42,7 @@ export interface FlowSidePanelBaseProps {
   submitDisabled?: boolean;
   /** Ask before discarding a dirty form. Default true. */
   confirmDiscard?: boolean;
-  /** Focus target on close when the element that opened the panel is gone. */
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   children?: ReactNode;
   className?: string;
@@ -87,16 +80,17 @@ export function FlowSidePanel({
   text: FlowSidePanelMessages;
 }) {
   const id = useId();
-  const flow = useCreateEditFlow({
+  const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
-    onSubmit,
     isDirty,
     confirmDiscard,
-    ...(launcherRef ? { launcherRef } : {}),
-    messages: text,
+    launcherRef,
+    messages: { error: text.submitError, errorText: text.errorText },
   });
-  useInitialFocus(open, flow.formRef);
+  const submit = async () => {
+    if (await flow.run(onSubmit)) flow.close();
+  };
 
   const actions = [
     {
@@ -104,7 +98,7 @@ export function FlowSidePanel({
       // Cast kept: ActionSet types `label` as a string but renders any node
       // as the button content. Its own `loading` flag adds an InlineLoading
       // with no text and an English icon name, so the label carries ours.
-      label: (flow.submitting ? (
+      label: (flow.pending ? (
         <InlineLoading
           description={text.submitting}
           iconDescription={text.submitting}
@@ -112,13 +106,13 @@ export function FlowSidePanel({
       ) : (
         primaryLabel
       )) as unknown as string,
-      disabled: submitDisabled || flow.submitting,
-      onClick: () => void flow.submit(),
+      disabled: submitDisabled || flow.pending,
+      onClick: () => void submit(),
     },
     {
       kind: 'secondary',
       label: text.cancel,
-      disabled: flow.submitting,
+      disabled: flow.pending,
       onClick: flow.requestClose,
     },
   ] satisfies SidePanelProps['actions'];
@@ -154,6 +148,7 @@ export function FlowSidePanel({
             .join(' ')}>
           <FlowForm
             flow={flow}
+            onSubmit={() => void submit()}
             submitDisabled={submitDisabled}
             aria-labelledby={`${id}-form-title`}>
             <h3
@@ -167,7 +162,10 @@ export function FlowSidePanel({
               </p>
             )}
             {children}
-            <FlowError error={flow.error} messages={text} />
+            <FlowError
+              error={flow.error}
+              iconDescription={text.errorIconDescription}
+            />
           </FlowForm>
         </SidePanel>
       </div>

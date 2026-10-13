@@ -3,10 +3,7 @@ import { useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
-import {
-  englishLeft,
-  sentinelMessages,
-} from '../CreateEditFlow/flowTestUtils.js';
+import { englishLeft, sentinelMessages } from '../FlowParts/flowTestUtils.js';
 import { defaultEditFullPageMessages, EditFullPage } from './EditFullPage.js';
 import type { EditFullPageProps } from './EditFullPage.js';
 

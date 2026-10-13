@@ -208,7 +208,9 @@ test('pending and rejection: stays on the name step with an alert', async () => 
   const alert = await screen.findByText('Something went wrong. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
   expect(nameField().value).toBe('CI');
-  await until(() => expect(active()).toBe(button('Generate')));
+  await until(() =>
+    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+  );
   await userEvent.click(screen.getByLabelText('Close', { selector: 'button' }));
   await until(() => expect(onClose).toHaveBeenCalledTimes(1));
 });

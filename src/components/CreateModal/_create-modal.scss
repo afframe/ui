@@ -1,5 +1,5 @@
-// CreateModal styles, plus the shared create and edit flow classes
-// (CreateEditFlow has no partial of its own). Carbon tokens only.
+// CreateModal styles, plus the shared FlowParts form and error classes
+// (FlowParts has no partial of its own). Carbon tokens only.
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
@@ -24,11 +24,11 @@
   gap: $spacing-05;
 }
 
-.afframe-create-edit-error:focus {
+.afframe-flow-error:focus {
   outline: 2px solid $focus;
   outline-offset: 2px;
 }
 
-.afframe-create-edit-error > * {
-  margin-block-end: 0;
+.afframe-flow-error > * {
+  margin: 0;
 }

@@ -1,4 +1,3 @@
-'use client';
 import { formatNumber } from '../../format/index.js';
 
 const units = ['byte', 'kilobyte', 'megabyte', 'gigabyte'] as const;

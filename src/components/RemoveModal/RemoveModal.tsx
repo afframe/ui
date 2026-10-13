@@ -6,10 +6,10 @@ import { Modal, TextInput, usePrefix } from '@carbon/react';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { ModalError } from '../ModalParts/ModalFeedback.js';
-import { defaultModalPartsMessages } from '../ModalParts/messages.js';
-import type { ModalPartsMessages } from '../ModalParts/messages.js';
-import { useModalBase } from '../ModalParts/useModalBase.js';
+import { FlowError } from '../FlowParts/FlowParts.js';
+import { defaultModalPartsMessages } from '../FlowParts/messages.js';
+import type { ModalPartsMessages } from '../FlowParts/messages.js';
+import { useFlow } from '../FlowParts/useFlow.js';
 
 export type RemoveModalKind = 'delete' | 'remove';
 
@@ -44,7 +44,7 @@ export const defaultRemoveModalMessages: RemoveModalMessages = {
 export interface RemoveModalProps {
   open: boolean;
   onClose: () => void;
-  /** Element that gets focus back on close (default: the element focused before opening). */
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<RemoveModalMessages>;
   className?: string;
@@ -98,10 +98,11 @@ export function RemoveModal({
     }
   }
 
-  const dialog = useModalBase({
+  const dialog = useFlow({
     open,
     onClose,
     launcherRef,
+    messages: { error: text.genericError },
     initialFocus: () =>
       phrase === undefined
         ? modalRef.current?.querySelector<HTMLElement>(
@@ -122,7 +123,7 @@ export function RemoveModal({
   const matches = phrase === undefined || (!emptyPhrase && typed === phrase);
   const confirm = async () => {
     if (!matches || dialog.pending) return;
-    if (await dialog.run(onConfirm)) onClose();
+    if (await dialog.run(onConfirm)) dialog.close();
   };
 
   return (
@@ -144,10 +145,12 @@ export function RemoveModal({
       loadingStatus={dialog.pending ? 'active' : 'inactive'}
       loadingDescription={text.pending}
       loadingIconDescription={text.pending}
-      launcherButtonRef={dialog.returnFocusRef}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => void confirm()}>
-      <div ref={dialog.bodyRef} tabIndex={-1} className="afframe-modal-body">
+      <div
+        ref={dialog.containerRef}
+        tabIndex={-1}
+        className="afframe-modal-body">
         {body ?? <p>{text.body(kind, resourceName)}</p>}
         {phrase !== undefined && (
           <TextInput
@@ -166,9 +169,8 @@ export function RemoveModal({
             onBlur={() => setBlurred(true)}
           />
         )}
-        <ModalError
-          show={dialog.failed}
-          title={text.genericError}
+        <FlowError
+          error={dialog.error}
           iconDescription={text.errorIconDescription}
         />
       </div>

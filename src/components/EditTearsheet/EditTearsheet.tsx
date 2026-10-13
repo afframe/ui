@@ -5,15 +5,10 @@ import { InlineLoading } from '@carbon/react';
 import { Children, isValidElement, useEffect, useState } from 'react';
 import type { ReactElement, ReactNode, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import {
-  defaultCreateEditFlowMessages,
-  DiscardDialog,
-  FlowError,
-  FlowForm,
-  useCreateEditFlow,
-  useInitialFocus,
-} from '../CreateEditFlow/CreateEditFlow.js';
-import type { CreateEditFlowMessages } from '../CreateEditFlow/CreateEditFlow.js';
+import { DiscardDialog, FlowError, FlowForm } from '../FlowParts/FlowParts.js';
+import { defaultCreateEditFlowMessages } from '../FlowParts/messages.js';
+import type { CreateEditFlowMessages } from '../FlowParts/messages.js';
+import { useFlow } from '../FlowParts/useFlow.js';
 
 export interface EditTearsheetMessages extends CreateEditFlowMessages {
   /** Primary button. */
@@ -88,7 +83,7 @@ export interface EditTearsheetProps {
   isDirty?: boolean;
   /** Ask before discarding a dirty form. Default true. */
   confirmDiscard?: boolean;
-  /** Focus target on close when the element that opened it is gone. */
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<EditTearsheetMessages>;
   /** The forms: `EditTearsheetForm` elements. */
@@ -124,16 +119,14 @@ export function EditTearsheet({
 }: EditTearsheetProps) {
   const text = resolveMessages(defaultEditTearsheetMessages, messages);
   const [current, setCurrent] = useState(0);
-  const flow = useCreateEditFlow({
+  const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
-    onSubmit,
     isDirty,
     confirmDiscard,
-    ...(launcherRef ? { launcherRef } : {}),
-    messages: text,
+    launcherRef,
+    messages: { error: text.submitError, errorText: text.errorText },
   });
-  useInitialFocus(open, flow.formRef);
 
   // Only EditTearsheetForm children are rendered and listed.
   const all = Children.toArray(children);
@@ -165,17 +158,17 @@ export function EditTearsheet({
   };
 
   // Save stays enabled with invalid forms; it focuses the first one instead.
-  const submit = () => {
+  const submit = async () => {
     const invalid = forms.findIndex((form) => form.invalid);
     if (invalid >= 0) select(invalid);
-    else void flow.submit();
+    else if (await flow.run(onSubmit)) flow.close();
   };
 
   const actions = [
     {
       kind: 'secondary' as const,
       label: text.cancel,
-      disabled: flow.submitting,
+      disabled: flow.pending,
       onClick: flow.requestClose,
     },
     {
@@ -183,7 +176,7 @@ export function EditTearsheet({
       // Cast kept: ActionSet types `label` as a string but renders any node
       // as the button content. Its own `loading` flag adds an InlineLoading
       // with no text and an English icon name, so the label carries ours.
-      label: (flow.submitting ? (
+      label: (flow.pending ? (
         <InlineLoading
           description={text.submitting}
           iconDescription={text.submitting}
@@ -191,8 +184,8 @@ export function EditTearsheet({
       ) : (
         text.save
       )) as unknown as string,
-      disabled: submitDisabled || flow.submitting,
-      onClick: submit,
+      disabled: submitDisabled || flow.pending,
+      onClick: () => void submit(),
     },
   ];
 
@@ -251,11 +244,15 @@ export function EditTearsheet({
         <Tearsheet.Body>
           <Tearsheet.MainContent>
             <FlowForm
-              flow={{ ...flow, submit: async () => submit() }}
+              flow={flow}
+              onSubmit={() => void submit()}
               submitDisabled={submitDisabled}
               aria-label={title}>
               {formElements}
-              <FlowError error={flow.error} messages={text} />
+              <FlowError
+                error={flow.error}
+                iconDescription={text.errorIconDescription}
+              />
             </FlowForm>
           </Tearsheet.MainContent>
         </Tearsheet.Body>

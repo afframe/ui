@@ -1,5 +1,5 @@
-// RemoveModal styles, Carbon tokens only. Also holds the content wrapper and
-// error spacing shared by the four Afframe modals (ModalParts has no partial).
+// RemoveModal styles, Carbon tokens only. Also holds the content wrapper
+// shared by the four Afframe modals (FlowParts has no partial).
 @use '@carbon/styles/scss/spacing' as *;
 
 .afframe-modal-body {
@@ -7,8 +7,4 @@
   flex-direction: column;
   gap: $spacing-05;
   outline: none;
-}
-
-.afframe-modal-error {
-  margin: 0;
 }

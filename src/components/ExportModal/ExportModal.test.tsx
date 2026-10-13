@@ -188,7 +188,9 @@ test('pending: Escape ignored; rejection keeps it open with an alert', async () 
   reject(new Error('no'));
   const alert = await screen.findByText('Something went wrong. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
-  await until(() => expect(active()).toBe(exportButton()));
+  await until(() =>
+    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+  );
   await userEvent.keyboard('{Escape}');
   await until(() => expect(onClose).toHaveBeenCalledTimes(1));
   await until(() => expect(active()).toBe(launcher()));

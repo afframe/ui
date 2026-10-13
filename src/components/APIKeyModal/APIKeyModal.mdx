@@ -135,8 +135,8 @@ Download, Done.
 
 Focus is trapped by the browser's modal dialog: the page behind it is inert.
 On close, focus returns to `launcherRef`, else to the element focused before
-the dialog opened, else to the page body. After a failure, focus returns to
-the button that started it.
+the dialog opened, else to the page body. After a failure, focus moves to the first invalid field, else to the error
+alert.
 
 Screen readers announce:
 

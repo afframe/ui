@@ -9,7 +9,7 @@ import {
   playRejected,
   rejectSubmit,
   useCustomerForm,
-} from '../CreateEditFlow/storyForm.js';
+} from '../FlowParts/storyForm.js';
 import { CreateModal } from './CreateModal.js';
 import type { CreateModalProps } from './CreateModal.js';
 import mdx from './CreateModal.mdx';

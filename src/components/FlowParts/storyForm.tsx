@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { expect, screen, userEvent, waitFor } from 'storybook/test';
 import { TextInput } from '../../index.js';
-import { defaultCreateEditFlowMessages } from './CreateEditFlow.js';
+import { defaultCreateEditFlowMessages } from './messages.js';
 
 const duplicateError = 'A customer with this name already exists.';
 

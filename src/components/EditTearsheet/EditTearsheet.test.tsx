@@ -14,7 +14,7 @@ import {
   sentinelMessages,
   tabbables,
   settleAndCleanup,
-} from '../CreateEditFlow/flowTestUtils.js';
+} from '../FlowParts/flowTestUtils.js';
 import {
   defaultEditTearsheetMessages,
   EditTearsheet,

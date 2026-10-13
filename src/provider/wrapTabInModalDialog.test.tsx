@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { tabbable } from 'tabbable';
 import { afterEach, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { settleAndCleanup } from '../components/CreateEditFlow/flowTestUtils.js';
+import { settleAndCleanup } from '../components/FlowParts/flowTestUtils.js';
 import {
   EditTearsheet,
   EditTearsheetForm,

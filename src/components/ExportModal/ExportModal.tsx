@@ -12,10 +12,10 @@ import {
 import { useEffect, useId, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { ModalError, ModalStatus } from '../ModalParts/ModalFeedback.js';
-import { defaultModalPartsMessages } from '../ModalParts/messages.js';
-import type { ModalPartsMessages } from '../ModalParts/messages.js';
-import { useModalBase } from '../ModalParts/useModalBase.js';
+import { FlowError, FlowStatus } from '../FlowParts/FlowParts.js';
+import { defaultModalPartsMessages } from '../FlowParts/messages.js';
+import type { ModalPartsMessages } from '../FlowParts/messages.js';
+import { useFlow } from '../FlowParts/useFlow.js';
 
 export interface ExportModalMessages extends ModalPartsMessages {
   title: string;
@@ -69,6 +69,7 @@ export interface ExportRequest {
 export interface ExportModalProps {
   open: boolean;
   onClose: () => void;
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<ExportModalMessages>;
   className?: string;
@@ -138,10 +139,11 @@ export function ExportModal({
     }
   }
 
-  const dialog = useModalBase({
+  const dialog = useFlow({
     open,
     onClose,
     launcherRef,
+    messages: { error: text.genericError },
     initialFocus: () => nameRef.current,
   });
 
@@ -193,10 +195,12 @@ export function ExportModal({
       loadingStatus={dialog.pending ? 'active' : 'inactive'}
       loadingDescription={text.exporting}
       loadingIconDescription={text.exporting}
-      launcherButtonRef={dialog.returnFocusRef}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => void submit()}>
-      <div ref={dialog.bodyRef} tabIndex={-1} className="afframe-modal-body">
+      <div
+        ref={dialog.containerRef}
+        tabIndex={-1}
+        className="afframe-modal-body">
         <TextInput
           ref={nameRef}
           id={`${id}-name`}
@@ -247,10 +251,9 @@ export function ExportModal({
             onBlur={() => setSecretTouched(true)}
           />
         )}
-        <ModalStatus message={succeeded} visible />
-        <ModalError
-          show={dialog.failed}
-          title={text.genericError}
+        <FlowStatus message={succeeded} visible />
+        <FlowError
+          error={dialog.error}
           iconDescription={text.errorIconDescription}
         />
       </div>

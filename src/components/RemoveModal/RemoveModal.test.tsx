@@ -216,7 +216,9 @@ test('pending: buttons disabled, Escape ignored; rejection keeps it open with an
     'Something went wrong. Try again.'
   );
   expect(dialogRole()).not.toBeNull();
-  await until(() => expect(active()).toBe(dangerButton('Delete')));
+  await until(() =>
+    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+  );
   expect(onClose).not.toHaveBeenCalled();
 });
 

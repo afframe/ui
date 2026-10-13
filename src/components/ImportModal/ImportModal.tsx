@@ -13,11 +13,11 @@ import {
 import { useId, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { ModalError, ModalStatus } from '../ModalParts/ModalFeedback.js';
-import { formatFileSize } from '../ModalParts/fileSize.js';
-import { defaultModalPartsMessages } from '../ModalParts/messages.js';
-import type { ModalPartsMessages } from '../ModalParts/messages.js';
-import { useModalBase } from '../ModalParts/useModalBase.js';
+import { FlowError, FlowStatus } from '../FlowParts/FlowParts.js';
+import { defaultModalPartsMessages } from '../FlowParts/messages.js';
+import type { ModalPartsMessages } from '../FlowParts/messages.js';
+import { useFlow } from '../FlowParts/useFlow.js';
+import { formatFileSize } from './fileSize.js';
 
 export interface ImportModalMessages extends ModalPartsMessages {
   title: string;
@@ -76,6 +76,7 @@ export const defaultImportModalMessages: ImportModalMessages = {
 export interface ImportModalProps {
   open: boolean;
   onClose: () => void;
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<ImportModalMessages>;
   className?: string;
@@ -173,10 +174,11 @@ export function ImportModal({
     }
   }
 
-  const dialog = useModalBase({
+  const dialog = useFlow({
     open,
     onClose,
     launcherRef,
+    messages: { error: text.importFailed },
     initialFocus: () => dropRef.current,
   });
 
@@ -212,7 +214,7 @@ export function ImportModal({
           ]
         : added.slice(0, 1)
     );
-    dialog.clearFailure();
+    dialog.clearError();
     // Errors are announced by the file row itself (Carbon renders them with
     // role="alert"); the polite region announces the files that were added.
     const ignored = multiple
@@ -249,14 +251,14 @@ export function ImportModal({
 
   const importUrl = async () => {
     if (dialog.pending || !canImportUrl) return;
-    if (await dialog.run(() => onImportUrl?.(trimmedUrl))) onClose();
+    if (await dialog.run(() => onImportUrl?.(trimmedUrl))) dialog.close();
   };
 
   const importFiles = async () => {
     if (dialog.pending) return;
     if (canImportFiles) {
       if (await dialog.run(() => onImport(validFiles.map((item) => item.file))))
-        onClose();
+        dialog.close();
       return;
     }
     if (canImportUrl) await importUrl();
@@ -276,10 +278,12 @@ export function ImportModal({
       loadingStatus={dialog.pending ? 'active' : 'inactive'}
       loadingDescription={text.pending}
       loadingIconDescription={text.pending}
-      launcherButtonRef={dialog.returnFocusRef}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => void importFiles()}>
-      <div ref={dialog.bodyRef} tabIndex={-1} className="afframe-modal-body">
+      <div
+        ref={dialog.containerRef}
+        tabIndex={-1}
+        className="afframe-modal-body">
         <p>{description ?? text.description}</p>
         <div
           className="afframe-import-modal-drop"
@@ -344,10 +348,9 @@ export function ImportModal({
             </Button>
           </div>
         )}
-        <ModalStatus message={announcement} />
-        <ModalError
-          show={dialog.failed}
-          title={text.importFailed}
+        <FlowStatus message={announcement} />
+        <FlowError
+          error={dialog.error}
           iconDescription={text.errorIconDescription}
         />
       </div>

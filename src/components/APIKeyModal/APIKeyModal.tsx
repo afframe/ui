@@ -13,10 +13,10 @@ import { Download } from '@carbon/icons-react';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { ModalError, ModalStatus } from '../ModalParts/ModalFeedback.js';
-import { defaultModalPartsMessages } from '../ModalParts/messages.js';
-import type { ModalPartsMessages } from '../ModalParts/messages.js';
-import { useModalBase } from '../ModalParts/useModalBase.js';
+import { FlowError, FlowStatus } from '../FlowParts/FlowParts.js';
+import { defaultModalPartsMessages } from '../FlowParts/messages.js';
+import type { ModalPartsMessages } from '../FlowParts/messages.js';
+import { useFlow } from '../FlowParts/useFlow.js';
 
 export interface APIKeyModalMessages extends ModalPartsMessages {
   generateTitle: string;
@@ -77,6 +77,7 @@ export interface APIKeyModalStep {
 interface APIKeyModalBaseProps {
   open: boolean;
   onClose: () => void;
+  /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
   messages?: Partial<APIKeyModalMessages>;
   className?: string;
@@ -226,12 +227,13 @@ export function APIKeyModal(props: APIKeyModalProps) {
 
   const nameStep = steps.length;
   const customStep = step < nameStep ? steps[step] : undefined;
-  const dialog = useModalBase({
+  const dialog = useFlow({
     open,
     onClose,
     launcherRef,
-    initialFocus: () =>
-      nameStep === 0 ? nameRef.current : dialog.bodyRef.current,
+    messages: { error: text.genericError },
+    initialFocus: (): HTMLElement | null =>
+      nameStep === 0 ? nameRef.current : dialog.containerRef.current,
   });
 
   // Set the key through the DOM property only: a React `value` would also
@@ -247,8 +249,8 @@ export function APIKeyModal(props: APIKeyModalProps) {
     moved.current = false;
     if (succeeded) keyRef.current?.focus();
     else if (step === nameStep) nameRef.current?.focus();
-    else dialog.bodyRef.current?.focus();
-  }, [step, succeeded, nameStep, dialog.bodyRef]);
+    else dialog.containerRef.current?.focus();
+  }, [step, succeeded, nameStep, dialog.containerRef]);
 
   const goTo = (next: number) => {
     moved.current = true;
@@ -279,7 +281,7 @@ export function APIKeyModal(props: APIKeyModalProps) {
   const save = async () => {
     if (props.mode !== 'edit') return;
     const { onSave } = props;
-    if (await dialog.run(() => onSave(trimmed))) onClose();
+    if (await dialog.run(() => onSave(trimmed))) dialog.close();
   };
 
   // The copy button shows its feedback on click, before the clipboard
@@ -332,12 +334,14 @@ export function APIKeyModal(props: APIKeyModalProps) {
       loadingStatus={dialog.pending ? 'active' : 'inactive'}
       loadingDescription={text.pending}
       loadingIconDescription={text.pending}
-      launcherButtonRef={dialog.returnFocusRef}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => {
         if (!primary.disabled && !dialog.pending) void primary.action();
       }}>
-      <div ref={dialog.bodyRef} tabIndex={-1} className="afframe-modal-body">
+      <div
+        ref={dialog.containerRef}
+        tabIndex={-1}
+        className="afframe-modal-body">
         {succeeded ? (
           <KeyView
             id={`${id}-key`}
@@ -354,7 +358,7 @@ export function APIKeyModal(props: APIKeyModalProps) {
                       trimmed,
                       downloadFileName,
                       downloadFileType,
-                      dialog.bodyRef.current ?? document.body
+                      dialog.containerRef.current ?? document.body
                     ),
                 }
               : {})}
@@ -379,10 +383,9 @@ export function APIKeyModal(props: APIKeyModalProps) {
             onChange={(event) => setName(event.target.value)}
           />
         )}
-        <ModalStatus message={announcement} />
-        <ModalError
-          show={dialog.failed}
-          title={text.genericError}
+        <FlowStatus message={announcement} />
+        <FlowError
+          error={dialog.error}
           iconDescription={text.errorIconDescription}
         />
       </div>

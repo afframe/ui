@@ -115,7 +115,8 @@ gone, focus returns to the element that had focus before the dialog opened;
 when that is gone too, focus stays with the browser default (the page body).
 
 While the action runs, focus moves to the dialog content if the focused button
-was disabled. After a failure, focus returns to the confirm button.
+was disabled. After a failure, focus moves to the first invalid field, else to the error
+alert.
 
 Screen readers announce:
 

@@ -6,7 +6,7 @@ import { AfframeProvider } from '../../index.js';
 import {
   englishLeft as englishCreateLeft,
   sentinelMessages,
-} from '../CreateEditFlow/flowTestUtils.js';
+} from '../FlowParts/flowTestUtils.js';
 import { CreateModal, defaultCreateModalMessages } from './CreateModal.js';
 import type { CreateModalProps } from './CreateModal.js';
 

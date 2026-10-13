@@ -3,16 +3,10 @@ import { Button, ButtonSet, InlineLoading } from '@carbon/react';
 import { useEffect, useId } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
-import {
-  defaultCreateEditFlowMessages,
-  DiscardDialog,
-  FlowError,
-  FlowForm,
-  isCloseEscape,
-  useCreateEditFlow,
-  useInitialFocus,
-} from '../CreateEditFlow/CreateEditFlow.js';
-import type { CreateEditFlowMessages } from '../CreateEditFlow/CreateEditFlow.js';
+import { DiscardDialog, FlowError, FlowForm } from '../FlowParts/FlowParts.js';
+import { defaultCreateEditFlowMessages } from '../FlowParts/messages.js';
+import type { CreateEditFlowMessages } from '../FlowParts/messages.js';
+import { isCloseEscape, useFlow } from '../FlowParts/useFlow.js';
 
 export interface EditFullPageMessages extends CreateEditFlowMessages {
   /** Primary button. */
@@ -64,19 +58,20 @@ export function EditFullPage({
 }: EditFullPageProps) {
   const text = resolveMessages(defaultEditFullPageMessages, messages);
   const id = useId();
-  const flow = useCreateEditFlow({
+  const flow = useFlow<HTMLFormElement>({
     open: true,
     onClose: () => {
       onClose();
       // The app usually unmounts the page; focus the launcher once it is back.
       setTimeout(() => launcherRef?.current?.focus());
     },
-    onSubmit,
     isDirty,
     confirmDiscard,
-    messages: text,
+    messages: { error: text.submitError, errorText: text.errorText },
   });
-  useInitialFocus(true, flow.formRef);
+  const submit = async () => {
+    if (await flow.run(onSubmit)) flow.close();
+  };
 
   // Only while dirty; the browser shows its own text, which cannot be set.
   useEffect(() => {
@@ -101,6 +96,7 @@ export function EditFullPage({
         }}>
         <FlowForm
           flow={flow}
+          onSubmit={() => void submit()}
           submitDisabled={submitDisabled}
           aria-labelledby={`${id}-title`}
           className={['afframe-edit-full-page', className]
@@ -118,20 +114,23 @@ export function EditFullPage({
               </p>
             )}
             {children}
-            <FlowError error={flow.error} messages={text} />
+            <FlowError
+              error={flow.error}
+              iconDescription={text.errorIconDescription}
+            />
           </div>
           <ButtonSet className="afframe-edit-full-page-actions">
             <Button
               kind="secondary"
-              disabled={flow.submitting}
+              disabled={flow.pending}
               onClick={flow.requestClose}>
               {text.cancel}
             </Button>
             <Button
               kind="primary"
               type="submit"
-              disabled={submitDisabled || flow.submitting}>
-              {flow.submitting ? (
+              disabled={submitDisabled || flow.pending}>
+              {flow.pending ? (
                 <InlineLoading
                   description={text.submitting}
                   iconDescription={text.submitting}

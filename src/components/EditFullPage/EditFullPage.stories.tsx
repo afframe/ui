@@ -10,7 +10,7 @@ import {
   playRejected,
   rejectSubmit,
   useCustomerForm,
-} from '../CreateEditFlow/storyForm.js';
+} from '../FlowParts/storyForm.js';
 import { EditFullPage } from './EditFullPage.js';
 import type { EditFullPageProps } from './EditFullPage.js';
 import mdx from './EditFullPage.mdx';

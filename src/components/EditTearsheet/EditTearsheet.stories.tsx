@@ -10,7 +10,7 @@ import {
   playRejected,
   rejectSubmit,
   useCustomerForm,
-} from '../CreateEditFlow/storyForm.js';
+} from '../FlowParts/storyForm.js';
 import { EditTearsheet, EditTearsheetForm } from './EditTearsheet.js';
 import type { EditTearsheetProps } from './EditTearsheet.js';
 import mdx from './EditTearsheet.mdx';

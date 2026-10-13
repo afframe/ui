@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
-import { formatFileSize } from '../ModalParts/fileSize.js';
+import { formatFileSize } from './fileSize.js';
 import { defaultImportModalMessages, ImportModal } from './ImportModal.js';
 import type { ImportModalProps } from './ImportModal.js';
 
@@ -201,8 +201,10 @@ test('URL path: field and button only with onImportUrl; rejection shows an alert
   // Carbon's TextInput also renders an empty counter alert; find by text.
   const alert = await screen.findByText('The import failed. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
-  await until(() => expect(active()).toBe(urlButton));
-  await userEvent.keyboard('{Enter}');
+  await until(() =>
+    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+  );
+  await userEvent.click(urlButton);
   await until(() => expect(screen.queryByRole('dialog')).toBeNull());
 });
 

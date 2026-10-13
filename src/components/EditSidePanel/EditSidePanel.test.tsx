@@ -7,7 +7,7 @@ import {
   englishLeft,
   sentinelMessages,
   tabbables,
-} from '../CreateEditFlow/flowTestUtils.js';
+} from '../FlowParts/flowTestUtils.js';
 import {
   EditSidePanel,
   defaultEditSidePanelMessages,

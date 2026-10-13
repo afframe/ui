@@ -60,8 +60,8 @@ const [name, setName] = useState('');
   true, Escape, the close icon, Cancel and an overlay click ask "Discard
   changes?" first, unless `confirmDiscard` is false.
 - `submitDisabled`: disables the primary button and Enter.
-- `launcherRef`: where focus goes on close when the element that had focus
-  when the panel opened is gone.
+- `launcherRef`: where focus goes on close. Without it, or when it is gone,
+  focus returns to the element that had focus when the panel opened.
 
 <ArgTypes of={CreateSidePanelStories} />
 
@@ -101,8 +101,8 @@ open list or menu inside the panel takes it.
 | Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                |
 | Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.    |
 
-On close, focus returns to the element that had focus when the panel opened,
-else to `launcherRef`, else to the page body.
+On close, focus returns to `launcherRef`, else to the element that had focus
+when the panel opened, else to the page body.
 
 A focused field never sits under the action bar: fields keep a scroll margin
 the size of the bar (the `LongForm` story checks it).
