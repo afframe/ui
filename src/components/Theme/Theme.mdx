@@ -3,7 +3,7 @@ import * as ThemeStories from './Theme.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, code samples import from @afframe/ui, Sass setup replaced by the Afframe theme model (styles.css and data-afframe-theme).
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, code samples import from @afframe/ui, Sass setup replaced by the Afframe theme model (styles.css and data-afframe-theme), global theme set by AfframeProvider instead of by hand.
 
 <Meta isTemplate />
 
@@ -51,30 +51,10 @@ Please note that in contrast to `Theme` this does not apply any styles on its
 own but rather sets the context's theme according to the value you pass to its
 `theme` prop.
 
-Afframe UI applies the global theme in CSS: the app sets
-`data-afframe-theme="light"`, `"dark"` or `"system"` on `<html>` in the
-server-rendered root layout (see the
-[consuming guide](https://github.com/afframe/ui/blob/main/docs/guides/consuming.md)).
-Give `GlobalTheme` the matching theme, `"white"` for light or `"g100"` for dark:
-
-```jsx
-import { GlobalTheme } from '@afframe/ui';
-
-function App() {
-  return (
-    <GlobalTheme theme="g100">
-      <YourApp />
-    </GlobalTheme>
-  );
-}
-```
-
-This way, the `GlobalTheme` component keeps the application's context in step
-with the theme on `<html>`, so that other components and hooks like `useTheme`
-work properly. For this reason, the component should be used as a wrapper of the
-root of your application.
-
-By default, the global theme is set to `white`.
+Afframe UI applies the global theme in CSS from `data-afframe-theme` on
+`<html>` ([Theming](?path=/docs/getting-started-theming--overview)).
+`AfframeProvider` renders `GlobalTheme` with the matching Carbon theme, so
+`useTheme` reports it and apps do not render `GlobalTheme` themselves.
 
 ## Setting an inline theme
 

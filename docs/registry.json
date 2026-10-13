@@ -11,7 +11,7 @@
       "storyTitle": "Getting Started/AfframeProvider",
       "status": "stable",
       "exports": ["AfframeProvider"],
-      "types": []
+      "types": ["AfframeProviderProps"]
     },
     {
       "name": "DataGrid",

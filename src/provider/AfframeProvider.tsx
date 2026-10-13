@@ -1,8 +1,9 @@
 'use client';
 
 import { pkg } from '@carbon/ibm-products';
-import { FeatureFlags } from '@carbon/react';
+import { FeatureFlags, GlobalTheme } from '@carbon/react';
 import type { ReactNode } from 'react';
+import { useCarbonTheme } from '../theme/use-afframe-theme.js';
 
 // Module scope: IBM's canary gate decides at first render, and a settings-only
 // module could be dropped by bundlers through `sideEffects`.
@@ -11,16 +12,29 @@ pkg.component.ScrollGradient = true;
 pkg.component.Decorator = true;
 pkg._silenceWarnings(false);
 
-/** Turns on the Carbon feature flags in React (docs/feature-flags.md). */
-export function AfframeProvider({ children }: { children?: ReactNode }) {
+export interface AfframeProviderProps {
+  /** The app, or the part of it that uses Afframe UI components. */
+  children?: ReactNode;
+}
+
+/**
+ * Turns on the Carbon feature flags in React (docs/feature-flags.md) and keeps
+ * Carbon's `GlobalTheme` in step with `data-afframe-theme`, so `useTheme()`
+ * reports `white` or `g100`.
+ */
+export function AfframeProvider({ children }: AfframeProviderProps) {
+  // GlobalTheme clones its child with its own ref, so its child is ours, not
+  // the app's.
   return (
-    <FeatureFlags
-      enableDialogElement
-      enableFocusWrapWithoutSentinels
-      enablePresence
-      enableEnhancedFileUploader
-      enableTreeviewControllable>
-      {children}
-    </FeatureFlags>
+    <GlobalTheme theme={useCarbonTheme()}>
+      <FeatureFlags
+        enableDialogElement
+        enableFocusWrapWithoutSentinels
+        enablePresence
+        enableEnhancedFileUploader
+        enableTreeviewControllable>
+        {children}
+      </FeatureFlags>
+    </GlobalTheme>
   );
 }

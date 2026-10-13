@@ -14,7 +14,9 @@ import { SourceLabel } from '../../.storybook/SourceLabel';
 
 Wrap the app once, near the root. The provider turns on the Carbon feature
 flags Afframe UI uses in React; the stylesheet carries their Sass side
-(`docs/feature-flags.md`).
+([Feature Flags](?path=/docs/getting-started-feature-flags--overview)). It also
+renders Carbon's `GlobalTheme` with the theme on `<html>`, so Carbon's
+`useTheme()` reports `white` or `g100`.
 
 ```tsx
 import '@afframe/ui/styles.css';
@@ -27,11 +29,8 @@ import { AfframeProvider } from '@afframe/ui';
 
 ## Themes
 
-The app sets `data-afframe-theme` on `<html>`; the provider does not.
-
-- `light` or no attribute: light theme.
-- `dark`: dark theme.
-- `system`: follows the operating system.
+The app sets `data-afframe-theme` on `<html>`; the provider does not. Values:
+[Theming](?path=/docs/getting-started-theming--overview).
 
 ## Component API
 

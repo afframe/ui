@@ -45,5 +45,7 @@ useCarbonTheme(); // 'white' | 'g100', type AfframeCarbonTheme
 ```
 
 Both return the light value on the server and during hydration.
+`AfframeProvider` passes `useCarbonTheme()` to Carbon's `GlobalTheme`, so
+Carbon's `useTheme()` reports the same theme.
 For a dark area inside a light page, use Carbon's `Theme` component
 (Components, Theme).
