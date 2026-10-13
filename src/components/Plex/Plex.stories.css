@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2018, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: plain CSS instead of SCSS, font families as Carbon type tokens; the Arabic, Devanagari, Hebrew and Thai font includes removed (Afframe ships Plex Sans, Mono and Serif only), so those classes and .text-sans keep the inherited Plex Sans. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: specimen layout classes added, plain CSS instead of SCSS, font families as Carbon type tokens; the Arabic, Devanagari, Hebrew and Thai font includes removed (Afframe ships Plex Sans, Mono and Serif only), so those classes and .text-sans keep the inherited Plex Sans. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 .text-mono {
@@ -16,4 +16,25 @@
 
 .text-serif {
   font-family: var(--cds-quotation-01-font-family);
+}
+
+.plex-specimen {
+  display: grid;
+  gap: var(--cds-spacing-07);
+  color: var(--cds-text-primary);
+}
+
+.plex-specimen__family {
+  margin-block-end: var(--cds-spacing-03);
+  font-size: var(--cds-heading-02-font-size);
+  font-weight: var(--cds-heading-02-font-weight);
+  line-height: var(--cds-heading-02-line-height);
+}
+
+.plex-specimen__weight {
+  display: inline-block;
+  inline-size: 8rem;
+  color: var(--cds-text-secondary);
+  font-family: var(--cds-body-compact-01-font-family);
+  font-weight: var(--cds-body-compact-01-font-weight);
 }
