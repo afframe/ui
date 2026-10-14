@@ -1,0 +1,8 @@
+// Carbon Modal and ComposedModal sizes under 'enable-dialog-element'. The
+// native dialog's own cap (.cds--dialog: 84%, 60%, 48% by breakpoint) is at
+// or below the md modal width, so lg rendered as wide as md. The modal
+// container's size rules alone set the width, as without the flag.
+/* stylelint-disable-next-line selector-class-pattern -- Carbon's class names */
+.cds--dialog.cds--modal-container {
+  max-inline-size: none;
+}

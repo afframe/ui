@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import {
   englishLeft as englishCreateLeft,
@@ -285,3 +285,52 @@ test('a rejection under the discard dialog closes it and focuses the alert', asy
   await new Promise((done) => setTimeout(done, 300));
   expect(document.activeElement).toBe(alert);
 });
+
+test.each([1024, 1312])(
+  'sizes keep their own widths under the dialog element at %ipx',
+  async (width) => {
+    // Above Carbon's md breakpoint, where the sizes differ.
+    await page.viewport(width, 800);
+    try {
+      const widthOf = async (size: 'sm' | 'md' | 'lg', dialog: boolean) => {
+        const modal = (
+          <CreateModal
+            open
+            size={size}
+            title="Item S"
+            onClose={() => undefined}
+            onSubmit={() => undefined}>
+            <input aria-label="Field S" />
+          </CreateModal>
+        );
+        const { unmount } = render(
+          dialog ? <AfframeProvider>{modal}</AfframeProvider> : modal
+        );
+        const node = await waitFor(() => {
+          const found = document.querySelector(
+            `.cds--modal-container--${size}`
+          );
+          if (!found) throw new Error('No modal container');
+          return found;
+        });
+        const result = node.getBoundingClientRect().width;
+        unmount();
+        return result;
+      };
+      const widths = {
+        sm: await widthOf('sm', true),
+        md: await widthOf('md', true),
+        lg: await widthOf('lg', true),
+      };
+      expect(widths.lg).toBeGreaterThan(widths.md + 100);
+      expect(widths.md).toBeGreaterThan(widths.sm + 100);
+      // Carbon's widths without the flag.
+      for (const size of ['sm', 'md', 'lg'] as const)
+        expect(
+          Math.abs(widths[size] - (await widthOf(size, false)))
+        ).toBeLessThanOrEqual(1);
+    } finally {
+      await page.viewport(1024, 768);
+    }
+  }
+);
