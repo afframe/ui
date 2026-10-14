@@ -230,6 +230,8 @@ export function EditTearsheet({
   const focusAfterSwitch = useRef<
     HTMLElement | (() => HTMLElement | null) | null
   >(null);
+  // The `errorCount` of the last error the invalid-field effect dealt with.
+  const handledError = useRef(0);
   const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
@@ -278,20 +280,28 @@ export function EditTearsheet({
 
   // An error field the consumer marked only in a hidden form: useFlow could
   // not focus it, so show its form and focus it there. A field in the shown
-  // form wins.
+  // form wins. Runs after every render until the error is dealt with: the
+  // consumer may mark the field a render or more after the error.
   useEffect(() => {
     const container = flow.containerRef.current;
-    if (flow.error === null || !container) return;
-    if (container.querySelector(`${visibleForm} [aria-invalid="true"]`)) return;
+    if (
+      flow.error === null ||
+      flow.errorCount === handledError.current ||
+      !container
+    )
+      return;
+    if (container.querySelector(`${visibleForm} [aria-invalid="true"]`)) {
+      handledError.current = flow.errorCount;
+      return;
+    }
     const field = container.querySelector<HTMLElement>('[aria-invalid="true"]');
     const section = field?.closest(`.${ibm}__form`);
-    if (!field || !section || section.matches(visibleForm)) return;
-    const index = forms.findIndex((form) => form.id === section.id);
-    if (index < 0) return;
+    const index = forms.findIndex((form) => form.id === section?.id);
+    if (!field || index < 0) return;
+    handledError.current = flow.errorCount;
     focusAfterSwitch.current = field;
     setCurrent(index);
-    // Runs on a new error only; `forms` is rebuilt on every render.
-  }, [flow.error, flow.containerRef]);
+  });
 
   useEffect(() => {
     const target = focusAfterSwitch.current;
@@ -302,6 +312,8 @@ export function EditTearsheet({
   const select = (index: number, focusHeading = false) => {
     const form = forms[index];
     if (!form) return;
+    // The user's choice wins over a field marked after the error.
+    handledError.current = flow.errorCount;
     if (focusHeading && index !== active)
       focusAfterSwitch.current = () =>
         document.getElementById(`${form.id}-title`);

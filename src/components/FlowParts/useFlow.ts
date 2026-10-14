@@ -44,6 +44,8 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
   pending: boolean;
   /** Text of the error alert after a rejected action, else null. */
   error: string | null;
+  /** Rejected actions so far; tells two errors with the same text apart. */
+  errorCount: number;
   /**
    * Runs an action; resolves true when it succeeded in the same session.
    * Resolves false at once while an earlier action, even an abandoned one,
@@ -358,6 +360,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     containerRef,
     pending,
     error,
+    errorCount,
     run,
     requestClose,
     close,

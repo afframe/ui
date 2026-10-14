@@ -180,6 +180,44 @@ test('a rejected submit with a field marked invalid in a hidden form shows that 
   );
 });
 
+test('a field marked invalid in a hidden form a render after the error still gets the focus', async () => {
+  function Rejecting() {
+    const [invalid, setInvalid] = useState(false);
+    return (
+      <AfframeProvider>
+        <EditTearsheet
+          open
+          title="Sheet H"
+          onClose={() => undefined}
+          onSubmit={() => {
+            setTimeout(() => setInvalid(true), 50);
+            return Promise.reject(new Error('Taken'));
+          }}>
+          <EditTearsheetForm id="h-one" title="One">
+            <label>
+              One field
+              <input />
+            </label>
+          </EditTearsheetForm>
+          <EditTearsheetForm id="h-two" title="Two">
+            <label>
+              Two field
+              <input aria-invalid={invalid || undefined} />
+            </label>
+          </EditTearsheetForm>
+        </EditTearsheet>
+      </AfframeProvider>
+    );
+  }
+  render(<Rejecting />);
+  await userEvent.click(
+    await screen.findByRole('button', { name: defaults.save })
+  );
+  await waitFor(() =>
+    expect(active()).toBe(screen.getByRole('textbox', { name: 'Two field' }))
+  );
+});
+
 test('a rejected submit with invalid fields in the shown and a hidden form focuses the shown one', async () => {
   function Rejecting() {
     const [invalid, setInvalid] = useState(false);
