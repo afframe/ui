@@ -2,7 +2,7 @@
 // The parts the nine Afframe dialogs and flows render around `useFlow`: the
 // form, the error alert, the busy button label, the polite live region and
 // the discard dialog.
-import { InlineNotification, Loading, Modal, usePrefix } from '@carbon/react';
+import { InlineNotification, Modal, usePrefix } from '@carbon/react';
 import { useEffect, useRef } from 'react';
 import type {
   FormEvent,
@@ -152,17 +152,32 @@ export function FlowButtonLabel({
   label: string;
   busy: boolean;
 }) {
+  const prefix = usePrefix();
   return (
     <span className="afframe-flow-button-label">
       {label}
       {busy && (
-        // Carbon's default description is an English tooltip.
-        <Loading
-          small
-          withOverlay={false}
-          description={label}
+        // Carbon's small Loading markup in a span: its div with aria-live is
+        // not allowed inside a button. The title is the hover tooltip.
+        <span
           aria-hidden="true"
-        />
+          className={`${prefix}--loading ${prefix}--loading--small`}>
+          <svg className={`${prefix}--loading__svg`} viewBox="0 0 100 100">
+            <title>{label}</title>
+            <circle
+              className={`${prefix}--loading__background`}
+              cx="50%"
+              cy="50%"
+              r="42"
+            />
+            <circle
+              className={`${prefix}--loading__stroke`}
+              cx="50%"
+              cy="50%"
+              r="42"
+            />
+          </svg>
+        </span>
       )}
     </span>
   );
