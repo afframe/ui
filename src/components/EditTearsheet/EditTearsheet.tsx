@@ -101,12 +101,12 @@ export function EditTearsheetForm({
       ].join(' ')}>
       <Grid>
         <Column sm={4} md={8} lg={context?.narrow ? 16 : 12}>
-          <h3
+          <h4
             id={`${id}-title`}
             tabIndex={-1}
-            className={`${ibm}__form--title afframe-edit-tearsheet-form-title`}>
+            className={`${ibm}__form--title`}>
             {title}
-          </h3>
+          </h4>
           {description && (
             <p className={`${ibm}__form--description`}>{description}</p>
           )}
