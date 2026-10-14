@@ -418,8 +418,7 @@ mark:where(#{$plain-text-level}) {
 // data-hidden; IBM ships the hiding rule only for PageHeader, and its
 // Storybook gets it from a global story style.
 /* stylelint-disable-next-line selector-class-pattern -- IBM's class name */
-.c4p--tearsheet__next__content__header-actions
-  [data-hidden]:not([data-fixed]) {
+.c4p--tearsheet__next__content__header-actions [data-hidden]:not([data-fixed]) {
   display: none;
 }
 
