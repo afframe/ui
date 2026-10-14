@@ -18,7 +18,7 @@ export type RemoveModalKind = 'delete' | 'remove';
 export interface RemoveModalMessages extends FlowMessages {
   /** Danger button text. */
   confirm: (kind: RemoveModalKind) => string;
-  /** Label of the typed confirmation field. */
+  /** Label of the typed confirmation field; the phrase in it renders bold. */
   typeToConfirm: (phrase: string) => string;
   /** Shown under the field when the typed text does not match. */
   mismatch: string;
@@ -29,7 +29,7 @@ export interface RemoveModalMessages extends FlowMessages {
 export const defaultRemoveModalMessages: RemoveModalMessages = {
   ...defaultTaskModalMessages,
   confirm: (kind) => (kind === 'delete' ? 'Delete' : 'Remove'),
-  typeToConfirm: (phrase) => `Type ${phrase} to confirm`,
+  typeToConfirm: (phrase) => `Type "${phrase}" to confirm`,
   mismatch: 'The text does not match.',
   dangerDescription: 'Danger',
 };
@@ -49,7 +49,10 @@ interface RemoveModalOwnProps {
   title: string;
   /** Small text above the title. */
   label?: ReactNode;
-  /** What happens to the resource; a string renders as a paragraph. */
+  /**
+   * What happens to the resource; a string renders as a paragraph, with
+   * `resourceName` in it bold and in quotes.
+   */
   description: ReactNode;
 }
 
@@ -86,6 +89,25 @@ interface RemoveModalBaseProps
 }
 
 export type RemoveModalProps = RemoveModalBaseProps & RemoveModalConfirmProps;
+
+// The name is bold so the user sees what to type; the quotes stay outside the
+// bold text so they do not read as part of it.
+function emphasize(text: string, name: string | undefined): ReactNode {
+  const at = name ? text.indexOf(name) : -1;
+  if (!name || at < 0) return text;
+  const before = text.slice(0, at);
+  const after = text.slice(at + name.length);
+  const quote = before.endsWith('"') && after.startsWith('"') ? '' : '"';
+  return (
+    <>
+      {before}
+      {quote}
+      <strong>{name}</strong>
+      {quote}
+      {after}
+    </>
+  );
+}
 
 export function RemoveModal({
   open,
@@ -180,12 +202,20 @@ export function RemoveModal({
         ref={dialog.containerRef}
         tabIndex={-1}
         className="afframe-modal-body">
-        <FlowDescription description={description} />
+        <FlowDescription
+          description={
+            typeof description === 'string' && description !== '' ? (
+              <p>{emphasize(description, resourceName)}</p>
+            ) : (
+              description
+            )
+          }
+        />
         {phrase !== undefined && (
           <TextInput
             ref={inputRef}
             id={inputId}
-            labelText={text.typeToConfirm(phrase)}
+            labelText={emphasize(text.typeToConfirm(phrase), phrase)}
             value={typed}
             autoComplete="off"
             invalid={blurred && typed !== '' && typed !== phrase}

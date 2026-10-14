@@ -44,7 +44,8 @@ const launcherRef = useRef<HTMLButtonElement>(null);
   open={open}
   onClose={() => setOpen(false)}
   launcherRef={launcherRef}
-  title="Delete Invoice 2026-001?"
+  title='Delete "Invoice 2026-001"?'
+  resourceName="Invoice 2026-001"
   description="Deleting Invoice 2026-001 is permanent and cannot be undone."
   onConfirm={() => api.deleteInvoice(id)}
 />;
@@ -56,9 +57,11 @@ const launcherRef = useRef<HTMLButtonElement>(null);
   the confirm button shows a spinner with the `pending` message, and Escape,
   Cancel and the close icon do nothing. If it rejects, the dialog stays open
   and shows an error alert; the user can try again.
-- `title` (required): the heading, for example "Delete Invoice 2026-001?".
+- `title` (required): the heading, for example `Delete "Invoice 2026-001"?`
+  (the name in quotes).
 - `description` (required): what happens to the resource. A string renders
-  as a paragraph; any other node as given.
+  as a paragraph, with `resourceName` in it bold and in quotes (quotes already
+  around it are kept); any other node renders as given.
 - `kind`: `delete` (default) or `remove`; picks the danger button text.
 - `resourceName`: the name of the item. Required with `confirmByTyping` set
   to `true`, which asks the user to type it; optional otherwise.
@@ -67,6 +70,8 @@ const launcherRef = useRef<HTMLButtonElement>(null);
   equals the phrase exactly; the match is case-sensitive and spaces count.
   An empty phrase (`confirmByTyping=""`, or `true` with an empty
   `resourceName`) keeps the confirm button disabled and logs a warning.
+  The field label shows the phrase bold and in quotes; the user types it
+  without the quotes.
 - `label`: small text above the title (for example the item type).
 - `launcherRef`: the element that gets focus back on close.
 - `messages`: overrides for the strings below.
@@ -83,12 +88,14 @@ A click on the page behind the dialog does not close it.
 `messages?: Partial<RemoveModalMessages>`; defaults in
 `defaultRemoveModalMessages`. Keys that are functions take the values shown;
 override them from a client component (a function cannot cross from a server
-component). The title and description are props, not messages.
+component). The title and description are props, not messages. The phrase in
+the `typeToConfirm` text renders bold; quotes are added around it when the
+text has none.
 
 | Key                    | Default                          |
 | ---------------------- | -------------------------------- |
 | `confirm`              | Delete / Remove                  |
-| `typeToConfirm`        | Type `phrase` to confirm         |
+| `typeToConfirm`        | Type "`phrase`" to confirm       |
 | `mismatch`             | The text does not match.         |
 | `dangerDescription`    | Danger                           |
 | `cancel`               | Cancel                           |

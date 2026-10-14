@@ -77,7 +77,7 @@ test('opens as an alertdialog described by its body, Cancel focused', async () =
     dialog.getAttribute('aria-describedby') ?? ''
   );
   expect(description?.textContent).toContain(
-    'Deleting Invoice 2026-001 is permanent'
+    'Deleting "Invoice 2026-001" is permanent'
   );
   expect(
     screen.getByRole('heading', { name: 'Delete Invoice 2026-001?' })
@@ -149,7 +149,7 @@ test('typed confirmation: input focused, Delete disabled until the exact phrase'
   renderHarness({ onConfirm, confirmByTyping: true });
   await openByKeyboard();
   const input = screen.getByRole('textbox', {
-    name: 'Type Invoice 2026-001 to confirm',
+    name: 'Type "Invoice 2026-001" to confirm',
   });
   await until(() => expect(active()).toBe(input));
   expect(input.getAttribute('autocomplete')).toBe('off');
@@ -177,9 +177,48 @@ test('typed confirmation: input focused, Delete disabled until the exact phrase'
 test('typed confirmation with a custom phrase', async () => {
   renderHarness({ confirmByTyping: 'DELETE', kind: 'remove' });
   await openByKeyboard();
-  const input = screen.getByRole('textbox', { name: 'Type DELETE to confirm' });
+  const input = screen.getByRole('textbox', {
+    name: 'Type "DELETE" to confirm',
+  });
   await userEvent.type(input, 'DELETE');
   expect(dangerButton('Remove').disabled).toBe(false);
+});
+
+test('the name is bold and quoted in the description and the field label', async () => {
+  renderHarness({ confirmByTyping: true });
+  await openByKeyboard();
+  const input = screen.getByRole('textbox', {
+    name: 'Type "Invoice 2026-001" to confirm',
+  });
+  const label = document.querySelector(`label[for="${input.id}"]`);
+  expect(label?.querySelector('strong')?.textContent).toBe('Invoice 2026-001');
+  const body = screen.getByText((_, element) =>
+    element?.tagName === 'P'
+      ? element.textContent ===
+        'Deleting "Invoice 2026-001" is permanent and cannot be undone.'
+      : false
+  );
+  const strong = body.querySelector('strong');
+  if (!strong) throw new Error('no bold name');
+  expect(strong.textContent).toBe('Invoice 2026-001');
+  expect(Number(getComputedStyle(strong).fontWeight)).toBeGreaterThanOrEqual(
+    600
+  );
+});
+
+test('a custom label gets the phrase bold; quotes already there are kept', async () => {
+  renderHarness({
+    confirmByTyping: 'DELETE',
+    description: 'Type "DELETE" below.',
+    resourceName: 'DELETE',
+    messages: { typeToConfirm: (phrase) => `Enter ${phrase}` },
+  });
+  await openByKeyboard();
+  const input = screen.getByRole('textbox', { name: 'Enter "DELETE"' });
+  const label = document.querySelector(`label[for="${input.id}"]`);
+  expect(label?.querySelector('strong')?.textContent).toBe('DELETE');
+  expect(screen.getByText('DELETE', { selector: 'p strong' })).toBeTruthy();
+  expect(document.body.textContent).toContain('Type "DELETE" below.');
 });
 
 test('pending: buttons disabled, Escape ignored; rejection keeps it open with an alert', async () => {
