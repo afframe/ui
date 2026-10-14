@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
 import { formatFileSize } from './fileSize.js';
 import { defaultImportModalMessages, ImportModal } from './ImportModal.js';
@@ -169,6 +169,35 @@ test('multiple files are listed; a file with the same name replaces the row', as
     'b.csv',
     'a.csv',
   ]);
+});
+
+test('a long file list scrolls the body; the footer stays in the dialog', async () => {
+  // Above Carbon's lg breakpoint, where the small modal is capped at 72% height.
+  await page.viewport(1280, 600);
+  try {
+    renderHarness({ multiple: true });
+    await openByKeyboard();
+    await userEvent.upload(fileInput(), [
+      csv('a.csv'),
+      csv('b.csv'),
+      csv('c.csv'),
+      csv('d.csv'),
+    ]);
+    await until(() => expect(screen.getAllByRole('listitem')).toHaveLength(4));
+    const dialog = document.querySelector('.afframe-import-modal dialog');
+    const content = document.querySelector(
+      '.afframe-import-modal .cds--modal-content'
+    );
+    if (!dialog || !content) throw new Error('no dialog');
+    const box = dialog.getBoundingClientRect();
+    const button = importButton().getBoundingClientRect();
+    expect(button.bottom).toBeLessThanOrEqual(box.bottom);
+    expect(button.bottom).toBeLessThanOrEqual(window.innerHeight);
+    expect(dialog.scrollHeight).toBeLessThanOrEqual(dialog.clientHeight);
+    expect(content.scrollHeight).toBeGreaterThan(content.clientHeight);
+  } finally {
+    await page.viewport(1024, 768);
+  }
 });
 
 test('without multiple, a new file replaces the old one', async () => {
