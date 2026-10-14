@@ -108,17 +108,28 @@ test('the nav switches the form shown; values survive the switch', async () => {
   const onFormChange = vi.fn();
   render(<Harness onFormChange={onFormChange} />);
   await launch();
-  const items = within(nav()).getAllByRole('link');
+  const items = within(nav()).getAllByRole('button');
   expect(items.map((item) => item.textContent)).toEqual(['Part A', 'Part B']);
-  expect(items[0]?.getAttribute('aria-current')).toBe('true');
+  expect(items[0]?.getAttribute('aria-current')).toBe('step');
   expect(screen.queryByRole('textbox', { name: 'Field C' })).toBeNull();
   await userEvent.type(fieldA(), 'kept');
   items[1]?.focus();
   await userEvent.keyboard('{Enter}');
-  // As IBM's EditTearsheet: focus stays on the nav item.
+  // Focus stays on the step.
   expect(active()).toBe(items[1]);
-  expect(items[1]?.getAttribute('aria-current')).toBe('true');
+  expect(items[1]?.getAttribute('aria-current')).toBe('step');
+  // Carbon's step handles Enter and the native click; the form changes once.
+  expect(onFormChange).toHaveBeenCalledTimes(1);
   expect(onFormChange).toHaveBeenCalledWith(1);
+  // Forms have no order: no step reads as complete, only the shown one as current.
+  expect(
+    document.querySelectorAll('.cds--progress-step--complete')
+  ).toHaveLength(0);
+  expect(
+    [...document.querySelectorAll('.cds--progress-step--current')].map(
+      (step) => step.textContent
+    )
+  ).toEqual(['Part B']);
   expect(screen.getByRole('textbox', { name: 'Field C' })).toBeTruthy();
   expect(screen.queryByRole('textbox', { name: 'Field A' })).toBeNull();
   await userEvent.click(items[0] as HTMLElement);
@@ -130,7 +141,9 @@ test('an invalid form has a named marker; Save focuses it and does not submit', 
   render(<Harness invalidB onSubmit={onSubmit} />);
   await launch();
   expect(
-    within(nav()).getByRole('img', { name: defaults.sectionInvalid('Part B') })
+    within(nav()).getByRole('button', {
+      name: `Part B ${defaults.sectionInvalid('Part B')}`,
+    })
   ).toBeTruthy();
   const save = screen.getByRole('button', { name: defaults.save });
   expect(save.hasAttribute('disabled')).toBe(false);
@@ -251,7 +264,7 @@ test('a rejected submit with invalid fields in the shown and a hidden form focus
   await userEvent.click(
     within(
       await screen.findByRole('navigation', { name: defaults.sectionsNavLabel })
-    ).getByRole('link', { name: 'Two' })
+    ).getByRole('button', { name: 'Two' })
   );
   await userEvent.click(screen.getByRole('button', { name: defaults.save }));
   await screen.findByRole('alert');
@@ -412,7 +425,9 @@ test('messages replace every visible string and accessible name', async () => {
   cleanup();
   render(<Harness invalidB messages={s} />);
   await launch();
-  expect(screen.getByRole('img', { name: 'zzInvalid Part B' })).toBeTruthy();
+  expect(
+    screen.getByRole('button', { name: 'Part B zzInvalid Part B' })
+  ).toBeTruthy();
   expect(englishLeft(english)).toEqual([]);
 });
 
@@ -459,8 +474,8 @@ function Sheet({ open, forms }: { open: boolean; forms: string[] }) {
 
 const currentItem = () =>
   within(nav())
-    .getAllByRole('link')
-    .find((item) => item.getAttribute('aria-current') === 'true')?.textContent;
+    .getAllByRole('button')
+    .find((item) => item.getAttribute('aria-current') === 'step')?.textContent;
 
 test('the nav ignores children that are not forms, with a warning', async () => {
   const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
@@ -468,7 +483,7 @@ test('the nav ignores children that are not forms, with a warning', async () => 
   await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
   expect(
     within(nav())
-      .getAllByRole('link')
+      .getAllByRole('button')
       .map((item) => item.textContent)
   ).toEqual(['One', 'Two']);
   expect(warn).toHaveBeenCalledWith(expect.stringContaining('EditTearsheet:'));
@@ -479,12 +494,12 @@ test('the current nav item resets on open and stays in range when forms shrink',
   const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   const { rerender } = render(<Sheet open forms={['One', 'Two']} />);
   await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
-  await userEvent.click(within(nav()).getByRole('link', { name: 'Two' }));
+  await userEvent.click(within(nav()).getByRole('button', { name: 'Two' }));
   expect(currentItem()).toBe('Two');
   rerender(<Sheet open forms={['One']} />);
   expect(currentItem()).toBe('One');
   rerender(<Sheet open forms={['One', 'Two']} />);
-  await userEvent.click(within(nav()).getByRole('link', { name: 'Two' }));
+  await userEvent.click(within(nav()).getByRole('button', { name: 'Two' }));
   rerender(<Sheet open={false} forms={['One', 'Two']} />);
   await waitFor(() => expect(screen.queryByRole('navigation')).toBeNull());
   rerender(<Sheet open forms={['One', 'Two']} />);
@@ -551,7 +566,7 @@ test('narrow: a trigger opens the nav in a panel; choosing a form closes it; Esc
   ).toBe(defaults.openSections);
   await userEvent.click(trigger);
   await userEvent.click(
-    within(await screen.findByRole('navigation')).getByRole('link', {
+    within(await screen.findByRole('navigation')).getByRole('button', {
       name: 'Two',
     })
   );
@@ -577,30 +592,4 @@ test('narrow: a trigger opens the nav in a panel; choosing a form closes it; Esc
   await waitFor(() => expect(screen.queryByRole('navigation')).toBeNull());
   await waitFor(() => expect(active()).toBe(trigger));
   expect(onClose).not.toHaveBeenCalled();
-});
-
-test.each([
-  ['Ctrl', { ctrlKey: true }],
-  ['Meta', { metaKey: true }],
-  ['Shift', { shiftKey: true }],
-  ['middle button', { button: 1 }],
-])('a %s click on a nav item is left to the browser', async (_, init) => {
-  render(<Harness />);
-  await launch();
-  const items = within(nav()).getAllByRole('link');
-  let prevented: boolean | undefined;
-  // Records the item's own handling, then stops the hash navigation.
-  window.addEventListener(
-    'click',
-    (event) => {
-      prevented = event.defaultPrevented;
-      event.preventDefault();
-    },
-    { once: true }
-  );
-  items[1]?.dispatchEvent(
-    new MouseEvent('click', { bubbles: true, cancelable: true, ...init })
-  );
-  expect(prevented).toBe(false);
-  expect(items[0]?.getAttribute('aria-current')).toBe('true');
 });

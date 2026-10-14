@@ -1,14 +1,7 @@
 'use client';
-import { RightPanelClose, WarningFilled } from '@carbon/icons-react';
+import { RightPanelClose } from '@carbon/icons-react';
 import { preview__Tearsheet as Tearsheet } from '@carbon/ibm-products';
-import {
-  Button,
-  Column,
-  Grid,
-  SideNav,
-  SideNavItems,
-  SideNavMenuItem,
-} from '@carbon/react';
+import { Button, ProgressIndicator, ProgressStep } from '@carbon/react';
 import {
   Children,
   createContext,
@@ -22,7 +15,6 @@ import {
 import type {
   HTMLAttributes,
   KeyboardEvent,
-  MouseEvent,
   ReactElement,
   ReactNode,
   Ref,
@@ -44,11 +36,11 @@ import { firstControlSelector, useFlow } from '../FlowParts/useFlow.js';
 export interface EditTearsheetMessages extends FlowMessages, DiscardMessages {
   /** Primary button. */
   save: string;
-  /** Name of the side navigation that lists the forms. */
+  /** Name of the navigation that lists the forms. */
   sectionsNavLabel: string;
-  /** Accessible name of the error icon on an invalid form's nav item. */
+  /** Read after an invalid form's name in the navigation. */
   sectionInvalid: (title: string) => string;
-  /** Button that opens the side navigation on small screens and in `narrow`. */
+  /** Button that opens the form navigation on small screens and in `narrow`. */
   openSections: string;
 }
 
@@ -61,27 +53,26 @@ export const defaultEditTearsheetMessages: EditTearsheetMessages = {
 };
 
 export interface EditTearsheetFormProps {
-  /** Unique in the page; the nav item links to the form with this id. */
+  /** Unique in the page; names the form's section and heading. */
   id: string;
   title: string;
   description?: ReactNode;
-  /** Marks the nav item with an error icon; Save then shows and focuses this form. */
+  /** Marks the form's step with IBM's warning icon; Save then shows and focuses this form. */
   invalid?: boolean;
   children?: ReactNode;
 }
 
-// IBM's EditTearsheet class names: its compiled styles hide the other forms,
-// fade the shown one in, and set the content padding and grid margins.
+// IBM's EditTearsheet class names: its compiled styles hide the other forms
+// and fade the shown one in.
 const ibm = 'c4p--tearsheet-edit';
 
 interface FormContextValue {
   activeId: string | undefined;
-  narrow: boolean;
 }
 
 const FormContext = createContext<FormContextValue | null>(null);
 
-/** One form of an EditTearsheet, listed in its side navigation; one is shown at a time. */
+/** One form of an EditTearsheet, a step in its form navigation; one is shown at a time. */
 export function EditTearsheetForm({
   id,
   title,
@@ -99,28 +90,15 @@ export function EditTearsheetForm({
         `${ibm}__form__form--${visible ? 'visible' : 'hidden'}-form`,
         'afframe-edit-tearsheet-form',
       ].join(' ')}>
-      <Grid>
-        <Column sm={4} md={8} lg={context?.narrow ? 16 : 12}>
-          {/* IBM's is an h4; an h3 under the tearsheet's h2 keeps the
-              heading order, styled as IBM's h4. */}
-          <h3
-            id={`${id}-title`}
-            tabIndex={-1}
-            className={`${ibm}__form--title afframe-edit-tearsheet-form-title`}>
-            {title}
-          </h3>
-          {description && (
-            <p className={`${ibm}__form--description`}>{description}</p>
-          )}
-        </Column>
-        <Column
-          sm={4}
-          md={8}
-          lg={context?.narrow ? 16 : 8}
-          className="afframe-edit-tearsheet-form-fields">
-          {children}
-        </Column>
-      </Grid>
+      {/* The main content heading of IBM's Tearsheet With Influencer, with
+          the spacing of IBM's EditTearsheet form title. */}
+      <h3 id={`${id}-title`} tabIndex={-1} className={`${ibm}__form--title`}>
+        {title}
+      </h3>
+      {description && (
+        <p className={`${ibm}__form--description`}>{description}</p>
+      )}
+      <div className="afframe-edit-tearsheet-form-fields">{children}</div>
     </section>
   );
 }
@@ -135,15 +113,15 @@ interface EditTearsheetOwnProps {
   description?: ReactNode;
   /** Small text above the title. */
   label?: ReactNode;
-  /** `wide` (default) or `narrow` (480px); narrow keeps the side navigation in a panel. */
+  /** `wide` (default) or `narrow` (480px); narrow keeps the form navigation in a panel. */
   variant?: 'wide' | 'narrow';
   /** IBM's `Tearsheet.HeaderActions` with `Tearsheet.HeaderActionItem`s, beside the title. */
   headerActions?: ReactNode;
   /** An AI label or another decorator in the header. */
   decorator?: ReactNode;
-  /** Width of the side navigation. Default `narrow`. */
+  /** Width of the influencer column with the form navigation. Default `narrow`. */
   influencerWidth?: 'narrow' | 'wide';
-  /** Called with the index of the form chosen in the side navigation. */
+  /** Called with the index of the form chosen in the navigation. */
   onFormChange?: (index: number) => void;
   submitDisabled?: boolean;
   isDirty?: boolean;
@@ -200,7 +178,7 @@ const firstVisibleControl = firstControlSelector
   .map((selector) => `${visibleForm} ${selector}`)
   .join(', ');
 
-/** A multi-form edit in IBM's tearsheet: a side navigation switches the form shown. Controlled by `open`. */
+/** A multi-form edit in IBM's tearsheet: a vertical progress indicator in the influencer switches the form shown. Controlled by `open`. */
 export function EditTearsheet({
   open,
   onClose,
@@ -277,6 +255,11 @@ export function EditTearsheet({
       setCurrent(invalid);
   }
   const active = Math.max(0, Math.min(current, forms.length - 1));
+  // The form shown as of the last select call: Carbon's ProgressStep runs
+  // onChange twice for Enter and Space (its keydown and the native click),
+  // and once for the current step, which reads as unclickable.
+  const shown = useRef(active);
+  shown.current = active;
 
   // An error field the consumer marked only in a hidden form: useFlow could
   // not focus it, so show its form and focus it there. A field in the shown
@@ -311,7 +294,8 @@ export function EditTearsheet({
 
   const select = (index: number, focusHeading = false) => {
     const form = forms[index];
-    if (!form) return;
+    if (!form || (!focusHeading && index === shown.current)) return;
+    shown.current = index;
     // The user's choice wins over a field marked after the error.
     handledError.current = flow.errorCount;
     if (focusHeading && index !== active)
@@ -388,64 +372,44 @@ export function EditTearsheet({
           />
         </Tearsheet.Header>
         <Tearsheet.Influencer
-          isFlush
           influencerPanelAriaLabel={text.sectionsNavLabel}
           influencerPanelOpen={panelOpen}
           onInfluencerPanelClose={() => setPanelOpen(false)}
           influencerPanelTriggerRef={triggerRef as RefObject<HTMLElement>}>
-          <SideNav
-            aria-label={text.sectionsNavLabel}
-            className="afframe-edit-tearsheet-nav"
-            expanded
-            isFixedNav={false}>
-            <SideNavItems>
+          <nav aria-label={text.sectionsNavLabel}>
+            {/* -1: Carbon marks every step before currentIndex complete and
+                forces the step at it current; forms have no order, so each
+                step sets its own current and none is complete. */}
+            <ProgressIndicator vertical currentIndex={-1} onChange={select}>
               {forms.map((form, index) => (
-                <SideNavMenuItem
+                <ProgressStep
                   key={form.id}
-                  // A link to the form, so the item is reachable by Tab;
-                  // IBM's has no href.
-                  href={`#${form.id}`}
-                  isActive={index === active}
-                  aria-current={index === active ? 'true' : undefined}
-                  onClick={(event: MouseEvent) => {
-                    // A new tab or window gets the link as is.
-                    if (
-                      event.button !== 0 ||
-                      event.metaKey ||
-                      event.ctrlKey ||
-                      event.shiftKey ||
-                      event.altKey
-                    )
-                      return;
-                    event.preventDefault();
-                    select(index);
-                  }}>
-                  <span className="afframe-edit-tearsheet-nav-text">
-                    {form.title}
-                    {form.invalid && (
-                      <WarningFilled
-                        role="img"
-                        aria-hidden={false}
-                        aria-label={text.sectionInvalid(form.title)}
-                        className="afframe-edit-tearsheet-nav-invalid"
-                      />
-                    )}
-                  </span>
-                </SideNavMenuItem>
+                  label={form.title}
+                  current={index === active}
+                  invalid={form.invalid ?? false}
+                  aria-current={index === active ? 'step' : undefined}
+                  // Carbon's "Current"/"Incomplete" status text says nothing
+                  // about a form; the invalid one names the form.
+                  translateWithId={(id) =>
+                    id === 'carbon.progress-step.invalid'
+                      ? text.sectionInvalid(form.title)
+                      : ''
+                  }
+                />
               ))}
-            </SideNavItems>
-          </SideNav>
+            </ProgressIndicator>
+          </nav>
         </Tearsheet.Influencer>
         <Tearsheet.Body>
-          <Tearsheet.MainContent isFlush>
+          <Tearsheet.MainContent>
             <FlowForm
               flow={flow}
               onSubmit={() => void submit()}
               submitDisabled={submitDisabled}
-              aria-label={title}
-              className={`${ibm}__content`}>
+              aria-label={title}>
               {small && (
-                // As IBM's story: a ghost icon button with 8px under it.
+                // IBM's story trigger: a ghost icon button in the content's
+                // top start corner.
                 <div className="afframe-edit-tearsheet-sections-trigger-wrapper">
                   <Button
                     ref={triggerRef}
@@ -460,23 +424,14 @@ export function EditTearsheet({
                   />
                 </div>
               )}
-              <FormContext.Provider
-                value={{
-                  activeId: forms[active]?.id,
-                  narrow: variant === 'narrow',
-                }}>
+              <FormContext.Provider value={{ activeId: forms[active]?.id }}>
                 {formElements}
               </FormContext.Provider>
               {flow.error !== null && (
-                // The fields' column, so the alert lines up with them.
-                <Grid>
-                  <Column sm={4} md={8} lg={variant === 'narrow' ? 16 : 8}>
-                    <FlowError
-                      error={flow.error}
-                      iconDescription={text.errorIconDescription}
-                    />
-                  </Column>
-                </Grid>
+                <FlowError
+                  error={flow.error}
+                  iconDescription={text.errorIconDescription}
+                />
               )}
             </FlowForm>
             {/* Outside the form: its aria-busy may hold back announcements. */}

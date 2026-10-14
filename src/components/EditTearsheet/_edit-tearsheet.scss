@@ -1,31 +1,15 @@
 // EditTearsheet styles, Carbon tokens only. IBM's EditTearsheet styles
-// (c4p--tearsheet-edit classes) do the rest.
+// (c4p--tearsheet-edit classes) hide the forms not shown.
 @use '@carbon/styles/scss/spacing' as *;
-@use '@carbon/styles/scss/theme' as *;
-@use '@carbon/styles/scss/type';
 
-// IBM sets the side nav to position: initial; Carbon's height leaves room
-// for a UI Shell header that is not there.
-.afframe-edit-tearsheet .afframe-edit-tearsheet-nav {
-  block-size: auto;
+// IBM's Tearsheet With Influencer: its 32px block padding comes from IBM's
+// story styles, not the component.
+/* stylelint-disable selector-class-pattern -- IBM's class names */
+.afframe-edit-tearsheet
+  :is(.c4p--tearsheet__next__influencer, .c4p--tearsheet__next__main-content) {
+  padding-block: $spacing-07;
 }
-
-.afframe-edit-tearsheet-nav-text {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $spacing-03;
-}
-
-.afframe-edit-tearsheet-nav-invalid {
-  flex: none;
-  fill: $support-error;
-}
-
-// Carbon's h4 style, which IBM's form title gets.
-.afframe-edit-tearsheet-form-title {
-  @include type.type-style('heading-03');
-}
+/* stylelint-enable selector-class-pattern */
 
 .afframe-edit-tearsheet-form-fields {
   display: flex;
@@ -33,12 +17,18 @@
   gap: $spacing-05;
 }
 
-// IBM's story trigger: its button stays in the flow (the story's absolute
-// rule does not reach the button inside Carbon's tooltip), with 8px under it.
-// The inline start lines it up with the form title (grid padding + gutter).
+// IBM's story trigger: a ghost icon button at the content's top start corner,
+// out of the flow, with 8px under its empty wrapper. The box to move is
+// Carbon's tooltip span around the icon-only button.
 .afframe-edit-tearsheet-sections-trigger-wrapper {
   margin-block-end: $spacing-03;
-  padding-inline-start: $spacing-06;
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- Carbon's class name */
+.afframe-edit-tearsheet-sections-trigger-wrapper > .cds--popover-container {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
 }
 
 // Keeps a focused field clear of the sticky footer (WCAG 2.4.11).
