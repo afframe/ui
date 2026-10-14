@@ -34,6 +34,14 @@
   gap: $spacing-05;
 }
 
+// IBM's story trigger: its button stays in the flow (the story's absolute
+// rule does not reach the button inside Carbon's tooltip), with 8px under it.
+// The inline start lines it up with the form title (grid padding + gutter).
+.afframe-edit-tearsheet-sections-trigger-wrapper {
+  margin-block-end: $spacing-03;
+  padding-inline-start: $spacing-06;
+}
+
 // Keeps a focused field clear of the sticky footer (WCAG 2.4.11).
 .afframe-edit-tearsheet .afframe-create-edit-form :focus {
   scroll-margin-block-end: $spacing-10;

@@ -408,26 +408,28 @@ export function EditTearsheet({
         </Tearsheet.Influencer>
         <Tearsheet.Body>
           <Tearsheet.MainContent isFlush>
-            {small && (
-              <Button
-                ref={triggerRef}
-                kind="ghost"
-                size="md"
-                hasIconOnly
-                iconDescription={text.openSections}
-                tooltipPosition="right"
-                renderIcon={RightPanelClose}
-                aria-expanded={panelOpen}
-                className="afframe-edit-tearsheet-sections-trigger"
-                onClick={() => setPanelOpen(true)}
-              />
-            )}
             <FlowForm
               flow={flow}
               onSubmit={() => void submit()}
               submitDisabled={submitDisabled}
               aria-label={title}
               className={`${ibm}__content`}>
+              {small && (
+                // As IBM's story: a ghost icon button with 8px under it.
+                <div className="afframe-edit-tearsheet-sections-trigger-wrapper">
+                  <Button
+                    ref={triggerRef}
+                    kind="ghost"
+                    size="md"
+                    hasIconOnly
+                    iconDescription={text.openSections}
+                    renderIcon={RightPanelClose}
+                    aria-expanded={panelOpen}
+                    className="afframe-edit-tearsheet-sections-trigger"
+                    onClick={() => setPanelOpen(true)}
+                  />
+                </div>
+              )}
               <FormContext.Provider
                 value={{
                   activeId: forms[active]?.id,
