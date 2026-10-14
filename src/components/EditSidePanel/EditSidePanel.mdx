@@ -30,8 +30,8 @@ It shares its submit, cancel, discard and focus behaviour with `CreateModal`,
 Save is disabled and shows a spinner; when it resolves, `onClose` is called;
 when it rejects, the panel stays open and shows the error above the action
 bar. Closing while it is pending asks "Discard changes?", also on a clean
-form: Discard closes the panel and ignores the result; the dialog closes
-itself when the promise settles.
+form, unless `confirmDiscard` is false. Discard closes the panel and ignores
+the result; the dialog closes itself when the promise settles.
 
 ### Wiring `isDirty`
 

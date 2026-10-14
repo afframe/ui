@@ -85,7 +85,7 @@ interface EditTearsheetOwnProps {
   onFormChange?: (index: number) => void;
   submitDisabled?: boolean;
   isDirty?: boolean;
-  /** Ask before discarding a dirty form. Default true. */
+  /** Ask before discarding a dirty form or a pending submit. Default true. */
   confirmDiscard?: boolean;
   /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;

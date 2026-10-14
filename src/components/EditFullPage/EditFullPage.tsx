@@ -41,7 +41,7 @@ interface EditFullPageOwnProps {
   description?: ReactNode;
   submitDisabled?: boolean;
   isDirty?: boolean;
-  /** Ask before discarding a dirty form. Default true. */
+  /** Ask before discarding a dirty form or a pending submit. Default true. */
   confirmDiscard?: boolean;
   /** Ask the browser to confirm leaving the page while dirty. Default true. */
   warnOnLeave?: boolean;

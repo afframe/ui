@@ -31,8 +31,8 @@ cancel, discard and focus behaviour with `CreateModal`, `EditSidePanel`,
 primary button is disabled and shows a spinner; when it resolves, `onClose` is
 called; when it rejects, the panel stays open and shows the error above the
 action bar. Closing while it is pending asks "Discard changes?", also on a
-clean form: Discard closes the panel and ignores the result; the dialog closes
-itself when the promise settles.
+clean form, unless `confirmDiscard` is false. Discard closes the panel and
+ignores the result; the dialog closes itself when the promise settles.
 
 ```tsx
 import { CreateSidePanel } from '@afframe/ui';

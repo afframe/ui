@@ -47,7 +47,7 @@ interface FlowSidePanelOwnProps {
   /** An AI label or another decorator next to the close icon. */
   decorator?: ReactNode;
   submitDisabled?: boolean;
-  /** Ask before discarding a dirty form. Default true. */
+  /** Ask before discarding a dirty form or a pending submit. Default true. */
   confirmDiscard?: boolean;
   /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;

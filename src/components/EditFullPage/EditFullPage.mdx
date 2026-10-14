@@ -34,8 +34,9 @@ the page landmarks. `onClose` leaves edit mode. `onSubmit` may return a
 promise: while it is pending Save is disabled and shows a spinner; when it
 resolves, `onClose` is called; when it rejects, the form stays and shows the
 error above the action bar. Closing while it is pending asks "Discard
-changes?", also on a clean form: Discard leaves edit mode and ignores the
-result; the dialog closes itself when the promise settles.
+changes?", also on a clean form, unless `confirmDiscard` is false. Discard
+leaves edit mode and ignores the result; the dialog closes itself when the
+promise settles.
 
 ### Wiring `isDirty`
 

@@ -29,9 +29,9 @@ submit, cancel, discard and focus behaviour with `CreateSidePanel`,
 `open` is controlled. `onSubmit` may return a promise: while it is pending the
 primary button is disabled and shows a spinner; when it resolves, `onClose` is
 called; when it rejects, the modal stays open and shows the error. Closing
-while it is pending asks "Discard changes?", also on a clean form: Discard
-closes the modal and ignores the result; the dialog closes itself when the
-promise settles.
+while it is pending asks "Discard changes?", also on a clean form, unless
+`confirmDiscard` is false. Discard closes the modal and ignores the result;
+the dialog closes itself when the promise settles.
 
 ```tsx
 import { CreateModal } from '@afframe/ui';
