@@ -13,18 +13,22 @@ import { DialogChooser } from '../../../.storybook/DialogChooser';
 
 [Source code](https://github.com/afframe/ui/tree/main/src/components/EditTearsheet). See also [Forms pattern](https://carbondesignsystem.com/building-blocks/core/patterns/forms).
 
-`EditTearsheet` edits a record with several forms (sections) in IBM
-Products' tearsheet (`preview__Tearsheet`). A side navigation lists the
-forms; choosing one scrolls to it and moves focus to its heading. The current
-item follows scrolling: it is the form whose top has passed the upper third of
-the tearsheet, or the last form once it shows in full after scrolling. It replaces
-IBM Products' deprecated EditTearsheet. It shares its submit, cancel, discard
-and focus behaviour with `CreateModal`, `CreateSidePanel`, `EditSidePanel`
-and `EditFullPage`.
+`EditTearsheet` edits a record with several forms in IBM Products' tearsheet
+(`preview__Tearsheet`), laid out as IBM Products' deprecated EditTearsheet,
+which it replaces: a side navigation lists the forms and shows one at a time.
+The other forms stay mounted, hidden, so their values survive switching. The
+actions, ghost Cancel and primary Save, sit under the form column; the
+navigation runs the full height on the left. It shares its submit, cancel,
+discard and focus behaviour with `CreateModal`, `CreateSidePanel`,
+`EditSidePanel` and `EditFullPage`.
 
 <Canvas of={EditTearsheetStories.Default} />
 
 ## Which component to use
+
+Use `EditTearsheet` when an edit has several forms the user moves between.
+One form that fits a panel is an `EditSidePanel`; a long single form that
+needs the page is an `EditFullPage`.
 
 <DialogChooser />
 
@@ -33,7 +37,7 @@ and `EditFullPage`.
 `open` is controlled. The children are `EditTearsheetForm` elements, each one
 section with its own heading. `onSubmit` may return a promise: while it is
 pending Save is disabled; when it resolves, `onClose` is called; when it
-rejects, the tearsheet stays open and shows the error above the footer.
+rejects, the tearsheet stays open and shows the error under the shown form.
 Closing while it is pending asks "Discard changes?", also on a clean form,
 unless `confirmDiscard` is false. Discard closes the tearsheet and ignores the
 result; the dialog closes itself when the promise settles.
@@ -67,17 +71,25 @@ const [vat, setVat] = useState(customer.vat);
 ```
 
 - `title`, `label` (above the title) and `description` head the tearsheet.
+  The close icon stays, as in IBM's tearsheet.
+- `variant`: `wide` (default) or `narrow` (480px). In `narrow`, and below the
+  `md` breakpoint, the navigation moves into IBM's side panel, opened by an
+  icon button above the form; choosing a form closes the panel.
+- `headerActions`: IBM's `Tearsheet.HeaderActions` with
+  `Tearsheet.HeaderActionItem`s (both from `@afframe/ui`'s `Tearsheet`),
+  beside the title; they collapse into a menu button when space runs out.
+- `decorator`: an `AILabel` or another decorator in the header.
 - `influencerWidth`: `narrow` (default, 16rem) or `wide` (20rem) side
   navigation.
-- `onFormChange(index)`: called when a form is chosen in the navigation, not
-  when scrolling moves the current item.
+- `onFormChange(index)`: called when a form is chosen in the navigation.
 - Only `EditTearsheetForm` children are rendered; other children are left
   out with a console warning.
 - `EditTearsheetForm`: `id` (unique in the page), `title` (a level 3
-  heading), `description`, `invalid`.
+  heading), `description`, `invalid`. Its fields take 8 of the 16 grid
+  columns from `lg` up (all of them in `narrow`), stacked.
 - `invalid` marks the form's navigation item with an error icon. Save stays
-  enabled; while a form is invalid, Save does not submit and moves focus to
-  the first invalid form's heading instead.
+  enabled; while a form is invalid, Save does not submit: it shows the first
+  invalid form and moves focus to its heading instead.
 - `isDirty`: compare the field state with the saved values. When true,
   Escape, the close icon and Cancel ask "Discard changes?" first, unless
   `confirmDiscard` is false. An overlay click never closes the tearsheet.
@@ -88,9 +100,6 @@ const [vat, setVat] = useState(customer.vat);
   tearsheet's root `div` (Carbon ComposedModal's, portaled to `body`), where
   `className` lands too. IBM names the dialog itself. The ref is `null` while
   the tearsheet is closed; the discard dialog renders beside it, never inside.
-
-Below the `md` breakpoint IBM's tearsheet moves the navigation into a closed
-side panel; use the full width layout for multi-form edits.
 
 <ArgTypes of={EditTearsheetStories} />
 
@@ -106,6 +115,7 @@ from a client component (server components can pass only the string keys).
 | `cancel`               | Cancel                                                      |
 | `sectionsNavLabel`     | Sections                                                    |
 | `sectionInvalid`       | `title` has errors                                          |
+| `openSections`         | Open sections                                               |
 | `pending`              | Saving                                                      |
 | `error`                | The changes could not be saved. Try again.                  |
 | `errorText`            | not set: `error` is shown                                   |
@@ -118,17 +128,20 @@ from a client component (server components can pass only the string keys).
 
 ## Keyboard and screen reader behaviour
 
-On open, focus moves to the first form control. Focus order: the close icon,
-the navigation items, the form fields, Cancel, Save. Tab and Shift+Tab stay
-inside the tearsheet and wrap.
+On open, focus moves to the first control of the first form. Focus order: the
+header actions, the close icon, the navigation items, the open-sections button
+(narrow and small screens), the shown form's fields, Cancel, Save. Hidden
+forms are out of the focus order. Tab and Shift+Tab stay inside the tearsheet
+and wrap.
 
-| Key          | Where                 | Action                                                                                            |
-| ------------ | --------------------- | ------------------------------------------------------------------------------------------------- |
-| Enter, Space | navigation item       | Scrolls to that form and moves focus to its heading.                                              |
-| Enter        | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.          |
-| Escape       | anywhere in the sheet | Closes a clean tearsheet. On a dirty one, or while a submit is pending, opens the discard dialog. |
-| Escape       | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                         |
-| Tab          | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.             |
+| Key    | Where                 | Action                                                                                            |
+| ------ | --------------------- | ------------------------------------------------------------------------------------------------- |
+| Enter  | navigation item       | Shows that form; focus stays on the item.                                                         |
+| Escape | navigation side panel | Closes only the panel; focus returns to the open-sections button.                                 |
+| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.          |
+| Escape | anywhere in the sheet | Closes a clean tearsheet. On a dirty one, or while a submit is pending, opens the discard dialog. |
+| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                         |
+| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.             |
 
 On close, focus returns to `launcherRef`, else to the element that had focus
 when the tearsheet opened, else to the page body.
@@ -139,12 +152,15 @@ margin the size of the footer (the test-only `FocusNotObscured` story checks it)
 Screen readers announce:
 
 - the tearsheet as a dialog named by its title; the navigation as a landmark
-  named `sectionsNavLabel`, the item of the form in view with `aria-current`; an invalid
-  form's error icon as an image named `sectionInvalid(title)`;
-- each form as a region named by its heading;
-- while saving, the form as busy and Save's loading text (`pending`);
-- a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
-  field with `aria-invalid="true"`, else to the alert;
+  named `sectionsNavLabel`, its items as links, the shown form's item with
+  `aria-current`; an invalid form's error icon as an image named
+  `sectionInvalid(title)`;
+- the shown form as a region named by its heading;
+- while saving, the form as busy and `pending` in a polite status; Save keeps
+  its name and shows a spinner;
+- a rejected submit as an alert with `error` (or `errorText(error)`). Focus
+  moves to the first field with `aria-invalid="true"`, showing its form first
+  when it is hidden, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
   `discardBody`.
 
@@ -159,3 +175,9 @@ Screen readers announce:
 <Canvas of={EditTearsheetStories.Submitting} />
 
 <Canvas of={EditTearsheetStories.LongForm} />
+
+<Canvas of={EditTearsheetStories.Narrow} />
+
+<Canvas of={EditTearsheetStories.WithHeaderActions} />
+
+<Canvas of={EditTearsheetStories.WithAILabel} />
