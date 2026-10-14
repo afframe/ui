@@ -149,8 +149,8 @@ Download, Done.
 
 Focus is trapped by the browser's modal dialog: the page behind it is inert.
 On close, focus returns to `launcherRef`, else to the element focused before
-the dialog opened, else to the page body. After a failure, focus moves to the first invalid field, else to the error
-alert.
+the dialog opened, else to the page body. After a failure, focus moves to the first invalid field, else to the dialog body,
+with no focus ring, so the next Tab reaches the first field; the error alert takes no focus.
 
 Screen readers announce:
 

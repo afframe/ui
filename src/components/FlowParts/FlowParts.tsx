@@ -84,7 +84,7 @@ export function FlowForm({
   };
   return (
     <form
-      // Focus parks here while pending (useFlow).
+      // Focus parks here while pending and after an error (useFlow).
       tabIndex={-1}
       {...rest}
       ref={formRef}
@@ -120,8 +120,8 @@ export function FlowDescription({
 }
 
 /**
- * The error alert, as wide as the fields; it takes the error focus itself.
- * Render it inside `containerRef`.
+ * The error alert, as wide as the fields. Not focusable: role="alert"
+ * announces it, and the error focus goes to `containerRef` (useFlow).
  */
 export function FlowError({
   error,
@@ -134,7 +134,6 @@ export function FlowError({
   return (
     <InlineNotification
       data-afframe-flow-error=""
-      tabIndex={-1}
       className="afframe-flow-error"
       kind="error"
       role="alert"

@@ -275,9 +275,15 @@ test('pending: buttons disabled, Escape ignored; rejection keeps it open with an
     'Something went wrong. Try again.'
   );
   expect(dialogRole()).not.toBeNull();
+  // The dialog body takes the error focus with no ring, not the alert; with
+  // no text field the next Tab reaches Cancel.
   await until(() =>
-    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+    expect(active()?.classList.contains('afframe-modal-body')).toBe(true)
   );
+  expect(getComputedStyle(active() as Element).outlineStyle).toBe('none');
+  expect(screen.getByRole('alert').hasAttribute('tabindex')).toBe(false);
+  await userEvent.tab();
+  expect(active()).toBe(screen.getByRole('button', { name: 'Cancel' }));
   expect(onClose).not.toHaveBeenCalled();
 });
 

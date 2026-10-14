@@ -238,7 +238,7 @@ test('focus stays in the form while the clicked button is disabled by pending', 
   expect(getComputedStyle(form).outlineStyle).toBe('none');
 });
 
-test('rejected submit keeps the surface open and focuses the alert', async () => {
+test('rejected submit keeps the surface open and focuses the form, not the alert', async () => {
   const onClose = vi.fn();
   const { unmount } = render(
     <Harness
@@ -252,8 +252,14 @@ test('rejected submit keeps the surface open and focuses the alert', async () =>
   expect(alert.textContent).toContain(messages.error);
   expect(alert.textContent).not.toContain('Name is taken');
   expect(onClose).not.toHaveBeenCalled();
-  await waitFor(() => expect(active()).toBe(alert));
+  const form = screen.getByRole('form', { name: 'Surface' });
+  await waitFor(() => expect(active()).toBe(form));
   expect(alert.hasAttribute('data-afframe-flow-error')).toBe(true);
+  // The alert takes no focus; the form shows no ring; Tab reaches the first field.
+  expect(alert.hasAttribute('tabindex')).toBe(false);
+  expect(getComputedStyle(form).outlineStyle).toBe('none');
+  await userEvent.tab();
+  expect(active()).toBe(screen.getByRole('textbox', { name: 'Name' }));
   unmount();
 
   render(<Harness onSubmit={() => Promise.reject(new Error(''))} />);
@@ -491,16 +497,17 @@ test('closeWhilePending: a success closes the dialog and then the surface', asyn
   await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
 });
 
-test('closeWhilePending: a failure closes the dialog and focuses the alert', async () => {
+test('closeWhilePending: a failure closes the dialog and focuses the form', async () => {
   const onClose = vi.fn();
   const action = await closeWhileBusy(onClose);
   await act(async () => action.reject(new Error('Nope')));
   await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
-  const alert = screen.getByRole('alert');
-  await waitFor(() => expect(active()).toBe(alert));
+  screen.getByRole('alert');
+  const form = screen.getByRole('form', { name: 'Surface' });
+  await waitFor(() => expect(active()).toBe(form));
   // Not taken back by the closing dialog.
   await pause(300);
-  expect(active()).toBe(alert);
+  expect(active()).toBe(form);
   expect(onClose).not.toHaveBeenCalled();
 });
 

@@ -3,7 +3,6 @@
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
-@use '@carbon/styles/scss/utilities/focus-outline' as *;
 
 .afframe-create-modal-description {
   @include type.type-style('body-01');
@@ -18,7 +17,8 @@
   gap: $spacing-05;
 }
 
-// Focus parks on the form while pending; it shows no ring of its own.
+// Focus parks on the form while pending and after an error; it shows no
+// ring of its own.
 .afframe-create-edit-form:focus {
   outline: none;
 }
@@ -29,10 +29,6 @@
   margin: 0;
   max-inline-size: none;
   min-inline-size: 0;
-}
-
-.afframe-flow-error:focus {
-  @include focus-outline('outline');
 }
 
 // A busy primary button in Carbon's loading look (.cds--btn--loading). Not

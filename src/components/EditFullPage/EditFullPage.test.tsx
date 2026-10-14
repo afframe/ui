@@ -6,7 +6,7 @@ import { AfframeProvider, TextInput } from '../../index.js';
 import {
   englishLeft,
   expectBusyPrimary,
-  expectFocusedErrorAlert,
+  expectErrorFocusAtStart,
   leavePendingButton,
   sentinelMessages,
 } from '../FlowParts/flowTestUtils.js';
@@ -211,7 +211,7 @@ test('a rejected submit stays with an alert and no onClose', async () => {
     defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
-  await expectFocusedErrorAlert();
+  await expectErrorFocusAtStart(fieldA());
 });
 
 function beforeunloadCalls(spy: { mock: { calls: unknown[][] } }) {
@@ -341,7 +341,7 @@ test.each([320, 375])('at %ipx both buttons stay on screen', async (width) => {
   }
 });
 
-test('a rejection under the discard dialog closes it and focuses the alert', async () => {
+test('a rejection under the discard dialog closes it and focuses the form', async () => {
   let reject: (reason: unknown) => void = () => undefined;
   render(
     <Harness
@@ -358,10 +358,11 @@ test('a rejection under the discard dialog closes it and focuses the alert', asy
   await screen.findByRole('alertdialog');
   reject(new Error('Duplicate'));
   await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
-  const alert = screen.getByRole('alert');
-  await waitFor(() => expect(document.activeElement).toBe(alert));
+  screen.getByRole('alert');
+  const form = fieldA().closest('form');
+  await waitFor(() => expect(document.activeElement).toBe(form));
   await new Promise((done) => setTimeout(done, 300));
-  expect(document.activeElement).toBe(alert);
+  expect(document.activeElement).toBe(form);
 });
 
 test('the busy primary button fits a narrow screen', async () => {

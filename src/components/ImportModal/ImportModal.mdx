@@ -146,8 +146,8 @@ Files can also be dragged onto the drop area.
 Focus is trapped by the browser's modal dialog: the page behind it is inert,
 and `AfframeProvider` wraps Tab from the last control to the first.
 On close, focus returns to `launcherRef`, else to the element focused before
-the dialog opened, else to the page body. After a failed import, focus moves to the first invalid field, else to the error
-alert.
+the dialog opened, else to the page body. After a failed import, focus moves to the first invalid field, else to the dialog body,
+with no focus ring, so the next Tab reaches the first field; the error alert takes no focus.
 
 Screen readers announce:
 

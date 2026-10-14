@@ -1,6 +1,7 @@
 // Test helpers for the create and edit components. Not shipped.
 import { cleanup, screen, waitFor, within } from '@testing-library/react';
 import { expect } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 /** The confirm button of the dialog that asks before closing a clean form while it saves. */
 export async function leavePendingButton(): Promise<HTMLElement> {
@@ -98,14 +99,18 @@ export function expectBusyPrimary(label: string, announcement: string) {
 }
 
 /**
- * After a rejected action: focus and its ring on the alert itself, which
- * spans the column the fields sit in.
+ * After a rejected action: focus on the form around `firstField` with no
+ * ring, not on the alert, which spans the column the fields sit in. The
+ * next Tab reaches `firstField`.
  */
-export async function expectFocusedErrorAlert() {
+export async function expectErrorFocusAtStart(firstField: HTMLElement) {
+  const start = firstField.closest('form');
+  if (!start) throw new Error('The field is not in a form');
   const alert = await screen.findByRole('alert');
-  await waitFor(() => expect(document.activeElement).toBe(alert));
+  await waitFor(() => expect(document.activeElement).toBe(start));
   expect(alert.hasAttribute('data-afframe-flow-error')).toBe(true);
-  expect(getComputedStyle(alert).outlineStyle).not.toBe('none');
+  expect(alert.hasAttribute('tabindex')).toBe(false);
+  expect(getComputedStyle(start).outlineStyle).toBe('none');
   const column = alert.parentElement;
   if (!column) throw new Error('The alert has no parent');
   const style = getComputedStyle(column);
@@ -116,4 +121,6 @@ export async function expectFocusedErrorAlert() {
   expect(
     Math.abs(alert.getBoundingClientRect().width - inner)
   ).toBeLessThanOrEqual(1);
+  await userEvent.tab();
+  expect(document.activeElement).toBe(firstField);
 }

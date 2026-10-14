@@ -129,7 +129,8 @@ Screen readers announce:
 - while submitting, the form as busy and `pending` as a status message; the
   primary button keeps its name and shows Carbon's inline loading;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
-  field with `aria-invalid="true"`, else to the alert;
+  field with `aria-invalid="true"`, else to the form itself, with no focus ring, so the next
+  Tab reaches the first field; the alert takes no focus;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
   `discardBody` (`leavePendingTitle` and `leavePendingBody` on a clean form
   while it saves).

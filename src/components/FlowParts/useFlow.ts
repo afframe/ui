@@ -37,7 +37,7 @@ export interface FlowOptions {
 export interface Flow<T extends HTMLElement = HTMLElement> {
   /**
    * The form or dialog body: initial focus, focus while pending, error
-   * focus. Give it tabIndex -1 so it can hold focus while pending.
+   * focus. Give it tabIndex -1 and no focus ring so it can hold focus.
    */
   containerRef: RefObject<T | null>;
   /**
@@ -75,8 +75,6 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
 /** The first enabled form control; the default primary focus target. */
 export const firstControlSelector =
   'input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])';
-
-const errorSelector = '[data-afframe-flow-error]';
 
 const focusable = (element: Element | null): element is HTMLElement =>
   element instanceof HTMLElement && element.isConnected;
@@ -246,15 +244,14 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
       containerRef.current?.focus();
   }, [pending]);
 
-  // After a rejected action: the first rendered invalid field, else the alert.
+  // After a rejected action: the first rendered invalid field, else the
+  // container, which shows no ring, so the next Tab reaches the first field.
+  // The alert announces itself (role="alert") and takes no focus.
   useEffect(() => {
     if (errorCount === 0) return;
     const container = containerRef.current;
     const fields = container?.querySelectorAll('[aria-invalid="true"]') ?? [];
-    const target =
-      [...fields].find(rendered) ??
-      container?.querySelector(errorSelector) ??
-      null;
+    const target = [...fields].find(rendered) ?? container ?? null;
     const retry = dismissedRef.current;
     dismissedRef.current = false;
     if (!focusable(target)) return;

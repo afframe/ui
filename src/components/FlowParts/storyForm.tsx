@@ -81,18 +81,23 @@ const settleOpen = async () => {
   await settleAnimations();
 };
 
-/** Clicks the primary button once open; the error alert takes focus. */
+/**
+ * Clicks the primary button once open; focus moves to the form, not the
+ * alert, and the next Tab reaches the first field.
+ */
 const playRejected = (name: string) => async () => {
   await settleOpen();
   await clickPrimary(name)();
-  const title = await screen.findByText(defaultFormFlowMessages.error, {
+  await screen.findByText(defaultFormFlowMessages.error, {
     selector: '.cds--inline-notification__title',
   });
-  const alert = title.closest('[role="alert"]');
-  await waitFor(() => expect(document.activeElement).toBe(alert));
+  const form = document.querySelector('form.afframe-create-edit-form');
+  await waitFor(() => expect(document.activeElement).toBe(form));
   // Still there once every animation has ended.
   await settleAnimations();
-  await expect(document.activeElement).toBe(alert);
+  await expect(document.activeElement).toBe(form);
+  await userEvent.tab();
+  await expect(document.activeElement).toBeInstanceOf(HTMLInputElement);
 };
 
 /** Types into Email, then Cancel opens the discard dialog. */

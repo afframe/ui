@@ -232,8 +232,9 @@ test('URL path: field and button only with onImportUrl; rejection shows an alert
   // Carbon's TextInput also renders an empty counter alert; find by text.
   const alert = await screen.findByText('The import failed. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
+  // The dialog body takes the error focus, not the alert.
   await until(() =>
-    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+    expect(active()?.classList.contains('afframe-modal-body')).toBe(true)
   );
   await userEvent.click(urlButton);
   await until(() => expect(screen.queryByRole('dialog')).toBeNull());

@@ -6,7 +6,7 @@ import { AfframeProvider } from '../../index.js';
 import {
   englishLeft,
   expectBusyPrimary,
-  expectFocusedErrorAlert,
+  expectErrorFocusAtStart,
   leavePendingButton,
   sentinelMessages,
   tabbables,
@@ -192,7 +192,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
     defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
-  await expectFocusedErrorAlert();
+  await expectErrorFocusAtStart(fieldA());
   expect(screen.getByRole('form')).toBeTruthy();
 });
 

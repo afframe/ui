@@ -6,7 +6,7 @@ import { AfframeProvider } from '../../index.js';
 import {
   englishLeft as englishCreateLeft,
   expectBusyPrimary,
-  expectFocusedErrorAlert,
+  expectErrorFocusAtStart,
   leavePendingButton,
   sentinelMessages,
 } from '../FlowParts/flowTestUtils.js';
@@ -187,7 +187,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
     defaultCreateModalMessages.error
   );
   expect(onClose).not.toHaveBeenCalled();
-  await expectFocusedErrorAlert();
+  await expectErrorFocusAtStart(fieldA());
   expect(screen.getByRole('dialog', { name: 'Item A' })).toBeTruthy();
 });
 
@@ -263,7 +263,7 @@ test('a description node renders as given, not inside a paragraph', async () => 
   expect(item.closest('p')).toBeNull();
 });
 
-test('a rejection under the discard dialog closes it and focuses the alert', async () => {
+test('a rejection under the discard dialog closes it and focuses the form', async () => {
   let reject: (reason: unknown) => void = () => undefined;
   render(
     <Harness
@@ -280,10 +280,11 @@ test('a rejection under the discard dialog closes it and focuses the alert', asy
   await screen.findByRole('alertdialog');
   reject(new Error('Duplicate'));
   await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
-  const alert = screen.getByRole('alert');
-  await waitFor(() => expect(document.activeElement).toBe(alert));
+  screen.getByRole('alert');
+  const form = fieldA().closest('form');
+  await waitFor(() => expect(document.activeElement).toBe(form));
   await new Promise((done) => setTimeout(done, 300));
-  expect(document.activeElement).toBe(alert);
+  expect(document.activeElement).toBe(form);
 });
 
 test.each([1024, 1312])(
