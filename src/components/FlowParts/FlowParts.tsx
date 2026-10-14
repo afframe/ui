@@ -155,7 +155,15 @@ export function FlowButtonLabel({
   return (
     <span className="afframe-flow-button-label">
       {label}
-      {busy && <Loading small withOverlay={false} aria-hidden="true" />}
+      {busy && (
+        // Carbon's default description is an English tooltip.
+        <Loading
+          small
+          withOverlay={false}
+          description={label}
+          aria-hidden="true"
+        />
+      )}
     </span>
   );
 }
