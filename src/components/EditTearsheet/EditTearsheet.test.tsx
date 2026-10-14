@@ -8,7 +8,7 @@ import {
 import { TextInput } from '@carbon/react';
 import { createRef, useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import {
   englishLeft,
@@ -268,34 +268,40 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
 test.each(['wide', 'narrow'] as const)(
   '%s: the error alert lines up with the fields',
   async (variant) => {
-    render(
-      <AfframeProvider>
-        <EditTearsheet
-          open
-          variant={variant}
-          title="Sheet F"
-          onClose={() => undefined}
-          onSubmit={() => Promise.reject(new Error('Conflict'))}>
-          <EditTearsheetForm id="f-one" title="One">
-            <TextInput id="f-name" labelText="Name" />
-          </EditTearsheetForm>
-        </EditTearsheet>
-      </AfframeProvider>
-    );
-    await userEvent.click(
-      await screen.findByRole('button', { name: defaults.save })
-    );
-    // TextInput has an alert of its own, for its character counter.
-    const alert = await waitFor(() => {
-      const node = document.querySelector('[data-afframe-flow-error]');
-      if (!node) throw new Error('No error alert');
-      return node.getBoundingClientRect();
-    });
-    const field = screen
-      .getByRole('textbox', { name: 'Name' })
-      .getBoundingClientRect();
-    expect(Math.abs(alert.left - field.left)).toBeLessThanOrEqual(1);
-    expect(Math.abs(alert.width - field.width)).toBeLessThanOrEqual(1);
+    // Wider than Carbon's lg breakpoint, where the wide fields take 8 of 16 columns.
+    await page.viewport(1280, 800);
+    try {
+      render(
+        <AfframeProvider>
+          <EditTearsheet
+            open
+            variant={variant}
+            title="Sheet F"
+            onClose={() => undefined}
+            onSubmit={() => Promise.reject(new Error('Conflict'))}>
+            <EditTearsheetForm id="f-one" title="One">
+              <TextInput id="f-name" labelText="Name" />
+            </EditTearsheetForm>
+          </EditTearsheet>
+        </AfframeProvider>
+      );
+      await userEvent.click(
+        await screen.findByRole('button', { name: defaults.save })
+      );
+      // TextInput has an alert of its own, for its character counter.
+      const alert = await waitFor(() => {
+        const node = document.querySelector('[data-afframe-flow-error]');
+        if (!node) throw new Error('No error alert');
+        return node.getBoundingClientRect();
+      });
+      const field = screen
+        .getByRole('textbox', { name: 'Name' })
+        .getBoundingClientRect();
+      expect(Math.abs(alert.left - field.left)).toBeLessThanOrEqual(1);
+      expect(Math.abs(alert.width - field.width)).toBeLessThanOrEqual(1);
+    } finally {
+      await page.viewport(1024, 768);
+    }
   }
 );
 
