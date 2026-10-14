@@ -497,3 +497,29 @@ test('narrow: a trigger opens the nav in a panel; choosing a form closes it; Esc
   await waitFor(() => expect(active()).toBe(trigger));
   expect(onClose).not.toHaveBeenCalled();
 });
+
+test.each([
+  ['Ctrl', { ctrlKey: true }],
+  ['Meta', { metaKey: true }],
+  ['Shift', { shiftKey: true }],
+  ['middle button', { button: 1 }],
+])('a %s click on a nav item is left to the browser', async (_, init) => {
+  render(<Harness />);
+  await launch();
+  const items = within(nav()).getAllByRole('link');
+  let prevented: boolean | undefined;
+  // Records the item's own handling, then stops the hash navigation.
+  window.addEventListener(
+    'click',
+    (event) => {
+      prevented = event.defaultPrevented;
+      event.preventDefault();
+    },
+    { once: true }
+  );
+  items[1]?.dispatchEvent(
+    new MouseEvent('click', { bubbles: true, cancelable: true, ...init })
+  );
+  expect(prevented).toBe(false);
+  expect(items[0]?.getAttribute('aria-current')).toBe('true');
+});

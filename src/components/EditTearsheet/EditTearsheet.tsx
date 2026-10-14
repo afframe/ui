@@ -394,6 +394,15 @@ export function EditTearsheet({
                   isActive={index === active}
                   aria-current={index === active ? 'true' : undefined}
                   onClick={(event: MouseEvent) => {
+                    // A new tab or window gets the link as is.
+                    if (
+                      event.button !== 0 ||
+                      event.metaKey ||
+                      event.ctrlKey ||
+                      event.shiftKey ||
+                      event.altKey
+                    )
+                      return;
                     event.preventDefault();
                     select(index);
                   }}>
