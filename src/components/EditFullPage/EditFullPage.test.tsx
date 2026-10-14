@@ -404,10 +404,12 @@ test('a short form keeps the action bar at the bottom of the region', () => {
   const barBottom = renderInRegion(2);
   expect(barBottom()).toBeCloseTo(window.innerHeight, 0);
   // Carbon's form items grow (flex: 1 1 auto); the free space must not spread them.
-  const [first, second] = [1, 2].map((n) =>
-    document.getElementById(`field-${n}`)?.getBoundingClientRect()
-  );
-  expect(second!.top - first!.bottom).toBeLessThan(64);
+  const box = (n: number) => {
+    const field = document.getElementById(`field-${n}`);
+    if (!field) throw new Error(`No field ${n}`);
+    return field.getBoundingClientRect();
+  };
+  expect(box(2).top - box(1).bottom).toBeLessThan(64);
 });
 
 test('a long form scrolls under a sticky action bar', async () => {
