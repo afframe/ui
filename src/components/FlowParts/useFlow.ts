@@ -44,11 +44,18 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
   pending: boolean;
   /** Text of the error alert after a rejected action, else null. */
   error: string | null;
-  /** Runs an action; resolves true when it succeeded in the same session. */
+  /**
+   * Runs an action; resolves true when it succeeded in the same session.
+   * Resolves false at once while an earlier action, even an abandoned one,
+   * still runs.
+   */
   run: (action: () => unknown) => Promise<boolean>;
   /** What Escape, the close icon, Cancel and an overlay click call. */
   requestClose: () => void;
-  /** Calls `onClose` at once; a running action's result is then ignored. */
+  /**
+   * Calls `onClose` at once; a running action's result is then ignored, and
+   * `run` waits for it to settle.
+   */
   close: () => void;
   clearError: () => void;
   discardOpen: boolean;
@@ -129,6 +136,9 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   // Bumped on every open, close and unmount: the result of an action started
   // in an earlier session is dropped.
   const sessionRef = useRef(0);
+  // Outlives `close` and reopening, unlike `pendingRef`: a surface that stays
+  // mounted after a discard must not send the same request twice.
+  const inFlightRef = useRef(false);
   const discardTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
@@ -272,7 +282,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   }, [isDirty, confirmDiscard, closeWhilePending, close]);
 
   const run = useCallback(async (action: () => unknown) => {
-    if (pendingRef.current) return false;
+    if (pendingRef.current || inFlightRef.current) return false;
     const session = sessionRef.current;
     const current = () => session === sessionRef.current;
     // A discard dialog opened while pending is moot once the action settles.
@@ -295,10 +305,12 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
         typeof (result as PromiseLike<unknown> | undefined)?.then === 'function'
       ) {
         pendingRef.current = true;
+        inFlightRef.current = true;
         setPending(true);
         await result;
       }
     } catch (reason) {
+      inFlightRef.current = false;
       if (!current()) return false;
       settle(true);
       const { error: text, errorText } = messagesRef.current;
@@ -306,6 +318,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
       setErrorCount((count) => count + 1);
       return false;
     }
+    inFlightRef.current = false;
     if (!current()) return false;
     settle(false);
     return true;

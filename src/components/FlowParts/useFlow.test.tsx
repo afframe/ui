@@ -105,6 +105,8 @@ function Harness(props: {
   noLauncherRef?: boolean;
   closeRef?: { current: () => void };
   surfaceMessages?: FlowMessages & DiscardMessages;
+  /** onClose leaves the surface mounted, as EditFullPage. */
+  keepOpen?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   if (props.closeRef) props.closeRef.current = () => setOpen(false);
@@ -128,7 +130,7 @@ function Harness(props: {
         onClose={() => {
           props.onClose?.();
           if (props.removeLauncher) setLauncherShown(false);
-          setOpen(false);
+          if (!props.keepOpen) setOpen(false);
         }}
         {...(props.isDirty === undefined ? {} : { isDirty: props.isDirty })}
         {...(props.confirmDiscard === undefined
@@ -523,4 +525,26 @@ test('closeWhilePending with confirmDiscard false closes at once', async () => {
   await act(async () => action.reject(new Error('late')));
   await pause(50);
   expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('closeWhilePending: after Discard on a surface that stays open, Save waits for the abandoned action', async () => {
+  const onClose = vi.fn();
+  const action = deferred();
+  const onSubmit = vi.fn(() => action.promise);
+  render(
+    <Harness keepOpen closeWhilePending onClose={onClose} onSubmit={onSubmit} />
+  );
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+  await userEvent.click(
+    await screen.findByRole('button', { name: messages.discard })
+  );
+  expect(onClose).toHaveBeenCalledTimes(1);
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  expect(onSubmit).toHaveBeenCalledTimes(1);
+  await act(async () => action.resolve());
+  expect(onClose).toHaveBeenCalledTimes(1);
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  expect(onSubmit).toHaveBeenCalledTimes(2);
 });
