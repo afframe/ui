@@ -520,7 +520,7 @@ test('closeWhilePending: a dirty surface keeps the discard text', async () => {
   expect(screen.getByRole('button', { name: messages.discard })).toBeTruthy();
 });
 
-test('closeWhilePending: Close closes at once and ignores the result', async () => {
+test('closeWhilePending: Stop waiting closes at once and ignores the result', async () => {
   const onClose = vi.fn();
   const action = await closeWhileBusy(onClose);
   await userEvent.click(await leavePendingButton());

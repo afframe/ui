@@ -41,7 +41,7 @@ promise: while it is pending Save is disabled and shows a spinner; when it
 resolves, `onClose` is called; when it rejects, the form stays and shows the
 error above the action bar. Closing while it is pending asks first, unless
 `confirmDiscard` is false: "Discard changes?" on a dirty form, "Stop waiting?"
-on a clean one. Discard or Close leaves edit mode and ignores the result; the
+on a clean one. Discard or Stop waiting leaves edit mode and ignores the result; the
 dialog closes itself when the promise settles.
 
 ### Wiring `isDirty`
@@ -107,7 +107,7 @@ which is set from a client component.
 | `keepEditing`          | Keep editing                                        |
 | `leavePendingTitle`    | Stop waiting? (closing a clean form while it saves) |
 | `leavePendingBody`     | Saving continues in the background.                 |
-| `leavePending`         | Close                                               |
+| `leavePending`         | Stop waiting                                        |
 | `keepWaiting`          | Keep waiting                                        |
 | `closeIconDescription` | Close (the discard dialog's close icon)             |
 

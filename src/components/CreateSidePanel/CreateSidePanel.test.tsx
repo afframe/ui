@@ -180,7 +180,7 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
 });
 
-test('while busy, Cancel stays enabled; Close leaves and drops the result', async () => {
+test('while busy, Cancel stays enabled; Stop waiting leaves and drops the result', async () => {
   let resolve: () => void = () => undefined;
   const onClose = vi.fn();
   render(

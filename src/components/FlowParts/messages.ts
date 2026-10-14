@@ -35,7 +35,7 @@ export interface DiscardMessages {
   leavePendingTitle?: string;
   /** Its body. Default "Saving continues in the background.". */
   leavePendingBody?: string;
-  /** Its button that closes the surface. Default "Close". */
+  /** Its button that closes the surface. Default "Stop waiting". */
   leavePending?: string;
   /** Its button that keeps the surface open. Default "Keep waiting". */
   keepWaiting?: string;
@@ -50,7 +50,7 @@ export const defaultLeavePendingMessages: Required<
 > = {
   leavePendingTitle: 'Stop waiting?',
   leavePendingBody: 'Saving continues in the background.',
-  leavePending: 'Close',
+  leavePending: 'Stop waiting',
   keepWaiting: 'Keep waiting',
 };
 

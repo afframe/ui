@@ -1,21 +1,12 @@
 // Test helpers for the create and edit components. Not shipped.
-import { cleanup, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor, within } from '@testing-library/react';
 import { expect } from 'vitest';
 
-/**
- * The confirm button of the dialog that asks before closing a clean form
- * while it saves: named "Close" like the dialog's close icon, so found by
- * its place in the footer.
- */
+/** The confirm button of the dialog that asks before closing a clean form while it saves. */
 export async function leavePendingButton(): Promise<HTMLElement> {
   const dialog = await screen.findByRole('alertdialog');
   expect(dialog.textContent).toContain('Stop waiting?');
-  const button = dialog.querySelector<HTMLElement>(
-    '.cds--modal-footer .cds--btn--danger'
-  );
-  if (!button) throw new Error('No confirm button in the dialog');
-  expect(button.textContent).toBe('Close');
-  return button;
+  return within(dialog).getByRole('button', { name: 'Stop waiting' });
 }
 
 /**
