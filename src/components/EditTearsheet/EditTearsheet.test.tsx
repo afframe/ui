@@ -103,18 +103,25 @@ test('opens on the first field and Escape closes back to the launcher', async ()
   await waitFor(() => expect(active()).toBe(launcher()));
 });
 
-test('the nav lists the forms; choosing one focuses its heading', async () => {
+test('the nav switches the form shown; values survive the switch', async () => {
   const onFormChange = vi.fn();
   render(<Harness onFormChange={onFormChange} />);
   await launch();
-  const items = within(nav()).getAllByRole('button');
+  const items = within(nav()).getAllByRole('link');
   expect(items.map((item) => item.textContent)).toEqual(['Part A', 'Part B']);
   expect(items[0]?.getAttribute('aria-current')).toBe('true');
+  expect(screen.queryByRole('textbox', { name: 'Field C' })).toBeNull();
+  await userEvent.type(fieldA(), 'kept');
   items[1]?.focus();
   await userEvent.keyboard('{Enter}');
-  expect(active()).toBe(screen.getByRole('heading', { name: 'Part B' }));
+  // As IBM's EditTearsheet: focus stays on the nav item.
+  expect(active()).toBe(items[1]);
   expect(items[1]?.getAttribute('aria-current')).toBe('true');
   expect(onFormChange).toHaveBeenCalledWith(1);
+  expect(screen.getByRole('textbox', { name: 'Field C' })).toBeTruthy();
+  expect(screen.queryByRole('textbox', { name: 'Field A' })).toBeNull();
+  await userEvent.click(items[0] as HTMLElement);
+  expect((fieldA() as HTMLInputElement).value).toBe('kept');
 });
 
 test('an invalid form has a named marker; Save focuses it and does not submit', async () => {
@@ -128,7 +135,48 @@ test('an invalid form has a named marker; Save focuses it and does not submit', 
   expect(save.hasAttribute('disabled')).toBe(false);
   await userEvent.click(save);
   expect(onSubmit).not.toHaveBeenCalled();
-  expect(active()).toBe(screen.getByRole('heading', { name: 'Part B' }));
+  await waitFor(() =>
+    expect(active()).toBe(screen.getByRole('heading', { name: 'Part B' }))
+  );
+  expect(screen.getByRole('textbox', { name: 'Field C' })).toBeTruthy();
+});
+
+test('a rejected submit with a field marked invalid in a hidden form shows that form and focuses the field', async () => {
+  function Rejecting() {
+    const [invalid, setInvalid] = useState(false);
+    return (
+      <AfframeProvider>
+        <EditTearsheet
+          open
+          title="Sheet D"
+          onClose={() => undefined}
+          onSubmit={() => {
+            setInvalid(true);
+            return Promise.reject(new Error('Taken'));
+          }}>
+          <EditTearsheetForm id="d-one" title="One">
+            <label>
+              One field
+              <input />
+            </label>
+          </EditTearsheetForm>
+          <EditTearsheetForm id="d-two" title="Two">
+            <label>
+              Two field
+              <input aria-invalid={invalid || undefined} />
+            </label>
+          </EditTearsheetForm>
+        </EditTearsheet>
+      </AfframeProvider>
+    );
+  }
+  render(<Rejecting />);
+  await userEvent.click(
+    await screen.findByRole('button', { name: defaults.save })
+  );
+  await waitFor(() =>
+    expect(active()).toBe(screen.getByRole('textbox', { name: 'Two field' }))
+  );
 });
 
 test('Tab stays inside the tearsheet and Shift+Tab wraps', async () => {
@@ -289,7 +337,7 @@ function Sheet({ open, forms }: { open: boolean; forms: string[] }) {
 
 const currentItem = () =>
   within(nav())
-    .getAllByRole('button')
+    .getAllByRole('link')
     .find((item) => item.getAttribute('aria-current') === 'true')?.textContent;
 
 test('the nav ignores children that are not forms, with a warning', async () => {
@@ -298,7 +346,7 @@ test('the nav ignores children that are not forms, with a warning', async () => 
   await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
   expect(
     within(nav())
-      .getAllByRole('button')
+      .getAllByRole('link')
       .map((item) => item.textContent)
   ).toEqual(['One', 'Two']);
   expect(warn).toHaveBeenCalledWith(expect.stringContaining('EditTearsheet:'));
@@ -309,105 +357,18 @@ test('the current nav item resets on open and stays in range when forms shrink',
   const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   const { rerender } = render(<Sheet open forms={['One', 'Two']} />);
   await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
-  await userEvent.click(within(nav()).getByRole('button', { name: 'Two' }));
+  await userEvent.click(within(nav()).getByRole('link', { name: 'Two' }));
   expect(currentItem()).toBe('Two');
   rerender(<Sheet open forms={['One']} />);
   expect(currentItem()).toBe('One');
   rerender(<Sheet open forms={['One', 'Two']} />);
-  await userEvent.click(within(nav()).getByRole('button', { name: 'Two' }));
+  await userEvent.click(within(nav()).getByRole('link', { name: 'Two' }));
   rerender(<Sheet open={false} forms={['One', 'Two']} />);
   await waitFor(() => expect(screen.queryByRole('navigation')).toBeNull());
   rerender(<Sheet open forms={['One', 'Two']} />);
   await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
   expect(currentItem()).toBe('One');
   warn.mockRestore();
-});
-
-// Three forms in a scrolling tearsheet; those in `tall` are taller than it.
-function TallSheet({ tall = ['One', 'Two'] }: { tall?: string[] }) {
-  return (
-    <AfframeProvider>
-      <EditTearsheet
-        open
-        title="Sheet C"
-        onClose={() => undefined}
-        onSubmit={() => undefined}>
-        {['One', 'Two', 'Three'].map((title) => (
-          <EditTearsheetForm key={title} id={`tall-${title}`} title={title}>
-            <label>
-              {`${title} field`}
-              <input />
-            </label>
-            {tall.includes(title) && <div style={{ blockSize: '150vh' }} />}
-          </EditTearsheetForm>
-        ))}
-      </EditTearsheet>
-    </AfframeProvider>
-  );
-}
-
-async function openTallSheet(tall?: string[]) {
-  render(<TallSheet {...(tall ? { tall } : {})} />);
-  await screen.findByRole('navigation', { name: defaults.sectionsNavLabel });
-  await waitFor(() =>
-    expect(active()).toBe(screen.getByRole('textbox', { name: 'One field' }))
-  );
-  let root = screen.getByRole('form').parentElement;
-  while (root && getComputedStyle(root).overflowY !== 'auto')
-    root = root.parentElement;
-  if (!root) throw new Error('no scroll container');
-  return root;
-}
-
-test('the current nav item follows scrolling', async () => {
-  const root = await openTallSheet();
-  expect(currentItem()).toBe('One');
-  const two = document.getElementById('tall-Two');
-  root.scrollTop +=
-    (two?.getBoundingClientRect().top ?? 0) - root.getBoundingClientRect().top;
-  await waitFor(() => expect(currentItem()).toBe('Two'));
-  // Three is short: its top never reaches the line, so the end selects it.
-  root.scrollTop = root.scrollHeight;
-  await waitFor(() => expect(currentItem()).toBe('Three'));
-  root.scrollTop = 0;
-  await waitFor(() => expect(currentItem()).toBe('One'));
-});
-
-test('a nav click does not mark the forms its scroll passes', async () => {
-  const root = await openTallSheet();
-  root.style.scrollBehavior = 'smooth';
-  const seen = new Set<string>();
-  const record = new MutationObserver(() => {
-    const item = currentItem();
-    if (item) seen.add(item);
-  });
-  record.observe(nav(), { attributes: true, subtree: true });
-  const ended = new Promise((resolve) =>
-    root.addEventListener('scrollend', resolve, { once: true })
-  );
-  await userEvent.click(within(nav()).getByRole('button', { name: 'Three' }));
-  await ended;
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  record.disconnect();
-  expect(root.scrollTop).toBeGreaterThan(0);
-  expect(currentItem()).toBe('Three');
-  expect([...seen]).toEqual(['Three']);
-});
-
-test('a clicked form stays current after the scroll; user scrolling moves it', async () => {
-  // Two cannot scroll to the top: the scroll ends with Three in full view.
-  const root = await openTallSheet(['One']);
-  const ended = new Promise((resolve) =>
-    root.addEventListener('scrollend', resolve, { once: true })
-  );
-  await userEvent.click(within(nav()).getByRole('button', { name: 'Two' }));
-  await ended;
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  expect(root.scrollTop).toBeGreaterThan(0);
-  expect(currentItem()).toBe('Two');
-  root.dispatchEvent(new WheelEvent('wheel', { bubbles: true }));
-  root.scrollTop = 0;
-  await waitFor(() => expect(currentItem()).toBe('One'));
 });
 
 test('ref and rest props reach the root', async () => {
@@ -430,4 +391,53 @@ test('ref and rest props reach the root', async () => {
   const root = await screen.findByTestId('root');
   expect(ref.current).toBe(root);
   expect(root.classList).toContain('afframe-edit-tearsheet');
+});
+
+test('narrow: a trigger opens the nav in a panel; choosing a form closes it; Escape closes only the panel', async () => {
+  const onClose = vi.fn();
+  render(
+    <AfframeProvider>
+      <EditTearsheet
+        open
+        variant="narrow"
+        title="Sheet E"
+        headerActions={<button type="button">Header action</button>}
+        decorator={<span>Decorator</span>}
+        onClose={onClose}
+        onSubmit={() => undefined}>
+        <EditTearsheetForm id="e-one" title="One">
+          <input aria-label="One field" />
+        </EditTearsheetForm>
+        <EditTearsheetForm id="e-two" title="Two">
+          <input aria-label="Two field" />
+        </EditTearsheetForm>
+      </EditTearsheet>
+    </AfframeProvider>
+  );
+  expect(
+    await screen.findByRole('button', { name: 'Header action' })
+  ).toBeTruthy();
+  expect(screen.getByText('Decorator')).toBeTruthy();
+  const trigger = document.querySelector<HTMLElement>(
+    '.afframe-edit-tearsheet-sections-trigger'
+  );
+  if (!trigger) throw new Error('no trigger');
+  // Named by its tooltip, which this query library does not resolve.
+  expect(
+    document.getElementById(trigger.getAttribute('aria-labelledby') ?? '')
+      ?.textContent
+  ).toBe(defaults.openSections);
+  await userEvent.click(trigger);
+  await userEvent.click(
+    within(await screen.findByRole('navigation')).getByRole('link', {
+      name: 'Two',
+    })
+  );
+  expect(screen.getByRole('textbox', { name: 'Two field' })).toBeTruthy();
+  await waitFor(() => expect(screen.queryByRole('navigation')).toBeNull());
+  await userEvent.click(trigger);
+  await screen.findByRole('navigation');
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => expect(screen.queryByRole('navigation')).toBeNull());
+  expect(onClose).not.toHaveBeenCalled();
 });
