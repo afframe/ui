@@ -548,3 +548,24 @@ test('closeWhilePending: after Discard on a surface that stays open, Save waits 
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect(onSubmit).toHaveBeenCalledTimes(2);
 });
+
+test('rejected submit skips an invalid field that is not rendered', async () => {
+  render(
+    <Harness
+      onSubmit={() => {
+        const name = screen.getByRole('textbox', { name: 'Name' });
+        name.setAttribute('aria-invalid', 'true');
+        name.style.display = 'none';
+        screen
+          .getByRole('textbox', { name: 'Notes' })
+          .setAttribute('aria-invalid', 'true');
+        throw new Error('Invalid');
+      }}
+    />
+  );
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await waitFor(() =>
+    expect(active()).toBe(screen.getByRole('textbox', { name: 'Notes' }))
+  );
+});

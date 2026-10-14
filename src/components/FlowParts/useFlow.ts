@@ -74,6 +74,13 @@ const errorSelector = '[data-afframe-flow-error]';
 const focusable = (element: Element | null): element is HTMLElement =>
   element instanceof HTMLElement && element.isConnected;
 
+// A connected field can still be unable to take focus: one in a hidden
+// EditTearsheet form is in the DOM under `display: none`.
+const rendered = (element: Element) =>
+  typeof element.checkVisibility === 'function'
+    ? element.checkVisibility({ visibilityProperty: true })
+    : element.getClientRects().length > 0;
+
 /**
  * Focuses `target` once it can take focus: a closing native dialog keeps the
  * page inert until its exit animation ends, and a reopened parent dialog
@@ -234,12 +241,13 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
       containerRef.current?.focus();
   }, [pending]);
 
-  // After a rejected action: the first invalid field, else the alert.
+  // After a rejected action: the first rendered invalid field, else the alert.
   useEffect(() => {
     if (errorCount === 0) return;
     const container = containerRef.current;
+    const fields = container?.querySelectorAll('[aria-invalid="true"]') ?? [];
     const target =
-      container?.querySelector('[aria-invalid="true"]') ??
+      [...fields].find(rendered) ??
       container?.querySelector(errorSelector) ??
       null;
     const retry = dismissedRef.current;

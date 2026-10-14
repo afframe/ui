@@ -172,8 +172,9 @@ Screen readers announce:
 - while saving, the form as busy and `pending` in a polite status; Save keeps
   its name and shows a spinner;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus
-  moves to the first field with `aria-invalid="true"`, showing its form first
-  when it is hidden, else to the alert;
+  moves to the first field with `aria-invalid="true"` in the shown form, else
+  to the first one in a hidden form, showing that form first, else to the
+  alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
   `discardBody`.
 

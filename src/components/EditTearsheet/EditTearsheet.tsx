@@ -276,11 +276,13 @@ export function EditTearsheet({
   }
   const active = Math.max(0, Math.min(current, forms.length - 1));
 
-  // An error field the consumer marked in a hidden form: useFlow could not
-  // focus it, so show its form and focus it there.
+  // An error field the consumer marked only in a hidden form: useFlow could
+  // not focus it, so show its form and focus it there. A field in the shown
+  // form wins.
   useEffect(() => {
     const container = flow.containerRef.current;
     if (flow.error === null || !container) return;
+    if (container.querySelector(`${visibleForm} [aria-invalid="true"]`)) return;
     const field = container.querySelector<HTMLElement>('[aria-invalid="true"]');
     const section = field?.closest(`.${ibm}__form`);
     if (!field || !section || section.matches(visibleForm)) return;

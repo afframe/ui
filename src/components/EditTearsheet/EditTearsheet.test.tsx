@@ -180,6 +180,49 @@ test('a rejected submit with a field marked invalid in a hidden form shows that 
   );
 });
 
+test('a rejected submit with invalid fields in the shown and a hidden form focuses the shown one', async () => {
+  function Rejecting() {
+    const [invalid, setInvalid] = useState(false);
+    return (
+      <AfframeProvider>
+        <EditTearsheet
+          open
+          title="Sheet G"
+          onClose={() => undefined}
+          onSubmit={() => {
+            setInvalid(true);
+            return Promise.reject(new Error('Taken'));
+          }}>
+          <EditTearsheetForm id="g-one" title="One">
+            <label>
+              One field
+              <input aria-invalid={invalid || undefined} />
+            </label>
+          </EditTearsheetForm>
+          <EditTearsheetForm id="g-two" title="Two">
+            <label>
+              Two field
+              <input aria-invalid={invalid || undefined} />
+            </label>
+          </EditTearsheetForm>
+        </EditTearsheet>
+      </AfframeProvider>
+    );
+  }
+  render(<Rejecting />);
+  await userEvent.click(
+    within(
+      await screen.findByRole('navigation', { name: defaults.sectionsNavLabel })
+    ).getByRole('link', { name: 'Two' })
+  );
+  await userEvent.click(screen.getByRole('button', { name: defaults.save }));
+  await screen.findByRole('alert');
+  await waitFor(() =>
+    expect(active()).toBe(screen.getByRole('textbox', { name: 'Two field' }))
+  );
+  expect(currentItem()).toBe('Two');
+});
+
 test('Tab stays inside the tearsheet and Shift+Tab wraps', async () => {
   render(<Harness />);
   await launch();
