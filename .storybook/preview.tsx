@@ -9,6 +9,14 @@ import { ThemedDocsContainer } from './DocsContainer.js';
 const preview: Preview = {
   // Every component gets a docs page, listed first (ADR 0008).
   tags: ['autodocs'],
+  // A story's own controls.exclude replaces the one below; argTypes merge, so
+  // these hold everywhere.
+  argTypes: {
+    ref: { control: false },
+    innerRef: { control: false },
+    containerRef: { control: false },
+    launcherRef: { control: false },
+  },
   globalTypes: {
     theme: {
       description: 'Theme',

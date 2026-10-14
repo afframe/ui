@@ -72,7 +72,7 @@ export default {
       page: mdx,
     },
     controls: {
-      exclude: ['ref', 'id'],
+      exclude: ['id'],
     },
   },
   subcomponents: {

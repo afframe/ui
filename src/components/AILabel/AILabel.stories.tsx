@@ -32,7 +32,7 @@ export default {
       page: mdx,
     },
     controls: {
-      exclude: ['ref', 'AILabelContent', 'aiTextLabel', 'slugLabel'],
+      exclude: ['AILabelContent', 'aiTextLabel', 'slugLabel'],
     },
   },
   tags: ['carbon'],
@@ -252,7 +252,6 @@ Inline.argTypes = {
 Inline.parameters = {
   controls: {
     exclude: [
-      'ref',
       'AILabelContent',
       'aiTextLabel',
       'slugLabel',
@@ -332,7 +331,6 @@ InlineWithContent.argTypes = {
 InlineWithContent.parameters = {
   controls: {
     exclude: [
-      'ref',
       'AILabelContent',
       'aiTextLabel',
       'slugLabel',

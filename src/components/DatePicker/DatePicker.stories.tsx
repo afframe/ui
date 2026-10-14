@@ -74,7 +74,6 @@ export default {
     },
     controls: {
       exclude: [
-        'ref',
         'appendTo',
         'datePickerType',
         'disable',

@@ -47,7 +47,7 @@ export default {
       page: mdx,
     },
     controls: {
-      exclude: ['containerRef', 'target'],
+      exclude: ['target'],
     },
   },
   argTypes: {
