@@ -103,6 +103,17 @@ const [vat, setVat] = useState(customer.vat);
 
 <ArgTypes of={EditTearsheetStories} />
 
+## Differences from IBM's EditTearsheet
+
+- Navigation items are links to the form ids, so Tab reaches them; IBM's
+  have no `href`.
+- Fields go straight into `EditTearsheetForm`; it places them in a Carbon
+  `Column` itself, where IBM expects your own.
+- In the side panel, choosing a form closes the panel and Escape closes only
+  the panel, so the shown form is never left covered.
+- The dirty check, discard dialog, error alert, busy Save and invalid-form
+  marker are Afframe's shared flow, which IBM's component does not have.
+
 ## Messages
 
 `messages?: Partial<EditTearsheetMessages>`; defaults in
