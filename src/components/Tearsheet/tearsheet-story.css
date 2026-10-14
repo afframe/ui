@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefixes as literals, hide-at breakpoint mixins as media queries, only the step styles that the copied steps example uses, the content padding scoped to pages showing these stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefixes as literals, hide-at breakpoint mixins as media queries, only the step styles that the copied steps example uses, the content padding scoped to pages showing these stories, the panel triggers positioned through the tooltip wrapper. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 .default__action-buttons {
@@ -30,13 +30,15 @@
   margin-block-end: var(--cds-spacing-03);
 }
 
-.summaryPanelTrigger > button {
+/* With hasIconOnly (IBM's `label` gives no accessible name) the button sits
+   in Carbon's tooltip span, which is the box to move. */
+.summaryPanelTrigger > :is(button, .cds--popover-container) {
   position: absolute;
   inset-block-start: 0;
   inset-inline-end: 0;
 }
 
-.influencerPanelTrigger > button {
+.influencerPanelTrigger > :is(button, .cds--popover-container) {
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
