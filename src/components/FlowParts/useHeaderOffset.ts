@@ -6,11 +6,9 @@ import type { RefObject } from 'react';
 const headerOffsetProperty = '--afframe-side-panel-offset';
 
 /**
- * Bottom edge of the first element matching `selector`, within the viewport;
- * 0 when none or scrolled away.
+ * Bottom edge of `header` within the viewport; 0 when none or scrolled away.
  */
-function measureHeaderOffset(selector: string): number {
-  const header = document.querySelector(selector);
+function measureHeaderOffset(header: Element | null): number {
   if (!header) return 0;
   const { bottom } = header.getBoundingClientRect();
   return Math.min(Math.max(bottom, 0), window.innerHeight);
@@ -30,11 +28,6 @@ export function useHeaderOffset(
   useLayoutEffect(() => {
     const node = target.current;
     if (!active || !node) return;
-    const update = () => {
-      const value = `${measureHeaderOffset(selector)}px`;
-      if (node.style.getPropertyValue(headerOffsetProperty) !== value)
-        node.style.setProperty(headerOffsetProperty, value);
-    };
     let frame = 0;
     const schedule = () => {
       if (frame) return;
@@ -43,10 +36,21 @@ export function useHeaderOffset(
         update();
       });
     };
-    update();
-    const header = document.querySelector(selector);
+    // Looked up on every measure: the header can mount or be replaced later.
+    let observed: Element | null = null;
     const observer = new ResizeObserver(schedule);
-    if (header) observer.observe(header);
+    const update = () => {
+      const header = document.querySelector(selector);
+      if (header !== observed) {
+        if (observed) observer.unobserve(observed);
+        if (header) observer.observe(header);
+        observed = header;
+      }
+      const value = `${measureHeaderOffset(header)}px`;
+      if (node.style.getPropertyValue(headerOffsetProperty) !== value)
+        node.style.setProperty(headerOffsetProperty, value);
+    };
+    update();
     window.addEventListener('resize', schedule);
     // A header that is not fixed moves with whatever scrolls.
     window.addEventListener('scroll', schedule, {
