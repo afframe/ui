@@ -4,7 +4,11 @@ import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import { DiscardDialog, FlowError, FlowForm } from './FlowParts.js';
-import { defaultFormFlowMessages } from './messages.js';
+import { leavePendingButton } from './flowTestUtils.js';
+import {
+  defaultFormFlowMessages,
+  defaultLeavePendingMessages as leave,
+} from './messages.js';
 import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useFlow } from './useFlow.js';
 
@@ -462,11 +466,15 @@ async function closeWhileBusy(onClose: () => void) {
   return action;
 }
 
-test('closeWhilePending: a clean surface asks to discard; Keep editing keeps the action', async () => {
+test('closeWhilePending: a clean surface asks to stop waiting; Keep waiting keeps the action', async () => {
   const onClose = vi.fn();
   const action = await closeWhileBusy(onClose);
+  const dialog = screen.getByRole('alertdialog');
+  expect(dialog.textContent).toContain(leave.leavePendingTitle);
+  expect(dialog.textContent).toContain(leave.leavePendingBody);
+  expect(dialog.textContent).not.toContain(messages.discardTitle);
   await userEvent.click(
-    screen.getByRole('button', { name: messages.keepEditing })
+    screen.getByRole('button', { name: leave.keepWaiting })
   );
   await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
@@ -496,10 +504,26 @@ test('closeWhilePending: a failure closes the dialog and focuses the alert', asy
   expect(onClose).not.toHaveBeenCalled();
 });
 
-test('closeWhilePending: Discard closes at once and ignores the result', async () => {
+test('closeWhilePending: a dirty surface keeps the discard text', async () => {
+  const action = deferred();
+  render(<Harness closeWhilePending isDirty onSubmit={() => action.promise} />);
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+  const dialog = await screen.findByRole('alertdialog');
+  expect(dialog.textContent).toContain(messages.discardTitle);
+  expect(dialog.textContent).toContain(messages.discardBody);
+  expect(dialog.textContent).not.toContain(leave.leavePendingTitle);
+  expect(
+    screen.getByRole('button', { name: messages.keepEditing })
+  ).toBeTruthy();
+  expect(screen.getByRole('button', { name: messages.discard })).toBeTruthy();
+});
+
+test('closeWhilePending: Close closes at once and ignores the result', async () => {
   const onClose = vi.fn();
   const action = await closeWhileBusy(onClose);
-  await userEvent.click(screen.getByRole('button', { name: messages.discard }));
+  await userEvent.click(await leavePendingButton());
   expect(onClose).toHaveBeenCalledTimes(1);
   await act(async () => action.resolve());
   await pause(50);
@@ -537,9 +561,7 @@ test('closeWhilePending: after Discard on a surface that stays open, Save waits 
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   await userEvent.click(screen.getByRole('button', { name: 'Close' }));
-  await userEvent.click(
-    await screen.findByRole('button', { name: messages.discard })
-  );
+  await userEvent.click(await leavePendingButton());
   expect(onClose).toHaveBeenCalledTimes(1);
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect(onSubmit).toHaveBeenCalledTimes(1);

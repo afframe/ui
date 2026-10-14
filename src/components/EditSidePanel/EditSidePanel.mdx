@@ -29,9 +29,10 @@ It shares its submit, cancel, discard and focus behaviour with `CreateModal`,
 `open` is controlled. `onSubmit` may return a promise: while it is pending
 Save is disabled and shows a spinner; when it resolves, `onClose` is called;
 when it rejects, the panel stays open and shows the error above the action
-bar. Closing while it is pending asks "Discard changes?", also on a clean
-form, unless `confirmDiscard` is false. Discard closes the panel and ignores
-the result; the dialog closes itself when the promise settles.
+bar. Closing while it is pending asks first, unless `confirmDiscard` is false:
+"Discard changes?" on a dirty form, "Stop waiting?" on a clean one. Discard or
+Close closes the panel and ignores the result; the dialog closes itself when the
+promise settles.
 
 ### Wiring `isDirty`
 
@@ -103,6 +104,10 @@ which is set from a client component.
 | `discardBody`          | Your changes will be lost.                              |
 | `discard`              | Discard                                                 |
 | `keepEditing`          | Keep editing                                            |
+| `leavePendingTitle`    | Stop waiting? (closing a clean form while it saves)     |
+| `leavePendingBody`     | Saving continues in the background.                     |
+| `leavePending`         | Close                                                   |
+| `keepWaiting`          | Keep waiting                                            |
 | `closeIconDescription` | Close (the panel's and the discard dialog's close icon) |
 
 ## Keyboard and screen reader behaviour
@@ -135,7 +140,8 @@ Screen readers announce:
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
-  `discardBody`.
+  `discardBody` (`leavePendingTitle` and `leavePendingBody` on a clean form
+  while it saves).
 
 ## Stories
 

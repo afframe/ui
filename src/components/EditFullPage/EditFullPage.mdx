@@ -39,10 +39,10 @@ scrolls. The region needs a definite height, for example a main area of
 Without one the bar sits right under the fields. `onClose` leaves edit mode. `onSubmit` may return a
 promise: while it is pending Save is disabled and shows a spinner; when it
 resolves, `onClose` is called; when it rejects, the form stays and shows the
-error above the action bar. Closing while it is pending asks "Discard
-changes?", also on a clean form, unless `confirmDiscard` is false. Discard
-leaves edit mode and ignores the result; the dialog closes itself when the
-promise settles.
+error above the action bar. Closing while it is pending asks first, unless
+`confirmDiscard` is false: "Discard changes?" on a dirty form, "Stop waiting?"
+on a clean one. Discard or Close leaves edit mode and ignores the result; the
+dialog closes itself when the promise settles.
 
 ### Wiring `isDirty`
 
@@ -93,19 +93,23 @@ editing ? (
 `defaultEditFullPageMessages`. All strings except the optional `errorText` function,
 which is set from a client component.
 
-| Key                    | Default                                    |
-| ---------------------- | ------------------------------------------ |
-| `save`                 | Save                                       |
-| `cancel`               | Cancel                                     |
-| `pending`              | Saving                                     |
-| `error`                | The changes could not be saved. Try again. |
-| `errorText`            | not set: `error` is shown                  |
-| `errorIconDescription` | Error                                      |
-| `discardTitle`         | Discard changes?                           |
-| `discardBody`          | Your changes will be lost.                 |
-| `discard`              | Discard                                    |
-| `keepEditing`          | Keep editing                               |
-| `closeIconDescription` | Close (the discard dialog's close icon)    |
+| Key                    | Default                                             |
+| ---------------------- | --------------------------------------------------- |
+| `save`                 | Save                                                |
+| `cancel`               | Cancel                                              |
+| `pending`              | Saving                                              |
+| `error`                | The changes could not be saved. Try again.          |
+| `errorText`            | not set: `error` is shown                           |
+| `errorIconDescription` | Error                                               |
+| `discardTitle`         | Discard changes?                                    |
+| `discardBody`          | Your changes will be lost.                          |
+| `discard`              | Discard                                             |
+| `keepEditing`          | Keep editing                                        |
+| `leavePendingTitle`    | Stop waiting? (closing a clean form while it saves) |
+| `leavePendingBody`     | Saving continues in the background.                 |
+| `leavePending`         | Close                                               |
+| `keepWaiting`          | Keep waiting                                        |
+| `closeIconDescription` | Close (the discard dialog's close icon)             |
 
 ## Keyboard and screen reader behaviour
 
@@ -133,7 +137,8 @@ Screen readers announce:
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
-  `discardBody`.
+  `discardBody` (`leavePendingTitle` and `leavePendingBody` on a clean form
+  while it saves).
 
 ## Stories
 

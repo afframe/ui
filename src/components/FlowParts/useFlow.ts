@@ -61,6 +61,8 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
   close: () => void;
   clearError: () => void;
   discardOpen: boolean;
+  /** The discard dialog is for a clean surface whose action still runs. */
+  discardWhilePending: boolean;
   confirmDiscard: () => void;
   keepEditing: () => void;
   /** Last focused element in the form, set by FlowForm. */
@@ -130,6 +132,8 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   const [error, setError] = useState<string | null>(null);
   const [errorCount, setErrorCount] = useState(0);
   const [discardOpen, setDiscardOpen] = useState(false);
+  // Set only on open: the closing dialog keeps its text.
+  const [discardWhilePending, setDiscardWhilePending] = useState(false);
   const containerRef = useRef<T>(null);
   // Refs, not state: IBM's SidePanel calls `onRequestClose` from a window
   // keydown listener that can hold an older render's callback, and that
@@ -283,9 +287,13 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
           ? active
           : lastFocusRef.current;
       discardRef.current = true;
+      const whilePending = !isDirty;
       // Next task: opened inside an Escape keydown, the new dialog would get
       // that same key's cancel event and close at once.
-      discardTimerRef.current = setTimeout(() => setDiscardOpen(true));
+      discardTimerRef.current = setTimeout(() => {
+        setDiscardWhilePending(whilePending);
+        setDiscardOpen(true);
+      });
       return;
     }
     close();
@@ -366,6 +374,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     close,
     clearError,
     discardOpen: open && discardOpen,
+    discardWhilePending,
     confirmDiscard: confirm,
     keepEditing,
     lastFocusRef,

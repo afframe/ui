@@ -11,6 +11,7 @@ import type {
   ReactNode,
   Ref,
 } from 'react';
+import { defaultLeavePendingMessages } from './messages.js';
 import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useMergedRefs } from './refs.js';
 import type { Flow } from './useFlow.js';
@@ -204,7 +205,8 @@ export function FlowStatus({
 }
 
 /**
- * "Discard changes?" over the parent surface. Render it as a sibling of the
+ * "Discard changes?" over the parent surface, or "Stop waiting?" when the
+ * surface is clean and its action still runs. Render it as a sibling of the
  * surface, never inside it: keys inside it must not reach the surface's own
  * React handlers (IBM SidePanel traps Tab and closes on Escape).
  */
@@ -212,12 +214,29 @@ export function DiscardDialog({
   flow,
   messages,
 }: {
-  flow: Pick<Flow, 'discardOpen' | 'keepEditing' | 'confirmDiscard'>;
+  flow: Pick<
+    Flow,
+    'discardOpen' | 'discardWhilePending' | 'keepEditing' | 'confirmDiscard'
+  >;
   messages: DiscardMessages & Pick<FlowMessages, 'closeIconDescription'>;
 }) {
   const prefix = usePrefix();
   const ref = useRef<HTMLDivElement>(null);
   const { discardOpen } = flow;
+  const leave = { ...defaultLeavePendingMessages, ...messages };
+  const text = flow.discardWhilePending
+    ? {
+        title: leave.leavePendingTitle,
+        body: leave.leavePendingBody,
+        confirm: leave.leavePending,
+        keep: leave.keepWaiting,
+      }
+    : {
+        title: messages.discardTitle,
+        body: messages.discardBody,
+        confirm: messages.discard,
+        keep: messages.keepEditing,
+      };
   // The dialog element ignores Carbon's selectorPrimaryFocus.
   useEffect(() => {
     if (!discardOpen) return;
@@ -243,14 +262,14 @@ export function DiscardDialog({
         alert
         size="xs"
         preventCloseOnClickOutside
-        modalHeading={messages.discardTitle}
-        primaryButtonText={messages.discard}
-        secondaryButtonText={messages.keepEditing}
+        modalHeading={text.title}
+        primaryButtonText={text.confirm}
+        secondaryButtonText={text.keep}
         closeButtonLabel={messages.closeIconDescription}
         onRequestClose={flow.keepEditing}
         onSecondarySubmit={flow.keepEditing}
         onRequestSubmit={flow.confirmDiscard}>
-        <p>{messages.discardBody}</p>
+        <p>{text.body}</p>
       </Modal>
     </div>
   );

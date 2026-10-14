@@ -7,6 +7,7 @@ import {
   englishLeft as englishCreateLeft,
   expectBusyPrimary,
   expectFocusedErrorAlert,
+  leavePendingButton,
   sentinelMessages,
 } from '../FlowParts/flowTestUtils.js';
 import { CreateModal, defaultCreateModalMessages } from './CreateModal.js';
@@ -147,7 +148,7 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
 });
 
-test('while busy, Cancel stays enabled; Discard leaves and drops the result', async () => {
+test('while busy, Cancel stays enabled; Close leaves and drops the result', async () => {
   let resolve: () => void = () => undefined;
   const onClose = vi.fn();
   render(
@@ -165,7 +166,7 @@ test('while busy, Cancel stays enabled; Discard leaves and drops the result', as
   const cancel = screen.getByRole('button', { name: 'Cancel' });
   expect(cancel.hasAttribute('disabled')).toBe(false);
   await userEvent.click(cancel);
-  await userEvent.click(await screen.findByRole('button', { name: 'Discard' }));
+  await userEvent.click(await leavePendingButton());
   expect(onClose).toHaveBeenCalledTimes(1);
   resolve();
   await new Promise((done) => setTimeout(done, 50));
