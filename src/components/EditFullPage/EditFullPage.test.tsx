@@ -6,6 +6,7 @@ import { AfframeProvider } from '../../index.js';
 import {
   englishLeft,
   expectBusyPrimary,
+  expectFocusedErrorAlert,
   sentinelMessages,
 } from '../FlowParts/flowTestUtils.js';
 import { defaultEditFullPageMessages, EditFullPage } from './EditFullPage.js';
@@ -209,6 +210,7 @@ test('a rejected submit stays with an alert and no onClose', async () => {
     defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
+  await expectFocusedErrorAlert();
 });
 
 function beforeunloadCalls(spy: { mock: { calls: unknown[][] } }) {

@@ -246,9 +246,8 @@ test('rejected submit keeps the surface open and focuses the alert', async () =>
   expect(alert.textContent).toContain(messages.error);
   expect(alert.textContent).not.toContain('Name is taken');
   expect(onClose).not.toHaveBeenCalled();
-  await waitFor(() =>
-    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
-  );
+  await waitFor(() => expect(active()).toBe(alert));
+  expect(alert.hasAttribute('data-afframe-flow-error')).toBe(true);
   unmount();
 
   render(<Harness onSubmit={() => Promise.reject(new Error(''))} />);
@@ -487,11 +486,11 @@ test('closeWhilePending: a failure closes the dialog and focuses the alert', asy
   const action = await closeWhileBusy(onClose);
   await act(async () => action.reject(new Error('Nope')));
   await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
-  const onAlert = () => active()?.hasAttribute('data-afframe-flow-error');
-  await waitFor(() => expect(onAlert()).toBe(true));
+  const alert = screen.getByRole('alert');
+  await waitFor(() => expect(active()).toBe(alert));
   // Not taken back by the closing dialog.
   await pause(300);
-  expect(onAlert()).toBe(true);
+  expect(active()).toBe(alert);
   expect(onClose).not.toHaveBeenCalled();
 });
 

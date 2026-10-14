@@ -113,7 +113,10 @@ export function FlowDescription({
   return description ? <p className={className}>{description}</p> : null;
 }
 
-/** The error alert; focusable for error focus. Render it inside `containerRef`. */
+/**
+ * The error alert, as wide as the fields; it takes the error focus itself.
+ * Render it inside `containerRef`.
+ */
 export function FlowError({
   error,
   iconDescription,
@@ -123,19 +126,17 @@ export function FlowError({
 }) {
   if (error === null) return null;
   return (
-    <div
+    <InlineNotification
       data-afframe-flow-error=""
       tabIndex={-1}
-      className="afframe-flow-error">
-      <InlineNotification
-        kind="error"
-        role="alert"
-        lowContrast
-        hideCloseButton
-        title={error}
-        statusIconDescription={iconDescription}
-      />
-    </div>
+      className="afframe-flow-error"
+      kind="error"
+      role="alert"
+      lowContrast
+      hideCloseButton
+      title={error}
+      statusIconDescription={iconDescription}
+    />
   );
 }
 

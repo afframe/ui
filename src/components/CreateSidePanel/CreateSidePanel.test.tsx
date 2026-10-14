@@ -7,6 +7,7 @@ import { AfframeProvider } from '../../index.js';
 import {
   englishLeft,
   expectBusyPrimary,
+  expectFocusedErrorAlert,
   sentinelMessages,
   tabbables,
 } from '../FlowParts/flowTestUtils.js';
@@ -209,6 +210,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
     defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
+  await expectFocusedErrorAlert();
   expect(screen.getByRole('form')).toBeTruthy();
 });
 

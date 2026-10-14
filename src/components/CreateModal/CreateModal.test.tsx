@@ -6,6 +6,7 @@ import { AfframeProvider } from '../../index.js';
 import {
   englishLeft as englishCreateLeft,
   expectBusyPrimary,
+  expectFocusedErrorAlert,
   sentinelMessages,
 } from '../FlowParts/flowTestUtils.js';
 import { CreateModal, defaultCreateModalMessages } from './CreateModal.js';
@@ -185,6 +186,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
     defaultCreateModalMessages.error
   );
   expect(onClose).not.toHaveBeenCalled();
+  await expectFocusedErrorAlert();
   expect(screen.getByRole('dialog', { name: 'Item A' })).toBeTruthy();
 });
 

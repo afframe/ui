@@ -23,12 +23,16 @@
   outline: none;
 }
 
-.afframe-flow-error:focus {
-  @include focus-outline('outline');
+// Carbon caps an inline notification at 288 to 832px by breakpoint; in a
+// flow it spans the form like the fields.
+.afframe-flow-error {
+  margin: 0;
+  max-inline-size: none;
+  min-inline-size: 0;
 }
 
-.afframe-flow-error > * {
-  margin: 0;
+.afframe-flow-error:focus {
+  @include focus-outline('outline');
 }
 
 .afframe-flow-button-label {

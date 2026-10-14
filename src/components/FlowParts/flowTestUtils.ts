@@ -1,5 +1,5 @@
 // Test helpers for the create and edit components. Not shipped.
-import { cleanup, screen } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import { expect } from 'vitest';
 
 /**
@@ -73,4 +73,25 @@ export function expectBusyPrimary(label: string, announcement: string) {
   expect(inner.top).toBeGreaterThanOrEqual(outer.top);
   expect(inner.bottom).toBeLessThanOrEqual(outer.bottom);
   expect(screen.getByRole('status').textContent).toBe(announcement);
+}
+
+/**
+ * After a rejected action: focus and its ring on the alert itself, which
+ * spans the column the fields sit in.
+ */
+export async function expectFocusedErrorAlert() {
+  const alert = await screen.findByRole('alert');
+  await waitFor(() => expect(document.activeElement).toBe(alert));
+  expect(alert.hasAttribute('data-afframe-flow-error')).toBe(true);
+  expect(getComputedStyle(alert).outlineStyle).not.toBe('none');
+  const column = alert.parentElement;
+  if (!column) throw new Error('The alert has no parent');
+  const style = getComputedStyle(column);
+  const inner =
+    column.clientWidth -
+    parseFloat(style.paddingInlineStart) -
+    parseFloat(style.paddingInlineEnd);
+  expect(
+    Math.abs(alert.getBoundingClientRect().width - inner)
+  ).toBeLessThanOrEqual(1);
 }
