@@ -97,7 +97,8 @@ function emphasize(text: string, name: string | undefined): ReactNode {
   if (!name || at < 0) return text;
   const before = text.slice(0, at);
   const after = text.slice(at + name.length);
-  const quote = before.endsWith('"') && after.startsWith('"') ? '' : '"';
+  const quoted = /["“„«‘‚']$/.test(before) && /^["”“»’‘']/.test(after);
+  const quote = quoted ? '' : '"';
   return (
     <>
       {before}

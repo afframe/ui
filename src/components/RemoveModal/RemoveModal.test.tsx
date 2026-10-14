@@ -221,6 +221,24 @@ test('a custom label gets the phrase bold; quotes already there are kept', async
   expect(document.body.textContent).toContain('Type "DELETE" below.');
 });
 
+test('typographic quotes around the name are kept, not doubled', async () => {
+  renderHarness({
+    confirmByTyping: true,
+    description: 'Faktura „Invoice 2026-001“ bude smazána.',
+    messages: { typeToConfirm: (phrase) => `Napište „${phrase}“` },
+  });
+  await openByKeyboard();
+  const input = screen.getByRole('textbox', {
+    name: 'Napište „Invoice 2026-001“',
+  });
+  const label = document.querySelector(`label[for="${input.id}"]`);
+  expect(label?.querySelector('strong')?.textContent).toBe('Invoice 2026-001');
+  const body = screen.getByText('Invoice 2026-001', {
+    selector: 'p strong',
+  }).parentElement;
+  expect(body?.textContent).toBe('Faktura „Invoice 2026-001“ bude smazána.');
+});
+
 test('pending: buttons disabled, Escape ignored; rejection keeps it open with an alert', async () => {
   let reject: (error: Error) => void = () => undefined;
   const onConfirm = vi.fn(
