@@ -439,10 +439,17 @@ export function EditTearsheet({
                 }}>
                 {formElements}
               </FormContext.Provider>
-              <FlowError
-                error={flow.error}
-                iconDescription={text.errorIconDescription}
-              />
+              {flow.error !== null && (
+                // The fields' column, so the alert lines up with them.
+                <Grid>
+                  <Column sm={4} md={8} lg={variant === 'narrow' ? 16 : 8}>
+                    <FlowError
+                      error={flow.error}
+                      iconDescription={text.errorIconDescription}
+                    />
+                  </Column>
+                </Grid>
+              )}
             </FlowForm>
             {/* Outside the form: its aria-busy may hold back announcements. */}
             <FlowStatus message={flow.pending ? text.pending : ''} />
