@@ -101,12 +101,14 @@ export function EditTearsheetForm({
       ].join(' ')}>
       <Grid>
         <Column sm={4} md={8} lg={context?.narrow ? 16 : 12}>
-          <h4
+          {/* IBM's is an h4; an h3 under the tearsheet's h2 keeps the
+              heading order, styled as IBM's h4. */}
+          <h3
             id={`${id}-title`}
             tabIndex={-1}
-            className={`${ibm}__form--title`}>
+            className={`${ibm}__form--title afframe-edit-tearsheet-form-title`}>
             {title}
-          </h4>
+          </h3>
           {description && (
             <p className={`${ibm}__form--description`}>{description}</p>
           )}

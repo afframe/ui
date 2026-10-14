@@ -2,6 +2,7 @@
 // (c4p--tearsheet-edit classes) do the rest.
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
 
 // IBM sets the side nav to position: initial; Carbon's height leaves room
 // for a UI Shell header that is not there.
@@ -19,6 +20,11 @@
 .afframe-edit-tearsheet-nav-invalid {
   flex: none;
   fill: $support-error;
+}
+
+// Carbon's h4 style, which IBM's form title gets.
+.afframe-edit-tearsheet-form-title {
+  @include type.type-style('heading-03');
 }
 
 .afframe-edit-tearsheet-form-fields {
