@@ -22,12 +22,3 @@
   align-items: flex-end;
   gap: $spacing-03;
 }
-
-// With 'enable-dialog-element' the native dialog is capped at 72% from lg up,
-// but its single .cds--dialog-container sits in an auto row with its own 84vh
-// cap, so a long file list pushes the footer out of the dialog. One row sized
-// to the dialog lets Carbon's content row scroll instead.
-/* stylelint-disable-next-line selector-class-pattern -- Carbon's class name */
-.afframe-import-modal .cds--modal-container {
-  grid-template-rows: minmax(0, 1fr);
-}

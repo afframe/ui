@@ -26,6 +26,7 @@
 @use '@carbon-labs/react-first-time-orientation/scss/styles/firstTimeOrientation';
 @use '@carbon-labs/react-processing/scss/processing';
 @use '@carbon-labs/react-text-highlighter/scss/text-highlighter';
+@use 'dialog-sizes';
 @use '../components/DataGrid/data-grid';
 @use '../components/FilterPanel/filter-panel';
 @use '../components/Amount/amount';

@@ -1,8 +1,17 @@
-// Carbon Modal and ComposedModal sizes under 'enable-dialog-element'. The
-// native dialog's own cap (.cds--dialog: 84%, 60%, 48% by breakpoint) is at
-// or below the md modal width, so lg rendered as wide as md. The modal
-// container's size rules alone set the width, as without the flag.
-/* stylelint-disable-next-line selector-class-pattern -- Carbon's class names */
-.cds--dialog.cds--modal-container {
+// Carbon Modal and ComposedModal under 'enable-dialog-element'. IBM's
+// preview Tearsheet also renders a native dialog with the modal container
+// class, and keeps its own sizes.
+/* stylelint-disable selector-class-pattern -- Carbon's and IBM's class names */
+.cds--dialog.cds--modal-container:not(.c4p--tearsheet__next__container) {
+  // The native dialog's own cap (84%, 60%, 48% by breakpoint) is at or below
+  // the md modal width, so lg rendered as wide as md. The container's size
+  // rules alone set the width, as without the flag.
   max-inline-size: none;
+
+  // The dialog holds a single .cds--dialog-container, which Carbon's grid
+  // puts in an auto row with its own 84vh cap, so a tall body pushed the
+  // footer out of the dialog. One row sized to the dialog lets Carbon's
+  // content row scroll instead.
+  grid-template-rows: minmax(0, 1fr);
 }
+/* stylelint-enable selector-class-pattern */

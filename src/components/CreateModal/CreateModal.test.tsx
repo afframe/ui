@@ -335,3 +335,35 @@ test.each([1024, 1312])(
     }
   }
 );
+
+test('a tall small form scrolls inside the dialog element and keeps the footer in view', async () => {
+  await page.viewport(1312, 600);
+  try {
+    render(
+      <AfframeProvider>
+        <CreateModal
+          open
+          size="sm"
+          title="Item T"
+          onClose={() => undefined}
+          onSubmit={() => undefined}>
+          {Array.from({ length: 30 }, (_, index) => (
+            <input key={index} aria-label={`Field T${index}`} />
+          ))}
+        </CreateModal>
+      </AfframeProvider>
+    );
+    const create = await screen.findByRole('button', { name: 'Create' });
+    const dialog = create.closest('dialog');
+    if (!dialog) throw new Error('No native dialog');
+    const footer = create.getBoundingClientRect();
+    const box = dialog.getBoundingClientRect();
+    expect(footer.bottom).toBeLessThanOrEqual(box.bottom + 1);
+    expect(footer.bottom).toBeLessThanOrEqual(window.innerHeight);
+    const content = dialog.querySelector('.cds--modal-content');
+    if (!content) throw new Error('No modal content');
+    expect(content.scrollHeight).toBeGreaterThan(content.clientHeight);
+  } finally {
+    await page.viewport(1024, 768);
+  }
+});
