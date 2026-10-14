@@ -339,3 +339,38 @@ test.each([320, 375])('at %ipx both buttons stay on screen', async (width) => {
     await page.viewport(1024, 768);
   }
 });
+
+test('a rejection under the discard dialog closes it and focuses the alert', async () => {
+  let reject: (reason: unknown) => void = () => undefined;
+  render(
+    <Harness
+      onSubmit={() =>
+        new Promise<void>((_, fail) => {
+          reject = fail;
+        })
+      }
+    />
+  );
+  await mounted();
+  await userEvent.click(screen.getByRole('button', { name: defaults.save }));
+  await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
+  reject(new Error('Duplicate'));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  const alert = screen.getByRole('alert');
+  await waitFor(() => expect(document.activeElement).toBe(alert));
+  await new Promise((done) => setTimeout(done, 300));
+  expect(document.activeElement).toBe(alert);
+});
+
+test('the busy primary button fits a narrow screen', async () => {
+  await page.viewport(375, 768);
+  try {
+    render(<Harness onSubmit={() => new Promise<void>(() => undefined)} />);
+    await mounted();
+    await userEvent.click(screen.getByRole('button', { name: defaults.save }));
+    expectBusyPrimary(defaults.save, defaults.pending);
+  } finally {
+    await page.viewport(1024, 768);
+  }
+});

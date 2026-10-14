@@ -261,3 +261,26 @@ test('a description node renders as given, not inside a paragraph', async () => 
   const item = await screen.findByText('One rule');
   expect(item.closest('p')).toBeNull();
 });
+
+test('a rejection under the discard dialog closes it and focuses the alert', async () => {
+  let reject: (reason: unknown) => void = () => undefined;
+  render(
+    <Harness
+      onSubmit={() =>
+        new Promise<void>((_, fail) => {
+          reject = fail;
+        })
+      }
+    />
+  );
+  await launch();
+  await userEvent.click(screen.getByRole('button', { name: 'Create' }));
+  await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
+  reject(new Error('Duplicate'));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  const alert = screen.getByRole('alert');
+  await waitFor(() => expect(document.activeElement).toBe(alert));
+  await new Promise((done) => setTimeout(done, 300));
+  expect(document.activeElement).toBe(alert);
+});

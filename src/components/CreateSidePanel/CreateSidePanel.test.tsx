@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { useRef, useState } from 'react';
 import type { Ref } from 'react';
 import { expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import {
   englishLeft,
@@ -297,4 +297,39 @@ test('a callback ref gets the aside; the focus trap and the exit still work', as
   await waitFor(() => expect(screen.queryByTestId('panel')).toBeNull());
   expect(nodes.at(-1)).toBeNull();
   await waitFor(() => expect(active()).toBe(launcher()));
+});
+
+test('a rejection under the discard dialog closes it and focuses the alert', async () => {
+  let reject: (reason: unknown) => void = () => undefined;
+  render(
+    <Harness
+      onSubmit={() =>
+        new Promise<void>((_, fail) => {
+          reject = fail;
+        })
+      }
+    />
+  );
+  await launch();
+  await userEvent.click(screen.getByRole('button', { name: primary }));
+  await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
+  reject(new Error('Duplicate'));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  const alert = screen.getByRole('alert');
+  await waitFor(() => expect(document.activeElement).toBe(alert));
+  await new Promise((done) => setTimeout(done, 300));
+  expect(document.activeElement).toBe(alert);
+});
+
+test('the busy primary button fits a narrow screen', async () => {
+  await page.viewport(375, 768);
+  try {
+    render(<Harness onSubmit={() => new Promise<void>(() => undefined)} />);
+    await launch();
+    await userEvent.click(screen.getByRole('button', { name: primary }));
+    expectBusyPrimary(primary, defaults.pending);
+  } finally {
+    await page.viewport(1024, 768);
+  }
 });
