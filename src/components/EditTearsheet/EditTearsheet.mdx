@@ -176,17 +176,18 @@ margin the size of the footer (the test-only `FocusNotObscured` story checks it)
 Screen readers announce:
 
 - the tearsheet as a dialog named by its title; the navigation as a landmark
-  named `sectionsNavLabel`, its items as links, the shown form's item with
-  `aria-current`; an invalid form's error icon as an image named
+  named `sectionsNavLabel`, its items as progress-step buttons, the shown
+  form's item with `aria-current="step"`; an invalid form's item named with
   `sectionInvalid(title)`;
 - the shown form as a region named by its heading;
 - while saving, the form as busy and `pending` in a polite status; Save keeps
-  its name and shows a spinner;
+  its name and shows Carbon's inline loading;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus
   moves to the first field with `aria-invalid="true"` in the shown form, else
   to the first one in a hidden form, showing that form first (also when the
   field is marked a render after the error, unless a form was chosen in the
-  meantime), else to the alert;
+  meantime), else to the form itself, with no focus ring, so the next Tab
+  reaches the first field; the alert takes no focus;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
   `discardBody` (`leavePendingTitle` and `leavePendingBody` on a clean form
   while it saves).
