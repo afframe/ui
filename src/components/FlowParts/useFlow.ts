@@ -40,7 +40,10 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
    * focus. Give it tabIndex -1 so it can hold focus while pending.
    */
   containerRef: RefObject<T | null>;
-  /** True while an action runs: the primary button is disabled. */
+  /**
+   * True while an action runs, also one abandoned by `close` or a parent
+   * close: the primary button is disabled.
+   */
   pending: boolean;
   /** Text of the error alert after a rejected action, else null. */
   error: string | null;
@@ -49,14 +52,14 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
   /**
    * Runs an action; resolves true when it succeeded in the same session.
    * Resolves false at once while an earlier action, even an abandoned one,
-   * still runs.
+   * still runs (`pending` is then true).
    */
   run: (action: () => unknown) => Promise<boolean>;
   /** What Escape, the close icon, Cancel and an overlay click call. */
   requestClose: () => void;
   /**
    * Calls `onClose` at once; a running action's result is then ignored, and
-   * `run` waits for it to settle.
+   * the surface stays busy until it settles.
    */
   close: () => void;
   clearError: () => void;
@@ -149,9 +152,6 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   // Bumped on every open, close and unmount: the result of an action started
   // in an earlier session is dropped.
   const sessionRef = useRef(0);
-  // Outlives `close` and reopening, unlike `pendingRef`: a surface that stays
-  // mounted after a discard must not send the same request twice.
-  const inFlightRef = useRef(false);
   const discardTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
@@ -176,13 +176,12 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     if (open === wasOpenRef.current) return;
     wasOpenRef.current = open;
     sessionRef.current += 1;
-    // A parent-driven close or a reopen leaves no discard dialog, busy state
-    // or error.
+    // A parent-driven close or a reopen leaves no discard dialog or error.
+    // The busy state stays until an abandoned action settles: a second
+    // submit would send the same request twice.
     clearTimeout(discardTimerRef.current);
     discardRef.current = false;
-    pendingRef.current = false;
     setDiscardOpen(false);
-    setPending(false);
     setError(null);
     cancelFocusRef.current?.();
     cancelFocusRef.current = null;
@@ -265,11 +264,9 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   }, [errorCount]);
 
   const close = useCallback(() => {
-    // Drops a running action's result. EditFullPage stays open, so no open
-    // change bumps the session there.
+    // Drops a running action's result, not its busy state. EditFullPage
+    // stays open, so no open change bumps the session there.
     sessionRef.current += 1;
-    pendingRef.current = false;
-    setPending(false);
     setError(null);
     onCloseRef.current();
   }, []);
@@ -300,7 +297,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   }, [isDirty, confirmDiscard, closeWhilePending, close]);
 
   const run = useCallback(async (action: () => unknown) => {
-    if (pendingRef.current || inFlightRef.current) return false;
+    if (pendingRef.current) return false;
     const session = sessionRef.current;
     const current = () => session === sessionRef.current;
     // A discard dialog opened while pending is moot once the action settles.
@@ -323,23 +320,23 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
         typeof (result as PromiseLike<unknown> | undefined)?.then === 'function'
       ) {
         pendingRef.current = true;
-        inFlightRef.current = true;
         setPending(true);
         await result;
       }
     } catch (reason) {
-      inFlightRef.current = false;
-      if (!current()) return false;
+      // Abandoned: only the busy state ends.
+      if (!current()) {
+        settle(false);
+        return false;
+      }
       settle(true);
       const { error: text, errorText } = messagesRef.current;
       setError(errorText?.(reason) ?? text);
       setErrorCount((count) => count + 1);
       return false;
     }
-    inFlightRef.current = false;
-    if (!current()) return false;
     settle(false);
-    return true;
+    return current();
   }, []);
 
   const confirm = useCallback(() => {

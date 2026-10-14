@@ -551,24 +551,65 @@ test('closeWhilePending with confirmDiscard false closes at once', async () => {
   expect(onClose).toHaveBeenCalledTimes(1);
 });
 
-test('closeWhilePending: after Discard on a surface that stays open, Save waits for the abandoned action', async () => {
+test.each(['resolves', 'rejects'] as const)(
+  'closeWhilePending: a surface that stays open after Stop waiting stays busy until the abandoned action %s',
+  async (outcome) => {
+    const onClose = vi.fn();
+    const action = deferred();
+    const onSubmit = vi.fn(() => action.promise);
+    render(
+      <Harness
+        keepOpen
+        closeWhilePending
+        onClose={onClose}
+        onSubmit={onSubmit}
+      />
+    );
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await userEvent.click(await leavePendingButton());
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+    expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
+    await userEvent.click(screen.getByRole('button', { name: 'Busy' }));
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    await act(async () =>
+      outcome === 'resolves' ? action.resolve() : action.reject(new Error('x'))
+    );
+    await waitFor(() =>
+      expect(screen.getByRole('form').getAttribute('aria-busy')).toBeNull()
+    );
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+  }
+);
+
+test('a surface reopened while an abandoned action runs is busy until it settles', async () => {
   const onClose = vi.fn();
+  const closeRef: { current: () => void } = { current: () => undefined };
   const action = deferred();
-  const onSubmit = vi.fn(() => action.promise);
   render(
-    <Harness keepOpen closeWhilePending onClose={onClose} onSubmit={onSubmit} />
+    <Harness
+      closeRef={closeRef}
+      onClose={onClose}
+      onSubmit={() => action.promise}
+    />
   );
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
-  await userEvent.click(screen.getByRole('button', { name: 'Close' }));
-  await userEvent.click(await leavePendingButton());
-  expect(onClose).toHaveBeenCalledTimes(1);
-  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
-  expect(onSubmit).toHaveBeenCalledTimes(1);
+  act(() => closeRef.current());
+  await openSurface();
+  expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
+  expect(screen.getByRole('button', { name: 'Busy' })).toBeTruthy();
   await act(async () => action.resolve());
-  expect(onClose).toHaveBeenCalledTimes(1);
-  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
-  expect(onSubmit).toHaveBeenCalledTimes(2);
+  await waitFor(() =>
+    expect(screen.getByRole('form').getAttribute('aria-busy')).toBeNull()
+  );
+  expect(onClose).not.toHaveBeenCalled();
+  expect(screen.queryByRole('alert')).toBeNull();
 });
 
 test('rejected submit skips an invalid field that is not rendered', async () => {

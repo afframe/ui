@@ -31,8 +31,9 @@ Save is disabled and shows a spinner; when it resolves, `onClose` is called;
 when it rejects, the panel stays open and shows the error above the action
 bar. Closing while it is pending asks first, unless `confirmDiscard` is false:
 "Discard changes?" on a dirty form, "Stop waiting?" on a clean one. Discard or
-Stop waiting closes the panel and ignores the result; the dialog closes itself when the
-promise settles.
+Stop waiting closes the panel and ignores the result; the dialog closes itself
+when the promise settles. If it is still shown or opened again before then, it
+stays busy until it settles.
 
 ### Wiring `isDirty`
 
