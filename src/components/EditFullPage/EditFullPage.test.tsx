@@ -374,3 +374,48 @@ test('the busy primary button fits a narrow screen', async () => {
     await page.viewport(1024, 768);
   }
 });
+
+/** The page in a region of viewport height, as the docs ask of the app. */
+function renderInRegion(fields: number) {
+  render(
+    <AfframeProvider>
+      <div style={{ blockSize: '100dvh' }}>
+        <EditFullPage
+          title="Record A"
+          onSubmit={() => undefined}
+          onClose={() => undefined}>
+          {Array.from({ length: fields }, (_, index) => (
+            <label key={index}>
+              Field {index + 1}
+              <input />
+            </label>
+          ))}
+        </EditFullPage>
+      </div>
+    </AfframeProvider>
+  );
+  const bar = document.querySelector('.afframe-edit-full-page-actions');
+  if (!bar) throw new Error('No action bar');
+  return () => bar.getBoundingClientRect().bottom;
+}
+
+test('a short form keeps the action bar at the bottom of the region', () => {
+  const barBottom = renderInRegion(2);
+  expect(barBottom()).toBeCloseTo(window.innerHeight, 0);
+});
+
+test('a long form scrolls under a sticky action bar', async () => {
+  const barBottom = renderInRegion(30);
+  try {
+    const end = document.documentElement.scrollHeight - window.innerHeight;
+    expect(end).toBeGreaterThan(0);
+    expect(barBottom()).toBeCloseTo(window.innerHeight, 0);
+    for (const top of [end / 2, end]) {
+      window.scrollTo(0, top);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      expect(barBottom()).toBeCloseTo(window.innerHeight, 0);
+    }
+  } finally {
+    window.scrollTo(0, 0);
+  }
+});

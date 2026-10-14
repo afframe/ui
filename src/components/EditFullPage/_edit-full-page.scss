@@ -4,12 +4,23 @@
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
 
+// Fills the region the app gives it, so the action bar sits at the bottom
+// of a short form and sticks while a long one scrolls. A percentage needs a
+// parent with a definite height; below the root the chain is flex.
+.afframe-edit-full-page-root {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100%;
+}
+
 .afframe-edit-full-page {
+  flex: 1 0 auto;
   gap: 0;
 }
 
 .afframe-edit-full-page-body {
   display: flex;
+  flex: 1 0 auto;
   flex-direction: column;
   padding: $spacing-07 $spacing-05;
   gap: $spacing-05;

@@ -30,7 +30,13 @@ behaviour with `CreateModal`, `CreateSidePanel`, `EditSidePanel` and
 
 Render it in place of the read-only view while the record is in edit mode. It
 renders a `<form>` named by its heading, not a `main` landmark: the app owns
-the page landmarks. `onClose` leaves edit mode. `onSubmit` may return a
+the page landmarks.
+
+It fills the region it is rendered in, so the action bar sits at the bottom
+of a short form and sticks to the bottom of the viewport while a long form
+scrolls. The region needs a definite height, for example a main area of
+`block-size: 100dvh` or one that fills the space under the page header.
+Without one the bar sits right under the fields. `onClose` leaves edit mode. `onSubmit` may return a
 promise: while it is pending Save is disabled and shows a spinner; when it
 resolves, `onClose` is called; when it rejects, the form stays and shows the
 error above the action bar. Closing while it is pending asks "Discard

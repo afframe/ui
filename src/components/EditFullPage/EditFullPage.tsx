@@ -64,7 +64,11 @@ export interface EditFullPageProps
   ref?: Ref<HTMLFormElement> | undefined;
 }
 
-/** A page-level edit form with a sticky Cancel and Save bar. */
+/**
+ * A page-level edit form with a Cancel and Save bar at the bottom of the page,
+ * sticky while a long form scrolls. Fills its parent, which needs a definite
+ * height.
+ */
 export function EditFullPage({
   onClose,
   onSubmit,
