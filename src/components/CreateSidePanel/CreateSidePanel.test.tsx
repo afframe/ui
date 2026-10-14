@@ -6,6 +6,7 @@ import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import {
   englishLeft,
+  expectBusyPrimary,
   sentinelMessages,
   tabbables,
 } from '../FlowParts/flowTestUtils.js';
@@ -159,7 +160,7 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText(defaults.pending).length).toBeGreaterThan(0);
+  expectBusyPrimary(primary, defaults.pending);
   await userEvent.keyboard('{Escape}');
   expect(onClose).not.toHaveBeenCalled();
   resolve();

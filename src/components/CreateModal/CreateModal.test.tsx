@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import {
   englishLeft as englishCreateLeft,
+  expectBusyPrimary,
   sentinelMessages,
 } from '../FlowParts/flowTestUtils.js';
 import { CreateModal, defaultCreateModalMessages } from './CreateModal.js';
@@ -135,7 +136,7 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText('Creating').length).toBeGreaterThan(0);
+  expectBusyPrimary('Create', 'Creating');
   await userEvent.keyboard('{Escape}');
   expect(onClose).not.toHaveBeenCalled();
   resolve();

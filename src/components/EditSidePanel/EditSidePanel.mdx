@@ -123,7 +123,8 @@ Screen readers announce:
 
 - the panel as a complementary region named by `title`, and the form named
   by `title` too;
-- while saving, the form as busy and Save's loading text (`pending`);
+- while saving, the form as busy and `pending` as a status message; Save
+  keeps its name and shows a spinner;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by

@@ -3,7 +3,11 @@ import { createRef, useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
-import { englishLeft, sentinelMessages } from '../FlowParts/flowTestUtils.js';
+import {
+  englishLeft,
+  expectBusyPrimary,
+  sentinelMessages,
+} from '../FlowParts/flowTestUtils.js';
 import { defaultEditFullPageMessages, EditFullPage } from './EditFullPage.js';
 import type { EditFullPageProps } from './EditFullPage.js';
 
@@ -156,7 +160,7 @@ test('Enter submits once; async submit is busy, then leaves', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText(defaults.pending).length).toBeGreaterThan(0);
+  expectBusyPrimary(defaults.save, defaults.pending);
   await userEvent.keyboard('{Escape}');
   expect(onClose).not.toHaveBeenCalled();
   resolve();

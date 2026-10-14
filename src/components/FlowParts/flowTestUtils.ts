@@ -1,5 +1,6 @@
 // Test helpers for the create and edit components. Not shipped.
-import { cleanup } from '@testing-library/react';
+import { cleanup, screen } from '@testing-library/react';
+import { expect } from 'vitest';
 
 /**
  * afterEach for EditTearsheet: lets running exit animations finish, then
@@ -54,4 +55,22 @@ export function tabbables(container: Element | null): HTMLElement[] {
       !element.hasAttribute('disabled') &&
       element.getClientRects().length > 0
   );
+}
+
+/**
+ * A busy primary button: named by its label alone, disabled, its spinner
+ * inside its box, and the busy text announced in the polite live region.
+ */
+export function expectBusyPrimary(label: string, announcement: string) {
+  const button = screen.getByRole('button', { name: label });
+  expect(button.hasAttribute('disabled')).toBe(true);
+  const spinner = button.querySelector('svg');
+  if (!spinner) throw new Error('No spinner in the busy button');
+  const outer = button.getBoundingClientRect();
+  const inner = spinner.getBoundingClientRect();
+  expect(inner.left).toBeGreaterThanOrEqual(outer.left);
+  expect(inner.right).toBeLessThanOrEqual(outer.right);
+  expect(inner.top).toBeGreaterThanOrEqual(outer.top);
+  expect(inner.bottom).toBeLessThanOrEqual(outer.bottom);
+  expect(screen.getByRole('status').textContent).toBe(announcement);
 }

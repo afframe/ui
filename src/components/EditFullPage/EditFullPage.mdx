@@ -119,7 +119,8 @@ margin the size of the bar (the `LongForm` story checks it).
 Screen readers announce:
 
 - the form named by its heading;
-- while saving, the form as busy and Save's loading text (`pending`);
+- while saving, the form as busy and `pending` as a status message; Save
+  keeps its name and shows a spinner;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by

@@ -1,13 +1,15 @@
 'use client';
-import { Button, ButtonSet, InlineLoading } from '@carbon/react';
+import { Button, ButtonSet } from '@carbon/react';
 import { useEffect, useId } from 'react';
 import type { FormHTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
 import {
   DiscardDialog,
+  FlowButtonLabel,
   FlowDescription,
   FlowError,
   FlowForm,
+  FlowStatus,
 } from '../FlowParts/FlowParts.js';
 import type { FlowFormOwnAttribute } from '../FlowParts/FlowParts.js';
 import { defaultFormFlowMessages } from '../FlowParts/messages.js';
@@ -155,17 +157,12 @@ export function EditFullPage({
               kind="primary"
               type="submit"
               disabled={submitDisabled || flow.pending}>
-              {flow.pending ? (
-                <InlineLoading
-                  description={text.pending}
-                  iconDescription={text.pending}
-                />
-              ) : (
-                text.save
-              )}
+              <FlowButtonLabel label={text.save} busy={flow.pending} />
             </Button>
           </ButtonSet>
         </FlowForm>
+        {/* Outside the form: its aria-busy may hold back announcements. */}
+        <FlowStatus message={flow.pending ? text.pending : ''} />
       </div>
       <DiscardDialog flow={flow} messages={text} />
     </>

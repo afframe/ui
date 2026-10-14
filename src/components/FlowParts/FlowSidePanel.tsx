@@ -2,7 +2,6 @@
 // Internal side panel on the shared flow, used by CreateSidePanel and
 // EditSidePanel. Not exported.
 import { SidePanel } from '@carbon/ibm-products';
-import { InlineLoading } from '@carbon/react';
 import type {
   ComponentProps,
   HTMLAttributes,
@@ -10,7 +9,13 @@ import type {
   Ref,
   RefObject,
 } from 'react';
-import { DiscardDialog, FlowError, FlowForm } from './FlowParts.js';
+import {
+  DiscardDialog,
+  FlowButtonLabel,
+  FlowError,
+  FlowForm,
+  FlowStatus,
+} from './FlowParts.js';
 import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useObjectRef } from './refs.js';
 import { firstControlSelector, isCloseEscape, useFlow } from './useFlow.js';
@@ -123,15 +128,10 @@ export function FlowSidePanel({
       kind: 'primary',
       // Cast kept: ActionSet types `label` as a string but renders any node
       // as the button content. Its own `loading` flag adds an InlineLoading
-      // with no text and an English icon name, so the label carries ours.
-      label: (flow.pending ? (
-        <InlineLoading
-          description={text.pending}
-          iconDescription={text.pending}
-        />
-      ) : (
-        primaryLabel
-      )) as unknown as string,
+      // that IBM pins to the button's edge, with an English icon name.
+      label: (
+        <FlowButtonLabel label={primaryLabel} busy={flow.pending} />
+      ) as unknown as string,
       disabled: submitDisabled || flow.pending,
       onClick: () => void submit(),
     },
@@ -187,6 +187,8 @@ export function FlowSidePanel({
               iconDescription={text.errorIconDescription}
             />
           </FlowForm>
+          {/* Outside the form: its aria-busy may hold back announcements. */}
+          <FlowStatus message={flow.pending ? text.pending : ''} />
         </SidePanel>
       </div>
       <DiscardDialog flow={flow} messages={text} />

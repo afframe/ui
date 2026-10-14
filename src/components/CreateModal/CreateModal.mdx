@@ -117,8 +117,8 @@ when the modal opened, else to the page body.
 Screen readers announce:
 
 - the modal as a dialog named by its title, and the form named by the title;
-- while submitting, the form as busy and the primary button's loading text
-  (`pending`);
+- while submitting, the form as busy and `pending` as a status message; the
+  primary button keeps its name and shows a spinner;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by

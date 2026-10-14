@@ -8,7 +8,11 @@ export interface FlowMessages {
   cancel: string;
   /** Accessible name of the close icon (and of the discard dialog's close icon). */
   closeIconDescription: string;
-  /** Text next to the spinner in the primary button while an action runs. */
+  /**
+   * Busy text announced while an action runs. The task modals and
+   * EditTearsheet also show it in the primary button; the other create and
+   * edit flows keep the button's label and add a spinner.
+   */
   pending: string;
   /** Alert text for a failed action, unless `errorText` is set. */
   error: string;

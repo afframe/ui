@@ -1,7 +1,8 @@
 'use client';
 // The parts the nine Afframe dialogs and flows render around `useFlow`: the
-// form, the error alert, the polite live region and the discard dialog.
-import { InlineNotification, Modal, usePrefix } from '@carbon/react';
+// form, the error alert, the busy button label, the polite live region and
+// the discard dialog.
+import { InlineNotification, Loading, Modal, usePrefix } from '@carbon/react';
 import { useEffect, useRef } from 'react';
 import type {
   FormEvent,
@@ -135,6 +136,26 @@ export function FlowError({
         statusIconDescription={iconDescription}
       />
     </div>
+  );
+}
+
+/**
+ * A primary button's content: its label, plus a small spinner while busy.
+ * The spinner is hidden from assistive tech, so the button's name stays the
+ * label; announce the busy state with FlowStatus.
+ */
+export function FlowButtonLabel({
+  label,
+  busy,
+}: {
+  label: string;
+  busy: boolean;
+}) {
+  return (
+    <span className="afframe-flow-button-label">
+      {label}
+      {busy && <Loading small withOverlay={false} aria-hidden="true" />}
+    </span>
   );
 }
 

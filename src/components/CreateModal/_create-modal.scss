@@ -30,3 +30,22 @@
 .afframe-flow-error > * {
   margin: 0;
 }
+
+.afframe-flow-button-label {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-03;
+}
+
+// The button is disabled while busy; Carbon's blue spinner would read as
+// active on its grey.
+/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
+.afframe-flow-button-label .cds--loading__svg,
+.afframe-flow-button-label .cds--loading__stroke {
+  stroke: $icon-on-color-disabled;
+}
+
+.afframe-flow-button-label .cds--loading__background {
+  stroke: transparent;
+}
+/* stylelint-enable selector-class-pattern */
