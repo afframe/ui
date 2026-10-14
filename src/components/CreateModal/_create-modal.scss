@@ -35,21 +35,19 @@
   @include focus-outline('outline');
 }
 
-.afframe-flow-button-label {
-  display: inline-flex;
-  align-items: center;
-  gap: $spacing-03;
+// A busy primary button in Carbon's loading look (.cds--btn--loading). Not
+// Carbon Modal's loadingStatus: it also disables Cancel, which the flows keep.
+/* stylelint-disable selector-class-pattern -- Carbon's and IBM's BEM class names */
+.cds--btn-set .cds--btn:has(> .afframe-flow-button-loading) {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
 }
 
-// The button is disabled while busy; Carbon's blue spinner would read as
-// active on its grey.
-/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
-.afframe-flow-button-label .cds--loading__svg,
-.afframe-flow-button-label .cds--loading__stroke {
-  stroke: $icon-on-color-disabled;
-}
-
-.afframe-flow-button-label .cds--loading__background {
-  stroke: transparent;
+// IBM ActionSet pins any InlineLoading to a 32px slot at the button's edge,
+// for its own icon-only spinner; this one carries the label.
+.c4p--action-set .c4p--action-set__action-button .afframe-flow-button-loading {
+  position: static;
+  inline-size: auto;
 }
 /* stylelint-enable selector-class-pattern */

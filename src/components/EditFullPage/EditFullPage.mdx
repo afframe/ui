@@ -37,7 +37,7 @@ of a short form and sticks to the bottom of the viewport while a long form
 scrolls. The region needs a definite height, for example a main area of
 `block-size: 100dvh` or one that fills the space under the page header.
 Without one the bar sits right under the fields. `onClose` leaves edit mode. `onSubmit` may return a
-promise: while it is pending Save is disabled and shows a spinner; when it
+promise: while it is pending Save is disabled and shows Carbon's inline loading; when it
 resolves, `onClose` is called; when it rejects, the form stays and shows the
 error above the action bar. Closing while it is pending asks first, unless
 `confirmDiscard` is false: "Discard changes?" on a dirty form, "Stop waiting?"
@@ -134,7 +134,7 @@ Screen readers announce:
 
 - the form named by its heading;
 - while saving, the form as busy and `pending` as a status message; Save
-  keeps its name and shows a spinner;
+  keeps its name and shows Carbon's inline loading;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by

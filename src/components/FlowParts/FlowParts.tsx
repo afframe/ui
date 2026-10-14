@@ -2,7 +2,12 @@
 // The parts the nine Afframe dialogs and flows render around `useFlow`: the
 // form, the error alert, the busy button label, the polite live region and
 // the discard dialog.
-import { InlineNotification, Modal, usePrefix } from '@carbon/react';
+import {
+  InlineLoading,
+  InlineNotification,
+  Modal,
+  usePrefix,
+} from '@carbon/react';
 import { useEffect, useRef } from 'react';
 import type {
   FormEvent,
@@ -142,9 +147,11 @@ export function FlowError({
 }
 
 /**
- * A primary button's content: its label, plus a small spinner while busy.
- * The spinner is hidden from assistive tech, so the button's name stays the
- * label; announce the busy state with FlowStatus.
+ * A primary button's content: its label, or while busy Carbon's
+ * InlineLoading with the label, in Carbon's loading button look (the
+ * styles key on `afframe-flow-button-loading`). The spinner is hidden from
+ * assistive tech, so the button's name stays the label; announce the busy
+ * state with FlowStatus.
  */
 export function FlowButtonLabel({
   label,
@@ -154,33 +161,20 @@ export function FlowButtonLabel({
   busy: boolean;
 }) {
   const prefix = usePrefix();
+  if (!busy) return label;
   return (
-    <span className="afframe-flow-button-label">
-      {label}
-      {busy && (
-        // Carbon's small Loading markup in a span: its div with aria-live is
-        // not allowed inside a button. The title is the hover tooltip.
-        <span
-          aria-hidden="true"
-          className={`${prefix}--loading ${prefix}--loading--small`}>
-          <svg className={`${prefix}--loading__svg`} viewBox="0 0 100 100">
-            <title>{label}</title>
-            <circle
-              className={`${prefix}--loading__background`}
-              cx="50%"
-              cy="50%"
-              r="42"
-            />
-            <circle
-              className={`${prefix}--loading__stroke`}
-              cx="50%"
-              cy="50%"
-              r="42"
-            />
-          </svg>
-        </span>
-      )}
-    </span>
+    <>
+      {/* Hidden: its icon name and text would read the label twice, and its
+          live regions would compete with FlowStatus. */}
+      <InlineLoading
+        aria-hidden="true"
+        status="active"
+        description={label}
+        iconDescription={label}
+        className={`${prefix}--inline-loading--btn afframe-flow-button-loading`}
+      />
+      <span className={`${prefix}--visually-hidden`}>{label}</span>
+    </>
   );
 }
 

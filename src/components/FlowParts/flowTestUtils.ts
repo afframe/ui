@@ -65,22 +65,35 @@ export function tabbables(container: Element | null): HTMLElement[] {
 }
 
 /**
- * A busy primary button: named by its label alone, disabled, its spinner
- * inside its box and made of phrasing content, and the busy text announced in the polite live region.
+ * A busy primary button: named by its label alone, disabled, Carbon's
+ * InlineLoading with the label inside its box, hidden from assistive tech,
+ * in Carbon's loading look (transparent), and the busy text announced in
+ * the polite live region.
  */
 export function expectBusyPrimary(label: string, announcement: string) {
   const button = screen.getByRole('button', { name: label });
   expect(button.hasAttribute('disabled')).toBe(true);
-  const spinner = button.querySelector('svg');
-  if (!spinner) throw new Error('No spinner in the busy button');
-  // Phrasing content only, and no live region of its own.
-  expect(button.querySelector('div, [aria-live]')).toBeNull();
+  const loading = button.querySelector('.cds--inline-loading');
+  if (!loading) throw new Error('No InlineLoading in the busy button');
+  expect(loading.getAttribute('aria-hidden')).toBe('true');
+  expect(loading.querySelector('.cds--inline-loading__text')?.textContent).toBe(
+    label
+  );
+  // Carbon's background transition, ended at once.
+  for (const animation of button.getAnimations()) animation.finish();
+  expect(getComputedStyle(button).backgroundColor).toBe('rgba(0, 0, 0, 0)');
   const outer = button.getBoundingClientRect();
-  const inner = spinner.getBoundingClientRect();
-  expect(inner.left).toBeGreaterThanOrEqual(outer.left);
-  expect(inner.right).toBeLessThanOrEqual(outer.right);
-  expect(inner.top).toBeGreaterThanOrEqual(outer.top);
-  expect(inner.bottom).toBeLessThanOrEqual(outer.bottom);
+  for (const part of [
+    loading.querySelector('svg'),
+    loading.querySelector('.cds--inline-loading__text'),
+  ]) {
+    if (!part) throw new Error('No spinner or text in the InlineLoading');
+    const inner = part.getBoundingClientRect();
+    expect(inner.left).toBeGreaterThanOrEqual(outer.left);
+    expect(inner.right).toBeLessThanOrEqual(outer.right);
+    expect(inner.top).toBeGreaterThanOrEqual(outer.top);
+    expect(inner.bottom).toBeLessThanOrEqual(outer.bottom);
+  }
   expect(screen.getByRole('status').textContent).toBe(announcement);
 }
 

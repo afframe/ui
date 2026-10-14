@@ -27,7 +27,7 @@ submit, cancel, discard and focus behaviour with `CreateSidePanel`,
 ## Usage and props
 
 `open` is controlled. `onSubmit` may return a promise: while it is pending the
-primary button is disabled and shows a spinner; when it resolves, `onClose` is
+primary button is disabled and shows Carbon's inline loading; when it resolves, `onClose` is
 called; when it rejects, the modal stays open and shows the error. Closing while
 it is pending asks first, unless `confirmDiscard` is false: "Discard changes?"
 on a dirty form, "Stop waiting?" on a clean one. Discard or Stop waiting closes
@@ -127,7 +127,7 @@ Screen readers announce:
 
 - the modal as a dialog named by its title, and the form named by the title;
 - while submitting, the form as busy and `pending` as a status message; the
-  primary button keeps its name and shows a spinner;
+  primary button keeps its name and shows Carbon's inline loading;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by

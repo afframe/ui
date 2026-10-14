@@ -27,7 +27,7 @@ It shares its submit, cancel, discard and focus behaviour with `CreateModal`,
 ## Usage and props
 
 `open` is controlled. `onSubmit` may return a promise: while it is pending
-Save is disabled and shows a spinner; when it resolves, `onClose` is called;
+Save is disabled and shows Carbon's inline loading; when it resolves, `onClose` is called;
 when it rejects, the panel stays open and shows the error above the action
 bar. Closing while it is pending asks first, unless `confirmDiscard` is false:
 "Discard changes?" on a dirty form, "Stop waiting?" on a clean one. Discard or
@@ -137,7 +137,7 @@ Screen readers announce:
 - the panel as a complementary region named by `title`, and the form named
   by `title` too;
 - while saving, the form as busy and `pending` as a status message; Save
-  keeps its name and shows a spinner;
+  keeps its name and shows Carbon's inline loading;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
   field with `aria-invalid="true"`, else to the alert;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
