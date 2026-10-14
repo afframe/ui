@@ -1,0 +1,21 @@
+@use '@carbon/styles/scss/theme' as *;
+
+// Modal and ComposedModal with an AI label under 'enable-dialog-element'.
+// Carbon draws the AI gradient and border on the dialog (.cds--modal-container)
+// and the AI overlay on .cds--modal, but the native dialog adds an inner
+// .cds--dialog-container that paints $layer and its own border over the
+// gradient, and .cds--modal collapses to no height, so the dialog's backdrop
+// shows $overlay instead. Clearing the inner layer and tinting the backdrop
+// gives Carbon's AI modal.
+/* stylelint-disable selector-class-pattern -- Carbon's class names */
+.cds--modal--decorator:has(.cds--ai-label) > .cds--dialog.cds--modal-container {
+  > .cds--dialog-container {
+    border: 0;
+    background-color: transparent;
+  }
+
+  &::backdrop {
+    background-color: $ai-overlay;
+  }
+}
+/* stylelint-enable selector-class-pattern */

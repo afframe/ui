@@ -27,6 +27,7 @@
 @use '@carbon-labs/react-processing/scss/processing';
 @use '@carbon-labs/react-text-highlighter/scss/text-highlighter';
 @use 'dialog-sizes';
+@use 'dialog-ai-label';
 @use '../components/DataGrid/data-grid';
 @use '../components/FilterPanel/filter-panel';
 @use '../components/Amount/amount';
