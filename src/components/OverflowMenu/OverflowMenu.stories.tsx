@@ -107,6 +107,7 @@ export default {
     },
     controls: {
       exclude: [
+        'innerRef',
         'direction',
         'iconClass',
         'id',

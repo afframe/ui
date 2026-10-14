@@ -152,6 +152,7 @@ export default {
     },
     controls: {
       exclude: [
+        'ref',
         'filterItems',
         'translateWithId',
         'titleText',
@@ -427,7 +428,7 @@ FilterableWithSelectAll.argTypes = {
 };
 FilterableWithSelectAll.parameters = {
   controls: {
-    exclude: ['label'],
+    exclude: ['ref', 'label'],
   },
 };
 Filterable.argTypes = {
@@ -441,7 +442,7 @@ Filterable.argTypes = {
 };
 Filterable.parameters = {
   controls: {
-    exclude: ['label'],
+    exclude: ['ref', 'label'],
   },
 };
 
@@ -483,7 +484,7 @@ FilterableWithCustomSearch.argTypes = {
 };
 FilterableWithCustomSearch.parameters = {
   controls: {
-    exclude: ['label'],
+    exclude: ['ref', 'label'],
   },
 };
 
@@ -531,7 +532,7 @@ FilterableWithLayer.argTypes = {
 };
 FilterableWithLayer.parameters = {
   controls: {
-    exclude: ['label'],
+    exclude: ['ref', 'label'],
   },
 };
 export const Controlled: StoryFn<StoryArgs> = (args) => {
@@ -706,7 +707,7 @@ FilterableWithAILabel.argTypes = {
 };
 FilterableWithAILabel.parameters = {
   controls: {
-    exclude: ['label'],
+    exclude: ['ref', 'label'],
   },
 };
 export const ExperimentalAutoAlign: StoryFn<StoryArgs> = (args) => {

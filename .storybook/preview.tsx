@@ -24,6 +24,8 @@ const preview: Preview = {
   parameters: {
     // Accessibility violations fail the Vitest run.
     a11y: { test: 'error' },
+    // A ref holds a DOM node: the Controls object editor JSON-serialises it and the panel crashes.
+    controls: { exclude: /^ref$|Ref$/ },
     // Docs pages follow the theme toolbar (DocsContainer.tsx).
     docs: { container: ThemedDocsContainer },
     options: {
