@@ -1,6 +1,5 @@
 // EditTearsheet styles, Carbon tokens only. IBM's EditTearsheet styles
 // (c4p--tearsheet-edit classes) do the rest.
-@use '@carbon/styles/scss/breakpoint';
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
@@ -33,16 +32,6 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-05;
-}
-
-// IBM's story shows its influencer trigger only where the influencer is a
-// side panel: below md and in the narrow variant.
-@include breakpoint.breakpoint('md') {
-  /* stylelint-disable-next-line selector-class-pattern -- IBM's class name */
-  .afframe-edit-tearsheet:not(.c4p--tearsheet__next--narrow)
-    .afframe-edit-tearsheet-sections-trigger {
-    display: none;
-  }
 }
 
 // Keeps a focused field clear of the sticky footer (WCAG 2.4.11).

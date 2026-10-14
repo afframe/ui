@@ -435,9 +435,24 @@ test('narrow: a trigger opens the nav in a panel; choosing a form closes it; Esc
   );
   expect(screen.getByRole('textbox', { name: 'Two field' })).toBeTruthy();
   await waitFor(() => expect(screen.queryByRole('navigation')).toBeNull());
+  await waitFor(() => expect(active()).toBe(trigger));
+  // The nav sits in the closed panel; the hidden form's field is skipped.
+  expect(
+    tabbables(trigger.closest('dialog')).map(
+      (element) => element.textContent || element.className.split(' ')[0]
+    )
+  ).toEqual([
+    'cds--modal-close',
+    'Header action',
+    'afframe-edit-tearsheet-sections-trigger',
+    '',
+    'Cancel',
+    'Save',
+  ]);
   await userEvent.click(trigger);
   await screen.findByRole('navigation');
   await userEvent.keyboard('{Escape}');
   await waitFor(() => expect(screen.queryByRole('navigation')).toBeNull());
+  await waitFor(() => expect(active()).toBe(trigger));
   expect(onClose).not.toHaveBeenCalled();
 });
