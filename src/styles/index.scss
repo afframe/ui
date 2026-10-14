@@ -404,11 +404,22 @@ mark:where(#{$plain-text-level}) {
 // IBM's preview Tearsheet under 'enable-dialog-element': the native dialog
 // carries IBM's container class and holds a single .cds--dialog-container,
 // which Carbon's 3-row grid puts in an auto row capped at 84vh, so the sheet
-// stops short of the bottom.
+// stops short of the bottom. Both the dialog and the container draw Carbon's
+// 1px border; IBM's sheet has one.
 /* stylelint-disable-next-line selector-class-pattern -- IBM's class name */
 .c4p--tearsheet__next__container > .cds--dialog-container {
   grid-row: 1 / -1;
   max-block-size: none;
+  border: 0;
+}
+
+// The overflow handler marks header actions that do not fit with
+// data-hidden; IBM ships the hiding rule only for PageHeader, and its
+// Storybook gets it from a global story style.
+/* stylelint-disable-next-line selector-class-pattern -- IBM's class name */
+.c4p--tearsheet__next__content__header-actions
+  [data-hidden]:not([data-fixed]) {
+  display: none;
 }
 
 // Carbon writes theme tokens only on theme classes such as .cds--white, so
