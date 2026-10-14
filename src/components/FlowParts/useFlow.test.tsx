@@ -262,6 +262,25 @@ test('rejected submit keeps the surface open and focuses the form, not the alert
   expect(active()).toBe(screen.getByRole('textbox', { name: 'Name' }));
   unmount();
 
+  // A form taller than the viewport still shows the alert.
+  const tall = render(
+    <>
+      <div style={{ blockSize: '150vh' }} />
+      <Harness onSubmit={() => Promise.reject(new Error('Again'))} />
+    </>
+  );
+  await openSurface();
+  screen.getByRole('textbox', { name: 'Name' }).focus({ preventScroll: true });
+  window.scrollTo(0, 0);
+  await userEvent.keyboard('{Enter}');
+  const shown = await screen.findByRole('alert');
+  await waitFor(() =>
+    expect(shown.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      window.innerHeight
+    )
+  );
+  tall.unmount();
+
   render(<Harness onSubmit={() => Promise.reject(new Error(''))} />);
   await openSurface();
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));

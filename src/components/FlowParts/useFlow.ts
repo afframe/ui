@@ -255,7 +255,12 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     const retry = dismissedRef.current;
     dismissedRef.current = false;
     if (!focusable(target)) return;
-    if (!retry) return target.focus();
+    // Focus no longer scrolls to the alert; a long form shows it this way.
+    if (target === container)
+      container
+        .querySelector('[data-afframe-flow-error]')
+        ?.scrollIntoView({ block: 'nearest' });
+    if (!retry) return target.focus({ preventScroll: true });
     cancelFocusRef.current?.();
     cancelFocusRef.current = focusWhenPossible(target);
   }, [errorCount]);
