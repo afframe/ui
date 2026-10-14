@@ -64,6 +64,10 @@ const [name, setName] = useState('');
   then) are passed to `SidePanel`.
 - `decorator`: an AI label or another decorator next to the close icon
   (`SidePanel` supports it).
+- `headerSelector`: the page header the panel starts below. While open, the
+  panel measures that header's bottom edge and follows its size; default
+  Carbon UI Shell's `Header`. Without a header, or with it scrolled away, the
+  panel is full height. The overlay stays under the header.
 - `isDirty`: the app compares the field state with the initial values. When
   true, Escape, the close icon, Cancel and an overlay click ask "Discard
   changes?" first, unless `confirmDiscard` is false.
@@ -138,3 +142,5 @@ Screen readers announce:
 <Canvas of={CreateSidePanelStories.Submitting} />
 
 <Canvas of={CreateSidePanelStories.LongForm} />
+
+<Canvas of={CreateSidePanelStories.UnderPageHeader} />

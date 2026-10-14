@@ -2,6 +2,8 @@
 // Internal side panel on the shared flow, used by CreateSidePanel and
 // EditSidePanel. Not exported.
 import { SidePanel } from '@carbon/ibm-products';
+import { usePrefix } from '@carbon/react';
+import { useRef } from 'react';
 import type {
   ComponentProps,
   HTMLAttributes,
@@ -19,6 +21,7 @@ import {
 import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useObjectRef } from './refs.js';
 import { firstControlSelector, isCloseEscape, useFlow } from './useFlow.js';
+import { useHeaderOffset } from './useHeaderOffset.js';
 
 type SidePanelProps = ComponentProps<typeof SidePanel>;
 
@@ -46,6 +49,12 @@ interface FlowSidePanelOwnProps {
   pageContentSelector?: string;
   /** An AI label or another decorator next to the close icon. */
   decorator?: ReactNode;
+  /**
+   * CSS selector of the page header the panel starts below; its bottom edge
+   * is measured while open. Default Carbon UI Shell's header. Without a
+   * match, or with the header scrolled away, the panel is full height.
+   */
+  headerSelector?: string;
   submitDisabled?: boolean;
   /** Ask before discarding a dirty form or a pending submit. Default true. */
   confirmDiscard?: boolean;
@@ -94,6 +103,7 @@ export function FlowSidePanel({
   slideIn = false,
   pageContentSelector,
   decorator,
+  headerSelector,
   submitDisabled = false,
   isDirty = false,
   confirmDiscard = true,
@@ -111,6 +121,11 @@ export function FlowSidePanel({
 }) {
   // IBM uses its ref as an object (focus trap, exit animation).
   const panelRef = useObjectRef<HTMLElement>(ref);
+  const prefix = usePrefix();
+  // On the root, not the aside: the root is always mounted, the aside
+  // inherits the property.
+  const rootRef = useRef<HTMLDivElement>(null);
+  useHeaderOffset(rootRef, open, headerSelector ?? `.${prefix}--header`);
   const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
@@ -147,6 +162,7 @@ export function FlowSidePanel({
     <>
       {/* IBM SidePanel ignores Escape when it slides in; handled here. */}
       <div
+        ref={rootRef}
         className="afframe-flow-side-panel-root"
         onKeyDown={(event) => {
           if (slideIn && isCloseEscape(event)) flow.requestClose();

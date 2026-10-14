@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
+import { Content, Header, HeaderName } from '../../index.js';
 import {
   exampleCustomer,
   flowHarnessArgTypes,
@@ -46,6 +47,24 @@ export const Dirty: Story = stories.Dirty;
 export const Submitting: Story = stories.Submitting;
 
 export const LongForm: Story = stories.LongForm;
+
+/** With a UI Shell header the panel starts at the header's measured bottom edge. */
+export const UnderPageHeader: Story = {
+  decorators: [
+    (Story) => (
+      <>
+        <Header aria-label="Afframe">
+          <HeaderName href="#" prefix="Afframe">
+            Invoices
+          </HeaderName>
+        </Header>
+        <Content>
+          <Story />
+        </Content>
+      </>
+    ),
+  ],
+};
 
 export const Dark: Story = {
   ...Default,

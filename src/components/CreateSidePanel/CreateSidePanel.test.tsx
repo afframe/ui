@@ -23,7 +23,12 @@ const primary = defaults.create;
 type HarnessProps = Partial<
   Pick<
     CreateSidePanelProps,
-    'onSubmit' | 'submitDisabled' | 'isDirty' | 'messages' | 'onClose'
+    | 'onSubmit'
+    | 'submitDisabled'
+    | 'isDirty'
+    | 'messages'
+    | 'onClose'
+    | 'headerSelector'
   >
 > & { extra?: boolean; slideIn?: boolean; panelRef?: Ref<HTMLElement> };
 
@@ -51,7 +56,10 @@ function Harness({ onClose, ...props }: HarnessProps) {
           : {})}
         {...(props.submitDisabled ? { submitDisabled: true } : {})}
         {...(props.isDirty ? { isDirty: true } : {})}
-        {...(props.messages ? { messages: props.messages } : {})}>
+        {...(props.messages ? { messages: props.messages } : {})}
+        {...(props.headerSelector
+          ? { headerSelector: props.headerSelector }
+          : {})}>
         <label>
           Field A
           <input />
@@ -331,5 +339,65 @@ test('the busy primary button fits a narrow screen', async () => {
     expectBusyPrimary(primary, defaults.pending);
   } finally {
     await page.viewport(1024, 768);
+  }
+});
+
+/** A fixed page header of `height`, like Carbon UI Shell's. */
+function addHeader(className: string, height: string) {
+  const header = document.createElement('header');
+  header.className = className;
+  Object.assign(header.style, {
+    position: 'fixed',
+    insetBlockStart: '0',
+    inlineSize: '100%',
+    blockSize: height,
+    zIndex: '8000',
+  });
+  document.body.append(header);
+  return header;
+}
+
+// The header covers the launcher, so it opens from the keyboard.
+async function launchUnderHeader() {
+  launcher().focus();
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(active()).toBe(fieldA()));
+}
+
+const panelBox = () => screen.getByTestId('panel').getBoundingClientRect();
+
+test('without a page header the panel is full height', async () => {
+  render(<Harness />);
+  await launch();
+  expect(panelBox().top).toBe(0);
+  expect(panelBox().height).toBe(window.innerHeight);
+});
+
+test('the panel starts below the Carbon header and follows its size', async () => {
+  const header = addHeader('cds--header', '3.5rem');
+  try {
+    render(<Harness />);
+    await launchUnderHeader();
+    const bottom = () => header.getBoundingClientRect().bottom;
+    expect(panelBox().top).toBe(bottom());
+    expect(panelBox().bottom).toBe(window.innerHeight);
+    header.style.blockSize = '5rem';
+    await waitFor(() => expect(panelBox().top).toBe(bottom()));
+    // The overlay sits under the header: the header stays reachable.
+    const hit = document.elementFromPoint(10, bottom() / 2);
+    expect(header.contains(hit)).toBe(true);
+  } finally {
+    header.remove();
+  }
+});
+
+test('headerSelector names another header', async () => {
+  const header = addHeader('app-bar', '2.5rem');
+  try {
+    render(<Harness headerSelector=".app-bar" />);
+    await launchUnderHeader();
+    expect(panelBox().top).toBe(header.getBoundingClientRect().bottom);
+  } finally {
+    header.remove();
   }
 });

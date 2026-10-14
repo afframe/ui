@@ -69,6 +69,10 @@ Reset the field state from the saved values when the panel opens again.
   default `md`) and `slideIn` with `pageContentSelector` (the page content the
   panel pushes aside; no overlay then) are passed to `SidePanel`.
 - `decorator`: an AI label or another decorator next to the close icon.
+- `headerSelector`: the page header the panel starts below. While open, the
+  panel measures that header's bottom edge and follows its size; default
+  Carbon UI Shell's `Header`. Without a header, or with it scrolled away, the
+  panel is full height. The overlay stays under the header.
 - When `isDirty` is true, Escape, the close icon, Cancel and an overlay click
   ask "Discard changes?" first, unless `confirmDiscard` is false.
 - `submitDisabled`: disables Save and Enter.

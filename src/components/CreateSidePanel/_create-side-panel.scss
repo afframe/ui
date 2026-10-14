@@ -2,6 +2,16 @@
 // (FlowParts has no partial of its own). Carbon tokens only.
 @use '@carbon/styles/scss/spacing' as *;
 
+// IBM reserves a fixed 3rem for a UI Shell header. The offset is the real
+// header's bottom edge, measured in FlowSidePanel; 0 without one.
+/* stylelint-disable-next-line selector-class-pattern -- IBM's class name */
+.afframe-flow-side-panel.c4p--side-panel {
+  // stylelint-disable-next-line length-zero-no-unit -- inside calc()
+  block-size: calc(100% - var(--afframe-side-panel-offset, 0px));
+  // stylelint-disable-next-line carbon/layout-use -- measured header edge
+  inset-block-start: var(--afframe-side-panel-offset, 0);
+}
+
 // Keeps a focused field clear of the sticky action bar (WCAG 2.4.11).
 .afframe-flow-side-panel .afframe-create-edit-form :focus {
   scroll-margin-block-end: $spacing-10;
