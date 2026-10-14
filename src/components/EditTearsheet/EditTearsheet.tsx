@@ -177,15 +177,20 @@ const influencerWidths = { narrow: '16rem', wide: '20rem' } as const;
 // IBM's tearsheet turns the influencer into a side panel at this width.
 const smallQuery = '(max-width: 42rem)';
 
+function subscribeSmallScreen(onChange: () => void) {
+  const list = window.matchMedia(smallQuery);
+  list.addEventListener('change', onChange);
+  return () => list.removeEventListener('change', onChange);
+}
+
+const isSmallScreen = () => window.matchMedia(smallQuery).matches;
+const isSmallScreenOnServer = () => false;
+
 function useSmallScreen(): boolean {
   return useSyncExternalStore(
-    (onChange) => {
-      const list = window.matchMedia(smallQuery);
-      list.addEventListener('change', onChange);
-      return () => list.removeEventListener('change', onChange);
-    },
-    () => window.matchMedia(smallQuery).matches,
-    () => false
+    subscribeSmallScreen,
+    isSmallScreen,
+    isSmallScreenOnServer
   );
 }
 
@@ -295,7 +300,7 @@ export function EditTearsheet({
   const select = (index: number, focusHeading = false) => {
     const form = forms[index];
     if (!form) return;
-    if (focusHeading)
+    if (focusHeading && index !== active)
       focusAfterSwitch.current = () =>
         document.getElementById(`${form.id}-title`);
     setCurrent(index);
