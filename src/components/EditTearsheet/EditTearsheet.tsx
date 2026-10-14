@@ -178,6 +178,7 @@ export function EditTearsheet({
     onClose,
     isDirty,
     confirmDiscard,
+    closeWhilePending: true,
     launcherRef,
     messages: { error: text.error, errorText: text.errorText },
   });
@@ -264,7 +265,6 @@ export function EditTearsheet({
     {
       kind: 'secondary' as const,
       label: text.cancel,
-      disabled: flow.pending,
       onClick: flow.requestClose,
     },
     {

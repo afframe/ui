@@ -32,9 +32,11 @@ and `EditFullPage`.
 
 `open` is controlled. The children are `EditTearsheetForm` elements, each one
 section with its own heading. `onSubmit` may return a promise: while it is
-pending the tearsheet is busy and cannot close; when it resolves, `onClose` is
-called; when it rejects, the tearsheet stays open and shows the error above
-the footer.
+pending Save is disabled; when it resolves, `onClose` is called; when it
+rejects, the tearsheet stays open and shows the error above the footer.
+Closing while it is pending asks "Discard changes?", also on a clean form:
+Discard closes the tearsheet and ignores the result; the dialog closes itself
+when the promise settles.
 
 ```tsx
 import { EditTearsheet, EditTearsheetForm } from '@afframe/ui';
@@ -120,13 +122,13 @@ On open, focus moves to the first form control. Focus order: the close icon,
 the navigation items, the form fields, Cancel, Save. Tab and Shift+Tab stay
 inside the tearsheet and wrap.
 
-| Key          | Where                 | Action                                                                                   |
-| ------------ | --------------------- | ---------------------------------------------------------------------------------------- |
-| Enter, Space | navigation item       | Scrolls to that form and moves focus to its heading.                                     |
-| Enter        | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field. |
-| Escape       | anywhere in the sheet | Closes a clean tearsheet. On a dirty one, opens the discard dialog.                      |
-| Escape       | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                |
-| Tab          | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.    |
+| Key          | Where                 | Action                                                                                            |
+| ------------ | --------------------- | ------------------------------------------------------------------------------------------------- |
+| Enter, Space | navigation item       | Scrolls to that form and moves focus to its heading.                                              |
+| Enter        | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.          |
+| Escape       | anywhere in the sheet | Closes a clean tearsheet. On a dirty one, or while a submit is pending, opens the discard dialog. |
+| Escape       | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                         |
+| Tab          | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.             |
 
 On close, focus returns to `launcherRef`, else to the element that had focus
 when the tearsheet opened, else to the page body.

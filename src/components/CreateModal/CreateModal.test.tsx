@@ -137,10 +137,38 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
   expectBusyPrimary('Create', 'Creating');
+  // Escape while busy asks first; the success closes that dialog too.
   await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
   expect(onClose).not.toHaveBeenCalled();
   resolve();
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+});
+
+test('while busy, Cancel stays enabled; Discard leaves and drops the result', async () => {
+  let resolve: () => void = () => undefined;
+  const onClose = vi.fn();
+  render(
+    <Harness
+      onClose={onClose}
+      onSubmit={() =>
+        new Promise<void>((done) => {
+          resolve = done;
+        })
+      }
+    />
+  );
+  await launch();
+  await userEvent.click(screen.getByRole('button', { name: 'Create' }));
+  const cancel = screen.getByRole('button', { name: 'Cancel' });
+  expect(cancel.hasAttribute('disabled')).toBe(false);
+  await userEvent.click(cancel);
+  await userEvent.click(await screen.findByRole('button', { name: 'Discard' }));
+  expect(onClose).toHaveBeenCalledTimes(1);
+  resolve();
+  await new Promise((done) => setTimeout(done, 50));
+  expect(onClose).toHaveBeenCalledTimes(1);
 });
 
 test('a rejected submit stays open with an alert and no onClose', async () => {

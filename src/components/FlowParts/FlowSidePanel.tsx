@@ -116,6 +116,7 @@ export function FlowSidePanel({
     onClose,
     isDirty,
     confirmDiscard,
+    closeWhilePending: true,
     launcherRef,
     messages: { error: text.error, errorText: text.errorText },
   });
@@ -138,7 +139,6 @@ export function FlowSidePanel({
     {
       kind: 'secondary',
       label: text.cancel,
-      disabled: flow.pending,
       onClick: flow.requestClose,
     },
   ] satisfies SidePanelProps['actions'];

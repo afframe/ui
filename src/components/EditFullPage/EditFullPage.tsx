@@ -93,6 +93,7 @@ export function EditFullPage({
     },
     isDirty,
     confirmDiscard,
+    closeWhilePending: true,
     messages: { error: text.error, errorText: text.errorText },
   });
   const submit = async () => {
@@ -147,10 +148,7 @@ export function EditFullPage({
             />
           </div>
           <ButtonSet className="afframe-edit-full-page-actions">
-            <Button
-              kind="secondary"
-              disabled={flow.pending}
-              onClick={flow.requestClose}>
+            <Button kind="secondary" onClick={flow.requestClose}>
               {text.cancel}
             </Button>
             <Button

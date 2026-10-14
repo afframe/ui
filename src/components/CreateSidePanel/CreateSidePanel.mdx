@@ -28,8 +28,11 @@ cancel, discard and focus behaviour with `CreateModal`, `EditSidePanel`,
 ## Usage and props
 
 `open` is controlled. `onSubmit` may return a promise: while it is pending the
-panel is busy and cannot close; when it resolves, `onClose` is called; when it
-rejects, the panel stays open and shows the error above the action bar.
+primary button is disabled and shows a spinner; when it resolves, `onClose` is
+called; when it rejects, the panel stays open and shows the error above the
+action bar. Closing while it is pending asks "Discard changes?", also on a
+clean form: Discard closes the panel and ignores the result; the dialog closes
+itself when the promise settles.
 
 ```tsx
 import { CreateSidePanel } from '@afframe/ui';
@@ -102,12 +105,12 @@ Shift+Tab stay inside the panel and wrap. A `slideIn` panel has no overlay and
 no trap: Tab continues into the page. Its Escape is ignored while an
 open list or menu inside the panel takes it.
 
-| Key    | Where                 | Action                                                                                   |
-| ------ | --------------------- | ---------------------------------------------------------------------------------------- |
-| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field. |
-| Escape | anywhere in the panel | Closes a clean panel. On a dirty one, opens the discard dialog.                          |
-| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                |
-| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.    |
+| Key    | Where                 | Action                                                                                        |
+| ------ | --------------------- | --------------------------------------------------------------------------------------------- |
+| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.      |
+| Escape | anywhere in the panel | Closes a clean panel. On a dirty one, or while a submit is pending, opens the discard dialog. |
+| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                     |
+| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.         |
 
 On close, focus returns to `launcherRef`, else to the element that had focus
 when the panel opened, else to the page body.

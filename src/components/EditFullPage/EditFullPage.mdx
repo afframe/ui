@@ -28,12 +28,14 @@ behaviour with `CreateModal`, `CreateSidePanel`, `EditSidePanel` and
 
 ## Usage and props
 
-Render it in place of the read-only view while the record is in edit mode.
-It renders a `<form>` named by its heading, not a `main` landmark: the app
-owns the page landmarks. `onClose` leaves edit mode. `onSubmit` may return a
-promise: while it is pending the form is busy and cannot be left with Cancel
-or Escape; when it resolves, `onClose` is called; when it rejects, the form
-stays and shows the error above the action bar.
+Render it in place of the read-only view while the record is in edit mode. It
+renders a `<form>` named by its heading, not a `main` landmark: the app owns
+the page landmarks. `onClose` leaves edit mode. `onSubmit` may return a
+promise: while it is pending Save is disabled and shows a spinner; when it
+resolves, `onClose` is called; when it rejects, the form stays and shows the
+error above the action bar. Closing while it is pending asks "Discard
+changes?", also on a clean form: Discard leaves edit mode and ignores the
+result; the dialog closes itself when the promise settles.
 
 ### Wiring `isDirty`
 
@@ -104,12 +106,12 @@ On mount, focus moves to the first form control. Focus order: the form
 fields, Cancel, Save. There is no focus trap: it is a page, and Tab continues
 to the rest of the page.
 
-| Key    | Where                | Action                                                                                                      |
-| ------ | -------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Enter  | single-line field    | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                    |
-| Escape | anywhere in the form | Leaves a clean form. On a dirty one, opens the discard dialog. Ignored while an open list or menu takes it. |
-| Escape | discard dialog       | Closes only the discard dialog; focus returns to the element that had it.                                   |
-| Tab    | discard dialog       | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.                       |
+| Key    | Where                | Action                                                                                                                                    |
+| ------ | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Enter  | single-line field    | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                                                  |
+| Escape | anywhere in the form | Leaves a clean form. On a dirty one, or while a submit is pending, opens the discard dialog. Ignored while an open list or menu takes it. |
+| Escape | discard dialog       | Closes only the discard dialog; focus returns to the element that had it.                                                                 |
+| Tab    | discard dialog       | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.                                                     |
 
 After leaving edit mode, focus moves to `launcherRef` once it is on the page.
 

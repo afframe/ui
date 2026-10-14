@@ -91,6 +91,7 @@ export function CreateModal({
     onClose,
     isDirty,
     confirmDiscard,
+    closeWhilePending: true,
     launcherRef,
     messages: { error: text.error, errorText: text.errorText },
     initialFocus: (): HTMLElement | null | undefined =>

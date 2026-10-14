@@ -24,6 +24,12 @@ export interface FlowOptions {
   isDirty?: boolean;
   /** Ask before discarding a dirty surface. Default true. */
   confirmDiscard?: boolean;
+  /**
+   * A close request while an action runs asks to discard, also when clean;
+   * the dialog closes itself once the action settles. Default false: the
+   * request is ignored until then.
+   */
+  closeWhilePending?: boolean;
   /** Focus target on open; default the first form control in `containerRef`. */
   initialFocus?: () => HTMLElement | null | undefined;
 }
@@ -34,7 +40,7 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
    * focus. Give it tabIndex -1 so it can hold focus while pending.
    */
   containerRef: RefObject<T | null>;
-  /** True while an action runs: buttons are disabled and closing waits. */
+  /** True while an action runs: the primary button is disabled. */
   pending: boolean;
   /** Text of the error alert after a rejected action, else null. */
   error: string | null;
@@ -42,7 +48,7 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
   run: (action: () => unknown) => Promise<boolean>;
   /** What Escape, the close icon, Cancel and an overlay click call. */
   requestClose: () => void;
-  /** Calls `onClose` at once. */
+  /** Calls `onClose` at once; a running action's result is then ignored. */
   close: () => void;
   clearError: () => void;
   discardOpen: boolean;
@@ -101,6 +107,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   messages,
   isDirty = false,
   confirmDiscard = true,
+  closeWhilePending = false,
   initialFocus,
 }: FlowOptions): Flow<T> {
   const [pending, setPending] = useState(false);
@@ -126,6 +133,9 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     undefined
   );
   const cancelFocusRef = useRef<(() => void) | null>(null);
+  // Set when an action settles under the discard dialog: the closing dialog
+  // restores focus itself, after the error focus.
+  const dismissedRef = useRef(false);
   // Read after an await or in a later effect: the render that started it may
   // be stale.
   const onCloseRef = useRef(onClose);
@@ -222,10 +232,20 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
       container?.querySelector('[aria-invalid="true"]') ??
       container?.querySelector(errorSelector) ??
       null;
-    if (focusable(target)) target.focus();
+    const retry = dismissedRef.current;
+    dismissedRef.current = false;
+    if (!focusable(target)) return;
+    if (!retry) return target.focus();
+    cancelFocusRef.current?.();
+    cancelFocusRef.current = focusWhenPossible(target);
   }, [errorCount]);
 
   const close = useCallback(() => {
+    // Drops a running action's result. EditFullPage stays open, so no open
+    // change bumps the session there.
+    sessionRef.current += 1;
+    pendingRef.current = false;
+    setPending(false);
     setError(null);
     onCloseRef.current();
   }, []);
@@ -233,8 +253,10 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   const clearError = useCallback(() => setError(null), []);
 
   const requestClose = useCallback(() => {
-    if (pendingRef.current || discardRef.current) return;
-    if (isDirty && confirmDiscard) {
+    if (discardRef.current) return;
+    if (pendingRef.current && !closeWhilePending) return;
+    // Leaving mid-action abandons it, so ask even when clean.
+    if ((isDirty || pendingRef.current) && confirmDiscard) {
       const active = document.activeElement;
       discardReturnRef.current =
         focusable(active) && active !== document.body
@@ -247,12 +269,23 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
       return;
     }
     close();
-  }, [isDirty, confirmDiscard, close]);
+  }, [isDirty, confirmDiscard, closeWhilePending, close]);
 
   const run = useCallback(async (action: () => unknown) => {
     if (pendingRef.current) return false;
     const session = sessionRef.current;
     const current = () => session === sessionRef.current;
+    // A discard dialog opened while pending is moot once the action settles.
+    const settle = (failed: boolean) => {
+      pendingRef.current = false;
+      setPending(false);
+      if (!discardRef.current) return;
+      dismissedRef.current = failed;
+      clearTimeout(discardTimerRef.current);
+      discardRef.current = false;
+      discardReturnRef.current = null;
+      setDiscardOpen(false);
+    };
     setError(null);
     try {
       const result = action();
@@ -267,16 +300,14 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
       }
     } catch (reason) {
       if (!current()) return false;
-      pendingRef.current = false;
-      setPending(false);
+      settle(true);
       const { error: text, errorText } = messagesRef.current;
       setError(errorText?.(reason) ?? text);
       setErrorCount((count) => count + 1);
       return false;
     }
     if (!current()) return false;
-    pendingRef.current = false;
-    setPending(false);
+    settle(false);
     return true;
   }, []);
 

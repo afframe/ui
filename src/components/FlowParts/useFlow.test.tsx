@@ -16,6 +16,7 @@ function Surface({
   onSubmit,
   isDirty = false,
   confirmDiscard,
+  closeWhilePending,
   launcherRef,
   submitDisabled,
   windowEscape = false,
@@ -27,6 +28,7 @@ function Surface({
   onSubmit: () => void | Promise<void>;
   isDirty?: boolean;
   confirmDiscard?: boolean;
+  closeWhilePending?: boolean;
   launcherRef?: React.RefObject<HTMLElement | null>;
   submitDisabled?: boolean;
   windowEscape?: boolean;
@@ -38,6 +40,7 @@ function Surface({
     onClose,
     isDirty,
     ...(confirmDiscard === undefined ? {} : { confirmDiscard }),
+    ...(closeWhilePending ? { closeWhilePending } : {}),
     launcherRef,
     messages: {
       error: surfaceMessages.error,
@@ -94,6 +97,7 @@ function Harness(props: {
   onClose?: () => void;
   isDirty?: boolean;
   confirmDiscard?: boolean;
+  closeWhilePending?: boolean;
   submitDisabled?: boolean;
   windowEscape?: boolean;
   disableWhilePending?: boolean;
@@ -130,6 +134,7 @@ function Harness(props: {
         {...(props.confirmDiscard === undefined
           ? {}
           : { confirmDiscard: props.confirmDiscard })}
+        {...(props.closeWhilePending ? { closeWhilePending: true } : {})}
         {...(props.submitDisabled ? { submitDisabled: true } : {})}
         {...(props.windowEscape ? { windowEscape: true } : {})}
         {...(props.disableWhilePending ? { disableWhilePending: true } : {})}
@@ -190,7 +195,7 @@ test('Enter in a single-line input submits once; not in a textarea or when disab
   expect(blocked).not.toHaveBeenCalled();
 });
 
-test('async submit is busy, ignores close requests, then closes', async () => {
+test('without closeWhilePending, close requests wait for a pending submit', async () => {
   let resolve: () => void = () => undefined;
   const onClose = vi.fn();
   const onSubmit = () =>
@@ -423,4 +428,100 @@ test('errorText shows the details of a rejection', async () => {
   expect((await screen.findByRole('alert')).textContent).toContain(
     'Details: Name is taken'
   );
+});
+
+/** An action the test settles by hand. */
+function deferred() {
+  let resolve: () => void = () => undefined;
+  let reject: (reason: unknown) => void = () => undefined;
+  const promise = new Promise<void>((done, fail) => {
+    resolve = done;
+    reject = fail;
+  });
+  return {
+    promise,
+    resolve: () => resolve(),
+    reject: (r: unknown) => reject(r),
+  };
+}
+
+async function closeWhileBusy(onClose: () => void) {
+  const action = deferred();
+  render(
+    <Harness
+      closeWhilePending
+      onClose={onClose}
+      onSubmit={() => action.promise}
+    />
+  );
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+  await screen.findByRole('alertdialog');
+  return action;
+}
+
+test('closeWhilePending: a clean surface asks to discard; Keep editing keeps the action', async () => {
+  const onClose = vi.fn();
+  const action = await closeWhileBusy(onClose);
+  await userEvent.click(
+    screen.getByRole('button', { name: messages.keepEditing })
+  );
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
+  expect(onClose).not.toHaveBeenCalled();
+  await act(async () => action.resolve());
+  await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+});
+
+test('closeWhilePending: a success closes the dialog and then the surface', async () => {
+  const onClose = vi.fn();
+  const action = await closeWhileBusy(onClose);
+  await act(async () => action.resolve());
+  await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+});
+
+test('closeWhilePending: a failure closes the dialog and focuses the alert', async () => {
+  const onClose = vi.fn();
+  const action = await closeWhileBusy(onClose);
+  await act(async () => action.reject(new Error('Nope')));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  const onAlert = () => active()?.hasAttribute('data-afframe-flow-error');
+  await waitFor(() => expect(onAlert()).toBe(true));
+  // Not taken back by the closing dialog.
+  await pause(300);
+  expect(onAlert()).toBe(true);
+  expect(onClose).not.toHaveBeenCalled();
+});
+
+test('closeWhilePending: Discard closes at once and ignores the result', async () => {
+  const onClose = vi.fn();
+  const action = await closeWhileBusy(onClose);
+  await userEvent.click(screen.getByRole('button', { name: messages.discard }));
+  expect(onClose).toHaveBeenCalledTimes(1);
+  await act(async () => action.resolve());
+  await pause(50);
+  expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('closeWhilePending with confirmDiscard false closes at once', async () => {
+  const onClose = vi.fn();
+  const action = deferred();
+  render(
+    <Harness
+      closeWhilePending
+      confirmDiscard={false}
+      onClose={onClose}
+      onSubmit={() => action.promise}
+    />
+  );
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(screen.queryByRole('alertdialog')).toBeNull();
+  await act(async () => action.reject(new Error('late')));
+  await pause(50);
+  expect(onClose).toHaveBeenCalledTimes(1);
 });
