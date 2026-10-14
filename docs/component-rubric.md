@@ -8,14 +8,16 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 - Light, dark and `system` themes render correctly, including on layers 01 to 03.
 - Every state is styled: default, hover, active, focus, selected, disabled, read-only, error, warning, loading, empty, skeleton.
 - Sizes follow Carbon's scale (`sm`, `md`, `lg` …) where the component has sizes.
-- Long text, Czech text with diacritics, large amounts and narrow widths do not break the layout.
+- Long text, Czech text with diacritics, large amounts and narrow widths (375 px) do not break the layout.
 - Spacing and alignment match the neighbouring Carbon components.
 
 ## Behaviour
 
-- Keyboard: every action reachable; tab order and arrow keys follow the Carbon or WAI-ARIA pattern; Escape closes overlays.
-- Focus: visible, moved on open, restored on close.
+- Keyboard: every action reachable; tab order and arrow keys follow the Carbon or WAI-ARIA pattern; Escape closes overlays; Tab stays inside a modal overlay, and a popup closes on Tab where its pattern says so.
+- Focus: visible, moved on open, restored on close to the element that opened it.
 - Screen reader: roles, names, live regions; no axe violations.
+- Invalid fields: `aria-invalid` set and error text linked with `aria-describedby`; on submit, focus moves to the first invalid field, else to the error message.
+- Console: no warnings or errors in development when a story loads, except upstream ones documented as accepted, with the reason, on the component's Feature Flags page.
 - Controlled and uncontrolled use both work; callbacks fire once with the documented value.
 - Edge cases: no data, one item, many items, slow async, errors.
 - Server rendering: server-safe parts stay server-safe; `'use client'` only where needed.
@@ -24,6 +26,8 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 
 - Names match Carbon conventions (`size`, `kind`, `onChange`, `open`, `onClose`, `messages`).
 - One way to do each thing; no duplicate or dead props.
+- Siblings use the same prop and `messages` key names for the same thing.
+- No duplicated internals: logic shared by several components lives in one helper.
 - `className`, `ref` and rest props pass through to the root element.
 - Strings overridable through `messages` (ADR 0014); defaults in English, formats cs-CZ / CZK.
 - Types exported; props documented with TSDoc.
@@ -32,7 +36,9 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 ## Variations
 
 - A playground story with controls for every prop that matters.
-- One story per meaningful variant and state, named consistently across components.
+- One story per meaningful variant and state, named the same across components: busy states after the action (`Submitting`, `Removing`), then `Disabled`, `ReadOnly`, `Invalid`, `Skeleton`.
+- Stories honour their args.
+- Re-export stories show a visible focus ring and have working controls.
 - Realistic, country-neutral business example data.
 
 ## Docs (ADR 0008)
@@ -40,6 +46,7 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 - Afframe-owned: H1, source label, source link, intro, canvas, props, keyboard and screen-reader behaviour.
 - Re-export: copied upstream page current with the pinned version; Afframe notes where Afframe differs (flags, defaults, wrappers).
 - When to use, when not, and which sibling component to use instead.
+- The docs page follows the theme, not only its canvases.
 - No broken links, dead stories or leftover upstream boilerplate.
 
 ## Naming and grouping
@@ -50,6 +57,6 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 
 ## Upkeep
 
-- Afframe-owned: unit or interaction test, visual baselines light and dark, focus baseline where focusable.
+- Afframe-owned: unit or interaction test, visual baselines light and dark, focus baseline where focusable, narrow baseline where the layout responds to width.
 - Upstream source pinned and linked; covered by `docs/guides/updating-carbon.md`.
 - Workarounds recorded in issue #4 or `docs/feature-flags.md`, with the upstream link.
