@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { createRef, useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { AfframeProvider } from '../../index.js';
+import { AfframeProvider, TextInput } from '../../index.js';
 import {
   englishLeft,
   expectBusyPrimary,
@@ -385,10 +385,11 @@ function renderInRegion(fields: number) {
           onSubmit={() => undefined}
           onClose={() => undefined}>
           {Array.from({ length: fields }, (_, index) => (
-            <label key={index}>
-              Field {index + 1}
-              <input />
-            </label>
+            <TextInput
+              key={index}
+              id={`field-${index + 1}`}
+              labelText={`Field ${index + 1}`}
+            />
           ))}
         </EditFullPage>
       </div>
@@ -402,6 +403,11 @@ function renderInRegion(fields: number) {
 test('a short form keeps the action bar at the bottom of the region', () => {
   const barBottom = renderInRegion(2);
   expect(barBottom()).toBeCloseTo(window.innerHeight, 0);
+  // Carbon's form items grow (flex: 1 1 auto); the free space must not spread them.
+  const [first, second] = [1, 2].map((n) =>
+    document.getElementById(`field-${n}`)?.getBoundingClientRect()
+  );
+  expect(second!.top - first!.bottom).toBeLessThan(64);
 });
 
 test('a long form scrolls under a sticky action bar', async () => {

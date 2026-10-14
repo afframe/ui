@@ -20,7 +20,6 @@
 
 .afframe-edit-full-page-body {
   display: flex;
-  flex: 1 0 auto;
   flex-direction: column;
   padding: $spacing-07 $spacing-05;
   gap: $spacing-05;
@@ -48,6 +47,10 @@
 
 .afframe-edit-full-page-actions {
   position: sticky;
+
+  // The free space goes above the bar: a growing body would stretch Carbon's
+  // form items (flex: 1 1 auto) apart.
+  margin-block-start: auto;
   z-index: 1;
   justify-content: flex-end;
   border-block-start: 1px solid $border-subtle;
