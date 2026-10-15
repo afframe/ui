@@ -224,3 +224,19 @@ test('a given id becomes the tag id and keeps the accent in the name', () => {
   expect(tag).toHaveAttribute('id', 'acme-tag');
   expect(tag.getAttribute('aria-labelledby')?.split(' ')[0]).toBe('acme-tag');
 });
+
+test('the strip uses the tag border token, not the tag text token', () => {
+  render(
+    <>
+      <AccentTag text="Overdue" accent="red" tooltip="Due soon" />
+      <div className="cds--g100">
+        <AccentTag text="Disputed" accent="red" tooltip="Under review" />
+      </div>
+    </>
+  );
+  const strip = (name: string) =>
+    getComputedStyle(screen.getByRole('button', { name }))
+      .borderInlineStartColor;
+  expect(strip('Overdue')).toBe('rgb(255, 131, 137)');
+  expect(strip('Disputed')).toBe('rgb(250, 77, 86)');
+});
