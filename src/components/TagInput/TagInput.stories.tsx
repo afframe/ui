@@ -7,11 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, TagInput and Carbon components from @afframe/ui (styles ship in the package CSS, so the tag-input.scss import is dropped), story styles converted to plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, TagInput and Carbon components from @afframe/ui (styles ship in the package CSS, so the tag-input.scss import is dropped), story styles converted to plain CSS, source tag, value held in story args, labelText and invoice tag example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState, type ComponentProps } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useArgs } from 'storybook/preview-api';
 import {
   Button,
   DismissibleTag,
@@ -31,6 +32,13 @@ export default {
     docs: {
       page: mdx,
     },
+    // Labs hides the label wrapper with display: none, so labelText does not
+    // name the field and axe sees only its title. Upstream issue drafted, not
+    // filed.
+    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
+  },
+  args: {
+    labelText: 'Tags',
   },
   argTypes: {
     size: {
@@ -51,14 +59,13 @@ type Story = StoryObj<typeof TagInput>;
  * @returns {React.ReactElement} Rendered component
  */
 const ControlledTagInput = (args: TagInputProps) => {
-  const [tags, setTags] = useState(args.value || []);
+  const [, updateArgs] = useArgs<TagInputProps>();
 
   return (
     <TagInput
       {...args}
-      value={tags}
       onTagsChange={(newTags: string[]) => {
-        setTags(newTags);
+        updateArgs({ value: newTags });
         args.onTagsChange?.(newTags);
       }}
     />
@@ -69,10 +76,6 @@ const ControlledTagInput = (args: TagInputProps) => {
  * Default story for TagInput
  */
 export const Default: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   render: ControlledTagInput,
   args: {
     id: 'tag-input-default',
@@ -87,15 +90,11 @@ export const Default: Story = {
 };
 
 export const WithInitialTags: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   render: ControlledTagInput,
   args: {
     id: 'tag-input-initial',
     placeholder: 'Add more tags',
-    value: ['React', 'TypeScript', 'Carbon'],
+    value: ['Urgent', 'Recurring', 'Disputed'],
     /**
      * Callback when tags change
      * @param {string[]} tags - Updated tags array
@@ -105,15 +104,11 @@ export const WithInitialTags: Story = {
 };
 
 export const CustomPlaceholder: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   render: ControlledTagInput,
   args: {
     id: 'tag-input-custom',
-    placeholder: 'Enter skills (press Enter to add)',
-    value: ['JavaScript', 'CSS'],
+    placeholder: 'Add a tag and press Enter',
+    value: ['Urgent'],
     /**
      * Callback when tags change
      * @param {string[]} tags - Updated tags array
@@ -124,17 +119,13 @@ export const CustomPlaceholder: Story = {
 
 // Example showing full control from parent
 export const FullyControlled: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   /**
    * Render function for fully controlled example
    * @param {object} args - Component props
    * @returns {React.ReactElement} Rendered component
    */
   render: function RenderFullyControlled(args) {
-    const [tags, setTags] = useState(['Controlled', 'Component']);
+    const [tags, setTags] = useState(['Urgent', 'Recurring']);
     const [log, setLog] = useState<string[]>([]);
 
     /**
@@ -166,10 +157,10 @@ export const FullyControlled: Story = {
           orientation="horizontal"
           gap={'8px'}
           className="fully-controlled-buttons">
-          <Button onClick={addPredefinedTag}>Add Predefined Tag</Button>
+          <Button onClick={addPredefinedTag}>Add predefined tag</Button>
 
           <Button kind="danger" onClick={clearAllTags}>
-            Clear All Tags
+            Clear all tags
           </Button>
         </Stack>
 
@@ -203,17 +194,18 @@ export const FullyControlled: Story = {
 
 // Example with colored tags using renderTag
 export const WithColors: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   /**
    * Render function for colored tags example
    * @param {object} args - Component props
    * @returns {React.ReactElement} Rendered component
    */
   render: function RenderWithColors(args) {
-    const [tags, setTags] = useState(['Error', 'Warning', 'Info', 'Success']);
+    const [tags, setTags] = useState([
+      'Overdue',
+      'Disputed',
+      'Recurring',
+      'Paid',
+    ]);
 
     return (
       <TagInput
@@ -224,13 +216,13 @@ export const WithColors: Story = {
         onTagsChange={setTags}
         renderTag={(tag, index, onRemove) => {
           let type: TagType = 'gray';
-          if (tag === 'Error') {
+          if (tag === 'Overdue') {
             type = 'red';
-          } else if (tag === 'Warning') {
+          } else if (tag === 'Disputed') {
             type = 'magenta';
-          } else if (tag === 'Info') {
+          } else if (tag === 'Recurring') {
             type = 'blue';
-          } else if (tag === 'Success') {
+          } else if (tag === 'Paid') {
             type = 'green';
           }
 
