@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, CheckmarkFilled from @afframe/ui/icons, class prefix inlined, `value` passed by spread (missing from Carbon StructuredListInput types), source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, CheckmarkFilled from @afframe/ui/icons, class prefix inlined, `value` passed by spread (missing from Carbon StructuredListInput types), source tag, the Skeleton wrapper is at most 800px wide instead of exactly, so it fits a narrow page. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -294,7 +294,7 @@ export const Skeleton: StoryFn<typeof StructuredListSkeleton> = (args) => (
 );
 
 Skeleton.decorators = [
-  (story) => <div style={{ width: '800px' }}>{story()}</div>,
+  (story) => <div style={{ maxInlineSize: '800px' }}>{story()}</div>,
 ];
 
 Skeleton.args = {
