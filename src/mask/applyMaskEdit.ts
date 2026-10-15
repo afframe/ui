@@ -52,7 +52,8 @@ const isDigit = (char: string | undefined) =>
 function toState({ digits, k }: Digits, spec: MaskSpec): MaskState {
   const value = render(digits, spec);
   let offset = 0;
-  for (let seen = 0; seen < k; offset++) {
+  // `render` drops digits past capacity, so `k` can exceed what is shown.
+  for (let seen = 0; seen < k && offset < value.length; offset++) {
     if (isDigit(value[offset])) seen++;
   }
   // A caret left in front of a separator would make the next digit land

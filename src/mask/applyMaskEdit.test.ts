@@ -283,6 +283,10 @@ describe('time', () => {
     expect(h23s.pattern).toBe(String.raw`\d{2}:\d{2}:\d{2}`);
   });
 
+  test('a value longer than the mask ends with the caret at the end', () => {
+    expect(edit(h23, '12:30:45|', 'deleteContentBackward')).toBe('12:30|');
+  });
+
   test('an ISO date pasted into a time is only tokenised', () => {
     expect(edit(h23, '|', 'insertFromPaste', '12:30')).toBe('12:30|');
   });
