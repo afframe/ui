@@ -179,6 +179,10 @@ export const NonHierarchicalWithPeekInsideItem = forwardRef<
       secondaryButtonText = 'Cancel',
       successNotificationTitle = 'Success',
       successNotificationSubtitle = '{count} item{plural} added',
+      // Taken out of rest so it does not reach the DOM; IBM's example never
+      // renders it.
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      peekInsidePanelLabel = 'Item details',
       className,
       ...rest
     },
