@@ -41,13 +41,19 @@ type Story = StoryObj<typeof meta>;
 
 const row = { display: 'flex', flexWrap: 'wrap', gap: '0.5rem' } as const;
 
-// Tab once focuses the tag and opens its tooltip.
 export const Default: Story = {
   render: (args) => (
     <div style={{ paddingBlockEnd: '4rem' }}>
       <AccentTag {...args} />
     </div>
   ),
+};
+
+// Tab once focuses the tag and opens its tooltip. Hidden, so the sidebar
+// story shows the start state.
+export const TestTooltipOnFocus: Story = {
+  ...Default,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvasElement }) => {
     const tag = within(canvasElement).getByRole('button', {
       name: 'Acme Trading',
