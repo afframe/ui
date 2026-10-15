@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, IconButton from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, IconButton from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names unified, WithBadgeIndicator renamed WithBadge, example label from the Afframe glossary, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -88,7 +88,7 @@ Default.args = {
   enterDelayMs: 100,
   highContrast: true,
   isSelected: false,
-  label: 'Custom label',
+  label: 'Edit',
   kind: 'primary',
   leaveDelayMs: 100,
   size: 'lg',
@@ -183,7 +183,7 @@ Default.parameters = {
   },
 };
 
-export const WithBadgeIndicator: StoryFn<IconButtonStoryArgs> = (args) => {
+export const WithBadge: StoryFn<IconButtonStoryArgs> = (args) => {
   return (
     <div style={{ margin: 'var(--cds-spacing-09)' }}>
       {/* The label comes from args (upstream also hardcodes one that args override). */}
@@ -194,7 +194,7 @@ export const WithBadgeIndicator: StoryFn<IconButtonStoryArgs> = (args) => {
   );
 };
 
-WithBadgeIndicator.args = {
+WithBadge.args = {
   align: 'bottom',
   autoAlign: true,
   badgeCount: 4,
@@ -209,7 +209,7 @@ WithBadgeIndicator.args = {
   leaveDelayMs: 100,
   size: 'lg',
 };
-WithBadgeIndicator.argTypes = {
+WithBadge.argTypes = {
   ...Default.argTypes,
   badgeCount: {
     control: {
@@ -226,8 +226,13 @@ WithBadgeIndicator.argTypes = {
     control: false,
   },
 };
-WithBadgeIndicator.parameters = {
+WithBadge.parameters = {
   controls: {
     exclude: ['children'],
   },
 };
+
+export const Disabled: StoryFn<IconButtonStoryArgs> = Default.bind({});
+Disabled.args = { ...Default.args, defaultOpen: false, disabled: true };
+Disabled.argTypes = Default.argTypes;
+Disabled.parameters = Default.parameters;

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, MenuButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, MenuButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019, example labels from the Afframe glossary, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -89,18 +89,18 @@ export const Default: StoryFn<typeof MenuButton> = (args) => {
   return (
     <MenuButton {...args} onClick={action('onClick')}>
       <MenuItem
-        label="First action with a long label description"
+        label="Send reminder with payment details and a QR code"
         onClick={action('onClick')}
       />
-      <MenuItem label="Second action" onClick={action('onClick')} />
-      <MenuItem label="Third action" onClick={action('onClick')} disabled />
+      <MenuItem label="Download PDF" onClick={action('onClick')} />
+      <MenuItem label="Duplicate" onClick={action('onClick')} disabled />
     </MenuButton>
   );
 };
 
 Default.args = commonArgs;
 
-export const ExperimentalAutoAlign: StoryFn<typeof MenuButton> = (args) => (
+export const AutoAlign: StoryFn<typeof MenuButton> = (args) => (
   <div style={{ width: '5000px', height: '5000px' }}>
     <div
       style={{
@@ -108,24 +108,24 @@ export const ExperimentalAutoAlign: StoryFn<typeof MenuButton> = (args) => (
         bottom: 'var(--cds-spacing-06)',
       }}>
       <MenuButton {...args}>
-        <MenuItem label="First action" />
-        <MenuItem label="Second action that is a longer item to test overflow and title." />
-        <MenuItem label="Third action" disabled />
+        <MenuItem label="Send reminder" />
+        <MenuItem label="Download PDF with payment details and a QR code" />
+        <MenuItem label="Duplicate" disabled />
       </MenuButton>
     </div>
   </div>
 );
 
-ExperimentalAutoAlign.args = commonArgs;
+AutoAlign.args = commonArgs;
 
 export const WithDanger: StoryFn<typeof MenuButton> = (args) => {
   return (
     <MenuButton {...args}>
-      <MenuItem label="First action" />
-      <MenuItem label="Second action" />
-      <MenuItem label="Third action" />
+      <MenuItem label="Send reminder" />
+      <MenuItem label="Download PDF" />
+      <MenuItem label="Duplicate" />
       <MenuItemDivider />
-      <MenuItem label="Danger action" kind="danger" />
+      <MenuItem label="Delete invoice" kind="danger" />
     </MenuButton>
   );
 };
@@ -210,27 +210,27 @@ export const WithMenuAlignment: StoryFn<typeof MenuButton> = ({
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <MenuButton {...sharedProps} label="Bottom" menuAlignment="bottom">
-          <MenuItem label="First action" />
-          <MenuItem label="Second action that is a longer item to test overflow and title." />
-          <MenuItem label="Third action" disabled />
+          <MenuItem label="Send reminder" />
+          <MenuItem label="Download PDF with payment details and a QR code" />
+          <MenuItem label="Duplicate" disabled />
         </MenuButton>
 
         <MenuButton
           {...sharedProps}
           label="Bottom start"
           menuAlignment="bottom-start">
-          <MenuItem label="First action" />
-          <MenuItem label="Second action that is a longer item to test overflow and title." />
-          <MenuItem label="Third action" disabled />
+          <MenuItem label="Send reminder" />
+          <MenuItem label="Download PDF with payment details and a QR code" />
+          <MenuItem label="Duplicate" disabled />
         </MenuButton>
 
         <MenuButton
           {...sharedProps}
           label="Bottom end"
           menuAlignment="bottom-end">
-          <MenuItem label="First action" />
-          <MenuItem label="Second action that is a longer item to test overflow and title." />
-          <MenuItem label="Third action" disabled />
+          <MenuItem label="Send reminder" />
+          <MenuItem label="Download PDF with payment details and a QR code" />
+          <MenuItem label="Duplicate" disabled />
         </MenuButton>
       </div>
 
@@ -241,24 +241,24 @@ export const WithMenuAlignment: StoryFn<typeof MenuButton> = ({
           justifyContent: 'space-between',
         }}>
         <MenuButton {...sharedProps} label="Top" menuAlignment="top">
-          <MenuItem label="First action" />
-          <MenuItem label="Second action that is a longer item to test overflow and title." />
-          <MenuItem label="Third action" disabled />
+          <MenuItem label="Send reminder" />
+          <MenuItem label="Download PDF with payment details and a QR code" />
+          <MenuItem label="Duplicate" disabled />
         </MenuButton>
 
         <MenuButton
           {...sharedProps}
           label="Top start"
           menuAlignment="top-start">
-          <MenuItem label="First action" />
-          <MenuItem label="Second action that is a longer item to test overflow and title." />
-          <MenuItem label="Third action" disabled />
+          <MenuItem label="Send reminder" />
+          <MenuItem label="Download PDF with payment details and a QR code" />
+          <MenuItem label="Duplicate" disabled />
         </MenuButton>
 
         <MenuButton {...sharedProps} label="Top end" menuAlignment="top-end">
-          <MenuItem label="First action" />
-          <MenuItem label="Second action that is a longer item to test overflow and title." />
-          <MenuItem label="Third action" disabled />
+          <MenuItem label="Send reminder" />
+          <MenuItem label="Download PDF with payment details and a QR code" />
+          <MenuItem label="Duplicate" disabled />
         </MenuButton>
       </div>
     </>
@@ -286,3 +286,6 @@ WithMenuAlignment.parameters = {
     ],
   },
 };
+
+export const Disabled: StoryFn<typeof MenuButton> = Default.bind({});
+Disabled.args = { ...commonArgs, disabled: true };

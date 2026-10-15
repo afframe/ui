@@ -1,0 +1,56 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonSetStories from './ButtonSet.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ButtonChooser } from '../../../.storybook/ButtonChooser';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# ButtonSet
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/ButtonSet)
+&nbsp;|&nbsp;
+[Usage guidelines](https://www.carbondesignsystem.com/components/button/usage)
+
+`ButtonSet` lays out the two to four buttons that close a form, a step or a
+dialog, with the primary action last. Carbon ships no docs page for it, so this
+one is written by Afframe.
+
+<Canvas of={ButtonSetStories.Default} />
+
+```jsx
+import { Button, ButtonSet } from '@afframe/ui';
+
+<ButtonSet>
+  <Button kind="secondary">Cancel</Button>
+  <Button kind="primary">Save</Button>
+</ButtonSet>;
+```
+
+## Fluid and stacked
+
+`fluid` makes the set fill its container, up to a width that depends on the
+number of buttons, and overrides `stacked`. `stacked` puts the buttons in a
+column.
+
+<Canvas of={ButtonSetStories.Fluid} />
+
+Below Carbon's `md` breakpoint (672 px) the default set keeps its buttons side
+by side and can overflow its container. Use `fluid` or `stacked` there.
+
+## Which component to use
+
+<ButtonChooser />
+
+## Component API
+
+<ArgTypes />
+
+## Keyboard and screen readers
+
+`ButtonSet` renders a `div` with no role. Tab moves through the buttons in DOM
+order, which is also the order on screen, so the primary button is reached
+last. Each button keeps its own name and focus ring.
