@@ -8,9 +8,10 @@ import {
   TableBody,
 } from '../../index.js';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TableChooser } from '../../../.storybook/TableChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, section on the toolbar menu with MenuItems added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, section on the toolbar menu with MenuItems added, upstream Feedback section and table of contents removed, table chooser added, Afframe notes on narrow batch actions and AI label column tables added.
 
 <Meta isTemplate />
 
@@ -25,6 +26,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 [Accessibility](https://www.carbondesignsystem.com/components/data-table/accessibility)
 
 <Canvas id="components-datatable-basic--default" />
+
+## Which component to use
+
+<TableChooser />
 
 ## Getting started
 
@@ -337,6 +342,17 @@ the following components:
 <Canvas id="components-datatable-batch-actions--default" />
 
 _Note: press "Show code" above to view a code snippet of this example_
+
+In Afframe UI, batch actions behave as Carbon ships them: at narrow widths the
+action list runs past the table container and the page scrolls sideways. Keep
+batch actions few, two or three, so the bar fits on small screens.
+
+## AI label
+
+In Afframe UI, the AI label stories follow Carbon's. The tables with an AI label
+in a column header turn off the table's horizontal scroll so the AI label
+callout is not clipped, so at 375 px those tables run past the page (upstream
+issue drafted, not filed). In an app, keep the scroll on narrow screens.
 
 ## Toolbar
 
