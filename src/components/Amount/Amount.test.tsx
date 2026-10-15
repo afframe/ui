@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test } from 'vitest';
 import { Amount } from './Amount.js';
@@ -119,4 +120,18 @@ test('renders the fallback on the server', () => {
   expect(
     renderToStaticMarkup(<Amount value={Number.NaN} fallback={<i>n/a</i>} />)
   ).toBe('<span class="afframe-amount"><i>n/a</i></span>');
+});
+
+test('ref reaches the data element, or the span of a fallback', () => {
+  const ref = createRef<HTMLDataElement | HTMLSpanElement>();
+  const { rerender } = render(
+    <Amount ref={ref} value={12} data-testid="amount" />
+  );
+  expect(ref.current).toBe(screen.getByTestId('amount'));
+  expect(ref.current?.tagName).toBe('DATA');
+  rerender(
+    <Amount ref={ref} value={Number.NaN} fallback="n/a" data-testid="amount" />
+  );
+  expect(ref.current).toBe(screen.getByTestId('amount'));
+  expect(ref.current?.tagName).toBe('SPAN');
 });

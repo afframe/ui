@@ -1,4 +1,4 @@
-import type { DataHTMLAttributes, ReactNode } from 'react';
+import type { DataHTMLAttributes, ReactNode, Ref } from 'react';
 import {
   formatAmount,
   roundAmount,
@@ -18,6 +18,8 @@ export interface AmountProps
    * a non-finite `value` throws.
    */
   fallback?: ReactNode;
+  /** The `<data>` element, or the `<span>` when the fallback renders. */
+  ref?: Ref<HTMLDataElement | HTMLSpanElement>;
 }
 
 /**
@@ -37,6 +39,7 @@ export function Amount({
   colorNegative = false,
   fallback,
   className,
+  ref,
   ...rest
 }: AmountProps) {
   if (fallback !== undefined && !Number.isFinite(value)) {
@@ -44,6 +47,7 @@ export function Amount({
     return (
       <span
         {...rest}
+        ref={ref as Ref<HTMLSpanElement> | undefined}
         className={
           className ? `afframe-amount ${className}` : 'afframe-amount'
         }>
@@ -65,7 +69,13 @@ export function Amount({
   if (colorNegative && rounded < 0) classes.push('afframe-amount-negative');
   if (className) classes.push(className);
   return (
-    <data {...rest} className={classes.join(' ')} value={String(rounded)}>
+    // TypeScript reads a ref as writable both ways; each branch only writes
+    // its own element.
+    <data
+      {...rest}
+      ref={ref as Ref<HTMLDataElement> | undefined}
+      className={classes.join(' ')}
+      value={String(rounded)}>
       {formatAmount(rounded, options)}
     </data>
   );

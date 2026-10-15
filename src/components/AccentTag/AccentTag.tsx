@@ -1,6 +1,12 @@
 'use client';
 import { OperationalTag, Tooltip } from '@carbon/react';
-import { useId, type ComponentType, type ReactNode } from 'react';
+import {
+  useId,
+  type ButtonHTMLAttributes,
+  type ComponentType,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import { resolveMessages } from '../../messages.js';
 
 /** Carbon's tag colours. */
@@ -38,7 +44,20 @@ export const defaultAccentTagMessages: AccentTagMessages = {
   accentLabel: (color) => `${colorNames[color]} accent`,
 };
 
-export interface AccentTagProps {
+// `type` is the tag colour on OperationalTag, and Carbon's Tooltip takes the
+// child's `aria-describedby` in place of its own, which would drop the tooltip.
+type AccentTagButtonAttributes = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  | 'onClick'
+  | 'children'
+  | 'className'
+  | 'type'
+  | 'disabled'
+  | 'id'
+  | 'aria-describedby'
+>;
+
+export interface AccentTagProps extends AccentTagButtonAttributes {
   text: string;
   /** Colour of the start-edge strip. */
   accent: AccentTagColor;
@@ -55,6 +74,9 @@ export interface AccentTagProps {
   announceAccent?: boolean;
   messages?: Partial<AccentTagMessages>;
   className?: string;
+  /** The tag button; also used in `aria-labelledby` when the accent is announced. */
+  id?: string;
+  ref?: Ref<HTMLButtonElement>;
 }
 
 const noop = () => {};
@@ -62,7 +84,8 @@ const noop = () => {};
 /**
  * A clickable Carbon OperationalTag with a tooltip and a coloured strip on
  * its inline-start edge. Always a button, so the tooltip is keyboard
- * reachable.
+ * reachable. `className`, `ref` and other attributes go to the tag button,
+ * as on Carbon's IconButton; the root is Carbon's Tooltip wrapper.
  */
 export function AccentTag({
   text,
@@ -76,11 +99,13 @@ export function AccentTag({
   announceAccent = false,
   messages,
   className,
+  id,
+  ...rest
 }: AccentTagProps) {
   const strings = resolveMessages(defaultAccentTagMessages, messages);
-  const id = useId();
-  const tagId = `${id}-tag`;
-  const accentId = `${id}-accent`;
+  const generatedId = useId();
+  const tagId = id ?? `${generatedId}-tag`;
+  const accentId = `${generatedId}-accent`;
   const accentText =
     accentLabel ?? (announceAccent ? strings.accentLabel(accent) : undefined);
   const classes = [
@@ -94,6 +119,7 @@ export function AccentTag({
     <>
       <Tooltip description={tooltip} align="bottom-start">
         <OperationalTag
+          {...rest}
           id={tagId}
           text={text}
           type="gray"

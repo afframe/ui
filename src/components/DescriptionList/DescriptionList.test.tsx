@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
+import { createRef } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test } from 'vitest';
 import { DescriptionList, DescriptionListItem } from './DescriptionList.js';
@@ -142,4 +143,22 @@ test('an item outside the direct children still shows the default empty text', (
     </DescriptionList>
   );
   expect(screen.getByRole('cell')).toHaveTextContent('No value');
+});
+
+test('ref and other attributes reach the list root', () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <DescriptionList
+      ref={ref}
+      id="invoice-details"
+      data-testid="list"
+      aria-label="Invoice details"
+      items={items}
+    />
+  );
+  const table = screen.getByRole('table', { name: 'Invoice details' });
+  expect(ref.current).toBe(table);
+  expect(table).toHaveClass('afframe-description-list');
+  expect(table).toHaveAttribute('id', 'invoice-details');
+  expect(table).toBe(screen.getByTestId('list'));
 });
