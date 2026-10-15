@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused Tooltip import removed, story styles as plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused Tooltip import removed, story styles as plain CSS, source tag, Afframe example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -32,7 +32,7 @@ export default {
   component: FormLabel,
   tags: ['carbon'],
   args: {
-    label: 'Form label',
+    label: 'Company name',
   },
   argTypes: {
     label: {
@@ -70,7 +70,7 @@ export const WithToggletip: StoryFn<
             <Information />
           </ToggletipButton>
           <ToggletipContent>
-            This can be used to provide more information about a field.
+            Use the name as shown on invoices.
           </ToggletipContent>
         </Toggletip>
       </div>
@@ -104,7 +104,7 @@ export const WithToggletip: StoryFn<
 };
 
 WithToggletip.args = {
-  label: 'Form label with Toggletip',
+  label: 'Company name',
   align: 'bottom',
 };
 

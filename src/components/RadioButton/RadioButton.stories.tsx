@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified, hideLabel kept off the group, every story takes args, Disabled, ReadOnly, Invalid and Warning stories, Afframe example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -53,51 +53,21 @@ export default {
   },
 } satisfies Meta<typeof RadioButton>;
 
-export const Default: StoryFn<
-  Partial<RadioButtonGroupProps> & { hideLabel: boolean }
-> = (args) => {
-  return (
-    <RadioButtonGroup
-      legendText="Radio Button group"
-      name="radio-button-default-group"
-      {...args}>
-      <RadioButton
-        labelText="Radio button label"
-        value="radio-1"
-        id="radio-1"
-        hideLabel={args.hideLabel}
-      />
-      <RadioButton
-        labelText="Radio button label"
-        value="radio-2"
-        id="radio-2"
-        hideLabel={args.hideLabel}
-      />
-      <RadioButton
-        labelText="Radio button label"
-        value="radio-3"
-        id="radio-3"
-        hideLabel={args.hideLabel}
-      />
-    </RadioButtonGroup>
-  );
-};
-
-Default.args = {
-  defaultSelected: 'radio-2',
-  helperText: 'Helper text',
-  hideLabel: false,
-  invalidText: 'Invalid selection',
+const groupArgs = {
+  disabled: false,
+  helperText: 'Shown on the invoice',
+  invalid: false,
+  invalidText: 'Choose a payment method.',
+  readOnly: false,
   warn: false,
-  warnText: 'Please notice the warning',
+  warnText: 'Cash payments are not matched to invoices automatically.',
 };
 
-Default.argTypes = {
-  defaultSelected: {
-    description: 'Specify the `<RadioButton>` to be selected by default',
-    options: ['radio-1', 'radio-2', 'radio-3'],
+const groupArgTypes = {
+  disabled: {
+    description: 'Specify whether the RadioButtonGroup is disabled',
     control: {
-      type: 'select',
+      type: 'boolean',
     },
   },
   readOnly: {
@@ -113,13 +83,6 @@ Default.argTypes = {
       type: 'text',
     },
   },
-  hideLabel: {
-    description:
-      'Specify whether the label should be visually hidden but still available to screen readers',
-    control: {
-      type: 'boolean',
-    },
-  },
   invalid: {
     description: 'Specify whether the RadioButtonGroup is invalid',
     control: {
@@ -129,6 +92,12 @@ Default.argTypes = {
   invalidText: {
     description:
       'Provide the text that is displayed when the control is in an invalid state',
+    control: {
+      type: 'text',
+    },
+  },
+  legendText: {
+    description: 'Provide the text to be rendered inside of the `<legend>`',
     control: {
       type: 'text',
     },
@@ -151,40 +120,113 @@ Default.argTypes = {
       type: 'text',
     },
   },
-};
+} as const;
 
-export const Vertical: StoryFn = () => {
+type GroupStoryArgs = Partial<RadioButtonGroupProps>;
+
+export const Default: StoryFn<GroupStoryArgs & { hideLabel: boolean }> = ({
+  hideLabel,
+  ...args
+}) => {
   return (
-    <RadioButtonGroup
-      legendText="Group label"
-      name="radio-button-vertical-group"
-      defaultSelected="radio-1"
-      orientation="vertical">
+    <RadioButtonGroup name="radio-button-default-group" {...args}>
       <RadioButton
-        labelText="Radio button label"
-        value="radio-1"
+        labelText="Bank transfer"
+        value="bank-transfer"
         id="radio-1"
+        hideLabel={hideLabel}
       />
       <RadioButton
-        labelText="Radio button label"
-        value="radio-2"
+        labelText="Card"
+        value="card"
         id="radio-2"
+        hideLabel={hideLabel}
       />
       <RadioButton
-        labelText="Radio button label"
-        value="radio-3"
+        labelText="Cash"
+        value="cash"
         id="radio-3"
-        disabled
+        hideLabel={hideLabel}
       />
     </RadioButtonGroup>
   );
 };
 
-export const Skeleton: StoryFn = () => {
-  return <RadioButtonSkeleton />;
+Default.args = {
+  ...groupArgs,
+  defaultSelected: 'card',
+  hideLabel: false,
+  legendText: 'Payment method',
 };
 
-export const WithAILabel: StoryFn = () => {
+Default.argTypes = {
+  ...groupArgTypes,
+  defaultSelected: {
+    description: 'Specify the `<RadioButton>` to be selected by default',
+    options: ['bank-transfer', 'card', 'cash'],
+    control: {
+      type: 'select',
+    },
+  },
+  hideLabel: {
+    description:
+      'Specify whether the label should be visually hidden but still available to screen readers',
+    control: {
+      type: 'boolean',
+    },
+  },
+};
+
+export const Vertical: StoryFn<GroupStoryArgs> = (args) => {
+  return (
+    <RadioButtonGroup name="radio-button-vertical-group" {...args}>
+      <RadioButton
+        labelText="Bank transfer"
+        value="bank-transfer"
+        id="radio-1"
+      />
+      <RadioButton labelText="Card" value="card" id="radio-2" />
+      <RadioButton labelText="Cash" value="cash" id="radio-3" disabled />
+    </RadioButtonGroup>
+  );
+};
+
+Vertical.args = {
+  ...groupArgs,
+  defaultSelected: 'bank-transfer',
+  legendText: 'Payment method',
+  orientation: 'vertical',
+};
+
+Vertical.argTypes = { ...groupArgTypes };
+
+export const Disabled = Default.bind({});
+Disabled.args = { ...Default.args, disabled: true };
+Disabled.argTypes = Default.argTypes;
+
+export const ReadOnly = Default.bind({});
+ReadOnly.args = { ...Default.args, readOnly: true };
+ReadOnly.argTypes = Default.argTypes;
+
+// Carbon sets no aria-invalid and does not link the error text to the
+// group (upstream issue drafted, not filed).
+export const Invalid = Default.bind({});
+Invalid.args = { ...Default.args, invalid: true };
+Invalid.argTypes = Default.argTypes;
+
+export const Warning = Default.bind({});
+Warning.args = { ...Default.args, warn: true };
+Warning.argTypes = Default.argTypes;
+
+export const Skeleton: StoryFn<typeof RadioButtonSkeleton> = (args) => {
+  return <RadioButtonSkeleton {...args} />;
+};
+
+Skeleton.parameters = {
+  controls: { include: ['className'] },
+};
+
+export const WithAILabel: StoryFn<GroupStoryArgs> = (args) => {
   const AILabelFunc = (kind: AILabelProps['kind'] = 'default') => (
     <AILabel className="ai-label-container" kind={kind}>
       <AILabelContent>
@@ -221,73 +263,60 @@ export const WithAILabel: StoryFn = () => {
       <RadioButtonGroup
         decorator={AILabelFunc('default')}
         orientation="vertical"
-        legendText="Group label"
+        legendText="Payment method"
         name="radio-button-group"
-        defaultSelected="radio-1">
-        <RadioButton
-          labelText="Radio button label"
-          value="radio-1"
-          id="radio-1"
-        />
-        <RadioButton
-          labelText="Radio button label"
-          value="radio-2"
-          id="radio-2"
-        />
-        <RadioButton
-          labelText="Radio button label"
-          value="radio-3"
-          id="radio-3"
-        />
+        defaultSelected="radio-1"
+        {...args}>
+        <RadioButton labelText="Bank transfer" value="radio-1" id="radio-1" />
+        <RadioButton labelText="Card" value="radio-2" id="radio-2" />
+        <RadioButton labelText="Cash" value="radio-3" id="radio-3" />
       </RadioButtonGroup>
 
       <RadioButtonGroup
         orientation="vertical"
-        legendText="Group label"
+        legendText="Payment method"
         name="radio-button-group-2"
-        defaultSelected="radio-4">
+        defaultSelected="radio-4"
+        {...args}>
         <RadioButton
-          labelText="Radio button label"
+          labelText="Bank transfer"
           value="radio-4"
           id="radio-4"
           decorator={AILabelFunc()}
         />
         <RadioButton
-          labelText="Radio button label"
+          labelText="Card"
           value="radio-5"
           id="radio-5"
           decorator={AILabelFunc()}
         />
-        <RadioButton
-          labelText="Radio button label"
-          value="radio-6"
-          id="radio-6"
-        />
+        <RadioButton labelText="Cash" value="radio-6" id="radio-6" />
       </RadioButtonGroup>
 
       <RadioButtonGroup
         orientation="vertical"
-        legendText="Group label"
+        legendText="Payment method"
         name="radio-button-group-3"
-        defaultSelected="radio-7">
+        defaultSelected="radio-7"
+        {...args}>
         <RadioButton
-          labelText="Radio button label"
+          labelText="Bank transfer"
           value="radio-7"
           id="radio-7"
           decorator={AILabelFunc('inline')}
         />
         <RadioButton
-          labelText="Radio button label"
+          labelText="Card"
           value="radio-8"
           id="radio-8"
           decorator={AILabelFunc('inline')}
         />
-        <RadioButton
-          labelText="Radio button label"
-          value="radio-9"
-          id="radio-9"
-        />
+        <RadioButton labelText="Cash" value="radio-9" id="radio-9" />
       </RadioButtonGroup>
     </div>
   );
 };
+
+WithAILabel.args = { ...groupArgs, helperText: '' };
+
+WithAILabel.argTypes = { ...groupArgTypes };
