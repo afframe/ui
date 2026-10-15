@@ -111,7 +111,8 @@ export function formatAmount(
 
 /**
  * Formats a plain number. Intl options pass through; zero never shows a minus
- * sign; NaN and Infinity throw a RangeError.
+ * sign; NaN and Infinity throw a RangeError. Decimal and unit numbers show at
+ * most 2 decimals unless the options set fraction or significant digits.
  */
 export function formatNumber(
   value: number,
@@ -119,8 +120,21 @@ export function formatNumber(
 ): string {
   assertFinite(value);
   const { locale = defaultLocale, ...intl } = options ?? {};
+  // Only where Intl's own default is 3: percent (0), currency (its digits) and
+  // compact notation (significant digits) keep Intl's rounding. Any digit
+  // option skips it, so a minimumFractionDigits above 2 cannot throw.
+  const twoDecimals =
+    (intl.style === undefined ||
+      intl.style === 'decimal' ||
+      intl.style === 'unit') &&
+    intl.notation !== 'compact' &&
+    intl.minimumFractionDigits === undefined &&
+    intl.maximumFractionDigits === undefined &&
+    intl.minimumSignificantDigits === undefined &&
+    intl.maximumSignificantDigits === undefined;
   return numberFormat(locale, {
     signDisplay: 'negative',
+    ...(twoDecimals ? { maximumFractionDigits: 2 } : {}),
     ...intl,
   }).format(value);
 }

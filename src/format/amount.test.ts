@@ -146,6 +146,22 @@ test('formats plain numbers in Czech, no negative zero', () => {
   expect(formatNumber(1234.5, { locale: 'en-GB' })).toBe('1,234.5');
 });
 
+test('formatNumber shows at most 2 decimals by default', () => {
+  expect(formatNumber(1234567.891)).toBe(`1${nbsp}234${nbsp}567,89`);
+  expect(formatNumber(12)).toBe('12');
+  expect(formatNumber(1.5, { style: 'unit', unit: 'kilometer' })).toBe(
+    '1,5 km'
+  );
+});
+
+test('formatNumber digit options override the 2-decimal default', () => {
+  expect(formatNumber(1234567.891, { maximumFractionDigits: 3 })).toBe(
+    `1${nbsp}234${nbsp}567,891`
+  );
+  expect(formatNumber(1.5, { minimumFractionDigits: 3 })).toBe('1,500');
+  expect(formatNumber(1.23456, { maximumSignificantDigits: 4 })).toBe('1,235');
+});
+
 test('formatNumber throws on NaN and Infinity', () => {
   expect(() => formatNumber(Number.NaN)).toThrow(RangeError);
   expect(() => formatNumber(Number.NEGATIVE_INFINITY)).toThrow(RangeError);

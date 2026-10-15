@@ -36,6 +36,10 @@ const examples: [string, () => unknown][] = [
   ['roundAmount(1.005)', () => roundAmount(1.005)],
   ['formatNumber(1234567.891)', () => formatNumber(1234567.891)],
   [
+    'formatNumber(1234567.891, { maximumFractionDigits: 3 })',
+    () => formatNumber(1234567.891, { maximumFractionDigits: 3 }),
+  ],
+  [
     "formatDate(new Date('2026-10-06T22:30:00Z'))",
     () => formatDate(new Date('2026-10-06T22:30:00Z')),
   ],
