@@ -107,3 +107,11 @@ test("inputMask={false} keeps Carbon's input", async () => {
   expect(input().pattern).toBe(String.raw`(1[012]|[1-9]):[0-5][0-9](\s)?`);
   expect(input().inputMode).toBe('');
 });
+
+test('turning inputMask off after focus drops the mask', async () => {
+  const { rerender } = render(<TimePicker id="start" labelText="Start time" />);
+  await userEvent.type(input(), '9');
+  rerender(<TimePicker id="start" labelText="Start time" inputMask={false} />);
+  await userEvent.type(input(), '905');
+  expect(input().value).toBe('905');
+});

@@ -14,7 +14,14 @@ export type TimePickerProps = CarbonTimePickerProps & TimeMaskProps;
  */
 export const TimePicker = forwardRef<HTMLInputElement, TimePickerProps>(
   function TimePicker(props, ref) {
-    return <CarbonTimePicker {...useTimeMask(props)} ref={ref} />;
+    // A new input drops the mask's listener when inputMask turns false.
+    return (
+      <CarbonTimePicker
+        key={props.inputMask === false ? 'plain' : 'masked'}
+        {...useTimeMask(props)}
+        ref={ref}
+      />
+    );
   }
 );
 TimePicker.displayName = 'TimePicker';

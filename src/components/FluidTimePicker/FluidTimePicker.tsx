@@ -24,6 +24,13 @@ export const FluidTimePicker = forwardRef<
   HTMLInputElement,
   FluidTimePickerProps
 >(function FluidTimePicker(props, ref) {
-  return <CarbonFluidTimePicker {...useTimeMask(props)} ref={ref} />;
+  // A new input drops the mask's listener when inputMask turns false.
+  return (
+    <CarbonFluidTimePicker
+      key={props.inputMask === false ? 'plain' : 'masked'}
+      {...useTimeMask(props)}
+      ref={ref}
+    />
+  );
 });
 FluidTimePicker.displayName = 'FluidTimePicker';
