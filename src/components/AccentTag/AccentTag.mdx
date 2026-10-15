@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as AccentTagStories from './AccentTag.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TagChooser } from '../../../.storybook/TagChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -16,7 +17,16 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 inline-start edge. It is built on Carbon's `OperationalTag` (a gray tag) and
 `Tooltip`. It is a client module.
 
+AccentTag is an Afframe addition: Carbon has no tag with an accent strip.
+Use Carbon's `Tag` with a `type` colour when the whole tag should carry the
+colour, for example a status. Use AccentTag when the tag stays neutral, the
+colour marks a category beside it, and the tag needs a tooltip or an action.
+
 <Canvas of={AccentTagStories.Default} />
+
+## Which component to use
+
+<TagChooser />
 
 ## Usage and props
 
@@ -49,6 +59,9 @@ import { AccentTag } from '@afframe/ui';
   the tooltip.
 - `tooltip` must not hold links or buttons; Carbon's tooltip is not
   interactive.
+- `className`, `ref`, `id` and other attributes go to the tag button, as on
+  Carbon's `IconButton`. `type` and `aria-describedby` are not passed: the
+  first is the tag colour in Carbon, the second would replace the tooltip.
 
 <ArgTypes of={AccentTagStories} />
 
