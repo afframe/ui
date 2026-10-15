@@ -2,9 +2,11 @@
 
 Date: 2026-10-05
 
+Amended: 2026-10-15
+
 ## Status
 
-Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the render checks run without the v12 flags.
+Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the render checks run without the v12 flags. Amended 2026-10-15: Carbon's utilities.
 
 ## Context
 
@@ -22,6 +24,15 @@ In scope:
 - Afframe improvements where Carbon has gaps (filter panel, create and edit dialogs, status indicator, description list and similar).
 
 Out: other frameworks, deprecated and archived packages, marketing sections, dead Labs experiments, Figma and other design-tool parity, and new pages, sections and templates (built later, only when a real use needs one).
+
+## Amendment 2026-10-15: Carbon's utilities
+
+IBM Products' Storybook documents helpers that IBM Products does not export: they come from Carbon's `@carbon/utilities` and `@carbon/utilities-react`. The maintainer wants them, so both packages are in scope as exact dependencies, pinned to the versions `@carbon/react` depends on:
+
+- `@carbon/utilities`: `createOverflowHandler` (with its `OverflowHandler` and `OverflowHandlerOptions` types), `dateTimeFormat` (see [ADR 0020](0020-own-formatters-beside-carbon-datetimeformat.md)) and `makeDraggable`.
+- `@carbon/utilities-react`: the step flow, `StepProvider`, `StepGroup`, `useStepContext` and the `StepContextType` type.
+
+Out: `initCarousel`, which the maintainer left out, and the rest of both packages (`AddSelectData`, which Afframe already exports from IBM Products, `datePartsOrder`, the document language helpers, `@internationalized/number`, `useNoInteractiveChildren`). IBM's `useOverflowItems` hook is internal to IBM Products and to Carbon; `createOverflowHandler` is the public helper that does the same job.
 
 ## Consequences
 

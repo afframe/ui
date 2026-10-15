@@ -17,7 +17,7 @@ ADR 0012 requires every user-facing string of an Afframe-owned component to be o
 - Each Afframe-owned component takes `messages?: Partial<<Name>Messages>` and exports its English defaults as `default<Name>Messages`. `resolveMessages` (`src/messages.ts`) merges the defaults with the overrides.
 - A message is a string, or a function when the string needs a value (for example a count).
 - Messages cover accessible names, `aria-label`s, tooltips, empty and loading states, and the strings Carbon takes as props. Numbers, currencies and dates are not messages; they come from the formatters.
-- Formatting defaults: locale `cs-CZ`, time zone `Europe/Prague`, currency `CZK`, amounts as numbers rounded to the currency's minor digits, other numbers to at most 2 decimals. Each is overridable per call or per component. The values live in `src/format/defaults.ts`.
+- Formatting defaults: locale `cs-CZ`, time zone `Europe/Prague`, currency `CZK`, amounts as numbers rounded to the currency's minor digits, other numbers to at most 2 decimals. Each is overridable per call or per component. The values live in `src/format/defaults.ts`. Carbon's `dateTimeFormat` sits beside these formatters with its own rules ([ADR 0020](0020-own-formatters-beside-carbon-datetimeformat.md)).
 
 ## Amendment 2026-10-13: content props
 
