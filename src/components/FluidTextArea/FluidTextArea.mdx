@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as FluidTextAreaStories from './FluidTextArea.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed, story names unified, state stories, field chooser and error message note added, accessible name section rewritten.
 
 <Meta isTemplate />
 
@@ -17,26 +18,55 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={FluidTextAreaStories.Default} />
 
+## Which component to use
+
+<FieldChooser />
+
+## Variations
+
+### Disabled
+
+<Canvas of={FluidTextAreaStories.Disabled} />
+
+### Read Only
+
+<Canvas of={FluidTextAreaStories.ReadOnly} />
+
+### Invalid
+
+<Canvas of={FluidTextAreaStories.Invalid} />
+
+### Warning
+
+<Canvas of={FluidTextAreaStories.Warning} />
+
 ### Skeleton
 
 <Canvas of={FluidTextAreaStories.Skeleton} />
 
-### Default With Toggletip
+### With Toggletip
 
-<Canvas of={FluidTextAreaStories.DefaultWithToggletip} />
+<Canvas of={FluidTextAreaStories.WithToggletip} />
 
-### Default With Layers
+### With Layer
 
-<Canvas of={FluidTextAreaStories.DefaultWithLayers} />
+<Canvas of={FluidTextAreaStories.WithLayer} />
 
 ## Accessibility Considerations
 
 ### Accessible Name
 
-To comply with accessibility requirements, make sure to supply the component
-with an accessible name by providing either the `aria-label`, `aria-labelledby`
-or `title` attribute. Read more on the accessible naming rule
-[here](https://able.ibm.com/rules/archives/latest/doc/en-US/aria_accessiblename_exists.html).
+`labelText` renders a visible label tied to the text area, which gives the
+field its accessible name.
+
+### Error message and screen readers
+
+In Carbon 1.118, FluidTextArea renders its error and warning text with
+`role="alert"`, so screen readers announce them. The text area points
+`aria-errormessage` at the error; in fluid mode it does not reference the
+warning, which is still announced as an alert. Carbon sets `aria-describedby`
+after your props, so the FluidTextInput recipe has no effect here and is not
+needed.
 
 ## Component API
 
