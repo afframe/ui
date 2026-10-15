@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as stories from './TagSet.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TagChooser } from '../../../.storybook/TagChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, usage guidelines link removed (internal IBM page), Carbon links point to the Carbon site, code sample section removed, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: source label and source link added, usage guidelines link removed (internal IBM page), Carbon links point to the Carbon site, code sample section removed, story names unified, upstream table of contents removed, Which component to use section added.
 
 <Meta isTemplate />
 
@@ -20,6 +21,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 The Tag set component allows users to see all the labels of a cluster in areas
 where all tags may not be visible at one time. They provide the ability to see
 how many additional labels exist and what they are.
+
+## Which component to use
+
+<TagChooser />
 
 ## Example usage
 

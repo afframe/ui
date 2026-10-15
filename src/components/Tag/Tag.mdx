@@ -2,9 +2,10 @@ import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as TagStories from './Tag.stories';
 import * as InteractiveTagStories from './InteractiveTag.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TagChooser } from '../../../.storybook/TagChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, Which component to use section added, sample code uses the story glossary data.
 
 <Meta isTemplate />
 
@@ -23,6 +24,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 Tags can be used to categorize items. Use short labels for easy scanning. Use
 two words only if necessary to describe the status and differentiate it from
 other tags.
+
+## Which component to use
+
+<TagChooser />
 
 ## Read Only
 
@@ -49,16 +54,16 @@ Here it is a sample code to help you get started.
 const tags = [
   {
     type: 'red',
-    text: 'Tag content with a long text description',
+    text: 'Disputed by the customer, credit note pending',
     tagTitle: 'Provide a custom title to the tag',
   },
   {
     type: 'magenta',
-    text: 'Tag content 1',
+    text: 'Paid',
   },
   {
     type: 'purple',
-    text: 'Tag content 2',
+    text: 'Overdue',
   },
 ];
 
@@ -122,26 +127,26 @@ Here it is a sample code to help you get started.
 const tags = [
   {
     id: 1,
-    text: 'Tag content with a long text description',
+    text: 'Disputed by the customer, credit note pending',
   },
   {
     id: 2,
-    text: 'Tag content 1',
+    text: 'Recurring',
   },
   {
     id: 3,
-    text: 'Tag content 2',
+    text: 'Export',
   },
   {
     id: 4,
-    text: 'Tag content 3',
+    text: 'VAT exempt',
   },
 ];
 
 const [selectedTags, setSelectedTags] = useState([
   {
     id: 2,
-    text: 'Tag content 1',
+    text: 'Recurring',
   },
 ]);
 
