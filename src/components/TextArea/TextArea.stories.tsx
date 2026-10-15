@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, labelText literals that args always override removed, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, labelText literals that args always override removed, source tag, story names unified, business example data, helperText literals that args always override removed, Disabled (color-contrast off), ReadOnly, Invalid and Warning stories, Skeleton passes only skeleton props. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -132,18 +132,17 @@ export default {
   },
   args: {
     enableCounter: false,
-    helperText: 'TextArea helper text',
-    labelText: 'TextArea label',
+    helperText: 'Shown on the invoice',
+    labelText: 'Note',
     maxCount: 500,
     disabled: false,
     hideLabel: false,
     invalid: false,
-    invalidText:
-      'Error message that is really long can wrap to more lines but should not be excessively long.',
+    invalidText: 'Keep the note to 500 characters or fewer.',
     placeholder: '',
     rows: 4,
     warn: false,
-    warnText: 'This is a warning message.',
+    warnText: 'The customer sees this note.',
   },
 } satisfies Meta<typeof TextArea>;
 
@@ -155,20 +154,34 @@ Default.args = {
   enableCounter: true,
 };
 
+export const Disabled: StoryFn<typeof TextArea> = Default.bind({});
+Disabled.args = { disabled: true };
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<typeof TextArea> = Default.bind({});
+ReadOnly.args = {
+  readOnly: true,
+  defaultValue: 'Delivery to the back entrance.',
+};
+
+// Carbon puts the error in role="alert", so it is announced; it sets
+// aria-describedby after the props, so the TextInput recipe does not apply.
+export const Invalid: StoryFn<typeof TextArea> = Default.bind({});
+Invalid.args = { invalid: true };
+
+export const Warning: StoryFn<typeof TextArea> = Default.bind({});
+Warning.args = { warn: true };
+
 export const WithLayer: StoryFn<typeof TextArea> = (args) => (
   <WithLayerTemplate>
-    {(layer) => (
-      <TextArea
-        helperText="Optional helper text"
-        rows={4}
-        id={`text-area-${layer}`}
-        {...args}
-      />
-    )}
+    {(layer) => <TextArea rows={4} id={`text-area-${layer}`} {...args} />}
   </WithLayerTemplate>
 );
 
-WithLayer.args = { helperText: 'Optional helper text' };
 export const WithAILabel: StoryFn<typeof TextArea> = (args) => {
   const aiLabel = (
     <AILabel className="ai-label-container">
@@ -201,24 +214,12 @@ export const WithAILabel: StoryFn<typeof TextArea> = (args) => {
     </AILabel>
   );
 
-  return (
-    <TextArea
-      helperText="Optional helper text"
-      rows={4}
-      id="text-area-5"
-      decorator={aiLabel}
-      {...args}
-    />
-  );
+  return <TextArea rows={4} id="text-area-5" decorator={aiLabel} {...args} />;
 };
 
-WithAILabel.args = { helperText: 'Optional helper text' };
-
-export const Skeleton: StoryFn<ComponentProps<typeof TextAreaSkeleton>> = (
-  args
-) => {
-  return <TextAreaSkeleton {...args} />;
-};
+export const Skeleton: StoryFn<
+  Required<Pick<ComponentProps<typeof TextAreaSkeleton>, 'hideLabel'>>
+> = ({ hideLabel }) => <TextAreaSkeleton hideLabel={hideLabel} />;
 Skeleton.parameters = {
   controls: {
     include: ['hideLabel'],

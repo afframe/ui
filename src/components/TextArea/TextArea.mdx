@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as TextAreaStories from './TextArea.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, state stories, error message note and field chooser added.
 
 <Meta isTemplate />
 
@@ -21,6 +22,22 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={TextAreaStories.Default} />
 
+## Disabled
+
+<Canvas of={TextAreaStories.Disabled} />
+
+## Read Only
+
+<Canvas of={TextAreaStories.ReadOnly} />
+
+## Invalid
+
+<Canvas of={TextAreaStories.Invalid} />
+
+## Warning
+
+<Canvas of={TextAreaStories.Warning} />
+
 ## Skeleton
 
 <Canvas of={TextAreaStories.Skeleton} />
@@ -28,6 +45,18 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## AI Label
 
 <Canvas of={TextAreaStories.WithAILabel} />
+
+## Error message and screen readers
+
+In Carbon 1.118, an invalid TextArea points `aria-errormessage` at its error
+text and renders that text with `role="alert"`, so screen readers announce it.
+Carbon sets `aria-describedby` after your props, so the TextInput recipe
+(passing `<id>-error-msg` in `aria-describedby`) has no effect here and is not
+needed.
+
+## Choosing a field
+
+<FieldChooser />
 
 ## Component API
 
