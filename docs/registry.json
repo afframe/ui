@@ -578,6 +578,7 @@
         "defaultLocale",
         "defaultCurrency",
         "defaultTimeZone",
+        "defaultMaxFractionDigits",
         "currencyDigits",
         "roundAmount",
         "formatAmount",
