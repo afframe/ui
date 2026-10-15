@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story body moved into a component, no PropTypes, AILabel story styles dropped, source tag, inline spacing as Carbon spacing tokens, spaced en-dashes in option and label text replaced with colons, story names unified, IBM names in placeholders replaced. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story body moved into a component, no PropTypes, AILabel story styles dropped, source tag, inline spacing as Carbon spacing tokens, spaced en-dashes in option and label text replaced with colons, story names unified, IBM names in placeholders replaced, Afframe example data in the lists and messages. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -89,9 +89,9 @@ export default {
     disabled: false,
     readOnly: false,
     invalid: false,
-    invalidText: 'Error message.',
+    invalidText: 'Check this field before you save.',
     warn: false,
-    warnText: 'Warning message.',
+    warnText: 'This change also affects existing invoices.',
   },
   argTypes: {
     className: {
@@ -152,33 +152,65 @@ interface Item {
   disabled?: boolean;
 }
 
-const items: Item[] = [
-  {
-    id: 'option-0',
-    text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-  },
-  {
-    id: 'option-1',
-    text: 'Option 1',
-  },
-  {
-    id: 'option-2',
-    text: 'Option 2',
-  },
-  {
-    id: 'option-3',
-    text: 'Option 3 - a disabled item',
-    disabled: true,
-  },
-  {
-    id: 'option-4',
-    text: 'Option 4',
-  },
-  {
-    id: 'option-5',
-    text: 'Option 5',
-  },
-];
+// One disabled item and one long label per list, as upstream shows both.
+const toItems = (prefix: string, texts: string[], disabledIndex: number) =>
+  texts.map((text, index): Item => ({
+    id: `${prefix}-${index}`,
+    text,
+    ...(index === disabledIndex ? { disabled: true } : {}),
+  }));
+
+const workspaces = toItems(
+  'workspace',
+  [
+    'Finance and accounting for all subsidiaries and branch offices',
+    'Sales',
+    'Operations',
+    'Marketing (archived)',
+    'Customer support',
+    'Design',
+  ],
+  3
+);
+
+const people = toItems(
+  'person',
+  [
+    'Alex Morgan',
+    'Sam Rivera',
+    'Jordan Lee',
+    'Taylor Brooks (on leave)',
+    'Morgan Hayes',
+    'Riley Chen-Okafor, Head of Customer Success',
+  ],
+  3
+);
+
+const projectTypes = toItems(
+  'type',
+  [
+    'Fixed scope, delivered in agreed milestones',
+    'Scrum',
+    'Kanban',
+    'Waterfall (retired)',
+    'Retainer',
+    'Time and materials',
+  ],
+  3
+);
+
+const tags = toItems(
+  'tag',
+  [
+    'Urgent',
+    'Recurring',
+    'Disputed',
+    'Archived (read-only)',
+    'Internal',
+    'Waiting for customer approval before work starts',
+  ],
+  3
+);
 
 const itemToString = (item: Item | null) => (item ? item.text : '');
 
@@ -390,9 +422,9 @@ const FormStory = (args: FormStoryArgs) => {
               id="workspace"
               titleText="Workspace"
               helperText="Workspace this project belongs to."
-              initialSelectedItem={items[1]}
+              initialSelectedItem={workspaces[1]}
               label="Select workspace"
-              items={items}
+              items={workspaces}
               itemToString={itemToString}
               {...listBoxProps}
             />
@@ -401,7 +433,7 @@ const FormStory = (args: FormStoryArgs) => {
             <ComboBox
               id="project-lead"
               onChange={() => {}}
-              items={items}
+              items={people}
               itemToString={itemToString}
               titleText="Project lead"
               helperText="Start typing to find a team member."
@@ -416,7 +448,7 @@ const FormStory = (args: FormStoryArgs) => {
           titleText="Team members"
           label="Select members"
           helperText="Everyone who will have access."
-          items={items}
+          items={people}
           itemToString={itemToString}
           selectionFeedback="top-after-reopen"
           {...listBoxProps}
@@ -512,9 +544,9 @@ const FormStory = (args: FormStoryArgs) => {
           id="project-type"
           titleText="Project type"
           helperText="Methodology used for this project."
-          initialSelectedItem={items[2]}
+          initialSelectedItem={projectTypes[2]}
           label="Select type"
-          items={items}
+          items={projectTypes}
           itemToString={itemToString}
           {...listBoxProps}
         />
@@ -524,7 +556,7 @@ const FormStory = (args: FormStoryArgs) => {
           titleText="Tags"
           helperText="Labels to categorise and filter this project."
           placeholder="Filter"
-          items={items}
+          items={tags}
           itemToString={itemToString}
           selectionFeedback="top-after-reopen"
           {...listBoxProps}
