@@ -200,8 +200,8 @@ Default.parameters = {
 const stateStory = (id: string, args: Partial<FluidNumberInputStoryArgs>) => {
   const story: StoryFn<FluidNumberInputStoryArgs> = Default.bind({});
   story.args = { ...Default.args, id, ...args };
-  story.argTypes = Default.argTypes;
-  story.parameters = Default.parameters;
+  story.argTypes = { ...Default.argTypes };
+  story.parameters = { ...Default.parameters };
   return story;
 };
 

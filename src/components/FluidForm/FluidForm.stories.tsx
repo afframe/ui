@@ -53,7 +53,7 @@ import {
   Stack,
   type FluidFormProps,
 } from '../../index.js';
-import { paymentTermItems } from '../../../.storybook/exampleData';
+import { paymentTermItems } from '../../../.storybook/exampleData.js';
 import mdx from './FluidForm.mdx';
 import '../AILabel/ailabel-story.css';
 

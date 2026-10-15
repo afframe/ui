@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; distinct id for the toggletip story (a11y); unsupported skeleton props removed; boolean table default summaries as strings; business example data, toggletip story renamed, Disabled (color-contrast off), ReadOnly, Invalid and Warning stories, error linked by aria-describedby in Invalid. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; distinct id for the toggletip story (a11y); unsupported skeleton props removed; boolean table default summaries as strings; unused upstream test.css import removed, business example data, toggletip story renamed, Disabled, ReadOnly, Invalid and Warning stories, error linked by aria-describedby in Invalid. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -185,7 +185,11 @@ WithToggletip.parameters = {
   },
 };
 
-const stateStory = (id: string, args: Partial<FluidTextInputProps>) => {
+// Carbon's props type omits aria-describedby, which it still forwards.
+const stateStory = (
+  id: string,
+  args: Partial<FluidTextInputProps> & { 'aria-describedby'?: string }
+) => {
   const story: StoryFn<FluidTextInputProps> = Default.bind({});
   story.args = { ...sharedArgs, id, ...args };
   story.argTypes = sharedArgTypes;

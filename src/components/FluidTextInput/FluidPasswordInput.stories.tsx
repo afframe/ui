@@ -131,10 +131,14 @@ Default.argTypes = {
   },
 };
 
-const stateStory = (id: string, args: Partial<FluidPasswordInputStoryArgs>) => {
+// Carbon's props type omits aria-describedby, which it still forwards.
+const stateStory = (
+  id: string,
+  args: Partial<FluidPasswordInputStoryArgs> & { 'aria-describedby'?: string }
+) => {
   const story: StoryFn<FluidPasswordInputStoryArgs> = Default.bind({});
   story.args = { ...Default.args, id, ...args };
-  story.argTypes = Default.argTypes;
+  story.argTypes = { ...Default.argTypes };
   return story;
 };
 
