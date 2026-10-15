@@ -7,11 +7,10 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Preview/preview__DatePicker, source tag, story names unified, Czech date format and example data, state stories added; date format and placeholders from the system setting, TypingADate story added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Preview/preview__DatePicker, source tag, story names unified, Czech date format and example data, state stories added; date format and placeholders from the system setting. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
-import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
 import { datePlaceholder, defaultDatePattern } from '../../format/index.js';
 import { FolderOpen, Folders, View } from '../../icons.js';
@@ -24,7 +23,6 @@ import {
   preview__DatePicker,
 } from '../../index.js';
 import mdx from './DatePickerV2.mdx';
-import { playTypingADate } from './playTypingADate.js';
 
 const { DatePicker, DatePickerInput, DatePickerSkeleton } = preview__DatePicker;
 
@@ -354,14 +352,3 @@ export const WithAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
 };
 
 WithAILabel.argTypes = { ...sharedArgTypes };
-
-export const TypingADate: StateStory = {
-  tags: ['afframe'],
-  parameters: { ...afframeA11y },
-  render: () => (
-    <DatePicker datePickerType="single">
-      <DatePickerInput labelText="Due date" id="date-picker-typing" />
-    </DatePicker>
-  ),
-  play: ({ canvasElement }) => playTypingADate(canvasElement),
-};

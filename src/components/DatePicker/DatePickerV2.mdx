@@ -222,10 +222,8 @@ Supported format tokens:
 
 Afframe: the picker defaults `dateFormat` and the input placeholder to the
 system date format, `defaultDateFormat` in `@afframe/ui/format`
-(`dd.mm.yyyy`), and masks typing; an incomplete or impossible date stays as
-typed and the input shows `messages.invalidDate`. `inputMask={false}` keeps
-Carbon's behaviour, where this preview drops typed text. A typed date does not
-reach the calendar or `onChange` yet: Carbon's preview ignores typed text.
+(`dd.mm.yyyy`). It has no typing mask: Carbon's preview ignores typed text,
+so a date is picked in the calendar. The stable `DatePicker` takes typed dates.
 This picker supports the `d`, `m` and `Y` tokens, and also `j`, `n` and `y`. `dateFormat` sets only the displayed text:
 string `value`, `minDate` and `maxDate` are read as `Y-m-d` or `m/d/Y`
 whatever the `dateFormat`, so pass ISO strings or `Date` objects.

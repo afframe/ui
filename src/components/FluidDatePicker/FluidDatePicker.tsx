@@ -33,8 +33,6 @@ export const FluidDatePicker = forwardRef<
     inputMask,
     messages,
     value: props.value,
-    restoreText: true,
-    controlText: false,
   });
   const parser = parseDate ?? field.parseDate;
   const carbonProps = {

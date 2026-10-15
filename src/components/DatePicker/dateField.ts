@@ -140,13 +140,6 @@ interface DateFieldOptions {
   allowInput: boolean | undefined;
   /** The picker's value: when the app empties it, the inputs are emptied too. */
   value: unknown;
-  /**
-   * flatpickr empties an input whose text it cannot parse, on blur and on a
-   * click outside; the text typed last is written back.
-   */
-  restoreText: boolean;
-  /** Set on the inputs as their value (the preview picker drops typed text otherwise). */
-  controlText: boolean;
 }
 
 const inCalendar = (target: EventTarget | null) =>
@@ -181,8 +174,6 @@ export function useDateField({
   inputMask = true,
   messages,
   value,
-  restoreText,
-  controlText,
 }: DateFieldOptions) {
   const { dateFormat, pattern } = resolveDateFormat(dateFormatProp);
   const typeable = inputMask && allowInput !== false;
@@ -208,7 +199,6 @@ export function useDateField({
   // the picker's onChange([]), not a reset.
   const kept = useRef(false);
   const [invalid, setInvalid] = useState<Pair<boolean>>([false, false]);
-  const [shown, setShown] = useState<Pair<string>>(['', '']);
 
   const cleared = isEmpty(value);
   const wasCleared = useRef(cleared);
@@ -220,21 +210,17 @@ export function useDateField({
     // set in the same batch; Carbon's reset reaches the picker only in its
     // own effect, after this render.
     if (kept.current && invalid.some(Boolean)) {
-      if (!restoreText) return;
       for (const [n, input] of inputs.current.entries()) {
         if (input && !input.value) input.value = typed.current[n] ?? '';
       }
       return;
     }
-    if (restoreText) {
-      for (const input of inputs.current) if (input) input.value = '';
-    }
+    for (const input of inputs.current) if (input) input.value = '';
     typed.current = ['', ''];
     dirty.current = [false, false];
     told.current = [false, false];
-    setShown(['', '']);
     setInvalid([false, false]);
-  }, [cleared, restoreText, invalid]);
+  }, [cleared, invalid]);
   useEffect(() => {
     kept.current = false;
   });
@@ -269,16 +255,6 @@ export function useDateField({
   const pickerChanged = (dates: readonly unknown[]) => {
     reported.current = [dates[0] != null, dates[1] != null];
     if (!masked) return false;
-    if (!restoreText) {
-      if (dates.length === 0) return false;
-      typed.current = [
-        inputs.current[0]?.value ?? '',
-        inputs.current[1]?.value ?? '',
-      ];
-      setShown(['', '']);
-      setInvalid([false, false]);
-      return false;
-    }
     const next: Pair<boolean> = [false, false];
     for (const n of [0, 1] as const) {
       const input = inputs.current[n];
@@ -350,7 +326,6 @@ export function useDateField({
           dirty.current[index] = true;
           told.current[index] = false;
         }
-        if (controlText) setShown((pair) => replaced(pair, index, current));
         if (!isInvalid(current))
           setInvalid((pair) => replaced(pair, index, false));
         own.onChange?.(event);
@@ -363,20 +338,17 @@ export function useDateField({
         inputs.current[index] = event.currentTarget;
         // React's onBlur listens to focusout, which follows the native blur
         // where flatpickr has already parsed and emptied the input.
-        if (restoreText) restore();
+        restore();
         // Tab moves focus into the calendar: the date is not entered yet.
         if (!inCalendar(event.relatedTarget)) {
           const current = event.currentTarget.value;
           const bad = isInvalid(current) || unavailable(current);
           setInvalid((pair) => replaced(pair, index, bad));
-          if (bad && restoreText && dirty.current[index]) tellApp(index);
+          if (bad && dirty.current[index]) tellApp(index);
         }
         own.onBlur?.(event);
       },
     };
-    if (controlText && own.value === undefined && shown[index] !== '') {
-      props.value = shown[index];
-    }
     if (own.invalid === undefined && invalid[index]) {
       props.invalid = true;
       props.invalidText =

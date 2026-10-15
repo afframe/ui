@@ -102,11 +102,15 @@ the input placeholder to the system date format, `defaultDateFormat` in
 `@afframe/ui/format` (`dd.mm.yyyy`). Typing is masked: separators appear as
 digits are typed, a typed separator pads the part (`1.1.2026` becomes
 `01.01.2026`), and a first digit that cannot start a day or month is padded
-(`4` becomes `04.`). Only complete, real dates are accepted. An incomplete or
-impossible date, such as `31.02.2026`, stays as typed and the input shows
-`messages.invalidDate`; an `invalid` set on the input wins. A `dateFormat` of
-`d`, `m` and `Y` with one separator is masked too; any other format is not.
-`inputMask={false}` keeps Carbon's behaviour.
+(`4` becomes `04.`). Only complete, real dates are accepted. An incomplete,
+impossible or unavailable date (`31.02.2026`, or one outside `minDate` or
+`maxDate`) stays as typed on blur, on Enter and in a range end, and the input
+shows `messages.invalidDate`; an `invalid` set on the input wins. If the app
+held a date for that input, `onChange` reports it gone once. Emptying a filled
+`value` empties the inputs; to clear kept text while `value` is already empty,
+remount the picker with a new `key`. A `dateFormat` of `d`, `m` and `Y` with
+one separator is masked too; any other format is not. `inputMask={false}`
+turns the mask and the kept text off.
 
 <Canvas of={DatePickerStories.TypingADate} />
 

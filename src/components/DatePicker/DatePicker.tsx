@@ -34,8 +34,6 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
       inputMask,
       messages,
       value: props.value,
-      restoreText: true,
-      controlText: false,
     });
     const parser = parseDate ?? field.parseDate;
     return (
