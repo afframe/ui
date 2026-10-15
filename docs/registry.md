@@ -41,6 +41,7 @@ One entry per Afframe or extras module and per subpath; the JSON lists its expor
 | FluidDatePicker      | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)           | yes, yes, yes      |
 | TimePicker           | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/TimePicker/TimePicker.mdx)                     | yes, yes, yes      |
 | FluidTimePicker      | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)           | yes, yes, yes      |
+| mask                 | util       | afframe        | `@afframe/ui`                       | client  |                                                                         |                    |
 | OverflowMenu         | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/OverflowMenu/OverflowMenu.mdx)                 | yes, yes, yes      |
 | TableToolbarMenu     | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/DataTable/DataTable.mdx)                       | yes, yes, yes      |
 | icons                | foundation | carbon         | `@afframe/ui/icons`                 | server  | [page](../src/components/Icons/Icons.mdx)                               |                    |

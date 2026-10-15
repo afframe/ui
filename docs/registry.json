@@ -1131,6 +1131,33 @@
       }
     },
     {
+      "name": "mask",
+      "kind": "util",
+      "source": "afframe",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/mask",
+      "docs": null,
+      "storyTitle": null,
+      "status": "stable",
+      "exports": [
+        "applyMaskEdit",
+        "dateMaskSpec",
+        "timeMaskSpec",
+        "useInputMask"
+      ],
+      "types": [
+        "MaskEdit",
+        "MaskState",
+        "DateMaskOptions",
+        "MaskPart",
+        "MaskPartKind",
+        "MaskSpec",
+        "TimeMaskOptions",
+        "InputMaskProps"
+      ]
+    },
+    {
       "name": "OverflowMenu",
       "kind": "component",
       "source": "carbon",
