@@ -8,9 +8,10 @@ import {
 import { DatePicker, DatePickerInput } from '../../index.js';
 import * as DatePickerStories from './DatePicker.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added.
+// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added, Afframe note on Czech dates and a Monday week start, date chooser added.
 
 <Meta isTemplate />
 
@@ -63,6 +64,10 @@ You can use the `DatePickerSkeleton` component to render a skeleton variant of a
 ### AI label
 
 <Canvas of={DatePickerStories.WithAILabel} />
+
+## Which component to use
+
+<DateChooser />
 
 ## Component API
 
@@ -205,6 +210,26 @@ FlatPickr instance. A complete list of valid locales can be found in the
   <DatePickerInput placeholder="dd/mm/yyyy" />
 </DatePicker>
 ```
+
+Afframe: for Czech dates set `dateFormat="d.m.Y"` and the placeholder
+`dd.mm.yyyy`, as the stories do, so the input matches `formatDate`. Keep the
+default English `locale` (ADR 0012). For a week that starts on Monday, pass
+an object locale. Carbon merges it over the strings of its `locale` key.
+Define it once at module scope, because Carbon caches on the object:
+
+```jsx
+const mondayEnglish = { locale: 'en', firstDayOfWeek: 1 };
+
+<DatePicker datePickerType="single" dateFormat="d.m.Y" locale={mondayEnglish}>
+  <DatePickerInput
+    id="invoice-date"
+    labelText="Invoice date"
+    placeholder="dd.mm.yyyy"
+  />
+</DatePicker>;
+```
+
+<Canvas of={DatePickerStories.WeekStartsMonday} />
 
 ### DatePicker `maxDate`
 
