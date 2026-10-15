@@ -118,9 +118,9 @@ SelectedScopes.args = {
 };
 
 // IBM's SearchBar passes scopesTypeLabel as the MultiSelect's `label` and
-// never sets its `titleText`, so the toggle button is labelled by an empty
-// label until a scope is selected; no story prop reaches it. Upstream issue
-// drafted, not filed.
+// never sets its `titleText` (an upstream bug), so the toggle button is
+// labelled by an empty label until a scope is selected; no story prop reaches
+// it.
 const buttonNameParameters = {
   a11y: { config: { rules: [{ id: 'button-name', enabled: false }] } },
 };

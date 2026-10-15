@@ -284,7 +284,7 @@ Disabled.parameters = {
 // Carbon 1.118 points aria-errormessage at the error but adds no live region
 // or aria-describedby, which fails axe's aria-valid-attr-value. Carbon spreads
 // rest props after its own aria-describedby, so passing the error id
-// (`${id}-error-msg`) links it. Upstream issue drafted, not filed.
+// (`${id}-error-msg`) links it. The gap is an upstream bug.
 export const Invalid: StoryFn<TextInputStoryArgs> = Default.bind({});
 Invalid.args = {
   invalid: true,

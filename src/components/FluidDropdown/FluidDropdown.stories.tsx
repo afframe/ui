@@ -280,7 +280,7 @@ ReadOnly.argTypes = Default.argTypes;
 ReadOnly.parameters = Default.parameters;
 
 // Carbon 1.118 links the error text but sets no aria-invalid, and passes extra
-// props to the wrapper, not the button. Upstream issue drafted, not filed.
+// props to the wrapper, not the button. This is an upstream bug.
 export const Invalid: StoryFn<
   Partial<FluidDropdownProps<unknown>> & { defaultWidth?: number }
 > = Default.bind({});

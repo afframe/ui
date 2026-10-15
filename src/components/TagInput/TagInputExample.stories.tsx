@@ -45,8 +45,7 @@ export default {
   tags: ['labs'],
   parameters: {
     // Labs hides the label wrapper with display: none: axe sees only the
-    // title, and Chrome computes an empty name. Upstream issue drafted, not
-    // filed.
+    // title, and Chrome computes an empty name. The gap is an upstream bug.
     a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
   },
   args: {

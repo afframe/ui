@@ -152,7 +152,7 @@ export const ReadOnly = stateStory('fluid-password-input-read-only', {
 });
 
 // Same gap and recipe as the FluidTextInput Invalid story: FluidPasswordInput
-// passes rest props to PasswordInput. Upstream issue drafted, not filed.
+// passes rest props to PasswordInput. The gap is an upstream bug.
 export const Invalid = stateStory('fluid-password-input-invalid', {
   invalid: true,
   'aria-describedby': 'fluid-password-input-invalid-error-msg',

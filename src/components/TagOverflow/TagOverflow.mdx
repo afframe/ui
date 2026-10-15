@@ -39,7 +39,7 @@ tags associated with the object.
 
 Known issue: when focus is on "View all tags", Escape closes the popover and
 focus moves to the page body, not back to the `+N` tag. Escape on the `+N` tag
-itself keeps focus there. Upstream issue drafted, not filed.
+itself keeps focus there. The focus loss is an upstream bug.
 
 ### Tags with truncation and overflow count
 
@@ -51,8 +51,7 @@ itself keeps focus there. Upstream issue drafted, not filed.
 
 The `multiline` prop is deprecated and has no effect: TagOverflow only hides
 items that do not fit. To wrap tags onto more lines, use `TagSet` with
-`multiline`. Passing it also logs a React warning: upstream issue drafted, not
-filed.
+`multiline`. Passing it also logs a React warning (an upstream bug).
 
 ### UserAvatars with overflow count and overflow modal
 

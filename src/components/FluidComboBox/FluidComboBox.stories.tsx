@@ -285,8 +285,7 @@ ReadOnly.argTypes = Default.argTypes;
 ReadOnly.parameters = Default.parameters;
 
 // Carbon 1.118 links the error text but sets no aria-invalid. ComboBox spreads
-// rest props on its input, so the story passes it. Upstream issue drafted, not
-// filed.
+// rest props on its input, so the story passes it. The gap is an upstream bug.
 export const Invalid: StoryFn<Partial<FluidComboBoxProps<unknown>>> =
   Default.bind({});
 Invalid.args = { ...sharedArgs, invalid: true, 'aria-invalid': true };

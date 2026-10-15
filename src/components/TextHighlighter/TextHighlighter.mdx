@@ -43,10 +43,9 @@ function App() {
 export default App;
 ```
 
-TextHighlighter renders a `<div>` container, so it cannot sit inside a `<p>`:
-React logs a nesting error and server-rendered pages fail to hydrate. Put
-running text that holds a highlighter in a `<div>`. Upstream issue drafted, not
-filed.
+TextHighlighter renders a `<div>` container (an upstream bug), so it cannot
+sit inside a `<p>`: React logs a nesting error and server-rendered pages fail
+to hydrate. Put running text that holds a highlighter in a `<div>`.
 
 ## Example usages
 

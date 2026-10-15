@@ -270,7 +270,7 @@ export const ReadOnly = Default.bind({});
 ReadOnly.args = { ...Default.args, readOnly: true };
 ReadOnly.argTypes = Default.argTypes;
 // Carbon puts aria-readonly on the group's fieldset, which the group role does
-// not allow (upstream issue drafted, not filed).
+// not allow (an upstream bug).
 ReadOnly.parameters = {
   ...Default.parameters,
   a11y: {
@@ -279,7 +279,7 @@ ReadOnly.parameters = {
 };
 
 // Carbon sets no aria-invalid and does not link the error text to the
-// group (upstream issue drafted, not filed).
+// group (an upstream bug).
 export const Invalid = Default.bind({});
 Invalid.args = { ...Default.args, invalid: true };
 Invalid.argTypes = Default.argTypes;

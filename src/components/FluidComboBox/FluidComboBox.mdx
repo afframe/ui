@@ -37,10 +37,9 @@ import { FieldChooser } from '../../../.storybook/FieldChooser';
 In Afframe UI, `FluidComboBox` is used as Carbon ships it:
 
 - With `invalid`, the input links `invalidText` through `aria-describedby` but
-  gets no `aria-invalid`, so screen readers do not announce the field as
-  invalid. FluidComboBox passes extra props to its input, so pass
-  `aria-invalid={invalid}` with `invalid`, as the Invalid story does (upstream
-  issue drafted, not filed).
+  gets no `aria-invalid` (an upstream bug), so screen readers do not announce
+  the field as invalid. FluidComboBox passes extra props to its input, so pass
+  `aria-invalid={invalid}` with `invalid`, as the Invalid story does.
 
 ## Which component to use
 

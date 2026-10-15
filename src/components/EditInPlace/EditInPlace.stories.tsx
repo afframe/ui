@@ -188,8 +188,7 @@ ReadOnly.args = {
   readOnlyLabel: 'Edit off',
 };
 // IBM's read-only mode renders an IconButton inside the ToggletipButton. Its
-// toggletip also stays open when Tab moves focus on; upstream issue drafted,
-// not filed.
+// toggletip also stays open when Tab moves focus on (an upstream bug).
 ReadOnly.parameters = {
   a11y: {
     config: { rules: [{ id: 'nested-interactive', enabled: false }] },

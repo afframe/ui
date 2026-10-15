@@ -494,8 +494,8 @@ ReadOnly.args = { ...sharedArgs, readOnly: true };
 ReadOnly.argTypes = { ...sharedArgTypes };
 ReadOnly.parameters = singleHandleParameters;
 
-// The invalid text is not linked to the input (upstream issue drafted, not
-// filed); axe does not flag it.
+// The invalid text is not linked to the input (an upstream bug); axe does not
+// flag it.
 export const Invalid: StoryFn<typeof Slider> = (args) => <Slider {...args} />;
 Invalid.args = { ...sharedArgs, invalid: true };
 Invalid.argTypes = { ...sharedArgTypes };

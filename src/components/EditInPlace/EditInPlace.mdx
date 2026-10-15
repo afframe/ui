@@ -63,8 +63,6 @@ import { EditInPlace } from '@afframe/ui';
   `aria-invalid`, but `invalidText` renders as a plain paragraph with no id,
   so screen readers do not announce it with the field. The TextInput
   workaround (`aria-describedby` on the component) does not apply: EditInPlace
-  passes extra props to its wrapper, not to the input. Upstream issue drafted,
-  not filed.
+  passes extra props to its wrapper, not to the input. This is an upstream bug.
 - **Read-only toggletip stays open.** In `readOnly` mode the toggletip opens
-  on click but does not close when Tab moves focus on. Upstream issue
-  drafted, not filed.
+  on click but does not close when Tab moves focus on. This is an upstream bug.

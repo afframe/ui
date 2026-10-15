@@ -364,8 +364,8 @@ Afframe: in Carbon 1.118, Tab from the input focuses the calendar grid itself.
 The current day is marked only by a class and `tabindex`; the grid has no
 `aria-activedescendant`, so a screen reader likely does not announce the day
 the arrows move to. Escape closes the calendar but leaves focus on the page
-body, not on the input. The classic `DatePicker` returns focus to the input.
-Upstream issue drafted, not filed.
+body, not on the input (an upstream bug). The classic `DatePicker` returns
+focus to the input.
 
 ## Migration from Carbon React v11
 

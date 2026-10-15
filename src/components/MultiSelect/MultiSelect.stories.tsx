@@ -705,7 +705,7 @@ ReadOnly.args = { ...sharedArgs, readOnly: true };
 
 // Carbon 1.118 gives the error text no id, links nothing to it and sets no
 // aria-invalid; MultiSelect takes no extra props to fix it from outside.
-// Upstream issue drafted, not filed.
+// This is an upstream bug.
 export const Invalid: StoryFn<StoryArgs> = Default.bind({});
 Invalid.args = { ...sharedArgs, invalid: true };
 

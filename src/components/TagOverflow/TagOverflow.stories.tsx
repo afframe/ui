@@ -109,7 +109,7 @@ WithOverflowModal.args = {
 
 // Upstream also passes multiline: true. The prop is deprecated, has no effect
 // and reaches the root div, where React warns about a non-boolean attribute.
-// Upstream issue drafted, not filed.
+// This is an upstream bug.
 export const Multiline = Template.bind({});
 Multiline.args = {
   containerWidth: 500,

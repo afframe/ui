@@ -28,10 +28,9 @@ and is typically used when there are a large amount of options to choose from.
 In Afframe UI, `ComboBox` is used as Carbon ships it:
 
 - With `invalid`, the input links `invalidText` through `aria-describedby` but
-  gets no `aria-invalid`, so screen readers do not announce the field as
-  invalid. ComboBox passes extra props to its input, so pass
-  `aria-invalid={invalid}` with `invalid`, as the Invalid story does (upstream
-  issue drafted, not filed).
+  gets no `aria-invalid` (an upstream bug), so screen readers do not announce
+  the field as invalid. ComboBox passes extra props to its input, so pass
+  `aria-invalid={invalid}` with `invalid`, as the Invalid story does.
 
 ## Which component to use
 

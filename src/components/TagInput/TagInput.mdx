@@ -148,10 +148,9 @@ Use the `renderTag` prop to customize tag colors based on content.
 ## Afframe notes
 
 - **The field has no accessible name.** Labs hides the label wrapper with
-  `display: none`. Chrome then computes an empty name for the input (the
-  hidden label overrides the title and placeholder), and axe reports
-  `label-title-only`. The stories turn that rule off. Upstream issue drafted,
-  not filed.
+  `display: none` (an upstream bug). Chrome then computes an empty name for
+  the input (the hidden label overrides the title and placeholder), and axe
+  reports `label-title-only`. The stories turn that rule off.
 - **No form states.** TagInput has no `invalid`, `helperText` or `disabled`
   props, so it cannot show an error in a validated form.
 - **Suggestion list.** The With Suggestions example builds its list in story

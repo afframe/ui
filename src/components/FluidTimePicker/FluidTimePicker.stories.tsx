@@ -178,8 +178,8 @@ ReadOnly.args = { ...Default.args, readOnly: true, defaultValue: '9:30' };
 ReadOnly.parameters = Default.parameters;
 ReadOnly.argTypes = Default.argTypes;
 
-// Carbon renders the error without an id and sets no aria-invalid (upstream
-// issue drafted, not filed), so the story links its own span by hand.
+// Carbon renders the error without an id and sets no aria-invalid (an upstream
+// bug), so the story links its own span by hand.
 export const Invalid: StoryFn<FluidTimePickerStoryArgs> = (args) => (
   <div style={{ width: '350px' }}>
     <FluidTimePicker

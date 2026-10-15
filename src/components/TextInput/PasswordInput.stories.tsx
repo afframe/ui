@@ -158,8 +158,7 @@ Disabled.parameters = {
 export const ReadOnly: StoryFn<PasswordInputStoryArgs> = Default.bind({});
 ReadOnly.args = { readOnly: true };
 
-// Same gap and recipe as the TextInput Invalid story. Upstream issue drafted,
-// not filed.
+// Same upstream gap and recipe as the TextInput Invalid story.
 export const Invalid: StoryFn<PasswordInputStoryArgs> = Default.bind({});
 Invalid.args = {
   invalid: true,

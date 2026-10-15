@@ -310,7 +310,7 @@ ReadOnly.args = {
 ReadOnly.argTypes = Default.argTypes;
 
 // Carbon 1.118 links the error text but sets no aria-invalid, and passes extra
-// props to the wrapper, not the button. Upstream issue drafted, not filed.
+// props to the wrapper, not the button. This is an upstream bug.
 export const Invalid: StoryFn<StoryArgs> = Default.bind({});
 Invalid.args = { ...sharedArgs, invalid: true };
 Invalid.argTypes = Default.argTypes;

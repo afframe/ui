@@ -209,7 +209,7 @@ ReadOnly.args = { ...Default.args, readOnly: true };
 ReadOnly.argTypes = Default.argTypes;
 
 // Carbon sets no aria-invalid and does not link the error text to the
-// group (upstream issue drafted, not filed).
+// group (an upstream bug).
 export const Invalid = Default.bind({});
 Invalid.args = { ...Default.args, invalid: true };
 Invalid.argTypes = Default.argTypes;
