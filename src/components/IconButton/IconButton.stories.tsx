@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, IconButton from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names unified, WithBadgeIndicator renamed WithBadge, example label from the Afframe glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, IconButton from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names unified, WithBadgeIndicator renamed WithBadge, example label from the Afframe glossary, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -231,3 +231,8 @@ WithBadge.parameters = {
     exclude: ['children'],
   },
 };
+
+export const Disabled: StoryFn<IconButtonStoryArgs> = Default.bind({});
+Disabled.args = { ...Default.args, defaultOpen: false, disabled: true };
+Disabled.argTypes = Default.argTypes;
+Disabled.parameters = Default.parameters;

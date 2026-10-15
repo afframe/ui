@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, MenuButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019, example labels from the Afframe glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, MenuButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019, example labels from the Afframe glossary, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -286,3 +286,6 @@ WithMenuAlignment.parameters = {
     ],
   },
 };
+
+export const Disabled: StoryFn<typeof MenuButton> = Default.bind({});
+Disabled.args = { ...commonArgs, disabled: true };

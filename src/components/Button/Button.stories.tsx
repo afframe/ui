@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Button from @afframe/ui, icons from @afframe/ui/icons, unused Stack import and story stylesheet dropped, source tag, inline spacing as Carbon spacing tokens, example labels from the Afframe glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Button from @afframe/ui, icons from @afframe/ui/icons, unused Stack import and story stylesheet dropped, source tag, inline spacing as Carbon spacing tokens, example labels from the Afframe glossary, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps, CSSProperties, ReactElement } from 'react';
@@ -651,6 +651,11 @@ IconButtonWithBadge.args = {
   kind: 'ghost',
   size: 'lg',
 };
+
+export const Disabled: StoryFn<ButtonStoryArgs> = Default.bind({});
+Disabled.args = { disabled: true };
+Disabled.argTypes = Default.argTypes;
+Disabled.parameters = Default.parameters;
 
 export const Skeleton: StoryFn<typeof ButtonSkeleton> = (args) => (
   <ButtonSkeleton {...args} />

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ComboButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019, example labels from the Afframe glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ComboButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019, example labels from the Afframe glossary, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -171,3 +171,8 @@ WithIcons.args = {
 };
 WithIcons.argTypes = sharedArgTypes;
 WithIcons.parameters = sharedParameters;
+
+export const Disabled: StoryFn<typeof ComboButton> = Default.bind({});
+Disabled.args = { ...sharedArgs, disabled: true };
+Disabled.argTypes = sharedArgTypes;
+Disabled.parameters = sharedParameters;
