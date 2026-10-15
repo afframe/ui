@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as RadioButtonStories from './RadioButton.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, Afframe note on the invalid state, field chooser table added.
 
 <Meta isTemplate />
 
@@ -40,6 +41,18 @@ states.
 ## AI Label
 
 <Canvas of={RadioButtonStories.WithAILabel} />
+
+## Invalid state
+
+In Afframe UI, `RadioButtonGroup` and `RadioButton` are used as Carbon ships
+them. With `invalid`, Carbon sets no `aria-invalid` on the group or the radio
+buttons, and the error text has no id, so nothing links it to the field. The
+same holds for `warn` and its text. Carbon also hides the error text while the
+group is `readOnly` or `disabled`.
+
+## Choosing a field
+
+<FieldChooser />
 
 ## Component API
 

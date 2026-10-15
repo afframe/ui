@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as FormStories from './Form.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, field chooser table added.
 
 <Meta isTemplate />
 
@@ -37,6 +38,10 @@ To comply with accessibility requirements, make sure to supply the component
 with an accessible name by providing either the `aria-label`, `aria-labelledby`
 or `title` attribute. Read more on the accessible naming rule
 [here](https://able.ibm.com/rules/archives/latest/doc/en-US/aria_accessiblename_exists.html).
+
+## Choosing a field
+
+<FieldChooser />
 
 ## Component API
 
