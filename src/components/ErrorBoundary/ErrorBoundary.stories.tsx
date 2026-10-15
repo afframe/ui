@@ -7,12 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified, invoice data, the custom log goes to Storybook actions. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { ErrorBoundary, ErrorBoundaryContext, Button } from '../../index.js';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
 import mdx from './ErrorBoundary.mdx';
 
 interface DemoArgs {
@@ -20,14 +20,15 @@ interface DemoArgs {
   children: ReactNode;
   errorMessage: string;
   fallback: ReactNode;
+  onLog: (error: Error, errorInfo: ErrorInfo) => void;
   shouldThrowError: boolean;
 }
 
 const defaultArgs = {
-  buttonLabel: 'Toggle throwing error',
-  children: 'Successfully rendered',
-  errorMessage: 'Component threw error',
-  fallback: 'Whoops',
+  buttonLabel: 'Throw an error',
+  children: 'Invoice list',
+  errorMessage: 'Invoice list failed to render',
+  fallback: 'This section could not be loaded.',
   shouldThrowError: false,
 };
 
@@ -105,8 +106,7 @@ Default.argTypes = { ...argTypes };
 
 export const WithCustomContext: StoryFn<DemoArgs> = (args) => {
   return (
-    <ErrorBoundaryContext.Provider
-      value={{ log: (...logArgs: unknown[]) => console.log(...logArgs) }}>
+    <ErrorBoundaryContext.Provider value={{ log: args.onLog }}>
       <DemoComponent {...args} />
     </ErrorBoundaryContext.Provider>
   );
