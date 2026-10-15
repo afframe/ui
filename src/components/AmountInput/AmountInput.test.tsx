@@ -233,6 +233,20 @@ test('from empty or zero the first step is 1 or -1, not step (Carbon)', async ()
   expect(spy).toHaveBeenLastCalledWith(101);
 });
 
+test.each([
+  ['{ArrowUp}', 1],
+  ['{ArrowDown}', -1],
+])(
+  'from an empty field %s steps to %d, not step (Carbon)',
+  async (key, first) => {
+    const spy = vi.fn();
+    render(<Controlled step={100} spy={spy} />);
+    await userEvent.click(input());
+    await userEvent.keyboard(key);
+    expect(spy).toHaveBeenLastCalledWith(first);
+  }
+);
+
 test('forgets rejected text once the parent sets a new amount', async () => {
   const rejected = vi.fn();
   const { rerender } = render(
