@@ -19,6 +19,12 @@ export const TimePicker = forwardRef<HTMLInputElement, TimePickerProps>(
       <CarbonTimePicker
         key={props.inputMask === false ? 'plain' : 'masked'}
         {...useTimeMask(props)}
+        className={[
+          props.seconds && 'afframe-time-picker-seconds',
+          props.className,
+        ]
+          .filter(Boolean)
+          .join(' ')}
         ref={ref}
       />
     );

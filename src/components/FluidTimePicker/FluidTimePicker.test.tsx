@@ -51,6 +51,7 @@ test('seconds give hh:mm:ss', async () => {
   await userEvent.type(input(), '235959');
   expect(input().value).toBe('23:59:59');
   expect(input().placeholder).toBe('hh:mm:ss');
+  expect(input().scrollWidth).toBeLessThanOrEqual(input().clientWidth);
 });
 
 test("inputMask={false} keeps Carbon's input", async () => {

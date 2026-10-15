@@ -53,6 +53,17 @@ test('seconds give hh:mm:ss', async () => {
   expect(input().maxLength).toBe(8);
 });
 
+test.each([false, true])(
+  'seconds widen the input so hh:mm:ss is not clipped (invalid: %s)',
+  async (invalid) => {
+    render(
+      <TimePicker id="start" labelText="Start time" seconds invalid={invalid} />
+    );
+    await userEvent.type(input(), '235959');
+    expect(input().scrollWidth).toBeLessThanOrEqual(input().clientWidth);
+  }
+);
+
 test('stays 24-hour beside an AM/PM select unless hourCycle="h12"', async () => {
   const { unmount } = render(
     <TimePicker id="start" labelText="Start time">
