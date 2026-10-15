@@ -46,8 +46,9 @@ const itemTexts = paymentTermItems
 export default {
   title: 'Components/ComboBox',
   component: ComboBox,
-  // Docgen reads only a few ComboBox props (Carbon's generic call signature),
-  // so the main ones are listed here with Carbon 1.118's descriptions.
+  // Docgen lists only a few ComboBox props (cause not found; Dropdown's types
+  // have the same shape and fill in), so the main ones are listed here with
+  // Carbon 1.118's descriptions.
   argTypes: {
     allowCustomValue: {
       control: 'boolean',
