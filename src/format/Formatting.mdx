@@ -14,8 +14,9 @@ import { SourceLabel } from '../../.storybook/SourceLabel';
 
 Functions for amounts, numbers, dates and date-range presets. They run on the
 server and in the browser (no `'use client'`). Defaults: locale `cs-CZ`,
-currency `CZK`, time zone `Europe/Prague` (`defaultLocale`,
-`defaultCurrency`, `defaultTimeZone`). Every default can be overridden per
+currency `CZK`, time zone `Europe/Prague`, plain numbers at most 2 decimals
+(`defaultLocale`, `defaultCurrency`, `defaultTimeZone`,
+`defaultMaxFractionDigits`). Every default can be overridden per
 call. Import them from `@afframe/ui`, or from `@afframe/ui/format` in server
 code that should not load the components.
 
