@@ -45,8 +45,8 @@ import { EditInPlace } from '@afframe/ui';
 
 ## Keyboard and screen readers
 
-- Enter saves a changed value, Escape restores the value from the last save.
-  Both leave edit mode.
+- Enter saves a changed value and leaves edit mode. Escape restores the value
+  from the last save and keeps focus in the field.
 - Moving focus out saves a changed value, unless `onBlur` is set; then
   `onBlur` receives the last saved value and decides.
 - `labelText` is the input's `aria-label`; there is no visible label.

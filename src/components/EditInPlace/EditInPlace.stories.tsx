@@ -171,6 +171,7 @@ Default.args = {
 export const Invalid = Template.bind({});
 Invalid.args = {
   ...defaultProps,
+  id: 'story-id-invalid',
   invalid: true,
 };
 
@@ -182,6 +183,7 @@ CustomBlurFunction.args = {
 export const ReadOnly = Template.bind({});
 ReadOnly.args = {
   ...defaultProps,
+  id: 'story-id-read-only',
   readOnly: true,
   readOnlyLabel: 'Edit off',
 };

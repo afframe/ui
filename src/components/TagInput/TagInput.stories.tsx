@@ -32,8 +32,8 @@ export default {
     docs: {
       page: mdx,
     },
-    // Labs hides the label wrapper with display: none, so labelText does not
-    // name the field and axe sees only its title. Upstream issue drafted, not
+    // Labs hides the label wrapper with display: none: axe sees only the
+    // title, and Chrome computes an empty name. Upstream issue drafted, not
     // filed.
     a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
   },
