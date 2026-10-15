@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, PasswordInput from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, PasswordInput from @afframe/ui, source tag, business example data, Disabled (color-contrast off), ReadOnly, Invalid and Warning stories, error linked by aria-describedby in Invalid. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -24,13 +24,13 @@ const args = {
   defaultValue: '',
   defaultWidth: 300,
   disabled: false,
-  helperText: 'Use at least 8 characters',
+  helperText: 'At least 12 characters',
   hideLabel: false,
   hidePasswordLabel: 'Hide password',
   id: 'password-input-1',
   inline: false,
   invalid: false,
-  invalidText: 'Password must be at least 8 characters',
+  invalidText: 'Enter at least 12 characters.',
   labelText: 'Password',
   placeholder: 'Enter your password',
   readOnly: false,
@@ -146,3 +146,33 @@ export const Default: StoryFn<PasswordInputStoryArgs> = ({
     <PasswordInput {...passwordInputArgs} />
   </div>
 );
+
+export const Disabled: StoryFn<PasswordInputStoryArgs> = Default.bind({});
+Disabled.args = { disabled: true };
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<PasswordInputStoryArgs> = Default.bind({});
+ReadOnly.args = { readOnly: true };
+
+// Same gap and recipe as the TextInput Invalid story. Upstream issue drafted,
+// not filed.
+export const Invalid: StoryFn<PasswordInputStoryArgs> = Default.bind({});
+Invalid.args = {
+  invalid: true,
+  'aria-describedby': 'password-input-1-error-msg',
+};
+Invalid.parameters = {
+  docs: {
+    description: {
+      story:
+        'Carbon links the error only through `aria-errormessage`. Pass `aria-describedby="<id>-error-msg"` while `invalid` is set so screen readers read it; see the TextInput page.',
+    },
+  },
+};
+
+export const Warning: StoryFn<PasswordInputStoryArgs> = Default.bind({});
+Warning.args = { warn: true };

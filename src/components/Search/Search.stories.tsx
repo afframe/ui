@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, argType for the removed light prop dropped, unique labels per layer in the layer stories (a11y), source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, argType for the removed light prop dropped, unique labels per layer in the layer stories (a11y), source tag, inline spacing as Carbon spacing tokens, story names unified, business example data, width capped by defaultWidth instead of fixed, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -29,8 +29,8 @@ export default {
     closeButtonLabelText: 'Clear search input',
     disabled: false,
     defaultWidth: 800,
-    labelText: 'Site search',
-    placeholder: 'Placeholder text',
+    labelText: 'Search invoices',
+    placeholder: 'Search invoices',
     size: 'md',
     type: 'search',
   },
@@ -105,7 +105,7 @@ export const Default: StoryFn<SearchStoryArgs> = ({
   defaultWidth,
   ...searchArgs
 }) => (
-  <div style={{ width: defaultWidth }}>
+  <div style={{ inlineSize: '100%', maxInlineSize: defaultWidth }}>
     <Search id="search-default-1" {...searchArgs} />
   </div>
 );
@@ -115,7 +115,12 @@ export const Expandable: StoryFn<SearchStoryArgs> = ({
   defaultWidth,
   ...searchArgs
 }) => (
-  <div style={{ marginTop: 'var(--cds-spacing-06)', width: defaultWidth }}>
+  <div
+    style={{
+      marginTop: 'var(--cds-spacing-06)',
+      inlineSize: '100%',
+      maxInlineSize: defaultWidth,
+    }}>
     <ExpandableSearch id="search-expandable-1" {...searchArgs} />
   </div>
 );
@@ -127,7 +132,7 @@ export const WithLayer: StoryFn<SearchStoryArgs> = ({
 }) => (
   <WithLayerTemplate>
     {(layer) => (
-      <div style={{ width: defaultWidth }}>
+      <div style={{ inlineSize: '100%', maxInlineSize: defaultWidth }}>
         <Search
           id={`search-${layer}`}
           {...searchArgs}
@@ -145,7 +150,12 @@ export const ExpandableWithLayer: StoryFn<SearchStoryArgs> = ({
 }) => (
   <WithLayerTemplate>
     {(layer) => (
-      <div style={{ marginTop: 'var(--cds-spacing-06)', width: defaultWidth }}>
+      <div
+        style={{
+          marginTop: 'var(--cds-spacing-06)',
+          inlineSize: '100%',
+          maxInlineSize: defaultWidth,
+        }}>
         <ExpandableSearch
           id={`search-expandable-${layer}`}
           {...searchArgs}
@@ -157,10 +167,14 @@ export const ExpandableWithLayer: StoryFn<SearchStoryArgs> = ({
 );
 ExpandableWithLayer.parameters = { ...expandableParameters };
 
+export const Disabled: StoryFn<SearchStoryArgs> = Default.bind({});
+Disabled.args = { disabled: true };
+Disabled.parameters = { ...defaultParameters };
+
 export const Skeleton: StoryFn<
   Required<Pick<SearchStoryArgs, 'size' | 'defaultWidth'>>
 > = ({ size, defaultWidth }) => (
-  <div style={{ width: defaultWidth }}>
+  <div style={{ inlineSize: '100%', maxInlineSize: defaultWidth }}>
     <SearchSkeleton size={size} />
   </div>
 );

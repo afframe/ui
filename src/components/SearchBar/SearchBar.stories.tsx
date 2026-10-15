@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, previewCandidate__SearchBar from @afframe/ui, source tag, scss styles dropped, button-name a11y rule disabled on Scopes and UnsortedScopes. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, previewCandidate__SearchBar from @afframe/ui, source tag, scss styles dropped, button-name a11y rule disabled on Scopes and UnsortedScopes, text controls for the story string args, business example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -24,6 +24,10 @@ export default {
   component: SearchBar,
   tags: ['ibm-products'],
   argTypes: {
+    clearButtonLabelText: { control: { type: 'text' } },
+    labelText: { control: { type: 'text' } },
+    placeholderText: { control: { type: 'text' } },
+    submitLabel: { control: { type: 'text' } },
     value: { control: { disable: true } },
     onChange: { control: { disable: true } },
     className: { control: { disable: true } },
@@ -46,24 +50,24 @@ export default {
 
 const scopes: Scope[] = [
   {
-    id: 'scope-2',
-    text: 'Scope 2',
+    id: 'payments',
+    text: 'Payments',
   },
   {
-    id: 'scope-1',
-    text: 'Scope 1',
+    id: 'customers',
+    text: 'Customers',
   },
   {
-    id: 'scope-3',
-    text: 'Scope 3',
+    id: 'invoices',
+    text: 'Invoices',
   },
 ];
 
 const defaultProps = {
   clearButtonLabelText: 'Clear',
-  placeholderText: 'Search...',
+  placeholderText: 'Search invoices, customers and payments',
   submitLabel: 'Search',
-  labelText: 'Label text',
+  labelText: 'Search records',
   onChange: (newVal: string) => action('onChange')(newVal),
   onSubmit: (newVal: string) => action('onSubmit')(newVal),
 };
@@ -84,14 +88,14 @@ Default.args = {
 export const InitialValue = DefaultTemplate.bind({});
 InitialValue.args = {
   ...defaultProps,
-  value: 'Initial value',
+  value: 'Lakeside Furniture',
 };
 
 export const Scopes = ScopesTemplate.bind({});
 Scopes.args = {
   ...defaultProps,
   scopes,
-  scopesTypeLabel: 'Scopes',
+  scopesTypeLabel: 'Search in',
   scopeToString: (item: string | object) => (item ? (item as Scope).text : ''),
 };
 
@@ -99,7 +103,7 @@ export const UnsortedScopes = ScopesTemplate.bind({});
 UnsortedScopes.args = {
   ...defaultProps,
   scopes,
-  scopesTypeLabel: 'Scopes',
+  scopesTypeLabel: 'Search in',
   sortItems: (items: readonly unknown[]) => items as unknown[],
   scopeToString: (item: string | object) => (item ? (item as Scope).text : ''),
 };
@@ -108,13 +112,15 @@ export const SelectedScopes = DefaultTemplate.bind({});
 SelectedScopes.args = {
   ...defaultProps,
   scopes,
-  scopesTypeLabel: 'Scopes',
+  scopesTypeLabel: 'Search in',
   selectedScopes: scopes.slice(0, 1),
   scopeToString: (item: string | object) => (item ? (item as Scope).text : ''),
 };
 
-// IBM's SearchBar gives the scopes MultiSelect no title text, so the toggle
-// button has no accessible name until a scope is selected.
+// IBM's SearchBar passes scopesTypeLabel as the MultiSelect's `label` and
+// never sets its `titleText`, so the toggle button is labelled by an empty
+// label until a scope is selected; no story prop reaches it. Upstream issue
+// drafted, not filed.
 const buttonNameParameters = {
   a11y: { config: { rules: [{ id: 'button-name', enabled: false }] } },
 };
