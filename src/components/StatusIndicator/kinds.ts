@@ -62,7 +62,7 @@ export const statusTagColors: {
     'not-started': 'gray',
     pending: 'cool-gray',
     unknown: 'gray',
-    informative: 'cyan',
+    informative: 'blue',
   },
   shape: {
     failed: 'red',

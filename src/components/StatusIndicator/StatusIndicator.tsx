@@ -3,6 +3,7 @@ import {
   preview__ShapeIndicator as ShapeIndicator,
   Tag,
 } from '@carbon/react';
+import type { ComponentPropsWithoutRef, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
 import {
   statusTagColors,
@@ -63,10 +64,25 @@ interface StatusIndicatorCommonProps {
   /** `tag` renders the status as a non-interactive Carbon `Tag`. */
   appearance?: 'indicator' | 'tag';
   messages?: Partial<StatusIndicatorMessages>;
+  /** Lands on the root: the Afframe `div` around Carbon's indicator, or the `Tag`. */
   className?: string;
+  /** Lands on the root: the Afframe `div` around Carbon's indicator, or the `Tag`. */
+  ref?: Ref<HTMLDivElement>;
 }
 
+// Carbon's `Tag` reads `title` as its deprecated close-button label and never
+// sets it on the root, so it is left out.
+type StatusIndicatorRootProps = Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'children' | 'title'
+>;
+
+/**
+ * Other `div` props (`id`, `data-*`, `aria-*`, handlers) land on the root, as
+ * `className` and `ref` do.
+ */
 export type StatusIndicatorProps = StatusIndicatorCommonProps &
+  StatusIndicatorRootProps &
   (
     | {
         variant?: 'icon';
@@ -86,14 +102,27 @@ export type StatusIndicatorProps = StatusIndicatorCommonProps &
 
 /**
  * One status: Carbon's preview icon or shape indicator, or a Carbon `Tag`.
+ * The root is an Afframe `div` around Carbon's indicator, or the `Tag` with
+ * `appearance="tag"`; `className`, `ref` and other props land on it.
  * Server-safe: no directive, no hooks.
  */
 export function StatusIndicator(props: StatusIndicatorProps) {
-  const { appearance = 'indicator', compact = false, messages } = props;
+  const {
+    appearance = 'indicator',
+    compact = false,
+    messages,
+    label: labelProp,
+    className: classNameProp,
+    ref,
+    variant = 'icon',
+    kind,
+    size,
+    textSize,
+    ...rest
+  } = props;
   const text = resolveMessages(defaultStatusIndicatorMessages, messages);
-  const variant = props.variant ?? 'icon';
-  const label = props.label ?? text.kindLabel(variant, props.kind);
-  const className = ['afframe-status-indicator', props.className]
+  const label = labelProp ?? text.kindLabel(variant, kind);
+  const className = ['afframe-status-indicator', classNameProp]
     .filter(Boolean)
     .join(' ');
 
@@ -110,8 +139,15 @@ export function StatusIndicator(props: StatusIndicatorProps) {
       props.variant === 'shape'
         ? statusTagColors.shape[props.kind]
         : statusTagColors.icon[props.kind];
+    // Carbon types `id` and `ref` without `undefined`.
+    const { id, ...tagRest } = rest;
     return (
-      <Tag className={`${className} afframe-status-indicator-tag`} type={type}>
+      <Tag
+        {...tagRest}
+        {...(id === undefined ? {} : { id })}
+        {...(ref === undefined ? {} : { ref })}
+        className={`${className} afframe-status-indicator-tag`}
+        type={type}>
         <span className="afframe-status-indicator-tag-content">
           {glyph}
           {label}
@@ -120,24 +156,25 @@ export function StatusIndicator(props: StatusIndicatorProps) {
     );
   }
 
-  if (props.variant === 'shape') {
-    return (
-      <ShapeIndicator
-        className={className}
-        kind={props.kind}
-        label={label}
-        compact={compact}
-        {...(props.textSize === undefined ? {} : { textSize: props.textSize })}
-      />
-    );
-  }
+  // Carbon's indicators drop every prop but `className` and `ref`, so the
+  // wrapper is the only root that can take the rest.
   return (
-    <IconIndicator
-      className={className}
-      kind={props.kind}
-      label={label}
-      compact={compact}
-      {...(props.size === undefined ? {} : { size: props.size })}
-    />
+    <div ref={ref} {...rest} className={className}>
+      {props.variant === 'shape' ? (
+        <ShapeIndicator
+          kind={props.kind}
+          label={label}
+          compact={compact}
+          {...(textSize === undefined ? {} : { textSize })}
+        />
+      ) : (
+        <IconIndicator
+          kind={props.kind}
+          label={label}
+          compact={compact}
+          {...(size === undefined ? {} : { size })}
+        />
+      )}
+    </div>
   );
 }

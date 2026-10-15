@@ -3,7 +3,7 @@ import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import * as stories from './StatusIndicator.stories.js';
 
-const { Default, Dark, Compact } = composeStories(stories);
+const { Icon, Dark, Compact } = composeStories(stories);
 
 async function snapshot(name: string) {
   await document.fonts.load('400 14px "IBM Plex Sans"');
@@ -14,7 +14,7 @@ async function snapshot(name: string) {
 }
 
 test.each([
-  ['status-indicator-light', Default],
+  ['status-indicator-light', Icon],
   ['status-indicator-dark', Dark],
 ] as const)('%s', async (name, story) => {
   await story.run();

@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as StatusIndicatorStories from './StatusIndicator.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { StatusChooser } from '../../../.storybook/StatusChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -13,8 +14,9 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 [Source code](https://github.com/afframe/ui/tree/main/src/components/StatusIndicator). See also [Status indicator pattern](https://carbondesignsystem.com/patterns/status-indicator-pattern/).
 
 `StatusIndicator` shows one status: a glyph and a label. It is built on
-Carbon's preview `IconIndicator` and `ShapeIndicator`, or on a Carbon `Tag`
-with `appearance="tag"`. It replaces IBM Products' deprecated `StatusIcon`.
+Carbon's preview [`IconIndicator`](?path=/docs/preview-preview-iconindicator--overview)
+and [`ShapeIndicator`](?path=/docs/preview-preview-shapeindicator--overview),
+or on a Carbon `Tag` with `appearance="tag"`. It replaces IBM Products' deprecated `StatusIcon`.
 IBM's deprecated `StatusIndicator` showed the steps of a process; use
 Carbon's `ProgressIndicator` for that.
 
@@ -26,6 +28,10 @@ Status is never shown by colour alone: the glyph or shape differs per kind
 and the label is text (WCAG 1.4.1).
 
 <Canvas of={StatusIndicatorStories.Default} />
+
+## Which component to use
+
+<StatusChooser />
 
 ## Usage and props
 
@@ -42,7 +48,12 @@ import { StatusIndicator } from '@afframe/ui';
 and `size` (16 or 20), `shape` takes Carbon's shape kinds and `textSize`
 (12 or 14). `compact` has no effect with `appearance="tag"`. The tag colour
 per kind is a table in `kinds.ts`; Carbon tags have no orange or yellow, so
-warning kinds use magenta and warm gray.
+warning kinds use magenta and warm gray. A kind in both lists has one colour.
+
+`className`, `ref` and other `div` props (`id`, `data-*`, `aria-*`) land on
+the root. With `appearance="indicator"` the root is an Afframe `div` around
+Carbon's indicator, not the `cds--icon-indicator` or `cds--shape-indicator`
+element. With `appearance="tag"` the root is the `Tag`.
 
 <ArgTypes of={StatusIndicatorStories} />
 
@@ -70,6 +81,8 @@ it from a client component, or pass a plain `label` string from server code.
 - The tag appearance is a non-interactive `div`; the label is read as text.
 
 ## Examples
+
+<Canvas of={StatusIndicatorStories.Icon} />
 
 <Canvas of={StatusIndicatorStories.Shape} />
 
