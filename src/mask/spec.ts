@@ -30,6 +30,8 @@ export interface DateMaskOptions {
 export interface TimeMaskOptions {
   seconds: boolean;
   hourCycle: 'h12' | 'h23';
+  /** Defaults to `:`. */
+  separator?: string;
 }
 
 const dateParts: Record<DateMaskOptions['order'][number], MaskPart> = {
@@ -73,6 +75,7 @@ export function dateMaskSpec({ order, separator }: DateMaskOptions): MaskSpec {
 export function timeMaskSpec({
   seconds,
   hourCycle,
+  separator = ':',
 }: TimeMaskOptions): MaskSpec {
   const hour: MaskPart =
     hourCycle === 'h12'
@@ -81,5 +84,5 @@ export function timeMaskSpec({
   const sixty = { length: 2, firstMax: 5, min: 0, max: 59 };
   const parts: MaskPart[] = [hour, { kind: 'minute', ...sixty }];
   if (seconds) parts.push({ kind: 'second', ...sixty });
-  return buildSpec(parts, ':');
+  return buildSpec(parts, separator);
 }

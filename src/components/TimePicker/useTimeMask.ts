@@ -1,6 +1,6 @@
 'use client';
 import { useMemo, type InputHTMLAttributes } from 'react';
-import { defaultTimePattern, timePlaceholder } from '../../format/index.js';
+import { defaultTimePattern } from '../../format/index.js';
 import { timeMaskSpec, useInputMask } from '../../mask/index.js';
 
 /** The props TimePicker and FluidTimePicker add to Carbon's. */
@@ -44,7 +44,12 @@ export function useTimeMask<P extends Partial<Masked>>({
   ...props
 }: P & TimeMaskProps): Omit<P, keyof TimeMaskProps> {
   const spec = useMemo(
-    () => timeMaskSpec({ seconds, hourCycle }),
+    () =>
+      timeMaskSpec({
+        seconds,
+        hourCycle,
+        separator: defaultTimePattern.separator,
+      }),
     [seconds, hourCycle]
   );
   const mask = useInputMask(spec);
@@ -55,7 +60,7 @@ export function useTimeMask<P extends Partial<Masked>>({
     onCompositionEnd,
     inputMode = mask.inputMode,
     autoComplete = mask.autoComplete,
-    placeholder = timePlaceholder({ ...defaultTimePattern, seconds }),
+    placeholder = spec.placeholder,
     pattern = mask.pattern,
   } = props;
   const masked: Required<Masked> = {
