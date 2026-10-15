@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: Calendar and Tag from @afframe/ui (styles ship in the package CSS, so the calendar.scss import is dropped), CalendarView and the renderCell argument typed from the component props instead of the internal types file, `as any` casts and unused renderCell arguments removed, the g10 theme and background globals dropped (Afframe themes come from the toolbar), source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: Calendar and Tag from @afframe/ui (styles ship in the package CSS, so the calendar.scss import is dropped), CalendarView and the renderCell argument typed from the component props instead of the internal types file, `as any` casts and unused renderCell arguments removed, the g10 theme and background globals dropped (Afframe themes come from the toolbar), source tag, props table built from Labs' CalendarProps because docgen finds none. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps, KeyboardEvent, MouseEvent } from 'react';
@@ -31,34 +31,107 @@ const meta: Meta<typeof Calendar> = {
   title: 'Components/Calendar',
   component: Calendar,
   tags: ['labs'],
+  // Docgen finds no props on the Labs re-export, so the props table is
+  // built here; descriptions are from Labs' CalendarProps.
   argTypes: {
+    ref: { table: { disable: true } },
+    innerRef: { table: { disable: true } },
+    containerRef: { table: { disable: true } },
+    launcherRef: { table: { disable: true } },
+    initialDate: {
+      control: 'date',
+      description: 'Initial value (defaults to today).',
+      table: { type: { summary: 'Date | string | number' } },
+    },
+    getCurrentDate: {
+      control: false,
+      description:
+        'The "now" value used for current-time indicator/highlight (defaults to new Date()).',
+      table: { type: { summary: '() => Date' } },
+    },
+    onNavigate: {
+      control: false,
+      description: 'Called whenever navigation changes the "selected date".',
+      table: { type: { summary: '(nextDate: Date) => void' } },
+    },
+    defaultView: {
+      control: { type: 'select' },
+      options: defaultViews,
+      description: "Initial view (defaults to 'month').",
+      table: { type: { summary: 'CalendarView' } },
+    },
+    onViewChange: {
+      control: false,
+      description: 'Trigger when view changes.',
+      table: { type: { summary: '(nextView: CalendarView) => void' } },
+    },
     views: {
       control: {
         type: 'check',
         options: defaultViews,
       },
-      description: 'Select enabled views (at least one required)',
+      description: 'Allowed views (defaults to all). At least one is required.',
+      table: {
+        type: {
+          summary: "('month' | 'week' | 'day' | 'threeDays' | 'workWeek')[]",
+        },
+      },
     },
-    defaultView: {
-      control: { type: 'select' },
-      options: defaultViews,
+    toolbar: {
+      control: 'boolean',
+      description: 'Show/hide toolbar (defaults to true).',
+      table: { type: { summary: 'boolean' } },
     },
-    weekStartsOn: {
-      control: { type: 'select' },
-      options: [0, 1, 2, 3, 4, 5, 6], // 0=Sun, 1=Mon...
-      description: 'Force start of week day (overrides locale)',
+    rtl: {
+      control: 'boolean',
+      description: 'Right-to-left layout (defaults to false).',
+      table: { type: { summary: 'boolean' } },
+    },
+    scrollToCurrentTime: {
+      control: 'boolean',
+      description:
+        'Auto-scroll the time grid to "now" when entering today view (defaults to true).',
+      table: { type: { summary: 'boolean' } },
     },
     region: {
       control: 'text',
-      description: 'Locale (e.g. en-US, fr-FR)',
+      description:
+        "Locale tag, e.g. 'en-US', 'ar', 'fr-FR' (defaults to browser locale).",
+      table: { type: { summary: 'string' } },
     },
-    initialDate: {
-      control: 'date',
+    formats: {
+      control: false,
+      description: 'Formatting rules for headers/labels.',
+      table: { type: { summary: 'CalendarFormats' } },
     },
-    toolbar: { control: 'boolean' },
-    stickyHeader: { control: 'boolean' },
-    rtl: { control: 'boolean' },
-    scrollToCurrentTime: { control: 'boolean' },
+    weekStartsOn: {
+      control: { type: 'select' },
+      options: [0, 1, 2, 3, 4, 5, 6],
+      description:
+        "The index of the day that the week starts on (0 - Sunday, 1 - Monday, etc.). If not provided, it defaults to the locale's start day.",
+      table: { type: { summary: '0 | 1 | 2 | 3 | 4 | 5 | 6' } },
+    },
+    renderCell: {
+      control: false,
+      description:
+        'Optional slot to render cell contents (events, etc.). Called for every visible cell in all views.',
+      table: {
+        type: {
+          summary:
+            '(args: { view, date, start, end, isToday, isCurrentTimeSlot }) => ReactNode',
+        },
+      },
+    },
+    className: {
+      control: false,
+      description: 'Optional className passthrough.',
+      table: { type: { summary: 'string' } },
+    },
+    stickyHeader: {
+      control: 'boolean',
+      description: 'Makes the header sticky.',
+      table: { type: { summary: 'boolean' } },
+    },
   },
   parameters: {
     layout: 'fullscreen',
