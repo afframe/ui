@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story body moved into a component, no PropTypes, AILabel story styles dropped, source tag, inline spacing as Carbon spacing tokens, spaced en-dashes in option and label text replaced with colons, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story body moved into a component, no PropTypes, AILabel story styles dropped, source tag, inline spacing as Carbon spacing tokens, spaced en-dashes in option and label text replaced with colons, story names unified, IBM names in placeholders replaced. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -357,7 +357,7 @@ const FormStory = (args: FormStoryArgs) => {
           size={size}
           id="search-members"
           labelText="Search members"
-          placeholder="e.g. Jane Smith"
+          placeholder="e.g. Alex Morgan"
           disabled={disabled}
         />
 
@@ -368,7 +368,7 @@ const FormStory = (args: FormStoryArgs) => {
               id="project-name"
               labelText="Project name"
               helperText="Short, descriptive project name."
-              placeholder="e.g. Carbon Design System"
+              placeholder="e.g. Website redesign"
               {...sharedProps}
             />
           </div>
@@ -377,7 +377,7 @@ const FormStory = (args: FormStoryArgs) => {
               id="project-id"
               labelText="Project ID"
               helperText="Lowercase letters, numbers, hyphens only."
-              placeholder="e.g. carbon-design-system"
+              placeholder="e.g. website-redesign"
               {...sharedProps}
             />
           </div>

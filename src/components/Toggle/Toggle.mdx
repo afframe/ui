@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as ToggleStories from './Toggle.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Small Toggle story renamed Small, field chooser table added.
 
 <Meta isTemplate />
 
@@ -21,9 +22,9 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={ToggleStories.Default} />
 
-## Small Toggle
+## Small
 
-<Canvas of={ToggleStories.SmallToggle} />
+<Canvas of={ToggleStories.Small} />
 
 ## Skeleton
 
@@ -32,6 +33,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## With Accessible Labels
 
 <Canvas of={ToggleStories.WithAccessibleLabels} />
+
+## Choosing a field
+
+<FieldChooser />
 
 ## Component API
 

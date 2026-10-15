@@ -7,10 +7,11 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused Skeleton args dropped, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused Skeleton args dropped, source tag, inline spacing as Carbon spacing tokens, label and toggled controls, SmallToggle renamed Small and built from Default's args, Disabled and ReadOnly stories, Afframe example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
+import { useArgs } from 'storybook/preview-api';
 import { Toggle, ToggleSkeleton, VStack } from '../../index.js';
 import type { ToggleProps } from '../../index.js';
 import mdx from './Toggle.mdx';
@@ -27,16 +28,24 @@ export default {
 } satisfies Meta<typeof Toggle>;
 
 export const Default: StoryFn<Partial<ToggleProps>> = (args) => {
+  const [, updateArgs] = useArgs();
   return (
     <Toggle
-      labelText="Label"
-      labelA="Off"
-      labelB="On"
-      defaultToggled
       id="toggle-3"
       {...args}
+      onToggle={(toggled) => {
+        updateArgs({ toggled });
+        args.onToggle?.(toggled);
+      }}
     />
   );
+};
+
+Default.args = {
+  labelText: 'Send reminders',
+  labelA: 'Off',
+  labelB: 'On',
+  toggled: true,
 };
 
 Default.argTypes = {
@@ -60,13 +69,19 @@ Default.argTypes = {
     control: false,
   },
   labelA: {
-    control: false,
+    control: {
+      type: 'text',
+    },
   },
   labelB: {
-    control: false,
+    control: {
+      type: 'text',
+    },
   },
   labelText: {
-    control: false,
+    control: {
+      type: 'text',
+    },
   },
   onClick: {
     control: false,
@@ -74,40 +89,46 @@ Default.argTypes = {
   onToggle: {
     control: false,
   },
+  readOnly: {
+    control: {
+      type: 'boolean',
+    },
+  },
   size: {
-    size: {
-      options: ['sm', 'md'],
-      control: { type: 'select' },
+    options: ['sm', 'md'],
+    control: { type: 'select' },
+  },
+  toggled: {
+    control: {
+      type: 'boolean',
     },
   },
 };
 
-export const SmallToggle: StoryFn<Partial<ToggleProps>> = (args) => {
-  return (
-    <Toggle
-      size="sm"
-      labelText="Label"
-      labelA="Off"
-      labelB="On"
-      defaultToggled
-      id="toggle-2"
-      {...args}
-    />
-  );
-};
+export const Small = Default.bind({});
+Small.args = { ...Default.args, id: 'toggle-2', size: 'sm' };
+Small.argTypes = Default.argTypes;
+
+export const Disabled = Default.bind({});
+Disabled.args = { ...Default.args, disabled: true };
+Disabled.argTypes = Default.argTypes;
+
+export const ReadOnly = Default.bind({});
+ReadOnly.args = { ...Default.args, readOnly: true };
+ReadOnly.argTypes = Default.argTypes;
 
 export const WithAccessibleLabels: StoryFn = () => {
   return (
     <VStack gap={7}>
-      <Toggle id="toggle-4" labelText="Label" />
+      <Toggle id="toggle-4" labelText="Send reminders" />
 
-      <Toggle id="toggle-5" labelText="Label" hideLabel />
+      <Toggle id="toggle-5" labelText="Send reminders" hideLabel />
 
       <div>
         <div
           id="toggle-6-label"
           style={{ marginBlockEnd: 'var(--cds-spacing-03)' }}>
-          Internal aria-label toggle
+          Send reminders (labelled by a div)
         </div>
         <Toggle aria-labelledby="toggle-6-label" id="toggle-6" />
       </div>
@@ -117,7 +138,7 @@ export const WithAccessibleLabels: StoryFn = () => {
           id="toggle-7-label"
           htmlFor="toggle-7"
           style={{ display: 'block', marginBlockEnd: 'var(--cds-spacing-03)' }}>
-          External toggle label
+          Send reminders (labelled by a label)
         </label>
         <Toggle aria-labelledby="toggle-7-label" id="toggle-7" />
       </div>
@@ -125,10 +146,10 @@ export const WithAccessibleLabels: StoryFn = () => {
   );
 };
 
-export const Skeleton: StoryFn = () => {
+export const Skeleton: StoryFn<typeof ToggleSkeleton> = (args) => {
   return (
     <div>
-      <ToggleSkeleton />
+      <ToggleSkeleton {...args} />
     </div>
   );
 };
