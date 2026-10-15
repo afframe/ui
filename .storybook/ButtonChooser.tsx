@@ -6,7 +6,10 @@ import { ChooserTable, docsLink as link } from './chooser';
 const rows = [
   ['One action with a text label', link('Button', 'components-button')],
   [
-    'One action shown as an icon only. Use it instead of Button with hasIconOnly',
+    <>
+      One action shown as an icon only. Use it instead of{' '}
+      <code>Button hasIconOnly</code>
+    </>,
     link('IconButton', 'components-iconbutton'),
   ],
   [

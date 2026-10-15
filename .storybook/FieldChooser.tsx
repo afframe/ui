@@ -150,17 +150,13 @@ const code = (...names: string[]) =>
 
 const propRows = [
   [
-    'Visible label',
+    'Label',
     code('labelText'),
     'TextInput, PasswordInput, TextArea, Select, Checkbox, RadioButton, Toggle, Slider, Search, DatePickerInput, TimePicker, TagInput, EditInPlace, previewCandidate__SearchBar and the fluid twins of these',
   ],
+  ['Label', code('label'), 'NumberInput, FluidNumberInput, AmountInput'],
   [
-    'Visible label',
-    code('label'),
-    'NumberInput, FluidNumberInput, AmountInput',
-  ],
-  [
-    'Visible label',
+    'Label',
     code('titleText'),
     'Dropdown, ComboBox, MultiSelect, FilterableMultiSelect and their fluid twins',
   ],
