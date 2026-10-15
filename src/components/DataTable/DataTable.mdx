@@ -8,9 +8,10 @@ import {
   TableBody,
 } from '../../index.js';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TableChooser } from '../../../.storybook/TableChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, section on the 1.0.x toolbar menu items added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, section on the toolbar menu with MenuItems added, upstream Feedback section and table of contents removed, table chooser added, Afframe notes on narrow batch actions and AI label column tables added.
 
 <Meta isTemplate />
 
@@ -25,6 +26,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 [Accessibility](https://www.carbondesignsystem.com/components/data-table/accessibility)
 
 <Canvas id="components-datatable-basic--default" />
+
+## Which component to use
+
+<TableChooser />
 
 ## Getting started
 
@@ -338,24 +343,37 @@ the following components:
 
 _Note: press "Show code" above to view a code snippet of this example_
 
+In Afframe UI, batch actions behave as Carbon ships them: at narrow widths the
+action list runs past the table container and the page scrolls sideways. Keep
+batch actions few.
+
+## AI label
+
+In Afframe UI, the AI label stories follow Carbon's. The tables with an AI label
+in a column header turn off the table's horizontal scroll so that the AI label
+callout is not clipped; at 375 px those tables run past the page. With the
+scroll on, the callout is cut at the table edge, even with `autoAlign` (upstream
+issue drafted, not filed). Choose per table: horizontal scroll on narrow
+screens, or a fully visible callout.
+
 ## Toolbar
 
 <Canvas id="components-datatable-toolbar--default" />
 
-### Toolbar menu items from 1.0.1
+### Toolbar menu with MenuItems
 
 `TableToolbarMenu` takes `TableToolbarAction` children and is named by
-`iconDescription`. Code written for `@afframe/ui` 1.0.x still works: a `label`
-prop, or `MenuItem` children (also `MenuItemDivider`, `MenuItemGroup`,
-`MenuItemRadioGroup`, `MenuItemSelectable`) placed directly or in one Fragment,
-switch that one menu to Carbon's newer menu. It
-renders Carbon's `Menu` with its v11 look and works by keyboard; `label` names
-the trigger and the menu. MenuItems inside your own wrapper component, or
-passed from a React Server Component, are not detected, so pass `label` there.
-The `TableToolbarMenu` types from Carbon omit `label`, the Afframe ones include
-it.
+`iconDescription`. In Afframe UI it also takes a `label` prop and `MenuItem`
+children (also `MenuItemDivider`, `MenuItemGroup`, `MenuItemRadioGroup`,
+`MenuItemSelectable`), placed directly or in one Fragment. Either one switches
+that menu to Carbon's newer menu: it renders Carbon's `Menu` with its v11 look
+and works by keyboard. `label` names the trigger and the menu; each `MenuItem`
+is one menu entry with its own `label` and `onClick`. MenuItems inside your own
+wrapper component, or passed from a React Server Component, are not detected,
+so pass `label` there. The `TableToolbarMenu` types from Carbon omit `label`,
+the Afframe ones include it.
 
-<Canvas id="components-datatable-toolbar--menu-items-from-101" />
+<Canvas id="components-datatable-toolbar--with-menu-items" />
 
 ```jsx
 import { MenuItem, MenuItemDivider, TableToolbarMenu } from '@afframe/ui';

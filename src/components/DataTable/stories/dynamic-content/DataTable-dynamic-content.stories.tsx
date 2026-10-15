@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, docs page and source tag added, expanded row heading h6 to h3 (axe heading-order), empty-table-header off, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, docs page and source tag added, expanded row heading h6 to h3 (axe heading-order), empty-table-header off, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, prop getter keys passed directly instead of spread, invoice example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './story.css';
@@ -40,6 +40,8 @@ import {
   TableToolbarSearch,
   TableToolbarMenu,
   preview__IconIndicator as IconIndicator,
+  formatAmount,
+  formatDate,
 } from '../../../../index.js';
 import type {
   TableHeaderProps,
@@ -53,6 +55,7 @@ import {
   dataTableArgs,
   dataTableArgTypes,
   headers,
+  rows,
 } from '../shared.js';
 import type { DataTableStoryArgs } from '../shared.js';
 import mdx from '../../DataTable.mdx';
@@ -60,62 +63,18 @@ import mdx from '../../DataTable.mdx';
 type DynamicRow = { id: string; [key: string]: ReactNode };
 type DynamicHeader = { key: string; header: string };
 
-const initialRows: DynamicRow[] = [
-  {
-    id: 'a',
-    name: 'Load Balancer 3',
-    protocol: 'HTTP',
-    port: 3000,
-    rule: 'Round robin',
-    attached_groups: 'Kevin’s VM Groups',
-    status: <IconIndicator kind="failed" label="Failed" />,
-  },
-  {
-    id: 'b',
-    name: 'Load Balancer 1',
-    protocol: 'HTTP',
-    port: 443,
-    rule: 'Round robin',
-    attached_groups: 'Maureen’s VM Groups',
-    status: <IconIndicator kind="in-progress" label="In progress" />,
-  },
-  {
-    id: 'c',
-    name: 'Load Balancer 2',
-    protocol: 'HTTP',
-    port: 80,
-    rule: 'DNS delegation',
-    attached_groups: 'Andrew’s VM Groups',
-    status: <IconIndicator kind="succeeded" label="Succeeded" />,
-  },
-  {
-    id: 'd',
-    name: 'Load Balancer 6',
-    protocol: 'HTTP',
-    port: 3000,
-    rule: 'Round robin',
-    attached_groups: 'Marc’s VM Groups',
-    status: <IconIndicator kind="failed" label="Failed" />,
-  },
-  {
-    id: 'e',
-    name: 'Load Balancer 4',
-    protocol: 'HTTP',
-    port: 443,
-    rule: 'Round robin',
-    attached_groups: 'Mel’s VM Groups',
-    status: <IconIndicator kind="in-progress" label="In progress" />,
-  },
-  {
-    id: 'f',
-    name: 'Load Balancer 5',
-    protocol: 'HTTP',
-    port: 80,
-    rule: 'DNS delegation',
-    attached_groups: 'Ronja’s VM Groups',
-    status: <IconIndicator kind="succeeded" label="Succeeded" />,
-  },
-];
+// Shared invoice rows; this story shows status as an IconIndicator.
+const statusIndicator: Record<string, ReactNode> = {
+  Draft: <IconIndicator kind="not-started" label="Draft" />,
+  Sent: <IconIndicator kind="in-progress" label="Sent" />,
+  Paid: <IconIndicator kind="succeeded" label="Paid" />,
+  Overdue: <IconIndicator kind="failed" label="Overdue" />,
+};
+
+const initialRows: DynamicRow[] = rows.map((row) => ({
+  ...row,
+  status: statusIndicator[row.status],
+}));
 
 type DynamicRowsProps = {
   args: DataTableStoryArgs;
@@ -157,12 +116,12 @@ class DynamicRows extends Component<
       const id = _id + 1;
       const row: DynamicRow = {
         id: '' + id,
-        name: `New Row ${id}`,
-        protocol: 'HTTP',
-        port: id * 100,
-        rule: id % 2 === 0 ? 'Round robin' : 'DNS delegation',
-        attached_groups: `Row ${id}'s VM Groups`,
-        status: 'Starting',
+        name: `INV-2026-${String(100 + id).padStart(4, '0')}`,
+        protocol: 'Birch Studio',
+        port: formatAmount(1000 + id * 10),
+        rule: id % 2 === 0 ? 'Net 30' : 'Net 14',
+        attached_groups: formatDate('2026-10-28'),
+        status: statusIndicator.Draft,
       };
       state.headers
         .filter((header) => row[header.key] === undefined)
@@ -274,40 +233,54 @@ class DynamicRows extends Component<
                         {...(getSelectionProps() as TableSelectAllProps)}
                       />
                     )}
-                    {headers.map((header) => (
-                      <TableHeader
-                        {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                        {header.header}
-                      </TableHeader>
-                    ))}
+                    {headers.map((header) => {
+                      const { key, ...headerProps } = getHeaderProps({
+                        header,
+                      });
+                      return (
+                        <TableHeader
+                          key={key}
+                          {...(headerProps as TableHeaderProps)}>
+                          {header.header}
+                        </TableHeader>
+                      );
+                    })}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {showEmptyState
                     ? null
-                    : rows.map((row) => (
-                        <Fragment key={row.id}>
-                          <TableExpandRow {...getRowProps({ row })}>
-                            <TableSelectRow
-                              {...(getSelectionProps({
-                                row,
-                              }) as TableSelectRowProps)}
-                            />
-                            {row.cells.map((cell) => (
-                              <TableCell {...getCellProps({ cell })}>
-                                {cell.value}
-                              </TableCell>
-                            ))}
-                          </TableExpandRow>
-                          <TableExpandedRow
-                            colSpan={headers.length + 3}
-                            className="demo-expanded-td"
-                            {...getExpandedRowProps({ row })}>
-                            <h3>Expandable row content</h3>
-                            <div>Description here</div>
-                          </TableExpandedRow>
-                        </Fragment>
-                      ))}
+                    : rows.map((row) => {
+                        const { key, ...rowProps } = getRowProps({ row });
+                        return (
+                          <Fragment key={key}>
+                            <TableExpandRow {...rowProps}>
+                              <TableSelectRow
+                                {...(getSelectionProps({
+                                  row,
+                                }) as TableSelectRowProps)}
+                              />
+                              {row.cells.map((cell) => {
+                                const { key, ...cellProps } = getCellProps({
+                                  cell,
+                                });
+                                return (
+                                  <TableCell key={key} {...cellProps}>
+                                    {cell.value}
+                                  </TableCell>
+                                );
+                              })}
+                            </TableExpandRow>
+                            <TableExpandedRow
+                              colSpan={headers.length + 3}
+                              className="demo-expanded-td"
+                              {...getExpandedRowProps({ row })}>
+                              <h3>Expandable row content</h3>
+                              <div>Description here</div>
+                            </TableExpandedRow>
+                          </Fragment>
+                        );
+                      })}
                 </TableBody>
               </Table>
               {showEmptyState && (

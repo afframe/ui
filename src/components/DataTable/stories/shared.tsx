@@ -7,11 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story args type. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story args type, invoice example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes } from '@storybook/react-vite';
-import { Link } from '../../../index.js';
+import { formatAmount, formatDate } from '../../../index.js';
+import { paymentTermItems } from '../../../../.storybook/exampleData.js';
 import type { DataTableProps } from '../../../index.js';
 
 export type DataTableStoryArgs = Required<
@@ -70,91 +71,88 @@ export const dataTableArgTypes = {
   },
 } satisfies ArgTypes;
 
+// Amounts share one digit-group width and due dates one month, so Carbon's
+// string sort orders the formatted cells correctly.
+const paymentTerm = (id: string) =>
+  paymentTermItems.find((item) => item.id === id)?.text ?? id;
+
 export const rows = [
   {
     id: 'a',
-    name: 'Load Balancer 3',
-    protocol: 'HTTP',
-    port: 3000,
-    rule: 'Round robin',
-    attached_groups: 'Kevin’s VM Groups',
-    status: (
-      <Link href="#" disabled={true}>
-        Disabled
-      </Link>
-    ),
+    name: 'INV-2026-0045',
+    protocol: 'Lakeside Furniture',
+    port: formatAmount(4800),
+    rule: paymentTerm('net-30'),
+    attached_groups: formatDate('2026-10-07'),
+    status: 'Paid',
   },
   {
     id: 'b',
-    name: 'Load Balancer 1',
-    protocol: 'HTTP',
-    port: 443,
-    rule: 'Round robin',
-    attached_groups: 'Maureen’s VM Groups',
-    status: <Link href="#">Starting</Link>,
+    name: 'INV-2026-0042',
+    protocol: 'Acme Trading',
+    port: formatAmount(1250),
+    rule: paymentTerm('net-14'),
+    attached_groups: formatDate('2026-10-14'),
+    status: 'Sent',
   },
   {
     id: 'c',
-    name: 'Load Balancer 2',
-    protocol: 'HTTP',
-    port: 80,
-    rule: 'DNS delegation',
-    attached_groups: 'Andrew’s VM Groups',
-    status: <Link href="#">Active</Link>,
+    name: 'INV-2026-0043',
+    protocol: 'Birch Studio',
+    port: formatAmount(9990),
+    rule: paymentTerm('due-on-receipt'),
+    attached_groups: formatDate('2026-10-02'),
+    status: 'Overdue',
   },
   {
     id: 'd',
-    name: 'Load Balancer 6',
-    protocol: 'HTTP',
-    port: 3000,
-    rule: 'Round robin',
-    attached_groups: 'Marc’s VM Groups',
-    status: (
-      <Link href="#" disabled={true}>
-        Disabled
-      </Link>
-    ),
+    name: 'INV-2026-0047',
+    protocol: 'Cedar Logistics',
+    port: formatAmount(3600),
+    rule: paymentTerm('net-30'),
+    attached_groups: formatDate('2026-10-21'),
+    status: 'Draft',
   },
   {
     id: 'e',
-    name: 'Load Balancer 4',
-    protocol: 'HTTP',
-    port: 443,
-    rule: 'Round robin',
-    attached_groups: 'Mel’s VM Groups',
-    status: <Link href="#">Starting</Link>,
+    name: 'INV-2026-0044',
+    protocol: 'Delta Foods',
+    port: formatAmount(7250),
+    rule: paymentTerm('end-of-month'),
+    attached_groups: formatDate('2026-10-31'),
+    status: 'Sent',
   },
   {
     id: 'f',
-    name: 'Load Balancer 5',
-    protocol: 'HTTP',
-    port: 80,
-    rule: 'DNS delegation',
-    attached_groups: 'Ronja’s VM Groups',
-    status: <Link href="#">Active</Link>,
+    name: 'INV-2026-0046',
+    protocol: 'Acme Trading',
+    port: formatAmount(2480),
+    rule: paymentTerm('net-7'),
+    attached_groups: formatDate('2026-10-09'),
+    status: 'Overdue',
   },
 ];
 
 export const headers = [
   {
     key: 'name',
-    header: 'Name',
+    header: 'Invoice',
   },
   {
     key: 'protocol',
-    header: 'Protocol',
+    header: 'Customer',
   },
   {
     key: 'port',
-    header: 'Port',
+    header: 'Amount',
   },
   {
     key: 'rule',
-    header: 'Rule',
+    header: 'Payment terms',
   },
   {
     key: 'attached_groups',
-    header: 'Attached groups',
+    header: 'Due date',
   },
   {
     key: 'status',
