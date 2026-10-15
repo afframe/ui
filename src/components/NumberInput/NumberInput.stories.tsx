@@ -7,10 +7,10 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, Carbon's internal useDocumentLang inlined, id added to the AI label story, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, Carbon's internal useDocumentLang from .storybook/useDocumentLang, id added to the AI label story, source tag, story names unified, Afframe example data, Disabled, ReadOnly, Invalid and Warning stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import { useState, useSyncExternalStore } from 'react';
+import { useState } from 'react';
 import type { ComponentProps } from 'react';
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
 import { action } from 'storybook/actions';
@@ -25,29 +25,13 @@ import {
   NumberInputSkeleton,
   validateNumberSeparators,
 } from '../../index.js';
+import { useDocumentLang } from '../../../.storybook/useDocumentLang.js';
 import mdx from './NumberInput.mdx';
 
 // Stories pass their own id.
 type NumberInputStoryArgs = Omit<ComponentProps<typeof NumberInput>, 'id'> & {
   id?: string;
 };
-
-// Carbon's internal useDocumentLang: the <html> lang, or the browser language.
-function subscribeDocumentLang(callback: () => void) {
-  const observer = new MutationObserver(callback);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['lang'],
-  });
-  return () => observer.disconnect();
-}
-
-function useDocumentLang() {
-  return useSyncExternalStore(
-    subscribeDocumentLang,
-    () => document.documentElement.lang || window.navigator.language || ''
-  );
-}
 
 export default {
   title: 'Components/NumberInput',
@@ -114,10 +98,10 @@ const sharedArgs = {
   allowEmpty: false,
   disableWheel: false,
   disabled: false,
-  helperText: 'Optional helper text.',
+  helperText: 'Units on the invoice line',
   invalid: false,
-  invalidText: 'Number is not valid.',
-  label: 'NumberInput label',
+  invalidText: 'Enter a valid quantity.',
+  label: 'Quantity',
   hideLabel: false,
   hideSteppers: false,
   inputMode: 'decimal',
@@ -126,8 +110,7 @@ const sharedArgs = {
   step: 1,
   type: 'number',
   warn: false,
-  warnText:
-    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+  warnText: 'This quantity is more than the stock on hand.',
 } satisfies NumberInputStoryArgs;
 
 const textArgs = {
@@ -170,8 +153,8 @@ export const Default: StoryFn<NumberInputStoryArgs> = (args) => {
 Default.args = {
   ...sharedArgs,
   max: 100,
-  min: -100,
-  invalidText: `Number is not valid. Must be between -100 and 100`,
+  min: 0,
+  invalidText: 'Enter a quantity from 0 to 100.',
 };
 
 Default.argTypes = { ...sharedArgTypes };
@@ -230,7 +213,7 @@ WithAILabel.argTypes = { ...sharedArgTypes };
 
 WithAILabel.args = {
   ...sharedArgs,
-  invalidText: 'Number is not valid',
+  invalidText: 'Enter a valid quantity.',
   max: reusableProps.max,
   min: reusableProps.min,
 };
@@ -241,7 +224,7 @@ WithAILabel.parameters = {
   },
 };
 
-export const WithTypeOfText: StoryFn<NumberInputStoryArgs> = (args) => {
+export const TextType: StoryFn<NumberInputStoryArgs> = (args) => {
   const locale = useDocumentLang();
   const { locale: localeArg, ...inputArgs } = args;
 
@@ -254,25 +237,23 @@ export const WithTypeOfText: StoryFn<NumberInputStoryArgs> = (args) => {
     />
   );
 };
-WithTypeOfText.args = {
+TextType.args = {
   ...textArgs,
-  invalidText: `Number is not valid. Must be between ${reusableProps.min} and ${reusableProps.max}`,
+  invalidText: `Enter a quantity from ${reusableProps.min} to ${reusableProps.max}.`,
 };
-WithTypeOfText.argTypes = {
+TextType.argTypes = {
   locale: { control: { type: 'text' } },
   stepStartValue: { control: { type: 'number' } },
   formatOptions: { control: { type: 'object' } },
   ...sharedArgTypes,
 };
-WithTypeOfText.parameters = {
+TextType.parameters = {
   controls: {
     include: textControls,
   },
 };
 
-export const WithTypeOfTextControlled: StoryFn<NumberInputStoryArgs> = (
-  args
-) => {
+export const TextTypeControlled: StoryFn<NumberInputStoryArgs> = (args) => {
   const locale = useDocumentLang();
   const [value, setValue] = useState<number | string>(NaN);
   const { locale: localeArg, ...inputArgs } = args;
@@ -299,22 +280,22 @@ export const WithTypeOfTextControlled: StoryFn<NumberInputStoryArgs> = (
     </>
   );
 };
-WithTypeOfTextControlled.args = {
+TextTypeControlled.args = {
   ...textArgs,
-  invalidText: `Number is not valid. Must be between ${reusableProps.min} and ${reusableProps.max}`,
+  invalidText: `Enter a quantity from ${reusableProps.min} to ${reusableProps.max}.`,
 };
-WithTypeOfTextControlled.argTypes = {
+TextTypeControlled.argTypes = {
   locale: { control: { type: 'text' } },
   formatOptions: { control: { type: 'object' } },
   ...sharedArgTypes,
 };
-WithTypeOfTextControlled.parameters = {
+TextTypeControlled.parameters = {
   controls: {
     include: textControls,
   },
 };
 
-export const WithTypeOfCustomValidation: StoryFn<NumberInputStoryArgs> = (
+export const TextTypeCustomValidation: StoryFn<NumberInputStoryArgs> = (
   args
 ) => {
   const locale = useDocumentLang();
@@ -343,21 +324,46 @@ export const WithTypeOfCustomValidation: StoryFn<NumberInputStoryArgs> = (
     </>
   );
 };
-WithTypeOfCustomValidation.args = {
+TextTypeCustomValidation.args = {
   ...textArgs,
   allowEmpty: true,
-  invalidText: `Number is not valid. Must be between ${reusableProps.min} and ${reusableProps.max}`,
+  invalidText: `Enter a quantity from ${reusableProps.min} to ${reusableProps.max}.`,
 };
-WithTypeOfCustomValidation.argTypes = {
+TextTypeCustomValidation.argTypes = {
   locale: { control: { type: 'text' } },
   formatOptions: { control: { type: 'object' } },
   ...sharedArgTypes,
 };
-WithTypeOfCustomValidation.parameters = {
+TextTypeCustomValidation.parameters = {
   controls: {
     include: textControls,
   },
 };
+
+export const Disabled = Default.bind({});
+Disabled.args = { ...Default.args, disabled: true };
+Disabled.argTypes = Default.argTypes;
+// Carbon greys the helper text of a disabled field (1.7:1). WCAG 1.4.3 exempts
+// inactive controls, but axe does not tie the text to the disabled input.
+Disabled.parameters = {
+  ...Default.parameters,
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly = Default.bind({});
+ReadOnly.args = { ...Default.args, readOnly: true };
+ReadOnly.argTypes = Default.argTypes;
+ReadOnly.parameters = Default.parameters;
+
+export const Invalid = Default.bind({});
+Invalid.args = { ...Default.args, invalid: true };
+Invalid.argTypes = Default.argTypes;
+Invalid.parameters = Default.parameters;
+
+export const Warning = Default.bind({});
+Warning.args = { ...Default.args, warn: true };
+Warning.argTypes = Default.argTypes;
+Warning.parameters = Default.parameters;
 
 export const Skeleton: StoryFn<typeof NumberInputSkeleton> = (args) => {
   return <NumberInputSkeleton {...args} />;
