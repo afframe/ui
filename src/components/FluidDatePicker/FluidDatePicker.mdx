@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as FluidDatePickerStories from './FluidDatePicker.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, date chooser added.
 
 <Meta isTemplate />
 
@@ -21,13 +22,17 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={FluidDatePickerStories.Skeleton} />
 
-### Single
+### Single With Calendar
 
-<Canvas of={FluidDatePickerStories.Single} />
+<Canvas of={FluidDatePickerStories.SingleWithCalendar} />
 
 ### Range With Calendar
 
 <Canvas of={FluidDatePickerStories.RangeWithCalendar} />
+
+## Which component to use
+
+<DateChooser />
 
 ## Accessibility Considerations
 
