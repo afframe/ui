@@ -156,9 +156,15 @@ for (const pass of ['component', 'subcomponents']) {
       ? rel(join(dir, page))
       : folders.get(rel(dir).split('/').pop().toLowerCase())?.docs;
     if (!docs) continue;
+    // A stories file can render a namespace member under a local name
+    // (`const { DatePicker } = preview__DatePicker`); its title still names
+    // the export.
     const names =
       pass === 'component'
-        ? [/^\s+component:\s*(\w+)/m.exec(code)?.[1]]
+        ? [
+            /^\s+component:\s*(\w+)/m.exec(code)?.[1],
+            /title:\s*'[^']*\/(\w+)'/.exec(code)?.[1],
+          ]
         : (/^\s+subcomponents:\s*\{([^}]*)\}/m.exec(code)?.[1] ?? '')
             .split(',')
             .map((item) => item.split(':')[0].trim());
@@ -195,14 +201,18 @@ const docsAliases = {
   ThemeContext: 'Theme/Theme.mdx',
   useThemeSetting: 'ThemeSettings/ThemeSettings.mdx',
   ThemeSetDropdown: 'ThemeSettings/ThemeSettings.mdx',
+  FluidDatePickerInput: 'FluidDatePicker/FluidDatePicker.mdx',
 };
 for (const [name, page] of Object.entries(docsAliases)) {
   if (!docsByName.has(name)) docsByName.set(name, `src/components/${page}`);
 }
+// A prefixed name takes its own page before the folder of its base name
+// (preview__DatePicker: DatePickerV2.mdx, not DatePicker.mdx).
 const docsOf = (name) =>
-  folders.get(baseName(name).toLowerCase())?.docs ??
-  docsByName.get(name) ??
-  docsByName.get(baseName(name));
+  (name !== baseName(name) && docsByName.get(name)) ||
+  (folders.get(baseName(name).toLowerCase())?.docs ??
+    docsByName.get(name) ??
+    docsByName.get(baseName(name)));
 
 // Export statements of a module: `export { a, b as c } from 'x'`,
 // `export * from 'x'`, and local declarations.
@@ -469,7 +479,7 @@ const markdown = [
   '',
   '## Carbon, IBM Products and Labs',
   '',
-  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories list it as `component` or `subcomponents`, else a page named in the alias map in `scripts/registry.mjs`.',
+  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export such as `preview__DatePicker` takes its own page before the folder of its base name.',
   '',
   ...table(
     ['Export', 'Kind', 'Source', 'Runtime', 'Status', 'Docs'],

@@ -47,7 +47,7 @@ One entry per Afframe or extras module and per subpath; the JSON lists its expor
 
 ## Carbon, IBM Products and Labs
 
-One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories list it as `component` or `subcomponents`, else a page named in the alias map in `scripts/registry.mjs`.
+One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export such as `preview__DatePicker` takes its own page before the folder of its base name.
 
 | Export                             | Kind      | Source       | Runtime | Status            | Docs                                                                  |
 | ---------------------------------- | --------- | ------------ | ------- | ----------------- | --------------------------------------------------------------------- |
@@ -106,7 +106,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | DatePicker                         | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
 | DatePickerInput                    | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
 | DatePickerSkeleton                 | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
-| preview__DatePicker                | namespace | carbon       | client  | preview           | [page](../src/components/DatePicker/DatePicker.mdx)                   |
+| preview__DatePicker                | namespace | carbon       | client  | preview           | [page](../src/components/DatePicker/DatePickerV2.mdx)                 |
 | TimePicker                         | component | carbon       | client  | stable            | [page](../src/components/TimePicker/TimePicker.mdx)                   |
 | TimePickerSelect                   | component | carbon       | client  | stable            | [page](../src/components/TimePicker/TimePicker.mdx)                   |
 | FileUploader                       | component | carbon       | client  | stable            | [page](../src/components/FileUploader/FileUploader.mdx)               |
@@ -121,7 +121,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | FluidComboBox                      | component | carbon       | client  | stable            | [page](../src/components/FluidComboBox/FluidComboBox.mdx)             |
 | FluidComboBoxSkeleton              | component | carbon       | client  | stable            | [page](../src/components/FluidComboBox/FluidComboBox.mdx)             |
 | FluidDatePicker                    | component | carbon       | client  | stable            | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)         |
-| FluidDatePickerInput               | component | carbon       | client  | stable            |                                                                       |
+| FluidDatePickerInput               | component | carbon       | client  | stable            | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)         |
 | FluidDatePickerSkeleton            | component | carbon       | client  | stable            | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)         |
 | FluidDropdown                      | component | carbon       | client  | stable            | [page](../src/components/FluidDropdown/FluidDropdown.mdx)             |
 | FluidDropdownSkeleton              | component | carbon       | client  | stable            | [page](../src/components/FluidDropdown/FluidDropdown.mdx)             |
@@ -250,7 +250,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | MenuItemGroup                      | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
 | MenuItemRadioGroup                 | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
 | MenuItemSelectable                 | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
-| useContextMenu                     | hook      | carbon       | client  | stable            |                                                                       |
+| useContextMenu                     | hook      | carbon       | client  | stable            | [page](../src/components/ContextMenu/useContextMenu.mdx)              |
 | OverflowMenuItem                   | component | carbon       | client  | stable            | [page](../src/components/OverflowMenu/OverflowMenu.mdx)               |
 | Link                               | component | carbon       | client  | stable            | [page](../src/components/Link/Link.mdx)                               |
 | Modal                              | component | carbon       | client  | stable            | [page](../src/components/Modal/Modal.mdx)                             |
