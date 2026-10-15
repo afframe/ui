@@ -386,12 +386,12 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | preview__FeatureFlags              | component | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
 | preview__useFeatureFlag            | hook      | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
 | preview__useFeatureFlags           | hook      | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
-| createOverflowHandler              | util      | carbon       | server  | stable            |                                                                       |
+| createOverflowHandler              | util      | carbon       | server  | stable            | [page](../src/components/OverflowHandler/OverflowHandler.mdx)         |
 | dateTimeFormat                     | util      | carbon       | server  | stable            | [page](../src/components/dateTimeFormat/dateTimeFormat.mdx)           |
 | makeDraggable                      | util      | carbon       | server  | stable            | [page](../src/components/makeDraggable/makeDraggable.mdx)             |
-| StepProvider                       | component | carbon       | client  | stable            |                                                                       |
+| StepProvider                       | component | carbon       | client  | stable            | [page](../src/components/StepFlow/StepFlow.mdx)                       |
 | StepGroup                          | component | carbon       | client  | stable            | [page](../src/components/StepFlow/StepFlow.mdx)                       |
-| useStepContext                     | hook      | carbon       | client  | stable            |                                                                       |
+| useStepContext                     | hook      | carbon       | client  | stable            | [page](../src/components/StepFlow/StepFlow.mdx)                       |
 | SideNavLabs                        | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
 | SIDE_NAV_TYPE                      | util      | labs         | client  | stable            |                                                                       |
 | SideNavItemsLabs                   | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |

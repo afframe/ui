@@ -135,13 +135,13 @@ Afframe defaults: without a `locale` and `timeZone` it uses the runtime's, so
 the server and the browser can differ, and Czech dates print as `7. 10. 2026`.
 It is not in `@afframe/ui/format` (ADR 0020).
 
-| To show                                                | Use                                                                 |
-| ------------------------------------------------------ | ------------------------------------------------------------------- |
-| A business date or period (documents, ledgers, tables) | `formatDate`, `formatDateRange`                                     |
-| A date and time of an event, in Afframe's format       | `formatDate` with `dateStyle` and `timeStyle`                       |
-| A relative time ("před 3 minutami", "in 2 days")       | `dateTimeFormat.relative.format(date, { locale })`, in client code  |
-| A duration ("1 h 30 m")                                | `dateTimeFormat.duration.format({ hours, minutes }, { locale })`    |
-| Dates for an `Intl` style other than `dd.mm.yyyy`      | `dateTimeFormat.absolute`, with an explicit `locale` and `timeZone` |
+| To show                                                | Use                                                                              |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| A business date or period (documents, ledgers, tables) | `formatDate`, `formatDateRange`                                                  |
+| A date and time of an event, in Afframe's format       | `formatDate` with `dateStyle` and `timeStyle`                                    |
+| A relative time ("před 3 minutami", "in 2 days")       | `dateTimeFormat.relative.format(date, { locale })`, in client code               |
+| A duration ("1 h 30 m")                                | `dateTimeFormat.duration.format({ hours, minutes }, { locale })`, in client code |
+| Dates for an `Intl` style other than `dd.mm.yyyy`      | `dateTimeFormat.absolute`, with an explicit `locale` and `timeZone`              |
 
 `dateTimeFormat.relative` reads the clock when it runs, so render it in a
 client component, not in server HTML. Pass `locale` every time.

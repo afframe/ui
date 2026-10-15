@@ -27,7 +27,7 @@ Out: other frameworks, deprecated and archived packages, marketing sections, dea
 
 ## Amendment 2026-10-15: Carbon's utilities
 
-IBM Products' Storybook documents helpers that IBM Products does not export: they come from Carbon's `@carbon/utilities` and `@carbon/utilities-react`. The maintainer wants them, so both packages are in scope as exact dependencies, pinned to the versions `@carbon/react` depends on:
+IBM Products' Storybook documents helpers that IBM Products does not export: they come from Carbon's `@carbon/utilities` and `@carbon/utilities-react`. The maintainer wants them, so both packages are in scope as exact dependencies, pinned to the versions released with `@carbon/react` (same `gitHead`):
 
 - `@carbon/utilities`: `createOverflowHandler` (with its `OverflowHandler` and `OverflowHandlerOptions` types), `dateTimeFormat` (see [ADR 0020](0020-own-formatters-beside-carbon-datetimeformat.md)) and `makeDraggable`.
 - `@carbon/utilities-react`: the step flow, `StepProvider`, `StepGroup`, `useStepContext` and the `StepContextType` type.

@@ -4081,7 +4081,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "server",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/OverflowHandler/OverflowHandler.mdx"
     },
     {
       "name": "dateTimeFormat",
@@ -4107,7 +4108,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StepFlow/StepFlow.mdx"
     },
     {
       "name": "StepGroup",
@@ -4124,7 +4126,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StepFlow/StepFlow.mdx"
     },
     {
       "name": "SideNavLabs",
