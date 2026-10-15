@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args; business example data, ids per story, layer and toggletip stories renamed, Disabled, ReadOnly, Invalid and Warning stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -20,7 +20,7 @@ import {
   ToggletipContent,
   type FluidTextAreaProps,
 } from '../../index.js';
-import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
 import styles from './fluid-text-area-story.css?inline';
 import mdx from './FluidTextArea.mdx';
 
@@ -153,15 +153,15 @@ const sharedArgs = {
   disabled: false,
   enableCounter: false,
   invalid: false,
-  invalidText:
-    'Error message that is really long can wrap to more lines but should not be excessively long.',
-  labelText: 'Text Area label',
+  id: 'fluid-text-area',
+  invalidText: 'Enter a note of 500 characters or fewer.',
+  labelText: 'Note',
   maxCount: 500,
-  placeholder: 'Placeholder text',
+  placeholder: '',
   readOnly: false,
   rows: 4,
   warn: false,
-  warnText: 'This is a warning message.',
+  warnText: 'Customers see this note on the invoice.',
 };
 
 export const Default: StoryFn<
@@ -183,30 +183,30 @@ Default.argTypes = {
   ...sharedArgTypes,
 };
 
-export const DefaultWithLayers: StoryFn<
+export const WithLayer: StoryFn<
   FluidTextAreaProps & { defaultWidth?: number }
 > = (args) => {
   const { defaultWidth, ...textAreaArgs } = args;
   return (
-    <WithLayer>
+    <WithLayerTemplate>
       {(layer) => (
         <div style={{ width: defaultWidth }}>
           <FluidTextArea {...textAreaArgs} id={`text-area-${layer}`} />
         </div>
       )}
-    </WithLayer>
+    </WithLayerTemplate>
   );
 };
 
-DefaultWithLayers.args = {
+WithLayer.args = {
   ...sharedArgs,
 };
 
-DefaultWithLayers.argTypes = {
+WithLayer.argTypes = {
   ...sharedArgTypes,
 };
 
-export const DefaultWithToggletip: StoryFn<
+export const WithToggletip: StoryFn<
   FluidTextAreaProps & { defaultWidth?: number }
 > = (args) => {
   const { defaultWidth, ...textAreaArgs } = args;
@@ -225,24 +225,49 @@ export const DefaultWithToggletip: StoryFn<
   return (
     <div className="fluid-text-area-story" style={{ width: defaultWidth }}>
       {labelToggletip}
-      <FluidTextArea {...textAreaArgs} labelText="Text Area label" />
+      <FluidTextArea {...textAreaArgs} labelText="Note" />
     </div>
   );
 };
 
-DefaultWithToggletip.args = {
+WithToggletip.args = {
   ...sharedArgs,
+  id: 'fluid-text-area-toggletip',
 };
 
-DefaultWithToggletip.argTypes = {
+WithToggletip.argTypes = {
   ...sharedArgTypes,
 };
 
-DefaultWithToggletip.parameters = {
+WithToggletip.parameters = {
   controls: {
     exclude: ['id', 'value', 'defaultValue', 'labelText'],
   },
 };
+
+type FluidTextAreaStoryArgs = FluidTextAreaProps & { defaultWidth?: number };
+
+const stateStory = (id: string, args: Partial<FluidTextAreaStoryArgs>) => {
+  const story: StoryFn<FluidTextAreaStoryArgs> = Default.bind({});
+  story.args = { ...sharedArgs, id, ...args };
+  story.argTypes = sharedArgTypes;
+  return story;
+};
+
+export const Disabled = stateStory('fluid-text-area-disabled', {
+  disabled: true,
+});
+
+export const ReadOnly = stateStory('fluid-text-area-read-only', {
+  defaultValue: 'Delivered to the reception desk.',
+  readOnly: true,
+});
+
+// Carbon renders the error with role="alert", so it is announced without the
+// FluidTextInput aria-describedby recipe (TextArea overwrites that prop anyway).
+export const Invalid = stateStory('fluid-text-area-invalid', { invalid: true });
+
+export const Warning = stateStory('fluid-text-area-warning', { warn: true });
 
 export const Skeleton: StoryFn<
   FluidTextAreaProps & { defaultWidth?: number }
