@@ -11,9 +11,9 @@ const rows = [
   [
     "Carbon's preview parts that StatusIndicator builds on",
     [
-      link('IconIndicator', 'preview-preview-iconindicator'),
+      link('preview__IconIndicator', 'preview-preview-iconindicator'),
       ', ',
-      link('ShapeIndicator', 'preview-preview-shapeindicator'),
+      link('preview__ShapeIndicator', 'preview-preview-shapeindicator'),
     ],
   ],
   ['A category, not a state', link('Tag', 'components-tag')],

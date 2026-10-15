@@ -30,7 +30,13 @@ const rows = [
   ],
   [
     'AI-generated content is loading',
-    link('AISkeleton', 'components-skeletons-aiskeleton'),
+    [
+      link('AISkeletonText', 'components-skeletons-aiskeleton'),
+      ', ',
+      link('AISkeletonPlaceholder', 'components-skeletons-aiskeleton'),
+      ', ',
+      link('AISkeletonIcon', 'components-skeletons-aiskeleton'),
+    ],
   ],
   [
     'Show the steps of a task and where the user is',

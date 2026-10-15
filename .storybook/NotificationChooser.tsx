@@ -25,7 +25,7 @@ const rows = [
   ],
   [
     'An onboarding hint',
-    link('InlineTip', 'preview-previewcandidate-inlinetip'),
+    link('previewCandidate__InlineTip', 'preview-previewcandidate-inlinetip'),
   ],
 ];
 
