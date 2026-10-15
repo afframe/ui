@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, pictogram cast (IBM types it as ReactNode but renders it as a component), a null media ratio falls back to 1x1, components, hooks and icons from @afframe/ui, useCarbonPrefix for Carbon's prefix, title kept (Components/Cards/ExpressiveCard), source tag, scss styles replaced by expressive-card-story.css (the #root width rule is dropped). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, pictogram cast (IBM types it as ReactNode but renders it as a component), a null media ratio falls back to 1x1, components, hooks and icons from @afframe/ui, useCarbonPrefix for Carbon's prefix, title kept (Components/Cards/ExpressiveCard), source tag, scss styles replaced by expressive-card-story.css (the #root width rule is dropped), example data from the Afframe glossary (card title and text, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps, ReactNode } from 'react';
@@ -49,9 +49,7 @@ const sampleDecorator = (decorator: number) => {
               <h1>84%</h1>
               <p className="secondary bold">Confidence score</p>
               <p className="secondary">
-                This is not really Lorem Ipsum but the spell checker did not
-                like the previous text with it&apos;s non-words which is why
-                this unwieldy sentence, should one choose to call it that, here.
+                Amounts suggested from the last 12 months of invoices.
               </p>
               <hr />
               <p className="secondary">Model type</p>
@@ -67,7 +65,7 @@ const sampleDecorator = (decorator: number) => {
             <Information />
           </ToggletipButton>
           <ToggletipContent>
-            <p>Custom content here</p>
+            <p>Counts invoices in every currency.</p>
           </ToggletipContent>
         </Toggletip>
       );
@@ -163,17 +161,12 @@ export default {
 } satisfies Meta;
 
 const defaultProps = {
-  label: 'Label',
-  title: 'Title',
+  label: 'Revenue',
+  title: 'Monthly revenue',
   columnSizeSm: 4,
   columnSizeMd: 8,
   columnSizeLg: 4,
-  children: (
-    <p>
-      expressive card body content block. description inviting the user to take
-      action on the card.
-    </p>
-  ),
+  children: <p>Revenue from paid invoices this month.</p>,
   primaryButtonText: 'Read more',
 };
 
@@ -252,7 +245,7 @@ LabelOnly.args = {
 export const WithCaption = Template.bind({});
 WithCaption.args = {
   ...defaultProps,
-  description: 'Description or long caption',
+  description: 'Revenue from paid invoices this month, by customer.',
   label: '',
   mediaRatio: null,
 };
