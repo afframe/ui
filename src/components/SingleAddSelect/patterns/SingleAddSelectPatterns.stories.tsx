@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, title Components/Add and select/SingleAddSelect, story styles imported as plain CSS instead of the styles parameter, the Overview story left out (the docs page takes its name in IBM's Storybook too), docs page converted to MDX, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, title Components/Add and select/SingleAddSelect, story styles imported as plain CSS instead of the styles parameter, centred layout as in IBM's Storybook, the Overview story left out (the docs page takes its name in IBM's Storybook too), docs page converted to MDX, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

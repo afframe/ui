@@ -1,0 +1,28 @@
+/*
+ * Copyright IBM Corp. 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: compiled from SCSS to plain CSS, Carbon tokens as custom properties, the c4p prefix written out. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.multi-add-select-hierarchy-no-select-all-pattern__no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--cds-spacing-07);
+  text-align: center;
+}
+
+.multi-add-select-hierarchy-no-select-all-pattern__no-results h4 {
+  margin-block-end: var(--cds-spacing-03);
+}
+
+.multi-add-select-hierarchy-no-select-all-pattern__no-results p {
+  color: var(--cds-text-secondary);
+}
