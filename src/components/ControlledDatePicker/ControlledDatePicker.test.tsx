@@ -108,7 +108,7 @@ test('uncontrolled: the user opens and closes it, onOpenChange reports both', as
 });
 
 test('Tab moves focus to the selected date; days and the calendar are named', async () => {
-  const { unmount } = render(<Single open value="10/15/2026" />);
+  const { unmount } = render(<Single open value="15.10.2026" />);
   await vi.waitFor(() => expect(isOpen()).toBe(true));
   const calendar = document.querySelector('.flatpickr-calendar.open');
   expect(calendar).toHaveAttribute('role', 'application');

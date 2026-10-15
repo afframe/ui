@@ -75,10 +75,8 @@ export {
   Search,
   ExpandableSearch,
   SearchSkeleton,
-  DatePicker,
   DatePickerInput,
   DatePickerSkeleton,
-  preview__DatePicker,
   TimePicker,
   TimePickerSelect,
   FileUploader,
@@ -128,7 +126,6 @@ export type {
   ToggleSmallSkeletonProps,
   SearchProps,
   SearchSkeletonProps,
-  DatePickerProps,
   DatePickerInputProps,
   DatePickerSkeletonProps,
   TimePickerProps,
@@ -148,7 +145,6 @@ export {
   FluidForm,
   FluidComboBox,
   FluidComboBoxSkeleton,
-  FluidDatePicker,
   FluidDatePickerInput,
   FluidDatePickerSkeleton,
   FluidDropdown,
@@ -174,7 +170,6 @@ export type {
   FluidFormProps,
   FluidComboBoxProps,
   FluidComboBoxSkeletonProps,
-  FluidDatePickerProps,
   FluidDatePickerSkeletonProps,
   FluidDropdownProps,
   FluidDropdownSkeletonProps,
@@ -860,6 +855,11 @@ export * from './components/HelpMenu/index.js';
 export * from './components/ChatElements/index.js';
 
 export * from './components/ControlledDatePicker/index.js';
+
+// Carbon's date pickers in the system date format with a typing mask
+// (ADR 0021).
+export * from './components/DatePicker/index.js';
+export * from './components/FluidDatePicker/index.js';
 
 // Carbon's OverflowMenu and TableToolbarMenu, wrapped so the 1.0.x menu shape
 // keeps working (docs/feature-flags.md).
