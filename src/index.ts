@@ -79,7 +79,6 @@ export {
   DatePickerInput,
   DatePickerSkeleton,
   preview__DatePicker,
-  TimePicker,
   TimePickerSelect,
   FileUploader,
   FileUploaderButton,
@@ -131,7 +130,6 @@ export type {
   DatePickerProps,
   DatePickerInputProps,
   DatePickerSkeletonProps,
-  TimePickerProps,
   TimePickerSelectProps,
   FileUploaderProps,
   FileUploaderButtonProps,
@@ -166,7 +164,6 @@ export {
   FluidTextAreaSkeleton,
   FluidTextInput,
   FluidTextInputSkeleton,
-  FluidTimePicker,
   FluidTimePickerSelect,
   FluidTimePickerSkeleton,
 } from '@carbon/react';
@@ -189,7 +186,6 @@ export type {
   FluidTextAreaSkeletonProps,
   FluidTextInputProps,
   FluidTextInputSkeletonProps,
-  FluidTimePickerProps,
   FluidTimePickerSelectProps,
   FluidTimePickerSkeletonProps,
 } from '@carbon/react';
@@ -860,6 +856,11 @@ export * from './components/HelpMenu/index.js';
 export * from './components/ChatElements/index.js';
 
 export * from './components/ControlledDatePicker/index.js';
+
+// Carbon's time pickers, wrapped for the 24-hour default and the typing mask
+// (ADR 0021).
+export * from './components/TimePicker/index.js';
+export * from './components/FluidTimePicker/index.js';
 
 // Carbon's OverflowMenu and TableToolbarMenu, wrapped so the 1.0.x menu shape
 // keeps working (docs/feature-flags.md).
