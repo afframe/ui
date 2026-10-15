@@ -7,11 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript (titleText argType gets a type name), components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript (titleText argType gets a type name), components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified, payment term example data, stories fit narrow screens, state stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
+import { paymentTermItems } from '../../../.storybook/exampleData.js';
 import '../AILabel/ailabel-story.css';
 import {
   AILabel,
@@ -33,53 +34,24 @@ interface Item {
 
 type StoryArgs = Partial<DropdownProps<Item>>;
 
-const items: Item[] = [
-  {
-    text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-  },
-  {
-    text: 'Option 1',
-  },
-  {
-    text: 'Option 2',
-  },
-  {
-    text: 'Option 3',
-    disabled: true,
-  },
-  {
-    text: 'Option 4',
-  },
-  {
-    text: 'Option 5',
-  },
-  {
-    text: 'Option 6',
-  },
-  {
-    text: 'Option 7',
-  },
-  {
-    text: 'Option 8',
-  },
-];
+const items: Item[] = paymentTermItems;
 
 const sharedArgs = {
   'aria-label': '',
   autoAlign: false,
   direction: 'bottom',
   disabled: false,
-  helperText: 'Helper text',
+  helperText: 'Applies to new invoices for this customer',
   hideLabel: false,
   invalid: false,
-  invalidText: 'Error message goes here',
-  label: 'Choose an option',
+  invalidText: 'Choose payment terms.',
+  label: 'Choose payment terms',
   readOnly: false,
   size: 'md',
-  titleText: 'Label',
+  titleText: 'Payment terms',
   type: 'default',
   warn: false,
-  warnText: 'Warning message goes here',
+  warnText: "Longer than this customer's usual terms.",
 } as const;
 
 const sharedArgTypes = {
@@ -171,44 +143,13 @@ export default {
 } satisfies Meta<typeof Dropdown>;
 
 export const Default: StoryFn<StoryArgs> = (args) => {
-  const items: Item[] = [
-    {
-      text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-    },
-    {
-      text: 'Option 1',
-    },
-    {
-      text: 'Option 2',
-    },
-    {
-      text: 'Option 3',
-      disabled: true,
-    },
-    {
-      text: 'Option 4',
-    },
-    {
-      text: 'Option 5',
-    },
-    {
-      text: 'Option 6',
-    },
-    {
-      text: 'Option 7',
-    },
-    {
-      text: 'Option 8',
-    },
-  ];
-
   return (
-    <div style={{ width: 400 }}>
+    <div style={{ maxInlineSize: 400 }}>
       <Dropdown
         id="default"
-        titleText="Label"
-        helperText="Helper text"
-        label="Choose an option"
+        titleText="Payment terms"
+        helperText="Applies to new invoices for this customer"
+        label="Choose payment terms"
         items={items}
         itemToString={(item) => (item ? item.text : '')}
         {...args}
@@ -225,47 +166,17 @@ Default.argTypes = {
   ...sharedArgTypes,
 };
 
-export const ExperimentalAutoAlign: StoryFn<StoryArgs> = (args) => {
-  const items: Item[] = [
-    {
-      text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-    },
-    {
-      text: 'Option 1',
-    },
-    {
-      text: 'Option 2',
-    },
-    {
-      text: 'Option 3',
-      disabled: true,
-    },
-    {
-      text: 'Option 4',
-    },
-    {
-      text: 'Option 5',
-    },
-    {
-      text: 'Option 6',
-    },
-    {
-      text: 'Option 7',
-    },
-    {
-      text: 'Option 8',
-    },
-  ];
+export const AutoAlign: StoryFn<StoryArgs> = (args) => {
   return (
-    <div style={{ width: 400 }}>
+    <div style={{ maxInlineSize: 400 }}>
       <div style={{ height: 300 }}></div>
       <Dropdown
         autoAlign={true}
         id="default"
-        titleText="Label"
-        helperText="Helper text"
+        titleText="Payment terms"
+        helperText="Applies to new invoices for this customer"
         initialSelectedItem={items[1] as Item}
-        label="Option 1"
+        label="Net 7"
         items={items}
         itemToString={(item) => (item ? item.text : '')}
         direction="top"
@@ -276,55 +187,25 @@ export const ExperimentalAutoAlign: StoryFn<StoryArgs> = (args) => {
   );
 };
 
-ExperimentalAutoAlign.argTypes = {
+AutoAlign.argTypes = {
   ...sharedArgTypes,
 };
 
-ExperimentalAutoAlign.args = {
+AutoAlign.args = {
   ...sharedArgs,
   autoAlign: true,
   direction: 'top',
-  label: 'Option 1',
+  label: 'Net 7',
 };
 
 export const Inline: StoryFn<StoryArgs> = (args) => {
-  const items: Item[] = [
-    {
-      text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-    },
-    {
-      text: 'Option 1',
-    },
-    {
-      text: 'Option 2',
-    },
-    {
-      text: 'Option 3',
-      disabled: true,
-    },
-    {
-      text: 'Option 4',
-    },
-    {
-      text: 'Option 5',
-    },
-    {
-      text: 'Option 6',
-    },
-    {
-      text: 'Option 7',
-    },
-    {
-      text: 'Option 8',
-    },
-  ];
   return (
-    <div style={{ width: 600 }}>
+    <div style={{ maxInlineSize: 600 }}>
       <Dropdown
         id="inline"
-        titleText="Label"
+        titleText="Payment terms"
         initialSelectedItem={items[1] as Item}
-        label="Option 1"
+        label="Net 7"
         type="inline"
         items={items}
         itemToString={(item) => (item ? item.text : '')}
@@ -345,20 +226,20 @@ Inline.argTypes = {
 Inline.args = {
   ...sharedArgs,
   helperText: '',
-  label: 'Option 1',
+  label: 'Net 7',
   type: 'inline',
 };
 
 export const WithLayer: StoryFn<StoryArgs> = (args) => (
   <WithLayerTemplate>
     {(layer) => (
-      <div style={{ width: 400 }}>
+      <div style={{ maxInlineSize: 400 }}>
         <Dropdown
           id={`default-${layer}`}
-          titleText="Label"
-          helperText="Helper text"
+          titleText="Payment terms"
+          helperText="Applies to new invoices for this customer"
           initialSelectedItem={items[1] as Item}
-          label="Option 1"
+          label="Net 7"
           items={items}
           itemToString={(item) => (item ? item.text : '')}
           {...args}
@@ -374,18 +255,18 @@ WithLayer.argTypes = {
 
 WithLayer.args = {
   ...sharedArgs,
-  label: 'Option 1',
+  label: 'Net 7',
 };
 
 export const InlineWithLayer: StoryFn<StoryArgs> = (args) => (
   <WithLayerTemplate>
     {(layer) => (
-      <div style={{ width: 600 }}>
+      <div style={{ maxInlineSize: 600 }}>
         <Dropdown
           id={`inline-${layer}`}
-          titleText="Label"
+          titleText="Payment terms"
           initialSelectedItem={items[1] as Item}
-          label="Option 1"
+          label="Net 7"
           type="inline"
           items={items}
           itemToString={(item) => (item ? item.text : '')}
@@ -407,9 +288,40 @@ InlineWithLayer.argTypes = {
 InlineWithLayer.args = {
   ...sharedArgs,
   helperText: '',
-  label: 'Option 1',
+  label: 'Net 7',
   type: 'inline',
 };
+
+export const Disabled: StoryFn<StoryArgs> = Default.bind({});
+Disabled.args = { ...sharedArgs, disabled: true };
+Disabled.argTypes = Default.argTypes;
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<StoryArgs> = Default.bind({});
+ReadOnly.args = {
+  ...sharedArgs,
+  readOnly: true,
+  initialSelectedItem: items[3] as Item,
+};
+ReadOnly.argTypes = Default.argTypes;
+
+// Carbon 1.118 links the error text but sets no aria-invalid, and passes extra
+// props to the wrapper, not the button. Upstream issue drafted, not filed.
+export const Invalid: StoryFn<StoryArgs> = Default.bind({});
+Invalid.args = { ...sharedArgs, invalid: true };
+Invalid.argTypes = Default.argTypes;
+
+export const Warning: StoryFn<StoryArgs> = Default.bind({});
+Warning.args = {
+  ...sharedArgs,
+  warn: true,
+  initialSelectedItem: items[5] as Item,
+};
+Warning.argTypes = Default.argTypes;
 
 export const Skeleton: StoryFn<typeof DropdownSkeleton> = (args) => {
   return (
@@ -456,45 +368,14 @@ export const WithAILabel: StoryFn<StoryArgs> = (args) => {
       </AILabelContent>
     </AILabel>
   );
-  const items: Item[] = [
-    {
-      text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-    },
-    {
-      text: 'Option 1',
-    },
-    {
-      text: 'Option 2',
-    },
-    {
-      text: 'Option 3',
-      disabled: true,
-    },
-    {
-      text: 'Option 4',
-    },
-    {
-      text: 'Option 5',
-    },
-    {
-      text: 'Option 6',
-    },
-    {
-      text: 'Option 7',
-    },
-    {
-      text: 'Option 8',
-    },
-  ];
-
   return (
-    <div style={{ width: 400 }}>
+    <div style={{ maxInlineSize: 400 }}>
       <Dropdown
         id="default"
-        titleText="Label"
-        helperText="Helper text"
+        titleText="Payment terms"
+        helperText="Applies to new invoices for this customer"
         initialSelectedItem={items[1] as Item}
-        label="Option 1"
+        label="Net 7"
         items={items}
         itemToString={(item) => (item ? item.text : '')}
         decorator={aiLabel}
@@ -510,7 +391,7 @@ WithAILabel.argTypes = {
 
 WithAILabel.args = {
   ...sharedArgs,
-  label: 'Option 1',
+  label: 'Net 7',
 };
 
 // Hidden Test-Only Story. This story tests for a bug where the invalid-text would overlap with components below it. #19960
