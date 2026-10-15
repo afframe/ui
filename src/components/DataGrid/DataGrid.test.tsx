@@ -848,7 +848,11 @@ test('virtualizes with a consumer id on the container', async () => {
       }}
     />
   );
-  await expect.poll(() => screen.getAllByRole('row').length).toBeLessThan(60);
+  // The row renders only when the virtualizer found the scroller.
+  document
+    .querySelector('.cds--data-table-content')
+    ?.scrollTo({ top: 48 * 900 });
+  expect(await screen.findByText('2026-0905')).toBeTruthy();
 });
 
 test('renders the emptyState slot in one cell spanning every column', () => {
