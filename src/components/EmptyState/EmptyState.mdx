@@ -66,14 +66,14 @@ and a dark version, pick the source from the page's colour scheme in a
 ```tsx
 'use client';
 import { EmptyState, useColorScheme } from '@afframe/ui';
-import customersLight from './customers-light.svg';
-import customersDark from './customers-dark.svg';
 
 export function NoCustomers() {
   const scheme = useColorScheme();
   return (
     <EmptyState
-      illustration={scheme === 'dark' ? customersDark : customersLight}
+      illustration={
+        scheme === 'dark' ? '/customers-dark.svg' : '/customers-light.svg'
+      }
       illustrationDescription=""
       title="No customers yet"
       subtitle="Add a customer to send them invoices."
