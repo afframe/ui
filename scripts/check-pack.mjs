@@ -74,6 +74,7 @@ const required = [
   'dist/ibm-products/add-select-data.js',
   'dist/ibm-products/scroll-gradient.js',
   'dist/ibm-products/decorator.js',
+  'dist/utilities/step-flow.js',
   ...labsModules,
   ...familyModules,
   ...serverFamilies.map((name) => `dist/components/${name}/${name}.js`),
@@ -140,6 +141,7 @@ const clientModules = [
   'dist/ibm-products/add-select-data.js',
   'dist/ibm-products/scroll-gradient.js',
   'dist/ibm-products/decorator.js',
+  'dist/utilities/step-flow.js',
   ...labsModules,
   ...new Set([...familyModules, ...familyImports]),
 ];

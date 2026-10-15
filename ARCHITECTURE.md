@@ -9,7 +9,7 @@ Layout: [docs/package-structure.md](docs/package-structure.md).
 ## 2. High-Level System Diagram
 
 ```
-@carbon/react, @carbon/ibm-products, @carbon-labs/*, extras (exact dependencies)
+@carbon/react, @carbon/utilities(-react), @carbon/ibm-products, @carbon-labs/*, extras (exact dependencies)
                  |
                  v
           afframe/ui (this repo)
@@ -52,7 +52,7 @@ None. This is a UI library.
 
 ## 5. External Integrations / APIs
 
-Upstream packages from npm (Carbon, IBM Products, Carbon Labs, Carbon Charts, ECharts, `@carbon/ai-chat`, TanStack Table). They are exact regular dependencies, kept current by Dependabot: [docs/guides/updating-carbon.md](docs/guides/updating-carbon.md).
+Upstream packages from npm (Carbon with its `@carbon/utilities` and `@carbon/utilities-react` helpers, IBM Products, Carbon Labs, Carbon Charts, ECharts, `@carbon/ai-chat`, TanStack Table). They are exact regular dependencies, kept current by Dependabot: [docs/guides/updating-carbon.md](docs/guides/updating-carbon.md).
 
 ## 6. Deployment & Infrastructure
 

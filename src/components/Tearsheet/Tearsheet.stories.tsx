@@ -18,7 +18,6 @@ import type {
 } from '@storybook/react-vite';
 import { useRef, useState } from 'react';
 import type { RefObject } from 'react';
-import { StepProvider } from '@carbon/utilities-react';
 import {
   AILabel,
   AILabelContent,
@@ -30,6 +29,7 @@ import {
   ProgressStep,
   Section,
   StackProvider,
+  StepProvider,
   Tab,
   TabList,
   TabPanel,

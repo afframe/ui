@@ -386,6 +386,12 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | preview__FeatureFlags              | component | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
 | preview__useFeatureFlag            | hook      | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
 | preview__useFeatureFlags           | hook      | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
+| createOverflowHandler              | util      | carbon       | server  | stable            |                                                                       |
+| dateTimeFormat                     | util      | carbon       | server  | stable            |                                                                       |
+| makeDraggable                      | util      | carbon       | server  | stable            |                                                                       |
+| StepProvider                       | component | carbon       | client  | stable            |                                                                       |
+| StepGroup                          | component | carbon       | client  | stable            |                                                                       |
+| useStepContext                     | hook      | carbon       | client  | stable            |                                                                       |
 | SideNavLabs                        | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
 | SIDE_NAV_TYPE                      | util      | labs         | client  | stable            |                                                                       |
 | SideNavItemsLabs                   | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
