@@ -1183,7 +1183,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ButtonSet/ButtonSet.mdx"
     },
     {
       "name": "ButtonSkeleton",

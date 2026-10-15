@@ -55,7 +55,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | PrimaryButton                      | component | carbon       | client  | stable            |                                                                       |
 | SecondaryButton                    | component | carbon       | client  | stable            |                                                                       |
 | DangerButton                       | component | carbon       | client  | stable            |                                                                       |
-| ButtonSet                          | component | carbon       | client  | stable            |                                                                       |
+| ButtonSet                          | component | carbon       | client  | stable            | [page](../src/components/ButtonSet/ButtonSet.mdx)                     |
 | ButtonSkeleton                     | component | carbon       | client  | stable            | [page](../src/components/Button/Button.mdx)                           |
 | ButtonKinds                        | util      | carbon       | client  | stable            |                                                                       |
 | ButtonSizes                        | util      | carbon       | client  | stable            |                                                                       |
