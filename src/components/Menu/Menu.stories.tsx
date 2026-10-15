@@ -51,6 +51,8 @@ export default {
     },
   },
   argTypes: {
+    // A ref holds a DOM node, and the Controls panel crashes serialising it.
+    containerRef: { control: false },
     mode: {
       control: false,
     },

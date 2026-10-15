@@ -85,6 +85,8 @@ const argTypes: Partial<ArgTypes<OverflowMenuProps>> = {
     description:
       'Specify the duration in milliseconds to delay before hiding the tooltip',
   },
+  // A ref holds a DOM node, and the Controls panel crashes serialising it.
+  innerRef: { control: false },
   open: {
     control: { type: 'boolean' },
   },
