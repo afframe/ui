@@ -4,3 +4,7 @@ export const defaultLocale = 'cs-CZ';
 export const defaultCurrency = 'CZK';
 export const defaultTimeZone = 'Europe/Prague';
 export const defaultMaxFractionDigits = 2;
+// The system date and time format (ADR 0021): every date field, placeholder,
+// picker and Czech `formatDate` output follows it. Grammar: `pattern.ts`.
+export const defaultDateFormat = 'dd.mm.yyyy';
+export const defaultTimeFormat = 'hh:mm';

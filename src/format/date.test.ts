@@ -358,3 +358,38 @@ test('prints Czech range ends as dd.mm.yyyy', () => {
     })
   ).toBe(`1. 10.${space}${dash}${space}31. 10.`);
 });
+
+test('lays out Czech dates in the format given per call', () => {
+  const slashes = { format: 'dd/mm/yyyy' };
+  const iso = { format: 'yyyy-mm-dd' };
+  expect(formatDate('2026-10-07', slashes)).toBe('07/10/2026');
+  expect(formatDate('2026-10-07', iso)).toBe('2026-10-07');
+  expect(
+    formatDate('2026-10-07', {
+      ...iso,
+      weekday: 'long',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    })
+  ).toBe('středa 2026-10-07');
+  expect(formatDateRange('2026-10-01', '2026-10-31', slashes)).toBe(
+    `01/10/2026${space}${dash}${space}31/10/2026`
+  );
+  expect(formatDateRange('2025-12-01', '2026-01-31', iso)).toBe(
+    `2025-12-01${space}${dash}${space}2026-01-31`
+  );
+  // Text months and other locales ignore the format.
+  expect(formatDate('2026-10-07', { ...iso, dateStyle: 'long' })).toBe(
+    '7. října 2026'
+  );
+  expect(formatDate('2026-10-07', { ...iso, locale: 'de-DE' })).toBe(
+    '07.10.2026'
+  );
+  expect(() => formatDate('2026-10-07', { format: 'd.m.Y' })).toThrow(
+    RangeError
+  );
+  expect(() =>
+    formatDate('2026-10-07', { format: 'd.m.Y', locale: 'en-GB' })
+  ).toThrow(RangeError);
+});
