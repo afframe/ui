@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, noValidate (not a Slider prop) removed, source tag, story names unified, Disabled, ReadOnly, Invalid and Warning stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, noValidate (not a Slider prop) removed, source tag, story names unified, Disabled, ReadOnly, Invalid and Warning stories, prop docs written out. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState } from 'react';
@@ -27,6 +27,169 @@ export default {
   parameters: {
     docs: {
       page: mdx,
+    },
+  },
+  // Carbon's prop docs from its 1.118 .d.ts, written out: the generated props
+  // table shows only translateWithId (cause not verified).
+  argTypes: {
+    ariaLabelInput: {
+      description: 'The `ariaLabel` for the `<input>`.',
+      table: { type: { summary: 'string' } },
+    },
+    unstable_ariaLabelInputUpper: {
+      description:
+        'The `ariaLabel` for the upper bound `<input>` and handle when there are two handles.',
+      table: { type: { summary: 'string' } },
+    },
+    children: {
+      description: 'The child nodes.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    className: {
+      description:
+        'The CSS class name for the slider, set on the wrapping div.',
+      table: { type: { summary: 'string' } },
+    },
+    disabled: {
+      description: '`true` to disable this slider.',
+      table: { type: { summary: 'boolean' } },
+    },
+    formatLabel: {
+      description:
+        'The callback to format the label associated with the minimum/maximum value and the value tooltip when hideTextInput is true.',
+      table: {
+        type: {
+          summary: '(value: number, label: string | undefined) => string',
+        },
+      },
+    },
+    hideTextInput: {
+      description: '`true` to hide the number input box.',
+      table: { type: { summary: 'boolean' } },
+    },
+    id: {
+      description: 'The ID of the `<input>`.',
+      table: { type: { summary: 'string' } },
+    },
+    inputType: {
+      description: 'The `type` attribute of the `<input>`.',
+      table: { type: { summary: 'string' } },
+    },
+    invalid: {
+      description: '`Specify whether the Slider is currently invalid',
+      table: { type: { summary: 'boolean' } },
+    },
+    invalidText: {
+      description:
+        'Provide the text that is displayed when the Slider is in an invalid state',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    labelText: {
+      description: 'The label for the slider.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    hideLabel: {
+      description:
+        'Specify whether you want the underlying label to be visually hidden',
+      table: { type: { summary: 'boolean' } },
+    },
+    light: {
+      description: 'Deprecated. `true` to use the light version.',
+      table: { type: { summary: 'boolean' } },
+    },
+    max: {
+      description: 'The maximum value.',
+      table: { type: { summary: 'number' } },
+    },
+    maxLabel: {
+      description: 'The label associated with the maximum value.',
+      table: { type: { summary: 'string' } },
+    },
+    min: {
+      description: 'The minimum value.',
+      table: { type: { summary: 'number' } },
+    },
+    minLabel: {
+      description: 'The label associated with the minimum value.',
+      table: { type: { summary: 'string' } },
+    },
+    name: {
+      description: 'The `name` attribute of the `<input>`.',
+      table: { type: { summary: 'string' } },
+    },
+    unstable_nameUpper: {
+      description:
+        'The `name` attribute of the upper bound `<input>` when there are two handles.',
+      table: { type: { summary: 'string' } },
+    },
+    onBlur: {
+      description:
+        'Provide an optional function to be called when the input element loses focus',
+      table: {
+        type: {
+          summary:
+            '(data: { value: string; handlePosition: HandlePosition | undefined; }) => void',
+        },
+      },
+    },
+    onChange: {
+      description: 'The callback to get notified of change in value.',
+      table: {
+        type: {
+          summary:
+            "(data: { value: SliderProps['value']; valueUpper: SliderProps['unstable_valueUpper']; }) => void",
+        },
+      },
+    },
+    onInputKeyUp: {
+      description:
+        'Provide an optional function to be called when a key is pressed in the number input.',
+      table: { type: { summary: 'KeyboardEventHandler<HTMLInputElement>' } },
+    },
+    onRelease: {
+      description: 'The callback to get notified of value on handle release.',
+      table: {
+        type: {
+          summary:
+            "(data: { value: SliderProps['value']; valueUpper: SliderProps['unstable_valueUpper']; }) => void",
+        },
+      },
+    },
+    readOnly: {
+      description: 'Whether the slider should be read-only',
+      table: { type: { summary: 'boolean' } },
+    },
+    required: {
+      description: '`true` to specify if the control is required.',
+      table: { type: { summary: 'boolean' } },
+    },
+    step: {
+      description:
+        'A value determining how much the value should increase/decrease by moving the thumb by mouse. If a value other than 1 is provided and the input is *not* hidden, the new step requirement should be added to a visible label. Values outside the `step` increment will be considered invalid.',
+      table: { type: { summary: 'number' } },
+    },
+    stepMultiplier: {
+      description:
+        'A value determining how much the value should increase/decrease by Shift+arrow keys, which will be `(max - min) / stepMultiplier`.',
+      table: { type: { summary: 'number' } },
+    },
+    value: {
+      description:
+        'The value of the slider. When there are two handles, value is the lower bound.',
+      table: { type: { summary: 'number' } },
+    },
+    unstable_valueUpper: {
+      description: 'The upper bound when there are two handles.',
+      table: { type: { summary: 'number' } },
+    },
+    warn: {
+      description: 'Specify whether the Slider is in a warning state.',
+      table: { type: { summary: 'boolean' } },
+    },
+    warnText: {
+      description:
+        'Provide the text displayed when the Slider is in a warning state.',
+      table: { type: { summary: 'ReactNode' } },
     },
   },
 } satisfies Meta<typeof Slider>;

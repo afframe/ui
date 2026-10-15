@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, Carbon's internal useDocumentLang from .storybook/useDocumentLang, id added to the AI label story, source tag, story names unified, Afframe example data, Disabled, ReadOnly, Invalid and Warning stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, Carbon's internal useDocumentLang from .storybook/useDocumentLang, id added to the AI label story, source tag, story names unified, Afframe example data, Disabled, ReadOnly, Invalid and Warning stories, prop docs written out. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -46,6 +46,206 @@ export default {
     },
     controls: {
       exclude: ['id', 'defaultValue', 'light', 'translateWithId'],
+    },
+  },
+  // Carbon's prop docs from its 1.118 .d.ts, written out: the generated props
+  // table shows only translateWithId (cause not verified).
+  argTypes: {
+    validate: {
+      description:
+        'Optional validation function that is called with the input value and locale. This is called before other validations, giving consumers the ability to short-circuit or extend validation without replacing built-in rules',
+      table: {
+        type: {
+          summary: '(value: string, locale: string) => boolean | undefined',
+        },
+      },
+    },
+    allowEmpty: {
+      description: '`true` to allow empty string.',
+      table: { type: { summary: 'boolean' } },
+    },
+    className: {
+      description:
+        'Specify an optional className to be applied to the wrapper node',
+      table: { type: { summary: 'string' } },
+    },
+    decorator: {
+      description:
+        '**Experimental**: Provide a `decorator` component to be rendered inside the `TextInput` component',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    defaultValue: {
+      description:
+        'Optional starting value for uncontrolled state Defaults to 0 when type="number" Defaults to NaN when type="text"',
+      table: { type: { summary: 'number | string' } },
+    },
+    disableWheel: {
+      description:
+        'Specify if the wheel functionality for the input should be disabled, or not',
+      table: { type: { summary: 'boolean' } },
+    },
+    disabled: {
+      description: 'Specify if the control should be disabled, or not',
+      table: { type: { summary: 'boolean' } },
+    },
+    formatOptions: {
+      description:
+        '**Experimental:** Specify Intl.NumberFormat options applied to internal number parsing and formatting. Use with `type="text"`, has no effect when `type="number"`.',
+      table: { type: { summary: 'NumberFormatOptions' } },
+    },
+    stepStartValue: {
+      description:
+        'Provide the value stepping should begin at when the input is empty',
+      table: { type: { summary: 'number' } },
+    },
+    helperText: {
+      description:
+        'Provide text that is used alongside the control label for additional help',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    hideLabel: {
+      description:
+        'Specify whether you want the underlying label to be visually hidden',
+      table: { type: { summary: 'boolean' } },
+    },
+    hideSteppers: {
+      description: 'Specify whether you want the steppers to be hidden',
+      table: { type: { summary: 'boolean' } },
+    },
+    iconDescription: {
+      description:
+        'Provide a description for up/down icons that can be read by screen readers',
+      table: { type: { summary: 'string' } },
+    },
+    id: {
+      description: 'Specify a custom `id` for the input',
+      table: { type: { summary: 'string' } },
+    },
+    inputMode: {
+      description:
+        'Instruct the browser which keyboard to display on mobile devices. Defaults to `decimal`, but note that standard numeric keyboards vary across devices and operating systems.',
+      table: {
+        type: {
+          summary: "React.HTMLAttributes<HTMLInputElement>['inputMode']",
+        },
+      },
+    },
+    invalid: {
+      description: 'Specify if the currently value is invalid.',
+      table: { type: { summary: 'boolean' } },
+    },
+    invalidText: {
+      description: 'Message which is displayed if the value is invalid.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    label: {
+      description:
+        'Generic `label` that will be used as the textual representation of what this field is for',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    light: {
+      description:
+        'Deprecated: use the `Layer` component. `true` to use the light version.',
+      table: { type: { summary: 'boolean' } },
+    },
+    locale: {
+      description:
+        '**Experimental:** Specify a [BCP47](https://www.ietf.org/rfc/bcp/bcp47.txt) language code for parsing and formatting. Use with `type="text"`, has no effect when `type="number"`.',
+      table: { type: { summary: 'string' } },
+    },
+    max: {
+      description: 'The maximum value.',
+      table: { type: { summary: 'number' } },
+    },
+    min: {
+      description: 'The minimum value.',
+      table: { type: { summary: 'number' } },
+    },
+    onBlur: {
+      description:
+        'Provide an optional handler that is called when the input is blurred.',
+      table: {
+        type: {
+          summary:
+            '(event: React.FocusEvent<HTMLInputElement>, value?: string | number) => void',
+        },
+      },
+    },
+    onStepperBlur: {
+      description:
+        'Provide an optional handler that is called when the stepper buttons are blurred.',
+      table: {
+        type: {
+          summary: '(event: React.FocusEvent<HTMLButtonElement>) => void',
+        },
+      },
+    },
+    onChange: {
+      description:
+        'Provide an optional handler that is called when the internal state of NumberInput changes. This handler is called with event and state info. When type="number", this is called on every change of the input. When type="text", this is only called on blur after the number has been parsed and formatted. `(event, { value, direction }) => void`',
+      table: {
+        type: {
+          summary:
+            '(event: React.MouseEvent<HTMLButtonElement> | React.FocusEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>, state: { value: number | string; direction: string; }) => void',
+        },
+      },
+    },
+    onClick: {
+      description:
+        'Provide an optional function to be called when the up/down button is clicked',
+      table: {
+        type: {
+          summary:
+            '(event: React.MouseEvent<HTMLElement>, state?: { value: number | string; direction: string; }) => void',
+        },
+      },
+    },
+    onKeyUp: {
+      description:
+        'Provide an optional function to be called when a key is pressed in the number input',
+      table: {
+        type: { summary: 'React.KeyboardEventHandler<HTMLInputElement>' },
+      },
+    },
+    pattern: {
+      description:
+        'When type="text", provide an optional pattern to restrict user input. Has no effect when type="number".',
+      table: { type: { summary: 'string' } },
+    },
+    readOnly: {
+      description: 'Specify if the component should be read-only',
+      table: { type: { summary: 'boolean' } },
+    },
+    size: {
+      description: 'Specify the size of the Number Input.',
+      table: { type: { summary: "'sm' | 'md' | 'lg'" } },
+    },
+    slug: {
+      description: 'Deprecated: use `decorator`.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    step: {
+      description:
+        'Specify how much the values should increase/decrease upon clicking on up/down button',
+      table: { type: { summary: 'number' } },
+    },
+    type: {
+      description:
+        '**Experimental**: Specify if the input should be of type text or number. Use type="text" with `locale`, `formatOptions`, and guide user input with `pattern` and `inputMode`.',
+      table: { type: { summary: "'number' | 'text'" } },
+    },
+    value: {
+      description: 'Specify the value of the input',
+      table: { type: { summary: 'number | string' } },
+    },
+    warn: {
+      description: 'Specify whether the control is currently in warning state',
+      table: { type: { summary: 'boolean' } },
+    },
+    warnText: {
+      description:
+        'Provide the text that is displayed when the control is in warning state',
+      table: { type: { summary: 'ReactNode' } },
     },
   },
 } satisfies Meta<typeof NumberInput>;
