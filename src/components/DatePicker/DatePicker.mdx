@@ -11,7 +11,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added, Afframe note on Czech dates and a Monday week start, date chooser added, section on typing a date added.
+// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added, Afframe note on Czech dates and a Monday week start, date chooser added, section on typing a date added, example dates in the system format (US-format maxDate example with an explicit dateFormat).
 
 <Meta isTemplate />
 
@@ -255,7 +255,7 @@ is setting it as January 9th.
     padding: 'var(--cds-spacing-05)',
     background: 'var(--cds-background)',
   }}>
-  <DatePicker maxDate="09/01/2020" datePickerType="single">
+  <DatePicker maxDate="09/01/2020" datePickerType="single" dateFormat="m/d/Y">
     <DatePickerInput
       placeholder="dd/mm/yyyy"
       id="date-picker-3"
@@ -277,7 +277,7 @@ is setting it as January 9th.
 </Unstyled>
 
 ```jsx
-<DatePicker maxDate="09/01/2020">
+<DatePicker maxDate="09/01/2020" dateFormat="m/d/Y">
   <DatePickerInput placeholder="mm/dd/yyyy" />
 </DatePicker>
 
@@ -370,11 +370,11 @@ explicitly added to the array.
   }}>
   <DatePicker
     datePickerType="single"
-    value="04/20/2023"
+    value="20.04.2023"
     enable={[
       {
-        from: '04/10/2023',
-        to: '04/25/2023',
+        from: '10.04.2023',
+        to: '25.04.2023',
       },
     ]}>
     <DatePickerInput
@@ -388,11 +388,11 @@ explicitly added to the array.
 ```jsx
 <DatePicker
   datePickerType="single"
-  value="04/20/2023"
+  value="20.04.2023"
   enable={[
     {
-      from: '04/10/2023',
-      to: '04/25/2023',
+      from: '10.04.2023',
+      to: '25.04.2023',
     },
   ]}>
   <DatePickerInput
@@ -413,7 +413,7 @@ start this at a different date, you can pass in a date string or date object.
     padding: 'var(--cds-spacing-05)',
     background: 'var(--cds-background)',
   }}>
-  <DatePicker datePickerType="single" value="07/15/1988">
+  <DatePicker datePickerType="single" value="15.07.1988">
     <DatePickerInput
       placeholder="dd/mm/yyyy"
       id="date-picker-6"
@@ -431,7 +431,7 @@ start this at a different date, you can pass in a date string or date object.
 </Unstyled>
 
 ```jsx
-<DatePicker datePickerType="single" value="07/15/1988">
+<DatePicker datePickerType="single" value="15.07.1988">
   <DatePickerInput
     placeholder="dd/mm/yyyy"
     id="date-picker-6"
