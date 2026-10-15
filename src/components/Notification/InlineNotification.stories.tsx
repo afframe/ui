@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, glossary text, status icon description left to Carbon's default. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -32,7 +32,6 @@ export default {
     lowContrast: false,
     hideCloseButton: false,
     ['aria-label']: 'closes notification',
-    statusIconDescription: 'notification',
     onClose: action('onClose'),
     onCloseButtonClick: action('onCloseButtonClick'),
   },
@@ -51,6 +50,7 @@ Default.argTypes = {
   },
 };
 Default.args = {
-  title: 'Notification title',
-  subtitle: 'Subtitle text goes here',
+  title: 'Invoice export failed',
+  subtitle:
+    '3 of 120 invoices were not exported. Check the customer tax IDs and try again.',
 };

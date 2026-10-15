@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, glossary text, status icon description left to Carbon's default. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -26,7 +26,6 @@ export default {
   args: {
     kind: 'info',
     lowContrast: false,
-    statusIconDescription: 'notification',
   },
   argTypes: {
     kind: {
@@ -38,23 +37,23 @@ export default {
 
 export const Default: StoryFn<typeof Callout> = (args) => (
   <Callout
-    title="Notification title"
-    subtitle="Subtitle text goes here"
+    title="Bank sync in progress"
+    subtitle="New payments appear here within a few minutes."
     {...args}
   />
 );
 
 Default.args = {
-  subtitle: 'Subtitle text goes here',
-  title: 'Notification title',
+  subtitle: 'New payments appear here within a few minutes.',
+  title: 'Bank sync in progress',
 };
 
 export const WithInteractiveElements: StoryFn<typeof Callout> = (args) => (
   <Callout {...args}>
     <div className="cds--inline-notification__subtitle">
-      Additional text can describe the notification, or a link to{' '}
+      New payments appear here within a few minutes.{' '}
       <Link inline href="#" aria-describedby={args.titleId}>
-        learn more
+        View bank accounts
       </Link>
     </div>
   </Callout>
@@ -63,8 +62,7 @@ export const WithInteractiveElements: StoryFn<typeof Callout> = (args) => (
 WithInteractiveElements.args = {
   kind: 'info',
   lowContrast: true,
-  statusIconDescription: 'notification',
-  title: 'Notification title',
+  title: 'Bank sync in progress',
   titleId: 'callout-title-interactive',
 };
 
