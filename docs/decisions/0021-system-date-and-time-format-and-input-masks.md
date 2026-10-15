@@ -35,4 +35,4 @@ Afframe shows and takes dates in one shape, but the shape was spread over hard-c
 - One constant re-aligns placeholders, masks, picker parsing and Czech `formatDate` output.
 - `formatDate` output for Czech times changes from `9:05` to `09:05`.
 - The wrappers depend on Carbon internals: the child-cloning branches of `DatePicker`, props reaching the `<input>`, and flatpickr's blur. Each Carbon update re-checks them (`docs/guides/updating-carbon.md`). `parseDate` goes away with flatpickr in Carbon v12 (Temporal internals); then only the parser changes.
-- `preview__DatePicker` parses with Temporal, which constrains `31.02` to `28.02`; the mask cannot prevent it.
+- `preview__DatePicker` parses with Temporal, whose default overflow constrains `31.02` to `28.02` instead of rejecting it; the mask checks each part alone, not the whole date. Its wrapper checks the typed text before Temporal sees it, so an invalid date stays as typed and the field shows invalid, as in the other pickers.

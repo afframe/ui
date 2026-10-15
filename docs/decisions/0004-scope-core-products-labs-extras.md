@@ -36,7 +36,7 @@ Out: `initCarousel`, which the maintainer left out, and the rest of both package
 
 ## Amendment 2026-10-15: date and time pickers
 
-[ADR 0021](0021-system-date-and-time-format-and-input-masks.md) replaces "re-exported as they are" for the pickers: `DatePicker`, `FluidDatePicker`, `preview__DatePicker`, `TimePicker` and `FluidTimePicker` are Afframe wrappers under Carbon's names that apply the system date and time format and a typing mask. Their inputs, selects and skeletons stay Carbon re-exports. Labs `Calendar` stays as it is.
+[ADR 0021](0021-system-date-and-time-format-and-input-masks.md) replaces "re-exported as they are" for the date and time pickers: they become Afframe wrappers under Carbon's names that apply the system date and time format and a typing mask (ADR 0021 lists them). Their inputs, selects and skeletons stay Carbon re-exports. Labs `Calendar` stays as it is.
 
 ## Consequences
 
