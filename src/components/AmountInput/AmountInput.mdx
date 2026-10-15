@@ -40,6 +40,7 @@ const [amount, setAmount] = useState(null);
 | `locale`             | `cs-CZ`  | Locale for typing and display.                                         |
 | `min`, `max`, `step` |          | Limits and step size, as Carbon's `NumberInput`.                       |
 | `messages`           |          | Overrides for the strings below.                                       |
+| `ref`                |          | The `<input>` element (React 19 `ref` prop).                           |
 
 Other `NumberInput` props (`helperText`, `size`, `disabled`, `readOnly`,
 `warn`, `invalid`, `invalidText`, `hideSteppers`, `name`) pass through.
@@ -66,11 +67,12 @@ Other `NumberInput` props (`helperText`, `size`, `disabled`, `readOnly`,
 | ------------------ | ---------------------------------------------------------- |
 | `increment`        | `Increase amount`                                          |
 | `decrement`        | `Decrease amount`                                          |
-| `invalidText`      | `({ min, max }) => 'Enter an amount from {min} to {max}.'` |
+| `invalidAmount`    | `({ min, max }) => 'Enter an amount from {min} to {max}.'` |
 | `invalidSeparator` | `(decimal) => 'Use "{decimal}" for decimals.'`             |
 
-`invalidText` gets the limits as formatted amounts; without `max` it says
-"at least", without `min` "at most". An `invalidText` prop wins over it.
+`invalidAmount` gets the limits as formatted amounts; without `max` it says
+"at least", without `min` "at most", without either "Enter a valid amount.".
+An `invalidText` prop wins over it.
 
 ## Keyboard and screen reader behaviour
 

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AmountInput, type AmountInputProps } from './AmountInput.js';
@@ -129,6 +129,29 @@ test('shows formatted limits when out of range', async () => {
   expect(input()).toHaveAccessibleDescription(
     `Enter an amount from 0,00${nbsp}Kč to 1${nbsp}000,00${nbsp}Kč.`
   );
+});
+
+test('takes the out-of-range text from messages.invalidAmount', async () => {
+  render(
+    <Controlled
+      spy={vi.fn()}
+      min={0}
+      max={1000}
+      messages={{
+        invalidAmount: ({ min, max }) => `Between ${min} and ${max}, please.`,
+      }}
+    />
+  );
+  await typeAndBlur('2000');
+  expect(input()).toHaveAccessibleDescription(
+    `Between 0,00${nbsp}Kč and 1${nbsp}000,00${nbsp}Kč, please.`
+  );
+});
+
+test('passes ref to the input', () => {
+  const ref = createRef<HTMLInputElement>();
+  render(<AmountInput id="amount" label="Amount" ref={ref} />);
+  expect(ref.current).toBe(input());
 });
 
 test('works uncontrolled and never shows negative zero', async () => {
