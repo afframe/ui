@@ -17,7 +17,7 @@ export default defineConfig({
     'src/components/{CreateModal,CreateSidePanel,EditSidePanel,EditTearsheet,EditFullPage}/index.ts',
     'src/components/{RemoveModal,ImportModal,ExportModal,APIKeyModal,AccentTag}/index.ts',
     'src/components/{EnvironmentSwitcher,LogoutBanner,LogoutTile,HelpMenu,ChatElements}/index.ts',
-    'src/components/{ControlledDatePicker,OverflowMenu,DataTable}/index.ts',
+    'src/components/{ControlledDatePicker,DatePicker,FluidDatePicker,OverflowMenu,DataTable}/index.ts',
     'src/theme/use-afframe-theme.ts',
   ],
   outDir: 'dist',

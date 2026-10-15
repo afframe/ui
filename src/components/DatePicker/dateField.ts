@@ -1,3 +1,4 @@
+'use client';
 import {
   Children,
   cloneElement,
@@ -53,6 +54,10 @@ function resolveDateFormat(dateFormat: string | undefined): {
   }
   return { dateFormat, pattern: fromFlatpickrFormat(dateFormat) };
 }
+
+// The package has no Node types; bundlers replace process.env.NODE_ENV, as
+// they do in Carbon's own development warnings.
+declare const process: { env: { NODE_ENV?: string } };
 
 /** Warns in development when a caller's `dateFormat` cannot be masked. */
 function useUnmaskableFormatWarning(
