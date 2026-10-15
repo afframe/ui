@@ -9,6 +9,6 @@
 /* Narrow viewports: the panel stacks above the grid. */
 @media (width < 42rem) {
   .afframe-data-grid-demo {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
