@@ -350,3 +350,15 @@ function FilterFlyoutHarness(
     />
   );
 }
+
+test('panel: the focused title shows a focus outline', async () => {
+  render(<Harness initial={{ status: ['paid'] }} />);
+  screen.getByRole('button', { name: 'Clear all' }).focus();
+  await userEvent.keyboard('{Enter}');
+  const heading = screen.getByRole('heading', { name: 'Filters' });
+  expect(active()).toBe(heading);
+  const style = getComputedStyle(heading);
+  expect(style.outlineStyle).toBe('solid');
+  expect(style.outlineWidth).toBe('2px');
+  expect(style.outlineOffset).toBe('-2px');
+});
