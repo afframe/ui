@@ -37,7 +37,6 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual';
 import {
   Fragment,
-  useCallback,
   useEffect,
   useId,
   useRef,
@@ -49,6 +48,7 @@ import {
   type Ref,
 } from 'react';
 import { resolveMessages } from '../../messages.js';
+import { useMergedRefs } from '../FlowParts/refs.js';
 import { ColumnResizer } from './ColumnResizer.js';
 import { ColumnSettings } from './ColumnSettings.js';
 import { EditableCell } from './EditableCell.js';
@@ -312,14 +312,7 @@ export function DataGrid<
   const [container, setContainer] = useState<HTMLElement | null>(null);
   const scroller =
     container?.querySelector<HTMLElement>('.cds--data-table-content') ?? null;
-  const containerRef = useCallback(
-    (element: HTMLElement | null) => {
-      setContainer(element);
-      if (typeof ref === 'function') ref(element);
-      else if (ref) ref.current = element;
-    },
-    [ref]
-  );
+  const containerRef = useMergedRefs(setContainer, ref);
   // Batch Cancel, or an action that clears the selection, hides the bar with
   // focus inside it; select-all is the control that started the selection.
   const wasOpen = useRef(batchOpen);
