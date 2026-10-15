@@ -49,7 +49,10 @@ function currentTheme(context: DocsContainerProps['context']): AfframeTheme {
   const { store } = context as unknown as {
     store?: { userGlobals?: { get?(): { theme?: AfframeTheme } | undefined } };
   };
-  return store?.userGlobals?.get?.()?.theme ?? 'light';
+  // The value can come from a crafted ?globals= link; only known themes reach
+  // the iframe URL.
+  const theme = store?.userGlobals?.get?.()?.theme;
+  return theme === 'dark' || theme === 'system' ? theme : 'light';
 }
 
 // Canvases with `inline: false` render iframe.html in their own iframe, which

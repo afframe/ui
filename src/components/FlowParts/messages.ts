@@ -8,7 +8,11 @@ export interface FlowMessages {
   cancel: string;
   /** Accessible name of the close icon (and of the discard dialog's close icon). */
   closeIconDescription: string;
-  /** Text next to the spinner in the primary button while an action runs. */
+  /**
+   * Busy text announced while an action runs. The task modals also show it
+   * in the primary button; the create and edit flows keep the button's
+   * label and add a spinner.
+   */
   pending: string;
   /** Alert text for a failed action, unless `errorText` is set. */
   error: string;
@@ -27,7 +31,28 @@ export interface DiscardMessages {
   discardBody: string;
   discard: string;
   keepEditing: string;
+  /** Title of the dialog when a clean form is closed while it saves. Default "Stop waiting?". */
+  leavePendingTitle?: string;
+  /** Its body. Default "Saving continues in the background.". */
+  leavePendingBody?: string;
+  /** Its button that closes the surface. Default "Stop waiting". */
+  leavePending?: string;
+  /** Its button that keeps the surface open. Default "Keep waiting". */
+  keepWaiting?: string;
 }
+
+/** Defaults of the optional `DiscardMessages` keys. */
+export const defaultLeavePendingMessages: Required<
+  Pick<
+    DiscardMessages,
+    'leavePendingTitle' | 'leavePendingBody' | 'leavePending' | 'keepWaiting'
+  >
+> = {
+  leavePendingTitle: 'Stop waiting?',
+  leavePendingBody: 'Saving continues in the background.',
+  leavePending: 'Stop waiting',
+  keepWaiting: 'Keep waiting',
+};
 
 const defaultFlowMessages: Omit<FlowMessages, 'pending' | 'error'> = {
   cancel: 'Cancel',
@@ -40,6 +65,7 @@ const defaultDiscardMessages: DiscardMessages = {
   discardBody: 'Your changes will be lost.',
   discard: 'Discard',
   keepEditing: 'Keep editing',
+  ...defaultLeavePendingMessages,
 };
 
 /** Defaults of the create and edit flows. */

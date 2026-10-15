@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
 import { formatFileSize } from './fileSize.js';
 import { defaultImportModalMessages, ImportModal } from './ImportModal.js';
@@ -171,6 +171,35 @@ test('multiple files are listed; a file with the same name replaces the row', as
   ]);
 });
 
+test('a long file list scrolls the body; the footer stays in the dialog', async () => {
+  // Above Carbon's lg breakpoint, where the small modal is capped at 72% height.
+  await page.viewport(1280, 600);
+  try {
+    renderHarness({ multiple: true });
+    await openByKeyboard();
+    await userEvent.upload(fileInput(), [
+      csv('a.csv'),
+      csv('b.csv'),
+      csv('c.csv'),
+      csv('d.csv'),
+    ]);
+    await until(() => expect(screen.getAllByRole('listitem')).toHaveLength(4));
+    const dialog = document.querySelector('.afframe-import-modal dialog');
+    const content = document.querySelector(
+      '.afframe-import-modal .cds--modal-content'
+    );
+    if (!dialog || !content) throw new Error('no dialog');
+    const box = dialog.getBoundingClientRect();
+    const button = importButton().getBoundingClientRect();
+    expect(button.bottom).toBeLessThanOrEqual(box.bottom);
+    expect(button.bottom).toBeLessThanOrEqual(window.innerHeight);
+    expect(dialog.scrollHeight).toBeLessThanOrEqual(dialog.clientHeight);
+    expect(content.scrollHeight).toBeGreaterThan(content.clientHeight);
+  } finally {
+    await page.viewport(1024, 768);
+  }
+});
+
 test('without multiple, a new file replaces the old one', async () => {
   renderHarness();
   await openByKeyboard();
@@ -203,8 +232,9 @@ test('URL path: field and button only with onImportUrl; rejection shows an alert
   // Carbon's TextInput also renders an empty counter alert; find by text.
   const alert = await screen.findByText('The import failed. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
+  // The dialog body takes the error focus, not the alert.
   await until(() =>
-    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+    expect(active()?.classList.contains('afframe-modal-body')).toBe(true)
   );
   await userEvent.click(urlButton);
   await until(() => expect(screen.queryByRole('dialog')).toBeNull());
@@ -348,6 +378,27 @@ test('single mode: dropping several files keeps the first and says the rest were
     )
   ).toBeTruthy();
   expect(screen.getAllByRole('listitem')).toHaveLength(1);
+});
+
+test('files dropped while an import runs do not count toward a later ignored note', async () => {
+  let reject: (error: Error) => void = () => undefined;
+  const onImport = () =>
+    new Promise<void>((_, fail) => {
+      reject = fail;
+    });
+  renderHarness({ onImport });
+  await openByKeyboard();
+  await userEvent.upload(fileInput(), csv('a.csv'));
+  await userEvent.click(importButton());
+  await until(() =>
+    expect(screen.getAllByText('Working').length).toBeGreaterThan(0)
+  );
+  dropFiles([csv('b.csv'), csv('c.csv'), csv('d.csv')]);
+  reject(new Error('no'));
+  await screen.findByRole('alert');
+  await userEvent.upload(fileInput(), csv('e.csv'));
+  await until(() => expect(status().textContent).toBe('e.csv added.'));
+  expect(document.body.textContent).not.toContain('ignored');
 });
 
 test('ref and rest props reach the root', async () => {

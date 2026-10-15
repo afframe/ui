@@ -48,6 +48,8 @@ export const Submitting: Story = stories.Submitting;
 
 export const LongForm: Story = stories.LongForm;
 
+export const FocusNotObscured: Story = stories.FocusNotObscured;
+
 export const Dark: Story = {
   ...Default,
   tags: ['!dev', '!autodocs'],

@@ -1,10 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { createRef, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import {
   englishLeft as englishCreateLeft,
+  expectBusyPrimary,
+  expectErrorFocusAtStart,
+  leavePendingButton,
   sentinelMessages,
 } from '../FlowParts/flowTestUtils.js';
 import { CreateModal, defaultCreateModalMessages } from './CreateModal.js';
@@ -135,11 +138,39 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText('Creating').length).toBeGreaterThan(0);
+  expectBusyPrimary('Create', 'Creating');
+  // Escape while busy asks first; the success closes that dialog too.
   await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
   expect(onClose).not.toHaveBeenCalled();
   resolve();
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+});
+
+test('while busy, Cancel stays enabled; Stop waiting leaves and drops the result', async () => {
+  let resolve: () => void = () => undefined;
+  const onClose = vi.fn();
+  render(
+    <Harness
+      onClose={onClose}
+      onSubmit={() =>
+        new Promise<void>((done) => {
+          resolve = done;
+        })
+      }
+    />
+  );
+  await launch();
+  await userEvent.click(screen.getByRole('button', { name: 'Create' }));
+  const cancel = screen.getByRole('button', { name: 'Cancel' });
+  expect(cancel.hasAttribute('disabled')).toBe(false);
+  await userEvent.click(cancel);
+  await userEvent.click(await leavePendingButton());
+  expect(onClose).toHaveBeenCalledTimes(1);
+  resolve();
+  await new Promise((done) => setTimeout(done, 50));
+  expect(onClose).toHaveBeenCalledTimes(1);
 });
 
 test('a rejected submit stays open with an alert and no onClose', async () => {
@@ -156,6 +187,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
     defaultCreateModalMessages.error
   );
   expect(onClose).not.toHaveBeenCalled();
+  await expectErrorFocusAtStart(fieldA());
   expect(screen.getByRole('dialog', { name: 'Item A' })).toBeTruthy();
 });
 
@@ -229,4 +261,109 @@ test('a description node renders as given, not inside a paragraph', async () => 
   );
   const item = await screen.findByText('One rule');
   expect(item.closest('p')).toBeNull();
+});
+
+test('a rejection under the discard dialog closes it and focuses the form', async () => {
+  let reject: (reason: unknown) => void = () => undefined;
+  render(
+    <Harness
+      onSubmit={() =>
+        new Promise<void>((_, fail) => {
+          reject = fail;
+        })
+      }
+    />
+  );
+  await launch();
+  await userEvent.click(screen.getByRole('button', { name: 'Create' }));
+  await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
+  reject(new Error('Duplicate'));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  screen.getByRole('alert');
+  const form = fieldA().closest('form');
+  await waitFor(() => expect(document.activeElement).toBe(form));
+  await new Promise((done) => setTimeout(done, 300));
+  expect(document.activeElement).toBe(form);
+});
+
+test.each([1024, 1312])(
+  'sizes keep their own widths under the dialog element at %ipx',
+  async (width) => {
+    // Above Carbon's md breakpoint, where the sizes differ.
+    await page.viewport(width, 800);
+    try {
+      const widthOf = async (size: 'sm' | 'md' | 'lg', dialog: boolean) => {
+        const modal = (
+          <CreateModal
+            open
+            size={size}
+            title="Item S"
+            onClose={() => undefined}
+            onSubmit={() => undefined}>
+            <input aria-label="Field S" />
+          </CreateModal>
+        );
+        const { unmount } = render(
+          dialog ? <AfframeProvider>{modal}</AfframeProvider> : modal
+        );
+        const node = await waitFor(() => {
+          const found = document.querySelector(
+            `.cds--modal-container--${size}`
+          );
+          if (!found) throw new Error('No modal container');
+          return found;
+        });
+        const result = node.getBoundingClientRect().width;
+        unmount();
+        return result;
+      };
+      const widths = {
+        sm: await widthOf('sm', true),
+        md: await widthOf('md', true),
+        lg: await widthOf('lg', true),
+      };
+      expect(widths.lg).toBeGreaterThan(widths.md + 100);
+      expect(widths.md).toBeGreaterThan(widths.sm + 100);
+      // Carbon's widths without the flag.
+      for (const size of ['sm', 'md', 'lg'] as const)
+        expect(
+          Math.abs(widths[size] - (await widthOf(size, false)))
+        ).toBeLessThanOrEqual(1);
+    } finally {
+      await page.viewport(1024, 768);
+    }
+  }
+);
+
+test('a tall small form scrolls inside the dialog element and keeps the footer in view', async () => {
+  await page.viewport(1312, 600);
+  try {
+    render(
+      <AfframeProvider>
+        <CreateModal
+          open
+          size="sm"
+          title="Item T"
+          onClose={() => undefined}
+          onSubmit={() => undefined}>
+          {Array.from({ length: 30 }, (_, index) => (
+            <input key={index} aria-label={`Field T${index}`} />
+          ))}
+        </CreateModal>
+      </AfframeProvider>
+    );
+    const create = await screen.findByRole('button', { name: 'Create' });
+    const dialog = create.closest('dialog');
+    if (!dialog) throw new Error('No native dialog');
+    const footer = create.getBoundingClientRect();
+    const box = dialog.getBoundingClientRect();
+    expect(footer.bottom).toBeLessThanOrEqual(box.bottom + 1);
+    expect(footer.bottom).toBeLessThanOrEqual(window.innerHeight);
+    const content = dialog.querySelector('.cds--modal-content');
+    if (!content) throw new Error('No modal content');
+    expect(content.scrollHeight).toBeGreaterThan(content.clientHeight);
+  } finally {
+    await page.viewport(1024, 768);
+  }
 });

@@ -11,20 +11,25 @@ import { DialogChooser } from '../../../.storybook/DialogChooser';
 
 <SourceLabel name="afframe" />
 
-[Source code](https://github.com/afframe/ui/tree/main/src/components/EditTearsheet). See also [Edit pattern](https://carbondesignsystem.com/community/patterns/edit-pattern/).
+[Source code](https://github.com/afframe/ui/tree/main/src/components/EditTearsheet). See also [Forms pattern](https://carbondesignsystem.com/building-blocks/core/patterns/forms).
 
-`EditTearsheet` edits a record with several forms (sections) in IBM
-Products' tearsheet (`preview__Tearsheet`). A side navigation lists the
-forms; choosing one scrolls to it and moves focus to its heading. The current
-item follows scrolling: it is the form whose top has passed the upper third of
-the tearsheet, or the last form once it shows in full after scrolling. It replaces
-IBM Products' deprecated EditTearsheet. It shares its submit, cancel, discard
-and focus behaviour with `CreateModal`, `CreateSidePanel`, `EditSidePanel`
-and `EditFullPage`.
+`EditTearsheet` edits a record with several forms in IBM Products' tearsheet
+(`preview__Tearsheet`), laid out as IBM's Tearsheet With Influencer: the
+influencer column on the left holds a vertical Carbon `ProgressIndicator` with
+one step per form, and choosing a step shows that form. It replaces IBM
+Products' deprecated EditTearsheet. The other forms stay mounted, hidden, so
+their values survive switching. The actions, ghost Cancel and primary Save,
+sit under the form column; the influencer runs the full height on the left. It shares its submit, cancel,
+discard and focus behaviour with `CreateModal`, `CreateSidePanel`,
+`EditSidePanel` and `EditFullPage`.
 
 <Canvas of={EditTearsheetStories.Default} />
 
 ## Which component to use
+
+Use `EditTearsheet` when an edit has several forms the user moves between.
+One form that fits a panel is an `EditSidePanel`; a long single form that
+needs the page is an `EditFullPage`.
 
 <DialogChooser />
 
@@ -32,9 +37,13 @@ and `EditFullPage`.
 
 `open` is controlled. The children are `EditTearsheetForm` elements, each one
 section with its own heading. `onSubmit` may return a promise: while it is
-pending the tearsheet is busy and cannot close; when it resolves, `onClose` is
-called; when it rejects, the tearsheet stays open and shows the error above
-the footer.
+pending Save is disabled; when it resolves, `onClose` is called; when it
+rejects, the tearsheet stays open and shows the error under the shown form.
+Closing while it is pending asks first, unless `confirmDiscard` is false:
+"Discard changes?" on a dirty form, "Stop waiting?" on a clean one. Discard or
+Stop waiting closes the tearsheet and ignores the result; the dialog closes
+itself when the promise settles. If it is still shown or opened again before
+then, it stays busy until it settles; closing it then, with a clean form, needs no confirmation.
 
 ```tsx
 import { EditTearsheet, EditTearsheetForm } from '@afframe/ui';
@@ -65,17 +74,25 @@ const [vat, setVat] = useState(customer.vat);
 ```
 
 - `title`, `label` (above the title) and `description` head the tearsheet.
-- `influencerWidth`: `narrow` (default, 16rem) or `wide` (20rem) side
-  navigation.
-- `onFormChange(index)`: called when a form is chosen in the navigation, not
-  when scrolling moves the current item.
+  The close icon stays, as in IBM's tearsheet.
+- `variant`: `wide` (default) or `narrow` (480px). In `narrow`, and below the
+  `md` breakpoint, the navigation moves into IBM's side panel, opened by an
+  icon button above the form; choosing a form closes the panel.
+- `headerActions`: IBM's `Tearsheet.HeaderActions` with
+  `Tearsheet.HeaderActionItem`s (both from `@afframe/ui`'s `Tearsheet`),
+  beside the title; they collapse into a menu button when space runs out.
+- `decorator`: an `AILabel` or another decorator in the header.
+- `influencerWidth`: `narrow` (default, 16rem) or `wide` (20rem) influencer
+  column.
+- `onFormChange(index)`: called when a form is chosen in the navigation.
 - Only `EditTearsheetForm` children are rendered; other children are left
   out with a console warning.
 - `EditTearsheetForm`: `id` (unique in the page), `title` (a level 3
-  heading), `description`, `invalid`.
-- `invalid` marks the form's navigation item with an error icon. Save stays
-  enabled; while a form is invalid, Save does not submit and moves focus to
-  the first invalid form's heading instead.
+  heading, IBM's main content heading), `description`, `invalid`. Its fields
+  take the full width of the content column, stacked.
+- `invalid` marks the form's step with Carbon's warning icon. Save stays
+  enabled; while a form is invalid, Save does not submit: it shows the first
+  invalid form and moves focus to its heading instead.
 - `isDirty`: compare the field state with the saved values. When true,
   Escape, the close icon and Cancel ask "Discard changes?" first, unless
   `confirmDiscard` is false. An overlay click never closes the tearsheet.
@@ -87,10 +104,24 @@ const [vat, setVat] = useState(customer.vat);
   `className` lands too. IBM names the dialog itself. The ref is `null` while
   the tearsheet is closed; the discard dialog renders beside it, never inside.
 
-Below the `md` breakpoint IBM's tearsheet moves the navigation into a closed
-side panel; use the full width layout for multi-form edits.
-
 <ArgTypes of={EditTearsheetStories} />
+
+## Differences from IBM's EditTearsheet
+
+- The layout is IBM's current Tearsheet With Influencer, not the deprecated
+  EditTearsheet's: the forms are steps of a vertical `ProgressIndicator` in a
+  padded influencer column, where IBM's had a flush Carbon `SideNav`; the
+  content column has the tearsheet's padding and full-width fields, where
+  IBM's had 8 grid columns.
+- The steps have no order: none is shown complete, only the shown form is
+  current, and a step's status text is left out except "has errors".
+- Form titles are level 3 headings in Carbon's level 3 style, as the main
+  content heading of IBM's With Influencer story; IBM's EditTearsheet used a
+  smaller level 4.
+- In the side panel, choosing a form closes the panel and Escape closes only
+  the panel, so the shown form is never left covered.
+- The dirty check, discard dialog, error alert, busy Save and invalid-form
+  marker are Afframe's shared flow, which IBM's component does not have.
 
 ## Messages
 
@@ -104,6 +135,7 @@ from a client component (server components can pass only the string keys).
 | `cancel`               | Cancel                                                      |
 | `sectionsNavLabel`     | Sections                                                    |
 | `sectionInvalid`       | `title` has errors                                          |
+| `openSections`         | Open sections                                               |
 | `pending`              | Saving                                                      |
 | `error`                | The changes could not be saved. Try again.                  |
 | `errorText`            | not set: `error` is shown                                   |
@@ -112,39 +144,53 @@ from a client component (server components can pass only the string keys).
 | `discardBody`          | Your changes will be lost.                                  |
 | `discard`              | Discard                                                     |
 | `keepEditing`          | Keep editing                                                |
+| `leavePendingTitle`    | Stop waiting? (closing a clean form while it saves)         |
+| `leavePendingBody`     | Saving continues in the background.                         |
+| `leavePending`         | Stop waiting                                                |
+| `keepWaiting`          | Keep waiting                                                |
 | `closeIconDescription` | Close (the tearsheet's and the discard dialog's close icon) |
 
 ## Keyboard and screen reader behaviour
 
-On open, focus moves to the first form control. Focus order: the close icon,
-the navigation items, the form fields, Cancel, Save. Tab and Shift+Tab stay
-inside the tearsheet and wrap.
+On open, focus moves to the first control of the first form. Focus order: the
+close icon, the header actions, the form steps, the open-sections button
+(narrow and small screens), the shown form's fields, Cancel, Save. Hidden
+forms are out of the focus order. Tab and Shift+Tab stay inside the tearsheet
+and wrap.
 
-| Key          | Where                 | Action                                                                                   |
-| ------------ | --------------------- | ---------------------------------------------------------------------------------------- |
-| Enter, Space | navigation item       | Scrolls to that form and moves focus to its heading.                                     |
-| Enter        | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field. |
-| Escape       | anywhere in the sheet | Closes a clean tearsheet. On a dirty one, opens the discard dialog.                      |
-| Escape       | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                |
-| Tab          | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.    |
+| Key    | Where                 | Action                                                                                                                                                              |
+| ------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enter  | form step             | Shows that form; focus stays on the step. In the side panel (narrow and small screens), the panel closes and focus returns to the open-sections button.             |
+| Escape | navigation side panel | Closes only the panel; focus returns to the open-sections button.                                                                                                   |
+| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                                                                            |
+| Escape | anywhere in the sheet | Closes a clean tearsheet. On a dirty one, or while a submit is pending, opens the discard dialog.                                                                   |
+| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                                                                                           |
+| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard (Keep waiting and Stop waiting on a clean form while it saves); focus starts on Keep editing (Keep waiting). |
 
 On close, focus returns to `launcherRef`, else to the element that had focus
 when the tearsheet opened, else to the page body.
 
 A focused field never sits under the sticky footer: fields keep a scroll
-margin the size of the footer (the `LongForm` story checks it).
+margin the size of the footer (the test-only `FocusNotObscured` story checks it).
 
 Screen readers announce:
 
 - the tearsheet as a dialog named by its title; the navigation as a landmark
-  named `sectionsNavLabel`, the item of the form in view with `aria-current`; an invalid
-  form's error icon as an image named `sectionInvalid(title)`;
-- each form as a region named by its heading;
-- while saving, the form as busy and Save's loading text (`pending`);
-- a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
-  field with `aria-invalid="true"`, else to the alert;
+  named `sectionsNavLabel`, its items as progress-step buttons, the shown
+  form's item with `aria-current="step"`; an invalid form's item named with
+  `sectionInvalid(title)`;
+- the shown form as a region named by its heading;
+- while saving, the form as busy and `pending` in a polite status; Save keeps
+  its name and shows Carbon's inline loading;
+- a rejected submit as an alert with `error` (or `errorText(error)`). Focus
+  moves to the first field with `aria-invalid="true"` in the shown form, else
+  to the first one in a hidden form, showing that form first (also when the
+  field is marked a render after the error, unless a form was chosen in the
+  meantime), else to the form itself, with no focus ring, so the next Tab
+  reaches the first field; the alert takes no focus;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
-  `discardBody`.
+  `discardBody` (`leavePendingTitle` and `leavePendingBody` on a clean form
+  while it saves).
 
 ## Stories
 
@@ -157,3 +203,9 @@ Screen readers announce:
 <Canvas of={EditTearsheetStories.Submitting} />
 
 <Canvas of={EditTearsheetStories.LongForm} />
+
+<Canvas of={EditTearsheetStories.Narrow} />
+
+<Canvas of={EditTearsheetStories.WithHeaderActions} />
+
+<Canvas of={EditTearsheetStories.WithAILabel} />

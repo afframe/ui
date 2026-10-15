@@ -62,12 +62,42 @@ const clickPrimary = (name: string) => async () => {
   await userEvent.click(await screen.findByRole('button', { name }));
 };
 
-/** Clicks the primary button and waits for the error notification. */
+/**
+ * Waits for the surface's own initial focus and its entrance animation. IBM
+ * SidePanel refocuses its primary target once its slide-in ends, which would
+ * take focus from anything a play moved it to before.
+ */
+const settleAnimations = async () => {
+  await Promise.all(
+    document.getAnimations().map((animation) => animation.finished)
+  );
+  await new Promise((resolve) => setTimeout(resolve, 50));
+};
+
+const settleOpen = async () => {
+  await waitFor(() =>
+    expect(document.activeElement).toBeInstanceOf(HTMLInputElement)
+  );
+  await settleAnimations();
+};
+
+/**
+ * Clicks the primary button once open; focus moves to the form, not the
+ * alert, and the next Tab reaches the first field.
+ */
 const playRejected = (name: string) => async () => {
+  await settleOpen();
   await clickPrimary(name)();
   await screen.findByText(defaultFormFlowMessages.error, {
     selector: '.cds--inline-notification__title',
   });
+  const form = document.querySelector('form.afframe-create-edit-form');
+  await waitFor(() => expect(document.activeElement).toBe(form));
+  // Still there once every animation has ended.
+  await settleAnimations();
+  await expect(document.activeElement).toBe(form);
+  await userEvent.tab();
+  await expect(document.activeElement).toBeInstanceOf(HTMLInputElement);
 };
 
 /** Types into Email, then Cancel opens the discard dialog. */
@@ -86,14 +116,7 @@ const playDirty = async () => {
  */
 const playFocusNotObscured = (label: string) => async () => {
   const field = await screen.findByRole('textbox', { name: label });
-  // Let the surface's own initial focus land first.
-  await waitFor(() =>
-    expect(document.activeElement).toBeInstanceOf(HTMLInputElement)
-  );
-  await Promise.all(
-    document.getAnimations().map((animation) => animation.finished)
-  );
-  await new Promise((resolve) => setTimeout(resolve, 50));
+  await settleOpen();
   field.focus();
   await expect(document.activeElement).toBe(field);
   await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -208,8 +231,11 @@ export function flowStories(
       args: { ...named, onSubmit: pendingSubmit },
       play: clickPrimary(primary),
     },
-    LongForm: {
+    LongForm: { args: { extraFields: longFormFields } },
+    // Test only: its play leaves focus on the last field.
+    FocusNotObscured: {
       args: { extraFields: longFormFields },
+      tags: ['!dev', '!autodocs'],
       play: playFocusNotObscured(`Note ${longFormFields}`),
     },
   };

@@ -6,7 +6,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { DialogChooser } from '../../../.storybook/DialogChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components from @afframe/ui, story styles as plain CSS, upstream Feedback section and table of contents removed, dialog chooser table added, props table TODO resolved in the stories.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components from @afframe/ui, story styles as plain CSS, upstream Feedback section and table of contents removed, dialog chooser table added, props table TODO resolved in the stories, links to the current Carbon site.
 
 <Meta isTemplate />
 
@@ -16,9 +16,9 @@ import { DialogChooser } from '../../../.storybook/DialogChooser';
 
 [Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/Modal)
 &nbsp;|&nbsp;
-[Usage guidelines](https://www.carbondesignsystem.com/components/modal/usage)
+[Usage guidelines](https://carbondesignsystem.com/building-blocks/core/components/modal/guidelines)
 &nbsp;|&nbsp;
-[Accessibility](https://www.carbondesignsystem.com/components/modal/accessibility)
+[Accessibility](https://carbondesignsystem.com/building-blocks/core/components/modal/accessibility)
 
 ## Overview
 
@@ -117,7 +117,7 @@ determines the default behavior.
 
 Passive modals by default close on outside clicks. For transactional,
 non-passive modals that include `ModalFooter`, the
-[design spec for Modal](https://carbondesignsystem.com/components/modal/usage/#transactional-modal)
+[design spec for Modal](https://carbondesignsystem.com/building-blocks/core/components/modal/guidelines#transactional-modal)
 calls for these to not be dissmissable via outside clicks.
 
 Setting `preventCloseOnClickOutside` to `false` to override the default for
@@ -126,7 +126,7 @@ non-passive modals is allowed but not recommended, and will trigger a warning.
 ## Modal sizes
 
 There are four responsive
-[modal sizes](https://www.carbondesignsystem.com/components/modal/usage/#modal-sizes):
+[modal sizes](https://carbondesignsystem.com/building-blocks/core/components/modal/guidelines#sizing):
 `xs`, `sm`, `md` (default), and `lg`. You can set it via the `size` prop.
 
 ```jsx
@@ -191,12 +191,12 @@ below.
 With `<Modal>`, you have limited control over the set of buttons. The following
 table shows the supported patterns.
 
-| Button group variant                                                                                 | Usage                                     |
-| ---------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| No button ([passive modal](https://www.carbondesignsystem.com/components/modal/usage#passive-modal)) | Use `passiveModal` prop in `<Modal>`      |
-| One button                                                                                           | Use `<ComposedModal>`                     |
-| Two buttons                                                                                          | Use `<Modal>` without `passiveModal` prop |
-| Two buttons with danger button                                                                       | Use `danger` prop in `<Modal>`            |
+| Button group variant                                                                                                       | Usage                                     |
+| -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| No button ([passive modal](https://carbondesignsystem.com/building-blocks/core/components/modal/guidelines#passive-modal)) | Use `passiveModal` prop in `<Modal>`      |
+| One button                                                                                                                 | Use `<ComposedModal>`                     |
+| Two buttons                                                                                                                | Use `<Modal>` without `passiveModal` prop |
+| Two buttons with danger button                                                                                             | Use `danger` prop in `<Modal>`            |
 
 ```jsx
 <Modal danger>
@@ -207,13 +207,13 @@ table shows the supported patterns.
 
 With `<ComposedModal>`, you can control the buttons with the following code.
 
-| Button group variant                                                                                 | Usage                                                                                                                                                                                                                                                           |
-| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| No button ([passive modal](https://www.carbondesignsystem.com/components/modal/usage#passive-modal)) | Use `<ComposedModal>` without `<ModalFooter>`                                                                                                                                                                                                                   |
-| One button                                                                                           | Use `primaryButtonText` in `<ModalFooter>`                                                                                                                                                                                                                      |
-| Two buttons                                                                                          | Use `primaryButtonText` and `secondaryButtonText` in `<ModalFooter>`                                                                                                                                                                                            |
-| Three buttons                                                                                        | Put three buttons as children of `<ModalFooter>`, instead of using `primaryButtonText` or `secondaryButtonText`. Using this option requires style adjustment defined in application-level CSS for `<ModalFooter>`, e.g. `.cds--modal-footer { padding: 25%; }`. |
-| Two buttons with danger button                                                                       | Set `danger` prop in `<ModalFooter>` (like below)                                                                                                                                                                                                               |
+| Button group variant                                                                                                       | Usage                                                                                                                                                                                                                                                           |
+| -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No button ([passive modal](https://carbondesignsystem.com/building-blocks/core/components/modal/guidelines#passive-modal)) | Use `<ComposedModal>` without `<ModalFooter>`                                                                                                                                                                                                                   |
+| One button                                                                                                                 | Use `primaryButtonText` in `<ModalFooter>`                                                                                                                                                                                                                      |
+| Two buttons                                                                                                                | Use `primaryButtonText` and `secondaryButtonText` in `<ModalFooter>`                                                                                                                                                                                            |
+| Three buttons                                                                                                              | Put three buttons as children of `<ModalFooter>`, instead of using `primaryButtonText` or `secondaryButtonText`. Using this option requires style adjustment defined in application-level CSS for `<ModalFooter>`, e.g. `.cds--modal-footer { padding: 25%; }`. |
+| Two buttons with danger button                                                                                             | Set `danger` prop in `<ModalFooter>` (like below)                                                                                                                                                                                                               |
 
 ```jsx
 <ComposedModal>
@@ -350,5 +350,5 @@ the modal gets open, by either of the following ways:
 ## References
 
 Check out the
-[usage guidelines](https://www.carbondesignsystem.com/components/modal/usage/)
+[usage guidelines](https://carbondesignsystem.com/building-blocks/core/components/modal/guidelines)
 on the Carbon Design System website.

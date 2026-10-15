@@ -4,7 +4,17 @@
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
 
+// Fills the region the app gives it, so the action bar sits at the bottom
+// of a short form and sticks while a long one scrolls. A percentage needs a
+// parent with a definite height; below the root the chain is flex.
+.afframe-edit-full-page-root {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100%;
+}
+
 .afframe-edit-full-page {
+  flex: 1 0 auto;
   gap: 0;
 }
 
@@ -37,6 +47,10 @@
 
 .afframe-edit-full-page-actions {
   position: sticky;
+
+  // The free space goes above the bar: a growing body would stretch Carbon's
+  // form items (flex: 1 1 auto) apart.
+  margin-block-start: auto;
   z-index: 1;
   justify-content: flex-end;
   border-block-start: 1px solid $border-subtle;

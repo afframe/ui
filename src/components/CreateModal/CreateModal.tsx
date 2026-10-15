@@ -4,9 +4,11 @@ import type { HTMLAttributes, ReactNode, Ref, RefObject } from 'react';
 import { resolveMessages } from '../../messages.js';
 import {
   DiscardDialog,
+  FlowButtonLabel,
   FlowDescription,
   FlowError,
   FlowForm,
+  FlowStatus,
 } from '../FlowParts/FlowParts.js';
 import { defaultFormFlowMessages } from '../FlowParts/messages.js';
 import type { DiscardMessages, FlowMessages } from '../FlowParts/messages.js';
@@ -41,7 +43,7 @@ interface CreateModalOwnProps {
   selectorPrimaryFocus?: string;
   submitDisabled?: boolean;
   isDirty?: boolean;
-  /** Ask before discarding a dirty form. Default true. */
+  /** Ask before discarding a dirty form or a pending submit. Default true. */
   confirmDiscard?: boolean;
   /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
@@ -89,6 +91,7 @@ export function CreateModal({
     onClose,
     isDirty,
     confirmDiscard,
+    closeWhilePending: true,
     launcherRef,
     messages: { error: text.error, errorText: text.errorText },
     initialFocus: (): HTMLElement | null | undefined =>
@@ -111,13 +114,12 @@ export function CreateModal({
           .join(' ')}
         modalHeading={title}
         {...(label ? { modalLabel: label } : {})}
-        primaryButtonText={text.create}
+        primaryButtonText={
+          <FlowButtonLabel label={text.create} busy={flow.pending} />
+        }
         secondaryButtonText={text.cancel}
         closeButtonLabel={text.closeIconDescription}
-        primaryButtonDisabled={submitDisabled}
-        loadingStatus={flow.pending ? 'active' : 'inactive'}
-        loadingDescription={text.pending}
-        loadingIconDescription={text.pending}
+        primaryButtonDisabled={submitDisabled || flow.pending}
         onRequestClose={flow.requestClose}
         onRequestSubmit={() => {
           if (!submitDisabled && !flow.pending) void submit();
@@ -137,6 +139,8 @@ export function CreateModal({
             iconDescription={text.errorIconDescription}
           />
         </FlowForm>
+        {/* Outside the form: its aria-busy may hold back announcements. */}
+        <FlowStatus message={flow.pending ? text.pending : ''} />
       </Modal>
       <DiscardDialog flow={flow} messages={text} />
     </>

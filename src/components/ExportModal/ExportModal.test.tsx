@@ -189,9 +189,13 @@ test('pending: Escape ignored; rejection keeps it open with an alert', async () 
   reject(new Error('no'));
   const alert = await screen.findByText('Something went wrong. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
+  // The dialog body takes the error focus, not the alert.
   await until(() =>
-    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+    expect(active()?.classList.contains('afframe-modal-body')).toBe(true)
   );
+  expect(getComputedStyle(active() as Element).outlineStyle).toBe('none');
+  await userEvent.tab();
+  expect(active()).toBeInstanceOf(HTMLInputElement);
   await userEvent.keyboard('{Escape}');
   await until(() => expect(onClose).toHaveBeenCalledTimes(1));
   await until(() => expect(active()).toBe(launcher()));

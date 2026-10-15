@@ -2,8 +2,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { createRef, useRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { AfframeProvider } from '../../index.js';
-import { englishLeft, sentinelMessages } from '../FlowParts/flowTestUtils.js';
+import { AfframeProvider, TextInput } from '../../index.js';
+import {
+  englishLeft,
+  expectBusyPrimary,
+  expectErrorFocusAtStart,
+  leavePendingButton,
+  sentinelMessages,
+} from '../FlowParts/flowTestUtils.js';
 import { defaultEditFullPageMessages, EditFullPage } from './EditFullPage.js';
 import type { EditFullPageProps } from './EditFullPage.js';
 
@@ -156,11 +162,39 @@ test('Enter submits once; async submit is busy, then leaves', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText(defaults.pending).length).toBeGreaterThan(0);
+  expectBusyPrimary(defaults.save, defaults.pending);
+  // Escape while busy asks first; the success closes that dialog too.
   await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
   expect(onClose).not.toHaveBeenCalled();
   resolve();
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+});
+
+test('while busy, Cancel stays enabled; Stop waiting leaves and drops the result', async () => {
+  let resolve: () => void = () => undefined;
+  const onClose = vi.fn();
+  render(
+    <Harness
+      onClose={onClose}
+      onSubmit={() =>
+        new Promise<void>((done) => {
+          resolve = done;
+        })
+      }
+    />
+  );
+  await mounted();
+  await userEvent.click(screen.getByRole('button', { name: defaults.save }));
+  const cancel = screen.getByRole('button', { name: defaults.cancel });
+  expect(cancel.hasAttribute('disabled')).toBe(false);
+  await userEvent.click(cancel);
+  await userEvent.click(await leavePendingButton());
+  expect(onClose).toHaveBeenCalledTimes(1);
+  resolve();
+  await new Promise((done) => setTimeout(done, 50));
+  expect(onClose).toHaveBeenCalledTimes(1);
 });
 
 test('a rejected submit stays with an alert and no onClose', async () => {
@@ -177,6 +211,7 @@ test('a rejected submit stays with an alert and no onClose', async () => {
     defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
+  await expectErrorFocusAtStart(fieldA());
 });
 
 function beforeunloadCalls(spy: { mock: { calls: unknown[][] } }) {
@@ -303,5 +338,94 @@ test.each([320, 375])('at %ipx both buttons stay on screen', async (width) => {
     expect(Math.round(cancel.width)).toBe(Math.round(save.width));
   } finally {
     await page.viewport(1024, 768);
+  }
+});
+
+test('a rejection under the discard dialog closes it and focuses the form', async () => {
+  let reject: (reason: unknown) => void = () => undefined;
+  render(
+    <Harness
+      onSubmit={() =>
+        new Promise<void>((_, fail) => {
+          reject = fail;
+        })
+      }
+    />
+  );
+  await mounted();
+  await userEvent.click(screen.getByRole('button', { name: defaults.save }));
+  await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
+  reject(new Error('Duplicate'));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  screen.getByRole('alert');
+  const form = fieldA().closest('form');
+  await waitFor(() => expect(document.activeElement).toBe(form));
+  await new Promise((done) => setTimeout(done, 300));
+  expect(document.activeElement).toBe(form);
+});
+
+test('the busy primary button fits a narrow screen', async () => {
+  await page.viewport(375, 768);
+  try {
+    render(<Harness onSubmit={() => new Promise<void>(() => undefined)} />);
+    await mounted();
+    await userEvent.click(screen.getByRole('button', { name: defaults.save }));
+    expectBusyPrimary(defaults.save, defaults.pending);
+  } finally {
+    await page.viewport(1024, 768);
+  }
+});
+
+/** The page in a region of viewport height, as the docs ask of the app. */
+function renderInRegion(fields: number) {
+  render(
+    <AfframeProvider>
+      <div style={{ blockSize: '100dvh' }}>
+        <EditFullPage
+          title="Record A"
+          onSubmit={() => undefined}
+          onClose={() => undefined}>
+          {Array.from({ length: fields }, (_, index) => (
+            <TextInput
+              key={index}
+              id={`field-${index + 1}`}
+              labelText={`Field ${index + 1}`}
+            />
+          ))}
+        </EditFullPage>
+      </div>
+    </AfframeProvider>
+  );
+  const bar = document.querySelector('.afframe-edit-full-page-actions');
+  if (!bar) throw new Error('No action bar');
+  return () => bar.getBoundingClientRect().bottom;
+}
+
+test('a short form keeps the action bar at the bottom of the region', () => {
+  const barBottom = renderInRegion(2);
+  expect(barBottom()).toBeCloseTo(window.innerHeight, 0);
+  // Carbon's form items grow (flex: 1 1 auto); the free space must not spread them.
+  const box = (n: number) => {
+    const field = document.getElementById(`field-${n}`);
+    if (!field) throw new Error(`No field ${n}`);
+    return field.getBoundingClientRect();
+  };
+  expect(box(2).top - box(1).bottom).toBeLessThan(64);
+});
+
+test('a long form scrolls under a sticky action bar', async () => {
+  const barBottom = renderInRegion(30);
+  try {
+    const end = document.documentElement.scrollHeight - window.innerHeight;
+    expect(end).toBeGreaterThan(0);
+    expect(barBottom()).toBeCloseTo(window.innerHeight, 0);
+    for (const top of [end / 2, end]) {
+      window.scrollTo(0, top);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      expect(barBottom()).toBeCloseTo(window.innerHeight, 0);
+    }
+  } finally {
+    window.scrollTo(0, 0);
   }
 });

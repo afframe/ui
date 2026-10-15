@@ -52,7 +52,8 @@ const meta = {
   parameters: {
     ...afframeA11y,
     layout: 'fullscreen',
-    docs: { page: mdx },
+    // In an iframe, so 100dvh is the canvas height, not the docs page's.
+    docs: { page: mdx, story: { inline: false, iframeHeight: 480 } },
   },
   argTypes: flowHarnessArgTypes,
   args: {
@@ -62,6 +63,14 @@ const meta = {
     onSubmit: (): void => undefined,
     initialName: exampleCustomer.name,
   },
+  // The app's main area: a region of definite height the page fills.
+  decorators: [
+    (Story) => (
+      <div style={{ blockSize: '100dvh' }}>
+        <Story />
+      </div>
+    ),
+  ],
   render: (args) => <Harness {...args} />,
 } satisfies Meta<Args>;
 
@@ -80,6 +89,8 @@ export const WithError: Story = stories.WithError;
 export const Submitting: Story = stories.Submitting;
 
 export const LongForm: Story = stories.LongForm;
+
+export const FocusNotObscured: Story = stories.FocusNotObscured;
 
 export const Dark: Story = {
   ...Default,

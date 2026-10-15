@@ -24,6 +24,13 @@ export interface FlowOptions {
   isDirty?: boolean;
   /** Ask before discarding a dirty surface. Default true. */
   confirmDiscard?: boolean;
+  /**
+   * A close request while an action runs asks to discard, also when clean;
+   * the dialog closes itself once the action settles. Default false: the
+   * request is ignored until then. An action from an earlier session (the
+   * surface was closed and reopened) never holds a close request back.
+   */
+  closeWhilePending?: boolean;
   /** Focus target on open; default the first form control in `containerRef`. */
   initialFocus?: () => HTMLElement | null | undefined;
 }
@@ -31,21 +38,35 @@ export interface FlowOptions {
 export interface Flow<T extends HTMLElement = HTMLElement> {
   /**
    * The form or dialog body: initial focus, focus while pending, error
-   * focus. Give it tabIndex -1 so it can hold focus while pending.
+   * focus. Give it tabIndex -1 and no focus ring so it can hold focus.
    */
   containerRef: RefObject<T | null>;
-  /** True while an action runs: buttons are disabled and closing waits. */
+  /**
+   * True while an action runs, also one abandoned by `close` or a parent
+   * close: the primary button is disabled.
+   */
   pending: boolean;
   /** Text of the error alert after a rejected action, else null. */
   error: string | null;
-  /** Runs an action; resolves true when it succeeded in the same session. */
+  /** Rejected actions so far; tells two errors with the same text apart. */
+  errorCount: number;
+  /**
+   * Runs an action; resolves true when it succeeded in the same session.
+   * Resolves false at once while an earlier action, even an abandoned one,
+   * still runs (`pending` is then true).
+   */
   run: (action: () => unknown) => Promise<boolean>;
   /** What Escape, the close icon, Cancel and an overlay click call. */
   requestClose: () => void;
-  /** Calls `onClose` at once. */
+  /**
+   * Calls `onClose` at once; a running action's result is then ignored, and
+   * the surface stays busy until it settles.
+   */
   close: () => void;
   clearError: () => void;
   discardOpen: boolean;
+  /** The discard dialog is for a clean surface whose action still runs. */
+  discardWhilePending: boolean;
   confirmDiscard: () => void;
   keepEditing: () => void;
   /** Last focused element in the form, set by FlowForm. */
@@ -56,10 +77,20 @@ export interface Flow<T extends HTMLElement = HTMLElement> {
 export const firstControlSelector =
   'input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])';
 
-const errorSelector = '[data-afframe-flow-error]';
-
 const focusable = (element: Element | null): element is HTMLElement =>
   element instanceof HTMLElement && element.isConnected;
+
+const focusedElement = () => {
+  const active = document.activeElement;
+  return focusable(active) && active !== document.body ? active : null;
+};
+
+// A connected field can still be unable to take focus: one in a hidden
+// EditTearsheet form is in the DOM under `display: none`.
+const rendered = (element: Element) =>
+  typeof element.checkVisibility === 'function'
+    ? element.checkVisibility({ visibilityProperty: true })
+    : element.getClientRects().length > 0;
 
 /**
  * Focuses `target` once it can take focus: a closing native dialog keeps the
@@ -101,17 +132,22 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   messages,
   isDirty = false,
   confirmDiscard = true,
+  closeWhilePending = false,
   initialFocus,
 }: FlowOptions): Flow<T> {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errorCount, setErrorCount] = useState(0);
   const [discardOpen, setDiscardOpen] = useState(false);
+  // Set only on open: the closing dialog keeps its text.
+  const [discardWhilePending, setDiscardWhilePending] = useState(false);
   const containerRef = useRef<T>(null);
   // Refs, not state: IBM's SidePanel calls `onRequestClose` from a window
   // keydown listener that can hold an older render's callback, and that
   // Escape arrives before the discard dialog's own cancel event.
   const pendingRef = useRef(false);
+  // The session the running action started in.
+  const pendingSessionRef = useRef(0);
   const discardRef = useRef(false);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const discardReturnRef = useRef<HTMLElement | null>(null);
@@ -126,6 +162,9 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     undefined
   );
   const cancelFocusRef = useRef<(() => void) | null>(null);
+  // Set when an action settles under the discard dialog: the closing dialog
+  // restores focus itself, after the error focus.
+  const dismissedRef = useRef(false);
   // Read after an await or in a later effect: the render that started it may
   // be stale.
   const onCloseRef = useRef(onClose);
@@ -143,20 +182,17 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     if (open === wasOpenRef.current) return;
     wasOpenRef.current = open;
     sessionRef.current += 1;
-    // A parent-driven close or a reopen leaves no discard dialog, busy state
-    // or error.
+    // A parent-driven close or a reopen leaves no discard dialog or error.
+    // The busy state stays until an abandoned action settles: a second
+    // submit would send the same request twice. Closing is not held back.
     clearTimeout(discardTimerRef.current);
     discardRef.current = false;
-    pendingRef.current = false;
     setDiscardOpen(false);
-    setPending(false);
     setError(null);
     cancelFocusRef.current?.();
     cancelFocusRef.current = null;
     if (open) {
-      const active = document.activeElement;
-      returnFocusRef.current =
-        focusable(active) && active !== document.body ? active : null;
+      returnFocusRef.current = focusedElement();
       return;
     }
     const launcher = launcherRef?.current ?? null;
@@ -214,18 +250,32 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
       containerRef.current?.focus();
   }, [pending]);
 
-  // After a rejected action: the first invalid field, else the alert.
+  // After a rejected action: the first rendered invalid field, else the
+  // container, which shows no ring, so the next Tab reaches the first field.
+  // The alert announces itself (role="alert") and takes no focus.
   useEffect(() => {
     if (errorCount === 0) return;
     const container = containerRef.current;
-    const target =
-      container?.querySelector('[aria-invalid="true"]') ??
-      container?.querySelector(errorSelector) ??
-      null;
-    if (focusable(target)) target.focus();
+    const fields = container?.querySelectorAll('[aria-invalid="true"]') ?? [];
+    const target = [...fields].find(rendered) ?? container ?? null;
+    const retry = dismissedRef.current;
+    dismissedRef.current = false;
+    if (!focusable(target)) return;
+    // preventScroll keeps the container in place, so the alert is scrolled
+    // into view on its own; on a long form it can sit below the fold.
+    if (target === container)
+      container
+        .querySelector('[data-afframe-flow-error]')
+        ?.scrollIntoView({ block: 'nearest' });
+    if (!retry) return target.focus({ preventScroll: true });
+    cancelFocusRef.current?.();
+    cancelFocusRef.current = focusWhenPossible(target);
   }, [errorCount]);
 
   const close = useCallback(() => {
+    // Drops a running action's result, not its busy state. EditFullPage
+    // stays open, so no open change bumps the session there.
+    sessionRef.current += 1;
     setError(null);
     onCloseRef.current();
   }, []);
@@ -233,26 +283,42 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   const clearError = useCallback(() => setError(null), []);
 
   const requestClose = useCallback(() => {
-    if (pendingRef.current || discardRef.current) return;
-    if (isDirty && confirmDiscard) {
-      const active = document.activeElement;
-      discardReturnRef.current =
-        focusable(active) && active !== document.body
-          ? active
-          : lastFocusRef.current;
+    if (discardRef.current) return;
+    const busy =
+      pendingRef.current && pendingSessionRef.current === sessionRef.current;
+    if (busy && !closeWhilePending) return;
+    // Leaving mid-action abandons it, so ask even when clean.
+    if ((isDirty || busy) && confirmDiscard) {
+      discardReturnRef.current = focusedElement() ?? lastFocusRef.current;
       discardRef.current = true;
+      const whilePending = !isDirty;
       // Next task: opened inside an Escape keydown, the new dialog would get
       // that same key's cancel event and close at once.
-      discardTimerRef.current = setTimeout(() => setDiscardOpen(true));
+      discardTimerRef.current = setTimeout(() => {
+        setDiscardWhilePending(whilePending);
+        setDiscardOpen(true);
+      });
       return;
     }
     close();
-  }, [isDirty, confirmDiscard, close]);
+  }, [isDirty, confirmDiscard, closeWhilePending, close]);
 
   const run = useCallback(async (action: () => unknown) => {
     if (pendingRef.current) return false;
     const session = sessionRef.current;
     const current = () => session === sessionRef.current;
+    // A discard dialog opened while pending is moot once the action settles;
+    // one from a later session is not this action's.
+    const settle = (failed: boolean) => {
+      pendingRef.current = false;
+      setPending(false);
+      if (!discardRef.current || !current()) return;
+      dismissedRef.current = failed;
+      clearTimeout(discardTimerRef.current);
+      discardRef.current = false;
+      discardReturnRef.current = null;
+      setDiscardOpen(false);
+    };
     setError(null);
     try {
       const result = action();
@@ -262,22 +328,24 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
         typeof (result as PromiseLike<unknown> | undefined)?.then === 'function'
       ) {
         pendingRef.current = true;
+        pendingSessionRef.current = session;
         setPending(true);
         await result;
       }
     } catch (reason) {
-      if (!current()) return false;
-      pendingRef.current = false;
-      setPending(false);
+      // Abandoned: only the busy state ends.
+      if (!current()) {
+        settle(false);
+        return false;
+      }
+      settle(true);
       const { error: text, errorText } = messagesRef.current;
       setError(errorText?.(reason) ?? text);
       setErrorCount((count) => count + 1);
       return false;
     }
-    if (!current()) return false;
-    pendingRef.current = false;
-    setPending(false);
-    return true;
+    settle(false);
+    return current();
   }, []);
 
   const confirm = useCallback(() => {
@@ -306,11 +374,13 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     containerRef,
     pending,
     error,
+    errorCount,
     run,
     requestClose,
     close,
     clearError,
     discardOpen: open && discardOpen,
+    discardWhilePending,
     confirmDiscard: confirm,
     keepEditing,
     lastFocusRef,

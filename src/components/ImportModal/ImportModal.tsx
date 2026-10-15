@@ -206,6 +206,8 @@ export function ImportModal({
   // The drop area and rows stay enabled while an import runs (Carbon's
   // disabled styles fail the contrast check); changes wait instead.
   const addFiles = (files: File[]) => {
+    const dropped = droppedCount.current;
+    droppedCount.current = 0;
     if (dialog.pending) return;
     const added: Item[] = files.map((file) => {
       nextId.current += 1;
@@ -234,10 +236,7 @@ export function ImportModal({
     dialog.clearError();
     // Errors are announced by the file row itself (Carbon renders them with
     // role="alert"); the polite region announces the files that were added.
-    const ignored = multiple
-      ? 0
-      : Math.max(droppedCount.current, files.length) - 1;
-    droppedCount.current = 0;
+    const ignored = multiple ? 0 : Math.max(dropped, files.length) - 1;
     const note = ignored > 0 ? text.extraFilesIgnored(ignored) : '';
     setIgnoredNote(note);
     setAnnouncement(

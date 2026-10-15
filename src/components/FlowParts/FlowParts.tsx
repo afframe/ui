@@ -1,7 +1,13 @@
 'use client';
 // The parts the nine Afframe dialogs and flows render around `useFlow`: the
-// form, the error alert, the polite live region and the discard dialog.
-import { InlineNotification, Modal, usePrefix } from '@carbon/react';
+// form, the error alert, the busy button label, the polite live region and
+// the discard dialog.
+import {
+  InlineLoading,
+  InlineNotification,
+  Modal,
+  usePrefix,
+} from '@carbon/react';
 import { useEffect, useRef } from 'react';
 import type {
   FormEvent,
@@ -10,6 +16,7 @@ import type {
   ReactNode,
   Ref,
 } from 'react';
+import { defaultLeavePendingMessages } from './messages.js';
 import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useMergedRefs } from './refs.js';
 import type { Flow } from './useFlow.js';
@@ -72,12 +79,20 @@ export function FlowForm({
       !textInputTypes.has(target.type)
     )
       return;
+    // A combobox takes Enter to pick an item or open its list; Carbon's
+    // ComboBox opens it on an empty input without preventDefault, so the
+    // form's implicit submission is blocked here too.
+    const handled =
+      event.defaultPrevented ||
+      target.closest(
+        '[aria-expanded="true"], [role="combobox"], [role="listbox"]'
+      );
     event.preventDefault();
-    submit();
+    if (!handled) submit();
   };
   return (
     <form
-      // Focus parks here while pending (useFlow).
+      // Focus parks here while pending and after an error (useFlow).
       tabIndex={-1}
       {...rest}
       ref={formRef}
@@ -112,7 +127,10 @@ export function FlowDescription({
   return description ? <p className={className}>{description}</p> : null;
 }
 
-/** The error alert; focusable for error focus. Render it inside `containerRef`. */
+/**
+ * The error alert, as wide as the fields. Not focusable: role="alert"
+ * announces it, and the error focus goes to `containerRef` (useFlow).
+ */
 export function FlowError({
   error,
   iconDescription,
@@ -122,19 +140,48 @@ export function FlowError({
 }) {
   if (error === null) return null;
   return (
-    <div
+    <InlineNotification
       data-afframe-flow-error=""
-      tabIndex={-1}
-      className="afframe-flow-error">
-      <InlineNotification
-        kind="error"
-        role="alert"
-        lowContrast
-        hideCloseButton
-        title={error}
-        statusIconDescription={iconDescription}
+      className="afframe-flow-error"
+      kind="error"
+      role="alert"
+      lowContrast
+      hideCloseButton
+      title={error}
+      statusIconDescription={iconDescription}
+    />
+  );
+}
+
+/**
+ * A primary button's content: its label, or while busy Carbon's
+ * InlineLoading with the label, in Carbon's loading button look (the
+ * styles key on `afframe-flow-button-loading`). The spinner is hidden from
+ * assistive tech, so the button's name stays the label; announce the busy
+ * state with FlowStatus.
+ */
+export function FlowButtonLabel({
+  label,
+  busy,
+}: {
+  label: string;
+  busy: boolean;
+}) {
+  const prefix = usePrefix();
+  if (!busy) return label;
+  return (
+    <>
+      {/* Hidden: its icon name and text would read the label twice, and its
+          live regions would compete with FlowStatus. */}
+      <InlineLoading
+        aria-hidden="true"
+        status="active"
+        description={label}
+        iconDescription={label}
+        className={`${prefix}--inline-loading--btn afframe-flow-button-loading`}
       />
-    </div>
+      <span className={`${prefix}--visually-hidden`}>{label}</span>
+    </>
   );
 }
 
@@ -159,7 +206,8 @@ export function FlowStatus({
 }
 
 /**
- * "Discard changes?" over the parent surface. Render it as a sibling of the
+ * "Discard changes?" over the parent surface, or "Stop waiting?" when the
+ * surface is clean and its action still runs. Render it as a sibling of the
  * surface, never inside it: keys inside it must not reach the surface's own
  * React handlers (IBM SidePanel traps Tab and closes on Escape).
  */
@@ -167,12 +215,29 @@ export function DiscardDialog({
   flow,
   messages,
 }: {
-  flow: Pick<Flow, 'discardOpen' | 'keepEditing' | 'confirmDiscard'>;
+  flow: Pick<
+    Flow,
+    'discardOpen' | 'discardWhilePending' | 'keepEditing' | 'confirmDiscard'
+  >;
   messages: DiscardMessages & Pick<FlowMessages, 'closeIconDescription'>;
 }) {
   const prefix = usePrefix();
   const ref = useRef<HTMLDivElement>(null);
   const { discardOpen } = flow;
+  const leave = { ...defaultLeavePendingMessages, ...messages };
+  const text = flow.discardWhilePending
+    ? {
+        title: leave.leavePendingTitle,
+        body: leave.leavePendingBody,
+        confirm: leave.leavePending,
+        keep: leave.keepWaiting,
+      }
+    : {
+        title: messages.discardTitle,
+        body: messages.discardBody,
+        confirm: messages.discard,
+        keep: messages.keepEditing,
+      };
   // The dialog element ignores Carbon's selectorPrimaryFocus.
   useEffect(() => {
     if (!discardOpen) return;
@@ -198,14 +263,14 @@ export function DiscardDialog({
         alert
         size="xs"
         preventCloseOnClickOutside
-        modalHeading={messages.discardTitle}
-        primaryButtonText={messages.discard}
-        secondaryButtonText={messages.keepEditing}
+        modalHeading={text.title}
+        primaryButtonText={text.confirm}
+        secondaryButtonText={text.keep}
         closeButtonLabel={messages.closeIconDescription}
         onRequestClose={flow.keepEditing}
         onSecondarySubmit={flow.keepEditing}
         onRequestSubmit={flow.confirmDiscard}>
-        <p>{messages.discardBody}</p>
+        <p>{text.body}</p>
       </Modal>
     </div>
   );

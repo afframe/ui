@@ -3,7 +3,6 @@
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
-@use '@carbon/styles/scss/utilities/focus-outline' as *;
 
 .afframe-create-modal-description {
   @include type.type-style('body-01');
@@ -18,15 +17,33 @@
   gap: $spacing-05;
 }
 
-// Focus parks on the form while pending; it shows no ring of its own.
+// Focus parks on the form while pending and after an error; it shows no
+// ring of its own.
 .afframe-create-edit-form:focus {
   outline: none;
 }
 
-.afframe-flow-error:focus {
-  @include focus-outline('outline');
+// Carbon caps an inline notification at 288 to 832px by breakpoint; in a
+// flow it spans the form like the fields.
+.afframe-flow-error {
+  margin: 0;
+  max-inline-size: none;
+  min-inline-size: 0;
 }
 
-.afframe-flow-error > * {
-  margin: 0;
+// A busy primary button in Carbon's loading look (.cds--btn--loading). Not
+// Carbon Modal's loadingStatus: it also disables Cancel, which the flows keep.
+/* stylelint-disable selector-class-pattern -- Carbon's and IBM's BEM class names */
+.cds--btn-set .cds--btn:has(> .afframe-flow-button-loading) {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
 }
+
+// IBM ActionSet pins any InlineLoading to a 32px slot at the button's edge,
+// for its own icon-only spinner; this one carries the label.
+.c4p--action-set .c4p--action-set__action-button .afframe-flow-button-loading {
+  position: static;
+  inline-size: auto;
+}
+/* stylelint-enable selector-class-pattern */

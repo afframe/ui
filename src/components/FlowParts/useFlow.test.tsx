@@ -1,10 +1,15 @@
+import { ComboBox } from '@carbon/react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { useEffect, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import { DiscardDialog, FlowError, FlowForm } from './FlowParts.js';
-import { defaultFormFlowMessages } from './messages.js';
+import { leavePendingButton } from './flowTestUtils.js';
+import {
+  defaultFormFlowMessages,
+  defaultLeavePendingMessages as leave,
+} from './messages.js';
 import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useFlow } from './useFlow.js';
 
@@ -16,6 +21,7 @@ function Surface({
   onSubmit,
   isDirty = false,
   confirmDiscard,
+  closeWhilePending,
   launcherRef,
   submitDisabled,
   windowEscape = false,
@@ -27,6 +33,7 @@ function Surface({
   onSubmit: () => void | Promise<void>;
   isDirty?: boolean;
   confirmDiscard?: boolean;
+  closeWhilePending?: boolean;
   launcherRef?: React.RefObject<HTMLElement | null>;
   submitDisabled?: boolean;
   windowEscape?: boolean;
@@ -38,6 +45,7 @@ function Surface({
     onClose,
     isDirty,
     ...(confirmDiscard === undefined ? {} : { confirmDiscard }),
+    ...(closeWhilePending ? { closeWhilePending } : {}),
     launcherRef,
     messages: {
       error: surfaceMessages.error,
@@ -94,6 +102,7 @@ function Harness(props: {
   onClose?: () => void;
   isDirty?: boolean;
   confirmDiscard?: boolean;
+  closeWhilePending?: boolean;
   submitDisabled?: boolean;
   windowEscape?: boolean;
   disableWhilePending?: boolean;
@@ -101,6 +110,8 @@ function Harness(props: {
   noLauncherRef?: boolean;
   closeRef?: { current: () => void };
   surfaceMessages?: FlowMessages & DiscardMessages;
+  /** onClose leaves the surface mounted, as EditFullPage. */
+  keepOpen?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   if (props.closeRef) props.closeRef.current = () => setOpen(false);
@@ -124,12 +135,13 @@ function Harness(props: {
         onClose={() => {
           props.onClose?.();
           if (props.removeLauncher) setLauncherShown(false);
-          setOpen(false);
+          if (!props.keepOpen) setOpen(false);
         }}
         {...(props.isDirty === undefined ? {} : { isDirty: props.isDirty })}
         {...(props.confirmDiscard === undefined
           ? {}
           : { confirmDiscard: props.confirmDiscard })}
+        {...(props.closeWhilePending ? { closeWhilePending: true } : {})}
         {...(props.submitDisabled ? { submitDisabled: true } : {})}
         {...(props.windowEscape ? { windowEscape: true } : {})}
         {...(props.disableWhilePending ? { disableWhilePending: true } : {})}
@@ -190,7 +202,46 @@ test('Enter in a single-line input submits once; not in a textarea or when disab
   expect(blocked).not.toHaveBeenCalled();
 });
 
-test('async submit is busy, ignores close requests, then closes', async () => {
+function ComboSurface({ onSubmit }: { onSubmit: () => void }) {
+  const flow = useFlow<HTMLFormElement>({
+    open: true,
+    onClose: () => undefined,
+    messages: { error: messages.error },
+  });
+  return (
+    <AfframeProvider>
+      <FlowForm flow={flow} onSubmit={onSubmit} aria-label="Combo">
+        <ComboBox
+          id="fruit"
+          titleText="Fruit"
+          items={['Apple', 'Banana']}
+          onChange={() => undefined}
+        />
+      </FlowForm>
+    </AfframeProvider>
+  );
+}
+
+test('Enter in a ComboBox picks or opens the list instead of submitting', async () => {
+  const onSubmit = vi.fn();
+  render(<ComboSurface onSubmit={onSubmit} />);
+  const input = screen.getByRole<HTMLInputElement>('combobox', {
+    name: 'Fruit',
+  });
+  await userEvent.click(input);
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() =>
+    expect(input.getAttribute('aria-expanded')).toBe('false')
+  );
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(input.getAttribute('aria-expanded')).toBe('true'));
+  expect(onSubmit).not.toHaveBeenCalled();
+  await userEvent.keyboard('Ban{Enter}');
+  await waitFor(() => expect(input.value).toBe('Banana'));
+  expect(onSubmit).not.toHaveBeenCalled();
+});
+
+test('without closeWhilePending, close requests wait for a pending submit', async () => {
   let resolve: () => void = () => undefined;
   const onClose = vi.fn();
   const onSubmit = () =>
@@ -227,7 +278,7 @@ test('focus stays in the form while the clicked button is disabled by pending', 
   expect(getComputedStyle(form).outlineStyle).toBe('none');
 });
 
-test('rejected submit keeps the surface open and focuses the alert', async () => {
+test('rejected submit keeps the surface open and focuses the form, not the alert', async () => {
   const onClose = vi.fn();
   const { unmount } = render(
     <Harness
@@ -241,10 +292,34 @@ test('rejected submit keeps the surface open and focuses the alert', async () =>
   expect(alert.textContent).toContain(messages.error);
   expect(alert.textContent).not.toContain('Name is taken');
   expect(onClose).not.toHaveBeenCalled();
-  await waitFor(() =>
-    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
-  );
+  const form = screen.getByRole('form', { name: 'Surface' });
+  await waitFor(() => expect(active()).toBe(form));
+  expect(alert.hasAttribute('data-afframe-flow-error')).toBe(true);
+  // The alert takes no focus; the form shows no ring; Tab reaches the first field.
+  expect(alert.hasAttribute('tabindex')).toBe(false);
+  expect(getComputedStyle(form).outlineStyle).toBe('none');
+  await userEvent.tab();
+  expect(active()).toBe(screen.getByRole('textbox', { name: 'Name' }));
   unmount();
+
+  // A form taller than the viewport still shows the alert.
+  const tall = render(
+    <>
+      <div style={{ blockSize: '150vh' }} />
+      <Harness onSubmit={() => Promise.reject(new Error('Again'))} />
+    </>
+  );
+  await openSurface();
+  screen.getByRole('textbox', { name: 'Name' }).focus({ preventScroll: true });
+  window.scrollTo(0, 0);
+  await userEvent.keyboard('{Enter}');
+  const shown = await screen.findByRole('alert');
+  await waitFor(() =>
+    expect(shown.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      window.innerHeight
+    )
+  );
+  tall.unmount();
 
   render(<Harness onSubmit={() => Promise.reject(new Error(''))} />);
   await openSurface();
@@ -422,5 +497,263 @@ test('errorText shows the details of a rejection', async () => {
   await userEvent.click(screen.getByRole('button', { name: 'Save' }));
   expect((await screen.findByRole('alert')).textContent).toContain(
     'Details: Name is taken'
+  );
+});
+
+/** An action the test settles by hand. */
+function deferred() {
+  let resolve: () => void = () => undefined;
+  let reject: (reason: unknown) => void = () => undefined;
+  const promise = new Promise<void>((done, fail) => {
+    resolve = done;
+    reject = fail;
+  });
+  return {
+    promise,
+    resolve: () => resolve(),
+    reject: (r: unknown) => reject(r),
+  };
+}
+
+async function closeWhileBusy(onClose: () => void) {
+  const action = deferred();
+  render(
+    <Harness
+      closeWhilePending
+      onClose={onClose}
+      onSubmit={() => action.promise}
+    />
+  );
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+  await screen.findByRole('alertdialog');
+  return action;
+}
+
+test('closeWhilePending: a clean surface asks to stop waiting; Keep waiting keeps the action', async () => {
+  const onClose = vi.fn();
+  const action = await closeWhileBusy(onClose);
+  const dialog = screen.getByRole('alertdialog');
+  expect(dialog.textContent).toContain(leave.leavePendingTitle);
+  expect(dialog.textContent).toContain(leave.leavePendingBody);
+  expect(dialog.textContent).not.toContain(messages.discardTitle);
+  await userEvent.click(
+    screen.getByRole('button', { name: leave.keepWaiting })
+  );
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
+  expect(onClose).not.toHaveBeenCalled();
+  await act(async () => action.resolve());
+  await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+});
+
+test('closeWhilePending: a success closes the dialog and then the surface', async () => {
+  const onClose = vi.fn();
+  const action = await closeWhileBusy(onClose);
+  await act(async () => action.resolve());
+  await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+});
+
+test('closeWhilePending: a failure closes the dialog and focuses the form', async () => {
+  const onClose = vi.fn();
+  const action = await closeWhileBusy(onClose);
+  await act(async () => action.reject(new Error('Nope')));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  screen.getByRole('alert');
+  const form = screen.getByRole('form', { name: 'Surface' });
+  await waitFor(() => expect(active()).toBe(form));
+  // Not taken back by the closing dialog.
+  await pause(300);
+  expect(active()).toBe(form);
+  expect(onClose).not.toHaveBeenCalled();
+});
+
+test('closeWhilePending: a dirty surface keeps the discard text', async () => {
+  const action = deferred();
+  render(<Harness closeWhilePending isDirty onSubmit={() => action.promise} />);
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+  const dialog = await screen.findByRole('alertdialog');
+  expect(dialog.textContent).toContain(messages.discardTitle);
+  expect(dialog.textContent).toContain(messages.discardBody);
+  expect(dialog.textContent).not.toContain(leave.leavePendingTitle);
+  expect(
+    screen.getByRole('button', { name: messages.keepEditing })
+  ).toBeTruthy();
+  expect(screen.getByRole('button', { name: messages.discard })).toBeTruthy();
+});
+
+test('closeWhilePending: Stop waiting closes at once and ignores the result', async () => {
+  const onClose = vi.fn();
+  const action = await closeWhileBusy(onClose);
+  await userEvent.click(await leavePendingButton());
+  expect(onClose).toHaveBeenCalledTimes(1);
+  await act(async () => action.resolve());
+  await pause(50);
+  expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('closeWhilePending with confirmDiscard false closes at once', async () => {
+  const onClose = vi.fn();
+  const action = deferred();
+  render(
+    <Harness
+      closeWhilePending
+      confirmDiscard={false}
+      onClose={onClose}
+      onSubmit={() => action.promise}
+    />
+  );
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(screen.queryByRole('alertdialog')).toBeNull();
+  await act(async () => action.reject(new Error('late')));
+  await pause(50);
+  expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test.each(['resolves', 'rejects'] as const)(
+  'closeWhilePending: a surface that stays open after Stop waiting stays busy until the abandoned action %s',
+  async (outcome) => {
+    const onClose = vi.fn();
+    const action = deferred();
+    const onSubmit = vi.fn(() => action.promise);
+    render(
+      <Harness
+        keepOpen
+        closeWhilePending
+        onClose={onClose}
+        onSubmit={onSubmit}
+      />
+    );
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await userEvent.click(await leavePendingButton());
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+    expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
+    await userEvent.click(screen.getByRole('button', { name: 'Busy' }));
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    await act(async () =>
+      outcome === 'resolves' ? action.resolve() : action.reject(new Error('x'))
+    );
+    await waitFor(() =>
+      expect(screen.getByRole('form').getAttribute('aria-busy')).toBeNull()
+    );
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+  }
+);
+
+test('a surface reopened while an abandoned action runs is busy until it settles', async () => {
+  const onClose = vi.fn();
+  const closeRef: { current: () => void } = { current: () => undefined };
+  const action = deferred();
+  render(
+    <Harness
+      closeRef={closeRef}
+      onClose={onClose}
+      onSubmit={() => action.promise}
+    />
+  );
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  act(() => closeRef.current());
+  await openSurface();
+  expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
+  expect(screen.getByRole('button', { name: 'Busy' })).toBeTruthy();
+  await act(async () => action.resolve());
+  await waitFor(() =>
+    expect(screen.getByRole('form').getAttribute('aria-busy')).toBeNull()
+  );
+  expect(onClose).not.toHaveBeenCalled();
+  expect(screen.queryByRole('alert')).toBeNull();
+});
+
+test.each(['resolves', 'rejects'] as const)(
+  'an abandoned action that %s leaves the discard dialog of a later session open',
+  async (outcome) => {
+    const action = deferred();
+    render(
+      <Harness closeWhilePending isDirty onSubmit={() => action.promise} />
+    );
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: messages.discard })
+    );
+    await waitFor(() => expect(screen.queryByRole('form')).toBeNull());
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    const keep = await screen.findByRole('button', {
+      name: messages.keepEditing,
+    });
+    await waitFor(() => expect(active()).toBe(keep));
+    await act(async () =>
+      outcome === 'resolves' ? action.resolve() : action.reject(new Error('x'))
+    );
+    await pause(400);
+    expect(
+      document.querySelector('.afframe-create-edit-discard .is-visible')
+    ).not.toBeNull();
+    expect(active()).toBe(keep);
+    expect(screen.queryByRole('alert')).toBeNull();
+  }
+);
+
+test.each([false, true])(
+  'a surface reopened after a parent close while busy closes at once (closeWhilePending %s)',
+  async (closeWhilePending) => {
+    const onClose = vi.fn();
+    const closeRef: { current: () => void } = { current: () => undefined };
+    const onSubmit = vi.fn(() => new Promise<void>(() => undefined));
+    render(
+      <Harness
+        closeRef={closeRef}
+        onClose={onClose}
+        closeWhilePending={closeWhilePending}
+        onSubmit={onSubmit}
+      />
+    );
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    act(() => closeRef.current());
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Busy' }));
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await pause(50);
+    expect(screen.queryByRole('alertdialog')).toBeNull();
+  }
+);
+
+test('rejected submit skips an invalid field that is not rendered', async () => {
+  render(
+    <Harness
+      onSubmit={() => {
+        const name = screen.getByRole('textbox', { name: 'Name' });
+        name.setAttribute('aria-invalid', 'true');
+        name.style.display = 'none';
+        screen
+          .getByRole('textbox', { name: 'Notes' })
+          .setAttribute('aria-invalid', 'true');
+        throw new Error('Invalid');
+      }}
+    />
+  );
+  await openSurface();
+  await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+  await waitFor(() =>
+    expect(active()).toBe(screen.getByRole('textbox', { name: 'Notes' }))
   );
 });

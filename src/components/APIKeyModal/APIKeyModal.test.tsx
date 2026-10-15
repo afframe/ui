@@ -209,8 +209,9 @@ test('pending and rejection: stays on the name step with an alert', async () => 
   const alert = await screen.findByText('Something went wrong. Try again.');
   expect(alert.closest('[role=alert]')).not.toBeNull();
   expect(nameField().value).toBe('CI');
+  // The dialog body takes the error focus, not the alert.
   await until(() =>
-    expect(active()?.hasAttribute('data-afframe-flow-error')).toBe(true)
+    expect(active()?.classList.contains('afframe-modal-body')).toBe(true)
   );
   await userEvent.click(screen.getByLabelText('Close', { selector: 'button' }));
   await until(() => expect(onClose).toHaveBeenCalledTimes(1));

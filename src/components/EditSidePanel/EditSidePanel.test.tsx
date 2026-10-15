@@ -5,6 +5,9 @@ import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import {
   englishLeft,
+  expectBusyPrimary,
+  expectErrorFocusAtStart,
+  leavePendingButton,
   sentinelMessages,
   tabbables,
 } from '../FlowParts/flowTestUtils.js';
@@ -140,11 +143,39 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText(defaults.pending).length).toBeGreaterThan(0);
+  expectBusyPrimary(primary, defaults.pending);
+  // Escape while busy asks first; the success closes that dialog too.
   await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
   expect(onClose).not.toHaveBeenCalled();
   resolve();
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+});
+
+test('while busy, Cancel stays enabled; Stop waiting leaves and drops the result', async () => {
+  let resolve: () => void = () => undefined;
+  const onClose = vi.fn();
+  render(
+    <Harness
+      onClose={onClose}
+      onSubmit={() =>
+        new Promise<void>((done) => {
+          resolve = done;
+        })
+      }
+    />
+  );
+  await launch();
+  await userEvent.click(screen.getByRole('button', { name: primary }));
+  const cancel = screen.getByRole('button', { name: defaults.cancel });
+  expect(cancel.hasAttribute('disabled')).toBe(false);
+  await userEvent.click(cancel);
+  await userEvent.click(await leavePendingButton());
+  expect(onClose).toHaveBeenCalledTimes(1);
+  resolve();
+  await new Promise((done) => setTimeout(done, 50));
+  expect(onClose).toHaveBeenCalledTimes(1);
 });
 
 test('a rejected submit stays open with an alert and no onClose', async () => {
@@ -161,6 +192,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
     defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
+  await expectErrorFocusAtStart(fieldA());
   expect(screen.getByRole('form')).toBeTruthy();
 });
 

@@ -11,7 +11,7 @@ import { DialogChooser } from '../../../.storybook/DialogChooser';
 
 <SourceLabel name="afframe" />
 
-[Source code](https://github.com/afframe/ui/tree/main/src/components/EditFullPage). See also [Edit pattern](https://carbondesignsystem.com/community/patterns/edit-pattern/).
+[Source code](https://github.com/afframe/ui/tree/main/src/components/EditFullPage). See also [Forms pattern](https://carbondesignsystem.com/building-blocks/core/patterns/forms).
 
 `EditFullPage` is a page-level edit form: a heading, an optional
 description, the fields, and a sticky action bar with Cancel and Save. It is
@@ -28,12 +28,22 @@ behaviour with `CreateModal`, `CreateSidePanel`, `EditSidePanel` and
 
 ## Usage and props
 
-Render it in place of the read-only view while the record is in edit mode.
-It renders a `<form>` named by its heading, not a `main` landmark: the app
-owns the page landmarks. `onClose` leaves edit mode. `onSubmit` may return a
-promise: while it is pending the form is busy and cannot be left with Cancel
-or Escape; when it resolves, `onClose` is called; when it rejects, the form
-stays and shows the error above the action bar.
+Render it in place of the read-only view while the record is in edit mode. It
+renders a `<form>` named by its heading, not a `main` landmark: the app owns
+the page landmarks.
+
+It fills the region it is rendered in, so the action bar sits at the bottom
+of a short form and sticks to the bottom of the viewport while a long form
+scrolls. The region needs a definite height, for example a main area of
+`block-size: 100dvh` or one that fills the space under the page header.
+Without one the bar sits right under the fields. `onClose` leaves edit mode. `onSubmit` may return a
+promise: while it is pending Save is disabled and shows Carbon's inline loading; when it
+resolves, `onClose` is called; when it rejects, the form stays and shows the
+error above the action bar. Closing while it is pending asks first, unless
+`confirmDiscard` is false: "Discard changes?" on a dirty form, "Stop waiting?"
+on a clean one. Discard or Stop waiting leaves edit mode and ignores the result;
+the dialog closes itself when the promise settles. If it is still shown or
+opened again before then, it stays busy until it settles; closing it then, with a clean form, needs no confirmation.
 
 ### Wiring `isDirty`
 
@@ -84,19 +94,23 @@ editing ? (
 `defaultEditFullPageMessages`. All strings except the optional `errorText` function,
 which is set from a client component.
 
-| Key                    | Default                                    |
-| ---------------------- | ------------------------------------------ |
-| `save`                 | Save                                       |
-| `cancel`               | Cancel                                     |
-| `pending`              | Saving                                     |
-| `error`                | The changes could not be saved. Try again. |
-| `errorText`            | not set: `error` is shown                  |
-| `errorIconDescription` | Error                                      |
-| `discardTitle`         | Discard changes?                           |
-| `discardBody`          | Your changes will be lost.                 |
-| `discard`              | Discard                                    |
-| `keepEditing`          | Keep editing                               |
-| `closeIconDescription` | Close (the discard dialog's close icon)    |
+| Key                    | Default                                             |
+| ---------------------- | --------------------------------------------------- |
+| `save`                 | Save                                                |
+| `cancel`               | Cancel                                              |
+| `pending`              | Saving                                              |
+| `error`                | The changes could not be saved. Try again.          |
+| `errorText`            | not set: `error` is shown                           |
+| `errorIconDescription` | Error                                               |
+| `discardTitle`         | Discard changes?                                    |
+| `discardBody`          | Your changes will be lost.                          |
+| `discard`              | Discard                                             |
+| `keepEditing`          | Keep editing                                        |
+| `leavePendingTitle`    | Stop waiting? (closing a clean form while it saves) |
+| `leavePendingBody`     | Saving continues in the background.                 |
+| `leavePending`         | Stop waiting                                        |
+| `keepWaiting`          | Keep waiting                                        |
+| `closeIconDescription` | Close (the discard dialog's close icon)             |
 
 ## Keyboard and screen reader behaviour
 
@@ -104,26 +118,29 @@ On mount, focus moves to the first form control. Focus order: the form
 fields, Cancel, Save. There is no focus trap: it is a page, and Tab continues
 to the rest of the page.
 
-| Key    | Where                | Action                                                                                                      |
-| ------ | -------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Enter  | single-line field    | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                    |
-| Escape | anywhere in the form | Leaves a clean form. On a dirty one, opens the discard dialog. Ignored while an open list or menu takes it. |
-| Escape | discard dialog       | Closes only the discard dialog; focus returns to the element that had it.                                   |
-| Tab    | discard dialog       | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.                       |
+| Key    | Where                | Action                                                                                                                                                              |
+| ------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enter  | single-line field    | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                                                                            |
+| Escape | anywhere in the form | Leaves a clean form. On a dirty one, or while a submit is pending, opens the discard dialog. Ignored while an open list or menu takes it.                           |
+| Escape | discard dialog       | Closes only the discard dialog; focus returns to the element that had it.                                                                                           |
+| Tab    | discard dialog       | Moves between its close icon, Keep editing and Discard (Keep waiting and Stop waiting on a clean form while it saves); focus starts on Keep editing (Keep waiting). |
 
 After leaving edit mode, focus moves to `launcherRef` once it is on the page.
 
 A focused field never sits under the sticky action bar: fields keep a scroll
-margin the size of the bar (the `LongForm` story checks it).
+margin the size of the bar (the test-only `FocusNotObscured` story checks it).
 
 Screen readers announce:
 
 - the form named by its heading;
-- while saving, the form as busy and Save's loading text (`pending`);
+- while saving, the form as busy and `pending` as a status message; Save
+  keeps its name and shows Carbon's inline loading;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
-  field with `aria-invalid="true"`, else to the alert;
+  field with `aria-invalid="true"`, else to the form itself, with no focus ring, so the next
+  Tab reaches the first field; the alert takes no focus;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
-  `discardBody`.
+  `discardBody` (`leavePendingTitle` and `leavePendingBody` on a clean form
+  while it saves).
 
 ## Stories
 

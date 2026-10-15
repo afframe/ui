@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ComposedModal parts and form parts from @afframe/ui, icons from @afframe/ui/icons, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), source tag, inline spacing as Carbon spacing tokens, story names unified, descriptions for the story-arg props, Default with neutral business data, its launcher ref and an initial field, preventCloseOnClickOutside on by default (a footer is present), Passive story name. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ComposedModal parts and form parts from @afframe/ui, icons from @afframe/ui/icons, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), source tag, inline spacing as Carbon spacing tokens, story names unified, descriptions for the story-arg props, Default with neutral business data, its launcher ref and an initial field, With AI Label, With State Manager, With Scrolling Content and With Inline Loading open on their first field, preventCloseOnClickOutside on by default (a footer is present), Passive story name. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -443,6 +443,7 @@ export const WithStateManager: StoryFn<ComposedModalStoryArgs> = (args) => {
             </p>
             <TextInput
               data-modal-primary-focus
+              ref={autofocus}
               id="text-input-1"
               labelText="Domain name"
               placeholder="e.g. github.com"
@@ -513,6 +514,7 @@ export const WithScrollingContent: StoryFn<ComposedModalStoryArgs> = (args) => {
           </p>
           <TextInput
             data-modal-primary-focus
+            ref={autofocus}
             id="text-input-1"
             labelText="Domain name"
             placeholder="e.g. github.com"
@@ -620,6 +622,7 @@ export const WithInlineLoading: StoryFn<ComposedModalStoryArgs> = (args) => {
           </p>
           <TextInput
             data-modal-primary-focus
+            ref={autofocus}
             id="text-input-1"
             labelText="Domain name"
             placeholder="e.g. github.com"
@@ -757,6 +760,7 @@ export const WithAILabel: StoryObj<ComposedModalStoryArgs> = {
 
             <TextInput
               data-modal-primary-focus
+              ref={autofocus}
               id="text-input-1"
               labelText="Domain name"
               placeholder="e.g. github.com"

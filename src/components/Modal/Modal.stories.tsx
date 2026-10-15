@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified, prop descriptions from Carbon's prop docs, Default with neutral business data, its launcher ref and an initial field, Danger and Passive story names. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Modal and form parts from @afframe/ui, icons from @afframe/ui/icons, unused Popover imports and state dropped, ComboBox gets its required onChange, the second withAILabel launcher dropped (it called an undefined setter), TextArea gets an id so its label applies, source tag, inline spacing as Carbon spacing tokens, story names unified, prop descriptions from Carbon's prop docs, Default with neutral business data, its launcher ref and an initial field, With AI Label, With Scrolling Content and With State Manager open on their first field, Danger and Passive story names. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -559,6 +559,7 @@ export const WithScrollingContent: StoryFn<ModalStoryArgs> = ({
         <div style={{ marginBottom: 'var(--cds-spacing-06)' }}>
           <TextInput
             data-modal-primary-focus
+            ref={autofocus}
             id="text-input-1"
             labelText="Domain name"
             placeholder="For example, GitHub.com"
@@ -663,6 +664,7 @@ export const WithStateManager: StoryFn<ModalStoryArgs> = ({
           </p>
           <TextInput
             data-modal-primary-focus
+            ref={autofocus}
             id="text-input-1"
             labelText="Domain name"
             placeholder="e.g. github.com"
@@ -836,6 +838,7 @@ export const WithAILabel: StoryObj<ModalStoryArgs> = {
           </p>
           <TextInput
             data-modal-primary-focus
+            ref={autofocus}
             id="text-input-1"
             labelText="Domain name"
             placeholder="For example, GitHub.com"

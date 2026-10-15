@@ -2,10 +2,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { useRef, useState } from 'react';
 import type { Ref } from 'react';
 import { expect, test, vi } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../index.js';
 import {
   englishLeft,
+  expectBusyPrimary,
+  expectErrorFocusAtStart,
+  leavePendingButton,
   sentinelMessages,
   tabbables,
 } from '../FlowParts/flowTestUtils.js';
@@ -21,7 +24,12 @@ const primary = defaults.create;
 type HarnessProps = Partial<
   Pick<
     CreateSidePanelProps,
-    'onSubmit' | 'submitDisabled' | 'isDirty' | 'messages' | 'onClose'
+    | 'onSubmit'
+    | 'submitDisabled'
+    | 'isDirty'
+    | 'messages'
+    | 'onClose'
+    | 'headerSelector'
   >
 > & { extra?: boolean; slideIn?: boolean; panelRef?: Ref<HTMLElement> };
 
@@ -49,7 +57,10 @@ function Harness({ onClose, ...props }: HarnessProps) {
           : {})}
         {...(props.submitDisabled ? { submitDisabled: true } : {})}
         {...(props.isDirty ? { isDirty: true } : {})}
-        {...(props.messages ? { messages: props.messages } : {})}>
+        {...(props.messages ? { messages: props.messages } : {})}
+        {...(props.headerSelector
+          ? { headerSelector: props.headerSelector }
+          : {})}>
         <label>
           Field A
           <input />
@@ -159,11 +170,39 @@ test('Enter submits once; async submit is busy, then closes', async () => {
   await userEvent.keyboard('{Enter}');
   expect(onSubmit).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('form').getAttribute('aria-busy')).toBe('true');
-  expect(screen.getAllByText(defaults.pending).length).toBeGreaterThan(0);
+  expectBusyPrimary(primary, defaults.pending);
+  // Escape while busy asks first; the success closes that dialog too.
   await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
   expect(onClose).not.toHaveBeenCalled();
   resolve();
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+});
+
+test('while busy, Cancel stays enabled; Stop waiting leaves and drops the result', async () => {
+  let resolve: () => void = () => undefined;
+  const onClose = vi.fn();
+  render(
+    <Harness
+      onClose={onClose}
+      onSubmit={() =>
+        new Promise<void>((done) => {
+          resolve = done;
+        })
+      }
+    />
+  );
+  await launch();
+  await userEvent.click(screen.getByRole('button', { name: primary }));
+  const cancel = screen.getByRole('button', { name: defaults.cancel });
+  expect(cancel.hasAttribute('disabled')).toBe(false);
+  await userEvent.click(cancel);
+  await userEvent.click(await leavePendingButton());
+  expect(onClose).toHaveBeenCalledTimes(1);
+  resolve();
+  await new Promise((done) => setTimeout(done, 50));
+  expect(onClose).toHaveBeenCalledTimes(1);
 });
 
 test('a rejected submit stays open with an alert and no onClose', async () => {
@@ -180,6 +219,7 @@ test('a rejected submit stays open with an alert and no onClose', async () => {
     defaults.error
   );
   expect(onClose).not.toHaveBeenCalled();
+  await expectErrorFocusAtStart(fieldA());
   expect(screen.getByRole('form')).toBeTruthy();
 });
 
@@ -266,4 +306,100 @@ test('a callback ref gets the aside; the focus trap and the exit still work', as
   await waitFor(() => expect(screen.queryByTestId('panel')).toBeNull());
   expect(nodes.at(-1)).toBeNull();
   await waitFor(() => expect(active()).toBe(launcher()));
+});
+
+test('a rejection under the discard dialog closes it and focuses the form', async () => {
+  let reject: (reason: unknown) => void = () => undefined;
+  render(
+    <Harness
+      onSubmit={() =>
+        new Promise<void>((_, fail) => {
+          reject = fail;
+        })
+      }
+    />
+  );
+  await launch();
+  await userEvent.click(screen.getByRole('button', { name: primary }));
+  await userEvent.keyboard('{Escape}');
+  await screen.findByRole('alertdialog');
+  reject(new Error('Duplicate'));
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+  screen.getByRole('alert');
+  const form = fieldA().closest('form');
+  await waitFor(() => expect(document.activeElement).toBe(form));
+  await new Promise((done) => setTimeout(done, 300));
+  expect(document.activeElement).toBe(form);
+});
+
+test('the busy primary button fits a narrow screen', async () => {
+  await page.viewport(375, 768);
+  try {
+    render(<Harness onSubmit={() => new Promise<void>(() => undefined)} />);
+    await launch();
+    await userEvent.click(screen.getByRole('button', { name: primary }));
+    expectBusyPrimary(primary, defaults.pending);
+  } finally {
+    await page.viewport(1024, 768);
+  }
+});
+
+/** A fixed page header of `height`, like Carbon UI Shell's. */
+function addHeader(className: string, height: string) {
+  const header = document.createElement('header');
+  header.className = className;
+  Object.assign(header.style, {
+    position: 'fixed',
+    insetBlockStart: '0',
+    inlineSize: '100%',
+    blockSize: height,
+    zIndex: '8000',
+  });
+  document.body.append(header);
+  return header;
+}
+
+// The header covers the launcher, so it opens from the keyboard.
+async function launchUnderHeader() {
+  launcher().focus();
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(active()).toBe(fieldA()));
+}
+
+const panelBox = () => screen.getByTestId('panel').getBoundingClientRect();
+
+test('without a page header the panel is full height', async () => {
+  render(<Harness />);
+  await launch();
+  expect(panelBox().top).toBe(0);
+  expect(panelBox().height).toBe(window.innerHeight);
+});
+
+test('the panel starts below the Carbon header and follows its size', async () => {
+  const header = addHeader('cds--header', '3.5rem');
+  try {
+    render(<Harness />);
+    await launchUnderHeader();
+    const bottom = () => header.getBoundingClientRect().bottom;
+    expect(panelBox().top).toBe(bottom());
+    expect(panelBox().bottom).toBe(window.innerHeight);
+    header.style.blockSize = '5rem';
+    await waitFor(() => expect(panelBox().top).toBe(bottom()));
+    // The overlay sits under the header: the header stays reachable.
+    const hit = document.elementFromPoint(10, bottom() / 2);
+    expect(header.contains(hit)).toBe(true);
+  } finally {
+    header.remove();
+  }
+});
+
+test('headerSelector names another header', async () => {
+  const header = addHeader('app-bar', '2.5rem');
+  try {
+    render(<Harness headerSelector=".app-bar" />);
+    await launchUnderHeader();
+    expect(panelBox().top).toBe(header.getBoundingClientRect().bottom);
+  } finally {
+    header.remove();
+  }
 });

@@ -11,7 +11,7 @@ import { DialogChooser } from '../../../.storybook/DialogChooser';
 
 <SourceLabel name="afframe" />
 
-[Source code](https://github.com/afframe/ui/tree/main/src/components/CreateSidePanel). See also [Create flows pattern](https://carbondesignsystem.com/community/patterns/create-flows/).
+[Source code](https://github.com/afframe/ui/tree/main/src/components/CreateSidePanel). See also [Create flows pattern](https://ibm-products.carbondesignsystem.com/?path=/docs/patterns-create-flows-createsidepanel--overview).
 
 `CreateSidePanel` is a create form in IBM Products' `SidePanel`, for a create
 task with more fields than a modal holds while the page stays in view. It
@@ -28,8 +28,13 @@ cancel, discard and focus behaviour with `CreateModal`, `EditSidePanel`,
 ## Usage and props
 
 `open` is controlled. `onSubmit` may return a promise: while it is pending the
-panel is busy and cannot close; when it resolves, `onClose` is called; when it
-rejects, the panel stays open and shows the error above the action bar.
+primary button is disabled and shows Carbon's inline loading; when it resolves, `onClose` is
+called; when it rejects, the panel stays open and shows the error above the
+action bar. Closing while it is pending asks first, unless `confirmDiscard` is
+false: "Discard changes?" on a dirty form, "Stop waiting?" on a clean one.
+Discard or Stop waiting closes the panel and ignores the result; the dialog
+closes itself when the promise settles. If it is still shown or opened again
+before then, it stays busy until it settles; closing it then, with a clean form, needs no confirmation.
 
 ```tsx
 import { CreateSidePanel } from '@afframe/ui';
@@ -61,6 +66,10 @@ const [name, setName] = useState('');
   then) are passed to `SidePanel`.
 - `decorator`: an AI label or another decorator next to the close icon
   (`SidePanel` supports it).
+- `headerSelector`: the page header the panel starts below. While open, the
+  panel measures that header's bottom edge and follows its size; default
+  Carbon UI Shell's `Header`. Without a header, or with it scrolled away, the
+  panel is full height. The overlay stays under the header.
 - `isDirty`: the app compares the field state with the initial values. When
   true, Escape, the close icon, Cancel and an overlay click ask "Discard
   changes?" first, unless `confirmDiscard` is false.
@@ -92,6 +101,10 @@ which is set from a client component.
 | `discardBody`          | Your changes will be lost.                              |
 | `discard`              | Discard                                                 |
 | `keepEditing`          | Keep editing                                            |
+| `leavePendingTitle`    | Stop waiting? (closing a clean form while it saves)     |
+| `leavePendingBody`     | Saving continues in the background.                     |
+| `leavePending`         | Stop waiting                                            |
+| `keepWaiting`          | Keep waiting                                            |
 | `closeIconDescription` | Close (the panel's and the discard dialog's close icon) |
 
 ## Keyboard and screen reader behaviour
@@ -102,29 +115,31 @@ Shift+Tab stay inside the panel and wrap. A `slideIn` panel has no overlay and
 no trap: Tab continues into the page. Its Escape is ignored while an
 open list or menu inside the panel takes it.
 
-| Key    | Where                 | Action                                                                                   |
-| ------ | --------------------- | ---------------------------------------------------------------------------------------- |
-| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field. |
-| Escape | anywhere in the panel | Closes a clean panel. On a dirty one, opens the discard dialog.                          |
-| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                |
-| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.    |
+| Key    | Where                 | Action                                                                                                                                                              |
+| ------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                                                                            |
+| Escape | anywhere in the panel | Closes a clean panel. On a dirty one, or while a submit is pending, opens the discard dialog.                                                                       |
+| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                                                                                           |
+| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard (Keep waiting and Stop waiting on a clean form while it saves); focus starts on Keep editing (Keep waiting). |
 
 On close, focus returns to `launcherRef`, else to the element that had focus
 when the panel opened, else to the page body.
 
 A focused field never sits under the action bar: fields keep a scroll margin
-the size of the bar (the `LongForm` story checks it).
+the size of the bar (the test-only `FocusNotObscured` story checks it).
 
 Screen readers announce:
 
 - the panel as a complementary region named by `title`, and the form named
   by `title` too;
-- while submitting, the form as busy and the primary button's loading text
-  (`pending`);
+- while submitting, the form as busy and `pending` as a status message; the
+  primary button keeps its name and shows Carbon's inline loading;
 - a rejected submit as an alert with `error` (or `errorText(error)`). Focus moves to the first
-  field with `aria-invalid="true"`, else to the alert;
+  field with `aria-invalid="true"`, else to the form itself, with no focus ring, so the next
+  Tab reaches the first field; the alert takes no focus;
 - the discard dialog as an alert dialog named by `discardTitle`, described by
-  `discardBody`.
+  `discardBody` (`leavePendingTitle` and `leavePendingBody` on a clean form
+  while it saves).
 
 ## Stories
 
@@ -135,3 +150,5 @@ Screen readers announce:
 <Canvas of={CreateSidePanelStories.Submitting} />
 
 <Canvas of={CreateSidePanelStories.LongForm} />
+
+<Canvas of={CreateSidePanelStories.WithPageHeader} />

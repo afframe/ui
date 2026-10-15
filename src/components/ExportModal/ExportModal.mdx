@@ -11,7 +11,7 @@ import { DialogChooser } from '../../../.storybook/DialogChooser';
 
 <SourceLabel name="afframe" />
 
-[Source code](https://github.com/afframe/ui/tree/main/src/components/ExportModal). See also [Modal usage](https://carbondesignsystem.com/components/modal/usage/).
+[Source code](https://github.com/afframe/ui/tree/main/src/components/ExportModal). See also [Export pattern](https://ibm-products.carbondesignsystem.com/?path=/docs/patterns-export-modal--overview).
 
 `ExportModal` asks for a file name, a format and, optionally, a password,
 then hands them to the app. It is a small Carbon modal with a text field, a
@@ -59,7 +59,8 @@ import { ExportModal } from '@afframe/ui';
   only when the field is shown and filled. It may return a promise: while it
   runs the buttons are disabled, the Export button shows a spinner with
   `pending`, and closing waits. If it rejects, the dialog stays open with an
-  alert.
+  alert. Reopened while a call from before a parent close still runs, it
+  stays busy, but Escape and the close icon close it.
 - `password`: `true` shows an optional password field with a show/hide
   toggle; `{ required: true }` makes it required (Export stays disabled until
   it is filled).
@@ -133,8 +134,8 @@ Cancel, Export.
 
 Focus is trapped by the browser's modal dialog: the page behind it is inert.
 On close, focus returns to `launcherRef`, else to the element focused before
-the dialog opened, else to the page body. After a failed export, focus moves to the first invalid field, else to the error
-alert.
+the dialog opened, else to the page body. After a failed export, focus moves to the first invalid field, else to the dialog body,
+with no focus ring, so the next Tab reaches the first field; the error alert takes no focus.
 
 Screen readers announce:
 

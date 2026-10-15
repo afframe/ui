@@ -11,7 +11,7 @@ import { DialogChooser } from '../../../.storybook/DialogChooser';
 
 <SourceLabel name="afframe" />
 
-[Source code](https://github.com/afframe/ui/tree/main/src/components/ImportModal). See also [Uploader pattern](https://carbondesignsystem.com/components/file-uploader/usage/).
+[Source code](https://github.com/afframe/ui/tree/main/src/components/ImportModal). See also [Import and upload pattern](https://ibm-products.carbondesignsystem.com/?path=/docs/patterns-import-and-upload--overview).
 
 `ImportModal` lets the user pick one or more files, or give a URL, and hands
 them to the app. It is a small Carbon modal with Carbon's file drop area and
@@ -47,7 +47,9 @@ import { ImportModal } from '@afframe/ui';
   Cancel, the close icon, Escape, and after a successful import.
 - `onImport(files)`: called with the valid files. It may return a promise:
   while it runs the buttons and the drop area are disabled and closing waits;
-  if it rejects, the dialog stays open with the `error` alert.
+  if it rejects, the dialog stays open with the `error` alert. Reopened while
+  a call from before a parent close still runs, it stays busy, but Escape and
+  the close icon close it.
 - `onImportUrl(url)`: when set, a URL field and an Import from URL button
   appear. Import also uses the URL when no file is listed.
 - `accept`: file extensions (`.csv`) or MIME types (`text/csv`, `image/*`).
@@ -79,6 +81,8 @@ A click on the page behind the dialog does not close it.
   user removes it. Import is disabled while any listed file is invalid, and
   until there is at least one valid file or a non-empty URL.
 - A file with the same name as a listed file replaces that row.
+- A long file list scrolls inside the dialog body; the header and the
+  Cancel and Import buttons stay visible.
 - Without `multiple`, dropping several files keeps the first; a note under
   the drop area (also announced) says how many were ignored.
 - These checks are a convenience for the user, not a security control: the
@@ -144,8 +148,8 @@ Files can also be dragged onto the drop area.
 Focus is trapped by the browser's modal dialog: the page behind it is inert,
 and `AfframeProvider` wraps Tab from the last control to the first.
 On close, focus returns to `launcherRef`, else to the element focused before
-the dialog opened, else to the page body. After a failed import, focus moves to the first invalid field, else to the error
-alert.
+the dialog opened, else to the page body. After a failed import, focus moves to the first invalid field, else to the dialog body,
+with no focus ring, so the next Tab reaches the first field; the error alert takes no focus.
 
 Screen readers announce:
 

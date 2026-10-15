@@ -2,7 +2,8 @@
 // Internal side panel on the shared flow, used by CreateSidePanel and
 // EditSidePanel. Not exported.
 import { SidePanel } from '@carbon/ibm-products';
-import { InlineLoading } from '@carbon/react';
+import { usePrefix } from '@carbon/react';
+import { useRef } from 'react';
 import type {
   ComponentProps,
   HTMLAttributes,
@@ -10,10 +11,17 @@ import type {
   Ref,
   RefObject,
 } from 'react';
-import { DiscardDialog, FlowError, FlowForm } from './FlowParts.js';
+import {
+  DiscardDialog,
+  FlowButtonLabel,
+  FlowError,
+  FlowForm,
+  FlowStatus,
+} from './FlowParts.js';
 import type { DiscardMessages, FlowMessages } from './messages.js';
 import { useObjectRef } from './refs.js';
 import { firstControlSelector, isCloseEscape, useFlow } from './useFlow.js';
+import { useHeaderOffset } from './useHeaderOffset.js';
 
 type SidePanelProps = ComponentProps<typeof SidePanel>;
 
@@ -41,8 +49,14 @@ interface FlowSidePanelOwnProps {
   pageContentSelector?: string;
   /** An AI label or another decorator next to the close icon. */
   decorator?: ReactNode;
+  /**
+   * CSS selector of the page header the panel starts below; its bottom edge
+   * is measured while open. Default Carbon UI Shell's header. Without a
+   * match, or with the header scrolled away, the panel is full height.
+   */
+  headerSelector?: string;
   submitDisabled?: boolean;
-  /** Ask before discarding a dirty form. Default true. */
+  /** Ask before discarding a dirty form or a pending submit. Default true. */
   confirmDiscard?: boolean;
   /** Focus target on close; default the element focused before opening. */
   launcherRef?: RefObject<HTMLElement | null>;
@@ -89,6 +103,7 @@ export function FlowSidePanel({
   slideIn = false,
   pageContentSelector,
   decorator,
+  headerSelector,
   submitDisabled = false,
   isDirty = false,
   confirmDiscard = true,
@@ -106,11 +121,17 @@ export function FlowSidePanel({
 }) {
   // IBM uses its ref as an object (focus trap, exit animation).
   const panelRef = useObjectRef<HTMLElement>(ref);
+  const prefix = usePrefix();
+  // On the root, not the aside: the root is always mounted, the aside
+  // inherits the property.
+  const rootRef = useRef<HTMLDivElement>(null);
+  useHeaderOffset(rootRef, open, headerSelector ?? `.${prefix}--header`);
   const flow = useFlow<HTMLFormElement>({
     open,
     onClose,
     isDirty,
     confirmDiscard,
+    closeWhilePending: true,
     launcherRef,
     messages: { error: text.error, errorText: text.errorText },
   });
@@ -123,22 +144,16 @@ export function FlowSidePanel({
       kind: 'primary',
       // Cast kept: ActionSet types `label` as a string but renders any node
       // as the button content. Its own `loading` flag adds an InlineLoading
-      // with no text and an English icon name, so the label carries ours.
-      label: (flow.pending ? (
-        <InlineLoading
-          description={text.pending}
-          iconDescription={text.pending}
-        />
-      ) : (
-        primaryLabel
-      )) as unknown as string,
+      // that IBM pins to the button's edge, with an English icon name.
+      label: (
+        <FlowButtonLabel label={primaryLabel} busy={flow.pending} />
+      ) as unknown as string,
       disabled: submitDisabled || flow.pending,
       onClick: () => void submit(),
     },
     {
       kind: 'secondary',
       label: text.cancel,
-      disabled: flow.pending,
       onClick: flow.requestClose,
     },
   ] satisfies SidePanelProps['actions'];
@@ -147,6 +162,7 @@ export function FlowSidePanel({
     <>
       {/* IBM SidePanel ignores Escape when it slides in; handled here. */}
       <div
+        ref={rootRef}
         className="afframe-flow-side-panel-root"
         onKeyDown={(event) => {
           if (slideIn && isCloseEscape(event)) flow.requestClose();
@@ -187,6 +203,8 @@ export function FlowSidePanel({
               iconDescription={text.errorIconDescription}
             />
           </FlowForm>
+          {/* Outside the form: its aria-busy may hold back announcements. */}
+          <FlowStatus message={flow.pending ? text.pending : ''} />
         </SidePanel>
       </div>
       <DiscardDialog flow={flow} messages={text} />

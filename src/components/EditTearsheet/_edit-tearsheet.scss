@@ -1,80 +1,34 @@
-// EditTearsheet styles, Carbon tokens only.
+// EditTearsheet styles, Carbon tokens only. IBM's EditTearsheet styles
+// (c4p--tearsheet-edit classes) hide the forms not shown.
 @use '@carbon/styles/scss/spacing' as *;
-@use '@carbon/styles/scss/theme' as *;
-@use '@carbon/styles/scss/type';
-@use '@carbon/styles/scss/utilities/focus-outline' as *;
 
-.afframe-edit-tearsheet-nav ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
+// IBM's Tearsheet With Influencer: its 32px block padding comes from IBM's
+// story styles, not the component.
+/* stylelint-disable selector-class-pattern -- IBM's class names */
+.afframe-edit-tearsheet
+  :is(.c4p--tearsheet__next__influencer, .c4p--tearsheet__next__main-content) {
+  padding-block: $spacing-07;
 }
-
-.afframe-edit-tearsheet-nav-item {
-  @include type.type-style('body-compact-01');
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: $spacing-04 $spacing-05;
-  border: 0;
-
-  // Carbon has no token for it; its side nav and vertical tabs mark the
-  // current item with the same 3px literal (_side-nav.scss, _tabs.scss).
-  border-inline-start: 3px solid transparent;
-  background: transparent;
-  block-size: $spacing-09;
-  color: $text-secondary;
-  cursor: pointer;
-  gap: $spacing-03;
-  inline-size: 100%;
-  text-align: start;
-}
-
-.afframe-edit-tearsheet-nav-item:hover {
-  background: $layer-hover;
-  color: $text-primary;
-}
-
-.afframe-edit-tearsheet-nav-item:focus {
-  @include focus-outline('outline');
-}
-
-.afframe-edit-tearsheet-nav-item[aria-current='true'] {
-  border-inline-start-color: $border-interactive;
-  color: $text-primary;
-  font-weight: type.font-weight('semibold');
-}
-
-.afframe-edit-tearsheet-nav-invalid {
-  flex: none;
-  fill: $support-error;
-}
-
-.afframe-edit-tearsheet-form {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-05;
-  padding-block-end: $spacing-07;
-}
-
-.afframe-edit-tearsheet-form-title {
-  @include type.type-style('heading-03');
-
-  color: $text-primary;
-  scroll-margin-block-start: $spacing-05;
-}
-
-.afframe-edit-tearsheet-form-description {
-  @include type.type-style('body-01');
-
-  color: $text-secondary;
-}
+/* stylelint-enable selector-class-pattern */
 
 .afframe-edit-tearsheet-form-fields {
   display: flex;
   flex-direction: column;
   gap: $spacing-05;
+}
+
+// IBM's story trigger: a ghost icon button at the content's top start corner,
+// out of the flow, with 8px under its empty wrapper. The box to move is
+// Carbon's tooltip span around the icon-only button.
+.afframe-edit-tearsheet-sections-trigger-wrapper {
+  margin-block-end: $spacing-03;
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- Carbon's class name */
+.afframe-edit-tearsheet-sections-trigger-wrapper > .cds--popover-container {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
 }
 
 // Keeps a focused field clear of the sticky footer (WCAG 2.4.11).

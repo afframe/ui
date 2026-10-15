@@ -11,7 +11,7 @@ import { DialogChooser } from '../../../.storybook/DialogChooser';
 
 <SourceLabel name="afframe" />
 
-[Source code](https://github.com/afframe/ui/tree/main/src/components/APIKeyModal). See also [Generate an API key pattern](https://carbondesignsystem.com/community/patterns/generate-an-api-key/).
+[Source code](https://github.com/afframe/ui/tree/main/src/components/APIKeyModal). See also [Generate an API key pattern](https://ibm-products.carbondesignsystem.com/?path=/docs/patterns-generate-an-api-key--overview).
 
 `APIKeyModal` names and generates an API key, then shows it once with copy
 and download actions. In edit mode it renames an existing key. It is a small
@@ -48,7 +48,8 @@ import { APIKeyModal } from '@afframe/ui';
 - `onGenerate(name)`: generate mode; resolves with the key. While it runs the
   buttons are disabled and closing waits. If it rejects or resolves with an
   empty key, the dialog stays on the name step with an alert. A key that
-  arrives after the dialog was closed is dropped.
+  arrives after the dialog was closed is dropped. Reopened while such a call
+  still runs, the dialog stays busy, but Escape and the close icon close it.
 - `onSave(name)`: edit mode; may return a promise; the dialog closes when it
   succeeds.
 - `apiKeyName`: the initial name. `nameRequired` (default `true`) keeps
@@ -149,8 +150,8 @@ Download, Done.
 
 Focus is trapped by the browser's modal dialog: the page behind it is inert.
 On close, focus returns to `launcherRef`, else to the element focused before
-the dialog opened, else to the page body. After a failure, focus moves to the first invalid field, else to the error
-alert.
+the dialog opened, else to the page body. After a failure, focus moves to the first invalid field, else to the dialog body,
+with no focus ring, so the next Tab reaches the first field; the error alert takes no focus.
 
 Screen readers announce:
 

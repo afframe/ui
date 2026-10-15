@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import { TextInput } from '../../index.js';
+import {
+  AILabel,
+  AILabelContent,
+  Button,
+  Tearsheet,
+  TextInput,
+} from '../../index.js';
 import {
   exampleCustomer,
   flowHarnessArgTypes,
@@ -76,6 +82,42 @@ export const Dirty: Story = stories.Dirty;
 export const Submitting: Story = stories.Submitting;
 
 export const LongForm: Story = stories.LongForm;
+
+export const FocusNotObscured: Story = stories.FocusNotObscured;
+
+export const Narrow: Story = { args: { variant: 'narrow' } };
+
+export const WithHeaderActions: Story = {
+  args: {
+    headerActions: (
+      <Tearsheet.HeaderActions
+        menuButtonProps={{ label: 'Actions', kind: 'tertiary' }}>
+        <Tearsheet.HeaderActionItem overflowItemLabel="Duplicate">
+          <Button kind="tertiary" size="sm">
+            Duplicate
+          </Button>
+        </Tearsheet.HeaderActionItem>
+        <Tearsheet.HeaderActionItem overflowItemLabel="Archive">
+          <Button kind="tertiary" size="sm">
+            Archive
+          </Button>
+        </Tearsheet.HeaderActionItem>
+      </Tearsheet.HeaderActions>
+    ),
+  },
+};
+
+export const WithAILabel: Story = {
+  args: {
+    decorator: (
+      <AILabel size="xs">
+        <AILabelContent>
+          <p>The billing email was suggested from earlier invoices.</p>
+        </AILabelContent>
+      </AILabel>
+    ),
+  },
+};
 
 export const Dark: Story = {
   ...Default,
