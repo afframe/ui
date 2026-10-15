@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, TextHighlighter and Carbon components from @afframe/ui (styles ship in the package CSS, so the text-highlighter.scss import is dropped), icons from @afframe/ui icons, story styles converted to plain CSS, the default kind="mark" written out in the ReferenceAnnotation story (the props type requires kind), source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, TextHighlighter and Carbon components from @afframe/ui (styles ship in the package CSS, so the text-highlighter.scss import is dropped), icons from @afframe/ui icons, story styles converted to plain CSS, the default kind="mark" written out in the ReferenceAnnotation story (the props type requires kind), source tag, paragraphs that hold a TextHighlighter are divs (it renders a div), Default story text from the Afframe example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -96,21 +96,15 @@ export const Default: Story = {
   render: (args) => (
     <Grid>
       <Column lg={16} md={8} sm={4}>
-        <p>
-          Lorem ipsum dolor sit amet,{' '}
-          <TextHighlighter {...args}>
-            consectetur adipiscing elit
-          </TextHighlighter>
-          , sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-          nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur{' '}
-          <TextHighlighter {...args}>
-            sint occaecat cupidatat non proident
-          </TextHighlighter>
-          , sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
+        <div>
+          Invoice INV-2026-0042 for Lakeside Furniture is{' '}
+          <TextHighlighter {...args}>14 days overdue</TextHighlighter>. Alex
+          Morgan sent the first reminder on the due date, and Sam Rivera will
+          call the customer this week. The invoice was issued with payment terms{' '}
+          <TextHighlighter {...args}>Net 30</TextHighlighter>, so any later
+          invoice for this customer moves to Due on receipt until the balance is
+          paid.
+        </div>
       </Column>
     </Grid>
   ),
@@ -252,7 +246,7 @@ export const ReferenceAnnotation: Story = {
             </div>
 
             <div className="th-ref-body">
-              <p>
+              <div className="th-paragraph">
                 The airship &quot;
                 <TextHighlighter kind="mark" type="magenta" reference="OR">
                   The Leviathan
@@ -263,8 +257,8 @@ export const ReferenceAnnotation: Story = {
                   Neo-Atheria
                 </TextHighlighter>
                 .
-              </p>
-              <p>
+              </div>
+              <div className="th-paragraph">
                 Within its opulent grand salon,{' '}
                 <TextHighlighter kind="mark" type="blue" reference="PE">
                   Captain Amelia Croft
@@ -288,8 +282,8 @@ export const ReferenceAnnotation: Story = {
                   Atlantis
                 </TextHighlighter>
                 .
-              </p>
-              <p>
+              </div>
+              <div className="th-paragraph">
                 The air crackled with anticipation as{' '}
                 <TextHighlighter kind="mark" type="blue" reference="PE">
                   Professor Alistair Finch
@@ -302,7 +296,7 @@ export const ReferenceAnnotation: Story = {
                 travel. The fate of humanity, it seemed, hung precariously in
                 the balance, poised on the precipice of a new era of exploration
                 and discovery.
-              </p>
+              </div>
             </div>
           </Tile>
         </Column>
@@ -352,71 +346,67 @@ export const DocumentVersioning: Story = {
             Text highlighters{' '}
             <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>
           </h1>
-          <p>
+          <div className="th-paragraph">
             Text highlighters{' '}
             <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
             serve <TextHighlighter kind={'del'}>several</TextHighlighter>{' '}
             <TextHighlighter kind={'ins'}>various</TextHighlighter> purposes in
             website or web applications:
-          </p>
-          <p>
-            <ol>
-              <li>
-                <strong>Enhanced readability:</strong> By allowing users to
-                highlight or annotate text, websites and applications can
-                improve readability and comprehension, especially for longer
-                passages or complex content. Users can mark important points,
-                make notes, or highlight key phrases, which can aid in
-                understanding.
-              </li>
-              <li>
-                <strong>Facilitating collaboration:</strong> In{' '}
-                <TextHighlighter kind={'del'}>collaborative</TextHighlighter>{' '}
-                environments such as educational platforms, research tools, or
-                document sharing platforms, text highlighters and annotations
-                enable users to collaborate more effectively. Users can
-                highlight areas of interest, leave comments, or provide feedback
-                for others to see.
-              </li>
-              <li>
-                <strong>Personalization:</strong> Text highlighters{' '}
-                <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
-                allow users to personalize their experience by marking sections
-                that are relevant or interesting to them. This customization can
-                enhance user engagement and satisfaction.
-              </li>
-              <li>
-                <strong>Studying and research:</strong> In educational or
-                research contexts, text highlighters{' '}
-                <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
-                are invaluable tools for studying, analyzing, and synthesizing
-                information. Users can mark important passages, jot down
-                thoughts or questions, and organize their notes for future
-                reference.
-              </li>
-              <li>
-                <strong>Accessibility:</strong> Text highlighters{' '}
-                <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
-                can improve accessibility for users with disabilities, such as
-                visual impairments or cognitive disabilities.{' '}
-                <TextHighlighter kind={'ins'}>
-                  Annotations can provide additional context or explanations for
-                  content, while text highlighters can draw attention to
-                  important information.
-                </TextHighlighter>
-              </li>
-              <li>
-                <strong>Content curation:</strong> In content-heavy websites or
-                applications, text highlighters{' '}
-                <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
-                can help users curate and save relevant information for later
-                reference. Users can highlight text or annotate it with tags,
-                comments, or categorizations to organize their findings
-                effectively.
-              </li>
-            </ol>
-          </p>
-          <p>
+          </div>
+          <ol>
+            <li>
+              <strong>Enhanced readability:</strong> By allowing users to
+              highlight or annotate text, websites and applications can improve
+              readability and comprehension, especially for longer passages or
+              complex content. Users can mark important points, make notes, or
+              highlight key phrases, which can aid in understanding.
+            </li>
+            <li>
+              <strong>Facilitating collaboration:</strong> In{' '}
+              <TextHighlighter kind={'del'}>collaborative</TextHighlighter>{' '}
+              environments such as educational platforms, research tools, or
+              document sharing platforms, text highlighters and annotations
+              enable users to collaborate more effectively. Users can highlight
+              areas of interest, leave comments, or provide feedback for others
+              to see.
+            </li>
+            <li>
+              <strong>Personalization:</strong> Text highlighters{' '}
+              <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
+              allow users to personalize their experience by marking sections
+              that are relevant or interesting to them. This customization can
+              enhance user engagement and satisfaction.
+            </li>
+            <li>
+              <strong>Studying and research:</strong> In educational or research
+              contexts, text highlighters{' '}
+              <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
+              are invaluable tools for studying, analyzing, and synthesizing
+              information. Users can mark important passages, jot down thoughts
+              or questions, and organize their notes for future reference.
+            </li>
+            <li>
+              <strong>Accessibility:</strong> Text highlighters{' '}
+              <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
+              can improve accessibility for users with disabilities, such as
+              visual impairments or cognitive disabilities.{' '}
+              <TextHighlighter kind={'ins'}>
+                Annotations can provide additional context or explanations for
+                content, while text highlighters can draw attention to important
+                information.
+              </TextHighlighter>
+            </li>
+            <li>
+              <strong>Content curation:</strong> In content-heavy websites or
+              applications, text highlighters{' '}
+              <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
+              can help users curate and save relevant information for later
+              reference. Users can highlight text or annotate it with tags,
+              comments, or categorizations to organize their findings
+              effectively.
+            </li>
+          </ol>
+          <div className="th-paragraph">
             Overall, text highlighters{' '}
             <TextHighlighter kind={'ins'}>and annotations</TextHighlighter>{' '}
             contribute to a richer and more interactive user experience,
@@ -424,7 +414,7 @@ export const DocumentVersioning: Story = {
             <TextHighlighter kind={'del'}>significant</TextHighlighter>{' '}
             <TextHighlighter kind={'ins'}>meaningful</TextHighlighter> ways and
             extract maximum value from it.
-          </p>
+          </div>
         </Tile>
       </Column>
     </Grid>
@@ -485,7 +475,7 @@ const DocumentHighlightingWithSourceComponent = () => {
               </p>
             </li>
             <li>
-              <p>
+              <div className="th-paragraph">
                 <strong>Accessibility:</strong> Text highlighters and
                 annotations can improve accessibility for users with
                 disabilities, such as visual impairments or cognitive
@@ -522,7 +512,7 @@ const DocumentHighlightingWithSourceComponent = () => {
                     </span>
                   </PopoverContent>
                 </Popover>
-              </p>
+              </div>
             </li>
             <li>
               <p>

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: aria-required-children disabled on WithPersistentSearch, argTypes typed, TypeScript, components and icons from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: aria-required-children disabled on WithPersistentSearch, argTypes typed, TypeScript, components and icons from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, story names unified, items are example customers. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState } from 'react';
@@ -40,11 +40,29 @@ export default {
   },
 } satisfies Meta<typeof ContainedList>;
 
+const customers = [
+  'Lakeside Furniture',
+  'Acme Trading',
+  'Birch Studio',
+  'Cedar Logistics',
+  'Delta Foods',
+];
+
+const customerDetails = [
+  { name: 'Lakeside Furniture', invoices: '2 open invoices', terms: 'Net 30' },
+  { name: 'Acme Trading', invoices: '1 open invoice', terms: 'Net 14' },
+  {
+    name: 'Birch Studio',
+    invoices: 'No open invoices',
+    terms: 'Due on receipt',
+  },
+];
+
 const sharedArgs = {
   className: '',
   isInset: false,
   kind: 'on-page' as const,
-  label: 'List title',
+  label: 'Customers',
   size: 'lg' as const,
 };
 
@@ -84,8 +102,10 @@ const DefaultStory: StoryFn<typeof ContainedList> = (args) => (
   <>
     {[...Array(4)].map((_, i) => (
       <ContainedList key={i} {...args}>
-        {[...Array(8)].map((_, j) => (
-          <ContainedListItem key={`${i}-${j}`}>List item</ContainedListItem>
+        {customers.map((customer) => (
+          <ContainedListItem key={`${i}-${customer}`}>
+            {customer}
+          </ContainedListItem>
         ))}
       </ContainedList>
     ))}
@@ -104,16 +124,16 @@ export const Disclosed: StoryFn<typeof ContainedList> = (args) => {
   return (
     <>
       <ContainedList {...args} kind="disclosed">
-        <ContainedListItem>List item</ContainedListItem>
-        <ContainedListItem>List item</ContainedListItem>
-        <ContainedListItem>List item</ContainedListItem>
-        <ContainedListItem>List item</ContainedListItem>
+        <ContainedListItem>Lakeside Furniture</ContainedListItem>
+        <ContainedListItem>Acme Trading</ContainedListItem>
+        <ContainedListItem>Birch Studio</ContainedListItem>
+        <ContainedListItem>Cedar Logistics</ContainedListItem>
       </ContainedList>
       <ContainedList {...args} kind="disclosed">
-        <ContainedListItem>List item</ContainedListItem>
-        <ContainedListItem>List item</ContainedListItem>
-        <ContainedListItem>List item</ContainedListItem>
-        <ContainedListItem>List item</ContainedListItem>
+        <ContainedListItem>Lakeside Furniture</ContainedListItem>
+        <ContainedListItem>Acme Trading</ContainedListItem>
+        <ContainedListItem>Birch Studio</ContainedListItem>
+        <ContainedListItem>Cedar Logistics</ContainedListItem>
       </ContainedList>
     </>
   );
@@ -137,12 +157,14 @@ export const WithInteractiveItems: StoryFn<typeof ContainedList> = (args) => {
 
   return (
     <ContainedList {...args}>
-      <ContainedListItem onClick={onClick}>List item</ContainedListItem>
-      <ContainedListItem onClick={onClick} disabled>
-        List item
+      <ContainedListItem onClick={onClick}>
+        Lakeside Furniture
       </ContainedListItem>
-      <ContainedListItem onClick={onClick}>List item</ContainedListItem>
-      <ContainedListItem onClick={onClick}>List item</ContainedListItem>
+      <ContainedListItem onClick={onClick} disabled>
+        Acme Trading
+      </ContainedListItem>
+      <ContainedListItem onClick={onClick}>Birch Studio</ContainedListItem>
+      <ContainedListItem onClick={onClick}>Cedar Logistics</ContainedListItem>
     </ContainedList>
   );
 };
@@ -164,12 +186,14 @@ export const WithActions: StoryFn<typeof ContainedList> = (args) => {
 
   return (
     <ContainedList {...args} action={''}>
-      <ContainedListItem action={itemAction}>List item</ContainedListItem>
-      <ContainedListItem action={itemAction} disabled>
-        List item
+      <ContainedListItem action={itemAction}>
+        Lakeside Furniture
       </ContainedListItem>
-      <ContainedListItem action={itemAction}>List item</ContainedListItem>
-      <ContainedListItem action={itemAction}>List item</ContainedListItem>
+      <ContainedListItem action={itemAction} disabled>
+        Acme Trading
+      </ContainedListItem>
+      <ContainedListItem action={itemAction}>Birch Studio</ContainedListItem>
+      <ContainedListItem action={itemAction}>Cedar Logistics</ContainedListItem>
     </ContainedList>
   );
 };
@@ -186,14 +210,7 @@ export const WithExpandableSearch: StoryFn<typeof ContainedList> = (args) => {
   };
 
   useEffect(() => {
-    const listItems = [
-      'List item 1',
-      'List item 2',
-      'List item 3',
-      'List item 4',
-    ];
-
-    const results = listItems.filter((listItem) =>
+    const results = customers.filter((listItem) =>
       listItem.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSearchResults(results);
@@ -231,14 +248,7 @@ export const WithPersistentSearch: StoryFn<typeof ContainedList> = (args) => {
   };
 
   useEffect(() => {
-    const listItems = [
-      'List item 1',
-      'List item 2',
-      'List item 3',
-      'List item 4',
-    ];
-
-    const results = listItems.filter((listItem) =>
+    const results = customers.filter((listItem) =>
       listItem.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSearchResults(results);
@@ -287,16 +297,16 @@ export const WithInteractiveItemsAndActions: StoryFn<typeof ContainedList> = (
   return (
     <ContainedList {...args} action={''}>
       <ContainedListItem action={itemAction} onClick={onClick}>
-        List item
+        Lakeside Furniture
       </ContainedListItem>
       <ContainedListItem action={itemAction} onClick={onClick}>
-        List item
+        Acme Trading
       </ContainedListItem>
       <ContainedListItem action={itemAction} onClick={onClick}>
-        List item
+        Birch Studio
       </ContainedListItem>
       <ContainedListItem action={itemAction} onClick={onClick}>
-        List item
+        Cedar Logistics
       </ContainedListItem>
     </ContainedList>
   );
@@ -319,16 +329,16 @@ export const WithListTitleDecorators: StoryFn<typeof ContainedList> = (
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <span>List title</span>
+          <span>Customers</span>
           <Tag size="sm" role="status" aria-label="4 items in list">
             4
           </Tag>
         </div>
       }>
-      <ContainedListItem>List item</ContainedListItem>
-      <ContainedListItem>List item</ContainedListItem>
-      <ContainedListItem>List item</ContainedListItem>
-      <ContainedListItem>List item</ContainedListItem>
+      <ContainedListItem>Lakeside Furniture</ContainedListItem>
+      <ContainedListItem>Acme Trading</ContainedListItem>
+      <ContainedListItem>Birch Studio</ContainedListItem>
+      <ContainedListItem>Cedar Logistics</ContainedListItem>
     </ContainedList>
   );
 };
@@ -340,10 +350,14 @@ WithListTitleDecorators.parameters = customLabelParameters;
 export const WithIcons: StoryFn<typeof ContainedList> = (args) => {
   return (
     <ContainedList {...args}>
-      <ContainedListItem renderIcon={Apple}>List item</ContainedListItem>
-      <ContainedListItem renderIcon={Wheat}>List item</ContainedListItem>
-      <ContainedListItem renderIcon={Strawberry}>List item</ContainedListItem>
-      <ContainedListItem renderIcon={Fish}>List item</ContainedListItem>
+      <ContainedListItem renderIcon={Apple}>
+        Lakeside Furniture
+      </ContainedListItem>
+      <ContainedListItem renderIcon={Wheat}>Acme Trading</ContainedListItem>
+      <ContainedListItem renderIcon={Strawberry}>
+        Birch Studio
+      </ContainedListItem>
+      <ContainedListItem renderIcon={Fish}>Cedar Logistics</ContainedListItem>
     </ContainedList>
   );
 };
@@ -356,8 +370,8 @@ export const WithLayer: StoryFn<typeof ContainedList> = (args) => {
   return (
     <WithLayerTemplate>
       <ContainedList {...args}>
-        <ContainedListItem>List item</ContainedListItem>
-        <ContainedListItem>List item</ContainedListItem>
+        <ContainedListItem>Lakeside Furniture</ContainedListItem>
+        <ContainedListItem>Acme Trading</ContainedListItem>
       </ContainedList>
     </WithLayerTemplate>
   );
@@ -382,17 +396,17 @@ export const UsageExamples: StoryFn<typeof ContainedList> = (args) => {
             tooltipPosition="left"
           />
         }>
-        {[...Array(3)].map((_, i) => (
+        {customers.slice(0, 3).map((customer) => (
           <ContainedListItem
-            key={i}
+            key={customer}
             action={
-              <OverflowMenu flipped size="lg" ariaLabel="List item options">
+              <OverflowMenu flipped size="lg" ariaLabel={`${customer} options`}>
                 <OverflowMenuItem itemText="View details" />
                 <OverflowMenuItem itemText="Edit" />
                 <OverflowMenuItem itemText="Remove" isDelete hasDivider />
               </OverflowMenu>
             }>
-            List item
+            {customer}
           </ContainedListItem>
         ))}
       </ContainedList>
@@ -407,28 +421,28 @@ export const UsageExamples: StoryFn<typeof ContainedList> = (args) => {
             kind="ghost"
           />
         }>
-        {[...Array(3)].map((_, i) => (
-          <ContainedListItem key={i}>
-            List item
+        {customerDetails.map(({ name, invoices }) => (
+          <ContainedListItem key={name}>
+            {name}
             <br />
             <span className={`${prefix}--label ${prefix}--label--no-margin`}>
-              Description text
+              {invoices}
             </span>
           </ContainedListItem>
         ))}
       </ContainedList>
       <ContainedList {...args}>
-        {[...Array(3)].map((_, i) => (
-          <ContainedListItem key={i}>
+        {customerDetails.map(({ name, invoices, terms }) => (
+          <ContainedListItem key={name}>
             <div
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
                 columnGap: 'var(--cds-spacing-05)',
               }}>
-              <span>List item</span>
-              <span>List item details</span>
-              <span>List item details</span>
+              <span>{name}</span>
+              <span>{invoices}</span>
+              <span>{terms}</span>
             </div>
           </ContainedListItem>
         ))}
