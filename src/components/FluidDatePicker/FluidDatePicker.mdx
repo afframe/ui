@@ -4,7 +4,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, date chooser added.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, date chooser added, section on typing a date added.
 
 <Meta isTemplate />
 
@@ -29,6 +29,17 @@ import { DateChooser } from '../../../.storybook/DateChooser';
 ### Range With Calendar
 
 <Canvas of={FluidDatePickerStories.RangeWithCalendar} />
+
+## Typing a date
+
+Afframe's `FluidDatePicker` defaults `dateFormat` and the input placeholder to
+the system date format, `defaultDateFormat` in `@afframe/ui/format`
+(`dd.mm.yyyy`), and masks typing like `DatePicker`: separators appear as digits
+are typed and a typed separator pads the part. An incomplete, impossible or
+unavailable date stays as typed and the input shows `messages.invalidDate`,
+as in `DatePicker`. `inputMask={false}` turns the mask and the kept text off.
+
+<Canvas of={FluidDatePickerStories.TypingADate} />
 
 ## Which component to use
 

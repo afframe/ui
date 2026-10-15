@@ -49,6 +49,7 @@
 @use '../components/LogoutTile/logout-tile';
 @use '../components/HelpMenu/help-menu';
 @use '../components/ChatElements/chat-elements';
+@use '../components/TimePicker/time-picker';
 
 // Labs CSS also matches Carbon components and plain HTML outside the Labs
 // components; the rules below give those back Carbon's (or the browser's)

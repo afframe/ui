@@ -1,6 +1,7 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as FormattingStories from './Formatting.stories';
 import { SourceLabel } from '../../.storybook/SourceLabel';
+import { defaultDateFormat, defaultTimeFormat } from './defaults';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -51,6 +52,35 @@ export const format = createFormat({ locale: 'en-US', currency: 'EUR' });
 format.formatAmount(1234.5); // '€1,234.50'
 format.formatAmount(1234.5, { currency: 'USD' }); // '$1,234.50'
 ```
+
+## System date and time format
+
+One setting decides the date and time format of every Afframe date and time
+field (typing mask, placeholder, picker parsing) and of Czech `formatDate`
+output. It lives in `src/format/defaults.ts` (ADR 0021):
+
+- `defaultDateFormat`: <code>{defaultDateFormat}</code>. `dd`, `mm` and
+  `yyyy` once each, in any order, joined by one separator character.
+- `defaultTimeFormat`: <code>{defaultTimeFormat}</code>. 24-hour `hh:mm`, or
+  `hh:mm:ss`; time fields add seconds per field.
+
+Changing it is a package change: edit the constant and release. A typo throws
+when the module loads. Per call, `formatDate` takes `format` and the pickers
+take `dateFormat`.
+
+The functions below translate a format for fields and pickers:
+
+| Function                      | Returns                                                                        |
+| ----------------------------- | ------------------------------------------------------------------------------ |
+| `parseDatePattern(format)`    | `{ order, separator }`; throws a `RangeError` outside the grammar.             |
+| `toFlatpickrFormat(pattern)`  | The picker's `dateFormat`, in flatpickr tokens `d`, `m` and `Y`.               |
+| `fromFlatpickrFormat(format)` | The pattern of a picker `dateFormat`, or `undefined` outside the grammar.      |
+| `datePlaceholder(pattern)`    | The format itself, as the field placeholder.                                   |
+| `dateInputPattern(pattern)`   | The input `pattern` attribute: the digits of each part, the separator escaped. |
+| `parseTimePattern(format)`    | `{ separator, seconds }`; throws a `RangeError` outside the grammar.           |
+| `timePlaceholder(pattern)`    | `hh:mm`, or `hh:mm:ss` with seconds.                                           |
+
+`defaultDatePattern` and `defaultTimePattern` hold the parsed setting.
 
 ## Amounts
 
@@ -112,16 +142,19 @@ string throws a `RangeError`, including a timestamp without `Z` or an offset.
 | `localDateToCivilDate(date)`            | The civil date of a local `Date` that `DatePicker` returns.   |
 
 In Czech (any `cs` tag: `cs`, `cs-CZ`) a date with a numeric day, month and
-year always prints as `dd.mm.yyyy`: zero-padded day and month, dots, no spaces, a four-digit year
-(`07.10.2026`, `07.10.2026 12:05`, `01.10.2026 – 31.10.2026`). Text months
-(`dateStyle: 'long'`: `7. října 2026`), dates without a day and other locales
-print as Intl does.
+year always prints in the system date format, <code>{defaultDateFormat}</code>:
+zero-padded day and month, a four-digit year (`07.10.2026`,
+`07.10.2026 09:05`, `01.10.2026 – 31.10.2026`). 24-hour times pad the hour,
+as <code>{defaultTimeFormat}</code> does. `format` changes the date layout per
+call: `formatDate('2026-10-07', { format: 'yyyy-mm-dd' })` gives `2026-10-07`.
+Text months (`dateStyle: 'long'`: `7. října 2026`), dates without a day,
+12-hour times and other locales print as Intl does.
 
 Options for `formatDate` and `formatDateRange` are Intl `DateTimeFormat`
-options plus `locale`. Node and browsers can differ in Intl's spaces, so both
-functions print U+2009 and U+202F as U+0020 and server and client agree. Range
-ends must both be civil dates or both instants. A reversed range prints in the
-given order; sort the ends first.
+options plus `locale` and `format`. Node and browsers can differ in Intl's
+spaces, so both functions print U+2009 and U+202F as U+0020 and server and
+client agree. Range ends must both be civil dates or both instants. A reversed
+range prints in the given order; sort the ends first.
 
 `startOfDayIn` assumes local midnight exists. In zones that skip midnight for
 daylight saving time (America/Santiago) it returns the hour before; Prague
@@ -141,7 +174,7 @@ It is not in `@afframe/ui/format` (ADR 0020).
 | A date and time of an event, in Afframe's format       | `formatDate` with `dateStyle` and `timeStyle`                                    |
 | A relative time ("před 3 minutami", "in 2 days")       | `dateTimeFormat.relative.format(date, { locale })`, in client code               |
 | A duration ("1 h 30 m")                                | `dateTimeFormat.duration.format({ hours, minutes }, { locale })`, in client code |
-| Dates for an `Intl` style other than `dd.mm.yyyy`      | `dateTimeFormat.absolute`, with an explicit `locale` and `timeZone`              |
+| Dates for an `Intl` style other than the system format | `dateTimeFormat.absolute`, with an explicit `locale` and `timeZone`              |
 
 `dateTimeFormat.relative` reads the clock when it runs, so render it in a
 client component, not in server HTML. Pass `locale` every time.

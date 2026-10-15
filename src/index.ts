@@ -75,11 +75,8 @@ export {
   Search,
   ExpandableSearch,
   SearchSkeleton,
-  DatePicker,
   DatePickerInput,
   DatePickerSkeleton,
-  preview__DatePicker,
-  TimePicker,
   TimePickerSelect,
   FileUploader,
   FileUploaderButton,
@@ -128,10 +125,8 @@ export type {
   ToggleSmallSkeletonProps,
   SearchProps,
   SearchSkeletonProps,
-  DatePickerProps,
   DatePickerInputProps,
   DatePickerSkeletonProps,
-  TimePickerProps,
   TimePickerSelectProps,
   FileUploaderProps,
   FileUploaderButtonProps,
@@ -148,7 +143,6 @@ export {
   FluidForm,
   FluidComboBox,
   FluidComboBoxSkeleton,
-  FluidDatePicker,
   FluidDatePickerInput,
   FluidDatePickerSkeleton,
   FluidDropdown,
@@ -166,7 +160,6 @@ export {
   FluidTextAreaSkeleton,
   FluidTextInput,
   FluidTextInputSkeleton,
-  FluidTimePicker,
   FluidTimePickerSelect,
   FluidTimePickerSkeleton,
 } from '@carbon/react';
@@ -174,7 +167,6 @@ export type {
   FluidFormProps,
   FluidComboBoxProps,
   FluidComboBoxSkeletonProps,
-  FluidDatePickerProps,
   FluidDatePickerSkeletonProps,
   FluidDropdownProps,
   FluidDropdownSkeletonProps,
@@ -189,7 +181,6 @@ export type {
   FluidTextAreaSkeletonProps,
   FluidTextInputProps,
   FluidTextInputSkeletonProps,
-  FluidTimePickerProps,
   FluidTimePickerSelectProps,
   FluidTimePickerSkeletonProps,
 } from '@carbon/react';
@@ -860,6 +851,20 @@ export * from './components/HelpMenu/index.js';
 export * from './components/ChatElements/index.js';
 
 export * from './components/ControlledDatePicker/index.js';
+
+// Carbon's date pickers in the system date format with a typing mask
+// (ADR 0021).
+export * from './components/DatePicker/index.js';
+export * from './components/FluidDatePicker/index.js';
+
+// Carbon's time pickers, wrapped for the 24-hour default and the typing mask
+// (ADR 0021).
+export * from './components/TimePicker/index.js';
+export * from './components/FluidTimePicker/index.js';
+
+// The typing mask under the date and time pickers, for other inputs
+// (ADR 0021).
+export * from './mask/index.js';
 
 // Carbon's OverflowMenu and TableToolbarMenu, wrapped so the 1.0.x menu shape
 // keeps working (docs/feature-flags.md).

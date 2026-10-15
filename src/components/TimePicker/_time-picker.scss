@@ -1,0 +1,11 @@
+// TimePicker with seconds. Carbon sizes the input for hh:mm; hh:mm:ss needs
+// three more characters of its monospace type.
+/* stylelint-disable selector-class-pattern -- Carbon's BEM class names */
+
+.afframe-time-picker-seconds .cds--time-picker__input-field {
+  inline-size: calc(4.875rem + 3ch);
+}
+
+.afframe-time-picker-seconds .cds--time-picker__input-field-error {
+  inline-size: calc(6.175rem + 3ch);
+}

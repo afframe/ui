@@ -7,11 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Preview/preview__DatePicker, source tag, story names unified, Czech date format and example data, state stories added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Preview/preview__DatePicker, source tag, story names unified, Czech date format and example data, state stories added; date format and placeholders from the system setting. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
 import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { datePlaceholder, defaultDatePattern } from '../../format/index.js';
 import { FolderOpen, Folders, View } from '../../icons.js';
 import {
   AILabel,
@@ -136,18 +137,16 @@ export const Default: StoryFn<DatePickerStoryArgs> = (args) => {
   return (
     <DatePicker
       datePickerType="single"
-      dateFormat="d.m.Y"
+
       {...restArgs}
       readOnly={readOnly}>
       <DatePickerInput
-        placeholder="dd.mm.yyyy"
         labelText="Due date"
         id="date-picker-single"
         {...restArgs}
       />
       {restArgs.datePickerType === 'range' && (
         <DatePickerInput
-          placeholder="dd.mm.yyyy"
           labelText="Billing period end"
           size="md"
           id="date-picker-input-2"
@@ -168,17 +167,15 @@ Default.argTypes = {
 
 export const RangeWithCalendar: StoryFn<DatePickerStoryArgs> = (args) => {
   return (
-    <DatePicker datePickerType="range" dateFormat="d.m.Y" {...args}>
+    <DatePicker datePickerType="range" {...args}>
       <DatePickerInput
         id="date-picker-input-id-start"
-        placeholder="dd.mm.yyyy"
         labelText="Billing period start"
         size="md"
         {...args}
       />
       <DatePickerInput
         id="date-picker-input-id-finish"
-        placeholder="dd.mm.yyyy"
         labelText="Billing period end"
         size="md"
         {...args}
@@ -194,17 +191,15 @@ export const RangeWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
 ) => (
   <WithLayer>
     {(layer) => (
-      <DatePicker datePickerType="range" dateFormat="d.m.Y" {...args}>
+      <DatePicker datePickerType="range" {...args}>
         <DatePickerInput
           id={`date-picker-input-id-start-${layer}`}
-          placeholder="dd.mm.yyyy"
           labelText="Billing period start"
           size="md"
           {...args}
         />
         <DatePickerInput
           id={`date-picker-input-id-finish-${layer}`}
-          placeholder="dd.mm.yyyy"
           labelText="Billing period end"
           size="md"
           {...args}
@@ -217,13 +212,8 @@ export const RangeWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
 RangeWithCalendarWithLayer.argTypes = { ...sharedArgTypes };
 
 export const Simple: StoryFn<DatePickerStoryArgs> = (args) => (
-  <DatePicker datePickerType="simple" dateFormat="d.m.Y" {...args}>
-    <DatePickerInput
-      placeholder="dd.mm.yyyy"
-      labelText="Due date"
-      id="date-picker-simple"
-      {...args}
-    />
+  <DatePicker datePickerType="simple" {...args}>
+    <DatePickerInput labelText="Due date" id="date-picker-simple" {...args} />
   </DatePicker>
 );
 
@@ -232,9 +222,8 @@ Simple.argTypes = { ...sharedArgTypes };
 export const SimpleWithLayer: StoryFn<DatePickerStoryArgs> = (args) => (
   <WithLayer>
     {(layer) => (
-      <DatePicker datePickerType="simple" dateFormat="d.m.Y" {...args}>
+      <DatePicker datePickerType="simple" {...args}>
         <DatePickerInput
-          placeholder="dd.mm.yyyy"
           labelText="Due date"
           id={`date-picker-simple-${layer}`}
           size="md"
@@ -248,9 +237,8 @@ export const SimpleWithLayer: StoryFn<DatePickerStoryArgs> = (args) => (
 SimpleWithLayer.argTypes = { ...sharedArgTypes };
 
 export const SingleWithCalendar: StoryFn<DatePickerStoryArgs> = (args) => (
-  <DatePicker datePickerType="single" dateFormat="d.m.Y" {...args}>
+  <DatePicker datePickerType="single" {...args}>
     <DatePickerInput
-      placeholder="dd.mm.yyyy"
       labelText="Due date"
       id="date-picker-single"
       size="md"
@@ -266,9 +254,8 @@ export const SingleWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
 ) => (
   <WithLayer>
     {(layer) => (
-      <DatePicker datePickerType="single" dateFormat="d.m.Y" {...args}>
+      <DatePicker datePickerType="single" {...args}>
         <DatePickerInput
-          placeholder="dd.mm.yyyy"
           labelText="Due date"
           id={`date-picker-single-${layer}`}
           size="md"
@@ -297,7 +284,10 @@ export const ReadOnly: StateStory = {
 
 export const Invalid: StateStory = {
   render: SingleWithCalendar,
-  args: { invalid: true, invalidText: 'Enter the date as dd.mm.yyyy.' },
+  args: {
+    invalid: true,
+    invalidText: `Enter the date as ${datePlaceholder(defaultDatePattern)}.`,
+  },
   argTypes: { ...sharedArgTypes },
 };
 
@@ -348,9 +338,8 @@ export const WithAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
   );
   return (
     <div style={{ width: 400 }}>
-      <DatePicker datePickerType="single" dateFormat="d.m.Y" {...args}>
+      <DatePicker datePickerType="single" {...args}>
         <DatePickerInput
-          placeholder="dd.mm.yyyy"
           labelText="Due date"
           size="md"
           id="date-picker"

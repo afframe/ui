@@ -3,7 +3,7 @@ import * as makeDraggableStories from './makeDraggable.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: copied from IBM Products' makeDraggable page, source label and a source link to Carbon's package added, import from @afframe/ui, the option names in the usage example corrected to the published ones (dragHandle, focusableDragHandle), upstream table of contents removed.
+// Modified by Afframe in 2026: copied from IBM Products' makeDraggable page, source label and a source link to Carbon's package added, import from @afframe/ui, the option names in the usage example corrected to the published ones (dragHandle, focusableDragHandle), upstream table of contents removed, the drag and close buttons in the code sample as IconButton with tooltip labels and the drag instructions in a visually hidden span, as in the story.
 
 <Meta isTemplate />
 
@@ -47,19 +47,28 @@ makeDraggable({
 
   <PopoverContent className="popover-content">
     <header ref={headerRef} className={`popover-header popover-title`}>
-      <Button
+      <IconButton
         kind="ghost"
         ref={dragRef}
         className="drag-icon"
-        onClick={() => console.log('clicked')}>
+        label="Drag"
+        align="bottom-start"
+        aria-describedby="drag-instructions">
         <Draggable />
-      </Button>
-      <Button
+      </IconButton>
+      <span id="drag-instructions" className="cds--visually-hidden">
+        To pick up the draggable item, press Enter. While dragging, use the
+        arrow keys to move the item. Press Enter again to leave the item in its
+        new position.
+      </span>
+      <IconButton
         kind="ghost"
         onClick={() => setIsOpen(false)}
-        className="close-icon">
+        className="close-icon"
+        label="Close"
+        align="bottom-end">
         <Close />
-      </Button>
+      </IconButton>
     </header>
     <p className="heading"> Available storage</p>
     <p className="popover-details">

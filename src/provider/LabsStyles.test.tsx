@@ -66,12 +66,8 @@ test('DatePicker selected day keeps Carbon colours, Calendar keeps the Labs high
   const { container } = render(
     <>
       <div id="carbon">
-        <DatePicker datePickerType="single" inline value="01/15/2026">
-          <DatePickerInput
-            id="date"
-            labelText="Date"
-            placeholder="mm/dd/yyyy"
-          />
+        <DatePicker datePickerType="single" inline value="15.01.2026">
+          <DatePickerInput id="date" labelText="Date" />
         </DatePicker>
       </div>
       <Calendar initialDate={new Date(2026, 0, 15)} />

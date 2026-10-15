@@ -1,5 +1,4 @@
 'use client';
-import { DatePicker, type DatePickerProps } from '@carbon/react';
 import {
   useCallback,
   useEffect,
@@ -9,6 +8,7 @@ import {
   type KeyboardEvent,
   type Ref,
 } from 'react';
+import { DatePicker, type DatePickerProps } from '../DatePicker/DatePicker.js';
 
 /** The part of flatpickr's instance this component uses. */
 export interface ControlledDatePickerCalendar {
@@ -34,7 +34,7 @@ export interface ControlledDatePickerProps extends DatePickerProps {
 type Hook = NonNullable<DatePickerProps['onOpen']>;
 
 /**
- * Carbon's classic (flatpickr) `DatePicker` with a controlled `open` prop.
+ * The classic (flatpickr) `DatePicker` with a controlled `open` prop.
  * It drives flatpickr's own `open()` and `close()` through the instance on
  * Carbon's ref and reports user actions through `onOpenChange`. A controlled
  * picker returns to `open` when the caller does not take the change.

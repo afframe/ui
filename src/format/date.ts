@@ -1,4 +1,10 @@
 import { defaultLocale, defaultTimeZone } from './defaults.js';
+import {
+  defaultDatePattern,
+  defaultTimePattern,
+  parseDatePattern,
+  type DatePattern,
+} from './pattern.js';
 
 // Instants vs civil dates: src/format/Formatting.mdx. Calendar math runs on UTC
 // dates, so the machine's own zone never leaks in.
@@ -11,6 +17,11 @@ export type DateInput = Date | number | string;
 export interface DateFormatOptions extends Intl.DateTimeFormatOptions {
   /** BCP 47 locale. Default `cs-CZ`. */
   locale?: string;
+  /**
+   * Layout of numeric Czech dates, such as `yyyy-mm-dd`. Default: the system
+   * format, `defaultDateFormat`. Other locales print as Intl does.
+   */
+  format?: string;
 }
 
 const civilPattern = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -44,8 +55,8 @@ function plainSpaces(text: string): string {
   return text.replace(/[\u2009\u202f]/g, ' ');
 }
 
-// Czech dates print as dd.mm.yyyy (07.10.2026), not Intl's `7. 10. 2026` or
-// `07.10.26`: one shape in every table, field and range.
+// Czech numeric dates print in the system format (07.10.2026), not Intl's
+// `7. 10. 2026` or `07.10.26`: one shape in every table, field and range.
 // Any Czech tag: cs, cs-CZ, cs-Latn-CZ, cs-CZ-u-nu-latn.
 const czech = /^cs(?:-|$)/i;
 
@@ -64,30 +75,53 @@ function czechOptions(
 const isDigits = (value: string | undefined) =>
   value !== undefined && /^\d+$/.test(value);
 
-/** Rewrites day, numeric month and year parts as dd.mm.yyyy. */
-function czechDate(parts: Intl.DateTimeFormatPart[]): string {
-  const numeric = (type: string) =>
-    parts.some((part) => part.type === type && isDigits(part.value));
-  if (!numeric('day') || !numeric('month') || !numeric('year')) {
-    return parts.map((part) => part.value).join('');
+const dateParts = new Set(['day', 'month', 'year']);
+
+/**
+ * Rewrites each numeric day, month and year run (`7. 10. 2026`) in the order
+ * and separator of the pattern, zero-padded, and 24-hour times in the system
+ * time format (`9:05` as `09:05`). Other parts stay as Intl prints them, so
+ * weekdays and range dashes survive.
+ */
+function layoutDate(
+  parts: Intl.DateTimeFormatPart[],
+  pattern: DatePattern
+): string {
+  const h23 = !parts.some((part) => part.type === 'dayPeriod');
+  const timeJoin = (before?: string, after?: string) =>
+    (before === 'hour' && after === 'minute') ||
+    (before === 'minute' && after === 'second');
+  let text = '';
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    const run = [parts[i], parts[i + 2], parts[i + 4]];
+    const isRun =
+      parts[i + 1]?.type === 'literal' &&
+      parts[i + 3]?.type === 'literal' &&
+      new Set(run.map((part) => part?.type)).size === 3 &&
+      run.every(
+        (part) => part && dateParts.has(part.type) && isDigits(part.value)
+      );
+    if (isRun) {
+      text += pattern.order
+        .map((type) => {
+          const value = run.find((part) => part?.type === type)?.value ?? '';
+          return value.padStart(type === 'year' ? 4 : 2, '0');
+        })
+        .join(pattern.separator);
+      i += 4;
+    } else if (h23 && part?.type === 'hour' && isDigits(part.value)) {
+      text += part.value.padStart(2, '0');
+    } else if (
+      part?.type === 'literal' &&
+      timeJoin(parts[i - 1]?.type, parts[i + 1]?.type)
+    ) {
+      text += defaultTimePattern.separator;
+    } else {
+      text += part?.value ?? '';
+    }
   }
-  return parts
-    .map((part, i) => {
-      if (part.type === 'day' || part.type === 'month') {
-        return part.value.padStart(2, '0');
-      }
-      const before = parts[i - 1]?.type;
-      const after = parts[i + 1]?.type;
-      if (
-        part.type === 'literal' &&
-        ((before === 'day' && after === 'month') ||
-          (before === 'month' && after === 'year'))
-      ) {
-        return '.';
-      }
-      return part.value;
-    })
-    .join('');
+  return text;
 }
 
 /** Parses `YYYY-MM-DD` to UTC midnight; throws on anything else. */
@@ -129,8 +163,8 @@ function parseInput(value: DateInput): Date {
 function formatter(
   value: DateInput,
   options: DateFormatOptions | undefined
-): [Intl.DateTimeFormat, Date, boolean] {
-  const { locale = defaultLocale, ...intl } = options ?? {};
+): [Intl.DateTimeFormat, Date, DatePattern | undefined] {
+  const { locale = defaultLocale, format, ...intl } = options ?? {};
   const civil = isCivil(value);
   const date = parseInput(value);
   if (Number.isNaN(date.getTime())) {
@@ -147,30 +181,33 @@ function formatter(
     // A civil date is the same day everywhere.
     timeZone: civil ? 'UTC' : (intl.timeZone ?? defaultTimeZone),
   };
-  return [
-    dateTimeFormat(locale, cs ? czechOptions(resolved) : resolved),
-    date,
-    cs,
-  ];
+  // Parsed for every locale, so a bad format throws even where it is unused.
+  const pattern =
+    format === undefined ? defaultDatePattern : parseDatePattern(format);
+  if (!cs) return [dateTimeFormat(locale, resolved), date, undefined];
+  return [dateTimeFormat(locale, czechOptions(resolved)), date, pattern];
 }
 
 /**
- * Formats a date. Default: `cs-CZ` as `dd.mm.yyyy`, Europe/Prague. Czech
- * numeric dates are always `dd.mm.yyyy`; other locales print as Intl does.
+ * Formats a date. Default: `cs-CZ` in the system format (`defaultDateFormat`),
+ * Europe/Prague. Czech numeric dates always use that format, or `format`;
+ * other locales print as Intl does.
  */
 export function formatDate(
   value: DateInput,
   options?: DateFormatOptions
 ): string {
-  const [format, date, cs] = formatter(value, options);
+  const [format, date, pattern] = formatter(value, options);
   return plainSpaces(
-    cs ? czechDate(format.formatToParts(date)) : format.format(date)
+    pattern
+      ? layoutDate(format.formatToParts(date), pattern)
+      : format.format(date)
   );
 }
 
 /**
  * Formats a date range with Intl's range rules; spaces around the dash are
- * U+0020. Czech ends print as `dd.mm.yyyy`. The ends print in the given order,
+ * U+0020. Czech ends print in the system format, as in `formatDate`. The ends print in the given order,
  * not sorted.
  */
 export function formatDateRange(
@@ -181,9 +218,9 @@ export function formatDateRange(
   if (isCivil(start) !== isCivil(end)) {
     throw new TypeError('Range ends must both be civil dates or both instants');
   }
-  const [format, from, cs] = formatter(start, options);
+  const [format, from, pattern] = formatter(start, options);
   const [, to] = formatter(end, options);
-  if (!cs) return plainSpaces(format.formatRange(from, to));
+  if (!pattern) return plainSpaces(format.formatRange(from, to));
   const parts = format.formatRangeToParts(from, to);
   // Intl may share parts between the ends (`1.–31. 10. 2026`); then each end
   // is printed whole.
@@ -195,7 +232,7 @@ export function formatDateRange(
         parts[i + 2]?.type === 'year')
   );
   return whole
-    ? plainSpaces(czechDate(parts))
+    ? plainSpaces(layoutDate(parts, pattern))
     : `${formatDate(start, options)} – ${formatDate(end, options)}`;
 }
 

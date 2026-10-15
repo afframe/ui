@@ -12,6 +12,7 @@
 | `src/utilities/`                             | Carbon's step flow (`@carbon/utilities-react`) in a `'use client'` module                      |
 | `src/provider/`, `src/theme/`                | `AfframeProvider`, feature flags, theme helpers                                                |
 | `src/format/`                                | Server-safe amount, number and date formatters                                                 |
+| `src/mask/`                                  | The typing mask of the date and time pickers, `useInputMask` in a `'use client'` module        |
 | `src/styles/`                                | Sass sources of `styles.css` and `charts.css`                                                  |
 | `.storybook/`                                | Storybook config, source labels, story templates                                               |
 | `examples/nextjs/`                           | Example app that installs the packed tarball                                                   |

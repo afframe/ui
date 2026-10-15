@@ -580,6 +580,17 @@
         "defaultCurrency",
         "defaultTimeZone",
         "defaultMaxFractionDigits",
+        "defaultDateFormat",
+        "defaultTimeFormat",
+        "parseDatePattern",
+        "toFlatpickrFormat",
+        "fromFlatpickrFormat",
+        "datePlaceholder",
+        "dateInputPattern",
+        "parseTimePattern",
+        "timePlaceholder",
+        "defaultDatePattern",
+        "defaultTimePattern",
         "currencyDigits",
         "roundAmount",
         "formatAmount",
@@ -597,6 +608,9 @@
         "createFormat"
       ],
       "types": [
+        "DatePart",
+        "DatePattern",
+        "TimePattern",
         "AmountOptions",
         "FormatAmountOptions",
         "CivilDate",
@@ -1039,6 +1053,109 @@
         "visualTest": true,
         "docs": true
       }
+    },
+    {
+      "name": "DatePicker",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/components/DatePicker",
+      "docs": "src/components/DatePicker/DatePicker.mdx",
+      "storyTitle": "Components/DatePicker",
+      "status": "stable",
+      "exports": ["DatePicker", "defaultDatePickerMessages"],
+      "types": ["DatePickerProps", "DatePickerMessages"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
+    },
+    {
+      "name": "FluidDatePicker",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/components/FluidDatePicker",
+      "docs": "src/components/FluidDatePicker/FluidDatePicker.mdx",
+      "storyTitle": "Components/Fluid Inputs/FluidDatePicker",
+      "status": "stable",
+      "exports": ["FluidDatePicker"],
+      "types": ["FluidDatePickerProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
+    },
+    {
+      "name": "TimePicker",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/components/TimePicker",
+      "docs": "src/components/TimePicker/TimePicker.mdx",
+      "storyTitle": "Components/TimePicker",
+      "status": "stable",
+      "exports": ["TimePicker"],
+      "types": ["TimePickerProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
+    },
+    {
+      "name": "FluidTimePicker",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/components/FluidTimePicker",
+      "docs": "src/components/FluidTimePicker/FluidTimePicker.mdx",
+      "storyTitle": "Components/Fluid Inputs/FluidTimePicker",
+      "status": "stable",
+      "exports": ["FluidTimePicker"],
+      "types": ["FluidTimePickerProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
+    },
+    {
+      "name": "mask",
+      "kind": "util",
+      "source": "afframe",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/mask",
+      "docs": null,
+      "storyTitle": null,
+      "status": "stable",
+      "exports": [
+        "applyMaskEdit",
+        "dateMaskSpec",
+        "timeMaskSpec",
+        "useInputMask"
+      ],
+      "types": [
+        "MaskEdit",
+        "MaskState",
+        "DateMaskOptions",
+        "MaskPart",
+        "MaskPartKind",
+        "MaskSpec",
+        "TimeMaskOptions",
+        "InputMaskProps"
+      ]
     },
     {
       "name": "OverflowMenu",
@@ -1598,15 +1715,6 @@
       "docs": "src/components/Search/Search.mdx"
     },
     {
-      "name": "DatePicker",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/DatePicker/DatePicker.mdx"
-    },
-    {
       "name": "DatePickerInput",
       "kind": "component",
       "source": "carbon",
@@ -1623,24 +1731,6 @@
       "runtime": "client",
       "status": "stable",
       "docs": "src/components/DatePicker/DatePicker.mdx"
-    },
-    {
-      "name": "preview__DatePicker",
-      "kind": "namespace",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "preview",
-      "docs": "src/components/DatePicker/DatePickerV2.mdx"
-    },
-    {
-      "name": "TimePicker",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/TimePicker/TimePicker.mdx"
     },
     {
       "name": "TimePickerSelect",
@@ -1748,15 +1838,6 @@
       "runtime": "client",
       "status": "stable",
       "docs": "src/components/FluidComboBox/FluidComboBox.mdx"
-    },
-    {
-      "name": "FluidDatePicker",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/FluidDatePicker/FluidDatePicker.mdx"
     },
     {
       "name": "FluidDatePickerInput",
@@ -1910,15 +1991,6 @@
       "runtime": "client",
       "status": "stable",
       "docs": "src/components/FluidTextInput/FluidTextInput.mdx"
-    },
-    {
-      "name": "FluidTimePicker",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/FluidTimePicker/FluidTimePicker.mdx"
     },
     {
       "name": "FluidTimePickerSelect",

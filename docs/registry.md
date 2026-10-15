@@ -37,6 +37,11 @@ One entry per Afframe or extras module and per subpath; the JSON lists its expor
 | HelpMenu             | component  | afframe        | `@afframe/ui`                       | client  | [page](../src/components/HelpMenu/HelpMenu.mdx)                         | yes, yes, yes, yes |
 | ChatElements         | component  | afframe        | `@afframe/ui`                       | client  | [page](../src/components/ChatElements/ChatElements.mdx)                 | yes, yes, yes, yes |
 | ControlledDatePicker | component  | afframe        | `@afframe/ui`                       | client  | [page](../src/components/ControlledDatePicker/ControlledDatePicker.mdx) | yes, yes, yes, yes |
+| DatePicker           | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/DatePicker/DatePicker.mdx)                     | yes, yes, yes      |
+| FluidDatePicker      | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)           | yes, yes, yes      |
+| TimePicker           | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/TimePicker/TimePicker.mdx)                     | yes, yes, yes      |
+| FluidTimePicker      | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)           | yes, yes, yes      |
+| mask                 | util       | afframe        | `@afframe/ui`                       | client  |                                                                         |                    |
 | OverflowMenu         | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/OverflowMenu/OverflowMenu.mdx)                 | yes, yes, yes      |
 | TableToolbarMenu     | component  | carbon wrapper | `@afframe/ui`                       | client  | [page](../src/components/DataTable/DataTable.mdx)                       | yes, yes, yes      |
 | icons                | foundation | carbon         | `@afframe/ui/icons`                 | server  | [page](../src/components/Icons/Icons.mdx)                               |                    |
@@ -103,11 +108,8 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | Search                             | component | carbon       | client  | stable            | [page](../src/components/Search/Search.mdx)                           |
 | ExpandableSearch                   | component | carbon       | client  | stable            | [page](../src/components/Search/Search.mdx)                           |
 | SearchSkeleton                     | component | carbon       | client  | stable            | [page](../src/components/Search/Search.mdx)                           |
-| DatePicker                         | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
 | DatePickerInput                    | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
 | DatePickerSkeleton                 | component | carbon       | client  | stable            | [page](../src/components/DatePicker/DatePicker.mdx)                   |
-| preview__DatePicker                | namespace | carbon       | client  | preview           | [page](../src/components/DatePicker/DatePickerV2.mdx)                 |
-| TimePicker                         | component | carbon       | client  | stable            | [page](../src/components/TimePicker/TimePicker.mdx)                   |
 | TimePickerSelect                   | component | carbon       | client  | stable            | [page](../src/components/TimePicker/TimePicker.mdx)                   |
 | FileUploader                       | component | carbon       | client  | stable            | [page](../src/components/FileUploader/FileUploader.mdx)               |
 | FileUploaderButton                 | component | carbon       | client  | stable            | [page](../src/components/FileUploader/FileUploader.mdx)               |
@@ -120,7 +122,6 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | FluidForm                          | component | carbon       | client  | stable            | [page](../src/components/FluidForm/FluidForm.mdx)                     |
 | FluidComboBox                      | component | carbon       | client  | stable            | [page](../src/components/FluidComboBox/FluidComboBox.mdx)             |
 | FluidComboBoxSkeleton              | component | carbon       | client  | stable            | [page](../src/components/FluidComboBox/FluidComboBox.mdx)             |
-| FluidDatePicker                    | component | carbon       | client  | stable            | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)         |
 | FluidDatePickerInput               | component | carbon       | client  | stable            | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)         |
 | FluidDatePickerSkeleton            | component | carbon       | client  | stable            | [page](../src/components/FluidDatePicker/FluidDatePicker.mdx)         |
 | FluidDropdown                      | component | carbon       | client  | stable            | [page](../src/components/FluidDropdown/FluidDropdown.mdx)             |
@@ -138,7 +139,6 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | FluidTextAreaSkeleton              | component | carbon       | client  | stable            | [page](../src/components/FluidTextArea/FluidTextArea.mdx)             |
 | FluidTextInput                     | component | carbon       | client  | stable            | [page](../src/components/FluidTextInput/FluidTextInput.mdx)           |
 | FluidTextInputSkeleton             | component | carbon       | client  | stable            | [page](../src/components/FluidTextInput/FluidTextInput.mdx)           |
-| FluidTimePicker                    | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)         |
 | FluidTimePickerSelect              | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)         |
 | FluidTimePickerSkeleton            | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)         |
 | DataTable                          | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                     |

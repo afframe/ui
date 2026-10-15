@@ -7,12 +7,19 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: copied from IBM Products' makeDraggable stories, TypeScript, makeDraggable, components and icons from @afframe/ui, carbon tag, prefix as a literal, story names unified (the popover first, as Default), the icon-only drag and close buttons named with aria-label, scss styles replaced by make-draggable-story.css, the click log dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: copied from IBM Products' makeDraggable stories, TypeScript, makeDraggable, components and icons from @afframe/ui, carbon tag, prefix as a literal, story names unified (the popover first, as Default), the drag and close buttons as IconButton with a tooltip label aligned below, Carbon's visually-hidden class for the drag instructions, a hidden play test for the Close tooltip and focus ring, scss styles replaced by make-draggable-story.css, the click log dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useRef, useState } from 'react';
-import type { Meta, StoryFn } from '@storybook/react-vite';
-import { Button, Popover, PopoverContent, makeDraggable } from '../../index.js';
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, waitFor } from 'storybook/test';
+import {
+  Button,
+  IconButton,
+  Popover,
+  PopoverContent,
+  makeDraggable,
+} from '../../index.js';
 import { Close, Draggable } from '../../icons.js';
 import mdx from './makeDraggable.mdx';
 import './make-draggable-story.css';
@@ -73,15 +80,16 @@ const DraggableDiv = () => {
       <div ref={dialogRef} className="draggable__div">
         <div ref={headerRef} className="draggable__div-header">
           <header className="div-header">
-            <Button
+            <IconButton
               kind="ghost"
               ref={dragRef}
               className="drag-icon-div"
-              aria-label="Drag"
+              label="Drag"
+              align="bottom-start"
               aria-describedby="drag-instructions-div">
               <Draggable />
-            </Button>
-            <span id="drag-instructions-div" className="sr-only">
+            </IconButton>
+            <span id="drag-instructions-div" className="cds--visually-hidden">
               To pick up the draggable item, press Enter. While dragging, use
               the arrow keys to move the item. Press Enter again to leave the
               item in its new position.
@@ -163,26 +171,28 @@ const DraggablePopoverTemplate = () => {
 
         <PopoverContent className="popover-content">
           <header ref={headerRef} className="popover-header popover-title">
-            <Button
+            <IconButton
               kind="ghost"
               ref={dragRef}
               className="drag-icon"
-              aria-label="Drag"
+              label="Drag"
+              align="bottom-start"
               aria-describedby="drag-instructions">
               <Draggable />
-            </Button>
-            <span id="drag-instructions" className="sr-only">
+            </IconButton>
+            <span id="drag-instructions" className="cds--visually-hidden">
               To pick up the draggable item, press Enter. While dragging, use
               the arrow keys to move the item. Press Enter again to leave the
               item in its new position.
             </span>
-            <Button
+            <IconButton
               kind="ghost"
               onClick={() => setIsOpen(false)}
               className="close-icon"
-              aria-label="Close">
+              label="Close"
+              align="bottom-end">
               <Close />
-            </Button>
+            </IconButton>
           </header>
           <p className="heading"> Available storage</p>
           <p className="popover-details">
@@ -197,3 +207,35 @@ const DraggablePopoverTemplate = () => {
 export const Default: StoryFn = DraggablePopoverTemplate.bind({});
 
 export const CustomElement: StoryFn = DraggableDiv.bind({});
+
+// Tab to Close: its tooltip opens and the button shows Carbon's 2px focus
+// ring (1px border plus a 1px inset shadow in the focus colour). Hidden, so
+// the sidebar story shows the start state.
+export const TestCloseTooltipOnFocus: StoryObj = {
+  render: () => <DraggablePopoverTemplate />,
+  tags: ['!dev', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    // Carbon names the button through aria-labelledby on its hidden tooltip,
+    // which Testing Library's role query does not resolve.
+    const close = canvasElement.querySelector<HTMLElement>('button.close-icon');
+    for (let i = 0; i < 5 && document.activeElement !== close; i++) {
+      await userEvent.tab();
+    }
+    await expect(close).not.toBeNull();
+    await expect(document.activeElement).toBe(close);
+    const tooltip = document.getElementById(
+      close?.getAttribute('aria-labelledby') ?? ''
+    );
+    await waitFor(() => expect(tooltip).toBeVisible());
+    await expect(tooltip).toHaveTextContent('Close');
+    // Carbon's button transitions its focus border and shadow.
+    await waitFor(() => {
+      const style = getComputedStyle(close as HTMLElement);
+      expect(style.borderTopWidth).toBe('1px');
+      expect(style.borderTopColor).not.toBe('rgba(0, 0, 0, 0)');
+      expect(style.boxShadow).toContain(
+        `${style.borderTopColor} 0px 0px 0px 1px inset`
+      );
+    });
+  },
+};

@@ -108,7 +108,7 @@ test('uncontrolled: the user opens and closes it, onOpenChange reports both', as
 });
 
 test('Tab moves focus to the selected date; days and the calendar are named', async () => {
-  const { unmount } = render(<Single open value="10/15/2026" />);
+  const { unmount } = render(<Single open value="15.10.2026" />);
   await vi.waitFor(() => expect(isOpen()).toBe(true));
   const calendar = document.querySelector('.flatpickr-calendar.open');
   expect(calendar).toHaveAttribute('role', 'application');
@@ -223,5 +223,21 @@ test("a caller's onKeyDown still runs", async () => {
   await userEvent.keyboard('{Escape}');
   expect(onKeyDown).toHaveBeenCalled();
   expect(isOpen()).toBe(false);
+  unmount();
+});
+
+test('Enter on an impossible date keeps it, marked invalid', async () => {
+  const { unmount } = render(
+    <ControlledDatePicker datePickerType="single">
+      <DatePickerInput id="due" labelText="Due date" />
+    </ControlledDatePicker>
+  );
+  const input = screen.getByLabelText<HTMLInputElement>('Due date');
+  await userEvent.type(input, '31022026');
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() =>
+    expect(input.getAttribute('aria-invalid')).toBe('true')
+  );
+  expect(input.value).toBe('31.02.2026');
   unmount();
 });

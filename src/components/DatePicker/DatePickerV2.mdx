@@ -4,7 +4,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: docs page of the stories file (template instead of Meta of), em-dashes replaced, source label added, code samples import from @afframe/ui, primitives link pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, onChange samples format with formatDate, Afframe notes on date strings and calendar focus, date chooser added.
+// Modified by Afframe in 2026: docs page of the stories file (template instead of Meta of), em-dashes replaced, source label added, code samples import from @afframe/ui, primitives link pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, onChange samples format with formatDate, Afframe notes on date strings, the system date format and calendar focus, date chooser added.
 
 <Meta isTemplate />
 
@@ -220,8 +220,11 @@ Supported format tokens:
 </DatePicker>
 ```
 
-Afframe: the stories use `dateFormat="d.m.Y"`. This picker supports the `d`,
-`m` and `Y` tokens used here, and also `j`, `n` and `y`. `dateFormat` sets only the displayed text:
+Afframe: the picker defaults `dateFormat` and the input placeholder to the
+system date format, `defaultDateFormat` in `@afframe/ui/format`
+(`dd.mm.yyyy`). It has no typing mask: Carbon's preview ignores typed text,
+so a date is picked in the calendar. The stable `DatePicker` takes typed dates.
+This picker supports the `d`, `m` and `Y` tokens, and also `j`, `n` and `y`. `dateFormat` sets only the displayed text:
 string `value`, `minDate` and `maxDate` are read as `Y-m-d` or `m/d/Y`
 whatever the `dateFormat`, so pass ISO strings or `Date` objects.
 

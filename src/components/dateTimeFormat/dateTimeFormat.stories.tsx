@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: copied from IBM Products' Date Time Format stories, TypeScript, dateTimeFormat and components from @afframe/ui, title by the export name, carbon tag, story names unified (Default, no storyName), the absolute style lists built by one helper and the time input guards merged (same output), Dropdown label set (a required prop), scss styles replaced by date-time-format-story.css. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: copied from IBM Products' Date Time Format stories, TypeScript, dateTimeFormat and components from @afframe/ui, title by the export name, carbon tag, story names unified (Default, no storyName), the absolute style lists built by one helper, the time field a masked TimePicker with seconds instead of a TextInput with input guards, Dropdown label set (a required prop), scss styles replaced by date-time-format-story.css, the date field in the system date format. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useMemo, useState } from 'react';
@@ -16,9 +16,11 @@ import {
   DatePicker,
   DatePickerInput,
   Dropdown,
-  TextInput,
+  TimePicker,
   dateTimeFormat,
 } from '../../index.js';
+import { defaultDatePattern } from '../../format/index.js';
+import { parseStrictDate } from '../DatePicker/dateField.js';
 import mdx from './dateTimeFormat.mdx';
 import './date-time-format-story.css';
 
@@ -59,8 +61,16 @@ const outputStyles = ['full', 'long', 'medium', 'short'] as const;
 
 const pad = (value: number) => String(value).padStart(2, '0');
 
+const dateParts = {
+  day: (date: Date) => pad(date.getDate()),
+  month: (date: Date) => pad(date.getMonth() + 1),
+  year: (date: Date) => String(date.getFullYear()),
+};
+
 const formatDateInputValue = (date: Date) =>
-  `${pad(date.getMonth() + 1)}/${pad(date.getDate())}/${date.getFullYear()}`;
+  defaultDatePattern.order
+    .map((part) => dateParts[part](date))
+    .join(defaultDatePattern.separator);
 
 const formatTimeInputValue = (date: Date) =>
   `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
@@ -68,13 +78,14 @@ const formatTimeInputValue = (date: Date) =>
 const isValidTimeInput = (value: string) => /^\d{2}:\d{2}:\d{2}$/.test(value);
 
 const parseDateTime = (dateValue: string, timeValue: string) => {
-  const [month = '01', day = '01', year = '1970'] = dateValue.split('/');
+  const date =
+    parseStrictDate(dateValue, defaultDatePattern) ?? new Date(1970, 0, 1);
   const [hours = '00', minutes = '00', seconds = '00'] = timeValue.split(':');
 
   return new Date(
-    Number(year),
-    Number(month) - 1,
-    Number(day),
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
     Number(hours),
     Number(minutes),
     Number(seconds)
@@ -155,31 +166,14 @@ const DateTimeFormatDemo = () => {
                 setDateValue(formatDateInputValue(selectedDates[0]));
               }
             }}>
-            <DatePickerInput
-              id="date-time-format-date"
-              labelText="Date"
-              placeholder="mm/dd/yyyy"
-            />
+            <DatePickerInput id="date-time-format-date" labelText="Date" />
           </DatePicker>
-          <TextInput
+          <TimePicker
             id="date-time-format-time"
             labelText="Time"
-            placeholder="hh:mm:ss"
+            seconds
             value={timeValue}
-            // fallow-ignore-next-line complexity -- IBM's time input guards
-            onChange={(event) => {
-              const nextValue = event.target.value;
-              const parts = nextValue.split(':');
-              if (
-                !/^[\d:]*$/.test(nextValue) ||
-                nextValue.length > 8 ||
-                parts.length > 3 ||
-                parts.some((part) => part.length > 2)
-              ) {
-                return;
-              }
-              setTimeValue(nextValue);
-            }}
+            onChange={(event) => setTimeValue(event.target.value)}
             onBlur={() => {
               if (!isValidTimeInput(timeValue)) {
                 setTimeValue(formatTimeInputValue(new Date()));

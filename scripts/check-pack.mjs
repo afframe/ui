@@ -44,6 +44,10 @@ const clientFamilies = [
   'HelpMenu',
   'ChatElements',
   'ControlledDatePicker',
+  'DatePicker',
+  'FluidDatePicker',
+  'TimePicker',
+  'FluidTimePicker',
   'OverflowMenu',
   'DataTable',
 ];
@@ -75,6 +79,7 @@ const required = [
   'dist/ibm-products/scroll-gradient.js',
   'dist/ibm-products/decorator.js',
   'dist/utilities/step-flow.js',
+  'dist/mask/useInputMask.js',
   ...labsModules,
   ...familyModules,
   ...serverFamilies.map((name) => `dist/components/${name}/${name}.js`),
@@ -142,6 +147,7 @@ const clientModules = [
   'dist/ibm-products/scroll-gradient.js',
   'dist/ibm-products/decorator.js',
   'dist/utilities/step-flow.js',
+  'dist/mask/useInputMask.js',
   ...labsModules,
   ...new Set([...familyModules, ...familyImports]),
 ];
