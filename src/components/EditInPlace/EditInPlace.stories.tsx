@@ -7,13 +7,14 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, EditInPlace from @afframe/ui, DisplayBox replaced by a div, story styles converted from SCSS to plain CSS, StoryDocsPage and the unused className dropped, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, EditInPlace from @afframe/ui, DisplayBox replaced by a div, story styles converted from SCSS to plain CSS, StoryDocsPage and the unused className dropped, source tag, value held in story args, project name example data, decorator without inline margin so it fits a narrow viewport, Afframe docs page. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { action } from 'storybook/actions';
+import { useArgs } from 'storybook/preview-api';
 import { EditInPlace, type EditInplaceProps } from '../../index.js';
+import mdx from './EditInPlace.mdx';
 import './edit-in-place-story.css';
 
 const storyClass = 'edit-in-place-example';
@@ -41,6 +42,9 @@ export default {
   title: 'Components/EditInPlace',
   component: EditInPlace,
   tags: ['ibm-products'],
+  parameters: {
+    docs: { page: mdx },
+  },
   argTypes: {
     containerWidth: {
       control: { type: 'range', min: 20, max: 800, step: 10 },
@@ -72,8 +76,8 @@ const defaultProps: StoryArgs = {
   editLabel: 'Edit',
   id: 'story-id',
   invalid: false,
-  invalidText: 'This field is required',
-  labelText: 'Label text',
+  invalidText: 'Enter a project name.',
+  labelText: 'Project name',
   onCancel: () => {},
   onChange: () => {},
   onSave: () => {},
@@ -81,69 +85,64 @@ const defaultProps: StoryArgs = {
   readOnlyToggleTipText: 'This field is read-only and cannot be edited',
   toggleTipAlignment: 'bottom',
   saveLabel: 'Save',
-  value: 'default',
-  placeholder: 'placeholder text',
+  value: 'Website redesign',
+  placeholder: 'Project name',
 };
 
 const Template: StoryFn<StoryArgs> = ({ containerWidth, ...args }) => {
-  const [value, setValue] = useState(defaultProps.value);
+  const [, updateArgs] = useArgs<StoryArgs>();
 
   const onChange = (val: string) => {
-    setValue(val);
+    updateArgs({ value: val });
     actionChange(val);
   };
 
   const onSave = () => {
-    actionSave(value);
+    actionSave(args.value);
   };
 
   const onCancel = (initialVal: string) => {
-    setValue(initialVal);
+    updateArgs({ value: initialVal });
     actionCancel(initialVal);
   };
 
   const props = {
     ...args,
-    value,
     onChange,
     onSave,
     onCancel,
   };
 
   return (
-    <div style={{ width: containerWidth }}>
+    <div style={{ width: containerWidth, maxInlineSize: '100%' }}>
       <EditInPlace {...props} />
     </div>
   );
 };
 
 const TemplateBlur: StoryFn<StoryArgs> = ({ containerWidth, ...args }) => {
-  const [value, setValue] = useState(defaultProps.value);
+  const [, updateArgs] = useArgs<StoryArgs>();
 
   const onChange = (val: string) => {
-    setValue(val);
+    updateArgs({ value: val });
     actionChange(val);
   };
 
   const onSave = () => {
-    // Update parent state so the value prop changes and component can sync initialValue
-    setValue(value);
-    actionSave(value);
+    actionSave(args.value);
   };
 
   const onCancel = (initialVal: string) => {
-    setValue(initialVal);
+    updateArgs({ value: initialVal });
     actionCancel(initialVal);
   };
 
   const onBlur = (initialVal: string) => {
     const shouldSaveValue = false;
     if (shouldSaveValue) {
-      // Update parent state when saving via blur
-      setValue(value);
-      actionSave(value);
+      actionSave(args.value);
     } else {
-      setValue(initialVal);
+      updateArgs({ value: initialVal });
       actionCancel(initialVal);
     }
     actionBlur(initialVal);
@@ -151,7 +150,6 @@ const TemplateBlur: StoryFn<StoryArgs> = ({ containerWidth, ...args }) => {
 
   const props = {
     ...args,
-    value,
     onChange,
     onSave,
     onCancel,
@@ -159,7 +157,7 @@ const TemplateBlur: StoryFn<StoryArgs> = ({ containerWidth, ...args }) => {
   };
 
   return (
-    <div style={{ width: containerWidth }}>
+    <div style={{ width: containerWidth, maxInlineSize: '100%' }}>
       <EditInPlace {...props} />
     </div>
   );
@@ -187,7 +185,9 @@ ReadOnly.args = {
   readOnly: true,
   readOnlyLabel: 'Edit off',
 };
-// IBM's read-only mode renders an IconButton inside the ToggletipButton.
+// IBM's read-only mode renders an IconButton inside the ToggletipButton. Its
+// toggletip also stays open when Tab moves focus on; upstream issue drafted,
+// not filed.
 ReadOnly.parameters = {
   a11y: {
     config: { rules: [{ id: 'nested-interactive', enabled: false }] },

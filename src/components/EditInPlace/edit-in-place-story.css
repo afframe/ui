@@ -7,10 +7,10 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: converted from SCSS to plain CSS, DisplayBox styles replaced by the viewport margin. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: converted from SCSS to plain CSS, DisplayBox styles replaced by the viewport margin, block margin only so the field fits a narrow viewport. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 .edit-in-place-example__viewport {
   /* stylelint-disable-next-line carbon/layout-use */
-  margin: 100px;
+  margin-block: 100px;
 }
