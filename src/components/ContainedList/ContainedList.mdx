@@ -4,7 +4,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added, note on focus after the expandable search collapses.
 
 <Meta isTemplate />
 
@@ -78,6 +78,10 @@ export const WithExpandableSearch = () => {
 ```
 
 <Canvas of={ContainedListStories.WithExpandableSearch} />
+
+When Escape collapses an empty `ExpandableSearch`, focus moves to the page
+instead of back to the search button, so keyboard users start again from the
+top. Upstream issue drafted, not filed.
 
 #### Persistent Search
 
