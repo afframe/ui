@@ -1,13 +1,14 @@
 import { Canvas, ArgTypes, Meta } from '@storybook/addon-docs/blocks';
 import * as stories from './NoDataEmptyState.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { EmptyStateChooser } from '../../../.storybook/EmptyStateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label and tag-pinned source link added, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label and tag-pinned source link added, story names unified, upstream table of contents removed, H1 as the component name, heading case, empty state chooser table and Afframe notes added.
 
 <Meta isTemplate />
 
-# NoData Empty State
+# NoDataEmptyState
 
 <SourceLabel name="ibm-products" />
 
@@ -19,6 +20,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 Empty states are moments in an app where there is no data to display to the
 user.
+
+## Which component to use
+
+<EmptyStateChooser />
 
 ## Default
 
@@ -32,7 +37,7 @@ user.
 
 <Canvas of={stories.WithAction} />
 
-## with Action Icon Button
+## With Action Icon Button
 
 <Canvas of={stories.WithActionIconButton} />
 
@@ -43,6 +48,40 @@ user.
 ## With Action And Link
 
 <Canvas of={stories.WithActionAndLink} />
+
+## Afframe notes
+
+### Illustration theme
+
+IBM draws the light illustration unless the app passes `illustrationTheme`.
+Pass the page's colour scheme from a `'use client'` component
+([Theming](?path=/docs/getting-started-theming--overview)):
+
+```tsx
+'use client';
+import { NoDataEmptyState, useColorScheme } from '@afframe/ui';
+
+export function NoInvoices() {
+  return (
+    <NoDataEmptyState
+      illustrationTheme={useColorScheme()}
+      title="No invoices yet"
+      subtitle="Create an invoice to start tracking payments."
+    />
+  );
+}
+```
+
+`useColorScheme()` returns `light` on the server render and the first client
+render, so a dark page shows the light illustration until the client renders
+again. The stories on this page follow the Storybook theme the same way; With
+Dark Mode Illustration sets `illustrationTheme="dark"` explicitly.
+
+### Illustration alt text
+
+The illustration is hidden from screen readers (`aria-hidden="true"`).
+`illustrationDescription`, or the title when it is empty, only fills the SVG's
+`<title>`, which shows as a tooltip. The title and subtitle carry the meaning.
 
 ## Component API
 

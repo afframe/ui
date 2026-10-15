@@ -1,13 +1,14 @@
 import { Canvas, ArgTypes, Meta } from '@storybook/addon-docs/blocks';
 import * as stories from './EmptyState.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { EmptyStateChooser } from '../../../.storybook/EmptyStateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label and tag-pinned source link added, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label and tag-pinned source link added, story names unified, upstream table of contents removed, H1 as the component name, heading case, empty state chooser table and Afframe notes added.
 
 <Meta isTemplate />
 
-# Empty State
+# EmptyState
 
 <SourceLabel name="ibm-products" />
 
@@ -20,6 +21,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 Empty states are moments in an app where there is no data to display to the
 user. They are most commonly seen the first time a user interacts with a product
 or page, but can be used when data has been deleted or is unavailable.
+
+## Which component to use
+
+<EmptyStateChooser />
 
 ## Default
 
@@ -37,7 +42,7 @@ or page, but can be used when data has been deleted or is unavailable.
 
 <Canvas of={stories.WithAction} />
 
-## with Action Icon Button
+## With Action Icon Button
 
 <Canvas of={stories.WithActionIconButton} />
 
@@ -48,6 +53,45 @@ or page, but can be used when data has been deleted or is unavailable.
 ## With Action And Link
 
 <Canvas of={stories.WithActionAndLink} />
+
+## Afframe notes
+
+### Illustration theme
+
+`EmptyState` shows the `illustration` it is given. For a picture with a light
+and a dark version, pick the source from the page's colour scheme in a
+`'use client'` component
+([Theming](?path=/docs/getting-started-theming--overview)):
+
+```tsx
+'use client';
+import { EmptyState, useColorScheme } from '@afframe/ui';
+
+export function NoCustomers() {
+  const scheme = useColorScheme();
+  return (
+    <EmptyState
+      illustration={
+        scheme === 'dark' ? '/customers-dark.svg' : '/customers-light.svg'
+      }
+      illustrationDescription=""
+      title="No customers yet"
+      subtitle="Add a customer to send them invoices."
+    />
+  );
+}
+```
+
+`useColorScheme()` returns `light` on the server render and the first client
+render, so a dark page shows the light picture until the client renders again.
+
+### Illustration alt text
+
+IBM renders the `illustration` image with `aria-hidden="true"`, so screen
+readers skip it whatever `illustrationDescription` says; the title and
+subtitle carry the meaning. `illustrationDescription` is still the image's
+`alt`, shown when the picture fails to load. With Custom Illustration passes
+`""` because the title sits next to the picture.
 
 ## Component API
 
