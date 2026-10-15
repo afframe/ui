@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefix as a literal, the duplicate is-dragging rule merged, literal colours, shadow and paddings replaced by Carbon tokens (header grey by layer-accent, shadow by the shadow token, 6px and 10px paddings by spacing-03 and spacing-04), the 4px drag ring kept as a literal because the token check takes no spacing token in box-shadow. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefix as a literal, the duplicate is-dragging rule merged, literal colours, shadow and paddings replaced by Carbon tokens (header grey by layer-accent, shadow by the shadow token, 6px and 10px paddings by spacing-03 and spacing-04), the 4px drag ring kept as a literal because the token check takes no spacing token in box-shadow, position: absolute dropped from close-icon, which Carbon's button rule overrides on IBM's page (with it the button covers the drag handle). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 /* Div */
@@ -48,7 +48,6 @@
 }
 
 .close-icon {
-  position: absolute;
   border: none;
   cursor: pointer;
 }
