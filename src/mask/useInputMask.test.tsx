@@ -12,20 +12,22 @@ const dotted = dateMaskSpec({
 
 function Field({
   spec = dotted,
+  enabled,
   spy,
 }: {
   spec?: MaskSpec;
+  enabled?: boolean;
   spy: (value: string) => void;
 }) {
-  const mask = useInputMask(spec);
+  const mask = useInputMask(spec, enabled);
   const [value, setValue] = useState('');
   return (
     <input
       aria-label="Field"
-      {...mask}
+      {...(enabled === false ? {} : mask)}
       value={value}
       onChange={(event) => {
-        mask.onChange(event);
+        if (enabled !== false) mask.onChange(event);
         setValue(event.target.value);
         spy(event.target.value);
       }}
@@ -100,4 +102,14 @@ test('normalises composed text on compositionend', async () => {
   );
   expect(input().value).toBe('01.02.2026');
   expect(spy).toHaveBeenLastCalledWith('01.02.2026');
+});
+
+test('a disabled mask stops its listener on an input that stays mounted', async () => {
+  const spy = vi.fn();
+  const { rerender } = render(<Field spy={spy} />);
+  await userEvent.type(input(), '01');
+  expect(input().value).toBe('01.');
+  rerender(<Field enabled={false} spy={spy} />);
+  await userEvent.type(input(), 'a');
+  expect(input().value).toBe('01.a');
 });

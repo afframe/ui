@@ -181,7 +181,10 @@ export function useDateField({
   useUnmaskableFormatWarning(name, dateFormatProp, typeable);
   const effective = pattern ?? defaultDatePattern;
   const spec = useMemo(() => dateMaskSpec(effective), [effective]);
-  const masks = [useInputMask(spec), useInputMask(spec)] as const;
+  const masks = [
+    useInputMask(spec, masked),
+    useInputMask(spec, masked),
+  ] as const;
   const text = resolveMessages(defaultDatePickerMessages, messages);
   const inputs = useRef<Pair<HTMLInputElement | null>>([null, null]);
   // The text typed last into each input.

@@ -51,9 +51,13 @@ const stateOf = (input: HTMLInputElement): MaskState => ({
 const dataOf = (event: InputEvent) =>
   event.data ?? event.dataTransfer?.getData('text/plain') ?? null;
 
-function listenerFor(input: HTMLInputElement, spec: { current: MaskSpec }) {
+function listenerFor(
+  input: HTMLInputElement,
+  spec: { current: MaskSpec },
+  enabled: { current: boolean }
+) {
   return (event: InputEvent) => {
-    if (event.isComposing) return;
+    if (event.isComposing || !enabled.current) return;
     const next = applyMaskEdit(
       stateOf(input),
       { inputType: event.inputType, data: dataOf(event) },
@@ -77,10 +81,12 @@ function normalized(input: HTMLInputElement, spec: MaskSpec): MaskState {
 /**
  * Masks typing in a text input to `spec`. Spread the result on the input;
  * a consumer's own `onFocus`, `onChange` or `onCompositionEnd` must call the
- * mask's handler first.
+ * mask's handler first. `enabled: false` stops the native listener, which
+ * outlives the spread props on an input that stays mounted.
  */
-export function useInputMask(spec: MaskSpec): InputMaskProps {
+export function useInputMask(spec: MaskSpec, enabled = true): InputMaskProps {
   const specRef = useRef(spec);
+  const enabledRef = useRef(enabled);
   const attached = useRef<{
     input: HTMLInputElement;
     listener: (event: InputEvent) => void;
@@ -88,6 +94,7 @@ export function useInputMask(spec: MaskSpec): InputMaskProps {
 
   useEffect(() => {
     specRef.current = spec;
+    enabledRef.current = enabled;
   });
 
   const detach = () => {
@@ -105,7 +112,7 @@ export function useInputMask(spec: MaskSpec): InputMaskProps {
       const input = event.currentTarget;
       if (attached.current?.input === input) return;
       detach();
-      const listener = listenerFor(input, specRef);
+      const listener = listenerFor(input, specRef, enabledRef);
       input.addEventListener('beforeinput', listener);
       attached.current = { input, listener };
     },
