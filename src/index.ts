@@ -862,6 +862,10 @@ export * from './components/FluidDatePicker/index.js';
 export * from './components/TimePicker/index.js';
 export * from './components/FluidTimePicker/index.js';
 
+// The typing mask under the date and time pickers, for other inputs
+// (ADR 0021).
+export * from './mask/index.js';
+
 // Carbon's OverflowMenu and TableToolbarMenu, wrapped so the 1.0.x menu shape
 // keeps working (docs/feature-flags.md).
 export * from './components/OverflowMenu/index.js';

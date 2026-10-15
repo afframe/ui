@@ -18,6 +18,7 @@ export default defineConfig({
     'src/components/{RemoveModal,ImportModal,ExportModal,APIKeyModal,AccentTag}/index.ts',
     'src/components/{EnvironmentSwitcher,LogoutBanner,LogoutTile,HelpMenu,ChatElements}/index.ts',
     'src/components/{ControlledDatePicker,DatePicker,FluidDatePicker,OverflowMenu,DataTable}/index.ts',
+    'src/components/{TimePicker,FluidTimePicker}/index.ts',
     'src/theme/use-afframe-theme.ts',
   ],
   outDir: 'dist',
