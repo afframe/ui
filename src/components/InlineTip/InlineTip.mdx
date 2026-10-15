@@ -1,9 +1,10 @@
-import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as stories from './InlineTip.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { NotificationChooser } from '../../../.storybook/NotificationChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, Stackblitz example and story helper import removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: source label added, Stackblitz example and story helper import removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed, notification chooser table and close note added, props table instead of controls.
 
 <Meta isTemplate />
 
@@ -19,11 +20,19 @@ Inline tips are messages embedded within other components that provide an
 ambient way to deliver learning content without distracting the user from their
 flow.
 
+## Which component to use
+
+<NotificationChooser />
+
 ## Example usage
 
 ### Inline tip
 
 <Canvas of={stories.Default} />
+
+`InlineTip` does not hide itself: `onClose` only reports the click, and the app
+removes the tip. Then move focus to a control that stays on the page, as the
+story does with Show tip again, so keyboard focus does not fall to the page body.
 
 ### Inline tip narrow
 
@@ -31,4 +40,4 @@ flow.
 
 ## Component API
 
-<Controls />
+<ArgTypes />

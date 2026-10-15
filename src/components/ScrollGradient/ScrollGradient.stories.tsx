@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ScrollGradient from @afframe/ui cast to a props type (IBM types it ref-only), title Components/ScrollGradient, source tag, scss styles replaced by scroll-gradient-story.css, scrollable-region-focusable a11y rule disabled on both stories, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ScrollGradient from @afframe/ui cast to a props type (IBM types it ref-only), title Components/ScrollGradient, source tag, scss styles replaced by scroll-gradient-story.css, story names unified, invoice example data, scroll element named and focusable through getScrollElementRef. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentType, CSSProperties, ReactNode } from 'react';
@@ -19,22 +19,38 @@ import './scroll-gradient-story.css';
 const ScrollGradient = IbmScrollGradient as ComponentType<{
   children?: ReactNode;
   className?: string;
+  color?: string;
+  getScrollElementRef?: (element: HTMLElement | null) => void;
   style?: CSSProperties;
 }>;
 
-const storyCopy =
-  'Use case specific content to display in the ScrollGradient component. Use case specific content to display in the ScrollGradient component. Use case specific content to display in the ScrollGradient component. ';
+const customers = [
+  'Lakeside Furniture',
+  'Northwind Traders',
+  'Bluebell Bakery',
+  'Harbor Logistics',
+  'Summit Office Supplies',
+];
 
 const storyChildren = (
   <div style={{ padding: 16 }}>
-    <p>{storyCopy}</p>
-    <p>{storyCopy}</p>
-    <p>{storyCopy}</p>
-    <p>{storyCopy}</p>
-    <p>{storyCopy}</p>
-    <p>{storyCopy}</p>
+    {Array.from({ length: 20 }, (_, index) => (
+      <p key={index}>
+        Invoice 2026-{String(index + 1).padStart(3, '0')},{' '}
+        {customers[index % customers.length]}
+      </p>
+    ))}
   </div>
 );
+
+// The scroll element is IBM's inner div, so only this callback can make it
+// keyboard reachable and give it a name.
+const nameScrollElement = (element: HTMLElement | null) => {
+  if (!element) return;
+  element.tabIndex = 0;
+  element.setAttribute('role', 'region');
+  element.setAttribute('aria-label', 'Invoices');
+};
 
 export default {
   title: 'Components/ScrollGradient',
@@ -55,7 +71,12 @@ const style = {
 const Template: StoryFn<typeof ScrollGradient> = (args) => {
   return (
     <div className="templateContainer">
-      <ScrollGradient style={style} className={'myScrollGradient'} {...args} />
+      <ScrollGradient
+        style={style}
+        className={'myScrollGradient'}
+        getScrollElementRef={nameScrollElement}
+        {...args}
+      />
     </div>
   );
 };
@@ -63,7 +84,12 @@ const Template: StoryFn<typeof ScrollGradient> = (args) => {
 const TemplateBothAxis: StoryFn<typeof ScrollGradient> = (args) => {
   return (
     <div className="templateContainer-sm">
-      <ScrollGradient style={style} className={'myScrollGradient'} {...args} />
+      <ScrollGradient
+        style={style}
+        className={'myScrollGradient'}
+        getScrollElementRef={nameScrollElement}
+        {...args}
+      />
     </div>
   );
 };
@@ -77,11 +103,3 @@ export const XAndYAxis = TemplateBothAxis.bind({});
 XAndYAxis.args = {
   children: <div style={{ width: '1500px' }}>{storyChildren}</div>,
 };
-
-const scrollableRegionFocusable = {
-  a11y: {
-    config: { rules: [{ id: 'scrollable-region-focusable', enabled: false }] },
-  },
-};
-Default.parameters = scrollableRegionFocusable;
-XAndYAxis.parameters = scrollableRegionFocusable;

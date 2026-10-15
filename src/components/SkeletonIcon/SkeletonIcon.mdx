@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as SkeletonIconStories from './SkeletonIcon.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { LoadingChooser } from '../../../.storybook/LoadingChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, loading chooser table and aria-busy note added, IconSkeleton section added.
 
 <Meta isTemplate />
 
@@ -19,6 +20,31 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={SkeletonIconStories.Default} />
 
+## Which component to use
+
+<LoadingChooser />
+
+## Accessibility
+
+A skeleton has no role and no text, so a screen reader does not announce it.
+Put `aria-busy="true"` on the region that is loading and set it back to
+`false` when the content arrives:
+
+```jsx
+<section aria-busy={loading} aria-label="Invoices">
+  {loading ? <SkeletonText paragraph lineCount={3} /> : <InvoiceList />}
+</section>
+```
+
 ## Component API
 
 <ArgTypes />
+
+## IconSkeleton
+
+`IconSkeleton` is Carbon's `Icon.Skeleton` under its export name. It renders the
+same element as `SkeletonIcon`: a `div` with the `cds--icon--skeleton` class.
+Only the types differ: `IconSkeletonProps` takes every `div` prop, while
+`SkeletonIconProps` takes only `className` and passes other props through at
+runtime without types. Prefer `SkeletonIcon` and size it with a class; use
+`IconSkeleton` when the code needs typed `style` or other `div` props.

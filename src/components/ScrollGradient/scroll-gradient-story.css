@@ -7,11 +7,16 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefixes as literals, nesting flattened. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefixes as literals, nesting flattened, canvas background rule scoped to the story containers. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-.sb-show-main,
-.docs-story {
+/* Scoped with :has() so the layer background stays on this component's canvases;
+   #storybook-root holds the story only outside docs pages. */
+.sb-show-main:has(
+  #storybook-root .templateContainer,
+  #storybook-root .templateContainer-sm
+),
+.docs-story:has(.templateContainer, .templateContainer-sm) {
   background-color: var(--cds-layer);
 }
 
