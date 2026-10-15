@@ -885,6 +885,15 @@ const alignColumns = alignHelper.columns([
   alignHelper.accessor('amount', { header: 'Amount', meta: { align: 'end' } }),
 ]);
 
+const plainFeatures = tableFeatures({ ...dataGridInlineEdit });
+const plainHelper = createColumnHelper<
+  typeof plainFeatures,
+  (typeof invoices)[number]
+>();
+const plainColumns = plainHelper.columns([
+  plainHelper.accessor('amount', { header: 'Amount', meta: { align: 'end' } }),
+]);
+
 test('end-aligns a column with meta.align on its header and cells', () => {
   render(
     <DataGrid
@@ -919,11 +928,7 @@ test('end-aligns a column with meta.align on its header and cells', () => {
   cleanup();
   render(
     <DataGrid
-      options={{
-        features: tableFeatures({ ...dataGridInlineEdit }),
-        columns: alignColumns,
-        data: few,
-      }}
+      options={{ features: plainFeatures, columns: plainColumns, data: few }}
     />
   );
   const plain = screen.getByRole('columnheader', { name: 'Amount' });
