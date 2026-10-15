@@ -1093,6 +1093,44 @@
       }
     },
     {
+      "name": "TimePicker",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/components/TimePicker",
+      "docs": "src/components/TimePicker/TimePicker.mdx",
+      "storyTitle": "Components/TimePicker",
+      "status": "stable",
+      "exports": ["TimePicker"],
+      "types": ["TimePickerProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
+    },
+    {
+      "name": "FluidTimePicker",
+      "kind": "component",
+      "source": "carbon",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/components/FluidTimePicker",
+      "docs": "src/components/FluidTimePicker/FluidTimePicker.mdx",
+      "storyTitle": "Components/Fluid Inputs/FluidTimePicker",
+      "status": "stable",
+      "exports": ["FluidTimePicker"],
+      "types": ["FluidTimePickerProps"],
+      "wrapper": true,
+      "parts": {
+        "afframeStory": true,
+        "test": true,
+        "docs": true
+      }
+    },
+    {
       "name": "OverflowMenu",
       "kind": "component",
       "source": "carbon",
@@ -1668,15 +1706,6 @@
       "docs": "src/components/DatePicker/DatePicker.mdx"
     },
     {
-      "name": "TimePicker",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/TimePicker/TimePicker.mdx"
-    },
-    {
       "name": "TimePickerSelect",
       "kind": "component",
       "source": "carbon",
@@ -1935,15 +1964,6 @@
       "runtime": "client",
       "status": "stable",
       "docs": "src/components/FluidTextInput/FluidTextInput.mdx"
-    },
-    {
-      "name": "FluidTimePicker",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/FluidTimePicker/FluidTimePicker.mdx"
     },
     {
       "name": "FluidTimePickerSelect",

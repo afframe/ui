@@ -1,0 +1,4 @@
+'use client';
+// TimePicker, a client module.
+export { TimePicker } from './TimePicker.js';
+export type { TimePickerProps } from './TimePicker.js';

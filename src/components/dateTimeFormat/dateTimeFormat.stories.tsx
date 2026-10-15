@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: copied from IBM Products' Date Time Format stories, TypeScript, dateTimeFormat and components from @afframe/ui, title by the export name, carbon tag, story names unified (Default, no storyName), the absolute style lists built by one helper and the time input guards merged (same output), Dropdown label set (a required prop), scss styles replaced by date-time-format-story.css, the date field in the system date format. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: copied from IBM Products' Date Time Format stories, TypeScript, dateTimeFormat and components from @afframe/ui, title by the export name, carbon tag, story names unified (Default, no storyName), the absolute style lists built by one helper, the time field a masked TimePicker with seconds instead of a TextInput with input guards, Dropdown label set (a required prop), scss styles replaced by date-time-format-story.css, the date field in the system date format. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useMemo, useState } from 'react';
@@ -16,7 +16,7 @@ import {
   DatePicker,
   DatePickerInput,
   Dropdown,
-  TextInput,
+  TimePicker,
   dateTimeFormat,
 } from '../../index.js';
 import { defaultDatePattern } from '../../format/index.js';
@@ -168,25 +168,12 @@ const DateTimeFormatDemo = () => {
             }}>
             <DatePickerInput id="date-time-format-date" labelText="Date" />
           </DatePicker>
-          <TextInput
+          <TimePicker
             id="date-time-format-time"
             labelText="Time"
-            placeholder="hh:mm:ss"
+            seconds
             value={timeValue}
-            // fallow-ignore-next-line complexity -- IBM's time input guards
-            onChange={(event) => {
-              const nextValue = event.target.value;
-              const parts = nextValue.split(':');
-              if (
-                !/^[\d:]*$/.test(nextValue) ||
-                nextValue.length > 8 ||
-                parts.length > 3 ||
-                parts.some((part) => part.length > 2)
-              ) {
-                return;
-              }
-              setTimeValue(nextValue);
-            }}
+            onChange={(event) => setTimeValue(event.target.value)}
             onBlur={() => {
               if (!isValidTimeInput(timeValue)) {
                 setTimeValue(formatTimeInputValue(new Date()));

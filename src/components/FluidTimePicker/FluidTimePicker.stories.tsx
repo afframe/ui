@@ -7,10 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; redundant labelText and placeholder removed from second picker (args supply them); skeleton className and isOnlyTwo passed explicitly, Default story first; business example data, Disabled (color-contrast off), ReadOnly, Invalid (error linked by hand), Warning and TwentyFourHour stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; redundant labelText and placeholder removed from second picker (args supply them); skeleton className and isOnlyTwo passed explicitly, Default story first; business example data, Disabled (color-contrast off), ReadOnly, Invalid (error linked by hand), Warning and TwentyFourHour stories; placeholder arg dropped (the time format sets it), hourCycle h12 beside the AM/PM select, TwentyFourHour without its own pattern, Afframe story for typing a time. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import type { Meta, StoryFn } from '@storybook/react-vite';
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, within } from 'storybook/test';
+import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { Information } from '../../icons.js';
 import {
   FluidTimePicker,
@@ -103,13 +105,14 @@ export const Default: StoryFn<FluidTimePickerStoryArgs> = (args) => {
   );
 };
 
+// The AM/PM select needs the 12-hour mask; the default is 24-hour.
 Default.args = {
+  hourCycle: 'h12',
   className: 'test-class',
   disabled: false,
   invalid: false,
   labelText: 'Start time',
   invalidText: 'Enter a time as hh:mm.',
-  placeholder: 'hh:mm',
   readOnly: false,
   warn: false,
   warnText: 'This time is outside business hours.',
@@ -154,6 +157,16 @@ Default.argTypes = {
   },
   warnText: {
     control: { type: 'text' },
+  },
+  hourCycle: {
+    options: ['h23', 'h12'],
+    control: { type: 'radio' },
+  },
+  seconds: {
+    control: { type: 'boolean' },
+  },
+  inputMask: {
+    control: { type: 'boolean' },
   },
 };
 
@@ -211,21 +224,19 @@ Warning.args = { ...Default.args, warn: true, defaultValue: '7:30' };
 Warning.parameters = Default.parameters;
 Warning.argTypes = Default.argTypes;
 
-// The pattern accepts 00:00 to 23:59, so no AM/PM select. The time zone
-// select stays: without a select Carbon sizes the input to half the width.
-// FluidTimePickerProps omits pattern, but Carbon passes it on to the input.
-const twentyFourHourInput = { pattern: '(?:[01]\\d|2[0-3]):[0-5]\\d' };
-
+// The default 24-hour mask takes 00:00 to 23:59, so no AM/PM select. The
+// time zone select stays: without a select Carbon sizes the input to half the
+// width.
 export const TwentyFourHour: StoryFn<FluidTimePickerStoryArgs> = (args) => (
   <div style={{ width: '350px' }}>
-    <FluidTimePicker id="time-picker-24h" {...twentyFourHourInput} {...args}>
+    <FluidTimePicker id="time-picker-24h" {...args}>
       <FluidTimePickerSelect id="select-24h" labelText="Time zone">
         {timeZones}
       </FluidTimePickerSelect>
     </FluidTimePicker>
   </div>
 );
-TwentyFourHour.args = { ...Default.args };
+TwentyFourHour.args = { ...Default.args, hourCycle: 'h23' };
 TwentyFourHour.parameters = Default.parameters;
 TwentyFourHour.argTypes = Default.argTypes;
 
@@ -238,4 +249,42 @@ export const Skeleton: StoryFn = () => {
       <FluidTimePickerSkeleton className="" isOnlyTwo />
     </div>
   );
+};
+
+export const TypingATime: StoryObj<typeof FluidTimePicker> = {
+  tags: ['afframe'],
+  parameters: { ...afframeA11y },
+  render: () => (
+    <div style={{ width: '350px' }}>
+      <FluidTimePicker id="time-picker-typing" labelText="Start time">
+        <FluidTimePickerSelect id="select-typing" labelText="Time zone">
+          {timeZones}
+        </FluidTimePickerSelect>
+      </FluidTimePicker>
+      <br />
+      <FluidTimePicker
+        id="time-picker-typing-seconds"
+        labelText="Duration"
+        seconds>
+        <FluidTimePickerSelect id="select-typing-seconds" labelText="Time zone">
+          {timeZones}
+        </FluidTimePickerSelect>
+      </FluidTimePicker>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const time = canvas.getByLabelText<HTMLInputElement>('Start time');
+    await userEvent.type(time, '905');
+    await expect(time).toHaveValue('09:05');
+    await userEvent.clear(time);
+    await userEvent.type(time, '9:');
+    await expect(time).toHaveValue('09:');
+    await userEvent.clear(time);
+    await userEvent.type(time, '24');
+    await expect(time).toHaveValue('2');
+    const duration = canvas.getByLabelText<HTMLInputElement>('Duration');
+    await userEvent.type(duration, '235959');
+    await expect(duration).toHaveValue('23:59:59');
+  },
 };
