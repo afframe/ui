@@ -2,11 +2,11 @@
 
 Date: 2026-10-07
 
-Amended: 2026-10-13
+Amended: 2026-10-13, 2026-10-15
 
 ## Status
 
-Accepted, amended 2026-10-13 (content props). Refines [ADR 0012](0012-i18n-ready-english-czk.md).
+Accepted, amended 2026-10-13 (content props) and 2026-10-15 (plain numbers at most 2 decimals). Refines [ADR 0012](0012-i18n-ready-english-czk.md).
 
 ## Context
 
