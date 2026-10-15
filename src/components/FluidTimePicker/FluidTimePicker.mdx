@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as FluidTimePickerStories from './FluidTimePicker.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed, date chooser, 24-hour, state and error message sections added.
 
 <Meta isTemplate />
 
@@ -17,11 +18,67 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={FluidTimePickerStories.Default} />
 
+## Which component to use
+
+<DateChooser />
+
+## 24-hour time
+
+Drop the AM/PM select and pass `placeholder="hh:mm"` and
+`pattern="(?:[01]\d|2[0-3]):[0-5]\d"`. Keep at least one select: with the
+input alone, Carbon sizes it to half the field. The `pattern` prop is missing
+from `FluidTimePickerProps` in Carbon 1.118 but reaches the input, so pass it
+in a spread object.
+
+<Canvas of={FluidTimePickerStories.TwentyFourHour} />
+
+## States
+
+### Disabled
+
+<Canvas of={FluidTimePickerStories.Disabled} />
+
+### Read only
+
+<Canvas of={FluidTimePickerStories.ReadOnly} />
+
+### Invalid
+
+<Canvas of={FluidTimePickerStories.Invalid} />
+
+### Warning
+
+<Canvas of={FluidTimePickerStories.Warning} />
+
 ### Skeleton
 
 <Canvas of={FluidTimePickerStories.Skeleton} />
 
 ## Accessibility Considerations
+
+### Error message and screen readers
+
+In Carbon 1.118, an invalid or warned FluidTimePicker renders its message
+without an id and sets no `aria-invalid`, so screen readers announce neither
+the state nor the reason. Until Carbon fixes it, wrap the message in an element
+with an id and link it while the state is set; Carbon passes both attributes on
+to the input:
+
+```tsx
+<FluidTimePicker
+  id="start-time"
+  labelText="Start time"
+  invalid={invalid}
+  invalidText={<span id="start-time-error">Enter a time as hh:mm.</span>}
+  {...(invalid && {
+    'aria-invalid': true,
+    'aria-describedby': 'start-time-error',
+  })}>
+  {/* selects */}
+</FluidTimePicker>
+```
+
+For a warning, link `warnText` the same way without `aria-invalid`.
 
 ### Accessible Name
 
