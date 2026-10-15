@@ -1,0 +1,91 @@
+/*
+ * Copyright IBM Corp. 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, prefix as a literal, row and column gaps as one gap, type mixins as their custom properties. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.date-time-format-story {
+  padding: var(--cds-spacing-07);
+  background: var(--cds-background);
+}
+
+.date-time-format-story__panel {
+  padding: var(--cds-spacing-05);
+  /* stylelint-disable-next-line carbon/theme-layer-use -- IBM's panels sit on layer-01 and layer-02 without a Layer component */
+  background: var(--cds-layer-01);
+  max-inline-size: 60rem;
+}
+
+.date-time-format-story__controls {
+  display: grid;
+  grid-template-columns: 18rem 18rem;
+  margin-block-end: var(--cds-spacing-06);
+  gap: var(--cds-spacing-06) var(--cds-spacing-05);
+}
+
+.date-time-format-story__output-label {
+  margin: 0 0 var(--cds-spacing-03);
+  color: var(--cds-text-primary);
+  font-size: var(--cds-label-01-font-size);
+  font-weight: var(--cds-label-01-font-weight);
+  letter-spacing: var(--cds-label-01-letter-spacing);
+  line-height: var(--cds-label-01-line-height);
+}
+
+.date-time-format-story__output-panel {
+  padding: var(--cds-spacing-05);
+  /* stylelint-disable-next-line carbon/theme-layer-use -- IBM's panels sit on layer-01 and layer-02 without a Layer component */
+  background: var(--cds-layer-02);
+}
+
+.date-time-format-story__output-group {
+  margin-block-end: var(--cds-spacing-06);
+}
+
+.date-time-format-story__output-group:last-child {
+  margin-block-end: 0;
+}
+
+.date-time-format-story__output-name {
+  margin: 0 0 var(--cds-spacing-02);
+  color: var(--cds-text-secondary);
+  font-size: var(--cds-label-01-font-size);
+  font-weight: var(--cds-label-01-font-weight);
+  letter-spacing: var(--cds-label-01-letter-spacing);
+  line-height: var(--cds-label-01-line-height);
+  text-transform: capitalize;
+}
+
+.date-time-format-story__output-value {
+  color: var(--cds-text-primary);
+  font-size: var(--cds-body-01-font-size);
+  font-weight: var(--cds-body-01-font-weight);
+  letter-spacing: var(--cds-body-01-letter-spacing);
+  line-height: var(--cds-body-01-line-height);
+}
+
+.date-time-format-story .cds--date-picker,
+.date-time-format-story .cds--date-picker-container,
+.date-time-format-story .cds--dropdown__wrapper,
+.date-time-format-story .cds--list-box__wrapper,
+.date-time-format-story .cds--dropdown,
+.date-time-format-story .cds--text-input-wrapper,
+.date-time-format-story .cds--text-input {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.date-time-format-story .cds--date-picker-input__wrapper,
+.date-time-format-story .cds--date-picker__input,
+.date-time-format-story .cds--text-input,
+.date-time-format-story .cds--list-box,
+.date-time-format-story .cds--list-box__field {
+  /* stylelint-disable-next-line carbon/theme-layer-use -- IBM's panels sit on layer-01 and layer-02 without a Layer component */
+  background: var(--cds-layer-02);
+}

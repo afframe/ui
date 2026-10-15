@@ -47,6 +47,7 @@ export default defineConfig({
       'react-dom',
       'react-dom/server',
       'storybook/actions',
+      '@carbon/utilities',
       '@carbon/utilities-react',
       '@tanstack/react-table',
       '@tanstack/react-virtual',

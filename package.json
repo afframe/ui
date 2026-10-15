@@ -92,6 +92,8 @@
     "@carbon/react": "1.118.0",
     "@carbon/themes": "11.83.0",
     "@carbon/type": "11.69.0",
+    "@carbon/utilities": "0.27.0",
+    "@carbon/utilities-react": "0.30.0",
     "@carbon/web-components": "2.65.0",
     "@tanstack/react-table": "9.2.8",
     "@tanstack/react-virtual": "3.14.14",
@@ -119,7 +121,6 @@
   "devDependencies": {
     "@carbon/ibm-products-styles": "2.96.0",
     "@carbon/styles": "1.117.0",
-    "@carbon/utilities-react": "0.30.0",
     "@eslint/js": "10.0.1",
     "@ibm/plex": "6.4.1",
     "@storybook/addon-a11y": "10.6.1",

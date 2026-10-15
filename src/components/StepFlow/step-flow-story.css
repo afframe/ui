@@ -1,0 +1,69 @@
+/*
+ * Copyright IBM Corp. 2024, 2024
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: the side panel rules of IBM's step tearsheet and step side panel story styles, SCSS rewritten to CSS with Carbon custom properties, prefixes as literals, nesting flattened; the step container, form and heading rules come from tearsheet-story.css, the #root centring on a story wrapper class. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.my-custom-action-set {
+  display: grid;
+  grid-auto-rows: minmax(auto, auto);
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.step-action-button {
+  inline-size: 100%;
+}
+
+.step-action-button__cancel {
+  grid-column: span 4;
+}
+
+.cds--tile-group div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cds-spacing-05);
+}
+
+.custom-intro-tile {
+  block-size: 240px;
+  inline-size: 280px;
+}
+
+.c4p--side-panel .custom-intro-tile {
+  block-size: 120px;
+  inline-size: 200px;
+}
+
+.selected-intro-option {
+  padding-block-end: var(--cds-spacing-06);
+  text-transform: capitalize;
+}
+
+.c4p--step-actions__button-container.my-custom-action-set {
+  position: fixed;
+  background-color: var(--cds-background);
+  border-block-start: 1px solid var(--cds-border-subtle-01);
+  inline-size: 100%;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  margin-block-start: auto;
+  max-block-size: 120px;
+}
+
+.c4p--step-actions__button-container.my-custom-action-set button {
+  inline-size: 100%;
+  max-inline-size: none;
+}
+
+.step-flow-story {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 100vh;
+}

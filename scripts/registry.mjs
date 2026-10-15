@@ -188,6 +188,9 @@ const docsAliases = {
   useFeatureFlags: 'FeatureFlags/FeatureFlags.mdx',
   PrefixContext: 'useCarbonPrefix/useCarbonPrefix.mdx',
   useTheme: 'Theme/Theme.mdx',
+  createOverflowHandler: 'OverflowHandler/OverflowHandler.mdx',
+  StepProvider: 'StepFlow/StepFlow.mdx',
+  useStepContext: 'StepFlow/StepFlow.mdx',
   usePrefersDarkScheme: 'Theme/Theme.mdx',
   ThemeContext: 'Theme/Theme.mdx',
   useThemeSetting: 'ThemeSettings/ThemeSettings.mdx',
@@ -358,6 +361,8 @@ for (const { from, star, names } of exportsOf(index)) {
     family(name, info, { runtime }, collected);
   } else if (dir === 'src/labs') {
     await listUpstream(collected, 'labs', runtime, pathToFileURL(file).href);
+  } else if (dir === 'src/utilities') {
+    await listUpstream(collected, 'carbon', runtime, pathToFileURL(file).href);
   } else if (dir === 'src/ibm-products') {
     await listUpstream(
       collected,

@@ -1,0 +1,103 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as StepFlowStories from './StepFlow.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: copied from IBM Products' Step flows page, titled by the module name, source label and a source link to Carbon's package added, imports from @afframe/ui, the step state type as Carbon publishes it (StepContextType), the CreateTearsheet and CreateFullPage mention replaced by Afframe's own create components, the closing Tearsheet tag fixed, upstream table of contents removed, story names unified.
+
+<Meta isTemplate />
+
+# StepFlow
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/utilities-react/src/StepFlow)
+
+## Overview
+
+The step flow utility can be used to compose stepping experiences across any
+variation of components. This utility allows for stepping through a more
+composable and headless delivery. This allows for the flexibility to incorporate
+stepped experiences within any component, such as a `Tearsheet` or a
+`SidePanel`.
+
+Included assets:
+
+- `StepProvider`
+- `useStepContext`
+- `StepGroup`, handles rendering of step components so _only_ the current step
+  is in the DOM
+
+## Example usage
+
+Wrap your stepped component in the `StepProvider` from the utility. Use
+`<StepGroup>` and step components with your new step enabled tearsheet
+component. Any content outside of the `<StepGroup>` will render on every step.
+
+```tsx
+import { StepGroup, StepProvider, Tearsheet } from '@afframe/ui';
+
+const Example = () => {
+  return (
+    <StepProvider>
+      <Tearsheet>
+        <StepGroup>
+          <Step1 />
+          <Step2 />
+          {someCondition && <ConditionalStep />}
+        </StepGroup>
+      </Tearsheet>
+    </StepProvider>
+  );
+};
+```
+
+Any component inside of the step enabled component (`StepProvider`) can use
+`useStepContext()` to retrieve the step context state, giving the ability to get
+and set the state.
+
+```tsx
+const Step1 = () => {
+  const { setFormState, formState } = useStepContext();
+  const { email } = formState ?? {};
+  return (
+    <TextInput
+      labelText="Email"
+      value={email ?? ''}
+      onChange={(e) => {
+        setFormState?.((prev: object) => ({
+          ...prev,
+          email: e.target.value,
+        }));
+      }}
+    />
+  );
+};
+```
+
+Step state (returned from `useStepContext`, type `StepContextType`):
+
+```ts
+// This interface should be extended by the consumer to match
+// their own unique use case given the fields within their
+// own stepped experience
+interface formStateType {
+  [key: string]: unknown;
+}
+
+export interface StepContextType {
+  formState: formStateType;
+  setFormState: Dispatch<SetStateAction<formStateType>>;
+  totalSteps: number;
+  setTotalSteps: Dispatch<SetStateAction<number>>;
+  currentStep: number;
+  handleGoToStep: (step: number) => void;
+  handleNext: () => void;
+  handlePrevious: () => void;
+}
+```
+
+<Canvas of={StepFlowStories.Default} />
+
+`StepProvider` and `StepGroup` are client components: render them from a
+client component, or pass server-rendered steps to them as children.

@@ -9,6 +9,8 @@ import * as themeSettings from '@carbon-labs/react-theme-settings';
 import * as uiShell from '@carbon-labs/react-ui-shell';
 import * as whatsNew from '@carbon-labs/react-whats-new';
 import * as carbon from '@carbon/react';
+import * as carbonUtilities from '@carbon/utilities';
+import * as carbonUtilitiesReact from '@carbon/utilities-react';
 import { expect, expectTypeOf, test } from 'vitest';
 import * as icons from './icons.js';
 import * as ui from './index.js';
@@ -127,6 +129,16 @@ test.each([
 ] as const)('exports %s as its backing component', (name, backing) => {
   expect(backing).toBeDefined();
   expect(ui[name]).toBe(backing);
+});
+
+test("exports Carbon's utilities under their own names", () => {
+  expect(ui.createOverflowHandler).toBe(carbonUtilities.createOverflowHandler);
+  expect(ui.dateTimeFormat).toBe(carbonUtilities.dateTimeFormat);
+  expect(ui.makeDraggable).toBe(carbonUtilities.makeDraggable);
+  expect(ui.StepProvider).toBe(carbonUtilitiesReact.StepProvider);
+  expect(ui.StepGroup).toBe(carbonUtilitiesReact.StepGroup);
+  expect(ui.useStepContext).toBe(carbonUtilitiesReact.useStepContext);
+  expect(ui).not.toHaveProperty('initCarousel');
 });
 
 test('exports the subcomponents of the migrated compound components', () => {

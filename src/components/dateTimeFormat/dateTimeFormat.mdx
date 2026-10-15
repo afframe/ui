@@ -1,0 +1,49 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DateTimeFormatStories from './dateTimeFormat.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2026
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: copied from IBM Products' Date Time Format page, titled by the export name, source label and a source link to Carbon's package added, IBM-internal guidance link dropped, README link pinned to the tag, Afframe note on its own date formatters added, story names unified.
+
+<Meta isTemplate />
+
+# dateTimeFormat
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/utilities/src/dateTimeFormat)
+
+`dateTimeFormat` is a utility from `@carbon/utilities` that wraps the browser
+internationalization APIs for formatting relative and absolute date and time
+values.
+
+## Overview
+
+Use this utility when you need consistent formatting for:
+
+- absolute date and time values
+- date-only values
+- time-only values
+- relative timestamps such as "3 minutes ago"
+
+In Afframe apps, business dates (documents, ledgers, tables, filters) use
+`formatDate` and `formatDateRange`: they default to `cs-CZ` and Prague time and
+print Czech dates as `07.10.2026`. Use `dateTimeFormat.relative` and
+`dateTimeFormat.duration` for relative times and durations, in client code, with
+an explicit `locale`. See
+[Formatting](?path=/docs/getting-started-formatting--overview) and ADR 0020.
+
+```js
+import { dateTimeFormat } from '@afframe/ui';
+
+dateTimeFormat.relative.format(Date.now() - 3 * 60_000, { locale: 'cs-CZ' }); // 'před 3 minutami'
+dateTimeFormat.duration.format({ hours: 1, minutes: 30 }, { locale: 'cs-CZ' }); // '1 h 30 m'
+```
+
+## Example usage
+
+<Canvas of={DateTimeFormatStories.Default} />
+
+## Reference
+
+- [dateTimeFormat README](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/utilities/src/dateTimeFormat)

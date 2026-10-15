@@ -801,10 +801,31 @@ export {
   preview__useFeatureFlags,
 } from '@carbon/ibm-products';
 
+// Carbon's framework-free utilities (@carbon/utilities), by Carbon's names. No
+// directive: they touch the DOM only when called, so server code can import
+// them. Named re-exports only: the package root also exports AddSelectData
+// (ours is typed, see above) and all of @internationalized/number.
+export {
+  createOverflowHandler,
+  dateTimeFormat,
+  makeDraggable,
+} from '@carbon/utilities';
+export type {
+  OverflowHandler,
+  OverflowHandlerOptions,
+} from '@carbon/utilities';
+// Carbon's step flow (@carbon/utilities-react), in a 'use client' module.
+export {
+  StepProvider,
+  StepGroup,
+  useStepContext,
+  type StepContextType,
+} from './utilities/step-flow.js';
+
 // Left out on purpose: TearsheetNarrow, TearsheetPresence and
 // withTearsheetPresence (Tearsheet has both built in), pkg (Afframe sets it),
 // IBM's ComboButton, the legacy PageHeader and stable Tearsheet, deprecated
-// components and the Datagrid family.
+// components and the Datagrid family; Carbon's initCarousel (ADR 0004).
 
 // Afframe components, formatting, theme hooks, messages and the extras. One
 // module per family, so a route ships only the 'use client' families it uses.

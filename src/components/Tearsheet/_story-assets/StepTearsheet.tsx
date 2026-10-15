@@ -14,18 +14,22 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode, RefObject } from 'react';
-import { StepGroup, useStepContext } from '@carbon/utilities-react';
-import type { StepContextType } from '@carbon/utilities-react';
 import {
   Button,
   CodeSnippet,
   ProgressIndicator,
   ProgressStep,
   Section,
+  StepGroup,
   Tearsheet,
   TextInput,
+  useStepContext,
 } from '../../../index.js';
-import type { TearsheetHeaderProps, TearsheetProps } from '../../../index.js';
+import type {
+  StepContextType,
+  TearsheetHeaderProps,
+  TearsheetProps,
+} from '../../../index.js';
 import { RightPanelClose } from '../../../icons.js';
 
 const useMatchMedia = (query: string) => {
