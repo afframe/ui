@@ -100,10 +100,16 @@ export const dataGridStickyColumns = {
 };
 
 /**
- * Inline edit: types the column `meta` keys `editable` and `align`. Columns
- * with `meta: { editable: true }` get an edit button, and the grid saves edits
- * through `onCellEdit`.
+ * Column meta: types the column `meta` keys `editable` and `align`; it adds no
+ * UI on its own. Register it for grids that only use `meta.align`.
  */
-export const dataGridInlineEdit = {
+export const dataGridColumnMeta = {
   columnMeta: metaHelper<DataGridColumnMeta>(),
 };
+
+/**
+ * Inline edit: the `dataGridColumnMeta` fragment, named for grids with
+ * editable columns. Columns with `meta: { editable: true }` get an edit
+ * button, and the grid saves edits through `onCellEdit`.
+ */
+export const dataGridInlineEdit = dataGridColumnMeta;

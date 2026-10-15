@@ -18,6 +18,7 @@ import mdx from './DataGrid.mdx';
 import './DataGrid.stories.css';
 import {
   dataGridColumnCustomization,
+  dataGridColumnMeta,
   dataGridExpansion,
   dataGridFiltering,
   dataGridInlineEdit,
@@ -48,7 +49,7 @@ type Story = StoryObj<typeof meta>;
 
 const few = invoices.slice(0, 8);
 
-// Amounts end-aligned through `meta.align`, which `dataGridInlineEdit` types.
+// Amounts end-aligned through `meta.align`, which `dataGridColumnMeta` types.
 const amount = {
   header: 'Amount',
   cell: (info: { getValue: () => number }) => (
@@ -63,7 +64,7 @@ const issued = {
 
 const sortingFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
 });
 const sortingHelper = createColumnHelper<typeof sortingFeatures, Invoice>();
 const sortingColumns = sortingHelper.columns([
@@ -90,7 +91,7 @@ export const Default: Story = {
 
 const filteringFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
   ...dataGridFiltering,
 });
 const filteringHelper = createColumnHelper<typeof filteringFeatures, Invoice>();
@@ -128,7 +129,7 @@ export const TestFiltering: Story = {
 
 const paginationFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
   ...dataGridFiltering,
   ...dataGridPagination,
 });
@@ -169,7 +170,7 @@ export const TestPagination: Story = {
 
 const selectionFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
   ...dataGridSelection,
 });
 const selectionHelper = createColumnHelper<typeof selectionFeatures, Invoice>();
@@ -285,7 +286,7 @@ export const TestRowActions: Story = {
 
 const expansionFeatures = tableFeatures({
   ...dataGridExpansion,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
   ...dataGridSelection,
 });
 const expansionHelper = createColumnHelper<typeof expansionFeatures, Invoice>();
@@ -329,7 +330,7 @@ export const TestExpansion: Story = {
 
 const customizationFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
   ...dataGridColumnCustomization,
 });
 const customizationHelper = createColumnHelper<
@@ -379,7 +380,7 @@ export const TestColumnCustomization: Story = {
 
 const resizingFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
   ...dataGridResizing,
 });
 const resizingHelper = createColumnHelper<typeof resizingFeatures, Invoice>();
@@ -419,7 +420,7 @@ export const TestResizing: Story = {
 
 const stickyFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
   ...dataGridSelection,
   ...dataGridStickyColumns,
 });
@@ -708,7 +709,7 @@ export const AllFeaturesExtraSmall: Story = {
 
 const panelFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridInlineEdit,
+  ...dataGridColumnMeta,
   ...dataGridFiltering,
 });
 const panelHelper = createColumnHelper<typeof panelFeatures, Invoice>();

@@ -8,6 +8,7 @@ import { iconButton } from '../MenuParts/menuTestUtils.js';
 import { DataGrid } from './DataGrid.js';
 import {
   dataGridColumnCustomization,
+  dataGridColumnMeta,
   dataGridExpansion,
   dataGridFiltering,
   dataGridInlineEdit,
@@ -943,6 +944,33 @@ test('end-aligns a column with meta.align on its header and cells', () => {
   expect(range.getBoundingClientRect().right).toBeCloseTo(
     plain.getBoundingClientRect().right - 16,
     0
+  );
+});
+
+const metaFeatures = tableFeatures({ ...dataGridColumnMeta });
+const metaHelper = createColumnHelper<
+  typeof metaFeatures,
+  (typeof invoices)[number]
+>();
+const metaColumns = metaHelper.columns([
+  metaHelper.accessor('number', { header: 'Number' }),
+  metaHelper.accessor('amount', { header: 'Amount', meta: { align: 'end' } }),
+]);
+
+test('dataGridColumnMeta types meta.align and adds no edit UI', () => {
+  render(
+    <DataGrid
+      options={{ features: metaFeatures, columns: metaColumns, data: few }}
+    />
+  );
+  expect(screen.queryByText(/^Edit /)).toBeNull();
+  expect(
+    screen.getByRole('columnheader', { name: 'Amount' }).classList
+  ).toContain('afframe-data-grid__align-end');
+  const row = screen.getAllByRole('row')[1];
+  if (!row) throw new Error('no row');
+  expect(within(row).getAllByRole('cell')[1]?.classList).toContain(
+    'afframe-data-grid__align-end'
   );
 });
 

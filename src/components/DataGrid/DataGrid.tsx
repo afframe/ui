@@ -80,7 +80,10 @@ export interface DataGridRowAction<TData extends RowData> {
   onClick: (row: TData) => void;
 }
 
-/** Column meta read by the grid; register it with `dataGridInlineEdit`. */
+/**
+ * Column meta read by the grid; register it with `dataGridColumnMeta`, or with
+ * `dataGridInlineEdit` for editable columns.
+ */
 export interface DataGridColumnMeta {
   /** The column's cells can be edited inline. */
   editable?: boolean;

@@ -23,13 +23,13 @@ pagination. Each feature is opt in: spread its fragment into TanStack's
 import {
   Amount,
   DataGrid,
-  dataGridInlineEdit,
+  dataGridColumnMeta,
   dataGridSorting,
   formatDate,
 } from '@afframe/ui';
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 
-const features = tableFeatures({ ...dataGridSorting, ...dataGridInlineEdit });
+const features = tableFeatures({ ...dataGridSorting, ...dataGridColumnMeta });
 const helper = createColumnHelper<typeof features, Invoice>();
 const columns = helper.columns([
   helper.accessor('number', { header: 'Number' }),
@@ -100,8 +100,10 @@ a new array on every render makes TanStack rebuild its rows each time.
   the table container, Carbon's `section.cds--data-table-container`.
 - Column `meta.align`: `'end'` aligns a column's header and cells at the end,
   for amounts and other numbers; a sortable header shows its sort icon
-  before the label. `dataGridInlineEdit` types the column `meta`, so register
-  it to use `align`; it adds no edit buttons on its own.
+  before the label. Both `dataGridColumnMeta` and `dataGridInlineEdit` type
+  the column `meta`: register `dataGridColumnMeta` when the grid only uses
+  `align`, and `dataGridInlineEdit` when it has `meta: { editable: true }`
+  columns.
 
 | Feature    | Fragment             |
 | ---------- | -------------------- |

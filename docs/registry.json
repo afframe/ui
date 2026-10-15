@@ -26,6 +26,7 @@
       "exports": [
         "DataGrid",
         "dataGridColumnCustomization",
+        "dataGridColumnMeta",
         "dataGridExpansion",
         "dataGridFiltering",
         "dataGridInlineEdit",
