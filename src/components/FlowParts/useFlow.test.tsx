@@ -670,6 +670,33 @@ test.each(['resolves', 'rejects'] as const)(
   }
 );
 
+test.each([false, true])(
+  'a surface reopened after a parent close while busy closes at once (closeWhilePending %s)',
+  async (closeWhilePending) => {
+    const onClose = vi.fn();
+    const closeRef: { current: () => void } = { current: () => undefined };
+    const onSubmit = vi.fn(() => new Promise<void>(() => undefined));
+    render(
+      <Harness
+        closeRef={closeRef}
+        onClose={onClose}
+        closeWhilePending={closeWhilePending}
+        onSubmit={onSubmit}
+      />
+    );
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    act(() => closeRef.current());
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Busy' }));
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+    await pause(50);
+    expect(screen.queryByRole('alertdialog')).toBeNull();
+  }
+);
+
 test('rejected submit skips an invalid field that is not rendered', async () => {
   render(
     <Harness

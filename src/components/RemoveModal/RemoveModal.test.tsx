@@ -287,6 +287,41 @@ test('pending: buttons disabled, Escape ignored; rejection keeps it open with an
   expect(onClose).not.toHaveBeenCalled();
 });
 
+test('reopened after a parent close while pending, Escape closes it', async () => {
+  const onClose = vi.fn();
+  function Parent() {
+    const [open, setOpen] = useState(false);
+    return (
+      <AfframeProvider>
+        <button type="button" onClick={() => setOpen(true)}>
+          Open
+        </button>
+        <button type="button" onClick={() => setOpen(false)}>
+          Parent close
+        </button>
+        <RemoveModal
+          open={open}
+          title="Delete it?"
+          description="Gone for good."
+          onConfirm={() => new Promise<void>(() => undefined)}
+          onClose={() => {
+            onClose();
+            setOpen(false);
+          }}
+        />
+      </AfframeProvider>
+    );
+  }
+  render(<Parent />);
+  await openByKeyboard();
+  await userEvent.click(dangerButton('Delete'));
+  screen.getByRole('button', { name: 'Parent close', hidden: true }).click();
+  await until(() => expect(dialogRole()).toBeNull());
+  await openByKeyboard();
+  await userEvent.keyboard('{Escape}');
+  expect(onClose).toHaveBeenCalledTimes(1);
+});
+
 test('overridden messages replace every English default', async () => {
   const messages = Object.fromEntries(
     Object.entries(defaultRemoveModalMessages).map(([key, value]) => [

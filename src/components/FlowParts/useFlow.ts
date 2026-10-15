@@ -27,7 +27,8 @@ export interface FlowOptions {
   /**
    * A close request while an action runs asks to discard, also when clean;
    * the dialog closes itself once the action settles. Default false: the
-   * request is ignored until then.
+   * request is ignored until then. An action from an earlier session (the
+   * surface was closed and reopened) never holds a close request back.
    */
   closeWhilePending?: boolean;
   /** Focus target on open; default the first form control in `containerRef`. */
@@ -140,6 +141,8 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
   // keydown listener that can hold an older render's callback, and that
   // Escape arrives before the discard dialog's own cancel event.
   const pendingRef = useRef(false);
+  // The session the running action started in.
+  const pendingSessionRef = useRef(0);
   const discardRef = useRef(false);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const discardReturnRef = useRef<HTMLElement | null>(null);
@@ -176,7 +179,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     sessionRef.current += 1;
     // A parent-driven close or a reopen leaves no discard dialog or error.
     // The busy state stays until an abandoned action settles: a second
-    // submit would send the same request twice.
+    // submit would send the same request twice. Closing is not held back.
     clearTimeout(discardTimerRef.current);
     discardRef.current = false;
     setDiscardOpen(false);
@@ -278,9 +281,11 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
 
   const requestClose = useCallback(() => {
     if (discardRef.current) return;
-    if (pendingRef.current && !closeWhilePending) return;
+    const busy =
+      pendingRef.current && pendingSessionRef.current === sessionRef.current;
+    if (busy && !closeWhilePending) return;
     // Leaving mid-action abandons it, so ask even when clean.
-    if ((isDirty || pendingRef.current) && confirmDiscard) {
+    if ((isDirty || busy) && confirmDiscard) {
       const active = document.activeElement;
       discardReturnRef.current =
         focusable(active) && active !== document.body
@@ -324,6 +329,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
         typeof (result as PromiseLike<unknown> | undefined)?.then === 'function'
       ) {
         pendingRef.current = true;
+        pendingSessionRef.current = session;
         setPending(true);
         await result;
       }
