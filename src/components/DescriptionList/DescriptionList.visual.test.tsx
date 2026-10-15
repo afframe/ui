@@ -26,6 +26,6 @@ test.each([
 test('description-list-focus', async () => {
   await Default.run();
   await userEvent.tab();
-  expect(document.activeElement?.textContent).toBe('FV-2026-0042.pdf');
+  expect(document.activeElement?.textContent).toBe('INV-2026-0042.pdf');
   await snapshot('description-list-focus');
 });

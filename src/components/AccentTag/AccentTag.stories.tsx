@@ -5,17 +5,17 @@ import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { AccentTag, type AccentTagColor } from './AccentTag.js';
 import mdx from './AccentTag.mdx';
 
-const accents: AccentTagColor[] = [
-  'red',
-  'magenta',
-  'purple',
-  'blue',
-  'cyan',
-  'teal',
-  'green',
-  'gray',
-  'cool-gray',
-  'warm-gray',
+const accents: [AccentTagColor, string][] = [
+  ['red', 'Red'],
+  ['magenta', 'Magenta'],
+  ['purple', 'Purple'],
+  ['blue', 'Blue'],
+  ['cyan', 'Cyan'],
+  ['teal', 'Teal'],
+  ['green', 'Green'],
+  ['gray', 'Gray'],
+  ['cool-gray', 'Cool gray'],
+  ['warm-gray', 'Warm gray'],
 ];
 
 const meta = {
@@ -70,14 +70,15 @@ export const TestTooltipOnFocus: Story = {
 };
 
 export const Accents: Story = {
+  parameters: { controls: { disable: true } },
   render: () => (
     <div style={row}>
-      {accents.map((accent) => (
+      {accents.map(([accent, name]) => (
         <AccentTag
           key={accent}
-          text={accent}
+          text={name}
           accent={accent}
-          tooltip={accent}
+          tooltip={`${name} accent strip`}
           announceAccent
         />
       ))}
