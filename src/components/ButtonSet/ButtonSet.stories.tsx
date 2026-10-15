@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Button and ButtonSet from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Button and ButtonSet from @afframe/ui, source tag, Afframe docs page. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { CSSProperties } from 'react';
@@ -20,6 +20,7 @@ import {
   fluidButtonOptions,
 } from '../Button/__story__/fluid-button-set-args.js';
 import type { FluidButton } from '../Button/__story__/fluid-button-set-args.js';
+import mdx from './ButtonSet.mdx';
 
 interface ButtonSetStoryArgs {
   // An option index in args; the control mapping turns it into buttons.
@@ -35,6 +36,11 @@ export default {
   component: ButtonSet,
   subcomponents: { Button },
   tags: ['carbon'],
+  parameters: {
+    docs: {
+      page: mdx,
+    },
+  },
 
   args: {
     Buttons: 4,
