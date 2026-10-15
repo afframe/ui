@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as IconIndicatorStories from './IconIndicator.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { StatusChooser } from '../../../.storybook/StatusChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, code sample closed, usage link, Afframe note on StatusIndicator and status chooser table added, kind list comma added.
 
 <Meta isTemplate />
 
@@ -12,7 +13,8 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 <SourceLabel name="carbon" />
 
 [Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/IconIndicator)
-&nbsp;
+&nbsp;|&nbsp;
+[Usage guidelines](https://carbondesignsystem.com/patterns/status-indicator-pattern/)
 
 ## Overview
 
@@ -24,18 +26,24 @@ users to quickly assess and identify status and respond accordingly.
 import { preview__IconIndicator as IconIndicator } from '@afframe/ui';
 
 function ExampleComponent() {
-  return (
-    <IconIndicator kind="failed" label="Failed">
-  );
+  return <IconIndicator kind="failed" label="Failed" />;
 }
 ```
 
 <Canvas of={IconIndicatorStories.Default} />
 
+In Afframe UI, use [`StatusIndicator`](?path=/docs/components-statusindicator--overview)
+in app code: it is built on this indicator, takes its labels from `messages`
+and can render as a `Tag`.
+
+## Which component to use
+
+<StatusChooser />
+
 ## Kind
 
 Icon indicators can take the form of failed, caution major, caution minor,
-undefined, succeeded, normal, in-progress incomplete, not started, pending,
+undefined, succeeded, normal, in-progress, incomplete, not started, pending,
 unknown, and informative.
 
 ## Size

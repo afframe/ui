@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, preview__IconIndicator from @afframe/ui, source tag, unused import dropped, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, preview__IconIndicator from @afframe/ui, source tag, unused import dropped, inline spacing as Carbon spacing tokens, iconDescription default arg dropped so the compact name is the label. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -106,7 +106,6 @@ export const Default: StoryFn<IndicatorArgs> = (props) => {
 Default.args = {
   align: 'right',
   autoAlign: false,
-  iconDescription: 'Icon',
   compact: false,
   size: 16,
 };
