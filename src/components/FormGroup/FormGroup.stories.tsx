@@ -121,7 +121,8 @@ Disabled.args = { ...Default.args, disabled: true };
 Disabled.argTypes = Default.argTypes;
 
 // Carbon's `invalid` only sets `data-invalid` on the fieldset; the message
-// shows through `message` and `messageText`.
+// shows through `message` and `messageText` and is not linked to the fields
+// (upstream issue drafted, not filed).
 export const Invalid = Default.bind({});
 Invalid.args = {
   ...Default.args,
