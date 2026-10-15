@@ -231,6 +231,44 @@ test('a field marked invalid in a hidden form a render after the error still get
   );
 });
 
+test('after an error with no invalid field, a field marked as the user types does not switch forms', async () => {
+  function Live() {
+    const [invalid, setInvalid] = useState(false);
+    return (
+      <AfframeProvider>
+        <EditTearsheet
+          open
+          title="Sheet L"
+          onClose={() => undefined}
+          onSubmit={() => Promise.reject(new Error('Server down'))}>
+          <EditTearsheetForm id="l-one" title="One">
+            <label>
+              One field
+              <input onChange={() => setInvalid(true)} />
+            </label>
+          </EditTearsheetForm>
+          <EditTearsheetForm id="l-two" title="Two">
+            <label>
+              Two field
+              <input aria-invalid={invalid || undefined} />
+            </label>
+          </EditTearsheetForm>
+        </EditTearsheet>
+      </AfframeProvider>
+    );
+  }
+  render(<Live />);
+  await userEvent.click(
+    await screen.findByRole('button', { name: defaults.save })
+  );
+  await screen.findByRole('alert');
+  const one = screen.getByRole('textbox', { name: 'One field' });
+  await userEvent.type(one, 'x');
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  expect(currentItem()).toBe('One');
+  expect(active()).toBe(one);
+});
+
 test('a rejected submit with invalid fields in the shown and a hidden form focuses the shown one', async () => {
   function Rejecting() {
     const [invalid, setInvalid] = useState(false);

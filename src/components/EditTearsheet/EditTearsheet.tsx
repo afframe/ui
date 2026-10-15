@@ -406,6 +406,11 @@ export function EditTearsheet({
               flow={flow}
               onSubmit={() => void submit()}
               submitDisabled={submitDisabled}
+              // An edit after the error wins too: live validation may mark a
+              // field in a hidden form while the user types.
+              onInput={() => {
+                handledError.current = flow.errorCount;
+              }}
               aria-label={title}>
               {small && (
                 // IBM's story trigger: a ghost icon button in the content's
