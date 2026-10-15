@@ -221,6 +221,23 @@ test('a custom label gets the phrase bold; quotes already there are kept', async
   expect(document.body.textContent).toContain('Type "DELETE" below.');
 });
 
+test('the bold goes to the quoted or whole-word occurrence, not a substring', async () => {
+  renderHarness({
+    confirmByTyping: 'Type',
+    resourceName: 'pro',
+    description: 'Removing the project pro is permanent.',
+  });
+  await openByKeyboard();
+  const input = screen.getByRole('textbox', { name: 'Type "Type" to confirm' });
+  const label = document.querySelector(`label[for="${input.id}"]`);
+  expect(label?.textContent).toBe('Type "Type" to confirm');
+  expect(label?.querySelector('strong')?.previousSibling?.textContent).toBe(
+    'Type "'
+  );
+  const body = screen.getByText('pro', { selector: 'p strong' }).parentElement;
+  expect(body?.textContent).toBe('Removing the project "pro" is permanent.');
+});
+
 test('typographic quotes around the name are kept, not doubled', async () => {
   renderHarness({
     confirmByTyping: true,

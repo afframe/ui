@@ -90,15 +90,28 @@ interface RemoveModalBaseProps
 
 export type RemoveModalProps = RemoveModalBaseProps & RemoveModalConfirmProps;
 
+const isQuoted = (before: string, after: string) =>
+  /["“„«‘‚']$/.test(before) && /^["”“»’‘']/.test(after);
+const isWord = (before: string, after: string) =>
+  !/[\p{L}\p{N}_]$/u.test(before) && !/^[\p{L}\p{N}_]/u.test(after);
+
 // The name is bold so the user sees what to type; the quotes stay outside the
-// bold text so they do not read as part of it.
+// bold text so they do not read as part of it. A quoted occurrence wins, then
+// a whole word: "Type" in `Type "Type" to confirm`, "pro" not in "project".
+// No such occurrence: no bold.
 function emphasize(text: string, name: string | undefined): ReactNode {
-  const at = name ? text.indexOf(name) : -1;
-  if (!name || at < 0) return text;
-  const before = text.slice(0, at);
-  const after = text.slice(at + name.length);
-  const quoted = /["“„«‘‚']$/.test(before) && /^["”“»’‘']/.test(after);
-  const quote = quoted ? '' : '"';
+  if (!name) return text;
+  const occurrences: number[] = [];
+  for (let at = text.indexOf(name); at >= 0; at = text.indexOf(name, at + 1))
+    occurrences.push(at);
+  const split = (at: number) =>
+    [text.slice(0, at), text.slice(at + name.length)] as const;
+  const at =
+    occurrences.find((index) => isQuoted(...split(index))) ??
+    occurrences.find((index) => isWord(...split(index)));
+  if (at === undefined) return text;
+  const [before, after] = split(at);
+  const quote = isQuoted(before, after) ? '' : '"';
   return (
     <>
       {before}
