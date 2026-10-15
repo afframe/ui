@@ -3,9 +3,10 @@ import { Button, ButtonSet } from '../../index.js';
 import { Add, TrashCan } from '../../icons.js';
 import * as ButtonStories from './Button.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ButtonChooser } from '../../../.storybook/ButtonChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components and icons from @afframe/ui, code samples import from @afframe/ui, inline spacing as Carbon spacing tokens, Sass samples dropped or rewritten as CSS custom properties, Sass flag note replaced (enable-v12-release is off in styles.css), upstream Feedback section and table of contents removed, H1 matches the title, the v11 radius note moved to the Radius intro, the radius table no longer nested in a paragraph, size="lg" on the badge examples.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components and icons from @afframe/ui, code samples import from @afframe/ui, inline spacing as Carbon spacing tokens, Sass samples dropped or rewritten as CSS custom properties, Sass flag note replaced (enable-v12-release is off in styles.css), upstream Feedback section and table of contents removed, H1 matches the title, the v11 radius note moved to the Radius intro, the radius table no longer nested in a paragraph, size="lg" on the badge examples, button chooser table added, link to the ButtonSet page.
 
 <Meta isTemplate />
 
@@ -27,6 +28,10 @@ in a variety of ways. `Button` labels express what action will occur when the
 user interacts with it.
 
 <Canvas of={ButtonStories.Default} />
+
+## Which component to use
+
+<ButtonChooser />
 
 ## Radius
 
@@ -586,7 +591,9 @@ a position and will render the tooltip accordingly. Accepted options are `top`,
 ### ButtonSet `stacked`
 
 By passing in `stacked` to the `ButtonSet` component, you can arrange your two
-`Button` elements vertically
+`Button` elements vertically. The
+[ButtonSet page](?path=/docs/components-buttonset--overview) covers `fluid` and
+narrow screens.
 
 <Unstyled
   style={{

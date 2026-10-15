@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as ComboButtonStories from './ComboButton.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ButtonChooser } from '../../../.storybook/ButtonChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Experimental Auto Align section renamed Auto align, usage and accessibility links, sample with import and example labels.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Experimental Auto Align section renamed Auto align, usage and accessibility links, sample with import and example labels, button chooser table added.
 
 <Meta isTemplate />
 
@@ -35,6 +36,10 @@ import { ComboButton, MenuItem } from '@afframe/ui';
 ```
 
 <Canvas of={ComboButtonStories.Default} />
+
+## Which component to use
+
+<ButtonChooser />
 
 ## With Icons
 

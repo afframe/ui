@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as MenuButtonStories from './MenuButton.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ButtonChooser } from '../../../.storybook/ButtonChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Experimental Auto Align section renamed Auto align, usage and accessibility links, sample with import and example labels, menuTarget example added, heading levels fixed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Experimental Auto Align section renamed Auto align, usage and accessibility links, sample with import and example labels, menuTarget example added, heading levels fixed, button chooser table added.
 
 <Meta isTemplate />
 
@@ -46,6 +47,10 @@ import { MenuButton, MenuItem } from '@afframe/ui';
 ### With Icons
 
 <Canvas of={MenuButtonStories.WithIcons} />
+
+## Which component to use
+
+<ButtonChooser />
 
 ## Menu Alignment
 
