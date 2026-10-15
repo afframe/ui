@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: converted from SCSS to plain CSS (nesting flattened, Carbon theme, tag, spacing and type tokens as custom properties), the global tag label and paragraph rules scoped to the story classes so they do not leak into other stories, a commented-out declaration removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: converted from SCSS to plain CSS (nesting flattened, Carbon theme, tag, spacing and type tokens as custom properties), the global tag label and paragraph rules scoped to the story classes so they do not leak into other stories, a commented-out declaration removed, paragraph rules also match the div paragraphs, the document story padding reduced below md. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 .th-compare .cds--tag__label,
@@ -16,9 +16,12 @@
   pointer-events: none;
 }
 
+/* TextHighlighter renders a div, so a paragraph that holds one is a div with this class. */
 .th-compare p,
 .th-ref p,
-.th-doc p {
+.th-doc p,
+.th-doc ol,
+.th-paragraph {
   font-size: var(--cds-body-02-font-size);
   font-weight: var(--cds-body-02-font-weight);
   letter-spacing: var(--cds-body-02-letter-spacing);
@@ -66,7 +69,7 @@
   line-height: var(--cds-label-01-line-height);
 }
 
-.th-ref .th-ref-body p {
+.th-ref .th-ref-body .th-paragraph {
   margin-block-end: var(--cds-spacing-05);
 }
 
@@ -164,7 +167,8 @@
   margin-block-end: var(--cds-spacing-05);
 }
 
-.th-doc p {
+.th-doc p,
+.th-doc .th-paragraph {
   margin-block-end: var(--cds-spacing-05);
 }
 
@@ -184,6 +188,14 @@
   margin: auto;
   box-shadow: 0 0 8px var(--cds-layer-active);
   max-inline-size: 60vw;
+}
+
+/* Below md the side padding and 60vw width leave a one-word column. */
+@media (max-width: 41.98rem) {
+  .th-doc .th-doc-wrapper {
+    padding: var(--cds-spacing-05);
+    max-inline-size: none;
+  }
 }
 
 .th-doc-source {
