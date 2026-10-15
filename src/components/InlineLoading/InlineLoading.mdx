@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as InlineLoadingStories from './InlineLoading.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { LoadingChooser } from '../../../.storybook/LoadingChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, loading chooser table, Finished, Error and Submitting sections, focus note on Submitting added.
 
 <Meta isTemplate />
 
@@ -21,7 +22,25 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={InlineLoadingStories.Default} />
 
-<Canvas of={InlineLoadingStories.UxExample} />
+## Which component to use
+
+<LoadingChooser />
+
+## Finished
+
+<Canvas of={InlineLoadingStories.Finished} />
+
+## Error
+
+<Canvas of={InlineLoadingStories.Error} />
+
+## Submitting
+
+<Canvas of={InlineLoadingStories.Submitting} />
+
+This story, copied from Carbon, replaces the focused Save button with
+`InlineLoading`, so focus drops to the page body. In an app, keep the button and disable it with
+`InlineLoading` inside, or move focus to the result when the work finishes.
 
 ## Component API
 

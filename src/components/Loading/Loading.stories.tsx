@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified, small description with the component name as code, placeholder className dropped, overlay stories describe what loads. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -19,6 +19,14 @@ export default {
   title: 'Components/Loading',
   component: Loading,
   tags: ['carbon'],
+  // Carbon's text names the component as a bare <Loading> tag, which the props
+  // table renders as a DOM element and React logs as wrong casing.
+  argTypes: {
+    small: {
+      description:
+        'Specify whether you would like the small variant of `Loading`',
+    },
+  },
   parameters: {
     docs: {
       page: mdx,
@@ -31,7 +39,7 @@ export default {
 } satisfies Meta<typeof Loading>;
 
 export const Default: StoryFn<typeof Loading> = (args) => {
-  return <Loading className={'some-class'} {...args} />;
+  return <Loading {...args} />;
 };
 
 Default.args = {
@@ -101,6 +109,10 @@ export const OverlayLoading: StoryFn<typeof Loading> = (args) => {
   );
 };
 
+OverlayLoading.args = {
+  description: 'Loading invoices',
+};
+
 OverlayLoading.argTypes = {
   small: sharedArgTypes.small,
   description: sharedArgTypes.description,
@@ -135,6 +147,10 @@ export const OverlayLoadingBehindModal: StoryFn<typeof Loading> = (args) => {
       <Loading {...args} active={isLoadingActive} withOverlay />
     </main>
   );
+};
+
+OverlayLoadingBehindModal.args = {
+  description: 'Loading invoices',
 };
 
 OverlayLoadingBehindModal.argTypes = {
