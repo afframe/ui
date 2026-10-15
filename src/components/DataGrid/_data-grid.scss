@@ -33,7 +33,8 @@
 // meta.align 'end': numbers line up at the end of the column. A sortable
 // header puts its sort icon before the label, so the label ends where the
 // cells end (as IBM's Datagrid right-aligned columns do).
-.afframe-data-grid .afframe-data-grid__align-end {
+.afframe-data-grid .afframe-data-grid__align-end,
+.afframe-data-grid .afframe-data-grid__align-end .cds--table-header-label {
   text-align: end;
 }
 

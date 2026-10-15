@@ -916,6 +916,25 @@ test('end-aligns a column with meta.align on its header and cells', () => {
   expect(label.getBoundingClientRect().right).toBeGreaterThan(
     amount.getBoundingClientRect().right - 48
   );
+  cleanup();
+  render(
+    <DataGrid
+      options={{
+        features: tableFeatures({ ...dataGridInlineEdit }),
+        columns: alignColumns,
+        data: few,
+      }}
+    />
+  );
+  const plain = screen.getByRole('columnheader', { name: 'Amount' });
+  const text = plain.querySelector('.cds--table-header-label');
+  if (!text) throw new Error('no label');
+  const range = document.createRange();
+  range.selectNodeContents(text);
+  expect(range.getBoundingClientRect().right).toBeCloseTo(
+    plain.getBoundingClientRect().right - 16,
+    0
+  );
 });
 
 function BatchGrid({ onDelete }: { onDelete?: () => void }) {
