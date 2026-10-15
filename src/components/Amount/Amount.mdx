@@ -1,6 +1,7 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as AmountStories from './Amount.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { NumberChooser } from '../../../.storybook/NumberChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -17,6 +18,10 @@ the formatted amount and `value` holds the rounded number for machines.
 It is a server component: no hooks and no client JavaScript.
 
 <Canvas of={AmountStories.Default} />
+
+## Which component to use
+
+<NumberChooser />
 
 ## Usage and props
 
@@ -41,8 +46,9 @@ import { Amount } from '@afframe/ui';
 | `colorNegative`       | `false`    | Colours negatives with the `text-error` token. Zero is never negative.                                                      |
 | `fallback`            | none       | Shown for a NaN or Infinity `value`, in a `<span>` with the same class and attributes (a `<data>` element needs a `value`). |
 
-Other attributes (`className`, `id`, `data-*`, `aria-*`) go to the `<data>`
-element. The rounding rules are on the Formatting page.
+`ref` and other attributes (`className`, `id`, `data-*`, `aria-*`) go to the
+`<data>` element, or to the `<span>` when the fallback renders. The rounding
+rules are on the Formatting page.
 
 ## Messages
 

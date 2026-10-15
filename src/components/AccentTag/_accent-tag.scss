@@ -8,45 +8,47 @@
   border-inline-start-width: $spacing-02;
 }
 
-// The strip uses each colour's tag text token: strong in light and dark.
+// The strip uses each colour's tag border token: the text tokens are
+// near-white tints in the dark themes, where the accents become hard to tell
+// apart.
 .afframe-accent-tag-red.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-red;
+  border-inline-start-color: tag.$tag-border-red;
 }
 
 .afframe-accent-tag-magenta.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-magenta;
+  border-inline-start-color: tag.$tag-border-magenta;
 }
 
 .afframe-accent-tag-purple.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-purple;
+  border-inline-start-color: tag.$tag-border-purple;
 }
 
 .afframe-accent-tag-blue.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-blue;
+  border-inline-start-color: tag.$tag-border-blue;
 }
 
 .afframe-accent-tag-cyan.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-cyan;
+  border-inline-start-color: tag.$tag-border-cyan;
 }
 
 .afframe-accent-tag-teal.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-teal;
+  border-inline-start-color: tag.$tag-border-teal;
 }
 
 .afframe-accent-tag-green.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-green;
+  border-inline-start-color: tag.$tag-border-green;
 }
 
 .afframe-accent-tag-gray.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-gray;
+  border-inline-start-color: tag.$tag-border-gray;
 }
 
 .afframe-accent-tag-cool-gray.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-cool-gray;
+  border-inline-start-color: tag.$tag-border-cool-gray;
 }
 
 .afframe-accent-tag-warm-gray.cds--tag.cds--tag--operational {
-  border-inline-start-color: tag.$tag-color-warm-gray;
+  border-inline-start-color: tag.$tag-border-warm-gray;
 }
 
 .afframe-accent-tag.cds--tag.cds--tag--operational.cds--tag--disabled {
