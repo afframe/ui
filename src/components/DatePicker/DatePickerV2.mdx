@@ -144,7 +144,7 @@ namespace from `@afframe/ui`. Destructure before use:
 - const handleChange = (selectedDates, dateStr, instance) => setValue(dateStr);
 + const handleChange = (dates) => {
 +   const [start, end] = dates;
-+   if (start) setValue(formatDate(localDateToCivilDate(start)));
++   setValue(start ? formatDate(localDateToCivilDate(start)) : '');
 + };
 ```
 
@@ -381,7 +381,7 @@ Once destructured, usage is identical:
    - const handleChange = (selectedDates, dateStr, instance) => setValue(dateStr);
    + const handleChange = (dates) => {
    +   const [start, end] = dates;
-   +   if (start) setValue(formatDate(localDateToCivilDate(start)));
+   +   setValue(start ? formatDate(localDateToCivilDate(start)) : '');
    + };
    ```
 

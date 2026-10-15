@@ -130,9 +130,9 @@ import { formatDate, localDateToCivilDate } from '@afframe/ui';
 
 <DatePicker
   datePickerType="single"
-  onChange={([date]) => {
-    if (date) setLabel(formatDate(localDateToCivilDate(date)));
-  }}>
+  onChange={([date]) =>
+    setLabel(date ? formatDate(localDateToCivilDate(date)) : '')
+  }>
   <DatePickerInput id="due-date" labelText="Due date" />
 </DatePicker>;
 ```
