@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from tile-story.css, inner WithFeatureFlags decorator removed (`enable-tile-contrast` is on globally; the v12 tile icon flags stay off, ADR 0018), inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from tile-story.css, inner WithFeatureFlags decorator removed (`enable-tile-contrast` is on globally; the v12 tile icon flags stay off, ADR 0018), inline spacing as Carbon spacing tokens, story names unified, expandable story wrappers capped at the screen width, example data from the Afframe glossary (plans, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { action } from 'storybook/actions';
@@ -151,7 +151,7 @@ type RadioStoryArgs = TileGroupProps<RadioTileProps['value']>;
 
 const radioArgs: RadioStoryArgs = {
   disabled: false,
-  legend: 'Radio Tile Group',
+  legend: 'Plan',
   name: 'radio tile group',
   required: false,
   valueSelected: 'radio-tile-2',
@@ -314,13 +314,13 @@ export const MultiSelect: StoryFn<SelectableTileProps> = (args) => {
       aria-label="selectable tiles"
       className={previewClassname}>
       <SelectableTile id="selectable-tile-1" name="tiles" {...args}>
-        Option 1
+        Starter
       </SelectableTile>
       <SelectableTile id="selectable-tile-2" name="tiles" {...args}>
-        Option 2
+        Business
       </SelectableTile>
       <SelectableTile id="selectable-tile-3" name="tiles" {...args}>
-        Option 3
+        Enterprise
       </SelectableTile>
     </div>
   );
@@ -343,13 +343,13 @@ export const Radio: StoryFn<RadioStoryArgs> = (args) => {
     <div className={previewClassname}>
       <TileGroup {...args}>
         <RadioTile id="radio-tile-1" value="radio-tile-1" {...radioTileGap}>
-          Option 1
+          Starter
         </RadioTile>
         <RadioTile id="radio-tile-2" value="radio-tile-2" {...radioTileGap}>
-          Option 2
+          Business
         </RadioTile>
         <RadioTile id="radio-tile-3" value="radio-tile-3" disabled>
-          Option 3
+          Enterprise
         </RadioTile>
       </TileGroup>
     </div>
@@ -378,10 +378,10 @@ export const RadioWithLayer: StoryFn<RadioStoryArgs> = (args) => {
               id={`radio-tile-${layer}-1`}
               value="radio-tile-1"
               {...radioTileGap}>
-              Option 1
+              Starter
             </RadioTile>
             <RadioTile id={`radio-tile-${layer}-2`} value="radio-tile-2">
-              Option 2
+              Business
             </RadioTile>
           </TileGroup>
         </div>
@@ -409,7 +409,9 @@ RadioWithLayer.parameters = {
 };
 
 export const Expandable: StoryFn<ExpandableTileProps> = (args) => (
-  <div style={{ width: '400px' }} className={previewClassname}>
+  <div
+    style={{ width: '400px', maxWidth: '100%' }}
+    className={previewClassname}>
     <ExpandableTile id="expandable-tile-1" {...args}>
       <TileAboveTheFoldContent>
         <div style={{ height: '200px' }}>Above the fold content here</div>
@@ -436,7 +438,9 @@ Expandable.parameters = {
 export const ExpandableWithInteractive: StoryFn<ExpandableTileProps> = (
   args
 ) => (
-  <div style={{ width: '400px' }} className={previewClassname}>
+  <div
+    style={{ width: '400px', maxWidth: '100%' }}
+    className={previewClassname}>
     <ExpandableTile id="expandable-tile-1" {...args}>
       <TileAboveTheFoldContent>
         <div style={{ height: '200px', width: '200px' }}>
@@ -476,7 +480,9 @@ export const ExpandableWithLayer: StoryFn<ExpandableTileProps> = (args) => {
   return (
     <WithLayer>
       {(layer) => (
-        <div style={{ width: '400px' }} className={previewClassname}>
+        <div
+          style={{ width: '400px', maxWidth: '100%' }}
+          className={previewClassname}>
           <ExpandableTile id={`expandable-tile-${layer}`} {...args}>
             <TileAboveTheFoldContent>
               <div style={{ height: '100px', width: '200px' }}>
@@ -522,8 +528,7 @@ const aiLabel = (
         <h2 className="ai-label-heading">84%</h2>
         <p className="secondary bold">Confidence score</p>
         <p className="secondary">
-          Lorem ipsum dolor sit amet, di os consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut fsil labore et dolore magna aliqua.
+          Amounts suggested from the last 12 months of invoices.
         </p>
         <hr />
         <p className="secondary">Model type</p>
@@ -563,7 +568,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
     <div className="ai-label-selectable-tile-container ai-label-preview-radio-tile-container">
       <TileGroup
         defaultSelected="default-selected"
-        legend="Radio Tile Group - Feature Flags enabled"
+        legend="Plan"
         name="radio tile group two"
         {...args}>
         <RadioTile
@@ -572,7 +577,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
           value="standard"
           decorator={aiLabel}
           {...args}>
-          Option 1
+          Starter
         </RadioTile>
         <RadioTile
           className="ai-label-radio-tile"
@@ -580,7 +585,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
           value="default-selected"
           decorator={aiLabel}
           {...args}>
-          Option 2
+          Business
         </RadioTile>
         <RadioTile
           className="ai-label-radio-tile"
@@ -588,7 +593,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
           value="selected"
           decorator={aiLabel}
           {...args}>
-          Option 3
+          Enterprise
         </RadioTile>
       </TileGroup>
     </div>

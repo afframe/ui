@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, primaryButtonIcon takes the icon itself (IBM types it as an icon component), components, hooks and icons from @afframe/ui, useCarbonPrefix for Carbon's prefix, title kept (Components/Cards/ProductiveCard), source tag, scss styles replaced by productive-card-story.css (the #root width rule is dropped). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, primaryButtonIcon takes the icon itself (IBM types it as an icon component), components, hooks and icons from @afframe/ui, useCarbonPrefix for Carbon's prefix, title kept (Components/Cards/ProductiveCard), source tag, scss styles replaced by productive-card-story.css (the #root width rule is dropped), example data from the Afframe glossary (card title and text, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -48,9 +48,7 @@ const sampleDecorator = (decorator: number) => {
               <h1>84%</h1>
               <p className="secondary bold">Confidence score</p>
               <p className="secondary">
-                This is not really Lorem Ipsum but the spell checker did not
-                like the previous text with it&apos;s non-words which is why
-                this unwieldy sentence, should one choose to call it that, here.
+                Amounts suggested from the last 12 months of invoices.
               </p>
               <hr />
               <p className="secondary">Model type</p>
@@ -66,7 +64,7 @@ const sampleDecorator = (decorator: number) => {
             <Information />
           </ToggletipButton>
           <ToggletipContent>
-            <p>Custom content here</p>
+            <p>Counts invoices in every currency.</p>
           </ToggletipContent>
         </Toggletip>
       );
@@ -156,7 +154,7 @@ export default {
 } satisfies Meta;
 
 const defaultProps = {
-  title: 'Title',
+  title: 'Overdue invoices',
   columnSizeSm: 4,
   columnSizeMd: 8,
   columnSizeLg: 8,
@@ -164,11 +162,11 @@ const defaultProps = {
     <>
       <div className={`${storyClass}__graph`}>
         <span className={`${storyClass}__visually-hidden`}>
-          graph showing progress
+          Overdue invoices by week
         </span>
       </div>
-      <p>Productive content text</p>
-      <p>Productive content text</p>
+      <p>12 invoices are overdue.</p>
+      <p>3 of them are more than 30 days late.</p>
     </>
   ),
   actionIcons: [
@@ -223,20 +221,20 @@ Default.args = {
 export const WithCaption = Template.bind({});
 WithCaption.args = {
   ...defaultProps,
-  description: 'caption',
+  description: 'Invoices past their due date that still wait for payment.',
 };
 
 export const WithLabel = Template.bind({});
 WithLabel.args = {
   ...defaultProps,
-  label: 'Label',
+  label: 'Invoices',
 };
 
 export const LabelOnly = Template.bind({});
 LabelOnly.args = {
   ...defaultProps,
   title: '',
-  label: 'Label',
+  label: 'Invoices',
   actionsPlacement: 'bottom',
   primaryButtonText: 'Read more',
 };
@@ -282,7 +280,7 @@ ComplexBottomBar.args = {
   primaryButtonText: 'Read more',
   actionsPlacement: 'bottom',
   title: '',
-  label: 'Label',
+  label: 'Invoices',
 };
 
 export const Clickable = Template.bind({});

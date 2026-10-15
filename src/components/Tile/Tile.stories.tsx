@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, inline spacing as Carbon spacing tokens, story names unified, expandable story wrappers capped at the screen width, example data from the Afframe glossary (plans, card text, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { action } from 'storybook/actions';
@@ -143,7 +143,7 @@ const selectableControls = Object.keys(selectableArgTypes);
 
 const radioArgs: TileGroupProps<RadioTileProps['value']> = {
   disabled: false,
-  legend: 'Radio Tile Group',
+  legend: 'Plan',
   name: 'radio tile group',
   required: false,
   defaultSelected: 'default-selected',
@@ -378,13 +378,13 @@ export const MultiSelect: StoryFn<SelectableTileProps> = (args) => {
   return (
     <div role="group" aria-label="selectable tiles">
       <SelectableTile id="selectable-tile-1" name="tiles" {...args}>
-        Option 1
+        Starter
       </SelectableTile>
       <SelectableTile id="selectable-tile-2" name="tiles" {...args}>
-        Option 2
+        Business
       </SelectableTile>
       <SelectableTile id="selectable-tile-3" name="tiles" {...args}>
-        Option 3
+        Enterprise
       </SelectableTile>
     </div>
   );
@@ -408,13 +408,13 @@ export const Radio: StoryFn<TileGroupProps<RadioTileProps['value']>> = (
   return (
     <TileGroup {...args}>
       <RadioTile id="radio-tile-1" value="standard" {...radioTileGap}>
-        Option 1
+        Starter
       </RadioTile>
       <RadioTile id="radio-tile-2" value="default-selected" {...radioTileGap}>
-        Option 2
+        Business
       </RadioTile>
       <RadioTile id="radio-tile-3" value="selected">
-        Option 3
+        Enterprise
       </RadioTile>
     </TileGroup>
   );
@@ -442,10 +442,10 @@ export const RadioWithLayer: StoryFn<
           id={`radio-tile-${layer}-1`}
           value="standard"
           {...radioTileGap}>
-          Option 1
+          Starter
         </RadioTile>
         <RadioTile id={`radio-tile-${layer}-2`} value="default-selected">
-          Option 2
+          Business
         </RadioTile>
       </TileGroup>
     )}
@@ -472,7 +472,7 @@ RadioWithLayer.parameters = {
 
 export const Expandable: StoryFn<ExpandableTileProps> = (args) => {
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: '400px', maxWidth: '100%' }}>
       <ExpandableTile id="expandable-tile-1" {...args}>
         <TileAboveTheFoldContent>
           <div style={{ height: '200px' }}>Above the fold content here</div>
@@ -501,7 +501,7 @@ export const ExpandableWithInteractive: StoryFn<ExpandableTileProps> = (
   args
 ) => {
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: '400px', maxWidth: '100%' }}>
       <ExpandableTile id="expandable-tile-1" {...args}>
         <TileAboveTheFoldContent>
           <div style={{ height: '200px', width: '200px' }}>
@@ -542,7 +542,7 @@ export const ExpandableWithLayer: StoryFn<ExpandableTileProps> = (args) => {
   return (
     <WithLayer>
       {(layer) => (
-        <div style={{ width: '400px' }}>
+        <div style={{ width: '400px', maxWidth: '100%' }}>
           <ExpandableTile id={`expandable-tile-${layer}`} {...args}>
             <TileAboveTheFoldContent>
               <div style={{ height: '100px' }}>Above the fold content here</div>
@@ -577,8 +577,7 @@ const aiLabel = (
         <h2 className="ai-label-heading">84%</h2>
         <p className="secondary bold">Confidence score</p>
         <p className="secondary">
-          Lorem ipsum dolor sit amet, di os consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut fsil labore et dolore magna aliqua.
+          Amounts suggested from the last 12 months of invoices.
         </p>
         <hr />
         <p className="secondary">Model type</p>
@@ -618,18 +617,15 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
     <>
       <div className="ai-label-tile-container">
         <Tile decorator={aiLabel} id="tile-1" {...args}>
-          <h4>Title</h4>
-          <p>
-            Lorem ipsum dolor sit amet consectetur. Posuere duis fermentum sit
-            at consectetur turpis mauris gravida penatibus.
-          </p>
+          <h4>Monthly revenue</h4>
+          <p>Revenue from paid invoices this month.</p>
           <div className="ai-data">
             <div className="data-container">
-              <p>Data Quality</p>
+              <p>Paid on time</p>
               <h3>85%</h3>
             </div>
             <div className="data-container">
-              <p>Label text</p>
+              <p>Overdue</p>
               <h3>16%</h3>
             </div>
           </div>
@@ -640,18 +636,15 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
           id="tile-click"
           renderIcon={ArrowRight}
           {...args}>
-          <h4>Title</h4>
-          <p>
-            Lorem ipsum dolor sit amet consectetur. Posuere duis fermentum sit
-            at consectetur turpis mauris gravida penatibus.
-          </p>
+          <h4>Monthly revenue</h4>
+          <p>Revenue from paid invoices this month.</p>
           <div className="ai-data">
             <div className="data-container">
-              <p>Data Quality</p>
+              <p>Paid on time</p>
               <h3>85%</h3>
             </div>
             <div className="data-container">
-              <p>Label text</p>
+              <p>Overdue</p>
               <h3>16%</h3>
             </div>
           </div>
@@ -664,28 +657,22 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
           decorator={aiLabel}
           {...args}>
           <TileAboveTheFoldContent>
-            <h4>Title</h4>
-            <p>
-              Lorem ipsum dolor sit amet consectetur. Posuere duis fermentum sit
-              at consectetur turpis mauris gravida penatibus.
-            </p>
+            <h4>Monthly revenue</h4>
+            <p>Revenue from paid invoices this month.</p>
             <div className="ai-data">
               <div className="data-container">
-                <p>Data Quality</p>
+                <p>Paid on time</p>
                 <h3>85%</h3>
               </div>
               <div className="data-container">
-                <p>Label text</p>
+                <p>Overdue</p>
                 <h3>16%</h3>
               </div>
             </div>
           </TileAboveTheFoldContent>
           <TileBelowTheFoldContent>
-            <h6>Expanded Section</h6>
-            <p>
-              Lorem ipsum dolor sit amet consectetur. Posuere duis fermentum sit
-              at consectetur turpis mauris.
-            </p>
+            <h6>Details</h6>
+            <p>Based on invoices from the last 12 months.</p>
           </TileBelowTheFoldContent>
         </ExpandableTile>
       </div>
@@ -693,7 +680,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
       <div className="ai-label-selectable-tile-container">
         <TileGroup
           defaultSelected="default-selected"
-          legend="Selectable Tile Group"
+          legend="Plans"
           name="selectable tile group"
           {...args}>
           <div>
@@ -702,7 +689,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
               id="selectable-tile-1"
               decorator={aiLabel}
               {...args}>
-              Option 1
+              Starter
             </SelectableTile>
           </div>
           <div>
@@ -711,7 +698,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
               decorator={aiLabel}
               id="selectable-tile-2"
               {...args}>
-              Option 2
+              Business
             </SelectableTile>
           </div>
           <div>
@@ -720,7 +707,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
               decorator={aiLabel}
               id="selectable-tile-3"
               {...args}>
-              Option 3
+              Enterprise
             </SelectableTile>
           </div>
         </TileGroup>
@@ -730,7 +717,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
       <div className="ai-label-selectable-tile-container">
         <TileGroup
           defaultSelected="default-selected"
-          legend="Radio Tile Group"
+          legend="Plan"
           name="radio tile group"
           {...args}>
           <RadioTile
@@ -739,7 +726,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
             value="standard"
             decorator={aiLabel}
             {...args}>
-            Option 1
+            Starter
           </RadioTile>
           <RadioTile
             className="ai-label-radio-tile"
@@ -747,7 +734,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
             value="default-selected"
             decorator={aiLabel}
             {...args}>
-            Option 2
+            Business
           </RadioTile>
           <RadioTile
             className="ai-label-radio-tile"
@@ -755,7 +742,7 @@ export const WithAILabel: StoryObj<{ hasRoundedCorners?: boolean }> = {
             value="selected"
             decorator={aiLabel}
             {...args}>
-            Option 3
+            Enterprise
           </RadioTile>
         </TileGroup>
         <br />

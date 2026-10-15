@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui (UserAvatar is IBM Products'), source tag, WithVideo kept out of the story tests, YouTube embeds through youtube-nocookie.com without the share id, the WithVideo card whose video source is a YouTube page removed, rel on the new-tab link, story styles as plain CSS, two upstream illustrations used for every image (IBM logo removed), console.log and alert as actions, type fixes (numeric icon sizes, iconDescription for the unknown label prop, the Next icon as a child, anchor props spread, explicit Disabled argTypes, truncate props default to false), dashes replaced. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui (UserAvatar is IBM Products'), source tag, WithVideo kept out of the story tests, YouTube embeds through youtube-nocookie.com without the share id, the WithVideo card whose video source is a YouTube page removed, rel on the new-tab link, story styles as plain CSS, two upstream illustrations used for every image (IBM logo removed), console.log and alert as actions, type fixes (numeric icon sizes, iconDescription for the unknown label prop, the Next icon as a child, anchor props spread, explicit Disabled argTypes, truncate props default to false), dashes replaced, example data from the Afframe glossary (card titles, person, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -220,8 +220,8 @@ const meta = {
     clickable: false,
     disabled: false,
     horizontal: false,
-    label: 'Example',
-    title: 'Card title',
+    label: 'Invoices',
+    title: 'Overdue invoices',
     description: '',
     bodyText: 'Last updated 2 hours ago.',
     actionCount: 0,
@@ -262,7 +262,7 @@ const HEADER_MEDIA_MAP = {
   none: null,
   icon: <Analytics size={32} />,
   tag: <Tag type="blue">New</Tag>,
-  'user-avatar': <UserAvatar name="Thomas J. Watson" size="md" />,
+  'user-avatar': <UserAvatar name="Alex Morgan" size="md" />,
   'status-indicator': (
     <IconIndicator kind="succeeded" size={16} label="Succeeded" />
   ),
@@ -352,7 +352,7 @@ export const Default: Story = {
                     <h1>84%</h1>
                     <p className="secondary bold">Confidence score</p>
                     <p className="secondary">
-                      This content was generated using IBM AI services.
+                      Amounts suggested from the last 12 months of invoices.
                     </p>
                     <hr />
                     <p className="secondary">Model type</p>
@@ -643,11 +643,13 @@ export const WithDensities: StoryFn<CardStoryArgs> = () => (
     <Column lg={4} md={4} sm={4}>
       <Card>
         <Card.Header>
-          <Card.Title label="Category" description="Card description">
-            Card title
+          <Card.Title
+            label="Invoices"
+            description="Invoices past their due date that still wait for payment.">
+            Overdue invoices
           </Card.Title>
         </Card.Header>
-        <Card.Body>5,240 active users across 12 regions.</Card.Body>
+        <Card.Body>12 invoices are overdue.</Card.Body>
         <Card.Footer>
           <Card.Action>
             <Button kind="ghost" size="md">
@@ -660,11 +662,13 @@ export const WithDensities: StoryFn<CardStoryArgs> = () => (
     <Column lg={4} md={4} sm={4}>
       <Card density="expressive">
         <Card.Header>
-          <Card.Title label="Category" description="Card description">
-            Card title
+          <Card.Title
+            label="Invoices"
+            description="Invoices past their due date that still wait for payment.">
+            Overdue invoices
           </Card.Title>
         </Card.Header>
-        <Card.Body>5,240 active users across 12 regions.</Card.Body>
+        <Card.Body>12 invoices are overdue.</Card.Body>
         <Card.Footer>
           <Card.Action>
             <Button kind="ghost" size="md">
@@ -691,8 +695,7 @@ export const WithAILabel: StoryFn<CardStoryArgs> = () => (
                 <h1>84%</h1>
                 <p className="secondary bold">Confidence score</p>
                 <p className="secondary">
-                  This content was generated using IBM AI services with high
-                  confidence based on historical data patterns.
+                  Amounts suggested from the last 12 months of invoices.
                 </p>
                 <hr />
                 <p className="secondary">Model type</p>

@@ -1,9 +1,10 @@
 import { Canvas, Controls, Meta, Story } from '@storybook/addon-docs/blocks';
 import * as stories from './ConditionBuilder.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TableChooser } from '../../../.storybook/TableChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, internal IBM guidelines link and unused imports removed, em-dashes replaced, story names unified.
+// Modified by Afframe in 2026: source label and source link added, internal IBM guidelines link and unused imports removed, em-dashes replaced, story names unified, table chooser and narrow-screen note added.
 
 <Meta isTemplate />
 
@@ -28,6 +29,18 @@ The component is available in two variants:
 - **Hierarchical** (`variant="Hierarchical"`): conditions can be grouped into
   nested sub-groups with independent connectors (`and` / `or`). Best for
   complex, multi-level rule building.
+
+## Which component to use
+
+<TableChooser />
+
+## Narrow screens
+
+Condition rows do not wrap. On a 375 px screen a row with a long property,
+operator and value runs past the edge: the page grows to 432 px in
+`With Custom Operators`, 435 px in `With Initial State` and 535 px in
+`Hierarchical Controlled`. This is IBM's layout, and Afframe UI adds no style
+override. Upstream issue drafted, not filed.
 
 ---
 
