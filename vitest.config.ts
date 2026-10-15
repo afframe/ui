@@ -60,7 +60,6 @@ export default defineConfig({
       '@carbon/echarts-theme',
       '@carbon/layout',
       '@carbon/type',
-      'classnames',
     ],
   },
   test: {
