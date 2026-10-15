@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, Default story first, onSuccess description with the component name as code. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, Default story first, Finished and Error stories, UxExample renamed to Submitting, Afframe example data, onSuccess description with the component name as code. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -80,8 +80,8 @@ export const Default: StoryFn<typeof InlineLoading> = (args) => (
 );
 
 Default.args = {
-  description: 'Loading',
-  iconDescription: 'Loading data...',
+  description: 'Saving invoice',
+  iconDescription: 'Saving',
   status: 'active',
   onSuccess: action('onSuccess'),
   'aria-live': 'assertive',
@@ -95,7 +95,38 @@ Default.parameters = {
 
 Default.argTypes = { ...sharedArgTypes };
 
-export const UxExample: StoryFn<typeof InlineLoading> = () => {
+export const Finished: StoryFn<typeof InlineLoading> = (args) => (
+  <InlineLoading {...args} />
+);
+
+Finished.args = {
+  description: 'Invoice saved',
+  status: 'finished',
+  onSuccess: action('onSuccess'),
+  'aria-live': 'assertive',
+};
+
+Finished.argTypes = { ...sharedArgTypes };
+
+export const Error: StoryFn<typeof InlineLoading> = (args) => (
+  <InlineLoading {...args} />
+);
+
+Error.args = {
+  description: 'Invoice not saved',
+  status: 'error',
+  'aria-live': 'assertive',
+};
+
+Error.parameters = {
+  controls: {
+    exclude: ['successDelay'],
+  },
+};
+
+Error.argTypes = { ...sharedArgTypes };
+
+export const Submitting: StoryFn<typeof InlineLoading> = () => {
   function MockSubmission({
     children,
   }: {
@@ -103,7 +134,7 @@ export const UxExample: StoryFn<typeof InlineLoading> = () => {
   }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [description, setDescription] = useState('Submitting...');
+    const [description, setDescription] = useState('Saving invoice');
     const [ariaLive, setAriaLive] = useState<'off' | 'assertive'>('off');
     const handleSubmit = () => {
       setIsSubmitting(true);
@@ -113,12 +144,12 @@ export const UxExample: StoryFn<typeof InlineLoading> = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         setSuccess(true);
-        setDescription('Submitted!');
+        setDescription('Invoice saved');
 
         // To make submittable again, we reset the state after a bit so the user gets completion feedback
         setTimeout(() => {
           setSuccess(false);
-          setDescription('Submitting...');
+          setDescription('Saving invoice');
           setAriaLive('off');
         }, 1500);
       }, 2000);
@@ -148,7 +179,7 @@ export const UxExample: StoryFn<typeof InlineLoading> = () => {
               aria-live={ariaLive}
             />
           ) : (
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button onClick={handleSubmit}>Save</Button>
           )}
         </ButtonSet>
       )}
