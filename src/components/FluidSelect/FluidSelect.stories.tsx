@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; unsupported light argType removed; decorator passed by spread (missing from types), story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; unsupported light argType removed; decorator passed by spread (missing from types), story names unified, currency example data, state stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -105,14 +105,21 @@ const sharedArgs = {
   className: 'test-class',
   disabled: false,
   invalid: false,
-  invalidText:
-    'Error message that is really long can wrap to more lines but should not be excessively long.',
-  labelText: 'Select an option',
+  invalidText: 'Choose a currency.',
+  labelText: 'Currency',
   readOnly: false,
   warn: false,
-  warnText:
-    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+  warnText: 'Your bank charges a fee for payments in this currency.',
 };
+
+const currencyItems = (
+  <>
+    <SelectItem value="" text="" />
+    {['CZK', 'EUR', 'USD', 'GBP', 'PLN'].map((code) => (
+      <SelectItem key={code} value={code} text={code} />
+    ))}
+  </>
+);
 
 const sharedControls = Object.keys(sharedArgTypes);
 const widthArgType: ArgTypes[string] = {
@@ -137,11 +144,7 @@ export const Default: StoryFn<FluidSelectProps & { defaultWidth?: number }> = (
         </Toggletip>
       </span>
       <FluidSelect {...selectArgs} id="select-1">
-        <SelectItem value="" text="" />
-        <SelectItem value="option-1" text="Option 1" />
-        <SelectItem value="option-2" text="Option 2" />
-        <SelectItem value="option-3" text="Option 3" />
-        <SelectItem value="option-4" text="Option 4" />
+        {currencyItems}
       </FluidSelect>
     </div>
   );
@@ -199,18 +202,11 @@ export const WithAILabel: StoryFn<
     <div style={{ width: defaultWidth }}>
       <FluidSelect
         id="select-1"
-        labelText="Select an option"
+        labelText="Currency"
         // `decorator` is missing from FluidSelectProps in Carbon 11.118.0.
         {...{ decorator: aiLabel }}
         {...selectArgs}>
-        <SelectItem value="" text="" />
-        <SelectItem
-          value="An example option that is really long to show what should be done to handle long text"
-          text="An example option that is really long to show what should be done to handle long text"
-        />
-        <SelectItem value="Option 2" text="Option 2" />
-        <SelectItem value="Option 3" text="Option 3" />
-        <SelectItem value="Option 4" text="Option 4" />
+        {currencyItems}
       </FluidSelect>
     </div>
   );
@@ -229,6 +225,31 @@ WithAILabel.argTypes = {
 WithAILabel.parameters = {
   controls: { include: [...sharedControls, 'defaultWidth'] },
 };
+
+export const Disabled: typeof Default = Default.bind({});
+Disabled.args = { ...Default.args, disabled: true };
+Disabled.argTypes = Default.argTypes;
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  ...Default.parameters,
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: typeof Default = Default.bind({});
+ReadOnly.args = { ...Default.args, readOnly: true, defaultValue: 'EUR' };
+ReadOnly.argTypes = Default.argTypes;
+ReadOnly.parameters = Default.parameters;
+
+export const Invalid: typeof Default = Default.bind({});
+Invalid.args = { ...Default.args, invalid: true };
+Invalid.argTypes = Default.argTypes;
+Invalid.parameters = Default.parameters;
+
+export const Warning: typeof Default = Default.bind({});
+Warning.args = { ...Default.args, warn: true, defaultValue: 'PLN' };
+Warning.argTypes = Default.argTypes;
+Warning.parameters = Default.parameters;
 
 export const Skeleton: StoryFn<FluidSelectProps & { defaultWidth?: number }> = (
   args

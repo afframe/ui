@@ -2,9 +2,10 @@ import { ArgTypes, Meta, Canvas, Unstyled } from '@storybook/addon-docs/blocks';
 import { Select, SelectItem } from '../../index.js';
 import * as SelectStories from './Select.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, field chooser added.
 
 <Meta isTemplate />
 
@@ -126,6 +127,10 @@ desired option.
   <SelectItem value="option-3" text="Option 3" />
 </Select>
 ```
+
+## Which component to use
+
+<FieldChooser />
 
 ## Inline
 

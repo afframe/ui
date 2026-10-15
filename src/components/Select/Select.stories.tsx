@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified, currency example data, state stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -99,27 +99,26 @@ const sharedArgTypes = {
 
 const sharedArgs = {
   disabled: false,
-  helperText: 'Select the region where your resources will be hosted.',
+  helperText: 'Used on new invoices',
   hideLabel: false,
   inline: false,
   invalid: false,
-  invalidText: 'Select a deployment region.',
-  labelText: 'Deployment region',
+  invalidText: 'Choose a currency.',
+  labelText: 'Currency',
   readOnly: false,
   size: 'md',
   warn: false,
-  warnText: 'This region has limited availability.',
+  warnText: 'Your bank charges a fee for payments in this currency.',
 } satisfies SelectStoryArgs;
 
 const sharedControls = Object.keys(sharedArgTypes);
 
 const selectItems = (
   <>
-    <SelectItem value="" text="Choose a region" />
-    <SelectItem value="us-south" text="Dallas (us-south)" />
-    <SelectItem value="us-east" text="Washington, DC (us-east)" />
-    <SelectItem value="eu-de" text="Frankfurt (eu-de)" />
-    <SelectItem value="au-syd" text="Sydney (au-syd)" />
+    <SelectItem value="" text="Choose a currency" />
+    {['CZK', 'EUR', 'USD', 'GBP', 'PLN'].map((code) => (
+      <SelectItem key={code} value={code} text={code} />
+    ))}
   </>
 );
 
@@ -172,6 +171,31 @@ Inline.parameters = {
   controls: { include: sharedControls },
 };
 
+export const Disabled: StoryFn<SelectStoryArgs> = Default.bind({});
+Disabled.args = { ...sharedArgs, disabled: true };
+Disabled.argTypes = { ...sharedArgTypes };
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  controls: { include: sharedControls },
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<SelectStoryArgs> = Default.bind({});
+ReadOnly.args = { ...sharedArgs, readOnly: true, defaultValue: 'EUR' };
+ReadOnly.argTypes = { ...sharedArgTypes };
+ReadOnly.parameters = { controls: { include: sharedControls } };
+
+export const Invalid: StoryFn<SelectStoryArgs> = Default.bind({});
+Invalid.args = { ...sharedArgs, invalid: true };
+Invalid.argTypes = { ...sharedArgTypes };
+Invalid.parameters = { controls: { include: sharedControls } };
+
+export const Warning: StoryFn<SelectStoryArgs> = Default.bind({});
+Warning.args = { ...sharedArgs, warn: true, defaultValue: 'PLN' };
+Warning.argTypes = { ...sharedArgTypes };
+Warning.parameters = { controls: { include: sharedControls } };
+
 export const Skeleton: StoryFn<typeof SelectSkeleton> = (args) => {
   return <SelectSkeleton {...args} />;
 };
@@ -221,8 +245,8 @@ export const WithAILabel: StoryFn<SelectStoryArgs> = (args) => {
           <h2 className="ai-label-heading">84%</h2>
           <p className="secondary bold">Confidence score</p>
           <p className="secondary">
-            This recommendation is based on current service availability and the
-            location of your existing resources.
+            This recommendation is based on the currency of this customer's
+            earlier invoices.
           </p>
           <hr />
           <p className="secondary">Model type</p>

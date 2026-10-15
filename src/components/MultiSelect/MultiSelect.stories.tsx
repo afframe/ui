@@ -7,13 +7,14 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript (ignored label prop dropped from FilterableWithAILabel), components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript (ignored label prop dropped from FilterableWithAILabel), components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified, payment term example data, state stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useRef, useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { action } from 'storybook/actions';
 import { WithLayer as WithLayerTemplate } from '../../../.storybook/templates/WithLayer/index.js';
+import { paymentTermItems } from '../../../.storybook/exampleData.js';
 import '../AILabel/ailabel-story.css';
 import {
   AILabel,
@@ -172,33 +173,7 @@ export default {
   tags: ['carbon'],
 } satisfies Meta<typeof MultiSelect>;
 
-const items: Item[] = [
-  {
-    id: 'downshift-1-item-0',
-    text: 'Option 1',
-  },
-  {
-    id: 'downshift-1-item-1',
-    text: 'Option 2',
-  },
-  {
-    id: 'downshift-1-item-2',
-    text: 'Option 3 - a disabled item',
-    disabled: true,
-  },
-  {
-    id: 'downshift-1-item-3',
-    text: 'Option 4',
-  },
-  {
-    id: 'downshift-1-item-4',
-    text: 'An example option that is really long to show what should be done to handle long text',
-  },
-  {
-    id: 'downshift-1-item-5',
-    text: 'Option 5',
-  },
-];
+const items: Item[] = paymentTermItems;
 
 const customSearchItems: CustomSearchItem[] = [
   {
@@ -226,16 +201,16 @@ const sharedArgs = {
   size: 'md',
   autoAlign: false,
   type: 'default',
-  titleText: 'Label',
+  titleText: 'Payment terms offered',
   disabled: false,
   hideLabel: false,
   invalid: false,
   warn: false,
   open: false,
-  helperText: 'This is helper text',
-  warnText: 'Warning message goes here',
-  invalidText: 'Error message goes here',
-  label: 'This is a label',
+  helperText: 'Customers can pick any of these on the invoice',
+  warnText: 'Customers usually pick the longest term offered.',
+  invalidText: 'Choose at least one payment term.',
+  label: 'Choose payment terms',
   clearSelectionDescription: 'Total items selected: ',
   useTitleInItem: false,
   clearSelectionText: 'To clear selection, press Delete or Backspace,',
@@ -254,43 +229,16 @@ const filterableArgTypes = {
   },
 } as const;
 export const Default: StoryFn<StoryArgs> = (args) => {
-  const items: Item[] = [
-    {
-      id: 'downshift-1-item-0',
-      text: 'Option 1',
-    },
-    {
-      id: 'downshift-1-item-1',
-      text: 'Option 2',
-    },
-    {
-      id: 'downshift-1-item-2',
-      text: 'Option 3 - a disabled item',
-      disabled: true,
-    },
-    {
-      id: 'downshift-1-item-3',
-      text: 'Option 4',
-    },
-    {
-      id: 'downshift-1-item-4',
-      text: 'An example option that is really long to show what should be done to handle long text',
-    },
-    {
-      id: 'downshift-1-item-5',
-      text: 'Option 5',
-    },
-  ];
   return (
     <div
       style={{
         width: 300,
       }}>
       <MultiSelect
-        label="Multiselect Label"
+        label="Choose payment terms"
         id="carbon-multiselect-example"
-        titleText="Multiselect title"
-        helperText="This is helper text"
+        titleText="Payment terms offered"
+        helperText="Customers can pick any of these on the invoice"
         items={items}
         itemToString={(item) => (item ? item.text : '')}
         selectionFeedback="top-after-reopen"
@@ -303,43 +251,16 @@ export const Default: StoryFn<StoryArgs> = (args) => {
 Default.args = { ...sharedArgs };
 
 export const WithInitialSelectedItems: StoryFn<StoryArgs> = (args) => {
-  const items: Item[] = [
-    {
-      id: 'downshift-1-item-0',
-      text: 'Option 1',
-    },
-    {
-      id: 'downshift-1-item-1',
-      text: 'Option 2',
-    },
-    {
-      id: 'downshift-1-item-2',
-      text: 'Option 3 - a disabled item',
-      disabled: true,
-    },
-    {
-      id: 'downshift-1-item-3',
-      text: 'Option 4',
-    },
-    {
-      id: 'downshift-1-item-4',
-      text: 'An example option that is really long to show what should be done to handle long text',
-    },
-    {
-      id: 'downshift-1-item-5',
-      text: 'Option 5',
-    },
-  ];
   return (
     <div
       style={{
         width: 300,
       }}>
       <MultiSelect
-        label="Multiselect Label"
+        label="Choose payment terms"
         id="carbon-multiselect-example-2"
-        titleText="Multiselect title"
-        helperText="This is helper text"
+        titleText="Payment terms offered"
+        helperText="Customers can pick any of these on the invoice"
         items={items}
         itemToString={(item) => (item ? item.text : '')}
         initialSelectedItems={[items[0] as Item, items[1] as Item]}
@@ -353,34 +274,6 @@ export const WithInitialSelectedItems: StoryFn<StoryArgs> = (args) => {
 WithInitialSelectedItems.args = { ...sharedArgs };
 
 export const Filterable: StoryFn<FilterableArgs> = (args) => {
-  const items: Item[] = [
-    {
-      id: 'downshift-1-item-0',
-      text: 'Option 1',
-    },
-    {
-      id: 'downshift-1-item-1',
-      text: 'Option 2',
-    },
-    {
-      id: 'downshift-1-item-2',
-      text: 'Option 3 - a disabled item',
-      disabled: true,
-    },
-    {
-      id: 'downshift-1-item-3',
-      text: 'Option 4',
-    },
-    {
-      id: 'downshift-1-item-4',
-      text: 'An example option that is really long to show what should be done to handle long text',
-    },
-    {
-      id: 'downshift-1-item-5',
-      text: 'Option 5',
-    },
-  ];
-
   return (
     <div
       style={{
@@ -388,8 +281,8 @@ export const Filterable: StoryFn<FilterableArgs> = (args) => {
       }}>
       <FilterableMultiSelect
         id="carbon-multiselect-example-3"
-        titleText="FilterableMultiSelect title"
-        helperText="This is helper text"
+        titleText="Payment terms offered"
+        helperText="Customers can pick any of these on the invoice"
         items={items}
         itemToString={(item) => (item ? item.text : '')}
         selectionFeedback="top-after-reopen"
@@ -409,8 +302,8 @@ export const FilterableWithSelectAll: StoryFn<FilterableArgs> = (args) => {
       }}>
       <FilterableMultiSelect
         id="carbon-multiselect-example-3"
-        titleText="FilterableMultiSelect title"
-        helperText="This is helper text"
+        titleText="Payment terms offered"
+        helperText="Customers can pick any of these on the invoice"
         items={itemsWithSelectAll}
         itemToString={(item) => (item ? item.text : '')}
         selectionFeedback="top-after-reopen"
@@ -492,10 +385,10 @@ export const WithLayer: StoryFn<StoryArgs> = (args) => (
     {(layer) => (
       <div style={{ width: 300 }}>
         <MultiSelect
-          label="Multiselect Label"
+          label="Choose payment terms"
           id={`carbon-multiselect-example-${layer}`}
-          titleText="Multiselect title"
-          helperText="This is helper text"
+          titleText="Payment terms offered"
+          helperText="Customers can pick any of these on the invoice"
           items={items}
           itemToString={(item) => (item ? item.text : '')}
           selectionFeedback="top-after-reopen"
@@ -512,8 +405,8 @@ export const FilterableWithLayer: StoryFn<FilterableArgs> = (args) => (
       <div style={{ width: 300 }}>
         <FilterableMultiSelect
           id={`carbon-multiselect-example-${layer}`}
-          titleText="Multiselect title"
-          helperText="This is helper text"
+          titleText="Payment terms offered"
+          helperText="Customers can pick any of these on the invoice"
           items={items}
           itemToString={(item) => (item ? item.text : '')}
           selectionFeedback="top-after-reopen"
@@ -536,7 +429,7 @@ FilterableWithLayer.parameters = {
 };
 export const Controlled: StoryFn<StoryArgs> = (args) => {
   const [selectedItems, setSelectedItems] = useState(
-    items.filter((item) => item.id === 'downshift-1-item-0')
+    items.filter((item) => item.id === 'net-30')
   );
 
   const onSelectionChanged = (value: Item[]) => {
@@ -548,8 +441,8 @@ export const Controlled: StoryFn<StoryArgs> = (args) => {
     <div style={{ width: 300 }}>
       <MultiSelect
         id="carbon-multiselect-example-controlled"
-        titleText="Multiselect title"
-        label="Multiselect label"
+        titleText="Payment terms offered"
+        label="Choose payment terms"
         items={items}
         selectedItems={selectedItems}
         onChange={(data: { selectedItems: Item[] }) =>
@@ -623,8 +516,8 @@ export const SelectAll: StoryFn<StoryArgs> = (args) => {
       <MultiSelect
         label={label}
         id="carbon-multiselect-example"
-        titleText="Multiselect title"
-        helperText="This is helper text"
+        titleText="Payment terms offered"
+        helperText="Customers can pick any of these on the invoice"
         items={itemsWithSelectAll}
         itemToString={(item) => (item ? item.text : '')}
         selectionFeedback="top-after-reopen"
@@ -671,10 +564,10 @@ const aiLabel = (
 export const WithAILabel: StoryFn<StoryArgs> = (args) => (
   <div style={{ width: 400 }}>
     <MultiSelect
-      label="Multiselect Label"
+      label="Choose payment terms"
       id="carbon-multiselect-example"
-      titleText="Multiselect title"
-      helperText="This is helper text"
+      titleText="Payment terms offered"
+      helperText="Customers can pick any of these on the invoice"
       items={items}
       itemToString={(item) => (item ? item.text : '')}
       selectionFeedback="top-after-reopen"
@@ -689,8 +582,8 @@ export const FilterableWithAILabel: StoryFn<FilterableArgs> = (args) => (
   <div style={{ width: 400 }}>
     <FilterableMultiSelect
       id="carbon-multiselect-example"
-      titleText="Multiselect title"
-      helperText="This is helper text"
+      titleText="Payment terms offered"
+      helperText="Customers can pick any of these on the invoice"
       items={items}
       itemToString={(item) => (item ? item.text : '')}
       selectionFeedback="top-after-reopen"
@@ -709,7 +602,7 @@ FilterableWithAILabel.parameters = {
     exclude: ['label'],
   },
 };
-export const ExperimentalAutoAlign: StoryFn<StoryArgs> = (args) => {
+export const AutoAlign: StoryFn<StoryArgs> = (args) => {
   const ref = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     ref?.current?.scrollIntoView({ block: 'center', inline: 'center' });
@@ -724,10 +617,10 @@ export const ExperimentalAutoAlign: StoryFn<StoryArgs> = (args) => {
           width: 300,
         }}>
         <MultiSelect
-          label="Multiselect Label"
+          label="Choose payment terms"
           id="carbon-multiselect-example"
-          titleText="Multiselect title"
-          helperText="This is helper text"
+          titleText="Payment terms offered"
+          helperText="Customers can pick any of these on the invoice"
           items={items}
           itemToString={(item) => (item ? item.text : '')}
           selectionFeedback="top-after-reopen"
@@ -740,13 +633,13 @@ export const ExperimentalAutoAlign: StoryFn<StoryArgs> = (args) => {
   );
 };
 
-ExperimentalAutoAlign.argTypes = {
+AutoAlign.argTypes = {
   autoAlign: {
     control: false,
   },
 };
 
-ExperimentalAutoAlign.args = { ...sharedArgs, autoAlign: true };
+AutoAlign.args = { ...sharedArgs, autoAlign: true };
 
 export const SelectAllWithDynamicItems: StoryFn<StoryArgs> = (args) => {
   const [label, setLabel] = useState('Choose options');
@@ -784,8 +677,8 @@ export const SelectAllWithDynamicItems: StoryFn<StoryArgs> = (args) => {
       <MultiSelect
         label={label}
         id="carbon-multiselect-example"
-        titleText="Multiselect title"
-        helperText="This is helper text"
+        titleText="Payment terms offered"
+        helperText="Customers can pick any of these on the invoice"
         items={items}
         itemToString={(item) => (item ? item.text : '')}
         selectionFeedback="top-after-reopen"
@@ -798,3 +691,23 @@ export const SelectAllWithDynamicItems: StoryFn<StoryArgs> = (args) => {
 };
 
 SelectAllWithDynamicItems.args = { ...sharedArgs };
+
+export const Disabled: StoryFn<StoryArgs> = Default.bind({});
+Disabled.args = { ...sharedArgs, disabled: true };
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<StoryArgs> = WithInitialSelectedItems.bind({});
+ReadOnly.args = { ...sharedArgs, readOnly: true };
+
+// Carbon 1.118 gives the error text no id, links nothing to it and sets no
+// aria-invalid; MultiSelect takes no extra props to fix it from outside.
+// Upstream issue drafted, not filed.
+export const Invalid: StoryFn<StoryArgs> = Default.bind({});
+Invalid.args = { ...sharedArgs, invalid: true };
+
+export const Warning: StoryFn<StoryArgs> = WithInitialSelectedItems.bind({});
+Warning.args = { ...sharedArgs, warn: true };
