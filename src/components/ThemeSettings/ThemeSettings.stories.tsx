@@ -88,6 +88,9 @@ const toggleTwice: StoryFn<typeof ThemeSettings>['play'] = async ({
     name: 'Complement menu theme',
   });
   await userEvent.click(toggle);
+  await expect(
+    canvas.getByRole('checkbox', { name: 'Complement menu theme' })
+  ).toBeChecked();
   await userEvent.click(
     canvas.getByRole('checkbox', { name: 'Complement menu theme' })
   );
