@@ -139,10 +139,12 @@ export function StatusIndicator(props: StatusIndicatorProps) {
       props.variant === 'shape'
         ? statusTagColors.shape[props.kind]
         : statusTagColors.icon[props.kind];
-    // Carbon types `id` and `ref` without `undefined`.
+    // Carbon types `id` and `ref` without `undefined`. `as="div"` keeps the
+    // root a div: Carbon's `Tag` turns into a `button` when given `onClick`.
     const { id, ...tagRest } = rest;
     return (
       <Tag
+        as="div"
         {...tagRest}
         {...(id === undefined ? {} : { id })}
         {...(ref === undefined ? {} : { ref })}

@@ -189,6 +189,21 @@ test('tag appearance: rest props land on the tag', () => {
   expect(tag).toHaveAttribute('aria-describedby', 'status-help');
 });
 
+test('tag appearance with onClick stays a div, not a button', () => {
+  const ref = createRef<HTMLDivElement>();
+  const { container } = render(
+    <StatusIndicator
+      ref={ref}
+      kind="pending"
+      appearance="tag"
+      onClick={vi.fn()}
+    />
+  );
+  expect(container.querySelector('button')).toBeNull();
+  expect(ref.current).toBeInstanceOf(HTMLDivElement);
+  expect(ref.current).toHaveClass('cds--tag');
+});
+
 test('server markup keeps id and data attributes in both appearances', () => {
   for (const appearance of ['indicator', 'tag'] as const) {
     const html = renderToStaticMarkup(
