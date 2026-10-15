@@ -11,7 +11,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added, Afframe note on Czech dates and a Monday week start, date chooser added.
+// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added, Afframe note on Czech dates and a Monday week start, date chooser added, section on typing a date added.
 
 <Meta isTemplate />
 
@@ -94,6 +94,21 @@ a custom class name for layout.
 ```jsx
 <DatePicker className="some-class">...</DatePicker>
 ```
+
+## Typing a date
+
+Afframe's `DatePicker` (and `ControlledDatePicker`) defaults `dateFormat` and
+the input placeholder to the system date format, `defaultDateFormat` in
+`@afframe/ui/format` (`dd.mm.yyyy`). Typing is masked: separators appear as
+digits are typed, a typed separator pads the part (`1.1.2026` becomes
+`01.01.2026`), and a first digit that cannot start a day or month is padded
+(`4` becomes `04.`). Only complete, real dates are accepted. An incomplete or
+impossible date, such as `31.02.2026`, stays as typed and the input shows
+`messages.invalidDate`; an `invalid` set on the input wins. A `dateFormat` of
+`d`, `m` and `Y` with one separator is masked too; any other format is not.
+`inputMask={false}` keeps Carbon's behaviour.
+
+<Canvas of={DatePickerStories.TypingADate} />
 
 ### DatePicker `dateFormat`
 
@@ -211,21 +226,17 @@ FlatPickr instance. A complete list of valid locales can be found in the
 </DatePicker>
 ```
 
-Afframe: for Czech dates set `dateFormat="d.m.Y"` and the placeholder
-`dd.mm.yyyy`, as the stories do, so the input matches `formatDate`. Keep the
-default English `locale` (ADR 0012). For a week that starts on Monday, pass
+Afframe: the picker follows the system date format, so the input matches
+`formatDate` without a `dateFormat` (see [Typing a date](#typing-a-date)).
+Keep the default English `locale` (ADR 0012). For a week that starts on Monday, pass
 an object locale. Carbon merges it over the strings of its `locale` key.
 Define it once at module scope, because Carbon caches on the object:
 
 ```jsx
 const mondayEnglish = { locale: 'en', firstDayOfWeek: 1 };
 
-<DatePicker datePickerType="single" dateFormat="d.m.Y" locale={mondayEnglish}>
-  <DatePickerInput
-    id="invoice-date"
-    labelText="Invoice date"
-    placeholder="dd.mm.yyyy"
-  />
+<DatePicker datePickerType="single" locale={mondayEnglish}>
+  <DatePickerInput id="invoice-date" labelText="Invoice date" />
 </DatePicker>;
 ```
 
