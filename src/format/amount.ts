@@ -11,15 +11,20 @@ export interface AmountOptions {
   digits?: number;
 }
 
-export interface FormatAmountOptions extends AmountOptions {
+type IntlAmountOptions = Pick<
+  Intl.NumberFormatOptions,
+  'signDisplay' | 'currencyDisplay' | 'currencySign' | 'trailingZeroDisplay'
+>;
+
+export interface FormatAmountOptions extends AmountOptions, IntlAmountOptions {
   /** Intl `signDisplay`. Default `negative` (no sign on zero). */
-  signDisplay?: 'auto' | 'always' | 'exceptZero' | 'negative' | 'never';
+  signDisplay?: IntlAmountOptions['signDisplay'];
   /** Intl `currencyDisplay`. Default `symbol`. */
-  currencyDisplay?: 'code' | 'symbol' | 'narrowSymbol' | 'name';
+  currencyDisplay?: IntlAmountOptions['currencyDisplay'];
   /** Intl `currencySign`. `accounting` puts negatives in parentheses in some locales. */
-  currencySign?: 'standard' | 'accounting';
+  currencySign?: IntlAmountOptions['currencySign'];
   /** Intl `trailingZeroDisplay`. `stripIfInteger` prints `12 Kč` for 12. */
-  trailingZeroDisplay?: 'auto' | 'stripIfInteger';
+  trailingZeroDisplay?: IntlAmountOptions['trailingZeroDisplay'];
 }
 
 // Intl formatters are slow to build; a table renders thousands of amounts.
