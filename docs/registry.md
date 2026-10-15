@@ -390,7 +390,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | dateTimeFormat                     | util      | carbon       | server  | stable            | [page](../src/components/dateTimeFormat/dateTimeFormat.mdx)           |
 | makeDraggable                      | util      | carbon       | server  | stable            | [page](../src/components/makeDraggable/makeDraggable.mdx)             |
 | StepProvider                       | component | carbon       | client  | stable            |                                                                       |
-| StepGroup                          | component | carbon       | client  | stable            |                                                                       |
+| StepGroup                          | component | carbon       | client  | stable            | [page](../src/components/StepFlow/StepFlow.mdx)                       |
 | useStepContext                     | hook      | carbon       | client  | stable            |                                                                       |
 | SideNavLabs                        | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
 | SIDE_NAV_TYPE                      | util      | labs         | client  | stable            |                                                                       |
