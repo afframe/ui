@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, TagSet from @afframe/ui, tag types and the c4p prefix as literals, DisplayBox replaced by a div with tag-set-story.css, docs page is an MDX file, source tag, the invalid function control on onOverflowClick disabled, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, TagSet from @afframe/ui, tag types and the c4p prefix as literals, DisplayBox replaced by a div with tag-set-story.css, docs page is an MDX file, source tag, the invalid function control on onOverflowClick disabled, story names unified, example data from the story glossary, story wrappers capped with max-inline-size so they fit narrow screens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps, ReactNode } from 'react';
@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { TagSet } from '../../index.js';
 import type { TagSetProps } from '../../index.js';
+import { tagLabels } from '../Tag/exampleTags.js';
 import mdx from './TagSet.mdx';
 import './tag-set-story.css';
 
@@ -43,105 +44,29 @@ const blockClass = 'c4p--tag-set';
 const blockClassModal = `${blockClass}-modal`;
 
 const tags = [
-  { type: 'blue', label: 'Tag 1' },
-  { type: 'high-contrast', label: 'Tag 123' },
-  { type: 'cyan', label: 'Tag 1234' },
-  { type: 'red', label: 'Tag 12345' },
+  { type: 'blue', label: 'Paid' },
+  { type: 'high-contrast', label: 'Recurring' },
+  { type: 'cyan', label: 'Key customer' },
+  { type: 'red', label: 'VAT exempt' },
 ];
 
-const manyTags = [
-  {
-    label: 'One',
-    type: 'blue',
-    ['data-search']: 'single',
-  },
-  {
-    label: 'Two',
-    type: 'red',
-  },
-  {
-    label: 'Three',
-    type: 'cyan',
-  },
-  {
-    label: 'Four',
-    type: 'high-contrast',
-  },
-  {
-    label: 'Five',
-    type: 'blue',
-  },
-  {
-    label: 'Six',
-    type: 'red',
-  },
-  {
-    label: 'Seven',
-    type: 'cyan',
-  },
-  {
-    label: 'Eight',
-    type: 'high-contrast',
-  },
-  {
-    label: 'Nine',
-    type: 'red',
-  },
-  {
-    label: 'Ten',
-    type: 'blue',
-  },
-  {
-    label: 'Eleven',
-    type: 'cyan',
-  },
-  {
-    label: 'Twelve',
-    type: 'high-contrast',
-    ['data-search']: 'dozen',
-  },
-  {
-    label: 'Thirteen',
-    type: 'red',
-  },
-  {
-    label: 'Fourteen',
-    type: 'cyan',
-  },
-  {
-    label: 'Fifteen',
-    type: 'blue',
-  },
-  {
-    label: 'Sixteen',
-    type: 'high-contrast',
-  },
-  {
-    label: 'Seventeen',
-    type: 'red',
-  },
-  {
-    label: 'Eighteen',
-    type: 'cyan',
-  },
-  {
-    label: 'Nineteen',
-    type: 'red',
-  },
-  {
-    label: 'Twenty',
-    type: 'high-contrast',
-  },
-].map((item, index) => ({
-  ...item,
-  ['data-search']: '' + (index + 1) + ' ' + item?.['data-search'],
+const manyTagTypes = ['blue', 'red', 'cyan', 'high-contrast'];
+// data-search holds extra words the all-tags modal search also matches.
+const searchWords: Record<string, string> = {
+  Paid: 'settled',
+  'Net 30': '30 days',
+};
+const manyTags = tagLabels.map((label, index) => ({
+  label,
+  type: manyTagTypes[index % manyTagTypes.length],
+  ['data-search']: searchWords[label],
 }));
 
 const hundredsOfTags: TagSetProps['tags'] = [];
+const tagTypeValues = Object.keys(tagTypes);
 for (let i = 0; i < 200; i++) {
-  const label = `Label_${i + 1}`;
-  const values = Object.keys(tagTypes);
-  const typeValue = values[Math.floor(Math.random() * values.length)];
+  const label = `INV-2026-${String(i + 1).padStart(4, '0')}`;
+  const typeValue = tagTypeValues[i % tagTypeValues.length];
 
   hundredsOfTags.push({ type: typeValue, label });
 }
@@ -208,7 +133,9 @@ const Template: StoryFn<TagSetStoryProps> = (argsIn) => {
 
   const ref = useRef<HTMLElement>(null);
   return (
-    <main style={{ width: containerWidth }} ref={ref}>
+    <main
+      style={{ inlineSize: '100%', maxInlineSize: containerWidth }}
+      ref={ref}>
       <TagSet
         {...args}
         allTagsModalTarget={
@@ -285,7 +212,9 @@ const TemplateWithClose: StoryFn<TagSetStoryProps> = (argsIn) => {
     );
   }, [size]);
   return (
-    <main style={{ width: containerWidth }} ref={ref}>
+    <main
+      style={{ inlineSize: '100%', maxInlineSize: containerWidth }}
+      ref={ref}>
       <TagSet
         {...args}
         tags={liveTags}
