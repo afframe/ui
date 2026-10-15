@@ -2,9 +2,11 @@
 
 Date: 2026-10-15
 
+Amended: 2026-10-15
+
 ## Status
 
-Accepted. Builds on [ADR 0014](0014-overridable-strings-through-a-messages-prop.md) and the 2026-10-15 amendment of [ADR 0004](0004-scope-core-products-labs-extras.md).
+Accepted, amended by [ADR 0021](0021-system-date-and-time-format-and-input-masks.md): the Czech date layout comes from the system date format. Builds on [ADR 0014](0014-overridable-strings-through-a-messages-prop.md) and the 2026-10-15 amendment of [ADR 0004](0004-scope-core-products-labs-extras.md).
 
 ## Context
 
@@ -18,6 +20,10 @@ ADR 0004 now brings in `@carbon/utilities`, whose `dateTimeFormat` formats absol
 - `dateTimeFormat` is re-exported unchanged from `@carbon/utilities`, by Carbon's name, from `@afframe/ui`. It is not in `@afframe/ui/format`, which holds only Afframe's server-safe formatters.
 - Use `dateTimeFormat.relative` and `dateTimeFormat.duration` for relative times and durations, in client code, with an explicit `locale`.
 - The Formatting page says which function to use for what; the `Utilities/dateTimeFormat` page is IBM's copied page.
+
+## Amendment 2026-10-15: layout from the setting
+
+Afframe's policy is no longer a literal `dd.mm.yyyy` in `formatDate`: Czech numeric dates follow `defaultDateFormat` and Czech times pad the hour to match `defaultTimeFormat` ([ADR 0021](0021-system-date-and-time-format-and-input-masks.md)). Other locales still print as Intl does.
 
 ## Options not chosen
 

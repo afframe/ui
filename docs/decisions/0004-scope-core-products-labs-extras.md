@@ -6,7 +6,7 @@ Amended: 2026-10-15
 
 ## Status
 
-Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the render checks run without the v12 flags. Amended 2026-10-15: Carbon's utilities.
+Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the render checks run without the v12 flags. Amended 2026-10-15: Carbon's utilities. Amended by [ADR 0021](0021-system-date-and-time-format-and-input-masks.md): the date and time pickers are wrapped.
 
 ## Context
 
@@ -33,6 +33,10 @@ IBM Products' Storybook documents helpers that IBM Products does not export: the
 - `@carbon/utilities-react`: the step flow, `StepProvider`, `StepGroup`, `useStepContext` and the `StepContextType` type.
 
 Out: `initCarousel`, which the maintainer left out, and the rest of both packages (`AddSelectData`, which Afframe already exports from IBM Products, `datePartsOrder`, the document language helpers, `@internationalized/number`, `useNoInteractiveChildren`). IBM's `useOverflowItems` hook is internal to IBM Products and to Carbon; `createOverflowHandler` is the public helper that does the same job.
+
+## Amendment 2026-10-15: date and time pickers
+
+[ADR 0021](0021-system-date-and-time-format-and-input-masks.md) replaces "re-exported as they are" for the pickers: `DatePicker`, `FluidDatePicker`, `preview__DatePicker`, `TimePicker` and `FluidTimePicker` are Afframe wrappers under Carbon's names that apply the system date and time format and a typing mask. Their inputs, selects and skeletons stay Carbon re-exports. Labs `Calendar` stays as it is.
 
 ## Consequences
 
