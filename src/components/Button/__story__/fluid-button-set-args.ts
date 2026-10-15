@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, example labels from the Afframe glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ButtonProps } from '../../../index.js';
@@ -30,14 +30,18 @@ const btn = (
   };
 };
 
-const primary = btn('Primary', 'primary', 1);
-const danger = btn('Danger', 'danger', 2);
-const secondary = btn('Secondary', 'secondary', 3);
+const primary = btn('Save', 'primary', 1);
+const danger = btn('Delete invoice', 'danger', 2);
+const secondary = btn('Cancel', 'secondary', 3);
 // Upstream passes 'secondary 2', which is not a ButtonKind.
-const secondary2 = btn('Secondary 2', 'secondary 2' as FluidButton['kind'], 4);
-const tertiary = btn('Tertiary', 'tertiary', 5);
-const dangerGhost = btn('Danger-ghost', 'danger--ghost', 6);
-const ghost = btn('Ghost', 'ghost', 7);
+const secondary2 = btn(
+  'Save as draft',
+  'secondary 2' as FluidButton['kind'],
+  4
+);
+const tertiary = btn('Send invoice', 'tertiary', 5);
+const dangerGhost = btn('Discard draft', 'danger--ghost', 6);
+const ghost = btn('Back', 'ghost', 7);
 
 const fluidButtonSets = [
   { label: 'None', mapping: [] },

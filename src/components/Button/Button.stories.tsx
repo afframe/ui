@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Button from @afframe/ui, icons from @afframe/ui/icons, unused Stack import and story stylesheet dropped, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Button from @afframe/ui, icons from @afframe/ui/icons, unused Stack import and story stylesheet dropped, source tag, inline spacing as Carbon spacing tokens, example labels from the Afframe glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps, CSSProperties, ReactElement } from 'react';
@@ -156,7 +156,7 @@ function ButtonRadiusExamples({
         <span style={radiusLabel}>Custom</span>
         <div style={{ ...radiusRow, ...playgroundStyle }}>
           <Button {...buttonProps} {...textIconProps}>
-            Button
+            Save
           </Button>
           <Button
             {...buttonProps}
@@ -202,7 +202,7 @@ function ButtonRadiusExamples({
               radiusSe: '0',
               radiusEe: '0',
             })}>
-            <Button {...buttonProps}>Primary action</Button>
+            <Button {...buttonProps}>Send invoice</Button>
           </div>
           <div
             style={toRadiusStyle({
@@ -230,7 +230,7 @@ function ButtonRadiusExamples({
             Cancel
           </Button>
           <div style={toRadiusStyle({ radiusEe: 'calc(0.5rem - 1px)' })}>
-            <Button {...buttonProps}>Confirm</Button>
+            <Button {...buttonProps}>Save</Button>
           </div>
         </div>
       </div>
@@ -357,7 +357,7 @@ export const Default: StoryFn<ButtonStoryArgs> = (args) => {
   const { renderIcon, ...rest } = args;
   return (
     <Button {...rest} {...iconProps(renderIcon)} onClick={action('onClick')}>
-      Button
+      Save
     </Button>
   );
 };
@@ -429,7 +429,7 @@ export const Secondary: StoryFn<ButtonStoryArgs> = (args) => {
   const { renderIcon, ...rest } = args;
   return (
     <Button {...rest} {...iconProps(renderIcon)} onClick={action('onClick')}>
-      Button
+      Cancel
     </Button>
   );
 };
@@ -455,7 +455,7 @@ export const Tertiary: StoryFn<ButtonStoryArgs> = (args) => {
   const { renderIcon, ...rest } = args;
   return (
     <Button {...rest} {...iconProps(renderIcon)} onClick={action('onClick')}>
-      Button
+      Send invoice
     </Button>
   );
 };
@@ -481,7 +481,7 @@ export const Ghost: StoryFn<ButtonStoryArgs> = (args) => {
   const { renderIcon, ...rest } = args;
   return (
     <Button {...rest} {...iconProps(renderIcon)} onClick={action('onClick')}>
-      Button
+      Cancel
     </Button>
   );
 };
@@ -507,7 +507,7 @@ export const Danger: StoryFn<ButtonStoryArgs> = (args) => {
   const { renderIcon, ...rest } = args;
   return (
     <Button {...rest} {...iconProps(renderIcon)} onClick={action('onClick')}>
-      Button
+      Delete invoice
     </Button>
   );
 };
@@ -533,7 +533,7 @@ export const DangerTertiary: StoryFn<ButtonStoryArgs> = (args) => {
   const { renderIcon, ...rest } = args;
   return (
     <Button {...rest} {...iconProps(renderIcon)} onClick={action('onClick')}>
-      Button
+      Delete invoice
     </Button>
   );
 };
@@ -559,7 +559,7 @@ export const DangerGhost: StoryFn<ButtonStoryArgs> = (args) => {
   const { renderIcon, ...rest } = args;
   return (
     <Button {...rest} {...iconProps(renderIcon)} onClick={action('onClick')}>
-      Button
+      Delete invoice
     </Button>
   );
 };
@@ -604,7 +604,7 @@ IconButton.argTypes = {
 IconButton.args = {
   hasIconOnly: true,
   renderIcon: 'Add',
-  iconDescription: 'Icon Description',
+  iconDescription: 'Add',
 };
 
 export const IconButtonWithBadge: StoryFn<ButtonStoryArgs> = (args) => {

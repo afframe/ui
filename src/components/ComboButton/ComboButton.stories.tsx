@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ComboButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ComboButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019, example labels from the Afframe glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -19,7 +19,7 @@ import mdx from './ComboButton.mdx';
 
 const sharedArgs: Partial<ComboButtonProps> = {
   disabled: false,
-  label: 'Primary action',
+  label: 'Send invoice',
   menuAlignment: 'bottom',
   size: 'lg',
   tooltipAlignment: 'top',
@@ -102,14 +102,14 @@ export const Default: StoryFn<typeof ComboButton> = (args) => {
   return (
     <ComboButton {...args}>
       <MenuItem
-        label="Second action with a long label description"
+        label="Send reminder with payment details and a QR code"
         onClick={action('onClick')}
       />
-      <MenuItem label="Third action" onClick={action('onClick')} />
-      <MenuItem label="Fourth action" disabled onClick={action('onClick')} />
+      <MenuItem label="Download PDF" onClick={action('onClick')} />
+      <MenuItem label="Duplicate" disabled onClick={action('onClick')} />
       <MenuItemDivider />
       <MenuItem
-        label="Danger action"
+        label="Delete invoice"
         kind="danger"
         onClick={action('onClick')}
       />
@@ -129,9 +129,9 @@ export const AutoAlign: StoryFn<typeof ComboButton> = (args) => (
         bottom: 'var(--cds-spacing-06)',
       }}>
       <ComboButton {...args}>
-        <MenuItem label="Second action with a long label description" />
-        <MenuItem label="Third action" />
-        <MenuItem label="Fourth action" disabled />
+        <MenuItem label="Send reminder with payment details and a QR code" />
+        <MenuItem label="Download PDF" />
+        <MenuItem label="Duplicate" disabled />
       </ComboButton>
     </div>{' '}
   </div>
@@ -144,11 +144,11 @@ AutoAlign.parameters = sharedParameters;
 export const WithDanger: StoryFn<typeof ComboButton> = (args) => {
   return (
     <ComboButton {...args}>
-      <MenuItem label="Second action with a long label description" />
-      <MenuItem label="Third action" />
-      <MenuItem label="Fourth action" />
+      <MenuItem label="Send reminder" />
+      <MenuItem label="Download PDF" />
+      <MenuItem label="Duplicate" />
       <MenuItemDivider />
-      <MenuItem label="Danger action" kind="danger" />
+      <MenuItem label="Delete invoice" kind="danger" />
     </ComboButton>
   );
 };
@@ -160,15 +160,14 @@ WithDanger.parameters = sharedParameters;
 export const WithIcons: StoryFn<typeof ComboButton> = (args) => {
   return (
     <ComboButton {...args}>
-      <MenuItem label="Save as a copy" renderIcon={CopyFile} />
-      <MenuItem label="Export" renderIcon={Export} />
+      <MenuItem label="Duplicate" renderIcon={CopyFile} />
+      <MenuItem label="Download PDF" renderIcon={Export} />
     </ComboButton>
   );
 };
 
 WithIcons.args = {
   ...sharedArgs,
-  label: 'Save record',
 };
 WithIcons.argTypes = sharedArgTypes;
 WithIcons.parameters = sharedParameters;
