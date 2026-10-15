@@ -393,3 +393,26 @@ test('lays out Czech dates in the format given per call', () => {
     formatDate('2026-10-07', { format: 'd.m.Y', locale: 'en-GB' })
   ).toThrow(RangeError);
 });
+
+test('pads the hour of Czech 24-hour times', () => {
+  // 07:05 UTC is 09:05 in Prague (CEST).
+  const morning = '2026-10-07T07:05:00Z';
+  expect(formatDate(morning, { timeStyle: 'short' })).toBe('09:05');
+  expect(formatDate(morning, { timeStyle: 'medium' })).toBe('09:05:00');
+  expect(formatDate(morning, { dateStyle: 'medium', timeStyle: 'short' })).toBe(
+    '07.10.2026 09:05'
+  );
+  expect(
+    formatDateRange(morning, '2026-10-07T08:00:00Z', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    })
+  ).toBe(`07.10.2026 09:05${dash}10:00`);
+  // 12-hour Czech times and other locales print as Intl does.
+  expect(formatDate(morning, { timeStyle: 'short', hour12: true })).toMatch(
+    /^9:05/
+  );
+  expect(
+    formatDate(morning, { locale: 'en-GB', hour: 'numeric', minute: '2-digit' })
+  ).toBe('9:05');
+});

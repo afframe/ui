@@ -1,6 +1,7 @@
 import { defaultLocale, defaultTimeZone } from './defaults.js';
 import {
   defaultDatePattern,
+  defaultTimePattern,
   parseDatePattern,
   type DatePattern,
 } from './pattern.js';
@@ -78,15 +79,21 @@ const dateParts = new Set(['day', 'month', 'year']);
 
 /**
  * Rewrites each numeric day, month and year run (`7. 10. 2026`) in the order
- * and separator of the pattern, zero-padded. Other parts stay as Intl prints
- * them, so weekdays, times and range dashes survive.
+ * and separator of the pattern, zero-padded, and 24-hour times in the system
+ * time format (`9:05` as `09:05`). Other parts stay as Intl prints them, so
+ * weekdays and range dashes survive.
  */
 function layoutDate(
   parts: Intl.DateTimeFormatPart[],
   pattern: DatePattern
 ): string {
+  const h23 = !parts.some((part) => part.type === 'dayPeriod');
+  const timeJoin = (before?: string, after?: string) =>
+    (before === 'hour' && after === 'minute') ||
+    (before === 'minute' && after === 'second');
   let text = '';
   for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
     const run = [parts[i], parts[i + 2], parts[i + 4]];
     const isRun =
       parts[i + 1]?.type === 'literal' &&
@@ -103,8 +110,15 @@ function layoutDate(
         })
         .join(pattern.separator);
       i += 4;
+    } else if (h23 && part?.type === 'hour' && isDigits(part.value)) {
+      text += part.value.padStart(2, '0');
+    } else if (
+      part?.type === 'literal' &&
+      timeJoin(parts[i - 1]?.type, parts[i + 1]?.type)
+    ) {
+      text += defaultTimePattern.separator;
     } else {
-      text += parts[i]?.value ?? '';
+      text += part?.value ?? '';
     }
   }
   return text;
