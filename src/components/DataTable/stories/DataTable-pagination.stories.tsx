@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, prop getter keys passed directly instead of spread, invoice example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -31,10 +31,14 @@ import {
   TableToolbarContent,
   TableToolbarMenu,
   TableToolbarSearch,
+  addDays,
+  formatAmount,
+  formatDate,
 } from '../../../index.js';
 import type { TableHeaderProps, TableToolbarProps } from '../../../index.js';
 import { dataTableArgs, dataTableArgTypes, headers } from './shared.js';
 import type { DataTableStoryArgs } from './shared.js';
+import { paymentTermItems } from '../../../../.storybook/exampleData.js';
 import mdx from '../DataTable.mdx';
 import './datatable-story.css';
 
@@ -63,18 +67,24 @@ export default {
 
 // Generate more rows for pagination demo
 const generateRows = (count: number) => {
-  const protocols = ['HTTP', 'HTTPS', 'TCP', 'UDP'];
-  const rules = ['Round robin', 'DNS delegation', 'Least connections'];
-  const statuses = ['Active', 'Starting', 'Disabled'];
-  const ports = [80, 443, 3000, 8080, 8443];
+  const customers = [
+    'Lakeside Furniture',
+    'Acme Trading',
+    'Birch Studio',
+    'Cedar Logistics',
+    'Delta Foods',
+  ];
+  const terms = paymentTermItems.filter((item) => !item.disabled);
+  const statuses = ['Draft', 'Sent', 'Paid', 'Overdue'];
+  const amounts = [1250, 2480, 3600, 4800, 7250, 9990];
 
   return Array.from({ length: count }, (_, i) => ({
-    id: `load-balancer-${i + 1}`,
-    name: `Load Balancer ${i + 1}`,
-    protocol: protocols[i % protocols.length],
-    port: ports[i % ports.length],
-    rule: rules[i % rules.length],
-    attached_groups: `VM Group ${i + 1}`,
+    id: `invoice-${i + 1}`,
+    name: `INV-2026-${String(i + 1).padStart(4, '0')}`,
+    protocol: customers[i % customers.length],
+    port: formatAmount(amounts[i % amounts.length] ?? 0),
+    rule: terms[i % terms.length]?.text,
+    attached_groups: formatDate(addDays('2026-10-01', i % 30)),
     status: statuses[i % statuses.length],
   }));
 };
@@ -163,7 +173,7 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => {
           getCellProps,
         }) => (
           <TableContainer
-            title="Load Balancers"
+            title="Invoices"
             description="Paginated data table with persistent toolbar">
             <TableToolbar
               {...(getToolbarProps() as Partial<TableToolbarProps>)}>

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, deprecated TableSlugRow dropped from subcomponents, AILabel callout styles from AILabel/ailabel-story.css, docs page is DataTable.mdx, visually hidden text in empty header cells and expanded row heading h6 to h3 (axe empty-table-header, heading-order), story names unified, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, deprecated TableSlugRow dropped from subcomponents, AILabel callout styles from AILabel/ailabel-story.css, docs page is DataTable.mdx, visually hidden text in empty header cells and expanded row heading h6 to h3 (axe empty-table-header, heading-order), story names unified, prop getter keys passed directly instead of spread, invoice example data, column AI label on the Amount column. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -78,23 +78,15 @@ export default {
 const columnAILabelHeaders = [
   {
     key: 'name',
-    header: 'Name',
+    header: 'Invoice',
   },
   {
     key: 'protocol',
-    header: 'Protocol',
+    header: 'Customer',
   },
   {
     key: 'port',
-    header: 'Port',
-  },
-  {
-    key: 'rule',
-    header: 'Rule',
-  },
-  {
-    key: 'attached_groups',
-    header: 'Attached groups',
+    header: 'Amount',
     decorator: (
       <AILabel
         className="ai-label-container"
@@ -106,9 +98,7 @@ const columnAILabelHeaders = [
             <h2 className="ai-label-heading">84%</h2>
             <p className="secondary bold">Confidence score</p>
             <p className="secondary">
-              Lorem ipsum dolor sit amet, di os consectetur adipiscing elit, sed
-              do eiusmod tempor incididunt ut fsil labore et dolore magna
-              aliqua.
+              Amounts suggested from the last 12 months of invoices.
             </p>
             <hr />
             <p className="secondary">Model type</p>
@@ -131,6 +121,14 @@ const columnAILabelHeaders = [
     ),
   },
   {
+    key: 'rule',
+    header: 'Payment terms',
+  },
+  {
+    key: 'attached_groups',
+    header: 'Due date',
+  },
+  {
     key: 'status',
     header: 'Status',
   },
@@ -144,8 +142,7 @@ const aiLabel = (
         <h2 className="ai-label-heading">84%</h2>
         <p className="secondary bold">Confidence score</p>
         <p className="secondary">
-          Lorem ipsum dolor sit amet, di os consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut fsil labore et dolore magna aliqua.
+          Amounts suggested from the last 12 months of invoices.
         </p>
         <hr />
         <p className="secondary">Model type</p>
