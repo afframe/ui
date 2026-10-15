@@ -59,7 +59,8 @@ import { ExportModal } from '@afframe/ui';
   only when the field is shown and filled. It may return a promise: while it
   runs the buttons are disabled, the Export button shows a spinner with
   `pending`, and closing waits. If it rejects, the dialog stays open with an
-  alert.
+  alert. Reopened while a call from before a parent close still runs, it
+  stays busy, but Escape and the close icon close it.
 - `password`: `true` shows an optional password field with a show/hide
   toggle; `{ required: true }` makes it required (Export stays disabled until
   it is filled).

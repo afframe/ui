@@ -48,7 +48,8 @@ import { APIKeyModal } from '@afframe/ui';
 - `onGenerate(name)`: generate mode; resolves with the key. While it runs the
   buttons are disabled and closing waits. If it rejects or resolves with an
   empty key, the dialog stays on the name step with an alert. A key that
-  arrives after the dialog was closed is dropped.
+  arrives after the dialog was closed is dropped. Reopened while such a call
+  still runs, the dialog stays busy, but Escape and the close icon close it.
 - `onSave(name)`: edit mode; may return a promise; the dialog closes when it
   succeeds.
 - `apiKeyName`: the initial name. `nameRequired` (default `true`) keeps

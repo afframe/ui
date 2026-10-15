@@ -56,12 +56,16 @@ const launcherRef = useRef<HTMLButtonElement>(null);
 - `onConfirm`: may return a promise. While it runs, the buttons are disabled,
   the confirm button shows a spinner with the `pending` message, and Escape,
   Cancel and the close icon do nothing. If it rejects, the dialog stays open
-  and shows an error alert; the user can try again.
+  and shows an error alert; the user can try again. Reopened while a call
+  from before a parent close still runs, the dialog stays busy, but Escape
+  and the close icon close it.
 - `title` (required): the heading, for example `Delete "Invoice 2026-001"?`
   (the name in quotes).
 - `description` (required): what happens to the resource. A string renders
   as a paragraph, with `resourceName` in it bold and in quotes (quotes already
-  around it are kept); any other node renders as given.
+  around it are kept). A quoted occurrence is bolded first, else a whole-word
+  one; a name found only inside a longer word stays plain. Any other node
+  renders as given.
 - `kind`: `delete` (default) or `remove`; picks the danger button text.
 - `resourceName`: the name of the item. Required with `confirmByTyping` set
   to `true`, which asks the user to type it; optional otherwise.

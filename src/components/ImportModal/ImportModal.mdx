@@ -47,7 +47,9 @@ import { ImportModal } from '@afframe/ui';
   Cancel, the close icon, Escape, and after a successful import.
 - `onImport(files)`: called with the valid files. It may return a promise:
   while it runs the buttons and the drop area are disabled and closing waits;
-  if it rejects, the dialog stays open with the `error` alert.
+  if it rejects, the dialog stays open with the `error` alert. Reopened while
+  a call from before a parent close still runs, it stays busy, but Escape and
+  the close icon close it.
 - `onImportUrl(url)`: when set, a URL field and an Import from URL button
   appear. Import also uses the URL when no file is listed.
 - `accept`: file extensions (`.csv`) or MIME types (`text/csv`, `image/*`).
