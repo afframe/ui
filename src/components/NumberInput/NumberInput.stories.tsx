@@ -343,8 +343,8 @@ TextTypeCustomValidation.parameters = {
 export const Disabled = Default.bind({});
 Disabled.args = { ...Default.args, disabled: true };
 Disabled.argTypes = Default.argTypes;
-// Carbon greys the helper text of a disabled field (1.7:1). WCAG 1.4.3 exempts
-// inactive controls, but axe does not tie the text to the disabled input.
+// WCAG 1.4.3 exempts inactive components; Carbon greys the helper text of a
+// disabled field (1.7:1).
 Disabled.parameters = {
   ...Default.parameters,
   a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
