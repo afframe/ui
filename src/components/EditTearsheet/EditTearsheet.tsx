@@ -57,7 +57,7 @@ export interface EditTearsheetFormProps {
   id: string;
   title: string;
   description?: ReactNode;
-  /** Marks the form's step with IBM's warning icon; Save then shows and focuses this form. */
+  /** Marks the form's step with Carbon's warning icon; Save then shows and focuses this form. */
   invalid?: boolean;
   children?: ReactNode;
 }
