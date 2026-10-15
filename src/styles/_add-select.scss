@@ -1,0 +1,17 @@
+// SingleAddSelect and MultiAddSelect render IBM's legacy Tearsheet, which
+// under 'enable-dialog-element' puts its container on a native dialog.
+/* stylelint-disable selector-class-pattern -- IBM's class names */
+
+// The dialog's ::backdrop already dims the page; the legacy overlay drawn in
+// ::before doubled it.
+.c4p--add-select.c4p--tearsheet:has(> .cds--dialog)::before {
+  content: none;
+}
+
+// Carbon caps .cds--dialog-container at 84vh in an auto grid row, so the
+// sheet stopped short of the bottom.
+.c4p--add-select .c4p--tearsheet__container > .cds--dialog-container {
+  grid-row: 1 / -1;
+  max-block-size: none;
+}
+/* stylelint-enable selector-class-pattern */
