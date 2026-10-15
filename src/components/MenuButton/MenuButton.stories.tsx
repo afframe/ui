@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, MenuButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, MenuButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -100,7 +100,7 @@ export const Default: StoryFn<typeof MenuButton> = (args) => {
 
 Default.args = commonArgs;
 
-export const ExperimentalAutoAlign: StoryFn<typeof MenuButton> = (args) => (
+export const AutoAlign: StoryFn<typeof MenuButton> = (args) => (
   <div style={{ width: '5000px', height: '5000px' }}>
     <div
       style={{
@@ -116,7 +116,7 @@ export const ExperimentalAutoAlign: StoryFn<typeof MenuButton> = (args) => (
   </div>
 );
 
-ExperimentalAutoAlign.args = commonArgs;
+AutoAlign.args = commonArgs;
 
 export const WithDanger: StoryFn<typeof MenuButton> = (args) => {
   return (

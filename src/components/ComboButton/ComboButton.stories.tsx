@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ComboButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ComboButton and Menu parts from @afframe/ui, icons from @afframe/ui/icons, source tag, inline spacing as Carbon spacing tokens, story names per ADR 0019. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -121,7 +121,7 @@ Default.args = sharedArgs;
 Default.argTypes = sharedArgTypes;
 Default.parameters = sharedParameters;
 
-export const ExperimentalAutoAlign: StoryFn<typeof ComboButton> = (args) => (
+export const AutoAlign: StoryFn<typeof ComboButton> = (args) => (
   <div style={{ width: '5000px', height: '5000px' }}>
     <div
       style={{
@@ -137,9 +137,9 @@ export const ExperimentalAutoAlign: StoryFn<typeof ComboButton> = (args) => (
   </div>
 );
 
-ExperimentalAutoAlign.args = sharedArgs;
-ExperimentalAutoAlign.argTypes = sharedArgTypes;
-ExperimentalAutoAlign.parameters = sharedParameters;
+AutoAlign.args = sharedArgs;
+AutoAlign.argTypes = sharedArgTypes;
+AutoAlign.parameters = sharedParameters;
 
 export const WithDanger: StoryFn<typeof ComboButton> = (args) => {
   return (
