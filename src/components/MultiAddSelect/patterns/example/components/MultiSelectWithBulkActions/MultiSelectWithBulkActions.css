@@ -1,0 +1,141 @@
+/*
+ * Copyright IBM Corp. 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: compiled from SCSS to plain CSS, Carbon tokens as custom properties, the c4p prefix written out. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.multi-add-select-with-bulk-actions-pattern .c4p--add-select__next-column {
+  padding-block-start: 0;
+}
+
+.multi-add-select-with-bulk-actions-pattern__modifier {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  min-inline-size: 200px;
+}
+
+.multi-add-select-with-bulk-actions-pattern__summary-title {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cds-spacing-03);
+}
+
+.multi-add-select-with-bulk-actions-pattern__summary-name {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.multi-add-select-with-bulk-actions-pattern__summary-modifier-value {
+  color: var(--cds-text-secondary);
+  /* stylelint-disable-next-line carbon/type-use -- IBM's literal value */
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.multi-add-select-with-bulk-actions-pattern__summary-content {
+  padding-block-start: var(--cds-spacing-03);
+}
+
+.multi-add-select-with-bulk-actions-pattern__summary-field {
+  margin-block-end: var(--cds-spacing-03);
+}
+
+.multi-add-select-with-bulk-actions-pattern__summary-field:last-child {
+  margin-block-end: 0;
+}
+
+.multi-add-select-with-bulk-actions-pattern__summary-field strong {
+  /* stylelint-disable-next-line carbon/type-use -- IBM's literal value */
+  font-weight: 600;
+}
+
+.multi-add-select-with-bulk-actions-pattern__no-results {
+  padding: var(--cds-spacing-07);
+  text-align: center;
+}
+
+.multi-add-select-with-bulk-actions-pattern__no-results h4 {
+  /* stylelint-disable-next-line carbon/type-use -- IBM's literal value */
+  font-size: 1rem;
+  /* stylelint-disable-next-line carbon/type-use -- IBM's literal value */
+  font-weight: 600;
+  margin-block-end: var(--cds-spacing-03);
+}
+
+.multi-add-select-with-bulk-actions-pattern__no-results p {
+  color: var(--cds-text-secondary);
+  /* stylelint-disable-next-line carbon/type-use -- IBM's literal value */
+  font-size: 0.875rem;
+}
+
+.multi-add-select-with-bulk-actions-pattern__notification {
+  position: fixed;
+  z-index: 9999;
+  inset-block-start: var(--cds-spacing-05);
+  inset-inline-end: var(--cds-spacing-05);
+}
+
+.multi-add-select-with-bulk-actions-pattern__edit-tearsheet {
+  z-index: 10000;
+}
+
+.multi-add-select-with-bulk-actions-pattern__edit-content {
+  padding: var(--cds-spacing-05);
+}
+
+.multi-add-select-with-bulk-actions-pattern__edit-user {
+  display: flex;
+  align-items: center;
+  gap: var(--cds-spacing-03);
+}
+
+.multi-add-select-with-bulk-actions-pattern__edit-user-icon {
+  flex-shrink: 0;
+}
+
+.multi-add-select-with-bulk-actions-pattern__edit-user-info {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.multi-add-select-with-bulk-actions-pattern__edit-user-name {
+  overflow: hidden;
+  /* stylelint-disable-next-line carbon/type-use -- IBM's literal value */
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multi-add-select-with-bulk-actions-pattern__edit-user-email {
+  overflow: hidden;
+  color: var(--cds-text-secondary);
+  /* stylelint-disable-next-line carbon/type-use -- IBM's literal value */
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multi-add-select-with-bulk-actions-pattern__batch-role-action {
+  display: flex;
+  align-items: center;
+}
+
+.multi-add-select-with-bulk-actions-pattern__batch-role-action
+  .cds--list-box__wrapper--inline {
+  min-inline-size: 12rem;
+}
+
+.multi-add-select-with-bulk-actions-pattern__batch-role-action
+  .cds--list-box--inline
+  .cds--list-box__label {
+  color: var(--cds-text-on-color);
+}

@@ -1,0 +1,35 @@
+/*
+ * Copyright IBM Corp. 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: compiled from SCSS to plain CSS, Carbon tokens as custom properties, the c4p prefix written out. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+.example-container {
+  padding: var(--cds-spacing-05);
+}
+
+.example-container h3 {
+  font-size: var(--cds-heading-03-font-size);
+  font-weight: var(--cds-heading-03-font-weight);
+  line-height: var(--cds-heading-03-line-height);
+  letter-spacing: var(--cds-heading-03-letter-spacing);
+  margin-block-end: var(--cds-spacing-03);
+}
+
+.example-container p {
+  font-size: var(--cds-body-01-font-size);
+  font-weight: var(--cds-body-01-font-weight);
+  line-height: var(--cds-body-01-line-height);
+  letter-spacing: var(--cds-body-01-letter-spacing);
+  margin-block-end: var(--cds-spacing-05);
+}
+
+.example-container .launch-button {
+  margin-block-start: var(--cds-spacing-05);
+}
