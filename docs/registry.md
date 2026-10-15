@@ -142,7 +142,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | FluidTimePickerSelect              | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)         |
 | FluidTimePickerSkeleton            | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)         |
 | DataTable                          | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                     |
-| DataTableSkeleton                  | component | carbon       | client  | stable            |                                                                       |
+| DataTableSkeleton                  | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                     |
 | Table                              | component | carbon       | client  | stable            |                                                                       |
 | TableActionList                    | component | carbon       | client  | stable            |                                                                       |
 | TableBatchAction                   | component | carbon       | client  | stable            |                                                                       |
