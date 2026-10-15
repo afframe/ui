@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; FluidFilterableMultiSelect replaced by FluidMultiSelect isFilterable (not exported); duplicate disabled arg removed; unsupported skeleton props removed; label added to ComboBox and filterable MultiSelect; FileUploader role="button" removed (a11y); AILabel story styles from AILabel/ailabel-story.css, inline spacing as Carbon spacing tokens, spaced en-dashes in option and label text replaced with colons. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; FluidFilterableMultiSelect replaced by FluidMultiSelect isFilterable (not exported); duplicate disabled arg removed; unsupported skeleton props removed; label added to ComboBox and filterable MultiSelect; FileUploader role="button" removed (a11y); AILabel story styles from AILabel/ailabel-story.css, inline spacing as Carbon spacing tokens, spaced en-dashes in option and label text replaced with colons; business example data, error linked by aria-describedby on invalid text inputs. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -53,6 +53,7 @@ import {
   Stack,
   type FluidFormProps,
 } from '../../index.js';
+import { paymentTermItems } from '../../../.storybook/exampleData';
 import mdx from './FluidForm.mdx';
 import '../AILabel/ailabel-story.css';
 
@@ -141,32 +142,30 @@ interface Item {
   disabled?: boolean;
 }
 
-const items: Item[] = [
+// Each list keeps one disabled item and one long label, like Carbon's lists.
+const workspaceItems: Item[] = [
+  { id: 'finance', text: 'Finance' },
+  { id: 'sales', text: 'Sales' },
+  { id: 'operations', text: 'Operations' },
+  { id: 'archive', text: 'Archive', disabled: true },
   {
-    id: 'option-0',
-    text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
+    id: 'client-services',
+    text: 'Client services and account management for key customers',
   },
-  {
-    id: 'option-1',
-    text: 'Option 1',
-  },
-  {
-    id: 'option-2',
-    text: 'Option 2',
-  },
-  {
-    id: 'option-3',
-    text: 'Option 3 - a disabled item',
-    disabled: true,
-  },
-  {
-    id: 'option-4',
-    text: 'Option 4',
-  },
-  {
-    id: 'option-5',
-    text: 'Option 5',
-  },
+];
+
+const memberItems: Item[] = [
+  { id: 'alex-morgan', text: 'Alex Morgan' },
+  { id: 'sam-rivera', text: 'Sam Rivera' },
+  { id: 'jordan-lee', text: 'Jordan Lee' },
+  { id: 'taylor-kim', text: 'Taylor Kim', disabled: true },
+  { id: 'casey-novak', text: 'Casey Novak, Lakeside Furniture' },
+];
+
+const tagItems: Item[] = [
+  { id: 'urgent', text: 'Urgent' },
+  { id: 'recurring', text: 'Recurring' },
+  { id: 'disputed', text: 'Disputed' },
 ];
 
 const formRowStyle: CSSProperties = {
@@ -204,7 +203,7 @@ const formShellStyle: CSSProperties = {
 // `required` and `pattern` are missing from FluidPasswordInputProps in Carbon 11.118.0.
 const passwordRules = {
   required: true,
-  pattern: '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,}',
+  pattern: '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{12,}',
 };
 
 export const Default: StoryFn<FluidFormArgs> = (args) => {
@@ -267,8 +266,13 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
     ...(decorator ? { decorator } : {}),
   };
 
+  // TextInput-based fields link their error only through aria-errormessage;
+  // see the FluidTextInput page. Spread only while invalid.
+  const describedByError = (id: string) =>
+    invalid ? { 'aria-describedby': `${id}-error-msg` } : {};
+
   const formContent = skeleton ? (
-    <FluidForm aria-label="new project setup">
+    <FluidForm aria-label="New project">
       <Stack gap={5}>
         <FluidSearchSkeleton />
         <div style={formRowStyle}>
@@ -312,12 +316,12 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
       </Stack>
     </FluidForm>
   ) : (
-    <FluidForm aria-label="new project setup">
+    <FluidForm aria-label="New project">
       <Stack gap={5}>
         <FluidSearch
           id="search-members"
           labelText="Search members"
-          placeholder="e.g. Jane Smith"
+          placeholder="e.g. Alex Morgan"
           disabled={disabled}
         />
 
@@ -326,16 +330,18 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
             <FluidTextInput
               id="project-name"
               labelText="Project name"
-              placeholder="e.g. Carbon Design System"
+              placeholder="e.g. Website redesign"
               {...sharedProps}
+              {...describedByError('project-name')}
             />
           </div>
           <div style={formColStyle}>
             <FluidTextInput
               id="project-id"
               labelText="Project ID"
-              placeholder="e.g. carbon-design-system"
+              placeholder="e.g. website-redesign"
               {...sharedProps}
+              {...describedByError('project-id')}
             />
           </div>
         </div>
@@ -345,9 +351,9 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
             <FluidDropdown
               id="workspace"
               titleText="Workspace"
-              initialSelectedItem={items[1]}
+              initialSelectedItem={workspaceItems[0]}
               label="Select workspace"
-              items={items}
+              items={workspaceItems}
               itemToString={(item: unknown) =>
                 item ? (item as Item).text : ''
               }
@@ -358,13 +364,13 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
             <FluidComboBox
               id="project-lead"
               onChange={() => {}}
-              items={items}
+              items={memberItems}
               itemToString={(item: unknown) =>
                 item ? (item as Item).text : ''
               }
               titleText="Project lead"
               label="Project lead"
-              placeholder="Search members..."
+              placeholder="Search members"
               {...sharedProps}
             />
           </div>
@@ -374,7 +380,7 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
           id="team-members"
           titleText="Team members"
           label="Select members"
-          items={items}
+          items={memberItems}
           itemToString={(item: unknown) => (item ? (item as Item).text : '')}
           selectionFeedback="top-after-reopen"
           {...sharedProps}
@@ -430,12 +436,13 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
             <FluidSelect
               id="currency"
               labelText="Currency"
-              defaultValue="usd"
+              defaultValue="czk"
               {...sharedProps}>
-              <SelectItem value="usd" text="USD: US Dollar" />
+              <SelectItem value="czk" text="CZK: Czech koruna" />
               <SelectItem value="eur" text="EUR: Euro" />
-              <SelectItem value="gbp" text="GBP: British Pound" />
-              <SelectItem value="jpy" text="JPY: Japanese Yen" />
+              <SelectItem value="usd" text="USD: US dollar" />
+              <SelectItem value="gbp" text="GBP: British pound" />
+              <SelectItem value="pln" text="PLN: Polish zloty" />
             </FluidSelect>
           </div>
         </div>
@@ -465,11 +472,11 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
         </RadioButtonGroup>
 
         <FluidDropdown
-          id="project-type"
-          titleText="Project type"
-          initialSelectedItem={items[2]}
-          label="Select type"
-          items={items}
+          id="payment-terms"
+          titleText="Payment terms"
+          initialSelectedItem={paymentTermItems[3]}
+          label="Select payment terms"
+          items={paymentTermItems}
           itemToString={(item: unknown) => (item ? (item as Item).text : '')}
           {...sharedProps}
         />
@@ -480,7 +487,7 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
           titleText="Tags"
           label="Tags"
           {...{ placeholder: 'Filter' }}
-          items={items}
+          items={tagItems}
           itemToString={(item: unknown) => (item ? (item as Item).text : '')}
           selectionFeedback="top-after-reopen"
           {...sharedProps}
@@ -524,6 +531,7 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
           labelText="Repository URL"
           placeholder="https://github.com/org/repo"
           {...sharedProps}
+          {...describedByError('repo-url')}
         />
 
         <FluidPasswordInput
@@ -534,7 +542,8 @@ export const Default: StoryFn<FluidFormArgs> = (args) => {
           disabled={disabled}
           readOnly={readOnly}
           invalid={invalid}
-          invalidText="Your password must be at least 6 characters as well as contain at least one uppercase, one lowercase, and one number."
+          invalidText="Use at least 12 characters with an uppercase letter, a lowercase letter and a number."
+          {...describedByError('repo-password')}
           warn={warn}
           warnText={warnText}
         />
