@@ -16,7 +16,7 @@ Carbon and IBM Products already document their components (MDX docs pages and st
 
 Copy Carbon's and IBM Products' docs and stories for the components Afframe UI carries, then add Afframe's own content (usage notes, defaults, accessibility notes). Docs for Afframe's own components are written from scratch in a short structure: H1, source label and one source link, a short intro, the canvas, props, and keyboard and screen-reader behaviour. They leave out Carbon's "Overview" and "Feedback" boilerplate. Copied pages also drop upstream boilerplate that does not apply to Afframe users: Feedback sections, tables of contents, Slack mentions, Carbon Labs owner and status blocks, and other IBM-internal content. Storybook carries the docs, docs page first for each component, as Carbon's Storybook does.
 
-IBM's coded pattern examples for a component Afframe carries are copied too, as stories in a `patterns/` folder next to the component's stories (`Components/Add and select` holds IBM's AddSelect examples). They are story code, not exports, and are not the new pages or templates that ADR 0004 leaves out.
+IBM's coded pattern examples for a component Afframe carries are copied too, as stories in a `patterns/` folder next to the component's stories (`Components/Add and Select` holds IBM's AddSelect examples). They are story code, not exports, and are not the new pages or templates that ADR 0004 leaves out.
 
 `docs/` in this repo holds what does not belong to one component: decisions, guides and topic files, laid out like Carbon's `docs/`.
 

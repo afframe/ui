@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, title Components/Add and select/MultiAddSelect, story styles imported as plain CSS from the SingleAddSelect pattern folder instead of the styles parameter, centred layout as in IBM's Storybook, the Overview story left out (the docs page takes its name in IBM's Storybook too), docs page converted to MDX, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, title Components/Add and Select/MultiAddSelect, story styles imported as plain CSS from the SingleAddSelect pattern folder instead of the styles parameter, centred layout as in IBM's Storybook, the Overview story left out (the docs page takes its name in IBM's Storybook too), docs page converted to MDX, source tag, story names from the export names where no other characters are needed (ADR 0019). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -25,7 +25,7 @@ import { MultiAddSelectWithDataTablePreview } from './example/preview-components
 import '../../SingleAddSelect/patterns/story-styles.css';
 
 export default {
-  title: 'Components/Add and select/MultiAddSelect',
+  title: 'Components/Add and Select/MultiAddSelect',
   tags: ['ibm-products'],
   parameters: {
     // IBM's Storybook centres every story.
@@ -55,7 +55,6 @@ export const Default: Story = {
 };
 
 export const WithHierarchy: Story = {
-  name: 'With Hierarchy',
   render: (_args, context) => (
     <MultiAddSelectWithHierarchyPreview
       initialOpen={context.viewMode !== 'docs'}
@@ -64,7 +63,6 @@ export const WithHierarchy: Story = {
 };
 
 export const WithModifiers: Story = {
-  name: 'With Modifiers',
   render: (_args, context) => (
     <MultiAddSelectWithModifiers initialOpen={context.viewMode !== 'docs'} />
   ),
@@ -89,7 +87,6 @@ export const WithHierarchyNoSelectAll: Story = {
 };
 
 export const WithModifiersAndBulkActions: Story = {
-  name: 'With Modifiers and Bulk Actions',
   render: (_args, context) => (
     <MultiSelectWithBulkActionsPreview
       initialOpen={context.viewMode !== 'docs'}
@@ -98,7 +95,6 @@ export const WithModifiersAndBulkActions: Story = {
 };
 
 export const WithGlobalActions: Story = {
-  name: 'With Global Actions',
   render: (_args, context) => (
     <MultiAddSelectWithGlobalActionsPreview
       initialOpen={context.viewMode !== 'docs'}
@@ -107,7 +103,6 @@ export const WithGlobalActions: Story = {
 };
 
 export const WithColumnActions: Story = {
-  name: 'With Column Actions',
   render: (_args, context) => (
     <MultiAddSelectWithColumnActionsPreview
       initialOpen={context.viewMode !== 'docs'}
@@ -123,7 +118,6 @@ export const WithScroll: Story = {
 };
 
 export const WithDataTable: Story = {
-  name: 'With DataTable',
   render: (_args, context) => (
     <MultiAddSelectWithDataTablePreview
       initialOpen={context.viewMode !== 'docs'}

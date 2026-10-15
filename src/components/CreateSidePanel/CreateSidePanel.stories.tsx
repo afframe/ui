@@ -51,7 +51,7 @@ export const LongForm: Story = stories.LongForm;
 export const FocusNotObscured: Story = stories.FocusNotObscured;
 
 /** With a UI Shell header the panel starts at the header's measured bottom edge. */
-export const UnderPageHeader: Story = {
+export const WithPageHeader: Story = {
   decorators: [
     (Story) => (
       <>
