@@ -1,14 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { useArgs } from 'storybook/preview-api';
 import { expect, userEvent, within } from 'storybook/test';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { AmountInput, type AmountInputProps } from './AmountInput.js';
 import mdx from './AmountInput.mdx';
-
-function Controlled(props: AmountInputProps) {
-  const [value, setValue] = useState(props.value ?? null);
-  return <AmountInput {...props} value={value} onChange={setValue} />;
-}
 
 const meta = {
   title: 'Components/AmountInput',
@@ -20,7 +15,20 @@ const meta = {
     value: 1234.5,
     step: 100,
   },
-  render: (args) => <Controlled {...args} />,
+  // The value lives in the story args, so the `value` control and typing stay
+  // in sync. useArgs works only in the render function itself.
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<AmountInputProps>();
+    return (
+      <AmountInput
+        {...args}
+        onChange={(value) => {
+          updateArgs({ value });
+          args.onChange?.(value);
+        }}
+      />
+    );
+  },
   parameters: {
     ...afframeA11y,
     docs: {
@@ -45,6 +53,25 @@ export const WithLimits: Story = {
 
 export const OtherCurrency: Story = {
   args: { value: -1234.5, currency: 'EUR', locale: 'en-GB' },
+};
+
+export const Disabled: Story = {
+  args: { disabled: true },
+};
+
+export const ReadOnly: Story = {
+  args: { readOnly: true },
+};
+
+export const Invalid: Story = {
+  args: {
+    invalid: true,
+    invalidText: 'The amount does not match the invoice total.',
+  },
+};
+
+export const Warning: Story = {
+  args: { warn: true, warnText: 'This amount is higher than usual.' },
 };
 
 export const Dark: Story = {

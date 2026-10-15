@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as NumberInputStories from './NumberInput.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, when-to-use and field chooser added, `step` values corrected to Carbon 1.118.
 
 <Meta isTemplate />
 
@@ -21,6 +22,16 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={NumberInputStories.Default} />
 
+## When to use
+
+Use `NumberInput` for counts, quantities and percentages. For money use
+[AmountInput](?path=/docs/components-amountinput--overview): it types and shows
+amounts in the locale's format with the currency.
+
+## Which component to use
+
+<FieldChooser />
+
 ## Skeleton state
 
 <Canvas of={NumberInputStories.Skeleton} />
@@ -31,12 +42,14 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 ## `step` values
 
-When stepper buttons increment or decrement an empty input, the following
-applies:
+When the stepper buttons or arrow keys change an empty input, or one at 0, the
+following applies (Carbon 1.118, both input types):
 
-- Incrementing always starts at `min`
-- Decrementing always starts at `max`
-- If no `min` or `max` is provided, the input will be set to 0
+- With a non-zero `stepStartValue`, the input is set to it.
+- Otherwise incrementing sets 1 and decrementing sets -1, kept within `min` and
+  `max`.
+- With a non-zero `min` and no `max`, the input is set to `min`.
+- Later steps add or subtract `step`.
 
 ## With type of text
 
@@ -53,7 +66,7 @@ Setting `type="text"` changes the NumberInput behavior in the following ways:
 - `inputMode` and `pattern` props should be configured to restrict and guide
   user input.
 
-<Canvas of={NumberInputStories.WithTypeOfText} />
+<Canvas of={NumberInputStories.TextType} />
 
 ### Formatting with `locale` and `formatOptions`
 

@@ -1,6 +1,6 @@
 'use client';
 import { NumberInput, type NumberInputProps } from '@carbon/react';
-import { useMemo, useState } from 'react';
+import { type Ref, useMemo, useState } from 'react';
 import { defaultCurrency, defaultLocale } from '../../format/defaults.js';
 import { formatAmount, roundAmount } from '../../format/amount.js';
 import { resolveMessages } from '../../messages.js';
@@ -10,8 +10,11 @@ export interface AmountInputMessages {
   increment: string;
   /** Accessible name of the step-down button. */
   decrement: string;
-  /** Shown when the amount is out of range; limits come formatted. */
-  invalidText: (limits: { min?: string; max?: string }) => string;
+  /**
+   * Shown when the amount is out of range, with the limits formatted; with
+   * no limits, a general "valid amount" text.
+   */
+  invalidAmount: (limits: { min?: string; max?: string }) => string;
   /** Shown when the text holds a separator the locale does not use for decimals. */
   invalidSeparator: (decimal: string) => string;
 }
@@ -19,7 +22,7 @@ export interface AmountInputMessages {
 export const defaultAmountInputMessages: AmountInputMessages = {
   increment: 'Increase amount',
   decrement: 'Decrease amount',
-  invalidText: ({ min, max }) =>
+  invalidAmount: ({ min, max }) =>
     min !== undefined && max !== undefined
       ? `Enter an amount from ${min} to ${max}.`
       : min !== undefined
@@ -60,6 +63,8 @@ export interface AmountInputProps extends Omit<
   locale?: string;
   /** Overrides for the English strings. */
   messages?: Partial<AmountInputMessages>;
+  /** The `<input>` element. */
+  ref?: Ref<HTMLInputElement>;
 }
 
 // Carbon reads NaN as empty; undefined would make the input uncontrolled.
@@ -181,7 +186,7 @@ export function AmountInput({
         invalidText ??
         (isForeign(draft)
           ? text.invalidSeparator(decimal)
-          : text.invalidText(limits))
+          : text.invalidAmount(limits))
       }
       onInput={(event) => {
         setDraft(event.currentTarget.value);

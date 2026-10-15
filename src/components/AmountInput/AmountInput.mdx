@@ -1,6 +1,7 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as AmountInputStories from './AmountInput.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -18,6 +19,15 @@ shows the formatted amount (`1 234,50 Kč`) and reports a `number` rounded to
 the currency's minor digits. It is a client component.
 
 <Canvas of={AmountInputStories.Default} />
+
+## When to use
+
+Use `AmountInput` for money: prices, totals, payments. For counts, quantities
+and percentages use [NumberInput](?path=/docs/components-numberinput--overview).
+
+## Which component to use
+
+<FieldChooser />
 
 ## Usage and props
 
@@ -40,6 +50,7 @@ const [amount, setAmount] = useState(null);
 | `locale`             | `cs-CZ`  | Locale for typing and display.                                         |
 | `min`, `max`, `step` |          | Limits and step size, as Carbon's `NumberInput`.                       |
 | `messages`           |          | Overrides for the strings below.                                       |
+| `ref`                |          | The `<input>` element (React 19 `ref` prop).                           |
 
 Other `NumberInput` props (`helperText`, `size`, `disabled`, `readOnly`,
 `warn`, `invalid`, `invalidText`, `hideSteppers`, `name`) pass through.
@@ -48,8 +59,9 @@ Other `NumberInput` props (`helperText`, `size`, `disabled`, `readOnly`,
   submitted with Enter before blur still holds the previous value.
 - Typed amounts round half away from zero (`1,005` becomes `1,01 Kč`), and the
   field shows the rounded amount. Zero never shows a minus sign.
-- From an empty field or zero, the first step goes to 1 or -1 (or to `min`
-  when only a positive `min` is set), not to `step`; later steps add `step`.
+- From an empty field or zero, the first step goes to 1 or -1, kept within
+  `min` and `max` (or to `min` when a non-zero `min` is set without `max`),
+  not to `step`; later steps add `step`.
   This is Carbon's behaviour. Carbon's `stepStartValue` sets that first value,
   but for both directions, so Arrow Down from zero would go up.
 - An amount outside `min` and `max` is still reported and the field is marked
@@ -66,11 +78,12 @@ Other `NumberInput` props (`helperText`, `size`, `disabled`, `readOnly`,
 | ------------------ | ---------------------------------------------------------- |
 | `increment`        | `Increase amount`                                          |
 | `decrement`        | `Decrease amount`                                          |
-| `invalidText`      | `({ min, max }) => 'Enter an amount from {min} to {max}.'` |
+| `invalidAmount`    | `({ min, max }) => 'Enter an amount from {min} to {max}.'` |
 | `invalidSeparator` | `(decimal) => 'Use "{decimal}" for decimals.'`             |
 
-`invalidText` gets the limits as formatted amounts; without `max` it says
-"at least", without `min` "at most". An `invalidText` prop wins over it.
+`invalidAmount` gets the limits as formatted amounts; without `max` it says
+"at least", without `min` "at most", without either "Enter a valid amount.".
+An `invalidText` prop wins over it.
 
 ## Keyboard and screen reader behaviour
 
@@ -95,3 +108,11 @@ Other `NumberInput` props (`helperText`, `size`, `disabled`, `readOnly`,
 <Canvas of={AmountInputStories.WithLimits} />
 
 <Canvas of={AmountInputStories.OtherCurrency} />
+
+<Canvas of={AmountInputStories.Disabled} />
+
+<Canvas of={AmountInputStories.ReadOnly} />
+
+<Canvas of={AmountInputStories.Invalid} />
+
+<Canvas of={AmountInputStories.Warning} />
