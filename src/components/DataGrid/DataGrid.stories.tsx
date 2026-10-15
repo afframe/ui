@@ -88,6 +88,11 @@ export const Filtering: Story = {
       }}
     />
   ),
+};
+
+export const TestFiltering: Story = {
+  ...Filtering,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, userEvent }) => {
     await userEvent.type(
       canvas.getByRole('searchbox', { name: 'Filter table' }),
@@ -123,6 +128,11 @@ export const Pagination: Story = {
       }}
     />
   ),
+};
+
+export const TestPagination: Story = {
+  ...Pagination,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, canvasElement, userEvent }) => {
     // Carbon names the icon button through its tooltip; find it by aria-label.
     const next = canvasElement.querySelector('[aria-label="Next page"]');
@@ -151,6 +161,11 @@ const selectionOptions = {
 
 export const Selection: Story = {
   render: () => <DataGrid title="Invoices" options={selectionOptions} />,
+};
+
+export const TestSelection: Story = {
+  ...Selection,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(
       canvas.getByRole('checkbox', { name: 'Select row 2026-0002' })
@@ -191,6 +206,11 @@ export const BatchActions: Story = {
       ]}
     />
   ),
+};
+
+export const TestBatchActions: Story = {
+  ...BatchActions,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(
       canvas.getByRole('checkbox', { name: 'Select row 2026-0001' })
@@ -217,6 +237,11 @@ export const RowActions: Story = {
       ]}
     />
   ),
+};
+
+export const TestRowActions: Story = {
+  ...RowActions,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvasElement, userEvent }) => {
     const tooltip = within(canvasElement).getByText(
       'Actions for row 2026-0001'
@@ -260,6 +285,11 @@ export const Expansion: Story = {
       )}
     />
   ),
+};
+
+export const TestExpansion: Story = {
+  ...Expansion,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(
       canvas.getByRole('button', { name: 'Expand row 2026-0001' })
@@ -300,6 +330,11 @@ export const ColumnCustomization: Story = {
       }}
     />
   ),
+};
+
+export const TestColumnCustomization: Story = {
+  ...ColumnCustomization,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, canvasElement, userEvent }) => {
     const tooltip = canvas.getByText('Customize columns');
     const trigger = canvasElement.querySelector(
@@ -338,6 +373,11 @@ export const Resizing: Story = {
       }}
     />
   ),
+};
+
+export const TestResizing: Story = {
+  ...Resizing,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, userEvent }) => {
     const handle = canvas.getByRole('separator', {
       name: 'Resize Customer column',
@@ -393,6 +433,11 @@ export const StickyColumns: Story = {
       }}
     />
   ),
+};
+
+export const TestStickyColumns: Story = {
+  ...StickyColumns,
+  tags: ['!dev', '!autodocs'],
   // WCAG 2.4.11: focus on a sticky header or sticky column cell is never
   // hidden, even when the table is scrolled both ways first.
   play: async ({ canvasElement, userEvent }) => {
@@ -445,6 +490,11 @@ export const NestedRows: Story = {
       }}
     />
   ),
+};
+
+export const TestNestedRows: Story = {
+  ...NestedRows,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, userEvent }) => {
     await expect(canvas.getByText('CN-2026-0041')).toBeVisible();
     await userEvent.click(
@@ -495,6 +545,11 @@ function InlineEditDemo() {
 
 export const InlineEdit: Story = {
   render: () => <InlineEditDemo />,
+};
+
+export const TestInlineEdit: Story = {
+  ...InlineEdit,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, canvasElement, userEvent }) => {
     const name = 'Edit Customer of row 2026-0001';
     const tooltip = canvas.getByText(name);
@@ -506,7 +561,7 @@ export const InlineEdit: Story = {
     const field = canvas.getByRole('textbox', { name });
     await userEvent.clear(field);
     await userEvent.type(field, 'Aspen Works{Enter}');
-    await expect(canvas.getByText('Aspen Works')).toBeVisible();
+    await expect(await canvas.findByText('Aspen Works')).toBeVisible();
   },
 };
 
@@ -525,6 +580,11 @@ export const Virtualization: Story = {
       }}
     />
   ),
+};
+
+export const TestVirtualization: Story = {
+  ...Virtualization,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, canvasElement }) => {
     await expect(canvas.getByRole('table')).toHaveAttribute(
       'aria-rowcount',
@@ -562,10 +622,7 @@ const fullOptions = {
   getRowId: (row: Invoice) => row.id,
 };
 
-/**
- * Every control at once. While rows are selected the toolbar under the batch
- * bar is inert; axe checks the open state.
- */
+/** Every control at once. */
 export const AllFeatures: Story = {
   render: () => (
     <DataGrid
@@ -579,6 +636,15 @@ export const AllFeatures: Story = {
       onCellEdit={fn()}
     />
   ),
+};
+
+/**
+ * While rows are selected the toolbar under the batch bar is inert; axe
+ * checks the open state.
+ */
+export const TestAllFeatures: Story = {
+  ...AllFeatures,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, canvasElement, userEvent }) => {
     await userEvent.click(
       canvas.getByRole('checkbox', { name: 'Select row 2026-0001' })
@@ -676,6 +742,11 @@ function FilterPanelDemo() {
 /** A filter panel beside the grid sets `columnFilters` as controlled state. */
 export const WithFilterPanel: Story = {
   render: () => <FilterPanelDemo />,
+};
+
+export const TestWithFilterPanel: Story = {
+  ...WithFilterPanel,
+  tags: ['!dev', '!autodocs'],
   play: async ({ canvas, userEvent }) => {
     const table = within(canvas.getByRole('table'));
     await expect(table.getAllByRole('row')).toHaveLength(9);
