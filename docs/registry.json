@@ -4097,7 +4097,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "server",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/makeDraggable/makeDraggable.mdx"
     },
     {
       "name": "StepProvider",

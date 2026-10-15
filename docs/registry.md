@@ -388,7 +388,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | preview__useFeatureFlags           | hook      | ibm-products | client  | preview           | [page](../src/components/FeatureFlags/FeatureFlags.mdx)               |
 | createOverflowHandler              | util      | carbon       | server  | stable            |                                                                       |
 | dateTimeFormat                     | util      | carbon       | server  | stable            |                                                                       |
-| makeDraggable                      | util      | carbon       | server  | stable            |                                                                       |
+| makeDraggable                      | util      | carbon       | server  | stable            | [page](../src/components/makeDraggable/makeDraggable.mdx)             |
 | StepProvider                       | component | carbon       | client  | stable            |                                                                       |
 | StepGroup                          | component | carbon       | client  | stable            |                                                                       |
 | useStepContext                     | hook      | carbon       | client  | stable            |                                                                       |

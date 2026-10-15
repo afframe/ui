@@ -1,0 +1,82 @@
+import { Story, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as makeDraggableStories from './makeDraggable.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: Copyright IBM Corp. 2025
+// SPDX-License-Identifier: Apache-2.0
+// Modified by Afframe in 2026: copied from IBM Products' makeDraggable page, source label and a source link to Carbon's package added, import from @afframe/ui, the option names in the usage example corrected to the published ones (dragHandle, focusableDragHandle), upstream table of contents removed.
+
+<Meta isTemplate />
+
+# makeDraggable
+
+<SourceLabel name="carbon" />
+
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/utilities/src/makeDraggable)
+
+## Overview
+
+The `makeDraggable` utility enables an HTML element to be draggable using either
+mouse or keyboard interactions. It allows developers to specify an HTML element
+as a required attribute to be moved, optional HTML element to initiate the
+drag(e.g., a header), optional HTML element to focus on drag for keyboard
+interaction (e.g., an icon) and an optional pixel value that defines the
+distance to move when dragging with arrow keys (default: 8px) and shift arrow
+keys (default: 32px).
+
+## Example usage
+
+```jsx
+import { makeDraggable } from '@afframe/ui';
+
+makeDraggable({
+  el: dialogRef.current,
+  dragHandle: headerRef.current,
+  focusableDragHandle: dragRef.current,
+});
+```
+
+```jsx
+<Popover open={isOpen} ref={dialogRef} className="popover">
+  <Button
+    aria-expanded={isOpen}
+    onClick={() => {
+      setIsOpen(!isOpen);
+    }}
+  >
+    Toggle
+  </Button>
+
+  <PopoverContent className="popover-content">
+    <header ref={headerRef} className={`popover-header popover-title`}>
+      <Button
+        kind="ghost"
+        ref={dragRef}
+        className="drag-icon"
+        onClick={() => console.log('clicked')}
+      >
+        <Draggable />
+      </Button>
+      <Button
+        kind="ghost"
+        onClick={() => setIsOpen(false)}
+        className="close-icon"
+      >
+        <Close />
+      </Button>
+    </header>
+    <p className="heading"> Available storage</p>
+    <p className="popover-details">
+      This server has 150 GB of block storage remaining.
+    </p>
+  </PopoverContent>
+</Popover>
+```
+
+`makeDraggable` returns `{ init, cleanup }`. Call `cleanup()` when the element
+unmounts, for example in the cleanup function of a React effect.
+
+## Example implementation
+
+<Canvas>
+  <Story of={makeDraggableStories.Default} />
+</Canvas>
