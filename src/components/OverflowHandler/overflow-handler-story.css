@@ -1,0 +1,241 @@
+/*
+ * Copyright IBM Corp. 2026
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: SCSS rewritten to CSS with Carbon custom properties, type mixins as their custom properties, half of spacing-04 as calc(), the token check disabled where upstream uses values it has no token for. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+
+/* Container that the overflow handler observes. Width/height constraints are
+   applied via modifier classes. */
+.overflow-handler-container {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  background: var(--cds-highlight);
+}
+
+.overflow-handler-container [data-hidden]:not([data-fixed]) {
+  display: none;
+}
+
+.overflow-handler-container::before,
+.overflow-handler-container::after {
+  content: none;
+}
+
+.overflow-handler-show-gap {
+  background: color-mix(in srgb, var(--cds-support-warning) 35%, transparent);
+}
+
+/* Leftover room after items. Negative margin cancels the flex gap before this
+   pseudo so gap color only appears between real items. */
+.overflow-handler-show-gap::after {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  min-inline-size: 0;
+  background: var(--cds-highlight);
+  content: '';
+  pointer-events: none;
+}
+
+.overflow-handler-show-offset-value::before {
+  position: absolute;
+  z-index: 0;
+  background: var(--cds-support-info);
+  content: '';
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.overflow-handler-container-horizontal {
+  flex-direction: row;
+  resize: horizontal;
+  inline-size: 100%;
+}
+
+.overflow-handler-container-horizontal.overflow-handler-show-offset-value::before {
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: var(--overflow-handler-offset-value, 0);
+}
+
+.overflow-handler-container-horizontal.overflow-handler-show-gap::after {
+  /* stylelint-disable-next-line carbon/layout-use -- cancels the gap the story control sets */
+  margin-inline-start: calc(-1 * var(--overflow-handler-gap, 0));
+}
+
+.overflow-handler-container-vertical {
+  flex-direction: column;
+  resize: vertical;
+  block-size: 14rem;
+  inline-size: 12.5rem;
+}
+
+.overflow-handler-container-vertical.overflow-handler-show-offset-value::before {
+  inset-block-end: 0;
+  inset-inline: 0;
+  block-size: var(--overflow-handler-offset-value, 0);
+}
+
+.overflow-handler-container-vertical.overflow-handler-show-gap::after {
+  /* stylelint-disable-next-line carbon/layout-use -- cancels the gap the story control sets */
+  margin-block-start: calc(-1 * var(--overflow-handler-gap, 0));
+}
+
+/* Individual items rendered inside the container. */
+.overflow-handler-item {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  background: var(--cds-layer-accent);
+  font-family: var(--cds-code-01-font-family);
+  font-size: var(--cds-code-01-font-size);
+  font-weight: var(--cds-code-01-font-weight);
+  letter-spacing: var(--cds-code-01-letter-spacing);
+  line-height: var(--cds-code-01-line-height);
+  white-space: nowrap;
+}
+
+.overflow-handler-container-horizontal .overflow-handler-item {
+  padding: 0 var(--cds-spacing-04);
+  block-size: var(--cds-spacing-07);
+  /* stylelint-disable-next-line carbon/type-use -- centres the text in the item height, as upstream */
+  line-height: var(--cds-spacing-07);
+}
+
+.overflow-handler-container-vertical .overflow-handler-item {
+  /* stylelint-disable-next-line carbon/layout-use -- half of spacing-04, as upstream; no token */
+  padding: calc(var(--cds-spacing-04) / 2) var(--cds-spacing-04);
+  inline-size: 100%;
+}
+
+/* Fixed (always-visible) item variant. */
+.overflow-handler-item-fixed {
+  background: var(--cds-support-success);
+  color: var(--cds-text-on-color);
+}
+
+/* The reserved-space offset element ("+N more" indicator). */
+.overflow-handler-offset {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  margin: 0;
+  border: 0;
+  background: var(--cds-button-secondary);
+  color: var(--cds-text-on-color);
+  cursor: pointer;
+  font-family: var(--cds-code-01-font-family);
+  font-size: var(--cds-code-01-font-size);
+  font-weight: var(--cds-code-01-font-weight);
+  letter-spacing: var(--cds-code-01-letter-spacing);
+  line-height: var(--cds-code-01-line-height);
+  white-space: nowrap;
+}
+
+.overflow-handler-container-horizontal .overflow-handler-offset {
+  padding: 0 var(--cds-spacing-04);
+  block-size: var(--cds-spacing-07);
+  /* stylelint-disable-next-line carbon/type-use -- centres the text in the item height, as upstream */
+  line-height: var(--cds-spacing-07);
+}
+
+.overflow-handler-container-vertical .overflow-handler-offset {
+  /* stylelint-disable-next-line carbon/layout-use -- half of spacing-04, as upstream; no token */
+  padding: calc(var(--cds-spacing-04) / 2) var(--cds-spacing-04);
+  inline-size: 100%;
+}
+
+/* Legend row beneath the container. */
+.overflow-handler-legend {
+  display: flex;
+  flex-wrap: wrap;
+  margin-block-start: var(--cds-spacing-04);
+  color: var(--cds-text-secondary);
+  font-family: var(--cds-code-01-font-family);
+  font-size: var(--cds-code-01-font-size);
+  font-weight: var(--cds-code-01-font-weight);
+  gap: var(--cds-spacing-05);
+  letter-spacing: var(--cds-code-01-letter-spacing);
+  line-height: var(--cds-code-01-line-height);
+}
+
+.overflow-handler-legend-offset {
+  display: none;
+}
+
+.overflow-handler-demo:has([data-offset]:not([data-hidden]))
+  .overflow-handler-legend-offset {
+  display: revert;
+}
+
+/* Colour swatches used in the legend. */
+.overflow-handler-swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  /* stylelint-disable-next-line carbon/layout-use -- half of spacing-04, as upstream; no token */
+  margin-inline-end: calc(var(--cds-spacing-04) / 2);
+  block-size: var(--cds-spacing-04);
+  inline-size: var(--cds-spacing-04);
+  vertical-align: middle;
+}
+
+.overflow-handler-swatch-regular {
+  background: var(--cds-layer-accent);
+}
+
+.overflow-handler-swatch-fixed {
+  background: var(--cds-support-success);
+}
+
+.overflow-handler-swatch-offset {
+  background: var(--cds-button-secondary);
+}
+
+.overflow-handler-swatch-available {
+  background: var(--cds-highlight);
+}
+
+.overflow-handler-swatch-gap {
+  background: var(--cds-support-warning);
+  opacity: 0.35;
+}
+
+.overflow-handler-swatch-offset-value {
+  background: var(--cds-support-info);
+  opacity: 0.6;
+}
+
+/* Live log output beneath the legend. */
+.overflow-handler-log {
+  padding: 0;
+  margin-block-start: var(--cds-spacing-04);
+  background: none;
+  color: var(--cds-text-secondary);
+  font-family: var(--cds-code-01-font-family);
+  font-size: var(--cds-code-01-font-size);
+  font-weight: var(--cds-code-01-font-weight);
+  letter-spacing: var(--cds-code-01-letter-spacing);
+  line-height: var(--cds-code-01-line-height);
+  white-space: pre-wrap;
+}
+
+/* Wrapper for a single duplicated instance. */
+.overflow-handler-instance {
+  padding-block-start: var(--cds-spacing-06);
+  border-block-start: 1px solid var(--cds-border-subtle);
+  margin-block-start: var(--cds-spacing-06);
+}
+
+.overflow-handler-instance:first-of-type {
+  padding-block-start: 0;
+  border-block-start: none;
+  margin-block-start: var(--cds-spacing-04);
+}
