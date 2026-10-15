@@ -1,3 +1,4 @@
+import { ComboBox } from '@carbon/react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { useEffect, useRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
@@ -199,6 +200,45 @@ test('Enter in a single-line input submits once; not in a textarea or when disab
   await userEvent.click(screen.getByRole('textbox', { name: 'Name' }));
   await userEvent.keyboard('{Enter}');
   expect(blocked).not.toHaveBeenCalled();
+});
+
+function ComboSurface({ onSubmit }: { onSubmit: () => void }) {
+  const flow = useFlow<HTMLFormElement>({
+    open: true,
+    onClose: () => undefined,
+    messages: { error: messages.error },
+  });
+  return (
+    <AfframeProvider>
+      <FlowForm flow={flow} onSubmit={onSubmit} aria-label="Combo">
+        <ComboBox
+          id="fruit"
+          titleText="Fruit"
+          items={['Apple', 'Banana']}
+          onChange={() => undefined}
+        />
+      </FlowForm>
+    </AfframeProvider>
+  );
+}
+
+test('Enter in a ComboBox picks or opens the list instead of submitting', async () => {
+  const onSubmit = vi.fn();
+  render(<ComboSurface onSubmit={onSubmit} />);
+  const input = screen.getByRole<HTMLInputElement>('combobox', {
+    name: 'Fruit',
+  });
+  await userEvent.click(input);
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() =>
+    expect(input.getAttribute('aria-expanded')).toBe('false')
+  );
+  await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(input.getAttribute('aria-expanded')).toBe('true'));
+  expect(onSubmit).not.toHaveBeenCalled();
+  await userEvent.keyboard('Ban{Enter}');
+  await waitFor(() => expect(input.value).toBe('Banana'));
+  expect(onSubmit).not.toHaveBeenCalled();
 });
 
 test('without closeWhilePending, close requests wait for a pending submit', async () => {

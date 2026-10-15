@@ -79,8 +79,16 @@ export function FlowForm({
       !textInputTypes.has(target.type)
     )
       return;
+    // A combobox takes Enter to pick an item or open its list; Carbon's
+    // ComboBox opens it on an empty input without preventDefault, so the
+    // form's implicit submission is blocked here too.
+    const handled =
+      event.defaultPrevented ||
+      target.closest(
+        '[aria-expanded="true"], [role="combobox"], [role="listbox"]'
+      );
     event.preventDefault();
-    submit();
+    if (!handled) submit();
   };
   return (
     <form
