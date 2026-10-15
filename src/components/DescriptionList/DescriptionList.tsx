@@ -49,10 +49,7 @@ interface DescriptionListBaseProps {
 // `role` stays Carbon's `table`; the name comes from the union below.
 type DescriptionListRootAttributes = Omit<
   HTMLAttributes<HTMLDivElement>,
-  | keyof DescriptionListBaseProps
-  | 'role'
-  | 'aria-label'
-  | 'aria-labelledby'
+  keyof DescriptionListBaseProps | 'role' | 'aria-label' | 'aria-labelledby'
 >;
 
 /** Other attributes go to the list root. */
