@@ -158,14 +158,14 @@ close icon, the header actions, the form steps, the open-sections button
 forms are out of the focus order. Tab and Shift+Tab stay inside the tearsheet
 and wrap.
 
-| Key    | Where                 | Action                                                                                                                                                  |
-| ------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Enter  | form step             | Shows that form; focus stays on the step. In the side panel (narrow and small screens), the panel closes and focus returns to the open-sections button. |
-| Escape | navigation side panel | Closes only the panel; focus returns to the open-sections button.                                                                                       |
-| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                                                                |
-| Escape | anywhere in the sheet | Closes a clean tearsheet. On a dirty one, or while a submit is pending, opens the discard dialog.                                                       |
-| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                                                                               |
-| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard; focus starts on Keep editing.                                                                   |
+| Key    | Where                 | Action                                                                                                                                                              |
+| ------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enter  | form step             | Shows that form; focus stays on the step. In the side panel (narrow and small screens), the panel closes and focus returns to the open-sections button.             |
+| Escape | navigation side panel | Closes only the panel; focus returns to the open-sections button.                                                                                                   |
+| Enter  | single-line field     | Submits once, unless `submitDisabled` or a submit is pending. Not in a multi-line field.                                                                            |
+| Escape | anywhere in the sheet | Closes a clean tearsheet. On a dirty one, or while a submit is pending, opens the discard dialog.                                                                   |
+| Escape | discard dialog        | Closes only the discard dialog; focus returns to the element that had it.                                                                                           |
+| Tab    | discard dialog        | Moves between its close icon, Keep editing and Discard (Keep waiting and Stop waiting on a clean form while it saves); focus starts on Keep editing (Keep waiting). |
 
 On close, focus returns to `launcherRef`, else to the element that had focus
 when the tearsheet opened, else to the page body.
