@@ -4,7 +4,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed, date chooser, 24-hour, state and error message sections added.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed, date chooser, Typing a time, state and error message sections added.
 
 <Meta isTemplate />
 
@@ -22,13 +22,18 @@ import { DateChooser } from '../../../.storybook/DateChooser';
 
 <DateChooser />
 
-## 24-hour time
+## Typing a time
 
-Drop the AM/PM select and pass `placeholder="hh:mm"` and
-`pattern="(?:[01]\d|2[0-3]):[0-5]\d"`. Keep at least one select: with the
-input alone, Carbon sizes it to half the field. The `pattern` prop is missing
-from `FluidTimePickerProps` in Carbon 1.118 but reaches the input, so pass it
-in a spread object.
+Afframe's `FluidTimePicker` wraps Carbon's and takes the same time props as
+[TimePicker](?path=/docs/components-timepicker--overview): 24-hour
+`hh:mm` masked to `defaultTimeFormat` in `@afframe/ui/format`, `seconds` for
+`hh:mm:ss`, `hourCycle="h12"` for a field with an AM/PM select, and
+`inputMask={false}` for Carbon's input. Keep at least one select: with the
+input alone, Carbon sizes it to half the field.
+
+<Canvas of={FluidTimePickerStories.TypingATime} />
+
+Without the AM/PM select:
 
 <Canvas of={FluidTimePickerStories.TwentyFourHour} />
 

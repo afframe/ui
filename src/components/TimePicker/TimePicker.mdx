@@ -4,7 +4,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, date chooser, 24-hour and state sections added.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, date chooser, Typing a time and state sections added.
 
 <Meta isTemplate />
 
@@ -26,22 +26,29 @@ import { DateChooser } from '../../../.storybook/DateChooser';
 
 <DateChooser />
 
-## 24-hour time
+## Typing a time
 
-Carbon's default `pattern` accepts 12-hour times only. For 24-hour time, as in
-Czech forms, render the input without the AM/PM select and pass the pattern:
+Afframe's `TimePicker` wraps Carbon's. It takes 24-hour time, `hh:mm`, and
+masks typing to the system time format, `defaultTimeFormat` in
+`@afframe/ui/format`: `905` becomes `09:05`, a typed `:` pads the hour (`9:`
+gives `09:`), and a digit that cannot start a valid time, such as the `4` of
+`24`, is dropped. The placeholder, `pattern` and `maxLength` follow the
+format.
 
-```tsx
-<TimePicker
-  id="start-time"
-  labelText="Start time"
-  placeholder="hh:mm"
-  pattern="(?:[01]\d|2[0-3]):[0-5]\d"
-/>
-```
+- `seconds` asks for `hh:mm:ss`.
+- `hourCycle="h12"` takes 01:00 to 12:59, for a field with an AM/PM select.
+  The default is `'h23'`, also next to a select.
+- `inputMask={false}` keeps Carbon's input: no mask, Carbon's 12-hour
+  `pattern`, `maxLength` 5.
 
-The pattern only sets the input's native validity; show the error with
-`invalid` and `invalidText`.
+Your own `placeholder`, `pattern`, `inputMode` and `autoComplete` win over the
+mask's. `maxLength` always follows the mask, since a shorter limit would block
+the last digits. `onFocus`, `onChange` and `onCompositionEnd` run after the
+mask's handlers.
+
+<Canvas of={TimePickerStories.TypingATime} />
+
+Without the AM/PM select:
 
 <Canvas of={TimePickerStories.TwentyFourHour} />
 
