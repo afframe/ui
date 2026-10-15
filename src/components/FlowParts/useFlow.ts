@@ -303,11 +303,12 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     if (pendingRef.current) return false;
     const session = sessionRef.current;
     const current = () => session === sessionRef.current;
-    // A discard dialog opened while pending is moot once the action settles.
+    // A discard dialog opened while pending is moot once the action settles;
+    // one from a later session is not this action's.
     const settle = (failed: boolean) => {
       pendingRef.current = false;
       setPending(false);
-      if (!discardRef.current) return;
+      if (!discardRef.current || !current()) return;
       dismissedRef.current = failed;
       clearTimeout(discardTimerRef.current);
       discardRef.current = false;

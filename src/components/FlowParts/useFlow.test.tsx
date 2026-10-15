@@ -638,6 +638,38 @@ test('a surface reopened while an abandoned action runs is busy until it settles
   expect(screen.queryByRole('alert')).toBeNull();
 });
 
+test.each(['resolves', 'rejects'] as const)(
+  'an abandoned action that %s leaves the discard dialog of a later session open',
+  async (outcome) => {
+    const action = deferred();
+    render(
+      <Harness closeWhilePending isDirty onSubmit={() => action.promise} />
+    );
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: messages.discard })
+    );
+    await waitFor(() => expect(screen.queryByRole('form')).toBeNull());
+    await openSurface();
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+    const keep = await screen.findByRole('button', {
+      name: messages.keepEditing,
+    });
+    await waitFor(() => expect(active()).toBe(keep));
+    await act(async () =>
+      outcome === 'resolves' ? action.resolve() : action.reject(new Error('x'))
+    );
+    await pause(400);
+    expect(
+      document.querySelector('.afframe-create-edit-discard .is-visible')
+    ).not.toBeNull();
+    expect(active()).toBe(keep);
+    expect(screen.queryByRole('alert')).toBeNull();
+  }
+);
+
 test('rejected submit skips an invalid field that is not rendered', async () => {
   render(
     <Harness
