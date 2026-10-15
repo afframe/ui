@@ -1,9 +1,10 @@
 import { Story, Canvas, ArgTypes, Meta } from '@storybook/addon-docs/blocks';
 import * as ProgressIndicatorStories from './ProgressIndicator.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { LoadingChooser } from '../../../.storybook/LoadingChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, usage text moved under the overview canvas, loading chooser table added.
 
 <Meta isTemplate />
 
@@ -21,14 +22,6 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={ProgressIndicatorStories.Default} />
 
-## Interactive
-
-<Canvas of={ProgressIndicatorStories.Interactive} />
-
-## Skeleton
-
-<Canvas of={ProgressIndicatorStories.Skeleton} />
-
 For React usage, `ProgressIndicator` holds the `currentIndex` state to indicate
 which `ProgressStep` is the current step. The `ProgressIndicator` component
 should always be used with `ProgressStep` components as its children.
@@ -38,9 +31,21 @@ components props (`complete`, `incomplete`, `current`). For general usage,
 Progress Indicators display steps in a process. It should indicate when steps
 have been complete, the active step, and the steps to come.
 
+## Which component to use
+
+<LoadingChooser />
+
+## Interactive
+
 If you register an `onChange` handler, the Progress Indicator will become
 interactive. Your parent component should update the `currentIndex` prop within
 the `onChange` handler.
+
+<Canvas of={ProgressIndicatorStories.Interactive} />
+
+## Skeleton
+
+<Canvas of={ProgressIndicatorStories.Skeleton} />
 
 ## Component API
 
