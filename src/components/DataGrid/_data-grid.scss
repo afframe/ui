@@ -30,6 +30,17 @@
   }
 }
 
+// meta.align 'end': numbers line up at the end of the column. A sortable
+// header puts its sort icon before the label, so the label ends where the
+// cells end (as IBM's Datagrid right-aligned columns do).
+.afframe-data-grid .afframe-data-grid__align-end {
+  text-align: end;
+}
+
+.afframe-data-grid .afframe-data-grid__align-end .cds--table-sort__flex {
+  flex-direction: row-reverse;
+}
+
 // Sized columns (resizing): widths come from a colgroup.
 .afframe-data-grid--sized .cds--data-table {
   table-layout: fixed;

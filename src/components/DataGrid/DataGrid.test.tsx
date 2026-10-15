@@ -1,6 +1,6 @@
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
-import { render, screen, within } from '@testing-library/react';
-import { useState } from 'react';
+import { cleanup, render, screen, within } from '@testing-library/react';
+import { createRef, useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
@@ -816,4 +816,104 @@ test('follows controlled state and reports changes', async () => {
   await userEvent.click(previous);
   expect(onChange).toHaveBeenCalledWith(1);
   expect(screen.getByText('11–20 of 60 items')).toBeTruthy();
+});
+
+test('passes ref and rest props to the table container', () => {
+  const ref = createRef<HTMLElement>();
+  render(
+    <DataGrid
+      ref={ref}
+      id="invoices"
+      data-testid="grid"
+      aria-busy="false"
+      options={{ features: sortFeatures, columns: sortColumns, data: few }}
+    />
+  );
+  const container = document.querySelector('.cds--data-table-container');
+  expect(ref.current).toBe(container);
+  expect(screen.getByTestId('grid')).toBe(container);
+  expect(container?.id).toBe('invoices');
+});
+
+test('virtualizes with a consumer id on the container', async () => {
+  render(
+    <DataGrid
+      id="many"
+      maxHeight="10rem"
+      virtualize
+      options={{
+        features: selectFeatures,
+        columns: selectColumns,
+        data: manyInvoices,
+      }}
+    />
+  );
+  await expect.poll(() => screen.getAllByRole('row').length).toBeLessThan(60);
+});
+
+test('renders the emptyState slot in one cell spanning every column', () => {
+  render(
+    <DataGrid
+      options={{ features: selectFeatures, columns: selectColumns, data: [] }}
+      emptyState={<p>Create your first invoice</p>}
+    />
+  );
+  const cell = screen.getByText('Create your first invoice').closest('td');
+  expect(cell?.colSpan).toBe(selectColumns.length + 1);
+  expect(screen.queryByText('No rows to show')).toBeNull();
+  cleanup();
+  render(
+    <DataGrid
+      options={{ features: selectFeatures, columns: selectColumns, data: [] }}
+    />
+  );
+  expect(screen.getByText('No rows to show').closest('td')?.colSpan).toBe(
+    selectColumns.length + 1
+  );
+});
+
+const alignFeatures = tableFeatures({
+  ...dataGridSorting,
+  ...dataGridInlineEdit,
+});
+const alignHelper = createColumnHelper<
+  typeof alignFeatures,
+  (typeof invoices)[number]
+>();
+const alignColumns = alignHelper.columns([
+  alignHelper.accessor('number', { header: 'Number' }),
+  alignHelper.accessor('amount', { header: 'Amount', meta: { align: 'end' } }),
+]);
+
+test('end-aligns a column with meta.align on its header and cells', () => {
+  render(
+    <DataGrid
+      options={{ features: alignFeatures, columns: alignColumns, data: few }}
+      onCellEdit={vi.fn()}
+    />
+  );
+  // dataGridInlineEdit only types the meta: no column is editable here.
+  expect(screen.queryByText(/^Edit /)).toBeNull();
+  const amount = screen.getByRole('columnheader', { name: /Amount/ });
+  expect(amount.classList).toContain('afframe-data-grid__align-end');
+  const cells = screen
+    .getAllByRole('row')
+    .slice(1)
+    .map((row) => within(row).getAllByRole('cell'));
+  expect(
+    cells.every((row) =>
+      row[1]?.classList.contains('afframe-data-grid__align-end')
+    )
+  ).toBe(true);
+  expect(
+    cells.some((row) =>
+      row[0]?.classList.contains('afframe-data-grid__align-end')
+    )
+  ).toBe(false);
+  // A sortable header end-aligns its label too.
+  const label = amount.querySelector('.cds--table-header-label');
+  if (!label) throw new Error('no label');
+  expect(label.getBoundingClientRect().right).toBeGreaterThan(
+    amount.getBoundingClientRect().right - 48
+  );
 });

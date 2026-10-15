@@ -37,12 +37,14 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual';
 import {
   Fragment,
+  useCallback,
   useId,
-  useLayoutEffect,
   useState,
+  type ComponentPropsWithoutRef,
   type CSSProperties,
   type ElementType,
   type ReactNode,
+  type Ref,
 } from 'react';
 import { resolveMessages } from '../../messages.js';
 import { ColumnResizer } from './ColumnResizer.js';
@@ -80,6 +82,8 @@ export interface DataGridRowAction<TData extends RowData> {
 export interface DataGridColumnMeta {
   /** The column's cells can be edited inline. */
   editable?: boolean;
+  /** Aligns the header and cells; `'end'` for amounts and other numbers. */
+  align?: 'start' | 'end';
 }
 
 /** A saved inline edit. */
@@ -94,7 +98,9 @@ export interface DataGridCellEdit<TData extends RowData> {
 export interface DataGridProps<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> {
+> extends Omit<ComponentPropsWithoutRef<'section'>, 'title' | 'children'> {
+  /** The table container, Carbon's `section.cds--data-table-container`. */
+  ref?: Ref<HTMLElement>;
   /** TanStack Table options: `features`, `columns`, `data` and any state. */
   options: TableOptions<TFeatures, TData>;
   /** Title above the table; also the table's accessible name. */
@@ -128,8 +134,12 @@ export interface DataGridProps<
   rowActions?: DataGridRowAction<TData>[];
   /** Page sizes offered by the pagination bar. */
   pageSizes?: number[];
+  /**
+   * Shown in one full-width cell when there are no rows, in place of the
+   * `emptyState` message; for example an `EmptyState`.
+   */
+  emptyState?: ReactNode;
   messages?: Partial<DataGridMessages>;
-  className?: string;
 }
 
 // Inside the grid every feature API is typed; each is used only after a
@@ -186,8 +196,12 @@ export function DataGrid<
   onCellEdit,
   getRowLabel,
   virtualize = false,
+  emptyState,
   messages,
   className,
+  ref,
+  style,
+  ...rest
 }: DataGridProps<TFeatures, TData>) {
   const text = resolveMessages(defaultDataGridMessages, messages);
   // A detail panel can open on every row unless the app decides per row.
@@ -266,12 +280,23 @@ export function DataGrid<
           offset: `calc(${Number(acting) * 3}rem + ${column.getAfter('end')}px)`,
         };
   };
-  const stickyCell = (pin: ReturnType<typeof sticky>) =>
-    pin && {
-      className: pin.className,
-      style: { '--afframe-data-grid-sticky': pin.offset } as CSSProperties,
+  const alignClass = (column: GridColumn<TData>) =>
+    (column.columnDef.meta as DataGridColumnMeta | undefined)?.align === 'end'
+      ? 'afframe-data-grid__align-end'
+      : undefined;
+  const cellClass = (column: GridColumn<TData>) => {
+    const pin = sticky(column);
+    const align = alignClass(column);
+    return {
+      ...(align && { className: align }),
+      ...(pin && {
+        className: [pin.className, align].filter(Boolean).join(' '),
+        style: { '--afframe-data-grid-sticky': pin.offset } as CSSProperties,
+      }),
     };
+  };
   const containerStyle = {
+    ...style,
     ...(sizing && {
       '--afframe-data-grid-width': `calc(${table.getTotalSize()}px + ${extras * 3}rem)`,
     }),
@@ -282,15 +307,17 @@ export function DataGrid<
     ...(maxHeight && { '--afframe-data-grid-max-height': maxHeight }),
   } as CSSProperties;
   // Virtualization: the scrolling element is Carbon's table content wrapper.
-  const containerId = `${id}-grid`;
-  const [scroller, setScroller] = useState<HTMLElement | null>(null);
-  useLayoutEffect(() => {
-    setScroller(
-      document
-        .getElementById(containerId)
-        ?.querySelector<HTMLElement>('.cds--data-table-content') ?? null
-    );
-  }, [containerId]);
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+  const scroller =
+    container?.querySelector<HTMLElement>('.cds--data-table-content') ?? null;
+  const containerRef = useCallback(
+    (element: HTMLElement | null) => {
+      setContainer(element);
+      if (typeof ref === 'function') ref(element);
+      else if (ref) ref.current = element;
+    },
+    [ref]
+  );
   // A detail panel is not part of its row's measured size, so a grid with
   // `renderExpandedRow` is not virtualized.
   const virtual =
@@ -346,7 +373,10 @@ export function DataGrid<
 
   return (
     <TableContainer
-      id={containerId}
+      {...rest}
+      // Carbon's props type has no `ref`; React 19 passes it in props, and
+      // TableContainer spreads them onto its section.
+      {...{ ref: containerRef }}
       title={title}
       description={description}
       style={containerStyle}
@@ -460,11 +490,15 @@ export function DataGrid<
                 const sortable = sorting && column.getCanSort();
                 const sorted = sortable ? column.getIsSorted() : false;
                 const pin = sticky(column);
+                const align = alignClass(column);
                 return (
                   <TableHeader
                     key={header.id}
+                    {...(align && { className: align })}
                     {...(pin && {
-                      className: pin.className,
+                      className: [pin.className, align]
+                        .filter(Boolean)
+                        .join(' '),
                       // Carbon passes `style` to the sort button, not the th.
                       ref: (th: HTMLTableCellElement | null) =>
                         th?.style.setProperty(
@@ -530,7 +564,7 @@ export function DataGrid<
                   />
                 )}
                 {cellsOf(row).map((cell, index) => (
-                  <TableCell key={cell.id} {...stickyCell(sticky(cell.column))}>
+                  <TableCell key={cell.id} {...cellClass(cell.column)}>
                     {onCellEdit &&
                     (
                       cell.column.columnDef.meta as
@@ -635,7 +669,9 @@ export function DataGrid<
           {spacer(after)}
           {rows.length === 0 && (
             <TableRow>
-              <TableCell colSpan={span}>{text.emptyState}</TableCell>
+              <TableCell colSpan={span}>
+                {emptyState ?? text.emptyState}
+              </TableCell>
             </TableRow>
           )}
         </TableBody>
