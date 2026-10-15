@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; distinct id for the toggletip story (a11y); unsupported skeleton props removed; boolean table default summaries as strings. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; distinct id for the toggletip story (a11y); unsupported skeleton props removed; boolean table default summaries as strings; business example data, toggletip story renamed, Disabled (color-contrast off), ReadOnly, Invalid and Warning stories, error linked by aria-describedby in Invalid. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -20,7 +20,6 @@ import {
   ToggletipContent,
   type FluidTextInputProps,
 } from '../../index.js';
-import './test.css';
 import styles from './fluid-text-input-story.css?inline';
 import mdx from './FluidTextInput.mdx';
 
@@ -128,15 +127,13 @@ const sharedArgs = {
   enableCounter: false,
   id: 'input-1',
   invalid: false,
-  invalidText:
-    'Error message that is really long can wrap to more lines but should not be excessively long.',
-  labelText: 'Label',
+  invalidText: 'Enter a company name.',
+  labelText: 'Company name',
   maxCount: 500,
-  placeholder: 'Placeholder text',
+  placeholder: '',
   readOnly: false,
   warn: false,
-  warnText:
-    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+  warnText: 'Another customer already uses this name.',
 } satisfies Partial<FluidTextInputProps>;
 
 const sharedControls = Object.keys(sharedArgTypes);
@@ -153,7 +150,7 @@ Default.parameters = {
   controls: { include: sharedControls },
 };
 
-export const DefaultWithToggletip: StoryFn<FluidTextInputProps> = (args) => {
+export const WithToggletip: StoryFn<FluidTextInputProps> = (args) => {
   const labelToggletip = (
     // Keep the toggletip outside `labelText`; interactive content is invalid in labels.
     <span className="fluid-text-input-story__toggletip">
@@ -170,23 +167,51 @@ export const DefaultWithToggletip: StoryFn<FluidTextInputProps> = (args) => {
   return (
     <div className="fluid-text-input-story">
       {labelToggletip}
-      <FluidTextInput {...args} labelText="Label" />
+      <FluidTextInput {...args} labelText="Company name" />
     </div>
   );
 };
 
-DefaultWithToggletip.args = {
+WithToggletip.args = {
   ...sharedArgs,
   id: 'text-input-toggletip',
 };
-DefaultWithToggletip.argTypes = {
+WithToggletip.argTypes = {
   ...sharedArgTypes,
 };
-DefaultWithToggletip.parameters = {
+WithToggletip.parameters = {
   controls: {
     include: sharedControls.filter((control) => control !== 'labelText'),
   },
 };
+
+const stateStory = (id: string, args: Partial<FluidTextInputProps>) => {
+  const story: StoryFn<FluidTextInputProps> = Default.bind({});
+  story.args = { ...sharedArgs, id, ...args };
+  story.argTypes = sharedArgTypes;
+  story.parameters = { controls: { include: sharedControls } };
+  return story;
+};
+
+export const Disabled = stateStory('fluid-text-input-disabled', {
+  disabled: true,
+});
+
+export const ReadOnly = stateStory('fluid-text-input-read-only', {
+  defaultValue: 'Lakeside Furniture',
+  readOnly: true,
+});
+
+// Carbon 1.118 points aria-errormessage at the error but adds no live region
+// or aria-describedby, which fails axe's aria-valid-attr-value. FluidTextInput
+// passes rest props to TextInput, which spreads them after its own
+// aria-describedby, so the error id links it. Upstream issue drafted, not filed.
+export const Invalid = stateStory('fluid-text-input-invalid', {
+  invalid: true,
+  'aria-describedby': 'fluid-text-input-invalid-error-msg',
+});
+
+export const Warning = stateStory('fluid-text-input-warning', { warn: true });
 
 export const Skeleton: StoryFn = () => {
   return <FluidTextInputSkeleton />;

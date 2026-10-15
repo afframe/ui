@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as FluidTextInputStories from './FluidTextInput.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed, state stories, field chooser and error message note added, accessible name section rewritten.
 
 <Meta isTemplate />
 
@@ -17,22 +18,63 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={FluidTextInputStories.Default} />
 
+## Which component to use
+
+<FieldChooser />
+
+## Variations
+
+### Disabled
+
+<Canvas of={FluidTextInputStories.Disabled} />
+
+### Read Only
+
+<Canvas of={FluidTextInputStories.ReadOnly} />
+
+### Invalid
+
+<Canvas of={FluidTextInputStories.Invalid} />
+
+### Warning
+
+<Canvas of={FluidTextInputStories.Warning} />
+
 ### Skeleton
 
 <Canvas of={FluidTextInputStories.Skeleton} />
 
-### Default With Toggletip
+### With Toggletip
 
-<Canvas of={FluidTextInputStories.DefaultWithToggletip} />
+<Canvas of={FluidTextInputStories.WithToggletip} />
 
 ## Accessibility Considerations
 
 ### Accessible Name
 
-To comply with accessibility requirements, make sure to supply the component
-with an accessible name by providing either the `aria-label`, `aria-labelledby`
-or `title` attribute. Read more on the accessible naming rule
-[here](https://able.ibm.com/rules/archives/latest/doc/en-US/aria_accessiblename_exists.html).
+`labelText` renders a visible label tied to the input, which gives the field
+its accessible name. Keep interactive content such as a toggletip outside
+`labelText`, as the With Toggletip story does.
+
+### Error message and screen readers
+
+FluidTextInput renders Carbon's TextInput, so it has the same gap: while
+`invalid`, the input points `aria-errormessage` at its error text, but nothing
+announces that text and axe reports `aria-valid-attr-value`. Pass the error id
+while `invalid` is set; Carbon renders it as `<id>-error-msg` and keeps your
+`aria-describedby`:
+
+```tsx
+<FluidTextInput
+  id="company-name"
+  labelText="Company name"
+  invalid={invalid}
+  invalidText="Enter a company name."
+  {...(invalid && { 'aria-describedby': 'company-name-error-msg' })}
+/>
+```
+
+The same applies to FluidPasswordInput. A warning is linked by Carbon already.
 
 ## Component API
 
