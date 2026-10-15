@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as TreeViewStories from './TreeView.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, stories file renamed to TreeView.stories, upstream Feedback section and table of contents removed, links to the current Carbon site.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, stories file renamed to TreeView.stories, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added.
 
 <Meta isTemplate />
 
@@ -24,6 +25,10 @@ items. It is used to display nested lists of items that can be expanded or
 collapsed to show and hide additional items.
 
 <Canvas of={TreeViewStories.Default} />
+
+## Which component to use
+
+<ListChooser />
 
 ## With Controlled Expansion
 

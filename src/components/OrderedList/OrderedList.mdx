@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as OrderedListStories from './OrderedList.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, inline spacing as Carbon spacing tokens, upstream Feedback section and table of contents removed, links to the current Carbon site.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, inline spacing as Carbon spacing tokens, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added.
 
 <Meta isTemplate />
 
@@ -22,6 +23,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 <div style={{ paddingLeft: 'var(--cds-spacing-05)' }}>
   <Canvas of={OrderedListStories.Default} />
 </div>
+
+## Which component to use
+
+<ListChooser />
 
 ## Native List Styles
 

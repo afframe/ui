@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as stories from './TruncatedText.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, code sample section removed, curly quotes replaced by straight ones, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: source label and source link added, code sample section removed, curly quotes replaced by straight ones, story names unified, upstream table of contents removed, list chooser table added.
 
 <Meta isTemplate />
 
@@ -29,6 +30,10 @@ full content:
 ## Example usage
 
 <Canvas of={stories.Default} />
+
+## Which component to use
+
+<ListChooser />
 
 ## Component API
 

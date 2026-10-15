@@ -1,9 +1,10 @@
 import { ArgTypes, Story, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as ContainedListStories from './ContainedList.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, links to the current Carbon site.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added.
 
 <Meta isTemplate />
 
@@ -164,6 +165,10 @@ export const WithPersistentSearch = () => {
 #### With Layer
 
 <Canvas of={ContainedListStories.WithLayer} />
+
+## Which component to use
+
+<ListChooser />
 
 ## Component API
 

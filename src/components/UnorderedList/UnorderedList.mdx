@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as UnorderedList from './UnorderedList.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, links to the current Carbon site.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added.
 
 <Meta isTemplate />
 
@@ -20,6 +21,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Overview
 
 <Canvas of={UnorderedList.Default} />
+
+## Which component to use
+
+<ListChooser />
 
 ## Nested
 
