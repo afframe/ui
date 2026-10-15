@@ -2,8 +2,9 @@
 import { Filter } from '@carbon/icons-react';
 import { Button, Popover, PopoverContent } from '@carbon/react';
 import { useId, useRef, useState } from 'react';
-import type { KeyboardEvent } from 'react';
+import type { ComponentPropsWithoutRef, KeyboardEvent, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
+import { useMergedRefs } from '../FlowParts/refs.js';
 import {
   countFilterPanelSelections,
   defaultFilterPanelMessages,
@@ -21,26 +22,46 @@ export const defaultFilterFlyoutMessages: FilterFlyoutMessages = {
   toggle: (count) => (count > 0 ? `Filter (${count})` : 'Filter'),
 };
 
-export interface FilterFlyoutProps extends Omit<FilterPanelProps, 'messages'> {
+export interface FilterFlyoutProps
+  extends
+    Pick<
+      FilterPanelProps,
+      'groups' | 'value' | 'onChange' | 'resultCount' | 'headingLevel'
+    >,
+    Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'children'> {
+  /** Ref to the root `div` (Carbon's Popover). */
+  ref?: Ref<HTMLDivElement>;
+  /** Opens the flyout on first render. */
+  defaultOpen?: boolean;
   messages?: Partial<FilterFlyoutMessages>;
 }
 
 /** A toolbar button that opens a `FilterPanel` in a popover. Controlled. */
 export function FilterFlyout({
+  groups,
+  value,
+  onChange,
+  resultCount,
+  headingLevel,
+  defaultOpen = false,
   messages,
   className,
-  ...panel
+  ref,
+  onKeyDownCapture: onKeyDownCaptureProp,
+  ...rest
 }: FilterFlyoutProps) {
   const text = resolveMessages(defaultFilterFlyoutMessages, messages);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const rootRef = useMergedRefs(wrapperRef, ref);
   const contentId = useId();
 
   // Carbon closes on Escape only from inside the content, and Carbon's
   // Search swallows Escape. Capturing it here also covers the toggle button,
   // lets a search with text clear first, and always returns focus.
-  const onKeyDownCapture = (event: KeyboardEvent) => {
+  const onKeyDownCapture = (event: KeyboardEvent<HTMLDivElement>) => {
+    onKeyDownCaptureProp?.(event);
     if (!open || event.key !== 'Escape') return;
     const target = event.target;
     const isSearch =
@@ -57,12 +78,13 @@ export function FilterFlyout({
 
   return (
     <Popover
+      {...rest}
       as="div"
       open={open}
       align="bottom-end"
       autoAlign
       caret={false}
-      ref={wrapperRef}
+      ref={rootRef}
       // Carbon also closes on a click whose target a filter change has just
       // removed (a dismissed tag, Clear all); those leave focus inside.
       onRequestClose={() => {
@@ -79,10 +101,17 @@ export function FilterFlyout({
         aria-expanded={open}
         aria-controls={contentId}
         onClick={() => setOpen(!open)}>
-        {text.toggle(countFilterPanelSelections(panel.groups, panel.value))}
+        {text.toggle(countFilterPanelSelections(groups, value))}
       </Button>
       <PopoverContent id={contentId} className="afframe-filter-flyout-content">
-        <FilterPanel {...panel} messages={text} />
+        <FilterPanel
+          groups={groups}
+          value={value}
+          onChange={onChange}
+          {...(resultCount !== undefined ? { resultCount } : {})}
+          {...(headingLevel !== undefined ? { headingLevel } : {})}
+          messages={text}
+        />
       </PopoverContent>
     </Popover>
   );

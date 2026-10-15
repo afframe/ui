@@ -1,10 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import { page, userEvent } from 'vitest/browser';
 import { FilterFlyout } from './FilterFlyout.js';
-import type { FilterFlyoutMessages } from './FilterFlyout.js';
+import type {
+  FilterFlyoutMessages,
+  FilterFlyoutProps,
+} from './FilterFlyout.js';
 import { countFilterPanelSelections, FilterPanel } from './FilterPanel.js';
 import type { FilterPanelGroup, FilterPanelValue } from './FilterPanel.js';
 
@@ -254,4 +257,108 @@ test('ids stay valid when group ids and values contain spaces', async () => {
   ).not.toMatch(/\s/);
   await userEvent.click(screen.getByText('Head office'));
   expect(onChange).toHaveBeenLastCalledWith({ 'cost centre': ['head office'] });
+});
+
+test('panel: ref and rest props reach the section', () => {
+  const ref = createRef<HTMLElement>();
+  render(
+    <FilterPanel
+      ref={ref}
+      groups={groups}
+      value={{}}
+      onChange={() => undefined}
+      data-testid="filters"
+      aria-describedby="hint"
+      className="extra"
+    />
+  );
+  const region = screen.getByRole('region', { name: 'Filters' });
+  expect(ref.current).toBe(region);
+  expect(region.tagName).toBe('SECTION');
+  expect(region.dataset.testid).toBe('filters');
+  expect(region.getAttribute('aria-describedby')).toBe('hint');
+  expect(region.className).toBe('afframe-filter-panel extra');
+});
+
+test('panel: headingLevel 3 renders an h3 that keeps the id and focus target', async () => {
+  render(
+    <FilterPanel
+      headingLevel={3}
+      groups={groups}
+      value={{ status: ['paid'] }}
+      onChange={() => undefined}
+    />
+  );
+  const heading = screen.getByRole('heading', { name: 'Filters', level: 3 });
+  expect(heading.tagName).toBe('H3');
+  expect(heading.getAttribute('tabindex')).toBe('-1');
+  const region = screen.getByRole('region', { name: 'Filters' });
+  expect(region.getAttribute('aria-labelledby')).toBe(heading.id);
+  screen.getByRole('button', { name: 'Clear all' }).focus();
+  await userEvent.keyboard('{Enter}');
+  expect(active()).toBe(heading);
+});
+
+test('flyout: ref and rest props reach the root; closing still works', async () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <>
+      <button type="button">Before</button>
+      <FilterFlyoutHarness ref={ref} data-testid="flyout" />
+    </>
+  );
+  expect(ref.current?.classList.contains('afframe-filter-flyout')).toBe(true);
+  expect(ref.current?.dataset.testid).toBe('flyout');
+  const toggle = screen.getByRole('button', { name: 'Filter (2)' });
+  expect(ref.current?.contains(toggle)).toBe(true);
+
+  // Dismissing a tag keeps it open only while the internal wrapper ref is set.
+  await userEvent.click(toggle);
+  await userEvent.click(dismiss('Paid'));
+  expect(toggle.getAttribute('aria-expanded')).toBe('true');
+
+  screen.getByRole('checkbox', { name: 'Overdue' }).focus();
+  await userEvent.keyboard('{Escape}');
+  expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  expect(active()).toBe(toggle);
+
+  await userEvent.click(toggle);
+  await userEvent.click(screen.getByRole('button', { name: 'Before' }));
+  expect(toggle.getAttribute('aria-expanded')).toBe('false');
+});
+
+test('flyout: defaultOpen renders it open', () => {
+  render(<FilterFlyoutHarness defaultOpen />);
+  const toggle = screen.getByRole('button', { name: 'Filter (2)' });
+  expect(toggle.getAttribute('aria-expanded')).toBe('true');
+  expect(screen.getByRole('region', { name: 'Filters' })).toBeTruthy();
+  expect(screen.getByRole('checkbox', { name: 'Paid' })).toBeTruthy();
+});
+
+function FilterFlyoutHarness(
+  props: Omit<FilterFlyoutProps, 'groups' | 'value' | 'onChange'>
+) {
+  const [value, setValue] = useState<FilterPanelValue>({
+    status: ['paid', 'overdue'],
+  });
+  return (
+    <FilterFlyout
+      {...props}
+      groups={groups}
+      value={value}
+      onChange={setValue}
+    />
+  );
+}
+
+test('panel: the focused title shows a focus outline', async () => {
+  render(<Harness initial={{ status: ['paid'] }} />);
+  screen.getByRole('button', { name: 'Clear all' }).focus();
+  await userEvent.keyboard('{Enter}');
+  const heading = screen.getByRole('heading', { name: 'Filters' });
+  expect(active()).toBe(heading);
+  const style = getComputedStyle(heading);
+  expect(style.outlineStyle).toBe('solid');
+  expect(style.outlineWidth).toBe('2px');
+  expect(style.outlineOffset).toBe('-2px');
 });
