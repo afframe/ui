@@ -80,6 +80,11 @@ export const firstControlSelector =
 const focusable = (element: Element | null): element is HTMLElement =>
   element instanceof HTMLElement && element.isConnected;
 
+const focusedElement = () => {
+  const active = document.activeElement;
+  return focusable(active) && active !== document.body ? active : null;
+};
+
 // A connected field can still be unable to take focus: one in a hidden
 // EditTearsheet form is in the DOM under `display: none`.
 const rendered = (element: Element) =>
@@ -187,9 +192,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     cancelFocusRef.current?.();
     cancelFocusRef.current = null;
     if (open) {
-      const active = document.activeElement;
-      returnFocusRef.current =
-        focusable(active) && active !== document.body ? active : null;
+      returnFocusRef.current = focusedElement();
       return;
     }
     const launcher = launcherRef?.current ?? null;
@@ -286,11 +289,7 @@ export function useFlow<T extends HTMLElement = HTMLDivElement>({
     if (busy && !closeWhilePending) return;
     // Leaving mid-action abandons it, so ask even when clean.
     if ((isDirty || busy) && confirmDiscard) {
-      const active = document.activeElement;
-      discardReturnRef.current =
-        focusable(active) && active !== document.body
-          ? active
-          : lastFocusRef.current;
+      discardReturnRef.current = focusedElement() ?? lastFocusRef.current;
       discardRef.current = true;
       const whilePending = !isDirty;
       // Next task: opened inside an Escape keydown, the new dialog would get
