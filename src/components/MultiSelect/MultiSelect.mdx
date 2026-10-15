@@ -1,11 +1,12 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, Afframe note on the invalid state, field chooser added.
 
 import * as MultiSelect from './MultiSelect.stories';
 import { Filterable } from './MultiSelect.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 
 <Meta isTemplate />
 
@@ -66,6 +67,19 @@ selectable items to a subset.
 ### With layer
 
 <Canvas of={MultiSelect.WithLayer} />
+
+In Afframe UI, `MultiSelect` and `FilterableMultiSelect` are used as Carbon
+ships them:
+
+- With `invalid`, the `invalidText` has no id, nothing points to it and the
+  field gets no `aria-invalid`, so screen readers do not read the message with
+  the field. Neither component passes extra props to the field, so an app
+  cannot link it. Repeat the reason near the form's submit button (upstream
+  issue drafted, not filed).
+
+## Which component to use
+
+<FieldChooser />
 
 ## Component API
 
