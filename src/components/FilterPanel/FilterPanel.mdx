@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as FilterPanelStories from './FilterPanel.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TableChooser } from '../../../.storybook/TableChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -22,6 +23,10 @@ Filtering is instant: every change calls `onChange`. There is no Apply button.
 <Canvas of={FilterPanelStories.Default} />
 
 <Canvas of={FilterPanelStories.Flyout} />
+
+## Which component to use
+
+<TableChooser />
 
 ## Usage and props
 
@@ -64,9 +69,13 @@ const [value, setValue] = useState<FilterPanelValue>({});
 - `onChange`: called with the next value.
 - `resultCount`: when set, the panel shows and announces it.
 - `messages`: overrides for the strings below.
+- `headingLevel`: level of the title heading, 2 (default) or 3. Use 3 when
+  the panel sits under a page section heading.
+- `ref` and other HTML attributes go to the root `section`.
 
-`FilterFlyout` takes the same props. Its toggle button shows the number of
-selected options.
+`FilterFlyout` takes the same filter props. Its toggle button shows the number
+of selected options. `defaultOpen` opens it on first render. `ref` and other
+HTML attributes go to its root `div`, Carbon's Popover.
 
 <ArgTypes of={FilterPanelStories} />
 
