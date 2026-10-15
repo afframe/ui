@@ -4089,7 +4089,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "server",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/dateTimeFormat/dateTimeFormat.mdx"
     },
     {
       "name": "makeDraggable",
