@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as FluidSearchStories from './FluidSearch.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed, Disabled story and field chooser added, accessible name section rewritten.
 
 <Meta isTemplate />
 
@@ -21,6 +22,16 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={FluidSearchStories.Default} />
 
+## Which component to use
+
+<FieldChooser />
+
+## Variations
+
+### Disabled
+
+<Canvas of={FluidSearchStories.Disabled} />
+
 ### Skeleton
 
 <Canvas of={FluidSearchStories.Skeleton} />
@@ -29,10 +40,8 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 ### Accessible Name
 
-To comply with accessibility requirements, make sure to supply the component
-with an accessible name by providing either the `aria-label`, `aria-labelledby`
-or `title` attribute. Read more on the accessible naming rule
-[here](https://able.ibm.com/rules/archives/latest/doc/en-US/aria_accessiblename_exists.html).
+`labelText` renders a visible label tied to the search input, which gives the
+field its accessible name. FluidSearch has no `invalid` or `warn` state.
 
 ## Component API
 

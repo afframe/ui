@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args, Default story first; business example data, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -27,8 +27,8 @@ export default {
     closeButtonLabelText: 'Clear search input',
     defaultWidth: 400,
     disabled: false,
-    labelText: 'Search',
-    placeholder: 'Prompt text',
+    labelText: 'Search invoices',
+    placeholder: 'Search invoices',
     role: 'searchbox',
     type: 'search',
   },
@@ -96,11 +96,15 @@ Default.args = {
   closeButtonLabelText: 'Clear search input',
   defaultWidth: 400,
   disabled: false,
-  labelText: 'Search',
-  placeholder: 'Prompt text',
+  labelText: 'Search invoices',
+  placeholder: 'Search invoices',
   role: 'searchbox',
   type: 'search',
 };
+
+export const Disabled: StoryFn<FluidSearchProps & { defaultWidth?: number }> =
+  Default.bind({});
+Disabled.args = { ...Default.args, disabled: true };
 
 export const Skeleton: StoryFn<FluidSearchProps & { defaultWidth?: number }> = (
   args
