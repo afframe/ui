@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, Default story first, onSuccess description with the component name as code. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -20,6 +20,14 @@ export default {
   title: 'Components/InlineLoading',
   component: InlineLoading,
   tags: ['carbon'],
+  // Carbon's text names the component as a bare <InlineLoading> tag, which the
+  // props table renders as a DOM element and React logs as wrong casing.
+  argTypes: {
+    onSuccess: {
+      description:
+        'Provide an optional handler to be invoked when `InlineLoading` is successful',
+    },
+  },
   parameters: {
     docs: {
       page: mdx,
