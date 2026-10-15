@@ -1,9 +1,10 @@
 import { Canvas, Controls, Meta, Story } from '@storybook/addon-docs/blocks';
 import * as stories from './ConditionBuilder.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TableChooser } from '../../../.storybook/TableChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, internal IBM guidelines link and unused imports removed, em-dashes replaced, story names unified.
+// Modified by Afframe in 2026: source label and source link added, internal IBM guidelines link and unused imports removed, em-dashes replaced, story names unified, table chooser added.
 
 <Meta isTemplate />
 
@@ -28,6 +29,10 @@ The component is available in two variants:
 - **Hierarchical** (`variant="Hierarchical"`): conditions can be grouped into
   nested sub-groups with independent connectors (`and` / `or`). Best for
   complex, multi-level rule building.
+
+## Which component to use
+
+<TableChooser />
 
 ---
 

@@ -2,9 +2,10 @@ import { Story, ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as TileStories from './Tile.stories';
 import * as TileFeatureFlagStories from './Tile.featureflag.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { CardChooser } from '../../../.storybook/CardChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, Sass flag setup replaced (enable-tile-contrast is on in styles.css), upstream Feedback section and table of contents removed, Carbon links moved to their current URLs.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, Sass flag setup replaced (enable-tile-contrast is on in styles.css), upstream Feedback section and table of contents removed, card chooser table added, Carbon links moved to their current URLs.
 
 <Meta isTemplate />
 
@@ -21,6 +22,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Overview
 
 <Canvas of={TileStories.Default} />
+
+## Which component to use
+
+<CardChooser />
 
 ## Clickable
 
