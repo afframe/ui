@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2021, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: plain CSS with var(--cds-*) properties; tile-story.scss and the AI label rules used by the stories merged, the preview-tile mixin call dropped (`enable-tile-contrast` is on globally; the v12 tile icon flags stay off, ADR 0018), literal spacing, colour and type values as Carbon tokens.
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) properties; tile-story.scss and the AI label rules used by the stories merged, the preview-tile mixin call dropped (`enable-tile-contrast` is on globally; the v12 tile icon flags stay off, ADR 0018), literal spacing, colour and type values as Carbon tokens, the AI label tile rows wrap so they fit a 375 px screen.
  */
 
 div .cds--tile--selectable:not(:last-child) {
@@ -97,6 +97,7 @@ div .cds--tile--selectable:not(:last-child) {
 
 .ai-label-selectable-tile-container .cds--tile-group > div {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--cds-spacing-05);
 }
 

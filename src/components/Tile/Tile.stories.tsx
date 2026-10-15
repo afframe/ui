@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, inline spacing as Carbon spacing tokens, story names unified, example data from the Afframe glossary (plans, card text, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, inline spacing as Carbon spacing tokens, story names unified, expandable story wrappers capped at the screen width, example data from the Afframe glossary (plans, card text, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { action } from 'storybook/actions';
@@ -472,7 +472,7 @@ RadioWithLayer.parameters = {
 
 export const Expandable: StoryFn<ExpandableTileProps> = (args) => {
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: '400px', maxWidth: '100%' }}>
       <ExpandableTile id="expandable-tile-1" {...args}>
         <TileAboveTheFoldContent>
           <div style={{ height: '200px' }}>Above the fold content here</div>
@@ -501,7 +501,7 @@ export const ExpandableWithInteractive: StoryFn<ExpandableTileProps> = (
   args
 ) => {
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: '400px', maxWidth: '100%' }}>
       <ExpandableTile id="expandable-tile-1" {...args}>
         <TileAboveTheFoldContent>
           <div style={{ height: '200px', width: '200px' }}>
@@ -542,7 +542,7 @@ export const ExpandableWithLayer: StoryFn<ExpandableTileProps> = (args) => {
   return (
     <WithLayer>
       {(layer) => (
-        <div style={{ width: '400px' }}>
+        <div style={{ width: '400px', maxWidth: '100%' }}>
           <ExpandableTile id={`expandable-tile-${layer}`} {...args}>
             <TileAboveTheFoldContent>
               <div style={{ height: '100px' }}>Above the fold content here</div>

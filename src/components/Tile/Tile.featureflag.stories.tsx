@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from tile-story.css, inner WithFeatureFlags decorator removed (`enable-tile-contrast` is on globally; the v12 tile icon flags stay off, ADR 0018), inline spacing as Carbon spacing tokens, story names unified, example data from the Afframe glossary (plans, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: labelText added to the TextInput in the expandable stories (story markup fix for the a11y label rule), TypeScript, components and icons from @afframe/ui, source tag, styles from tile-story.css, inner WithFeatureFlags decorator removed (`enable-tile-contrast` is on globally; the v12 tile icon flags stay off, ADR 0018), inline spacing as Carbon spacing tokens, story names unified, expandable story wrappers capped at the screen width, example data from the Afframe glossary (plans, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { action } from 'storybook/actions';
@@ -410,7 +410,7 @@ RadioWithLayer.parameters = {
 
 export const Expandable: StoryFn<ExpandableTileProps> = (args) => (
   <div
-    style={{ width: '400px' }}
+    style={{ width: '400px', maxWidth: '100%' }}
     className={previewClassname}>
     <ExpandableTile id="expandable-tile-1" {...args}>
       <TileAboveTheFoldContent>
@@ -439,7 +439,7 @@ export const ExpandableWithInteractive: StoryFn<ExpandableTileProps> = (
   args
 ) => (
   <div
-    style={{ width: '400px' }}
+    style={{ width: '400px', maxWidth: '100%' }}
     className={previewClassname}>
     <ExpandableTile id="expandable-tile-1" {...args}>
       <TileAboveTheFoldContent>
@@ -481,7 +481,7 @@ export const ExpandableWithLayer: StoryFn<ExpandableTileProps> = (args) => {
     <WithLayer>
       {(layer) => (
         <div
-          style={{ width: '400px' }}
+          style={{ width: '400px', maxWidth: '100%' }}
           className={previewClassname}>
           <ExpandableTile id={`expandable-tile-${layer}`} {...args}>
             <TileAboveTheFoldContent>
