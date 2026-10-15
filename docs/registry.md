@@ -275,8 +275,8 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | InlineNotification                 | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
 | ToastNotification                  | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
 | Callout                            | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
-| NotificationActionButton           | component | carbon       | client  | stable            |                                                                       |
-| NotificationButton                 | component | carbon       | client  | stable            |                                                                       |
+| NotificationActionButton           | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
+| NotificationButton                 | component | carbon       | client  | stable            | [page](../src/components/Notification/Notification.mdx)               |
 | Loading                            | component | carbon       | client  | stable            | [page](../src/components/Loading/Loading.mdx)                         |
 | InlineLoading                      | component | carbon       | client  | stable            | [page](../src/components/InlineLoading/InlineLoading.mdx)             |
 | ProgressBar                        | component | carbon       | client  | stable            | [page](../src/components/ProgressBar/ProgressBar.mdx)                 |
@@ -286,9 +286,9 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | SkeletonIcon                       | component | carbon       | client  | stable            | [page](../src/components/SkeletonIcon/SkeletonIcon.mdx)               |
 | SkeletonPlaceholder                | component | carbon       | client  | stable            | [page](../src/components/SkeletonPlaceholder/SkeletonPlaceholder.mdx) |
 | SkeletonText                       | component | carbon       | client  | stable            | [page](../src/components/SkeletonText/SkeletonText.mdx)               |
-| IconSkeleton                       | component | carbon       | client  | stable            |                                                                       |
+| IconSkeleton                       | component | carbon       | client  | stable            | [page](../src/components/SkeletonIcon/SkeletonIcon.mdx)               |
 | ErrorBoundary                      | component | carbon       | client  | stable            | [page](../src/components/ErrorBoundary/ErrorBoundary.mdx)             |
-| ErrorBoundaryContext               | util      | carbon       | client  | stable            |                                                                       |
+| ErrorBoundaryContext               | util      | carbon       | client  | stable            | [page](../src/components/ErrorBoundary/ErrorBoundary.mdx)             |
 | AILabel                            | component | carbon       | client  | stable            | [page](../src/components/AILabel/AILabel.mdx)                         |
 | AILabelActions                     | component | carbon       | client  | stable            |                                                                       |
 | AILabelContent                     | component | carbon       | client  | stable            |                                                                       |

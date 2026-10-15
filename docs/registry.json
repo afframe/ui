@@ -3107,7 +3107,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Notification/Notification.mdx"
     },
     {
       "name": "NotificationButton",
@@ -3115,7 +3116,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Notification/Notification.mdx"
     },
     {
       "name": "Loading",
@@ -3204,7 +3206,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/SkeletonIcon/SkeletonIcon.mdx"
     },
     {
       "name": "ErrorBoundary",
@@ -3221,7 +3224,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ErrorBoundary/ErrorBoundary.mdx"
     },
     {
       "name": "AILabel",

@@ -203,6 +203,10 @@ const docsAliases = {
   ThemeSetDropdown: 'ThemeSettings/ThemeSettings.mdx',
   FluidDatePickerInput: 'FluidDatePicker/FluidDatePicker.mdx',
   DataTableSkeleton: 'DataTable/DataTable.mdx',
+  IconSkeleton: 'SkeletonIcon/SkeletonIcon.mdx',
+  NotificationButton: 'Notification/Notification.mdx',
+  NotificationActionButton: 'Notification/Notification.mdx',
+  ErrorBoundaryContext: 'ErrorBoundary/ErrorBoundary.mdx',
 };
 for (const [name, page] of Object.entries(docsAliases)) {
   if (!docsByName.has(name)) docsByName.set(name, `src/components/${page}`);
