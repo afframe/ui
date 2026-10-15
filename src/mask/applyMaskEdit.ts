@@ -195,7 +195,7 @@ const typeText: Handler = ({ base, data, spec }) => {
   for (const char of data) {
     const step = isDigit(char)
       ? insertDigit(typed, char, spec)
-      : separate(typed, spec);
+      : (separate(typed, spec) ?? typed);
     if (!step) break;
     typed = step;
   }

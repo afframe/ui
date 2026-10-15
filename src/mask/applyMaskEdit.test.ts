@@ -120,6 +120,10 @@ describe('typed separators', () => {
     expect(show(type(dotted, '.', '0|1.10.'))).toBe('0|1.10.');
   });
 
+  test('an ignored separator does not stop the rest of the text', () => {
+    expect(edit(dotted, '|', 'insertText', '.5')).toBe('05.|');
+  });
+
   test('is ignored with a selection', () => {
     expect(edit(dotted, '[01].10.', 'insertText', '.')).toBe('[01].10.');
   });
