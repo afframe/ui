@@ -24,7 +24,7 @@ function parse(marked: string): MaskState {
   const caret = marked.indexOf('|');
   if (caret !== -1) {
     return {
-      value: marked.replace('|', ''),
+      value: marked.slice(0, caret) + marked.slice(caret + 1),
       selectionStart: caret,
       selectionEnd: caret,
     };
