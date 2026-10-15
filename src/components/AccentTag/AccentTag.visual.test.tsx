@@ -3,7 +3,7 @@ import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import * as stories from './AccentTag.stories.js';
 
-const { Accents, Dark, Default } = composeStories(stories);
+const { Accents, Dark, TestTooltipOnFocus } = composeStories(stories);
 
 async function snapshot(name: string) {
   await document.fonts.load('400 14px "IBM Plex Sans"');
@@ -21,10 +21,10 @@ test.each([
   await snapshot(name);
 });
 
-// The Default play function presses Tab once to the tag and waits for its
-// tooltip; wait for the tooltip's animation before the screenshot.
+// The TestTooltipOnFocus play function presses Tab once to the tag and waits
+// for its tooltip; wait for the tooltip's animation before the screenshot.
 test('accent-tag-focus', async () => {
-  await Default.run();
+  await TestTooltipOnFocus.run();
   const tag = page.getByRole('button', { name: 'Acme Trading' }).element();
   expect(document.activeElement).toBe(tag);
   await expect.element(page.getByRole('tooltip')).toBeVisible();

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, CopyButton from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, CopyButton from @afframe/ui, source tag, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -88,3 +88,8 @@ export const Default: StoryFn<typeof CopyButton> = (args) => (
 Default.args = defaultArgs;
 Default.argTypes = argTypes;
 Default.parameters = parameters;
+
+export const Disabled: StoryFn<typeof CopyButton> = Default.bind({});
+Disabled.args = { ...defaultArgs, disabled: true };
+Disabled.argTypes = argTypes;
+Disabled.parameters = parameters;

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, propTypes dropped, margin as a logical inline style. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, propTypes dropped, margin as a logical inline style, Billing demo product. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ReactNode } from 'react';
@@ -33,7 +33,7 @@ export const UiShell = ({ children }: { children?: ReactNode }) => {
       <Theme theme="g100">
         <HeaderContainer
           render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-            <Header aria-label="IBM Product">
+            <Header aria-label="Billing">
               <SkipToContent />
               <HeaderMenuButton
                 aria-label={isSideNavExpanded ? 'Close menu' : 'Open menu'}
@@ -41,8 +41,8 @@ export const UiShell = ({ children }: { children?: ReactNode }) => {
                 isCollapsible
                 isActive={isSideNavExpanded}
               />
-              <HeaderName href="/" prefix="IBM">
-                Product
+              <HeaderName href="#" prefix="">
+                Billing
               </HeaderName>
               <SideNav
                 aria-label="Side navigation"
@@ -50,15 +50,12 @@ export const UiShell = ({ children }: { children?: ReactNode }) => {
                 isPersistent={false}>
                 <SideNavItems>
                   <HeaderSideNavItems>
-                    {/* You can add more items here if needed */}
-                    <HeaderMenuItem href="/repos">Repositories</HeaderMenuItem>
+                    <HeaderMenuItem href="#">Invoices</HeaderMenuItem>
                   </HeaderSideNavItems>
                 </SideNavItems>
               </SideNav>
               <HeaderGlobalBar style={{ marginRight: '1rem' }}>
-                <HeaderGlobalAction
-                  aria-label="User Avatar"
-                  tooltipAlignment="end">
+                <HeaderGlobalAction aria-label="Account" tooltipAlignment="end">
                   <UserAvatar size={20} />
                 </HeaderGlobalAction>
               </HeaderGlobalBar>

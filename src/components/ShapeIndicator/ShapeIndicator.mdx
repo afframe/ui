@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as ShapeIndicatorStories from './ShapeIndicator.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { StatusChooser } from '../../../.storybook/StatusChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, code sample closed, usage link, Afframe note on StatusIndicator and status chooser table added, overview sentence written.
 
 <Meta isTemplate />
 
@@ -12,23 +13,31 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 <SourceLabel name="carbon" />
 
 [Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/ShapeIndicator)
-&nbsp;
+&nbsp;|&nbsp;
+[Usage guidelines](https://carbondesignsystem.com/patterns/status-indicator-pattern/)
 
 ## Overview
 
-`ShapeIndicator`
+The `ShapeIndicator` component shows a status or severity level with a shape
+and a label, so users can scan and compare items quickly.
 
 ```jsx
 import { preview__ShapeIndicator as ShapeIndicator } from '@afframe/ui';
 
 function ExampleComponent() {
-  return (
-    <ShapeIndicator kind="failed" label="Failed">
-  );
+  return <ShapeIndicator kind="failed" label="Failed" />;
 }
 ```
 
 <Canvas of={ShapeIndicatorStories.Default} />
+
+In Afframe UI, use [`StatusIndicator`](?path=/docs/components-statusindicator--overview)
+in app code: it is built on this indicator, takes its labels from `messages`
+and can render as a `Tag`.
+
+## Which component to use
+
+<StatusChooser />
 
 ## Kind
 

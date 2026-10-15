@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Components/TagOverflow, pkg.prefix as the 'c4p' literal, DisplayBox replaced by a div, story styles converted from SCSS to plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Components/TagOverflow, pkg.prefix as the 'c4p' literal, DisplayBox replaced by a div, story styles converted from SCSS to plain CSS, source tag, story names unified, story wrappers capped with max-inline-size so they fit narrow screens, the deprecated multiline arg dropped from Multiline. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState, useRef, type ComponentType } from 'react';
@@ -77,7 +77,7 @@ const Template: StoryFn<StoryArgs> = (argsIn) => {
     ...argsIn,
   };
   return (
-    <div style={{ width: containerWidth }}>
+    <div style={{ inlineSize: '100%', maxInlineSize: containerWidth }}>
       <TagOverflow {...(args as unknown as TagOverflowProps)} />
     </div>
   );
@@ -107,11 +107,13 @@ WithOverflowModal.args = {
   ...overflowAndModalStrings,
 };
 
+// Upstream also passes multiline: true. The prop is deprecated, has no effect
+// and reaches the root div, where React warns about a non-boolean attribute.
+// This is an upstream bug.
 export const Multiline = Template.bind({});
 Multiline.args = {
   containerWidth: 500,
   items: tags,
-  multiline: true,
   ...overflowAndModalStrings,
 };
 
@@ -162,7 +164,9 @@ const TemplateWithClose: StoryFn<StoryArgs> = (argsIn) => {
 
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div style={{ width: containerWidth }} ref={ref}>
+    <div
+      style={{ inlineSize: '100%', maxInlineSize: containerWidth }}
+      ref={ref}>
       <TagOverflow
         {...(args as unknown as TagOverflowProps)}
         items={liveTags as TagOverflowProps['items']}

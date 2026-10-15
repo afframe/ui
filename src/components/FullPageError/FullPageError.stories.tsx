@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as a plain CSS file, template literals around props dropped, TODO comments dropped, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story styles as a plain CSS file, template literals around props dropped, TODO comments dropped, story names unified, invoice data, links to #, main-content id for the skip link. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -39,10 +39,9 @@ export default {
 
 const defaultProps = {
   kind: 'custom',
-  title: '[Error title]',
-  label: 'Error ###',
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
+  title: 'Something went wrong',
+  label: 'Error 500',
+  description: 'We could not load this page. Try again in a few minutes.',
 } as const;
 
 const Template: StoryFn<typeof FullPageError> = (args) => {
@@ -50,7 +49,7 @@ const Template: StoryFn<typeof FullPageError> = (args) => {
   return (
     <div className={`${storyClass}__viewport`}>
       <UiShell>
-        <div className={`${storyClass}__offset`}>
+        <div className={`${storyClass}__offset`} id="main-content">
           <div className={`${storyClass}__breadcrumb-container`}>
             <Breadcrumbs className={`${storyClass}__breadcrumb`} />
           </div>
@@ -59,12 +58,12 @@ const Template: StoryFn<typeof FullPageError> = (args) => {
             label={args.label}
             description={args.description}
             {...(args.kind ? { kind: args.kind } : {})}>
-            <Link size="lg" href={'/'}>
-              – Forwarding Link 1
+            <Link size="lg" href="#">
+              Go to invoices
             </Link>
             <br />
-            <Link size="lg" href={'/'}>
-              – Forwarding Link 1
+            <Link size="lg" href="#">
+              Contact support
             </Link>
           </FullPageError>
         </div>

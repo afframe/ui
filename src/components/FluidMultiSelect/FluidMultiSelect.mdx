@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as FluidMultiSelectStories from './FluidMultiSelect.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, accessible name section rewritten for `titleText`, Afframe note on the invalid state, field chooser added.
 
 <Meta isTemplate />
 
@@ -41,14 +42,25 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={FluidMultiSelectStories.Condensed} />
 
+In Afframe UI, `FluidMultiSelect` is used as Carbon ships it:
+
+- With `invalid`, the `invalidText` has no id, nothing points to it and the
+  field gets no `aria-invalid`, so screen readers do not read the message with
+  the field. FluidMultiSelect passes no extra props to the field, so an app
+  cannot link it (an upstream bug). Repeat the reason near the form's submit
+  button.
+
+## Which component to use
+
+<FieldChooser />
+
 ## Accessibility Considerations
 
 ### Accessible Name
 
-To comply with accessibility requirements, make sure to supply the component
-with an accessible name by providing either the `aria-label`, `aria-labelledby`
-or `title` attribute. Read more on the accessible naming rule
-[here](https://able.ibm.com/rules/archives/latest/doc/en-US/aria_accessiblename_exists.html).
+The accessible name comes from `titleText`: Carbon renders it as the field's
+`<label>`, so set it on every field. `label` is the placeholder text inside
+the field and does not name it.
 
 ## Component API
 

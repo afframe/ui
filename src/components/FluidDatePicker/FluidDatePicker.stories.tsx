@@ -7,10 +7,10 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args; datePickerType comes from args; unsupported skeleton props removed, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args; datePickerType comes from args; unsupported skeleton props removed, story names unified, args split between FluidDatePicker and FluidDatePickerInput, Czech date format and example data, state stories added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
+import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
 import { Information } from '../../icons.js';
 import {
   FluidDatePicker,
@@ -59,26 +59,26 @@ type FluidDatePickerArgs = FluidDatePickerProps &
     maxDate?: string;
     minDate?: string;
     short?: boolean;
+    value?: string;
   };
 
 const sharedArgs: FluidDatePickerArgs = {
   allowInput: true,
   closeOnSelect: true,
-  dateFormat: 'm/d/Y',
+  dateFormat: 'd.m.Y',
   disabled: false,
   helperText: '',
   invalid: false,
-  invalidText:
-    'Error message that is really long can wrap to more lines but should not be excessively long.',
+  invalidText: 'Enter the due date as dd.mm.yyyy, for example 15.10.2026.',
   maxDate: '',
   minDate: '',
-  placeholder: 'mm/dd/yyyy',
+  placeholder: 'dd.mm.yyyy',
   readOnly: false,
   short: false,
   size: 'md',
   warn: false,
   warnText:
-    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+    'The due date is in the past. Check it before you send the invoice.',
 };
 
 const sharedArgTypes: ArgTypes = {
@@ -108,15 +108,9 @@ const sharedArgTypes: ArgTypes = {
   },
   readOnly: {
     control: { type: 'boolean' },
-    table: {
-      category: 'DatePickerInput',
-    },
   },
   invalid: {
     control: { type: 'boolean' },
-    table: {
-      category: 'DatePickerInput',
-    },
   },
   invalidText: {
     control: { type: 'text' },
@@ -144,9 +138,6 @@ const sharedArgTypes: ArgTypes = {
   },
   short: {
     control: { type: 'boolean' },
-    table: {
-      category: 'DatePickerInput',
-    },
   },
   size: {
     control: 'select',
@@ -157,9 +148,6 @@ const sharedArgTypes: ArgTypes = {
   },
   warn: {
     control: { type: 'boolean' },
-    table: {
-      category: 'DatePickerInput',
-    },
   },
   warnText: {
     control: { type: 'text' },
@@ -168,6 +156,23 @@ const sharedArgTypes: ArgTypes = {
     },
   },
 };
+
+// FluidDatePicker passes unknown props to DatePicker, which spreads them onto
+// its div; FluidDatePickerInput spreads its own onto the input. So each gets
+// only its own args. The picker sets the fluid invalid, warn and read-only
+// classes and clones those three into its inputs.
+function splitArgs(args: FluidDatePickerArgs) {
+  const picker: Partial<FluidDatePickerArgs> = {};
+  const input: Partial<FluidDatePickerArgs> = {};
+  for (const [key, value] of Object.entries(args)) {
+    const target =
+      sharedArgTypes[key]?.table?.category === 'DatePickerInput'
+        ? input
+        : picker;
+    Object.assign(target, { [key]: value });
+  }
+  return { picker, input };
+}
 
 const datePickerTypeArgType: ArgTypes[string] = {
   control: 'select',
@@ -201,15 +206,16 @@ const LabelToggletip = () => (
 
 export const Default: StoryFn<FluidDatePickerArgs> = (args) => {
   const { defaultWidth, ...datePickerArgs } = args;
+  const { picker, input } = splitArgs(datePickerArgs);
   return (
     <div className="fluid-date-picker-story" style={{ width: defaultWidth }}>
       <LabelToggletip />
-      <FluidDatePicker {...datePickerArgs}>
+      <FluidDatePicker {...picker}>
         <FluidDatePickerInput
-          placeholder="mm/dd/yyyy"
-          labelText="Label"
+          placeholder="dd.mm.yyyy"
+          labelText="Due date"
           id="date-picker-simple"
-          {...datePickerArgs}
+          {...input}
         />
       </FluidDatePicker>
     </div>
@@ -228,55 +234,59 @@ Default.argTypes = {
 };
 Default.parameters = sharedParameters;
 
-export const Single: StoryFn<FluidDatePickerArgs> = (args) => {
+export const SingleWithCalendar: StoryFn<FluidDatePickerArgs> = (args) => {
   const { defaultWidth, ...datePickerArgs } = args;
+  const { picker, input } = splitArgs(datePickerArgs);
   return (
     <div className="fluid-date-picker-story" style={{ width: defaultWidth }}>
       <LabelToggletip />
-      <FluidDatePicker {...datePickerArgs}>
+      <FluidDatePicker {...picker}>
         <FluidDatePickerInput
           style={{ width: defaultWidth }}
-          placeholder="mm/dd/yyyy"
-          labelText="Label"
+          placeholder="dd.mm.yyyy"
+          labelText="Due date"
           id="date-picker-single"
-          {...datePickerArgs}
+          {...input}
         />
       </FluidDatePicker>
     </div>
   );
 };
 
-Single.args = {
+SingleWithCalendar.args = {
   ...sharedArgs,
   datePickerType: 'single',
   defaultWidth: 288,
 };
-Single.argTypes = {
+SingleWithCalendar.argTypes = {
   ...sharedArgTypes,
   datePickerType: datePickerTypeArgType,
   defaultWidth: defaultWidthArgType,
 };
-Single.parameters = sharedParameters;
+SingleWithCalendar.parameters = sharedParameters;
 
 export const RangeWithCalendar: StoryFn<FluidDatePickerArgs> = (args) => {
   const { defaultWidth, ...datePickerArgs } = args;
+  const { picker, input } = splitArgs(datePickerArgs);
   return (
-    <div className="fluid-date-picker-story" style={{ width: defaultWidth }}>
+    <div
+      className="fluid-date-picker-story fluid-date-picker-story--range"
+      style={{ width: defaultWidth }}>
       <LabelToggletip />
-      <FluidDatePicker {...datePickerArgs}>
+      <FluidDatePicker {...picker}>
         <FluidDatePickerInput
           id="date-picker-input-id-start"
-          placeholder="mm/dd/yyyy"
-          labelText="Label"
+          placeholder="dd.mm.yyyy"
+          labelText="Billing period start"
           size="md"
-          {...datePickerArgs}
+          {...input}
         />
         <FluidDatePickerInput
           id="date-picker-input-id-finish"
-          placeholder="mm/dd/yyyy"
-          labelText="End date"
+          placeholder="dd.mm.yyyy"
+          labelText="Billing period end"
           size="md"
-          {...datePickerArgs}
+          {...input}
         />
       </FluidDatePicker>
     </div>
@@ -294,6 +304,27 @@ RangeWithCalendar.argTypes = {
   defaultWidth: defaultWidthArgType,
 };
 RangeWithCalendar.parameters = sharedParameters;
+
+type StateStory = StoryObj<FluidDatePickerArgs>;
+
+const stateStory = (args: Partial<FluidDatePickerArgs>): StateStory => ({
+  render: SingleWithCalendar,
+  args: { ...sharedArgs, datePickerType: 'single', defaultWidth: 288, ...args },
+  argTypes: {
+    ...sharedArgTypes,
+    datePickerType: datePickerTypeArgType,
+    defaultWidth: defaultWidthArgType,
+  },
+  parameters: sharedParameters,
+});
+
+export const Disabled = stateStory({ disabled: true });
+
+export const ReadOnly = stateStory({ readOnly: true, value: '15.10.2026' });
+
+export const Invalid = stateStory({ invalid: true });
+
+export const Warning = stateStory({ warn: true });
 
 export const Skeleton: StoryFn<
   FluidDatePickerSkeletonProps & { defaultWidth?: number }

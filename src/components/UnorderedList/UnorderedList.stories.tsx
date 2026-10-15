@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified, items are example payment methods. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -51,9 +51,9 @@ export default {
 export const Default: StoryFn<typeof UnorderedList> = (args) => {
   return (
     <UnorderedList {...args}>
-      <ListItem>Review pull requests</ListItem>
-      <ListItem>Update dependencies</ListItem>
-      <ListItem>Publish the release notes</ListItem>
+      <ListItem>Bank transfer</ListItem>
+      <ListItem>Card</ListItem>
+      <ListItem>Cash</ListItem>
     </UnorderedList>
   );
 };
@@ -65,20 +65,20 @@ export const Nested: StoryFn<typeof UnorderedList> = ({
   return (
     <UnorderedList {...listArgs}>
       <ListItem>
-        Prepare the release
+        Bank transfer
         <UnorderedList {...listArgs} nested={nested}>
-          <ListItem>Review pull requests</ListItem>
+          <ListItem>Domestic transfer</ListItem>
           <ListItem>
-            Update dependencies
+            International transfer
             <UnorderedList {...listArgs} nested={nested}>
-              <ListItem>Run the test suite</ListItem>
-              <ListItem>Resolve security alerts</ListItem>
+              <ListItem>Paid in the invoice currency</ListItem>
+              <ListItem>Paid in another currency</ListItem>
             </UnorderedList>
           </ListItem>
         </UnorderedList>
       </ListItem>
-      <ListItem>Publish the release notes</ListItem>
-      <ListItem>Notify maintainers</ListItem>
+      <ListItem>Card</ListItem>
+      <ListItem>Cash</ListItem>
     </UnorderedList>
   );
 };

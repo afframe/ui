@@ -9,6 +9,7 @@ import {
   usePrefix,
 } from '@carbon/react';
 import { useId, useRef, useState } from 'react';
+import type { ComponentPropsWithoutRef, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
 
 /** One checkbox in a filter group. `value` is stored in `FilterPanelValue`. */
@@ -58,13 +59,20 @@ export const defaultFilterPanelMessages: FilterPanelMessages = {
   noMatches: 'No matching options',
 };
 
-export interface FilterPanelProps {
+export interface FilterPanelProps extends Omit<
+  ComponentPropsWithoutRef<'section'>,
+  'onChange' | 'children'
+> {
+  /** Ref to the root `section`. */
+  ref?: Ref<HTMLElement>;
   groups: readonly FilterPanelGroup[];
   value: FilterPanelValue;
   onChange: (value: FilterPanelValue) => void;
   /** Number of results with the current filters; shown and announced when set. */
   resultCount?: number;
   messages?: Partial<FilterPanelMessages>;
+  /** Level of the title heading. Default 2. */
+  headingLevel?: 2 | 3;
   className?: string;
 }
 
@@ -100,7 +108,10 @@ export function FilterPanel({
   onChange,
   resultCount,
   messages,
+  headingLevel = 2,
   className,
+  ref,
+  ...rest
 }: FilterPanelProps) {
   const text = resolveMessages(defaultFilterPanelMessages, messages);
   const prefix = usePrefix();
@@ -138,17 +149,22 @@ export function FilterPanel({
   };
 
   const classes = ['afframe-filter-panel', className].filter(Boolean).join(' ');
+  const Heading = headingLevel === 3 ? 'h3' : 'h2';
 
   return (
-    <section className={classes} aria-labelledby={`${id}-title`}>
+    <section
+      aria-labelledby={`${id}-title`}
+      {...rest}
+      ref={ref}
+      className={classes}>
       <div className="afframe-filter-panel-header">
-        <h2
+        <Heading
           id={`${id}-title`}
           ref={titleRef}
           tabIndex={-1}
           className="afframe-filter-panel-title">
           {text.title}
-        </h2>
+        </Heading>
         {resultCount !== undefined && (
           <p role="status" className="afframe-filter-panel-count">
             {text.resultCount(resultCount)}

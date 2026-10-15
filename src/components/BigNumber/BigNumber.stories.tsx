@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, BigNumber, Button and Edit from @afframe/ui, size options as literals, title Components/BigNumber, source tag, scss styles dropped, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, BigNumber, Button and Edit from @afframe/ui, size options as literals, title Components/BigNumber, source tag, scss styles dropped, story names unified, label from the Afframe glossary, icon button described as Edit. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -38,7 +38,7 @@ const iconButtonOptions = {
   'Example <Button> ': (
     <Button
       renderIcon={Edit}
-      iconDescription="Icon Description"
+      iconDescription="Edit"
       kind="ghost"
       size={'sm'}
       hasIconOnly
@@ -143,7 +143,7 @@ const defaultProps = {
   forceShowTotal: false,
   fractionDigits: 1,
   iconButton: 0,
-  label: 'Label',
+  label: 'Revenue this month',
   loading: false,
   locale: 'en-US',
   percentage: false,

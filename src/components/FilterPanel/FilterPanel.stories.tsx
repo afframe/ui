@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { useArgs } from 'storybook/preview-api';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { FilterFlyout } from './FilterFlyout.js';
+import type { FilterFlyoutProps } from './FilterFlyout.js';
 import { FilterPanel } from './FilterPanel.js';
-import type { FilterPanelGroup, FilterPanelValue } from './FilterPanel.js';
+import type {
+  FilterPanelGroup,
+  FilterPanelProps,
+  FilterPanelValue,
+} from './FilterPanel.js';
 import mdx from './FilterPanel.mdx';
 
 const groups: FilterPanelGroup[] = [
@@ -62,29 +67,33 @@ function countResults(value: FilterPanelValue): number {
 
 const initialValue: FilterPanelValue = { status: ['paid', 'overdue'] };
 
-function PanelHarness() {
-  const [value, setValue] = useState(initialValue);
+function PanelHarness(args: FilterPanelProps) {
+  const [, updateArgs] = useArgs<FilterPanelProps>();
   return (
     <div style={{ maxInlineSize: '20rem' }}>
       <FilterPanel
-        groups={groups}
-        value={value}
-        onChange={setValue}
-        resultCount={countResults(value)}
+        resultCount={countResults(args.value)}
+        {...args}
+        onChange={(value) => {
+          updateArgs({ value });
+          args.onChange(value);
+        }}
       />
     </div>
   );
 }
 
-function FlyoutHarness() {
-  const [value, setValue] = useState(initialValue);
+function FlyoutHarness(args: FilterFlyoutProps) {
+  const [, updateArgs] = useArgs<FilterFlyoutProps>();
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
       <FilterFlyout
-        groups={groups}
-        value={value}
-        onChange={setValue}
-        resultCount={countResults(value)}
+        resultCount={countResults(args.value)}
+        {...args}
+        onChange={(value) => {
+          updateArgs({ value });
+          args.onChange(value);
+        }}
       />
     </div>
   );
@@ -104,22 +113,21 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+type FlyoutStory = StoryObj<FilterFlyoutProps>;
 
 export const Default: Story = {
-  render: () => <PanelHarness />,
+  render: PanelHarness,
 };
 
-export const Flyout: Story = {
-  render: () => <FlyoutHarness />,
+export const Flyout: FlyoutStory = {
+  render: FlyoutHarness,
   parameters: { layout: 'padded' },
 };
 
-export const FlyoutOpen: Story = {
-  render: () => <FlyoutHarness />,
-  parameters: { layout: 'padded' },
-  play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Filter (2)' }));
-  },
+export const FlyoutOpen: FlyoutStory = {
+  ...Flyout,
+  args: { defaultOpen: true },
+  parameters: { layout: 'padded', docs: { story: { height: '32rem' } } },
 };
 
 export const Dark: Story = {
@@ -128,7 +136,7 @@ export const Dark: Story = {
   globals: { theme: 'dark' },
 };
 
-export const FlyoutOpenDark: Story = {
+export const FlyoutOpenDark: FlyoutStory = {
   ...FlyoutOpen,
   tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },

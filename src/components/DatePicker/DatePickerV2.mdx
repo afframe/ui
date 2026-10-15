@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as DatePickerStories from './DatePickerV2.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: docs page of the stories file (template instead of Meta of), em-dashes replaced, source label added, code samples import from @afframe/ui, primitives link pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, onChange samples format with formatDate.
+// Modified by Afframe in 2026: docs page of the stories file (template instead of Meta of), em-dashes replaced, source label added, code samples import from @afframe/ui, primitives link pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, onChange samples format with formatDate, Afframe notes on date strings and calendar focus, date chooser added.
 
 <Meta isTemplate />
 
@@ -66,6 +67,10 @@ The input also supports Carbon AI label decoration through the `DatePickerInput`
 `decorator` prop.
 
 <Canvas of={DatePickerStories.WithAILabel} />
+
+## Which component to use
+
+<DateChooser />
 
 ## Component API
 
@@ -215,6 +220,11 @@ Supported format tokens:
 </DatePicker>
 ```
 
+Afframe: the stories use `dateFormat="d.m.Y"`. This picker supports the `d`,
+`m` and `Y` tokens used here, and also `j`, `n` and `y`. `dateFormat` sets only the displayed text:
+string `value`, `minDate` and `maxDate` are read as `Y-m-d` or `m/d/Y`
+whatever the `dateFormat`, so pass ISO strings or `Date` objects.
+
 ### Date picker `datePickerType`
 
 There are three supported variations of `DatePicker` in Carbon.
@@ -349,6 +359,13 @@ sequence.
 
 When the calendar opens without a selected date, focus automatically moves to
 today's date for easy keyboard navigation.
+
+Afframe: in Carbon 1.118, Tab from the input focuses the calendar grid itself.
+The current day is marked only by a class and `tabindex`; the grid has no
+`aria-activedescendant`, so a screen reader likely does not announce the day
+the arrows move to. Escape closes the calendar but leaves focus on the page
+body, not on the input (an upstream bug). The classic `DatePicker` returns
+focus to the input.
 
 ## Migration from Carbon React v11
 

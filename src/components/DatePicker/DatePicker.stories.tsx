@@ -7,11 +7,11 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, Carbon's internal useDocumentLang inlined, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, useDocumentLang from .storybook, source tag, story names unified, args split between DatePicker and DatePickerInput, Czech date format and example data, datePickerType control, state stories and WeekStartsMonday added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import { useSyncExternalStore } from 'react';
-import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
+import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { useDocumentLang } from '../../../.storybook/useDocumentLang.js';
 import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
 import { FolderOpen, Folders, View } from '../../icons.js';
 import {
@@ -26,9 +26,10 @@ import {
 } from '../../index.js';
 import mdx from './DatePicker.mdx';
 
-// Shared args flow into both DatePicker and DatePickerInput.
 interface DatePickerStoryArgs {
   datePickerType?: 'simple' | 'single' | 'range';
+  dateFormat?: string;
+  value?: string;
   readOnly: boolean;
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
@@ -41,23 +42,6 @@ interface DatePickerStoryArgs {
   onChange?: (...args: unknown[]) => void;
   onClose?: (...args: unknown[]) => void;
   onOpen?: (...args: unknown[]) => void;
-}
-
-// Carbon's internal useDocumentLang: the <html> lang, or the browser language.
-function subscribeDocumentLang(callback: () => void) {
-  const observer = new MutationObserver(callback);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['lang'],
-  });
-  return () => observer.disconnect();
-}
-
-function useDocumentLang() {
-  return useSyncExternalStore(
-    subscribeDocumentLang,
-    () => document.documentElement.lang || window.navigator.language || ''
-  );
 }
 
 export default {
@@ -73,16 +57,11 @@ export default {
       page: mdx,
     },
     controls: {
-      exclude: [
-        'appendTo',
-        'datePickerType',
-        'disable',
-        'enable',
-        'inline',
-        'locale',
-        'value',
-      ],
+      exclude: ['appendTo', 'disable', 'enable', 'inline', 'locale', 'value'],
     },
+  },
+  args: {
+    dateFormat: 'd.m.Y',
   },
   argTypes: {
     light: {
@@ -93,14 +72,15 @@ export default {
   },
 } satisfies Meta;
 
-const sharedArgs = {
-  invalidText: 'Error message goes here',
-  warnText: 'Warning message goes here',
-};
+const invalidText = 'Enter the date as dd.mm.yyyy.';
+const warnText = 'The date is in the past.';
 
-// Add sharedArgs to each story's .args so they flow through {...args} automatically
+const sharedArgs = { invalidText, warnText };
 
 const sharedArgTypes = {
+  datePickerType: {
+    control: false,
+  },
   onChange: {
     action: 'onChange',
   },
@@ -166,37 +146,47 @@ const sharedArgTypes = {
   },
 } satisfies ArgTypes<DatePickerStoryArgs>;
 
-export const Default: StoryFn<DatePickerStoryArgs> = ({
-  readOnly,
-  ...args
-}) => {
+// DatePicker spreads unknown props onto its div and DatePickerInput onto its
+// input, so each gets only its own args. DatePicker clones readOnly, invalid
+// and warn into its inputs.
+function splitArgs(args: DatePickerStoryArgs) {
+  const picker: Partial<DatePickerStoryArgs> = {};
+  const input: Partial<DatePickerStoryArgs> = {};
+  for (const [key, value] of Object.entries(args)) {
+    const argType = (sharedArgTypes as ArgTypes)[key];
+    const target =
+      argType?.table?.category === 'DatePickerInput' ? input : picker;
+    Object.assign(target, { [key]: value });
+  }
+  return { picker, input };
+}
+
+export const Default: StoryFn<DatePickerStoryArgs> = (args) => {
   const locale = useDocumentLang().split('-')[0];
+  const { picker, input } = splitArgs(args);
+  const range = picker.datePickerType === 'range';
   return (
-    <DatePicker
-      datePickerType="single"
-      {...args}
-      readOnly={readOnly}
-      locale={locale}>
+    <DatePicker datePickerType="single" {...picker} locale={locale}>
       <DatePickerInput
-        placeholder="mm/dd/yyyy"
-        labelText="Date Picker label"
+        placeholder="dd.mm.yyyy"
+        labelText={range ? 'Billing period start' : 'Due date'}
         id="date-picker-single"
-        {...args}
+        {...input}
       />
-      {args.datePickerType === 'range' && (
+      {range && (
         <DatePickerInput
-          placeholder="mm/dd/yyyy"
-          labelText="End date"
+          placeholder="dd.mm.yyyy"
+          labelText="Billing period end"
           size="md"
           id="date-picker-input-2"
-          {...args}
+          {...input}
         />
       )}
     </DatePicker>
   );
 };
 
-Default.args = { ...sharedArgs };
+Default.args = { ...sharedArgs, datePickerType: 'single' };
 
 Default.argTypes = {
   ...sharedArgTypes,
@@ -207,13 +197,14 @@ Default.argTypes = {
 };
 
 export const Simple: StoryFn<DatePickerStoryArgs> = (args) => {
+  const { picker, input } = splitArgs(args);
   return (
-    <DatePicker datePickerType="simple" {...args}>
+    <DatePicker datePickerType="simple" {...picker}>
       <DatePickerInput
-        placeholder="mm/dd/yyyy"
-        labelText="Date Picker label"
+        placeholder="dd.mm.yyyy"
+        labelText="Due date"
         id="date-picker-simple"
-        {...args}
+        {...input}
       />
     </DatePicker>
   );
@@ -223,14 +214,15 @@ Simple.args = { ...sharedArgs };
 Simple.argTypes = { ...sharedArgTypes };
 
 export const SingleWithCalendar: StoryFn<DatePickerStoryArgs> = (args) => {
+  const { picker, input } = splitArgs(args);
   return (
-    <DatePicker datePickerType="single" {...args}>
+    <DatePicker datePickerType="single" {...picker}>
       <DatePickerInput
-        placeholder="mm/dd/yyyy"
-        labelText="Date Picker label"
+        placeholder="dd.mm.yyyy"
+        labelText="Due date"
         id="date-picker-single"
         size="md"
-        {...args}
+        {...input}
       />
     </DatePicker>
   );
@@ -240,21 +232,22 @@ SingleWithCalendar.args = { ...sharedArgs };
 SingleWithCalendar.argTypes = { ...sharedArgTypes };
 
 export const RangeWithCalendar: StoryFn<DatePickerStoryArgs> = (args) => {
+  const { picker, input } = splitArgs(args);
   return (
-    <DatePicker datePickerType="range" {...args}>
+    <DatePicker datePickerType="range" {...picker}>
       <DatePickerInput
         id="date-picker-input-id-start"
-        placeholder="mm/dd/yyyy"
-        labelText="Start date"
+        placeholder="dd.mm.yyyy"
+        labelText="Billing period start"
         size="md"
-        {...args}
+        {...input}
       />
       <DatePickerInput
         id="date-picker-input-id-finish"
-        placeholder="mm/dd/yyyy"
-        labelText="End date"
+        placeholder="dd.mm.yyyy"
+        labelText="Billing period end"
         size="md"
-        {...args}
+        {...input}
       />
     </DatePicker>
   );
@@ -264,18 +257,19 @@ RangeWithCalendar.args = { ...sharedArgs };
 RangeWithCalendar.argTypes = { ...sharedArgTypes };
 
 export const SimpleWithLayer: StoryFn<DatePickerStoryArgs> = (args) => {
+  const { picker, input } = splitArgs(args);
   return (
     <WithLayer>
       {(layer) => (
-        <DatePicker datePickerType="simple" {...args}>
+        <DatePicker datePickerType="simple" {...picker}>
           <DatePickerInput
-            placeholder="mm/dd/yyyy"
-            labelText="Date Picker label"
+            placeholder="dd.mm.yyyy"
+            labelText="Due date"
             id={`date-picker-simple-${layer}`}
             size="md"
-            invalidText="Error message goes here"
-            warnText="Warning message goes here"
-            {...args}
+            invalidText={invalidText}
+            warnText={warnText}
+            {...input}
           />
         </DatePicker>
       )}
@@ -288,18 +282,19 @@ SimpleWithLayer.argTypes = { ...sharedArgTypes };
 export const SingleWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
   args
 ) => {
+  const { picker, input } = splitArgs(args);
   return (
     <WithLayer>
       {(layer) => (
-        <DatePicker datePickerType="single" {...args}>
+        <DatePicker datePickerType="single" {...picker}>
           <DatePickerInput
-            placeholder="mm/dd/yyyy"
-            labelText="Date Picker label"
+            placeholder="dd.mm.yyyy"
+            labelText="Due date"
             id={`date-picker-single-${layer}`}
             size="md"
-            invalidText="Error message goes here"
-            warnText="Warning message goes here"
-            {...args}
+            invalidText={invalidText}
+            warnText={warnText}
+            {...input}
           />
         </DatePicker>
       )}
@@ -311,37 +306,89 @@ SingleWithCalendarWithLayer.argTypes = { ...sharedArgTypes };
 
 export const RangeWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
   args
-) => (
-  <WithLayer>
-    {(layer) => (
-      <DatePicker datePickerType="range" {...args}>
-        <DatePickerInput
-          id={`date-picker-input-id-start-${layer}`}
-          placeholder="mm/dd/yyyy"
-          labelText="Start date"
-          size="md"
-          {...args}
-        />
-        <DatePickerInput
-          id={`date-picker-input-id-finish-${layer}`}
-          placeholder="mm/dd/yyyy"
-          labelText="End date"
-          size="md"
-          {...args}
-        />
-      </DatePicker>
-    )}
-  </WithLayer>
-);
+) => {
+  const { picker, input } = splitArgs(args);
+  return (
+    <WithLayer>
+      {(layer) => (
+        <DatePicker datePickerType="range" {...picker}>
+          <DatePickerInput
+            id={`date-picker-input-id-start-${layer}`}
+            placeholder="dd.mm.yyyy"
+            labelText="Billing period start"
+            size="md"
+            {...input}
+          />
+          <DatePickerInput
+            id={`date-picker-input-id-finish-${layer}`}
+            placeholder="dd.mm.yyyy"
+            labelText="Billing period end"
+            size="md"
+            {...input}
+          />
+        </DatePicker>
+      )}
+    </WithLayer>
+  );
+};
 
 RangeWithCalendarWithLayer.args = { ...sharedArgs };
 RangeWithCalendarWithLayer.argTypes = { ...sharedArgTypes };
+
+// Carbon merges an object locale over flatpickr's strings for its `locale`
+// key (DatePicker.js:240-247). Module scope: Carbon caches on the object.
+const mondayEnglish = { locale: 'en', firstDayOfWeek: 1 };
+
+export const WeekStartsMonday: StoryFn<DatePickerStoryArgs> = (args) => {
+  const { picker, input } = splitArgs(args);
+  return (
+    <DatePicker datePickerType="single" {...picker} locale={mondayEnglish}>
+      <DatePickerInput
+        placeholder="dd.mm.yyyy"
+        labelText="Invoice date"
+        id="date-picker-week-starts-monday"
+        size="md"
+        {...input}
+      />
+    </DatePicker>
+  );
+};
+
+WeekStartsMonday.args = { ...sharedArgs };
+WeekStartsMonday.argTypes = { ...sharedArgTypes };
+
+type StateStory = StoryObj<DatePickerStoryArgs>;
+
+export const Disabled: StateStory = {
+  render: SingleWithCalendar,
+  args: { ...sharedArgs, disabled: true },
+  argTypes: { ...sharedArgTypes },
+};
+
+export const ReadOnly: StateStory = {
+  render: SingleWithCalendar,
+  args: { ...sharedArgs, readOnly: true, value: '15.10.2026' },
+  argTypes: { ...sharedArgTypes },
+};
+
+export const Invalid: StateStory = {
+  render: SingleWithCalendar,
+  args: { ...sharedArgs, invalid: true },
+  argTypes: { ...sharedArgTypes },
+};
+
+export const Warning: StateStory = {
+  render: SingleWithCalendar,
+  args: { ...sharedArgs, warn: true },
+  argTypes: { ...sharedArgTypes },
+};
 
 export const Skeleton: StoryFn = () => {
   return <DatePickerSkeleton range />;
 };
 
 export const WithAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
+  const { picker, input } = splitArgs(args);
   const aiLabel = (
     <AILabel className="ai-label-container">
       <AILabelContent>
@@ -374,14 +421,14 @@ export const WithAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
   );
   return (
     <div style={{ width: 400 }}>
-      <DatePicker datePickerType="single" {...args}>
+      <DatePicker datePickerType="single" {...picker}>
         <DatePickerInput
-          placeholder="mm/dd/yyyy"
-          labelText="Date Picker label"
+          placeholder="dd.mm.yyyy"
+          labelText="Due date"
           size="md"
           id="date-picker"
           decorator={aiLabel}
-          {...args}
+          {...input}
         />
       </DatePicker>
     </div>

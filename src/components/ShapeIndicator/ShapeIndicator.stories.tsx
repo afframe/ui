@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, preview__ShapeIndicator from @afframe/ui, source tag, unused import dropped, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, preview__ShapeIndicator from @afframe/ui, source tag, unused import dropped, inline spacing as Carbon spacing tokens, shapeDescription story args dropped so the compact name is the label. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -106,7 +106,6 @@ Default.args = {
   align: 'right',
   autoAlign: false,
   compact: false,
-  shapeDescription: 'Shape',
   textSize: 12,
 };
 
@@ -139,7 +138,6 @@ DefaultWithTextSize14.args = {
   align: 'right',
   autoAlign: false,
   compact: false,
-  shapeDescription: 'Shape',
   textSize: 14,
 };
 

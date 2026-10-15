@@ -1,15 +1,38 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import { statusIconKinds, statusShapeKinds } from './kinds.js';
-import { StatusIndicator } from './StatusIndicator.js';
+import {
+  statusIconKinds,
+  statusShapeKinds,
+  type StatusIndicatorIconKind,
+  type StatusIndicatorShapeKind,
+} from './kinds.js';
+import {
+  StatusIndicator,
+  type StatusIndicatorProps,
+} from './StatusIndicator.js';
 import mdx from './StatusIndicator.mdx';
 
 const meta = {
   title: 'Components/StatusIndicator',
   component: StatusIndicator,
   tags: ['afframe'],
-  args: { kind: 'succeeded' },
+  args: {
+    kind: 'succeeded',
+    variant: 'icon',
+    appearance: 'indicator',
+    compact: false,
+  },
+  argTypes: {
+    kind: {
+      control: 'select',
+      options: [...new Set([...statusIconKinds, ...statusShapeKinds])],
+    },
+    variant: { control: 'inline-radio', options: ['icon', 'shape'] },
+    appearance: { control: 'inline-radio', options: ['indicator', 'tag'] },
+    size: { control: 'inline-radio', options: [16, 20] },
+    textSize: { control: 'inline-radio', options: [12, 14] },
+  },
   parameters: {
     ...afframeA11y,
     docs: {
@@ -60,7 +83,39 @@ const TagRow = () => (
   </div>
 );
 
-export const Default: Story = { render: IconGrid };
+// One indicator from the controls. `kind` offers both lists, so a kind the
+// variant lacks falls back to `failed` (in both lists), and the size control
+// of the other variant is dropped.
+const Playground = (args: StatusIndicatorProps) => {
+  const { variant, kind, size, textSize, ...common } = args;
+  if (variant === 'shape') {
+    const shapeKind = (statusShapeKinds as readonly string[]).includes(kind)
+      ? (kind as StatusIndicatorShapeKind)
+      : 'failed';
+    return (
+      <StatusIndicator
+        {...common}
+        variant="shape"
+        kind={shapeKind}
+        {...(textSize === undefined ? {} : { textSize })}
+      />
+    );
+  }
+  const iconKind = (statusIconKinds as readonly string[]).includes(kind)
+    ? (kind as StatusIndicatorIconKind)
+    : 'failed';
+  return (
+    <StatusIndicator
+      {...common}
+      kind={iconKind}
+      {...(size === undefined ? {} : { size })}
+    />
+  );
+};
+
+export const Default: Story = { render: Playground };
+
+export const Icon: Story = { render: IconGrid };
 
 export const Shape: Story = { render: ShapeGrid };
 

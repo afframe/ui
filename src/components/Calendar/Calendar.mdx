@@ -1,9 +1,10 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as CalendarStories from './Calendar.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, Stackblitz links and unused imports removed, getting started imports Calendar from @afframe/ui (its styles ship in the package CSS), upstream table of contents and Labs owner block removed.
+// Modified by Afframe in 2026: source label and source link added, Stackblitz links and unused imports removed, getting started imports Calendar from @afframe/ui (its styles ship in the package CSS), upstream table of contents and Labs owner block removed, date chooser, Afframe notes and props table added.
 
 <Meta isTemplate />
 
@@ -19,6 +20,10 @@ The calendar is a full-page component that provides the users with a view of a s
 
 <Canvas of={CalendarStories.Default} />
 
+## Which component to use
+
+<DateChooser />
+
 ## Getting started
 
 Here's a quick example to get you started.
@@ -32,3 +37,35 @@ function App() {
 
 export default App;
 ```
+
+## Afframe notes
+
+### Week start and region
+
+The stories set `region="en-US"` as Labs does, so weeks start on Sunday.
+Without `region`, the calendar follows the browser language. `region` also
+sets the language of the month header and the mini calendar, so for Czech
+users keep English names with a non-US English region and start weeks on
+Monday:
+
+```tsx
+<Calendar region="en-GB" weekStartsOn={1} />
+```
+
+Two gaps remain in Labs 0.11.0, whatever the region (upstream bugs): hour
+labels in the week and day views are always 12-hour (AM/PM), and the mini
+calendar in the side panel ignores `weekStartsOn`, so with an English region it
+starts weeks on Sunday.
+
+<Canvas of={CalendarStories.WeekStartsMonday} />
+
+### Narrow screens
+
+The calendar is built for wide layouts. Below about 800 px, weekday names in
+the month view are cut off, and at phone widths (375 px) the view switcher is
+cut off too (upstream bugs). Use it in a full-width page region, not in a side
+panel or a phone layout.
+
+## Component API
+
+<ArgTypes />

@@ -8,8 +8,10 @@ import {
   Children,
   cloneElement,
   isValidElement,
+  type HTMLAttributes,
   type ReactElement,
   type ReactNode,
+  type Ref,
 } from 'react';
 import { resolveMessages } from '../../messages.js';
 
@@ -40,9 +42,19 @@ interface DescriptionListBaseProps {
   orientation?: 'horizontal' | 'vertical';
   messages?: Partial<DescriptionListMessages>;
   className?: string;
+  /** The list root, Carbon's `StructuredListWrapper` `div`. */
+  ref?: Ref<HTMLDivElement>;
 }
 
+// `role` stays Carbon's `table`; the name comes from the union below.
+type DescriptionListRootAttributes = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  keyof DescriptionListBaseProps | 'role' | 'aria-label' | 'aria-labelledby'
+>;
+
+/** Other attributes go to the list root. */
 export type DescriptionListProps = DescriptionListBaseProps &
+  DescriptionListRootAttributes &
   (
     | { 'aria-label': string; 'aria-labelledby'?: never }
     | { 'aria-labelledby': string; 'aria-label'?: never }
@@ -109,6 +121,7 @@ export function DescriptionList({
   className,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
+  ...rest
 }: DescriptionListProps) {
   const text = resolveMessages(defaultDescriptionListMessages, messages);
   const rows =
@@ -130,6 +143,7 @@ export function DescriptionList({
     .join(' ');
   return (
     <StructuredListWrapper
+      {...rest}
       className={classes}
       // Carbon defaults aria-label to an English string; empty suppresses it.
       aria-label={ariaLabel ?? ''}

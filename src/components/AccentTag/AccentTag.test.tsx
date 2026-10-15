@@ -1,5 +1,6 @@
 import { OperationalTag } from '@carbon/react';
 import { render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AccentTag, type AccentTagColor } from './AccentTag.js';
@@ -186,4 +187,56 @@ test('the tooltip opens on hover and stays open while it is hovered', async () =
   await userEvent.hover(content);
   await new Promise((resolve) => setTimeout(resolve, 500));
   expect(tooltip).toHaveAttribute('aria-hidden', 'false');
+});
+
+test('ref and other attributes reach the tag button', () => {
+  const ref = createRef<HTMLButtonElement>();
+  render(
+    <AccentTag
+      ref={ref}
+      text="Acme"
+      accent="red"
+      tooltip="Customer"
+      className="customer-tag"
+      data-testid="tag"
+      aria-haspopup="dialog"
+    />
+  );
+  const tag = screen.getByRole('button', { name: 'Acme' });
+  expect(ref.current).toBe(tag);
+  expect(tag).toBe(screen.getByTestId('tag'));
+  expect(tag).toHaveClass('afframe-accent-tag', 'customer-tag');
+  expect(tag).toHaveAttribute('aria-haspopup', 'dialog');
+  expect(tooltipOf(tag)).toHaveTextContent('Customer');
+});
+
+test('a given id becomes the tag id and keeps the accent in the name', () => {
+  render(
+    <AccentTag
+      id="acme-tag"
+      text="Acme"
+      accent="red"
+      tooltip="Customer"
+      accentLabel="Blocked"
+    />
+  );
+  const tag = screen.getByRole('button', { name: 'Acme Blocked' });
+  expect(tag).toHaveAttribute('id', 'acme-tag');
+  expect(tag.getAttribute('aria-labelledby')?.split(' ')[0]).toBe('acme-tag');
+});
+
+test('the strip uses the tag border token, not the tag text token', () => {
+  render(
+    <>
+      <AccentTag text="Overdue" accent="red" tooltip="Due soon" />
+      <div className="cds--g100">
+        <AccentTag text="Disputed" accent="red" tooltip="Under review" />
+      </div>
+    </>
+  );
+  const strip = (name: string) =>
+    getComputedStyle(screen.getByRole('button', { name }))
+      .borderInlineStartColor;
+  expect(strip('Overdue')).toBe('rgb(255, 131, 137)');
+  expect(strip('Disputed')).toBe('rgb(250, 77, 86)');
 });

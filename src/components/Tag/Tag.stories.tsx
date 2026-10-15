@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, Skeleton args typed loosely because upstream passes size md, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, styles from a plain CSS file, Skeleton args typed loosely because upstream passes size md, inline spacing as Carbon spacing tokens, story names unified, example data from the story glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -23,6 +23,7 @@ import {
   Tag,
   TagSkeleton,
 } from '../../index.js';
+import { longTagLabel, tagLabels } from './exampleTags.js';
 import mdx from './Tag.mdx';
 import './story.css';
 
@@ -43,40 +44,40 @@ export const ReadOnly: StoryFn<TagStoryArgs> = (args) => {
   return (
     <div className="tag-group">
       <Tag className="some-class" type="red" {...args}>
-        {'Tag content with a long text description'}
+        {longTagLabel}
       </Tag>
       <Tag className="some-class" type="magenta" {...args}>
-        {'Tag content'}
+        {tagLabels[0]}
       </Tag>
       <Tag className="some-class" type="purple" {...args}>
-        {'Tag content'}
+        {tagLabels[1]}
       </Tag>
       <Tag className="some-class" type="blue" {...args}>
-        {'Tag content'}
+        {tagLabels[2]}
       </Tag>
       <Tag className="some-class" type="cyan" {...args}>
-        {'Tag content'}
+        {tagLabels[3]}
       </Tag>
       <Tag className="some-class" type="teal" {...args}>
-        {'Tag content'}
+        {tagLabels[4]}
       </Tag>
       <Tag className="some-class" type="green" {...args}>
-        {'Tag content'}
+        {tagLabels[5]}
       </Tag>
       <Tag className="some-class" type="gray" {...args}>
-        {'Tag content'}
+        {tagLabels[6]}
       </Tag>
       <Tag className="some-class" type="cool-gray" {...args}>
-        {'Tag content'}
+        {tagLabels[7]}
       </Tag>
       <Tag className="some-class" type="warm-gray" {...args}>
-        {'Tag content'}
+        {tagLabels[8]}
       </Tag>
       <Tag className="some-class" type="high-contrast" {...args}>
-        {'Tag content'}
+        {tagLabels[9]}
       </Tag>
       <Tag className="some-class" type="outline" {...args}>
-        {'Tag content'}
+        {tagLabels[10]}
       </Tag>
     </div>
   );
@@ -174,8 +175,7 @@ export const WithAILabel: StoryFn<TagStoryArgs> = (args) => {
           <h2 className="ai-label-heading">84%</h2>
           <p className="secondary bold">Confidence score</p>
           <p className="secondary">
-            Lorem ipsum dolor sit amet, di os consectetur adipiscing elit, sed
-            do eiusmod tempor incididunt ut fsil labore et dolore magna aliqua.
+            Amounts suggested from the last 12 months of invoices.
           </p>
           <hr />
           <p className="secondary">Model type</p>
@@ -241,7 +241,7 @@ export const WithAILabel: StoryFn<TagStoryArgs> = (args) => {
 WithAILabel.args = {
   disabled: false,
   size: 'md',
-  text: 'Tag content',
+  text: 'Recurring',
 };
 
 WithAILabel.argTypes = {

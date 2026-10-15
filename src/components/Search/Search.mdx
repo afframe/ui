@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as SearchStories from './Search.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Disabled section and field chooser added.
 
 <Meta isTemplate />
 
@@ -24,6 +25,14 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Expandable
 
 <Canvas of={SearchStories.Expandable} />
+
+## Disabled
+
+<Canvas of={SearchStories.Disabled} />
+
+## Choosing a field
+
+<FieldChooser />
 
 ## Component API
 

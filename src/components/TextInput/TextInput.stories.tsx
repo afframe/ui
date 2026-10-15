@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified, business example data, Disabled (color-contrast off), Invalid and Warning stories, error linked by aria-describedby in Invalid. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ChangeEvent, ComponentProps, MouseEvent } from 'react';
@@ -76,15 +76,14 @@ export default {
   args: {
     className: 'input-test-class',
     id: 'text-input-1',
-    placeholder: 'Placeholder text',
+    placeholder: '',
     invalid: false,
-    invalidText: 'Error message goes here',
+    invalidText: 'Enter a company name.',
     disabled: false,
-    labelText: 'Label text',
-    helperText: 'Helper text',
+    labelText: 'Company name',
+    helperText: 'As shown on invoices',
     warn: false,
-    warnText:
-      'Warning message that is really long can wrap to more lines but should not be excessively long.',
+    warnText: 'Another customer already uses this name.',
     size: 'md',
     readOnly: false,
     inline: false,
@@ -254,7 +253,7 @@ export const ReadOnly: StoryFn<TextInputStoryArgs> = (args) => {
 };
 
 ReadOnly.args = {
-  defaultValue: "This is read only, you can't type more.",
+  defaultValue: 'Lakeside Furniture',
   readOnly: true,
 };
 
@@ -273,6 +272,27 @@ ReadOnly.parameters = {
     ],
   },
 };
+
+export const Disabled: StoryFn<TextInputStoryArgs> = Default.bind({});
+Disabled.args = { disabled: true };
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+// Carbon 1.118 points aria-errormessage at the error but adds no live region
+// or aria-describedby, which fails axe's aria-valid-attr-value. Carbon spreads
+// rest props after its own aria-describedby, so passing the error id
+// (`${id}-error-msg`) links it. The gap is an upstream bug.
+export const Invalid: StoryFn<TextInputStoryArgs> = Default.bind({});
+Invalid.args = {
+  invalid: true,
+  'aria-describedby': 'text-input-1-error-msg',
+};
+
+export const Warning: StoryFn<TextInputStoryArgs> = Default.bind({});
+Warning.args = { warn: true };
 
 export const WithLayer: StoryFn<TextInputStoryArgs> = (args) => {
   const { defaultWidth, textInputArgs } = getTextInputStoryArgs(args);

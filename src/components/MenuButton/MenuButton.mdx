@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as MenuButtonStories from './MenuButton.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ButtonChooser } from '../../../.storybook/ButtonChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Experimental Auto Align section renamed Auto align, usage and accessibility links, sample with import and example labels, menuTarget example added, heading levels fixed, button chooser table added.
 
 <Meta isTemplate />
 
@@ -12,6 +13,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 <SourceLabel name="carbon" />
 
 [Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/MenuButton)
+&nbsp;|&nbsp;
+[Usage guidelines](https://www.carbondesignsystem.com/components/menu-buttons/usage)
+&nbsp;|&nbsp;
+[Accessibility](https://www.carbondesignsystem.com/components/menu-buttons/accessibility)
 
 ## Overview
 
@@ -20,26 +25,32 @@ actions must be `MenuItem`s passed as `children`. The trigger buttons's label is
 passed as `props.label`.
 
 ```jsx
+import { MenuButton, MenuItem } from '@afframe/ui';
+
 <MenuButton label="Actions">
-  <MenuItem label="First action" />
-  <MenuItem label="Second action" />
-  <MenuItem label="Third action" />
-</MenuButton>
+  <MenuItem label="Send reminder" />
+  <MenuItem label="Download PDF" />
+  <MenuItem label="Duplicate" />
+</MenuButton>;
 ```
 
 <Canvas of={MenuButtonStories.Default} />
 
-#### With Danger
+### With Danger
 
 <Canvas of={MenuButtonStories.WithDanger} />
 
-#### With Dividers
+### With Dividers
 
 <Canvas of={MenuButtonStories.WithDividers} />
 
-#### With Icons
+### With Icons
 
 <Canvas of={MenuButtonStories.WithIcons} />
+
+## Which component to use
+
+<ButtonChooser />
 
 ## Menu Alignment
 
@@ -64,7 +75,19 @@ renders in `document.body`, but this can disrupt focus order in modals or other
 components with focus management.
 
 Pass the `menuTarget` prop to render the `Menu` inside the modal or any specific
-element where you want it to render:
+element where you want it to render. `target` is that element, held in state as
+the next section shows:
+
+```jsx
+<Modal open modalHeading="Send invoice">
+  <div ref={containerRef}>
+    <MenuButton label="Actions" menuTarget={target}>
+      <MenuItem label="Send reminder" />
+      <MenuItem label="Download PDF" />
+    </MenuButton>
+  </div>
+</Modal>
+```
 
 ## Managing the `menuTarget` prop with React refs
 
@@ -90,9 +113,9 @@ const Component = () => {
 };
 ```
 
-## Experimental Auto Align
+## Auto align
 
-<Canvas of={MenuButtonStories.ExperimentalAutoAlign} />
+<Canvas of={MenuButtonStories.AutoAlign} />
 
 ## Component API
 

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, expanded row heading h6 to h3 (axe heading-order), empty-table-header off for Default. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, expanded row heading h6 to h3 (axe heading-order), empty-table-header off for Default, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -78,36 +78,44 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => (
           <TableHead>
             <TableRow>
               <TableExpandHeader {...getExpandHeaderProps()} />
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({ header });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <Fragment key={row.id}>
-                <TableExpandRow
-                  {...getRowProps({ row })}
-                  // TableExpandRow types omit onClick; it reaches the row.
-                  {...{ onClick: action('onClick') }}>
-                  {row.cells.map((cell) => (
-                    <TableCell {...getCellProps({ cell })}>
-                      {cell.value}
-                    </TableCell>
-                  ))}
-                </TableExpandRow>
-                <TableExpandedRow
-                  colSpan={headers.length + 1}
-                  className="demo-expanded-td"
-                  {...getExpandedRowProps({ row })}>
-                  <h3>Expandable row content</h3>
-                  <div>Description here</div>
-                </TableExpandedRow>
-              </Fragment>
-            ))}
+            {rows.map((row) => {
+              const { key, ...rowProps } = getRowProps({ row });
+              return (
+                <Fragment key={key}>
+                  <TableExpandRow
+                    {...rowProps}
+                    // TableExpandRow types omit onClick; it reaches the row.
+                    {...{ onClick: action('onClick') }}>
+                    {row.cells.map((cell) => {
+                      const { key, ...cellProps } = getCellProps({ cell });
+                      return (
+                        <TableCell key={key} {...cellProps}>
+                          {cell.value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableExpandRow>
+                  <TableExpandedRow
+                    colSpan={headers.length + 1}
+                    className="demo-expanded-td"
+                    {...getExpandedRowProps({ row })}>
+                    <h3>Expandable row content</h3>
+                    <div>Description here</div>
+                  </TableExpandedRow>
+                </Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -148,33 +156,41 @@ export const BatchExpansion: StoryFn<DataTableStoryArgs> = (args) => (
                 enableToggle={true}
                 {...getExpandHeaderProps()}
               />
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({ header });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <Fragment key={row.id}>
-                <TableExpandRow {...getRowProps({ row })}>
-                  {row.cells.map((cell) => (
-                    <TableCell {...getCellProps({ cell })}>
-                      {cell.value}
-                    </TableCell>
-                  ))}
-                </TableExpandRow>
-                <TableExpandedRow
-                  colSpan={headers.length + 1}
-                  className="demo-expanded-td"
-                  {...getExpandedRowProps({ row })}>
-                  <h3>Expandable row content</h3>
-                  <div>Description here</div>
-                </TableExpandedRow>
-              </Fragment>
-            ))}
+            {rows.map((row) => {
+              const { key, ...rowProps } = getRowProps({ row });
+              return (
+                <Fragment key={key}>
+                  <TableExpandRow {...rowProps}>
+                    {row.cells.map((cell) => {
+                      const { key, ...cellProps } = getCellProps({ cell });
+                      return (
+                        <TableCell key={key} {...cellProps}>
+                          {cell.value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableExpandRow>
+                  <TableExpandedRow
+                    colSpan={headers.length + 1}
+                    className="demo-expanded-td"
+                    {...getExpandedRowProps({ row })}>
+                    <h3>Expandable row content</h3>
+                    <div>Description here</div>
+                  </TableExpandedRow>
+                </Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -209,33 +225,43 @@ export const BatchExpansionMultipleTables: StoryFn<DataTableStoryArgs> = (
                   enableToggle={true}
                   {...getExpandHeaderProps()}
                 />
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
+                {headers.map((header) => {
+                  const { key, ...headerProps } = getHeaderProps({ header });
+                  return (
+                    <TableHeader
+                      key={key}
+                      {...(headerProps as TableHeaderProps)}>
+                      {header.header}
+                    </TableHeader>
+                  );
+                })}
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <Fragment key={row.id}>
-                  <TableExpandRow {...getRowProps({ row })}>
-                    {row.cells.map((cell) => (
-                      <TableCell {...getCellProps({ cell })}>
-                        {cell.value}
-                      </TableCell>
-                    ))}
-                  </TableExpandRow>
-                  <TableExpandedRow
-                    colSpan={headers.length + 1}
-                    className="demo-expanded-td"
-                    {...getExpandedRowProps({ row })}>
-                    <h3>Expandable row content</h3>
-                    <div>Description here</div>
-                  </TableExpandedRow>
-                </Fragment>
-              ))}
+              {rows.map((row) => {
+                const { key, ...rowProps } = getRowProps({ row });
+                return (
+                  <Fragment key={key}>
+                    <TableExpandRow {...rowProps}>
+                      {row.cells.map((cell) => {
+                        const { key, ...cellProps } = getCellProps({ cell });
+                        return (
+                          <TableCell key={key} {...cellProps}>
+                            {cell.value}
+                          </TableCell>
+                        );
+                      })}
+                    </TableExpandRow>
+                    <TableExpandedRow
+                      colSpan={headers.length + 1}
+                      className="demo-expanded-td"
+                      {...getExpandedRowProps({ row })}>
+                      <h3>Expandable row content</h3>
+                      <div>Description here</div>
+                    </TableExpandedRow>
+                  </Fragment>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
@@ -264,33 +290,43 @@ export const BatchExpansionMultipleTables: StoryFn<DataTableStoryArgs> = (
                   enableToggle={true}
                   {...getExpandHeaderProps()}
                 />
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
+                {headers.map((header) => {
+                  const { key, ...headerProps } = getHeaderProps({ header });
+                  return (
+                    <TableHeader
+                      key={key}
+                      {...(headerProps as TableHeaderProps)}>
+                      {header.header}
+                    </TableHeader>
+                  );
+                })}
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <Fragment key={row.id}>
-                  <TableExpandRow {...getRowProps({ row })}>
-                    {row.cells.map((cell) => (
-                      <TableCell {...getCellProps({ cell })}>
-                        {cell.value}
-                      </TableCell>
-                    ))}
-                  </TableExpandRow>
-                  <TableExpandedRow
-                    colSpan={headers.length + 1}
-                    className="demo-expanded-td"
-                    {...getExpandedRowProps({ row })}>
-                    <h3>Expandable row content</h3>
-                    <div>Description here</div>
-                  </TableExpandedRow>
-                </Fragment>
-              ))}
+              {rows.map((row) => {
+                const { key, ...rowProps } = getRowProps({ row });
+                return (
+                  <Fragment key={key}>
+                    <TableExpandRow {...rowProps}>
+                      {row.cells.map((cell) => {
+                        const { key, ...cellProps } = getCellProps({ cell });
+                        return (
+                          <TableCell key={key} {...cellProps}>
+                            {cell.value}
+                          </TableCell>
+                        );
+                      })}
+                    </TableExpandRow>
+                    <TableExpandedRow
+                      colSpan={headers.length + 1}
+                      className="demo-expanded-td"
+                      {...getExpandedRowProps({ row })}>
+                      <h3>Expandable row content</h3>
+                      <div>Description here</div>
+                    </TableExpandedRow>
+                  </Fragment>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>

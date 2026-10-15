@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, styles from the shared story.css, selected passed as a boolean, control: false instead of the string 'false', inline spacing as Carbon spacing tokens, Default story added, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, styles from the shared story.css, selected passed as a boolean, control: false instead of the string 'false', inline spacing as Carbon spacing tokens, Default story added, story names unified, example data from the story glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -23,6 +23,12 @@ import {
   SelectableTag,
   Tag,
 } from '../../index.js';
+import {
+  customers,
+  longTagLabel,
+  overdueInvoices,
+  tagLabels,
+} from './exampleTags.js';
 import mdx from './Tag.mdx';
 import './story.css';
 
@@ -54,7 +60,7 @@ export const Default: StoryFn<ComponentProps<typeof Tag>> = (args) => (
 );
 
 Default.args = {
-  children: 'Tag content',
+  children: 'Paid',
   type: 'gray',
   size: 'md',
   disabled: false,
@@ -90,26 +96,26 @@ export const Selectable: StoryFn<InteractiveArgs> = (args) => {
   const tags: TagItem[] = [
     {
       id: 1,
-      text: 'Tag content with a long text description',
+      text: longTagLabel,
     },
     {
       id: 2,
-      text: 'Tag content 1',
+      text: 'Recurring',
     },
     {
       id: 3,
-      text: 'Tag content 2',
+      text: 'Export',
     },
     {
       id: 4,
-      text: 'Tag content 3',
+      text: 'VAT exempt',
     },
   ];
 
   const [selectedTags, setSelectedTags] = useState<TagItem[]>([
     {
       id: 2,
-      text: 'Tag content 1',
+      text: 'Recurring',
     },
   ]);
 
@@ -183,70 +189,70 @@ export const Operational: StoryFn<InteractiveArgs> = (args) => {
           type="red"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content with a long text description"
+          text={longTagLabel}
           {...args}
         />
         <OperationalTag
           type="magenta"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[0]}
           {...args}
         />
         <OperationalTag
           type="purple"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[1]}
           {...args}
         />
         <OperationalTag
           type="blue"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[2]}
           {...args}
         />
         <OperationalTag
           type="cyan"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[3]}
           {...args}
         />
         <OperationalTag
           type="teal"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[4]}
           {...args}
         />
         <OperationalTag
           type="green"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[5]}
           {...args}
         />
         <OperationalTag
           type="gray"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[6]}
           {...args}
         />
         <OperationalTag
           type="cool-gray"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[7]}
           {...args}
         />
         <OperationalTag
           type="warm-gray"
           className="some-class"
           renderIcon={Asleep}
-          text="Tag content"
+          text={tagLabels[8]}
           {...args}
         />
       </div>
@@ -272,16 +278,14 @@ export const Operational: StoryFn<InteractiveArgs> = (args) => {
             }}
             aria-expanded={openHighContrast}
             renderIcon={Asleep}
-            text="Tag content"
+            text="Overdue"
             className="some-class"
             {...args}
           />
           <PopoverContent className="popover-content">
-            <p>Tag 1 name</p>
-            <p>Tag 2 name</p>
-            <p>Tag 3 name</p>
-            <p>Tag 4 name</p>
-            <p>Tag 5 name</p>
+            {overdueInvoices.map((invoice) => (
+              <p key={invoice}>{invoice}</p>
+            ))}
           </PopoverContent>
         </Popover>
 
@@ -297,27 +301,21 @@ export const Operational: StoryFn<InteractiveArgs> = (args) => {
             }}
             aria-expanded={open}
             renderIcon={Asleep}
-            text="Tag content"
+            text="Key customer"
             className="some-class"
             {...args}
           />
           <PopoverContent>
             <div className="tag-group tag-group--column">
-              <Tag type="blue" className="some-class" {...args}>
-                {'Tag 1 name'}
-              </Tag>
-              <Tag type="blue" className="some-class" {...args}>
-                {'Tag 2 name'}
-              </Tag>
-              <Tag type="blue" className="some-class" {...args}>
-                {'Tag 3 name'}
-              </Tag>
-              <Tag type="blue" className="some-class" {...args}>
-                {'Tag 4 name'}
-              </Tag>
-              <Tag type="blue" className="some-class" {...args}>
-                {'Tag 5 name'}
-              </Tag>
+              {customers.map((customer) => (
+                <Tag
+                  key={customer}
+                  type="blue"
+                  className="some-class"
+                  {...args}>
+                  {customer}
+                </Tag>
+              ))}
             </div>
           </PopoverContent>
         </Popover>
@@ -365,52 +363,52 @@ export const Dismissible: StoryFn<InteractiveArgs> = (args) => {
   const tags: DismissibleItem[] = [
     {
       type: 'red',
-      text: 'Tag content with a long text description',
+      text: longTagLabel,
       tagTitle: 'Provide a custom title to the tag',
     },
     {
       type: 'magenta',
-      text: 'Tag content 1',
+      text: tagLabels[0],
     },
     {
       type: 'purple',
-      text: 'Tag content 2',
+      text: tagLabels[1],
     },
     {
       type: 'blue',
-      text: 'Tag content 3',
+      text: tagLabels[2],
     },
     {
       type: 'cyan',
-      text: 'Tag content 4',
+      text: tagLabels[3],
     },
     {
       type: 'teal',
-      text: 'Tag content 5',
+      text: tagLabels[4],
     },
     {
       type: 'green',
-      text: 'Tag content 6',
+      text: tagLabels[5],
     },
     {
       type: 'gray',
-      text: 'Tag content 7',
+      text: tagLabels[6],
     },
     {
       type: 'cool-gray',
-      text: 'Tag content 8',
+      text: tagLabels[7],
     },
     {
       type: 'warm-gray',
-      text: 'Tag content 9',
+      text: tagLabels[8],
     },
     {
       type: 'high-contrast',
-      text: 'Tag content 10',
+      text: tagLabels[9],
     },
     {
       type: 'outline',
-      text: 'Tag content 11',
+      text: tagLabels[10],
     },
   ];
 

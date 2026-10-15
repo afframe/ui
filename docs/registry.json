@@ -26,6 +26,7 @@
       "exports": [
         "DataGrid",
         "dataGridColumnCustomization",
+        "dataGridColumnMeta",
         "dataGridExpansion",
         "dataGridFiltering",
         "dataGridInlineEdit",
@@ -1183,7 +1184,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ButtonSet/ButtonSet.mdx"
     },
     {
       "name": "ButtonSkeleton",
@@ -1629,7 +1631,7 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview",
-      "docs": "src/components/DatePicker/DatePicker.mdx"
+      "docs": "src/components/DatePicker/DatePickerV2.mdx"
     },
     {
       "name": "TimePicker",
@@ -1762,7 +1764,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FluidDatePicker/FluidDatePicker.mdx"
     },
     {
       "name": "FluidDatePickerSkeleton",
@@ -1950,7 +1953,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "Table",
@@ -2884,7 +2888,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ContextMenu/useContextMenu.mdx"
     },
     {
       "name": "OverflowMenuItem",
@@ -3104,7 +3109,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Notification/Notification.mdx"
     },
     {
       "name": "NotificationButton",
@@ -3112,7 +3118,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Notification/Notification.mdx"
     },
     {
       "name": "Loading",
@@ -3201,7 +3208,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/SkeletonIcon/SkeletonIcon.mdx"
     },
     {
       "name": "ErrorBoundary",
@@ -3218,7 +3226,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ErrorBoundary/ErrorBoundary.mdx"
     },
     {
       "name": "AILabel",
@@ -3660,7 +3669,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/EditInPlace/EditInPlace.mdx"
     },
     {
       "name": "FullPageError",

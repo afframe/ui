@@ -9,6 +9,7 @@ export type {
 } from './DataGrid.js';
 export {
   dataGridColumnCustomization,
+  dataGridColumnMeta,
   dataGridExpansion,
   dataGridFiltering,
   dataGridInlineEdit,

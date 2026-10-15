@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as SearchBarStories from './SearchBar.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, TODO note and code sample section removed, upstream table of contents removed.
+// Modified by Afframe in 2026: source label and source link added, TODO note and code sample section removed, upstream table of contents removed, scopes accessibility note and field chooser added.
 
 <Meta isTemplate />
 
@@ -36,6 +37,18 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ### Selected Scopes
 
 <Canvas of={SearchBarStories.SelectedScopes} />
+
+## Scopes and screen readers
+
+In IBM Products 2.100.0, `scopesTypeLabel` becomes the text inside the scopes
+button, and no prop sets the MultiSelect's `titleText`. Until a scope is
+selected, the button points `aria-labelledby` at an empty label, so it has no
+accessible name (axe `button-name`). The Scopes and Unsorted Scopes stories
+turn that rule off.
+
+## Choosing a field
+
+<FieldChooser />
 
 ## Component API
 

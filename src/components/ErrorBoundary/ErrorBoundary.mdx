@@ -1,13 +1,14 @@
-import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as ErrorBoundaryStories from './ErrorBoundary.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { EmptyStateChooser } from '../../../.storybook/EmptyStateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, unused Story import dropped, H1 as the component name, empty state chooser table, Afframe notes and ErrorBoundaryContext section added.
 
 <Meta isTemplate />
 
-# Error Boundary
+# ErrorBoundary
 
 <SourceLabel name="carbon" />
 
@@ -16,6 +17,67 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Overview
 
 <Canvas of={ErrorBoundaryStories.Default} />
+
+## Which component to use
+
+<EmptyStateChooser />
+
+## Afframe notes
+
+### Fallback
+
+`ErrorBoundary` catches errors thrown while its children render and shows
+`fallback` instead. Pass a full empty state as the fallback: `ErrorEmptyState`
+when one region fails, `FullPageError` when the whole page fails.
+
+The fallback appears without an announcement. Give it `role="alert"`, or move
+focus to it, so screen reader users learn that the region failed:
+
+```tsx
+import { ErrorBoundary, ErrorEmptyState } from '@afframe/ui';
+
+<ErrorBoundary
+  fallback={
+    <div role="alert">
+      <ErrorEmptyState
+        title="Invoices could not be loaded"
+        subtitle="Try again in a few minutes. If it keeps failing, contact support."
+      />
+    </div>
+  }>
+  <InvoiceList />
+</ErrorBoundary>;
+```
+
+### Reset
+
+Carbon's `ErrorBoundary` has no reset function. It clears the error when its
+`children` prop changes, and JSX creates new children on every render of the
+parent, so any re-render of the parent renders the children again. The story's
+button works this way. To reset on purpose, for example from a Try again
+action, change the boundary's `key`.
+
+It catches errors thrown while React renders, not errors in event handlers or
+async code.
+
+## ErrorBoundaryContext
+
+`ErrorBoundaryContext` holds the `log(error, errorInfo)` function the boundary
+calls when it catches an error. The default logs `errorInfo.componentStack`
+with `console.log`. Provide your own to send errors to your error reporting:
+
+```tsx
+import { ErrorBoundaryContext } from '@afframe/ui';
+
+<ErrorBoundaryContext.Provider
+  value={{ log: (error, errorInfo) => trackError(error, errorInfo) }}>
+  <App />
+</ErrorBoundaryContext.Provider>;
+```
+
+This story logs to the Storybook Actions panel:
+
+<Canvas of={ErrorBoundaryStories.WithCustomContext} />
 
 ## Component API
 

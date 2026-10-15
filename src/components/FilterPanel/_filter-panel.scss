@@ -2,6 +2,7 @@
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/utilities/focus-outline' as *;
 
 .afframe-filter-panel {
   color: $text-primary;
@@ -18,6 +19,11 @@
 
 .afframe-filter-panel-title {
   @include type.type-style('heading-compact-02');
+}
+
+// The title takes focus after Clear all or the last tag is removed.
+.afframe-filter-panel-title:focus {
+  @include focus-outline('outline');
 }
 
 .afframe-filter-panel-count {

@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as TimePickerStories from './TimePicker.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, date chooser, 24-hour and state sections added.
 
 <Meta isTemplate />
 
@@ -20,6 +21,50 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Overview
 
 <Canvas of={TimePickerStories.Default} />
+
+## Which component to use
+
+<DateChooser />
+
+## 24-hour time
+
+Carbon's default `pattern` accepts 12-hour times only. For 24-hour time, as in
+Czech forms, render the input without the AM/PM select and pass the pattern:
+
+```tsx
+<TimePicker
+  id="start-time"
+  labelText="Start time"
+  placeholder="hh:mm"
+  pattern="(?:[01]\d|2[0-3]):[0-5]\d"
+/>
+```
+
+The pattern only sets the input's native validity; show the error with
+`invalid` and `invalidText`.
+
+<Canvas of={TimePickerStories.TwentyFourHour} />
+
+## States
+
+### Disabled
+
+<Canvas of={TimePickerStories.Disabled} />
+
+### Read only
+
+<Canvas of={TimePickerStories.ReadOnly} />
+
+### Invalid
+
+<Canvas of={TimePickerStories.Invalid} />
+
+### Warning
+
+TimePicker takes `warning` and `warningText`, not `warn` and `warnText` as
+the other fields do.
+
+<Canvas of={TimePickerStories.Warning} />
 
 ## Component API
 

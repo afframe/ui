@@ -1,9 +1,10 @@
 import { ArgTypes, Story, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as ContainedListStories from './ContainedList.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added, note on focus after the expandable search collapses, code samples use the customer example data.
 
 <Meta isTemplate />
 
@@ -13,7 +14,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 [Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/ContainedList)
 &nbsp;|&nbsp;
-[Usage guidelines](https://carbondesignsystem.com/components/contained-list/usage/)
+[Usage guidelines](https://carbondesignsystem.com/building-blocks/core/components/contained-list/guidelines)
 
 ## Overview
 
@@ -43,10 +44,11 @@ export const WithExpandableSearch = () => {
 
   useEffect(() => {
     const listItems = [
-      'List item 1',
-      'List item 2',
-      'List item 3',
-      'List item 4',
+      'Lakeside Furniture',
+      'Acme Trading',
+      'Birch Studio',
+      'Cedar Logistics',
+      'Delta Foods',
     ];
 
     const results = listItems.filter((listItem) =>
@@ -57,7 +59,7 @@ export const WithExpandableSearch = () => {
 
   return (
     <ContainedList
-      label="List title"
+      label="Customers"
       kind="on-page"
       action={
         <ExpandableSearch
@@ -77,6 +79,10 @@ export const WithExpandableSearch = () => {
 ```
 
 <Canvas of={ContainedListStories.WithExpandableSearch} />
+
+When Escape collapses an empty `ExpandableSearch`, focus moves to the page
+instead of back to the search button, so keyboard users start again from the
+top. This is an upstream bug.
 
 #### Persistent Search
 
@@ -99,10 +105,11 @@ export const WithPersistentSearch = () => {
 
   useEffect(() => {
     const listItems = [
-      'List item 1',
-      'List item 2',
-      'List item 3',
-      'List item 4',
+      'Lakeside Furniture',
+      'Acme Trading',
+      'Birch Studio',
+      'Cedar Logistics',
+      'Delta Foods',
     ];
 
     const results = listItems.filter((listItem) =>
@@ -112,7 +119,7 @@ export const WithPersistentSearch = () => {
   }, [searchTerm]);
 
   return (
-    <ContainedList label="List title" kind="on-page" action={''}>
+    <ContainedList label="Customers" kind="on-page" action={''}>
       <Search
         placeholder="Filterable search"
         value={searchTerm}
@@ -164,6 +171,10 @@ export const WithPersistentSearch = () => {
 #### With Layer
 
 <Canvas of={ContainedListStories.WithLayer} />
+
+## Which component to use
+
+<ListChooser />
 
 ## Component API
 

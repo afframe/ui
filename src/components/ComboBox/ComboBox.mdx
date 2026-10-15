@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as ComboBoxStories from './ComboBox.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, Afframe note on the invalid state, field chooser added.
 
 <Meta isTemplate />
 
@@ -23,6 +24,17 @@ A combobox allows the user to make a selection from a predefined list of options
 and is typically used when there are a large amount of options to choose from.
 
 <Canvas of={ComboBoxStories.Default} />
+
+In Afframe UI, `ComboBox` is used as Carbon ships it:
+
+- With `invalid`, the input links `invalidText` through `aria-describedby` but
+  gets no `aria-invalid` (an upstream bug), so screen readers do not announce
+  the field as invalid. ComboBox passes extra props to its input, so pass
+  `aria-invalid={invalid}` with `invalid`, as the Invalid story does.
+
+## Which component to use
+
+<FieldChooser />
 
 ## Disabled
 

@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as DescriptionListStories from './DescriptionList.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -23,6 +24,10 @@ render.
 
 <Canvas of={DescriptionListStories.Default} />
 
+## Which component to use
+
+<ListChooser />
+
 ## Usage and props
 
 ```tsx
@@ -36,16 +41,14 @@ import {
 <DescriptionList
   aria-label="Invoice details"
   items={[
-    { term: 'Invoice', description: 'FV-2026-0042' },
+    { term: 'Invoice', description: 'INV-2026-0042' },
     { term: 'Issued', description: formatDate('2026-10-07') },
     { term: 'Total', description: <Amount value={12100} /> },
   ]}
 />;
 
-<DescriptionList aria-labelledby="supplier-heading" orientation="vertical">
-  <DescriptionListItem term="Supplier">
-    Northwind Studio s.r.o.
-  </DescriptionListItem>
+<DescriptionList aria-labelledby="customer-heading" orientation="vertical">
+  <DescriptionListItem term="Customer">Lakeside Furniture</DescriptionListItem>
   <DescriptionListItem term="VAT ID">{vatId}</DescriptionListItem>
 </DescriptionList>;
 ```
@@ -59,7 +62,9 @@ are server-safe.
 size (`xs`, `sm`, `md` default, `lg`); `border` draws a rule between rows;
 `orientation="vertical"` puts each term above its value. An empty value
 (`null`, `undefined`, `false` or `''`) shows a dash with the visually hidden
-text from `messages.emptyValue`, never an empty cell.
+text from `messages.emptyValue`, never an empty cell. `ref` and other
+attributes (`id`, `className`, `data-*`) go to the list root, Carbon's
+`StructuredListWrapper` `div`; its `table` role stays.
 
 <ArgTypes of={DescriptionListStories} />
 
@@ -88,10 +93,18 @@ component.
 
 ## Examples
 
+### Sizes
+
 <Canvas of={DescriptionListStories.Sizes} />
+
+### Vertical
 
 <Canvas of={DescriptionListStories.Vertical} />
 
+### With border
+
 <Canvas of={DescriptionListStories.WithBorder} />
+
+### Empty values
 
 <Canvas of={DescriptionListStories.EmptyValues} />

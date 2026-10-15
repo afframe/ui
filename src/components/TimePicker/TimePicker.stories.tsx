@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story names unified, business example data, named selects, Disabled (color-contrast off), ReadOnly, Invalid, Warning and TwentyFourHour stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -23,6 +23,12 @@ type TimePickerStoryArgs = Omit<
 > & {
   disabled: boolean;
 };
+
+const timeZones = [
+  <SelectItem key="utc" value="UTC" text="UTC" />,
+  <SelectItem key="cet" value="CET" text="Central European Time (CET)" />,
+  <SelectItem key="eet" value="EET" text="Eastern European Time (EET)" />,
+];
 
 export default {
   title: 'Components/TimePicker',
@@ -44,14 +50,19 @@ export default {
 
 export const Default: StoryFn<TimePickerStoryArgs> = (args) => {
   return (
-    <TimePicker id="time-picker" labelText="Select a time" {...args}>
-      <TimePickerSelect id="time-picker-select-1" disabled={args.disabled}>
+    <TimePicker id="time-picker" {...args}>
+      <TimePickerSelect
+        id="time-picker-select-1"
+        aria-label="AM or PM"
+        disabled={args.disabled}>
         <SelectItem value="AM" text="AM" />
         <SelectItem value="PM" text="PM" />
       </TimePickerSelect>
-      <TimePickerSelect id="time-picker-select-2" disabled={args.disabled}>
-        <SelectItem value="Time zone 1" text="Time zone 1" />
-        <SelectItem value="Time zone 2" text="Time zone 2" />
+      <TimePickerSelect
+        id="time-picker-select-2"
+        aria-label="Time zone"
+        disabled={args.disabled}>
+        {timeZones}
       </TimePickerSelect>
     </TimePicker>
   );
@@ -61,7 +72,10 @@ Default.args = {
   disabled: false,
   hideLabel: false,
   invalid: false,
+  invalidText: 'Enter a time as hh:mm.',
+  labelText: 'Start time',
   warning: false,
+  warningText: 'This time is outside business hours.',
 };
 
 Default.argTypes = {
@@ -100,17 +114,49 @@ Default.argTypes = {
   },
 };
 
+export const Disabled: StoryFn<TimePickerStoryArgs> = Default.bind({});
+Disabled.args = { ...Default.args, disabled: true };
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks it anyway.
+Disabled.parameters = {
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<TimePickerStoryArgs> = Default.bind({});
+ReadOnly.args = { ...Default.args, readOnly: true, defaultValue: '9:30' };
+
+export const Invalid: StoryFn<TimePickerStoryArgs> = Default.bind({});
+Invalid.args = { ...Default.args, invalid: true, defaultValue: '9:75' };
+
+export const Warning: StoryFn<TimePickerStoryArgs> = Default.bind({});
+Warning.args = { ...Default.args, warning: true, defaultValue: '7:30' };
+
+// Input only: the pattern accepts 00:00 to 23:59, so no AM/PM select.
+export const TwentyFourHour: StoryFn<TimePickerStoryArgs> = (args) => (
+  <TimePicker
+    id="time-picker-24h"
+    placeholder="hh:mm"
+    pattern="(?:[01]\d|2[0-3]):[0-5]\d"
+    {...args}
+  />
+);
+TwentyFourHour.args = { ...Default.args };
+TwentyFourHour.argTypes = Default.argTypes;
+
 export const WithLayer: StoryFn = () => (
   <WithLayerTemplate>
     {(layer) => (
-      <TimePicker id={`time-picker-${layer}`} labelText="Select a time">
-        <TimePickerSelect id={`time-picker-select-${layer}-1`}>
+      <TimePicker id={`time-picker-${layer}`} labelText="Start time">
+        <TimePickerSelect
+          id={`time-picker-select-${layer}-1`}
+          aria-label="AM or PM">
           <SelectItem value="AM" text="AM" />
           <SelectItem value="PM" text="PM" />
         </TimePickerSelect>
-        <TimePickerSelect id={`time-picker-select-${layer}-2`}>
-          <SelectItem value="Time zone 1" text="Time zone 1" />
-          <SelectItem value="Time zone 2" text="Time zone 2" />
+        <TimePickerSelect
+          id={`time-picker-select-${layer}-2`}
+          aria-label="Time zone">
+          {timeZones}
         </TimePickerSelect>
       </TimePicker>
     )}

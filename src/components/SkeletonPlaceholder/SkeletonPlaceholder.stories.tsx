@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, story-only height and width args described in the Story controls category. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -31,6 +31,8 @@ export default {
       },
     },
     height: {
+      description: 'Height in px; the story sets it through `style`.',
+      table: { category: 'Story controls' },
       control: {
         type: 'range',
         min: 16,
@@ -39,6 +41,8 @@ export default {
       },
     },
     width: {
+      description: 'Width in px; the story sets it through `style`.',
+      table: { category: 'Story controls' },
       control: {
         type: 'range',
         min: 16,

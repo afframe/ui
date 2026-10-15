@@ -1,12 +1,13 @@
-import { Canvas, ArgTypes, Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, ArgTypes, Meta, Title } from '@storybook/addon-docs/blocks';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { NotificationChooser } from '../../../.storybook/NotificationChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed, H1 from the page's export name, one canvas of the page's own story in place of the three upstream canvases, sibling sections link to their pages, Callout section, notification chooser table, Afframe notes on focus and toast placement, section on NotificationActionButton and NotificationButton.
 
 <Meta isTemplate />
 
-# Notification
+<Title />
 
 <SourceLabel name="carbon" />
 
@@ -20,7 +21,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 There are 4 different types of notification components:
 `ActionableNotification`, `InlineNotification`, `ToastNotification`, and
-`Callout`.
+`Callout`. This page shows the one it documents; each section below links to
+the page of the others.
+
+<Canvas />
 
 ### ActionableNotification
 
@@ -55,13 +59,18 @@ div. If you place actions or interactive elements within this component, place
 an `aria-describedby` on the interactive element with a value that matches the
 `titleId` prop.
 
+## Which component to use
+
+<NotificationChooser />
+
 ## Component API
 
 <ArgTypes />
 
 ## Actionable
 
-<Canvas id="components-notifications-actionable--default" />
+Live example on the [ActionableNotification](?path=/docs/components-notifications-actionablenotification--overview)
+page.
 
 ### Using the `role` prop
 
@@ -84,10 +93,68 @@ user. Two viable options include:
   panel") and announcing to the user how they can navigate to that place to
   review all notifications and optionally take action on it.
 
+### Focus
+
+On mount, an `ActionableNotification` with the default `alertdialog` role and
+`hasFocus` moves focus to an action button. Carbon finds that button with a
+query over the whole document, so it is the first action button on the page,
+which may belong to another notification. Keep one alertdialog notification on
+screen at a time.
+
+Carbon runs that focus step after every render of the notification, not only
+on mount. A re-render while it is open, from a parent state change or a prop
+change, pulls focus back to the action button, even after the user moved it
+elsewhere. To avoid it, render the notification through a small component that
+mounts with it and turns `hasFocus` off after the first focus. The focus trap
+does not depend on `hasFocus`. After Close, Carbon returns focus nowhere, so it
+falls to the page body; return it to the control that opened the notification:
+
+```jsx
+function FocusOnceNotification(props) {
+  const [hasFocus, setHasFocus] = useState(true);
+  useEffect(() => setHasFocus(false), []);
+  return <ActionableNotification {...props} hasFocus={hasFocus} />;
+}
+
+const notification = open && (
+  <FocusOnceNotification
+    onClose={() => triggerRef.current?.focus()}
+    {...props}
+  />
+);
+```
+
+The state must live in that component, not in a page that stays mounted:
+there, `hasFocus` is already `false` when the notification appears, and it
+never takes focus.
+
 ## Inline
 
-<Canvas id="components-notifications-inline--default" />
+Live example on the [InlineNotification](?path=/docs/components-notifications-inlinenotification--overview)
+page.
+
+`InlineNotification` does not take focus. After Close, focus falls to the page
+body; move it back to a sensible place in `onClose`, such as the control the
+message is about.
 
 ## Toast
 
-<Canvas id="components-notifications-toast--default" />
+Live example on the [ToastNotification](?path=/docs/components-notifications-toastnotification--overview)
+page.
+
+Carbon renders no toast container. The app owns a fixed region for toasts and
+their stacking. As with `InlineNotification`, focus falls to the page body after
+Close, so return it in `onClose`.
+
+## Callout
+
+Live example on the [Callout](?path=/docs/components-notifications-callout--overview)
+page.
+
+## NotificationActionButton and NotificationButton
+
+These are the action and close buttons Carbon's notifications render. Use them
+only to build a custom notification that looks and behaves like Carbon's.
+`NotificationActionButton` takes `inline` for the inline look;
+`NotificationButton` takes `notificationType` (`toast`, `inline` or
+`actionable`) and an `aria-label`, `close notification` by default.

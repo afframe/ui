@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, prop descriptions with tags in backticks, Disabled and Invalid stories, Afframe example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -33,23 +33,36 @@ export default {
       exclude: ['children'],
     },
   },
+  // Carbon's descriptions say `<FormGroup>` without backticks; the props
+  // table renders them as Markdown, so React logged an unknown-tag warning.
+  argTypes: {
+    invalid: { description: 'Specify whether the `<FormGroup>` is invalid' },
+    message: {
+      description:
+        'Specify whether the message should be displayed in the `<FormGroup>`',
+    },
+    messageText: {
+      description: 'Provide the text for the message in the `<FormGroup>`',
+    },
+  },
 } satisfies Meta<typeof FormGroup>;
 
 export const Default: StoryFn<typeof FormGroup> = (args) => {
   return (
     <FormGroup style={{ maxWidth: '400px' }} {...args}>
       <Stack gap={7}>
-        <TextInput id="one" labelText="First Name" />
-        <TextInput id="two" labelText="Last Name" />
+        <TextInput id="one" labelText="Street" />
+        <TextInput id="two" labelText="City" />
+        <TextInput id="three" labelText="Postal code" />
         <RadioButtonGroup
-          legendText="Radio button heading"
+          legendText="Address type"
           name="formgroup-default-radio-button-group"
           defaultSelected="radio-1">
-          <RadioButton labelText="Option 1" value="radio-1" id="radio-1" />
-          <RadioButton labelText="Option 2" value="radio-2" id="radio-2" />
-          <RadioButton labelText="Option 3" value="radio-3" id="radio-3" />
+          <RadioButton labelText="Office" value="radio-1" id="radio-1" />
+          <RadioButton labelText="Warehouse" value="radio-2" id="radio-2" />
+          <RadioButton labelText="Other" value="radio-3" id="radio-3" />
         </RadioButtonGroup>
-        <Button>Submit</Button>
+        <Button>Save</Button>
       </Stack>
     </FormGroup>
   );
@@ -98,7 +111,23 @@ Default.args = {
   disabled: false,
   invalid: false,
   legendId: 'form-group-1',
-  legendText: 'FormGroup Legend',
+  legendText: 'Billing address',
   message: false,
-  messageText: 'Form group message',
+  messageText: 'Invoices are sent to this address.',
 };
+
+export const Disabled = Default.bind({});
+Disabled.args = { ...Default.args, disabled: true };
+Disabled.argTypes = Default.argTypes;
+
+// Carbon's `invalid` only sets `data-invalid` on the fieldset; the message
+// shows through `message` and `messageText` and is not linked to the fields
+// (an upstream bug).
+export const Invalid = Default.bind({});
+Invalid.args = {
+  ...Default.args,
+  invalid: true,
+  message: true,
+  messageText: 'Enter a postal code.',
+};
+Invalid.argTypes = Default.argTypes;

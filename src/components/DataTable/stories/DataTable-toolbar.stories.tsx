@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 toolbar menu items added, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, upstream v12 overflow menu branches removed, Afframe story for toolbar menu items added (MenuItem children and label), story names unified, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -137,26 +137,36 @@ export const Default: StoryFn<ToolbarStoryArgs> = ({ persistent, ...args }) => {
           <Table {...getTableProps()} aria-label="sample table">
             <TableHead>
               <TableRow>
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
+                {headers.map((header) => {
+                  const { key, ...headerProps } = getHeaderProps({ header });
+                  return (
+                    <TableHeader
+                      key={key}
+                      {...(headerProps as TableHeaderProps)}>
+                      {header.header}
+                    </TableHeader>
+                  );
+                })}
               </TableRow>
             </TableHead>
             <TableBody>
               {showEmptyState
                 ? null
-                : rows.map((row) => (
-                    <TableRow {...getRowProps({ row })}>
-                      {row.cells.map((cell) => (
-                        <TableCell {...getCellProps({ cell })}>
-                          {cell.value}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+                : rows.map((row) => {
+                    const { key, ...rowProps } = getRowProps({ row });
+                    return (
+                      <TableRow key={key} {...rowProps}>
+                        {row.cells.map((cell) => {
+                          const { key, ...cellProps } = getCellProps({ cell });
+                          return (
+                            <TableCell key={key} {...cellProps}>
+                              {cell.value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
             </TableBody>
           </Table>
           {showEmptyState && (
@@ -257,26 +267,36 @@ export const PersistentToolbar: StoryFn<ToolbarStoryArgs> = ({
           <Table {...getTableProps()} aria-label="sample table">
             <TableHead>
               <TableRow>
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
+                {headers.map((header) => {
+                  const { key, ...headerProps } = getHeaderProps({ header });
+                  return (
+                    <TableHeader
+                      key={key}
+                      {...(headerProps as TableHeaderProps)}>
+                      {header.header}
+                    </TableHeader>
+                  );
+                })}
               </TableRow>
             </TableHead>
             <TableBody>
               {showEmptyState
                 ? null
-                : rows.map((row) => (
-                    <TableRow {...getRowProps({ row })}>
-                      {row.cells.map((cell) => (
-                        <TableCell {...getCellProps({ cell })}>
-                          {cell.value}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+                : rows.map((row) => {
+                    const { key, ...rowProps } = getRowProps({ row });
+                    return (
+                      <TableRow key={key} {...rowProps}>
+                        {row.cells.map((cell) => {
+                          const { key, ...cellProps } = getCellProps({ cell });
+                          return (
+                            <TableCell key={key} {...cellProps}>
+                              {cell.value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
             </TableBody>
           </Table>
           {showEmptyState && (
@@ -375,26 +395,36 @@ export const SmallPersistentToolbar: StoryFn<ToolbarStoryArgs> = ({
             aria-label="sample table">
             <TableHead>
               <TableRow>
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
+                {headers.map((header) => {
+                  const { key, ...headerProps } = getHeaderProps({ header });
+                  return (
+                    <TableHeader
+                      key={key}
+                      {...(headerProps as TableHeaderProps)}>
+                      {header.header}
+                    </TableHeader>
+                  );
+                })}
               </TableRow>
             </TableHead>
             <TableBody>
               {showEmptyState
                 ? null
-                : rows.map((row) => (
-                    <TableRow {...getRowProps({ row })}>
-                      {row.cells.map((cell) => (
-                        <TableCell {...getCellProps({ cell })}>
-                          {cell.value}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+                : rows.map((row) => {
+                    const { key, ...rowProps } = getRowProps({ row });
+                    return (
+                      <TableRow key={key} {...rowProps}>
+                        {row.cells.map((cell) => {
+                          const { key, ...cellProps } = getCellProps({ cell });
+                          return (
+                            <TableCell key={key} {...cellProps}>
+                              {cell.value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
             </TableBody>
           </Table>
           {showEmptyState && (
@@ -484,34 +514,44 @@ export const WithOverflowMenu: StoryFn<ToolbarStoryArgs> = ({
           <Table {...getTableProps()} aria-label="sample table">
             <TableHead>
               <TableRow>
-                {headers.map((header) => (
-                  <TableHeader
-                    {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                    {header.header}
-                  </TableHeader>
-                ))}
+                {headers.map((header) => {
+                  const { key, ...headerProps } = getHeaderProps({ header });
+                  return (
+                    <TableHeader
+                      key={key}
+                      {...(headerProps as TableHeaderProps)}>
+                      {header.header}
+                    </TableHeader>
+                  );
+                })}
                 <TableHeader>Actions</TableHeader>
               </TableRow>
             </TableHead>
             <TableBody>
               {showEmptyState
                 ? null
-                : rows.map((row) => (
-                    <TableRow {...getRowProps({ row })}>
-                      {row.cells.map((cell) => (
-                        <TableCell {...getCellProps({ cell })}>
-                          {cell.value}
+                : rows.map((row) => {
+                    const { key, ...rowProps } = getRowProps({ row });
+                    return (
+                      <TableRow key={key} {...rowProps}>
+                        {row.cells.map((cell) => {
+                          const { key, ...cellProps } = getCellProps({ cell });
+                          return (
+                            <TableCell key={key} {...cellProps}>
+                              {cell.value}
+                            </TableCell>
+                          );
+                        })}
+                        <TableCell className="cds--table-column-menu">
+                          <OverflowMenu size="sm" flipped>
+                            <OverflowMenuItem itemText="Stop app" />
+                            <OverflowMenuItem itemText="Restart app" />
+                            <OverflowMenuItem itemText="Rename app" />
+                          </OverflowMenu>
                         </TableCell>
-                      ))}
-                      <TableCell className="cds--table-column-menu">
-                        <OverflowMenu size="sm" flipped>
-                          <OverflowMenuItem itemText="Stop app" />
-                          <OverflowMenuItem itemText="Restart app" />
-                          <OverflowMenuItem itemText="Rename app" />
-                        </OverflowMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                      </TableRow>
+                    );
+                  })}
             </TableBody>
           </Table>
           {showEmptyState && (
@@ -566,10 +606,9 @@ WithOverflowMenu.play = async ({ canvasElement }) => {
   await waitFor(() => expect(trigger).toHaveFocus());
 };
 
-// Afframe: the 1.0.x shape, `label` and MenuItem children. The Afframe
-// TableToolbarMenu turns on Carbon's newer menu for it, so the keyboard works.
-export const MenuItemsFrom101: StoryObj<typeof TableToolbarMenu> = {
-  name: 'Menu Items From 1.0.1',
+// Afframe: `label` and MenuItem children turn on Carbon's newer menu in the
+// Afframe TableToolbarMenu, so the keyboard works.
+export const WithMenuItems: StoryObj<typeof TableToolbarMenu> = {
   tags: ['afframe'],
   parameters: { ...afframeA11y },
   render: () => (

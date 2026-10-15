@@ -7,9 +7,10 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, InlineTip components from @afframe/ui, plain CSS file, class string written inline instead of classnames, image URL resolved with new URL, story args typed for the action and media selectors, typed casts for the button and link, props built instead of null, tags, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, InlineTip components from @afframe/ui, plain CSS file, class string written inline instead of classnames, image URL resolved with new URL, story args typed for the action and media selectors, typed casts for the button and link, props built instead of null, tags, story names unified, invoice example data, action link to #, Close hides the tip and a Show tip again button restores it, autodocs and Onboarding tags dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
+import { useEffect, useRef, useState } from 'react';
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
@@ -18,7 +19,9 @@ import type {
 } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { action } from 'storybook/actions';
+import { fn } from 'storybook/test';
 import {
+  Button,
   previewCandidate__InlineTip as InlineTip,
   previewCandidate__InlineTipButton as InlineTipButton,
   previewCandidate__InlineTipLink as InlineTipLink,
@@ -54,7 +57,7 @@ const ActionLink = InlineTipLink as ComponentType<
 export default {
   title: 'Preview/previewCandidate__InlineTip',
   component: InlineTip,
-  tags: ['autodocs', 'Onboarding', 'ibm-products'],
+  tags: ['ibm-products'],
   parameters: {
     layout: 'padded',
     docs: {
@@ -77,41 +80,37 @@ export default {
 } satisfies Meta<typeof InlineTip>;
 
 const defaultProps: Partial<InlineTipArgs> = {
-  children: (
-    // 'Use case-specific content that explains the concept or adds context. Use case-specific content that explains the concept or adds context. Use case-specific content that explains the concept or adds context.',
-    <ul>
-      <li>
-        Use <b>case-specific</b> content that explains the concept or adds
-        context.
-      </li>
-      <li>
-        Use case-specific <i>content that</i> explains the concept or adds
-        context.
-      </li>
-      <li>
-        Use case-specific content that explains the concept or adds context.
-      </li>
-    </ul>
-  ),
+  children: 'Filter by due date to see which invoices need a reminder.',
   closeIconDescription: 'Close',
   collapseButtonLabel: 'Read less',
   collapsible: false,
   action: 'None',
   expandButtonLabel: 'Read more',
   renderMedia: 'None',
-  onClick: () => {
-    action(`Clicked the tertiary button`)();
-  },
-  onClose: () => {
-    action(`Clicked the close button`)();
-  },
-  title: 'Use case-specific heading',
+  onClick: fn(),
+  onClose: fn(),
+  title: 'Find overdue invoices',
   withLeftGutter: false,
 };
 
 const Template: StoryFn<InlineTipArgs> = (args) => {
-  const { renderMedia, action: componentAction, ...rest } = args;
+  const { renderMedia, action: componentAction, onClose, ...rest } = args;
   const { narrow } = rest;
+  // IBM leaves hiding to the app. Focus moves only after Close or Show tip
+  // again, never on the first render, so the docs page keeps its focus.
+  const [open, setOpen] = useState(true);
+  const toggled = useRef(false);
+  const tipRef = useRef<HTMLDivElement>(null);
+  const showAgainRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!toggled.current) return;
+    if (open) tipRef.current?.querySelector<HTMLElement>('button')?.focus();
+    else showAgainRef.current?.focus();
+  }, [open]);
+  const toggle = (next: boolean) => {
+    toggled.current = true;
+    setOpen(next);
+  };
 
   const selectedMedia = (function () {
     switch (renderMedia) {
@@ -131,7 +130,7 @@ const Template: StoryFn<InlineTipArgs> = (args) => {
               onClick={() => {
                 action(`Clicked the action button`)();
               }}>
-              Click me
+              Show me
             </ActionButton>
           ),
         };
@@ -139,12 +138,11 @@ const Template: StoryFn<InlineTipArgs> = (args) => {
         return {
           action: (
             <ActionLink
-              href="https://www.ibm.com"
+              href="#"
               onClick={() => {
                 action('Clicked the link')();
-              }}
-              target="_blank">
-              Learn more
+              }}>
+              Show me
             </ActionLink>
           ),
         };
@@ -158,7 +156,22 @@ const Template: StoryFn<InlineTipArgs> = (args) => {
       className={
         narrow ? 'storybook--inline-tip-narrow' : 'storybook--inline-tip-wide'
       }>
-      <InlineTip {...rest} {...selectedMedia} {...selectedAction} />
+      {open ? (
+        <InlineTip
+          ref={tipRef}
+          {...rest}
+          {...selectedMedia}
+          {...selectedAction}
+          onClose={() => {
+            onClose?.();
+            toggle(false);
+          }}
+        />
+      ) : (
+        <Button kind="ghost" ref={showAgainRef} onClick={() => toggle(true)}>
+          Show tip again
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,9 +1,9 @@
-import { Canvas, Meta, Controls } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as TagInputStories from './TagInput.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, Stackblitz links, the SCSS section and unused imports removed, getting started imports TagInput from @afframe/ui (its styles ship in the package CSS), upstream table of contents and Labs owner block removed.
+// Modified by Afframe in 2026: source label and source link added, Stackblitz links, the SCSS section and unused imports removed, getting started imports TagInput from @afframe/ui (its styles ship in the package CSS), upstream table of contents and Labs owner block removed, Controls block replaced by ArgTypes, labelText row and the placeholder default fixed in the props table, invoice tag example data, Afframe notes.
 
 <Meta isTemplate />
 
@@ -28,7 +28,7 @@ The TagInput component provides an intuitive interface for users to add, manage,
 
 <Canvas of={TagInputStories.Default} />
 
-<Controls />
+<ArgTypes />
 
 ## Getting started
 
@@ -44,6 +44,7 @@ function App() {
   return (
     <TagInput
       id="my-tag-input"
+      labelText="Tags"
       placeholder="Type and press Enter"
       value={tags}
       onTagsChange={setTags}
@@ -58,14 +59,15 @@ export default App;
 
 The TagInput component accepts the following props:
 
-| Prop           | Type                                                              | Required | Default                  | Description                                                                                                                     |
-| -------------- | ----------------------------------------------------------------- | -------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| `id`           | `string`                                                          | Yes      | -                        | Unique identifier for the input element                                                                                         |
-| `placeholder`  | `string`                                                          | No       | `'Type and press Enter'` | Placeholder text displayed in the input field                                                                                   |
-| `value`        | `string[]`                                                        | No       | `[]`                     | Array of tag strings to display. Component is controlled via this prop                                                          |
-| `onTagsChange` | `(tags: string[]) => void`                                        | No       | -                        | Callback function invoked when tags are added or removed. Receives updated array of tags                                        |
-| `size`         | `'sm' \| 'md' \| 'lg'`                                            | No       | `'md'`                   | Size variant of the input field and tags                                                                                        |
-| `renderTag`    | `(tag: string, index: number, onRemove: () => void) => ReactNode` | No       | -                        | Custom render function for tags. Receives tag text, index, and remove callback. Allows complete customization of tag appearance |
+| Prop           | Type                                                              | Required | Default                             | Description                                                                                                                     |
+| -------------- | ----------------------------------------------------------------- | -------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `id`           | `string`                                                          | Yes      | -                                   | Unique identifier for the input element                                                                                         |
+| `labelText`    | `string`                                                          | No       | `'Add tag'`                         | Label of the input field, hidden (see Afframe notes)                                                                            |
+| `placeholder`  | `string`                                                          | No       | `'Type values and press enter key'` | Placeholder text displayed in the input field                                                                                   |
+| `value`        | `string[]`                                                        | No       | `[]`                                | Array of tag strings to display. Component is controlled via this prop                                                          |
+| `onTagsChange` | `(tags: string[]) => void`                                        | No       | -                                   | Callback function invoked when tags are added or removed. Receives updated array of tags                                        |
+| `size`         | `'sm' \| 'md' \| 'lg'`                                            | No       | `'md'`                              | Size variant of the input field and tags                                                                                        |
+| `renderTag`    | `(tag: string, index: number, onRemove: () => void) => ReactNode` | No       | -                                   | Custom render function for tags. Receives tag text, index, and remove callback. Allows complete customization of tag appearance |
 
 ### Prop Details
 
@@ -74,7 +76,7 @@ The TagInput component accepts the following props:
 The TagInput is a controlled component. The parent component must manage the tag state:
 
 ```javascript
-const [tags, setTags] = useState(['Tag1', 'Tag2']);
+const [tags, setTags] = useState(['Urgent', 'Recurring']);
 
 <TagInput id="example" value={tags} onTagsChange={setTags} />;
 ```
@@ -142,3 +144,14 @@ Demonstrate full parent control with external buttons to add and clear tags.
 Use the `renderTag` prop to customize tag colors based on content.
 
 <Canvas of={TagInputStories.WithColors} />
+
+## Afframe notes
+
+- **The field has no accessible name.** Labs hides the label wrapper with
+  `display: none` (an upstream bug). Chrome then computes an empty name for
+  the input (the hidden label overrides the title and placeholder), and axe
+  reports `label-title-only`. The stories turn that rule off.
+- **No form states.** TagInput has no `invalid`, `helperText` or `disabled`
+  props, so it cannot show an error in a validated form.
+- **Suggestion list.** The With Suggestions example builds its list in story
+  code; it closes when focus leaves the field and on Escape.

@@ -3,13 +3,14 @@ import { Button, ButtonSet } from '../../index.js';
 import { Add, TrashCan } from '../../icons.js';
 import * as ButtonStories from './Button.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ButtonChooser } from '../../../.storybook/ButtonChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components and icons from @afframe/ui, code samples import from @afframe/ui, inline spacing as Carbon spacing tokens, Sass samples dropped or rewritten as CSS custom properties, Sass flag note replaced (enable-v12-release is off in styles.css), upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, components and icons from @afframe/ui, code samples import from @afframe/ui, inline spacing as Carbon spacing tokens, Sass samples dropped or rewritten as CSS custom properties, Sass flag note replaced (enable-v12-release is off in styles.css), upstream Feedback section and table of contents removed, H1 matches the title, the v11 radius note moved to the Radius intro, the radius table no longer nested in a paragraph, size="lg" on the badge examples, button chooser table added, link to the ButtonSet page.
 
 <Meta isTemplate />
 
-# Buttons
+# Button
 
 <SourceLabel name="carbon" />
 
@@ -28,10 +29,16 @@ user interacts with it.
 
 <Canvas of={ButtonStories.Default} />
 
+## Which component to use
+
+<ButtonChooser />
+
 ## Radius
 
-Buttons in v12 default to `$border-radius-max` (fully rounded). Radius is not a
-component prop. Any ancestor can set CSS custom properties, which inherit into
+Buttons in v12 default to `$border-radius-max` (fully rounded).
+`enable-v12-release` is off in `styles.css`, so buttons keep the v11 square
+corners (radius `0`) unless an ancestor sets the properties below. Radius is not
+a component prop. Any ancestor can set CSS custom properties, which inherit into
 descendant buttons.
 
 | Custom property          | Corner      |
@@ -47,7 +54,6 @@ corner. Carbon uses this so a default button can stay fully rounded while a
 button in another component uses a different token which fits its design
 context:
 
-<p>
 <details>
 <summary>Where Carbon sets button radius</summary>
 
@@ -78,7 +84,6 @@ context:
 | AI Label last footer action (end-end) | `$border-radius-08 - 1px` |
 
 </details>
-</p>
 
 The `ss`, `se`, `es`, and `ee` suffixes are logical corners (start-start,
 start-end, end-start, end-end). They follow writing direction, so a joined
@@ -189,9 +194,6 @@ Per-corner properties inherit independently. If an ancestor sets
 `--cds-button-radius-ee`, a descendant that only sets `--cds-button-radius`
 still uses the inherited end-end value. Set that per-corner property on the
 descendant when you need to change that corner.
-
-`enable-v12-release` is off in `styles.css`, so buttons keep the v11 square
-corners (radius `0`) unless an ancestor sets these properties.
 
 ## Danger Button
 
@@ -476,7 +478,8 @@ renders as `lg`.
 ### Icon Button `badgeCount`
 
 The `badgeCount` prop is used to display a badge with a number on icon-only
-buttons. setting this prop without passing any number shows a red dot.
+buttons. setting this prop without passing any number shows a red dot. It needs
+`hasIconOnly`, `kind="ghost"` and `size="lg"`; Carbon warns otherwise.
 
 <Unstyled
   style={{
@@ -490,6 +493,7 @@ buttons. setting this prop without passing any number shows a red dot.
     hasIconOnly
     kind="ghost"
     renderIcon={Add}
+    size="lg"
     iconDescription="Add to selection"
     badgeCount={5}
   />
@@ -497,14 +501,15 @@ buttons. setting this prop without passing any number shows a red dot.
     hasIconOnly
     kind="ghost"
     renderIcon={Add}
+    size="lg"
     iconDescription="Add to selection"
     badgeCount={0}
   />
 </Unstyled>
 
 ```jsx
-<Button hasIconOnly kind="ghost" renderIcon={Add} iconDescription="Add to selection" badgeCount={5} />
-<Button hasIconOnly kind="ghost" renderIcon={Add} iconDescription="Add to selection" badgeCount={0} />
+<Button hasIconOnly kind="ghost" size="lg" renderIcon={Add} iconDescription="Add to selection" badgeCount={5} />
+<Button hasIconOnly kind="ghost" size="lg" renderIcon={Add} iconDescription="Add to selection" badgeCount={0} />
 ```
 
 ### Icon Button `tooltipAlignment`
@@ -586,7 +591,9 @@ a position and will render the tooltip accordingly. Accepted options are `top`,
 ### ButtonSet `stacked`
 
 By passing in `stacked` to the `ButtonSet` component, you can arrange your two
-`Button` elements vertically
+`Button` elements vertically. The
+[ButtonSet page](?path=/docs/components-buttonset--overview) covers `fluid` and
+narrow screens.
 
 <Unstyled
   style={{

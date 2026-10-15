@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as CardStories from './Card.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { CardChooser } from '../../../.storybook/CardChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, source link pinned to v11.118.0, example imports Card from @afframe/ui (preview__Card), em-dashes replaced, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: source label added, source link pinned to v11.118.0, example imports Card from @afframe/ui (preview__Card), em-dashes replaced, upstream Feedback section and table of contents removed, card chooser table added.
 
 <Meta isTemplate />
 
@@ -46,6 +47,10 @@ function Example() {
 ```
 
 <Canvas of={CardStories.Minimal} />
+
+## Which component to use
+
+<CardChooser />
 
 ## Subcomponents
 

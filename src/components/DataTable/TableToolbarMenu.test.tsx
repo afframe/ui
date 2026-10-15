@@ -29,7 +29,7 @@ function Toolbar({ children }: { children: ReactNode }) {
   );
 }
 
-test('1.0.x shape: label and MenuItem children with a divider work by keyboard', async () => {
+test('label and MenuItem children with a divider work by keyboard', async () => {
   const onExport = vi.fn();
   const label = { label: 'Table settings' };
   render(

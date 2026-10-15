@@ -1,12 +1,13 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as DataGridStories from './DataGrid.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TableChooser } from '../../../.storybook/TableChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
 <Meta isTemplate />
 
-# Data grid
+# DataGrid
 
 <SourceLabel name="afframe" />
 
@@ -19,10 +20,16 @@ pagination. Each feature is opt in: spread its fragment into TanStack's
 
 ```tsx
 'use client';
-import { Amount, DataGrid, dataGridSorting, formatDate } from '@afframe/ui';
+import {
+  Amount,
+  DataGrid,
+  dataGridColumnMeta,
+  dataGridSorting,
+  formatDate,
+} from '@afframe/ui';
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 
-const features = tableFeatures({ ...dataGridSorting });
+const features = tableFeatures({ ...dataGridSorting, ...dataGridColumnMeta });
 const helper = createColumnHelper<typeof features, Invoice>();
 const columns = helper.columns([
   helper.accessor('number', { header: 'Number' }),
@@ -33,6 +40,7 @@ const columns = helper.columns([
   helper.accessor('amount', {
     header: 'Amount',
     cell: (info) => <Amount value={info.getValue()} />,
+    meta: { align: 'end' },
   }),
 ]);
 
@@ -53,6 +61,10 @@ also needs rows to page: `dataGridPagination`'s row model, or
 
 Keep `features`, `columns` and `data` stable (module scope, state or memo):
 a new array on every render makes TanStack rebuild its rows each time.
+
+## Which component to use
+
+<TableChooser />
 
 ## Usage and props
 
@@ -81,7 +93,17 @@ a new array on every render makes TanStack rebuild its rows each time.
 - `rowActions`: items of an overflow menu at the end of each row:
   `{ id, label, danger?, onClick(row) }`.
 - `pageSizes`: page sizes offered by the pagination bar, default 10, 20, 50.
+- `emptyState`: content of the full-width cell shown when there are no rows,
+  such as an `EmptyState`. Without it the cell shows the `emptyState` message.
 - `messages`: overrides for any string (below).
+- `ref` and other HTML attributes (`id`, `data-*`, `aria-*`, `style`) go to
+  the table container, Carbon's `section.cds--data-table-container`.
+- Column `meta.align`: `'end'` aligns a column's header and cells at the end,
+  for amounts and other numbers; a sortable header shows its sort icon
+  before the label. Both `dataGridColumnMeta` and `dataGridInlineEdit` type
+  the column `meta`: register `dataGridColumnMeta` when the grid only uses
+  `align`, and `dataGridInlineEdit` when it has `meta: { editable: true }`
+  columns.
 
 | Feature    | Fragment             |
 | ---------- | -------------------- |
@@ -125,6 +147,8 @@ any of them.
   action bar, named by `batchActionsLabel`: the selected count, the actions,
   "Select all" and "Cancel". The toolbar under it is `aria-hidden` and `inert`,
   so Tab skips it. Cancel clears the selection and brings the toolbar back.
+  When the bar closes with focus inside it, after Cancel or an action that
+  clears the selection, focus moves to the select-all checkbox.
 - With row actions, each row ends with a menu button named by `rowActions`.
   Enter or Space opens the menu and focuses its first item; Up
   and Down Arrow move, Enter runs the item, Escape closes the menu and
@@ -145,6 +169,9 @@ any of them.
   the width by 16 px, Home and End set the narrowest and widest width: the
   column's `minSize` and `maxSize`, kept between 48 and 1200. Dragging resizes with a pointer; a double click
   resets the width. Column widths come from `size` in the column definition.
+  A grid with column sizing is only as wide as its columns (Carbon's
+  `useStaticWidth`), so the title and the batch bar end with the table; a
+  wider table scrolls inside its parent.
 - With sticky columns, columns pinned in `columnPinning` state (`start` or
   `end`) move to that edge and stay in view while the table scrolls sideways;
   the expand and select columns stick with the start ones, the row actions
@@ -170,7 +197,8 @@ any of them.
   the position in the whole list. Rows out of view are not in the DOM, so Tab
   reaches only rendered rows; scrolling brings more in.
 - With a title, the table is named by it.
-- A table with no rows shows `emptyState` in one cell.
+- A table with no rows shows `emptyState` in one cell that spans every
+  column.
 
 ## Stories
 
@@ -198,6 +226,9 @@ Set `getRowId` so selection follows rows across sorting and filtering.
 <Canvas of={DataGridStories.SelectionExtraSmall} />
 
 ### Batch actions
+
+At narrow widths the action list runs past the container, as in Carbon's
+`DataTable`. Keep batch actions few.
 
 <Canvas of={DataGridStories.BatchActions} />
 
@@ -243,6 +274,18 @@ Each filtered column gets a `filterFn` that keeps a row when its value is one
 of the selected options.
 
 <Canvas of={DataGridStories.WithFilterPanel} />
+
+### Loading and empty
+
+While data loads, render Carbon's `DataTableSkeleton` with the grid's
+headers in place of the grid. `DataGrid` has no loading prop.
+
+<Canvas of={DataGridStories.Skeleton} />
+
+With no rows, `emptyState` fills the full-width cell, here with
+`NoDataEmptyState`. Without it the cell shows the `emptyState` message.
+
+<Canvas of={DataGridStories.Empty} />
 
 ### All features
 

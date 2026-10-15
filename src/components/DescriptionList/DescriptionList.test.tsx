@@ -1,10 +1,11 @@
 import { render, screen, within } from '@testing-library/react';
+import { createRef } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test } from 'vitest';
 import { DescriptionList, DescriptionListItem } from './DescriptionList.js';
 
 const items = [
-  { term: 'Invoice', description: 'FV-2026-0042' },
+  { term: 'Invoice', description: 'INV-2026-0042' },
   { term: 'Issued', description: '7 Oct 2026' },
   { term: 'Note', description: null },
 ];
@@ -15,7 +16,7 @@ test('renders on the server', () => {
   );
   expect(html).toContain('role="table"');
   expect(html).toContain('aria-label="Invoice details"');
-  expect(html).toContain('FV-2026-0042');
+  expect(html).toContain('INV-2026-0042');
 });
 
 test('items and composition produce the same markup', () => {
@@ -24,7 +25,7 @@ test('items and composition produce the same markup', () => {
   );
   const composed = renderToStaticMarkup(
     <DescriptionList aria-label="Invoice details">
-      <DescriptionListItem term="Invoice">FV-2026-0042</DescriptionListItem>
+      <DescriptionListItem term="Invoice">INV-2026-0042</DescriptionListItem>
       <DescriptionListItem term="Issued">7 Oct 2026</DescriptionListItem>
       <DescriptionListItem term="Note">{null}</DescriptionListItem>
     </DescriptionList>
@@ -142,4 +143,22 @@ test('an item outside the direct children still shows the default empty text', (
     </DescriptionList>
   );
   expect(screen.getByRole('cell')).toHaveTextContent('No value');
+});
+
+test('ref and other attributes reach the list root', () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <DescriptionList
+      ref={ref}
+      id="invoice-details"
+      data-testid="list"
+      aria-label="Invoice details"
+      items={items}
+    />
+  );
+  const table = screen.getByRole('table', { name: 'Invoice details' });
+  expect(ref.current).toBe(table);
+  expect(table).toHaveClass('afframe-description-list');
+  expect(table).toHaveAttribute('id', 'invoice-details');
+  expect(table).toBe(screen.getByTestId('list'));
 });

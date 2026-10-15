@@ -1,14 +1,14 @@
 import { Link } from '@carbon/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import { Amount } from '../../index.js';
-import { DescriptionList, DescriptionListItem } from './DescriptionList.js';
+import { Amount, formatDate } from '../../index.js';
+import { DescriptionList } from './DescriptionList.js';
 import mdx from './DescriptionList.mdx';
 
 const items = [
-  { term: 'Invoice', description: 'FV-2026-0042' },
-  { term: 'Supplier', description: 'Northwind Studio s.r.o.' },
-  { term: 'Issued', description: '07.10.2026' },
+  { term: 'Invoice', description: 'INV-2026-0042' },
+  { term: 'Customer', description: 'Lakeside Furniture' },
+  { term: 'Issued', description: formatDate('2026-10-07') },
   { term: 'Total', description: <Amount value={12500} /> },
 ];
 
@@ -31,26 +31,26 @@ type Story = StoryObj<typeof meta>;
 
 // The link is the one focusable element (focus screenshot).
 export const Default: Story = {
-  render: () => (
-    <DescriptionList aria-label="Invoice details">
-      {items.map(({ term, description }) => (
-        <DescriptionListItem key={term} term={term}>
-          {description}
-        </DescriptionListItem>
-      ))}
-      <DescriptionListItem term="Document">
-        <Link href="#invoice">FV-2026-0042.pdf</Link>
-      </DescriptionListItem>
-    </DescriptionList>
-  ),
+  args: {
+    items: [
+      ...items,
+      {
+        term: 'Document',
+        description: <Link href="#invoice">INV-2026-0042.pdf</Link>,
+      },
+    ],
+  },
 };
 
 export const Sizes: Story = {
+  parameters: { controls: { disable: true } },
   render: () => (
     <div style={{ display: 'grid', gap: '2rem' }}>
       {(['xs', 'sm', 'md', 'lg'] as const).map((size) => (
         <section key={size}>
-          <h2 id={`size-${size}`}>{size}</h2>
+          <p id={`size-${size}`} className="cds--label">
+            {size}
+          </p>
           <DescriptionList
             aria-labelledby={`size-${size}`}
             items={items}
@@ -73,7 +73,7 @@ export const WithBorder: Story = {
 export const EmptyValues: Story = {
   args: {
     items: [
-      { term: 'Invoice', description: 'FV-2026-0042' },
+      { term: 'Invoice', description: 'INV-2026-0042' },
       { term: 'Purchase order', description: null },
       { term: 'Note', description: '' },
     ],

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args; unused upstream test.css import removed, business example data, Disabled, ReadOnly, Invalid and Warning stories, error linked by aria-describedby in Invalid. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -15,7 +15,6 @@ import {
   FluidPasswordInput,
   type FluidPasswordInputProps,
 } from '../../index.js';
-import './test.css';
 import mdx from './FluidPasswordInput.mdx';
 
 export default {
@@ -32,9 +31,11 @@ export default {
   },
 } satisfies Meta<typeof FluidPasswordInput>;
 
-export const Default: StoryFn<
-  FluidPasswordInputProps & { defaultWidth?: number }
-> = (args) => {
+type FluidPasswordInputStoryArgs = FluidPasswordInputProps & {
+  defaultWidth?: number;
+};
+
+export const Default: StoryFn<FluidPasswordInputStoryArgs> = (args) => {
   const { defaultWidth, ...passwordInputArgs } = args;
   return (
     <div style={{ width: defaultWidth }}>
@@ -49,16 +50,14 @@ Default.args = {
   disabled: false,
   id: 'input-1',
   invalid: false,
-  invalidText:
-    'Error message that is really long can wrap to more lines but should not be excessively long.',
-  labelText: 'Label',
-  placeholder: 'Placeholder text',
+  invalidText: 'Enter at least 12 characters.',
+  labelText: 'Password',
+  placeholder: 'At least 12 characters',
   readOnly: false,
   showPasswordLabel: 'Show password',
   hidePasswordLabel: 'Hide password',
   warn: false,
-  warnText:
-    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+  warnText: 'Caps Lock is on.',
 };
 
 Default.argTypes = {
@@ -131,3 +130,34 @@ Default.argTypes = {
     },
   },
 };
+
+// Carbon's props type omits aria-describedby, which it still forwards.
+const stateStory = (
+  id: string,
+  args: Partial<FluidPasswordInputStoryArgs> & { 'aria-describedby'?: string }
+) => {
+  const story: StoryFn<FluidPasswordInputStoryArgs> = Default.bind({});
+  story.args = { ...Default.args, id, ...args };
+  story.argTypes = { ...Default.argTypes };
+  return story;
+};
+
+export const Disabled = stateStory('fluid-password-input-disabled', {
+  disabled: true,
+});
+
+export const ReadOnly = stateStory('fluid-password-input-read-only', {
+  defaultValue: 'correct-horse-battery',
+  readOnly: true,
+});
+
+// Same gap and recipe as the FluidTextInput Invalid story: FluidPasswordInput
+// passes rest props to PasswordInput. The gap is an upstream bug.
+export const Invalid = stateStory('fluid-password-input-invalid', {
+  invalid: true,
+  'aria-describedby': 'fluid-password-input-invalid-error-msg',
+});
+
+export const Warning = stateStory('fluid-password-input-warning', {
+  warn: true,
+});

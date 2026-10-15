@@ -2,9 +2,10 @@ import { ArgTypes, Canvas, Meta, Unstyled } from '@storybook/addon-docs/blocks';
 import { Dropdown } from '../../index.js';
 import * as DropdownStories from './Dropdown.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, Afframe note on the invalid state, field chooser added.
 
 <Meta isTemplate />
 
@@ -33,9 +34,9 @@ variant
 
 <Canvas of={DropdownStories.Inline} />
 
-### Experimental Auto Align
+### Auto align
 
-<Canvas of={DropdownStories.ExperimentalAutoAlign} />
+<Canvas of={DropdownStories.AutoAlign} />
 
 ### Skeleton state
 
@@ -48,6 +49,17 @@ be fetched from an external API.
 ### AI label
 
 <Canvas of={DropdownStories.WithAILabel} />
+
+In Afframe UI, `Dropdown` is used as Carbon ships it:
+
+- With `invalid`, the button links `invalidText` through `aria-describedby`
+  but gets no `aria-invalid`, so screen readers read the message without
+  announcing the field as invalid. Dropdown passes extra props to its wrapper,
+  not the button, so an app cannot add it (an upstream bug).
+
+## Which component to use
+
+<FieldChooser />
 
 ## Component API
 

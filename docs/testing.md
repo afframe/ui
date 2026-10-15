@@ -21,6 +21,8 @@ pnpm test
 
 Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.css`, then runs `vitest run`. Every test runs in headless Chromium through Playwright at the viewport set in `vitest.config.ts`. To run one project: `pnpm exec vitest run --project unit`. A local run of `unit` and `storybook` takes under a minute (254 test files, 1,295 tests in 45 s on 2026-10-07). The `visual` project runs only with `CI` set, in the release checks: its baselines are rendered on the CI runner, and font rendering differs on other machines.
 
+The Storybook dev server logs `Lit is in dev mode. Not recommended for production!` once per load. It comes from Lit, which `@carbon/web-components` and `@carbon/ai-chat` use; it is expected and fails nothing.
+
 | Project     | Runs                                                         | Fails on                                     |
 | ----------- | ------------------------------------------------------------ | -------------------------------------------- |
 | `unit`      | `src/**/*.test.{ts,tsx}`, with `styles.css` and `charts.css` | a failed assertion                           |

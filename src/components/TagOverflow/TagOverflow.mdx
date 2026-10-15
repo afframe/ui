@@ -1,9 +1,10 @@
 import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as TagOverflowStories from './TagOverflow.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { TagChooser } from '../../../.storybook/TagChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, Codesandbox example and unused imports removed, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: source label and source link added, Codesandbox example and unused imports removed, story names unified, upstream table of contents removed, Which component to use section added, notes on focus after Escape and on the deprecated multiline prop.
 
 <Meta isTemplate />
 
@@ -26,11 +27,19 @@ are more than 10 additional tags, the toggletip also includes a link to view all
 tags. When the user clicks on this link, a modal opens with a list of all the
 tags associated with the object.
 
+## Which component to use
+
+<TagChooser />
+
 ## Example usage
 
 ### Tags with overflow count and overflow modal
 
 <Canvas of={TagOverflowStories.WithOverflowModal}></Canvas>
+
+Known issue: when focus is on "View all tags", Escape closes the popover and
+focus moves to the page body, not back to the `+N` tag. Escape on the `+N` tag
+itself keeps focus there. The focus loss is an upstream bug.
 
 ### Tags with truncation and overflow count
 
@@ -39,6 +48,10 @@ tags associated with the object.
 ### Multiline tags
 
 <Canvas of={TagOverflowStories.Multiline}></Canvas>
+
+The `multiline` prop is deprecated and has no effect: TagOverflow only hides
+items that do not fit. To wrap tags onto more lines, use `TagSet` with
+`multiline`. Passing it also logs a React warning (an upstream bug).
 
 ### UserAvatars with overflow count and overflow modal
 

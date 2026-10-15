@@ -7,11 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, TagInput and Carbon components from @afframe/ui (styles ship in the package CSS, so the tag-input.scss import is dropped), story styles converted to plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, TagInput and Carbon components from @afframe/ui (styles ship in the package CSS, so the tag-input.scss import is dropped), story styles converted to plain CSS, source tag, labelText and invoice tag example data, the suggestion list closes when focus leaves the field, with a play test. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 import {
   ClickableTile,
   DismissibleTag,
@@ -42,6 +43,14 @@ export default {
   title: 'Components/TagInput/Examples',
   component: TagInput,
   tags: ['labs'],
+  parameters: {
+    // Labs hides the label wrapper with display: none: axe sees only the
+    // title, and Chrome computes an empty name. The gap is an upstream bug.
+    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
+  },
+  args: {
+    labelText: 'Tags',
+  },
   argTypes: {
     size: {
       control: 'select',
@@ -69,10 +78,6 @@ const TAG_COLORS: TagType[] = [
 
 // Example with dynamic color assignment based on prefix
 export const DynamicColors: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   /**
    * Render function for dynamic colors example
    * @param {object} args - Component props
@@ -126,10 +131,6 @@ export const DynamicColors: Story = {
 
 // Example with random colors
 export const RandomColors: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   /**
    * Render function for random colors example
    * @param {object} args - Component props
@@ -140,17 +141,17 @@ export const RandomColors: Story = {
     const [tagsWithColors, setTagsWithColors] = useState([
       {
         id: 1,
-        text: 'Random1',
+        text: 'Urgent',
         color: TAG_COLORS[Math.floor(Math.random() * TAG_COLORS.length)],
       },
       {
         id: 2,
-        text: 'Random2',
+        text: 'Recurring',
         color: TAG_COLORS[Math.floor(Math.random() * TAG_COLORS.length)],
       },
       {
         id: 3,
-        text: 'Random3',
+        text: 'Disputed',
         color: TAG_COLORS[Math.floor(Math.random() * TAG_COLORS.length)],
       },
     ]);
@@ -220,17 +221,13 @@ export const RandomColors: Story = {
 
 // Example with uniform color for all tags
 export const WithUniformColor: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   /**
    * Render function for uniform color example
    * @param {object} args - Component props
    * @returns {React.ReactElement} Rendered component
    */
   render: function RenderWithUniformColor(args) {
-    const [tags, setTags] = useState(['Tag1', 'Tag2', 'Tag3']);
+    const [tags, setTags] = useState(['Urgent', 'Recurring', 'Disputed']);
 
     return (
       <Stack gap={'16px'}>
@@ -263,17 +260,13 @@ export const WithUniformColor: Story = {
 
 // Example with duplicate checking and warning
 export const WithDuplicateChecking: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   /**
    * Render function for duplicate checking example
    * @param {object} args - Component props
    * @returns {React.ReactElement} Rendered component
    */
   render: function RenderWithDuplicateChecking(args) {
-    const [tags, setTags] = useState(['React', 'TypeScript', 'Carbon']);
+    const [tags, setTags] = useState(['Urgent', 'Recurring', 'Disputed']);
     const [notifications, setNotifications] = useState<
       { id: number; message: string }[]
     >([]);
@@ -355,7 +348,7 @@ export const WithDuplicateChecking: Story = {
           <TagInput
             {...args}
             id="duplicate-checking"
-            placeholder="Try adding 'React' or 'TypeScript'"
+            placeholder="Try adding 'Urgent' or 'urgent'"
             value={tags}
             onTagsChange={handleTagsChange}
           />
@@ -375,17 +368,13 @@ export const WithDuplicateChecking: Story = {
 
 // Example with tag suggestions dropdown
 export const WithSuggestions: Story = {
-  parameters: {
-    // Labs hides the TagInput label wrapper with display: none, so the field is named only by its title.
-    a11y: { config: { rules: [{ id: 'label-title-only', enabled: false }] } },
-  },
   /**
    * Render function for suggestions example
    * @param {object} args - Component props
    * @returns {React.ReactElement} Rendered component
    */
   render: function RenderWithSuggestions(args) {
-    const [tags, setTags] = useState(['React', 'TypeScript']);
+    const [tags, setTags] = useState(['Urgent', 'Recurring']);
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -396,26 +385,18 @@ export const WithSuggestions: Story = {
     // Available suggestions as objects - memoized to prevent recreation on every render
     const suggestions = useMemo(
       () => [
-        { id: '1', text: 'React' },
-        { id: '2', text: 'TypeScript' },
-        { id: '3', text: 'JavaScript' },
-        { id: '4', text: 'Python' },
-        { id: '5', text: 'Java' },
-        { id: '6', text: 'Carbon' },
-        { id: '7', text: 'Node.js' },
-        { id: '8', text: 'Express' },
-        { id: '9', text: 'MongoDB' },
-        { id: '10', text: 'PostgreSQL' },
-        { id: '11', text: 'GraphQL' },
-        { id: '12', text: 'REST API' },
-        { id: '13', text: 'Docker' },
-        { id: '14', text: 'Kubernetes' },
-        { id: '15', text: 'AWS' },
-        { id: '16', text: 'Azure' },
-        { id: '17', text: 'Google Cloud' },
-        { id: '18', text: 'Redux' },
-        { id: '19', text: 'Vue.js' },
-        { id: '20', text: 'Angular' },
+        { id: '1', text: 'Urgent' },
+        { id: '2', text: 'Recurring' },
+        { id: '3', text: 'Disputed' },
+        { id: '4', text: 'Overdue' },
+        { id: '5', text: 'Paid' },
+        { id: '6', text: 'Partially paid' },
+        { id: '7', text: 'Draft' },
+        { id: '8', text: 'Reminder sent' },
+        { id: '9', text: 'Credit note' },
+        { id: '10', text: 'Reverse charge' },
+        { id: '11', text: 'Foreign currency' },
+        { id: '12', text: 'Archived' },
       ],
       []
     );
@@ -580,11 +561,19 @@ export const WithSuggestions: Story = {
           and press Enter to add them as tags.
         </p>
 
-        <div ref={containerRef} className="with-suggestions-container">
+        <div
+          ref={containerRef}
+          className="with-suggestions-container"
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+              setShowSuggestions(false);
+              setHighlightedIndex(-1);
+            }
+          }}>
           <TagInput
+            {...args}
             id="tag-input-suggestions"
             placeholder="Type to search..."
-            size={args.size ?? 'md'}
             value={tags}
             onTagsChange={setTags}
           />
@@ -630,5 +619,19 @@ export const WithSuggestions: Story = {
   },
   args: {
     size: 'md',
+  },
+  play: async ({ canvas, userEvent }) => {
+    const input = canvas.getByRole('textbox', { name: 'Tags' });
+    await userEvent.type(input, 'ov');
+    await expect(await canvas.findByRole('listbox')).toBeVisible();
+    await userEvent.tab();
+    await waitFor(() => expect(canvas.queryByRole('listbox')).toBeNull());
+
+    await userEvent.clear(input);
+    await userEvent.type(input, 'ov');
+    await expect(await canvas.findByRole('listbox')).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(canvas.queryByRole('listbox')).toBeNull());
+    await expect(input).toHaveFocus();
   },
 };

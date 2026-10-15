@@ -27,6 +27,7 @@ export const Negative: Story = {
 };
 
 export const Currencies: Story = {
+  parameters: { controls: { disable: true } },
   render: () => (
     <ul>
       <li>
@@ -49,6 +50,7 @@ export const Currencies: Story = {
 };
 
 export const Signs: Story = {
+  parameters: { controls: { disable: true } },
   render: () => (
     <ul>
       <li>
@@ -65,6 +67,7 @@ export const Signs: Story = {
 };
 
 export const Fallback: Story = {
+  parameters: { controls: { disable: true } },
   render: () => (
     <ul>
       <li>

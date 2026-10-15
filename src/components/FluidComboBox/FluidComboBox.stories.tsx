@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed items, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed items, story names unified, payment term example data, state stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -22,6 +22,7 @@ import {
   IconButton,
   type FluidComboBoxProps,
 } from '../../index.js';
+import { paymentTermItems } from '../../../.storybook/exampleData.js';
 import mdx from './FluidComboBox.mdx';
 
 export default {
@@ -44,33 +45,7 @@ interface Item {
   disabled?: boolean;
 }
 
-const items: Item[] = [
-  {
-    id: 'option-0',
-    text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-  },
-  {
-    id: 'option-1',
-    text: 'Option 1',
-  },
-  {
-    id: 'option-2',
-    text: 'Option 2',
-  },
-  {
-    id: 'option-3',
-    text: 'Option 3 - a disabled item',
-    disabled: true,
-  },
-  {
-    id: 'option-4',
-    text: 'Option 4',
-  },
-  {
-    id: 'option-5',
-    text: 'Option 5',
-  },
-];
+const items: Item[] = paymentTermItems;
 
 const sharedArgTypes: ArgTypes = {
   autoAlign: {
@@ -151,15 +126,13 @@ const sharedArgs = {
   direction: 'bottom',
   disabled: false,
   invalid: false,
-  invalidText:
-    'Error message that is really long can wrap to more lines but should not be excessively long.',
+  invalidText: 'Choose payment terms.',
   isCondensed: false,
-  label: 'Choose an option',
+  label: 'Choose payment terms',
   readOnly: false,
-  titleText: 'Label',
+  titleText: 'Payment terms',
   warn: false,
-  warnText:
-    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+  warnText: "Longer than this customer's usual terms.",
 } satisfies Partial<FluidComboBoxProps<unknown>>;
 
 const sharedControls = Object.keys(sharedArgTypes);
@@ -172,8 +145,8 @@ export const Default: StoryFn<Partial<FluidComboBoxProps<unknown>>> = (
       <FluidComboBox
         onChange={() => {}}
         id="default"
-        titleText="Label"
-        label="Choose an option"
+        titleText="Payment terms"
+        label="Choose payment terms"
         items={items}
         itemToString={(item: unknown) => (item ? (item as Item).text : '')}
         {...args}
@@ -202,8 +175,8 @@ export const Condensed: StoryFn<Partial<FluidComboBoxProps<unknown>>> = (
       <FluidComboBox
         onChange={() => {}}
         id="default"
-        titleText="Label"
-        label="Choose an option"
+        titleText="Payment terms"
+        label="Choose payment terms"
         items={items}
         itemToString={(item: unknown) => (item ? (item as Item).text : '')}
         {...args}
@@ -267,8 +240,8 @@ export const WithAILabel: StoryFn<Partial<FluidComboBoxProps<unknown>>> = (
       <FluidComboBox
         onChange={() => {}}
         id="default"
-        titleText="Label"
-        label="Choose an option"
+        titleText="Payment terms"
+        label="Choose payment terms"
         items={items}
         itemToString={(item: unknown) => (item ? (item as Item).text : '')}
         decorator={aiLabel}
@@ -289,6 +262,41 @@ WithAILabel.argTypes = {
 WithAILabel.parameters = {
   controls: { include: sharedControls },
 };
+
+export const Disabled: StoryFn<Partial<FluidComboBoxProps<unknown>>> =
+  Default.bind({});
+Disabled.args = { ...sharedArgs, disabled: true };
+Disabled.argTypes = Default.argTypes;
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  controls: { include: sharedControls },
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<Partial<FluidComboBoxProps<unknown>>> =
+  Default.bind({});
+ReadOnly.args = {
+  ...sharedArgs,
+  readOnly: true,
+  initialSelectedItem: items[3],
+};
+ReadOnly.argTypes = Default.argTypes;
+ReadOnly.parameters = Default.parameters;
+
+// Carbon 1.118 links the error text but sets no aria-invalid. ComboBox spreads
+// rest props on its input, so the story passes it. The gap is an upstream bug.
+export const Invalid: StoryFn<Partial<FluidComboBoxProps<unknown>>> =
+  Default.bind({});
+Invalid.args = { ...sharedArgs, invalid: true, 'aria-invalid': true };
+Invalid.argTypes = Default.argTypes;
+Invalid.parameters = Default.parameters;
+
+export const Warning: StoryFn<Partial<FluidComboBoxProps<unknown>>> =
+  Default.bind({});
+Warning.args = { ...sharedArgs, warn: true, initialSelectedItem: items[5] };
+Warning.argTypes = Default.argTypes;
+Warning.parameters = Default.parameters;
 
 export const Skeleton: StoryFn = () => (
   <div style={{ width: 400 }}>

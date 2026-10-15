@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 menu items added, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 menu items added, story names unified, innerRef without a control. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -85,6 +85,8 @@ const argTypes: Partial<ArgTypes<OverflowMenuProps>> = {
     description:
       'Specify the duration in milliseconds to delay before hiding the tooltip',
   },
+  // A ref holds a DOM node, and the Controls panel crashes serialising it.
+  innerRef: { control: false },
   open: {
     control: { type: 'boolean' },
   },

@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as IconButtonStories from './IconButton.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ButtonChooser } from '../../../.storybook/ButtonChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, code samples import from @afframe/ui, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, code samples import from @afframe/ui, upstream Feedback section and table of contents removed, button chooser table added.
 
 <Meta isTemplate />
 
@@ -36,6 +37,10 @@ function ExampleComponent() {
 ```
 
 <Canvas of={IconButtonStories.Default} />
+
+## Which component to use
+
+<ButtonChooser />
 
 ## Kind
 

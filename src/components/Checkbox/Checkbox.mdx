@@ -1,9 +1,10 @@
 import { Canvas, ArgTypes, Meta } from '@storybook/addon-docs/blocks';
 import * as CheckboxStories from './Checkbox.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, onChange signature and spelling fixed, Afframe note on the invalid state, field chooser table added.
 
 <Meta isTemplate />
 
@@ -42,6 +43,10 @@ function ExampleComponent() {
 }
 ```
 
+## Which component to use
+
+<FieldChooser />
+
 ## Horizontal
 
 <Canvas of={CheckboxStories.Horizontal} />
@@ -62,12 +67,20 @@ fetched from an external resource like an API.
 
 <Canvas of={CheckboxStories.WithAILabel} />
 
+## Invalid state
+
+In Afframe UI, `CheckboxGroup` and `Checkbox` are used as Carbon ships them.
+With `invalid`, Carbon sets no `aria-invalid` on the group or the checkboxes,
+and the error text has no id, so nothing links it to the field. The same holds
+for `warn` and its text.
+
 ## Component API
 
 <ArgTypes />
+
 ### Checkbox defaultChecked
 
-You can use the `defaultChecked` prop to specify weather a checkbox is checked
+You can use the `defaultChecked` prop to specify whether a checkbox is checked
 by default or not on page load.
 
 ```jsx
@@ -98,8 +111,8 @@ input that is being exposed to the user and is a required prop.
 ### Checkbox onChange
 
 You can use the `onChange` prop to pass in a custom function for event handling.
-This prop receives three arguments: a boolean, the checkbox id, and the dom
-event.
+It receives two arguments: the change event and an object with `checked` and
+`id`.
 
 ```jsx
 <Checkbox onChange={()=>{}} labelText={`Checkbox label`} id="checkbox-label-1" />

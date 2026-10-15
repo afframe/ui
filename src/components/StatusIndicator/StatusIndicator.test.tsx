@@ -1,12 +1,18 @@
+import { composeStories } from '@storybook/react-vite';
 import { render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { statusIconKinds, statusShapeKinds, statusTagColors } from './kinds.js';
 import {
   defaultStatusIndicatorMessages,
   StatusIndicator,
 } from './StatusIndicator.js';
+import * as stories from './StatusIndicator.stories.js';
+
+// The unit project has no MDX loader; the stories file imports its docs page.
+vi.mock('./StatusIndicator.mdx', () => ({ default: () => null }));
 
 const label = defaultStatusIndicatorMessages.kindLabel;
 
@@ -126,4 +132,107 @@ test('tag appearance: every kind has a colour and a glyph', () => {
     expect(tag).toHaveClass(`cds--tag--${kinds[index]}`);
     expect(tag.querySelector('svg')).not.toBeNull();
   });
+});
+
+test('ref lands on the root in every appearance', () => {
+  const icon = createRef<HTMLDivElement>();
+  const shape = createRef<HTMLDivElement>();
+  const tag = createRef<HTMLDivElement>();
+  render(
+    <>
+      <StatusIndicator ref={icon} kind="failed" />
+      <StatusIndicator ref={shape} variant="shape" kind="critical" />
+      <StatusIndicator ref={tag} kind="failed" appearance="tag" />
+    </>
+  );
+  expect(icon.current).toHaveClass('afframe-status-indicator');
+  expect(icon.current?.firstElementChild).toHaveClass('cds--icon-indicator');
+  expect(shape.current).toHaveClass('afframe-status-indicator');
+  expect(shape.current?.firstElementChild).toHaveClass('cds--shape-indicator');
+  expect(tag.current).toHaveClass('cds--tag');
+});
+
+test('indicator appearance: className, ref and rest props share one div', () => {
+  const ref = createRef<HTMLDivElement>();
+  render(
+    <StatusIndicator
+      ref={ref}
+      kind="pending"
+      className="row-status"
+      id="status-1"
+      data-testid="status"
+      aria-describedby="status-help"
+    />
+  );
+  const root = screen.getByTestId('status');
+  expect(root.tagName).toBe('DIV');
+  expect(root).toBe(ref.current);
+  expect(root).toHaveClass('afframe-status-indicator', 'row-status');
+  expect(root).toHaveAttribute('id', 'status-1');
+  expect(root).toHaveAttribute('aria-describedby', 'status-help');
+  expect(root.querySelector('.row-status')).toBeNull();
+});
+
+test('tag appearance: rest props land on the tag', () => {
+  render(
+    <StatusIndicator
+      kind="pending"
+      appearance="tag"
+      id="status-2"
+      data-testid="status-tag"
+      aria-describedby="status-help"
+    />
+  );
+  const tag = screen.getByTestId('status-tag');
+  expect(tag).toHaveClass('cds--tag');
+  expect(tag).toHaveAttribute('id', 'status-2');
+  expect(tag).toHaveAttribute('aria-describedby', 'status-help');
+});
+
+test('tag appearance with onClick stays a div, not a button', () => {
+  const ref = createRef<HTMLDivElement>();
+  const { container } = render(
+    <StatusIndicator
+      ref={ref}
+      kind="pending"
+      appearance="tag"
+      onClick={vi.fn()}
+    />
+  );
+  expect(container.querySelector('button')).toBeNull();
+  expect(ref.current).toBeInstanceOf(HTMLDivElement);
+  expect(ref.current).toHaveClass('cds--tag');
+});
+
+test('server markup keeps id and data attributes in both appearances', () => {
+  for (const appearance of ['indicator', 'tag'] as const) {
+    const html = renderToStaticMarkup(
+      <StatusIndicator
+        kind="failed"
+        appearance={appearance}
+        id={`status-${appearance}`}
+        data-testid="status"
+      />
+    );
+    expect(html).toContain(`id="status-${appearance}"`);
+    expect(html).toContain('data-testid="status"');
+  }
+});
+
+test('a kind in both lists has one tag colour', () => {
+  const shared = statusIconKinds.filter((kind) =>
+    (statusShapeKinds as readonly string[]).includes(kind)
+  );
+  expect(shared.length).toBeGreaterThan(0);
+  for (const kind of shared) {
+    expect(statusTagColors.icon[kind]).toBe(
+      statusTagColors.shape[kind as (typeof statusShapeKinds)[number]]
+    );
+  }
+});
+
+test('the Default story renders one indicator from its args', async () => {
+  const { Default } = composeStories(stories);
+  const { container } = render(<Default kind="failed" appearance="tag" />);
+  expect(container.querySelectorAll('.cds--tag--red')).toHaveLength(1);
 });

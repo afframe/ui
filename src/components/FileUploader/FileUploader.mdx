@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as FileUploaderStories from './FileUploader.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions and their raw source imports removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions and their raw source imports removed, source label added, story names unified, upstream Feedback section and table of contents removed, example headings replaced by story names, ImportModal link and field chooser added.
 
 <Meta isTemplate />
 
@@ -21,27 +22,33 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={FileUploaderStories.Default} />
 
-## Drag And Drop
+FileUploader attaches files to a form. To import records from a file in a
+dialog, use
+[ImportModal](?path=/docs/components-task-dialogs-importmodal--overview),
+which builds on `FileUploaderDropContainer` and `FileUploaderItem` and adds a
+URL import.
 
-#### Drag And Drop Upload Container Example Application
+## Which component to use
+
+<FieldChooser />
+
+## Drag And Drop
 
 <Canvas of={FileUploaderStories.DragAndDrop} />
 
-#### Drag And Drop Upload Single Container Example Application
+## Drag And Drop Single
 
 <Canvas of={FileUploaderStories.DragAndDropSingle} />
 
-## File
-
-#### File Uploader Drop Container
+## Drop Container
 
 <Canvas of={FileUploaderStories.DropContainer} />
 
-#### File Uploader Item
+## Item
 
 <Canvas of={FileUploaderStories.Item} />
 
-## Skeleton state
+## Skeleton
 
 <Canvas of={FileUploaderStories.Skeleton} />
 

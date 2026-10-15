@@ -7,11 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, icons from @afframe/ui icons, the tag types from constants.js inlined. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, icons from @afframe/ui icons, the tag types from constants.js inlined, tag labels from the story glossary. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { forwardRef, type ComponentType } from 'react';
 import * as CarbonIcons from '../../icons.js';
+import { longTagLabel, tagLabels } from '../Tag/exampleTags.js';
 
 // Copied from @carbon/react/es/components/Tag/Tag.js
 const TYPES = {
@@ -29,17 +30,15 @@ const TYPES = {
   outline: 'Outline',
 };
 
-const tagLabel = (index: number) => `Tag ${index + 1}`;
-
-export const tags = Array.from({ length: 20 }, (v, k) => ({
-  label: tagLabel(k),
+export const tags = tagLabels.map((label: string, k) => ({
+  label,
   id: `id-${k}`,
 }));
 
 export const fiveTags = tags.slice(0, 5);
 
 const longTagsArr = [...fiveTags];
-longTagsArr.splice(1, 1, { id: 'id-1', label: 'Business performance' });
+longTagsArr.splice(1, 1, { id: 'id-1', label: longTagLabel });
 const tagTypes = Object.keys(TYPES) as (keyof typeof TYPES)[];
 
 export const longTags = longTagsArr.map((item, i) => {

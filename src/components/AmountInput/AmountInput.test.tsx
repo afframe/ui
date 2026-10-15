@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AmountInput, type AmountInputProps } from './AmountInput.js';
@@ -131,6 +131,29 @@ test('shows formatted limits when out of range', async () => {
   );
 });
 
+test('takes the out-of-range text from messages.invalidAmount', async () => {
+  render(
+    <Controlled
+      spy={vi.fn()}
+      min={0}
+      max={1000}
+      messages={{
+        invalidAmount: ({ min, max }) => `Between ${min} and ${max}, please.`,
+      }}
+    />
+  );
+  await typeAndBlur('2000');
+  expect(input()).toHaveAccessibleDescription(
+    `Between 0,00${nbsp}Kč and 1${nbsp}000,00${nbsp}Kč, please.`
+  );
+});
+
+test('passes ref to the input', () => {
+  const ref = createRef<HTMLInputElement>();
+  render(<AmountInput id="amount" label="Amount" ref={ref} />);
+  expect(ref.current).toBe(input());
+});
+
 test('works uncontrolled and never shows negative zero', async () => {
   const spy = vi.fn();
   render(
@@ -209,6 +232,20 @@ test('from empty or zero the first step is 1 or -1, not step (Carbon)', async ()
   await userEvent.keyboard('{ArrowUp}');
   expect(spy).toHaveBeenLastCalledWith(101);
 });
+
+test.each([
+  ['{ArrowUp}', 1],
+  ['{ArrowDown}', -1],
+])(
+  'from an empty field %s steps to %d, not step (Carbon)',
+  async (key, first) => {
+    const spy = vi.fn();
+    render(<Controlled step={100} spy={spy} />);
+    await userEvent.click(input());
+    await userEvent.keyboard(key);
+    expect(spy).toHaveBeenLastCalledWith(first);
+  }
+);
 
 test('forgets rejected text once the parent sets a new amount', async () => {
   const rejected = vi.fn();

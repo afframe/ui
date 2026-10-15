@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, only the background and layer types, literal spacing, colour and type values as Carbon tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, only the background and layer types, literal spacing, colour and type values as Carbon tokens, background margin matched to the 1rem padded canvas. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 .carbon-storybook-template--annotation {
@@ -49,8 +49,13 @@
 }
 
 .carbon-storybook-template--annotation--background {
-  margin: calc(-1 * var(--cds-spacing-08));
   min-block-size: 100vh;
+}
+
+/* Cancels the padded canvas's 1rem padding, as Carbon's -42px cancels its own
+   canvas padding, so the background box fills the canvas edge to edge. */
+.sb-main-padded .carbon-storybook-template--annotation--background {
+  margin: calc(-1 * var(--cds-spacing-05));
 }
 
 .carbon-storybook-template--annotation--background {

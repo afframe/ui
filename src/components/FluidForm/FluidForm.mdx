@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as FluidFormStories from './FluidForm.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, upstream Feedback section and table of contents removed, field chooser added, accessible name section rewritten.
 
 <Meta isTemplate />
 
@@ -21,14 +22,29 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={FluidFormStories.Default} />
 
+FluidForm is the fluid twin of
+[Form](?path=/docs/components-form--overview): use it around the fluid
+fields, and Form around standard ones.
+
+## Which component to use
+
+<FieldChooser />
+
 ## Accessibility Considerations
 
 ### Accessible Name
 
-To comply with accessibility requirements, make sure to supply the component
-with an accessible name by providing either the `aria-label`, `aria-labelledby`
-or `title` attribute. Read more on the accessible naming rule
-[here](https://able.ibm.com/rules/archives/latest/doc/en-US/aria_accessiblename_exists.html).
+FluidForm renders a `<form>`. Name it with `aria-label`, or `aria-labelledby`
+pointing at the heading above it, so screen readers list it as a form
+landmark. Each field inside takes its name from its own label prop
+(`labelText`, `titleText` or `label`; see the field props table above).
+
+### Error messages
+
+The fields keep their own error wiring inside FluidForm. FluidTextInput and
+FluidPasswordInput need `aria-describedby="<id>-error-msg"` while `invalid` is
+set, as the Default story does; see the
+[FluidTextInput page](?path=/docs/components-fluid-inputs-fluidtextinput--overview).
 
 ## Component API
 

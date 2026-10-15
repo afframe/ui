@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, DataTableSkeleton from @afframe/ui, source tag, DataTable docs page, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, DataTableSkeleton from @afframe/ui, source tag, DataTable docs page, story names unified, wrapper narrows below 800px. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -36,7 +36,7 @@ export const Default: StoryFn<typeof DataTableSkeleton> = (args) => {
   const { ...rest } = props();
 
   return (
-    <div style={{ width: '800px' }}>
+    <div style={{ inlineSize: '100%', maxInlineSize: '800px' }}>
       <DataTableSkeleton
         {...rest}
         {...args}

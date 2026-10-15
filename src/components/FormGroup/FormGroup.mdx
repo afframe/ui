@@ -1,9 +1,10 @@
 import { ArgTypes, Story, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as FormGroupStories from './FormGroup.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Afframe note on the invalid state, field chooser table added.
 
 <Meta isTemplate />
 
@@ -20,6 +21,16 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Overview
 
 <Canvas of={FormGroupStories.Default} />
+
+## Which component to use
+
+<FieldChooser />
+
+## Invalid state
+
+In Afframe UI, `FormGroup` is used as Carbon ships it. `invalid` only sets
+`data-invalid` on the fieldset. To show an error, set `message` and
+`messageText`; that text has no id, so nothing links it to the fields.
 
 ## Component API
 

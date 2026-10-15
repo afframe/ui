@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: IBM header added (upstream file has none; years from its git history), unused onChange prop removed, components and icons from @afframe/ui, classnames and PropTypes removed. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: IBM header added (upstream file has none; years from its git history), unused onChange prop removed, components and icons from @afframe/ui, classnames and PropTypes removed, filter options match the invoice example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useId, useState } from 'react';
@@ -129,28 +129,28 @@ const TableToolbarFilter = ({
             <fieldset className={`${prefix}--fieldset`}>
               <legend className={`${prefix}--label`}>Filter options</legend>
               <Checkbox
-                labelText="Marc"
+                labelText="Acme Trading"
                 id="checkbox1"
                 onChange={handleCheckboxChange}
-                checked={selectedCheckboxes.includes('Marc')}
+                checked={selectedCheckboxes.includes('Acme Trading')}
               />
               <Checkbox
-                labelText="300"
+                labelText="Net 30"
                 id="checkbox2"
                 onChange={handleCheckboxChange}
-                checked={selectedCheckboxes.includes('300')}
+                checked={selectedCheckboxes.includes('Net 30')}
               />
               <Checkbox
-                labelText="80"
+                labelText="Overdue"
                 id="checkbox3"
                 onChange={handleCheckboxChange}
-                checked={selectedCheckboxes.includes('80')}
+                checked={selectedCheckboxes.includes('Overdue')}
               />
               <Checkbox
-                labelText="Robin"
+                labelText="Paid"
                 id="checkbox4"
                 onChange={handleCheckboxChange}
-                checked={selectedCheckboxes.includes('Robin')}
+                checked={selectedCheckboxes.includes('Paid')}
               />
             </fieldset>
           </div>

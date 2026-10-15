@@ -13,7 +13,8 @@ const meta = {
   tags: ['afframe'],
   args: {
     datePickerType: 'single',
-    value: '10/15/2026',
+    dateFormat: 'd.m.Y',
+    value: '15.10.2026',
     onOpenChange: action('onOpenChange'),
     children: null,
   },
@@ -63,7 +64,7 @@ export const Default: Story = {
           <DatePickerInput
             id="due-date"
             labelText="Due date"
-            placeholder="mm/dd/yyyy"
+            placeholder="dd.mm.yyyy"
           />
         </ControlledDatePicker>
       </div>
@@ -88,13 +89,16 @@ export const Default: Story = {
 // Open from the first render: the caller keeps it open.
 export const Open: Story = {
   args: { open: true },
+  // flatpickr places the open calendar on <body> once: in its own iframe it
+  // stays inside the story instead of covering the props table.
+  parameters: { docs: { story: { inline: false, height: '28rem' } } },
   render: (args) => (
     <div style={frame}>
       <ControlledDatePicker {...args}>
         <DatePickerInput
           id="open-date"
           labelText="Invoice date"
-          placeholder="mm/dd/yyyy"
+          placeholder="dd.mm.yyyy"
         />
       </ControlledDatePicker>
     </div>
@@ -112,7 +116,7 @@ export const Uncontrolled: Story = {
         <DatePickerInput
           id="uncontrolled-date"
           labelText="Payment date"
-          placeholder="mm/dd/yyyy"
+          placeholder="dd.mm.yyyy"
         />
       </ControlledDatePicker>
     </div>
@@ -127,7 +131,7 @@ export const Uncontrolled: Story = {
 
 // A range opens one calendar for both inputs.
 export const Range: Story = {
-  args: { datePickerType: 'range', value: ['10/01/2026', '10/31/2026'] },
+  args: { datePickerType: 'range', value: ['01.10.2026', '31.10.2026'] },
   render: function Render(args) {
     const [open, setOpen] = useState(false);
     return (
@@ -144,12 +148,12 @@ export const Range: Story = {
           <DatePickerInput
             id="period-from"
             labelText="From"
-            placeholder="mm/dd/yyyy"
+            placeholder="dd.mm.yyyy"
           />
           <DatePickerInput
             id="period-to"
             labelText="To"
-            placeholder="mm/dd/yyyy"
+            placeholder="dd.mm.yyyy"
           />
         </ControlledDatePicker>
       </div>

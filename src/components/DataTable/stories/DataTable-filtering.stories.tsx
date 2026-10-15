@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, unused imports removed, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, unused imports removed, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -152,26 +152,38 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => {
             <Table {...getTableProps()} aria-label="sample table">
               <TableHead>
                 <TableRow>
-                  {headers.map((header) => (
-                    <TableHeader
-                      {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                      {header.header}
-                    </TableHeader>
-                  ))}
+                  {headers.map((header) => {
+                    const { key, ...headerProps } = getHeaderProps({ header });
+                    return (
+                      <TableHeader
+                        key={key}
+                        {...(headerProps as TableHeaderProps)}>
+                        {header.header}
+                      </TableHeader>
+                    );
+                  })}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {showEmptyState
                   ? null
-                  : tableRows.map((row) => (
-                      <TableRow {...getRowProps({ row })}>
-                        {row.cells.map((cell) => (
-                          <TableCell {...getCellProps({ cell })}>
-                            {cell.value}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
+                  : tableRows.map((row) => {
+                      const { key, ...rowProps } = getRowProps({ row });
+                      return (
+                        <TableRow key={key} {...rowProps}>
+                          {row.cells.map((cell) => {
+                            const { key, ...cellProps } = getCellProps({
+                              cell,
+                            });
+                            return (
+                              <TableCell key={key} {...cellProps}>
+                                {cell.value}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
               </TableBody>
             </Table>
             {showEmptyState && (

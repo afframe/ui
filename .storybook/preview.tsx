@@ -10,12 +10,12 @@ const preview: Preview = {
   // Every component gets a docs page, listed first (ADR 0008).
   tags: ['autodocs'],
   // A story's own controls.exclude replaces the one below; argTypes merge, so
-  // these hold everywhere.
+  // this holds everywhere. Only `ref` sits here: the docgen server merges
+  // global argTypes into every props table, so other names show as ghost
+  // rows. A story with its own controls.exclude, whose component has a ref
+  // prop other than `ref`, sets that prop to `control: false` in its meta.
   argTypes: {
     ref: { control: false },
-    innerRef: { control: false },
-    containerRef: { control: false },
-    launcherRef: { control: false },
   },
   globalTypes: {
     theme: {

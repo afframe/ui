@@ -7,11 +7,11 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, AI label story styles as plain CSS, source tag, story names unified, Single follows its checked control, Disabled, ReadOnly, Invalid and Warning stories, Afframe example data. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import { useState } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
+import { useArgs } from 'storybook/preview-api';
 import '../AILabel/ailabel-story.css';
 import {
   AILabel,
@@ -44,14 +44,14 @@ export default {
 
 const groupArgs = {
   disabled: false,
-  helperText: 'Helper text goes here',
+  helperText: 'Sent by email',
   invalid: false,
-  invalidText: 'Invalid message goes here',
-  legendText: 'Group label',
+  invalidText: 'Choose at least one notification.',
+  legendText: 'Notifications',
   orientation: 'vertical',
   readOnly: false,
   warn: false,
-  warnText: 'Warning message goes here',
+  warnText: 'Without notifications, overdue invoices can go unnoticed.',
 } as const;
 
 const groupArgTypes = {
@@ -82,7 +82,7 @@ const groupArgTypes = {
   },
   legendText: {
     description:
-      'Provide the text to be rendered inside of the fieldset <legend>',
+      'Provide the text to be rendered inside of the fieldset `<legend>`',
     control: {
       type: 'text',
     },
@@ -128,16 +128,16 @@ const groupControls = [
 const checkboxArgs = {
   checked: false,
   disabled: false,
-  helperText: 'Helper text goes here',
+  helperText: 'Sent every Monday',
   hideLabel: false,
   indeterminate: false,
   invalid: false,
-  invalidText: 'Invalid text goes here',
-  labelText: 'Checkbox label',
+  invalidText: 'Choose at least one notification.',
+  labelText: 'Weekly summary',
   readOnly: false,
   title: '',
   warn: false,
-  warnText: 'Warning text goes here',
+  warnText: 'Without the summary, overdue invoices can go unnoticed.',
 };
 
 const checkboxArgTypes = {
@@ -210,8 +210,8 @@ export const Default: StoryFn<typeof CheckboxGroup> = ({
   ...args
 }) => (
   <CheckboxGroup {...args} {...(readOnly ? { readOnly } : {})}>
-    <Checkbox labelText="Checkbox label" id="checkbox-label-1" />
-    <Checkbox labelText="Checkbox label" id="checkbox-label-2" />
+    <Checkbox labelText="Payment received" id="checkbox-label-1" />
+    <Checkbox labelText="Invoice overdue" id="checkbox-label-2" />
   </CheckboxGroup>
 );
 
@@ -233,9 +233,9 @@ export const Horizontal: StoryFn<typeof CheckboxGroup> = ({
 }) => {
   return (
     <CheckboxGroup {...args} {...(readOnly ? { readOnly } : {})}>
-      <Checkbox labelText="Checkbox label" id="checkbox-label-1" />
-      <Checkbox labelText="Checkbox label" id="checkbox-label-2" />
-      <Checkbox labelText="Checkbox label" id="checkbox-label-3" />
+      <Checkbox labelText="Payment received" id="checkbox-label-1" />
+      <Checkbox labelText="Invoice overdue" id="checkbox-label-2" />
+      <Checkbox labelText="Weekly summary" id="checkbox-label-3" />
     </CheckboxGroup>
   );
 };
@@ -261,15 +261,41 @@ Horizontal.parameters = {
   },
 };
 
+export const Disabled = Default.bind({});
+Disabled.args = { ...Default.args, disabled: true };
+Disabled.argTypes = Default.argTypes;
+Disabled.parameters = Default.parameters;
+
+export const ReadOnly = Default.bind({});
+ReadOnly.args = { ...Default.args, readOnly: true };
+ReadOnly.argTypes = Default.argTypes;
+// Carbon puts aria-readonly on the group's fieldset, which the group role does
+// not allow (an upstream bug).
+ReadOnly.parameters = {
+  ...Default.parameters,
+  a11y: {
+    config: { rules: [{ id: 'aria-allowed-attr', enabled: false }] },
+  },
+};
+
+// Carbon sets no aria-invalid and does not link the error text to the
+// group (an upstream bug).
+export const Invalid = Default.bind({});
+Invalid.args = { ...Default.args, invalid: true };
+Invalid.argTypes = Default.argTypes;
+Invalid.parameters = Default.parameters;
+
+export const Warning = Default.bind({});
+Warning.args = { ...Default.args, warn: true };
+Warning.argTypes = Default.argTypes;
+Warning.parameters = Default.parameters;
+
 export const Single: StoryFn<typeof Checkbox> = (args) => {
-  const [{ checked }, updateArgs] = useState<{ checked?: boolean | undefined }>(
-    args
-  );
+  const [, updateArgs] = useArgs();
 
   return (
     <Checkbox
       {...args}
-      checked={checked}
       id="checkbox-single"
       onChange={(event, data) => {
         updateArgs({ checked: data.checked });
@@ -344,37 +370,37 @@ export const WithAILabel: StoryFn<typeof CheckboxGroup> = ({
         decorator={AILabelFunc()}
         {...args}
         {...(readOnly ? { readOnly } : {})}>
-        <Checkbox labelText="Checkbox label" id="checkbox-label-1" />
-        <Checkbox labelText="Checkbox label" id="checkbox-label-2" />
-        <Checkbox labelText="Checkbox label" id="checkbox-label-3" />
+        <Checkbox labelText="Payment received" id="checkbox-label-1" />
+        <Checkbox labelText="Invoice overdue" id="checkbox-label-2" />
+        <Checkbox labelText="Weekly summary" id="checkbox-label-3" />
       </CheckboxGroup>
 
       <CheckboxGroup {...args} {...(readOnly ? { readOnly } : {})}>
         <Checkbox
-          labelText="Checkbox label"
+          labelText="Payment received"
           id="checkbox-label-4"
           decorator={AILabelFunc()}
         />
         <Checkbox
-          labelText="Checkbox label"
+          labelText="Invoice overdue"
           id="checkbox-label-5"
           decorator={AILabelFunc()}
         />
-        <Checkbox labelText="Checkbox label" id="checkbox-label-6" />
+        <Checkbox labelText="Weekly summary" id="checkbox-label-6" />
       </CheckboxGroup>
 
       <CheckboxGroup {...args} {...(readOnly ? { readOnly } : {})}>
         <Checkbox
-          labelText="Checkbox label"
+          labelText="Payment received"
           id="checkbox-label-7"
           decorator={AILabelFunc('inline')}
         />
         <Checkbox
-          labelText="Checkbox label"
+          labelText="Invoice overdue"
           id="checkbox-label-8"
           decorator={AILabelFunc('inline')}
         />
-        <Checkbox labelText="Checkbox label" id="checkbox-label-9" />
+        <Checkbox labelText="Weekly summary" id="checkbox-label-9" />
       </CheckboxGroup>
     </div>
   );
@@ -383,7 +409,6 @@ export const WithAILabel: StoryFn<typeof CheckboxGroup> = ({
 WithAILabel.args = {
   ...groupArgs,
   helperText: '',
-  legendText: 'Group Label',
 };
 
 WithAILabel.argTypes = { ...groupArgTypes };

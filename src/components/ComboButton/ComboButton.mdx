@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as ComboButtonStories from './ComboButton.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ButtonChooser } from '../../../.storybook/ButtonChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, Experimental Auto Align section renamed Auto align, usage and accessibility links, sample with import and example labels, button chooser table added.
 
 <Meta isTemplate />
 
@@ -12,6 +13,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 <SourceLabel name="carbon" />
 
 [Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/ComboButton)
+&nbsp;|&nbsp;
+[Usage guidelines](https://www.carbondesignsystem.com/components/menu-buttons/usage)
+&nbsp;|&nbsp;
+[Accessibility](https://www.carbondesignsystem.com/components/menu-buttons/accessibility)
 
 ## Overview
 
@@ -21,14 +26,20 @@ disclosed list next to the primary action. These additional actions must be
 `props.label`.
 
 ```jsx
-<ComboButton label="Primary action">
-  <MenuItem label="Second action" />
-  <MenuItem label="Third action" />
-  <MenuItem label="Fourth action" />
-</ComboButton>
+import { ComboButton, MenuItem } from '@afframe/ui';
+
+<ComboButton label="Send invoice">
+  <MenuItem label="Send reminder" />
+  <MenuItem label="Download PDF" />
+  <MenuItem label="Duplicate" />
+</ComboButton>;
 ```
 
 <Canvas of={ComboButtonStories.Default} />
+
+## Which component to use
+
+<ButtonChooser />
 
 ## With Icons
 
@@ -51,9 +62,9 @@ to display the Menu in case the provided `menuAlignment` obscures it.
 We encourage you to play around in the Storybook Default stories to better
 understand the `menuAlignment` prop.
 
-## Experimental Auto Align
+## Auto align
 
-<Canvas of={ComboButtonStories.ExperimentalAutoAlign} />
+<Canvas of={ComboButtonStories.AutoAlign} />
 
 ## Component API
 

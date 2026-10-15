@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; label added to filterable story; typed items, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; label added to filterable story; typed items, story names unified, payment term example data, state stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -23,6 +23,7 @@ import {
   type FluidMultiSelectProps,
 } from '../../index.js';
 import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { paymentTermItems } from '../../../.storybook/exampleData.js';
 import mdx from './FluidMultiSelect.mdx';
 
 export default {
@@ -52,33 +53,7 @@ interface Item {
   disabled?: boolean;
 }
 
-const items: Item[] = [
-  {
-    id: 'option-0',
-    text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-  },
-  {
-    id: 'option-1',
-    text: 'Option 1',
-  },
-  {
-    id: 'option-2',
-    text: 'Option 2',
-  },
-  {
-    id: 'option-3',
-    text: 'Option 3 - a disabled item',
-    disabled: true,
-  },
-  {
-    id: 'option-4',
-    text: 'Option 4',
-  },
-  {
-    id: 'option-5',
-    text: 'Option 5',
-  },
-];
+const items: Item[] = paymentTermItems;
 
 export const Default: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
   args
@@ -86,8 +61,8 @@ export const Default: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
   return (
     <FluidMultiSelect
       id="default"
-      titleText="Label"
-      label="Choose an option"
+      titleText="Payment terms offered"
+      label="Choose payment terms"
       items={items}
       itemToString={(item: unknown) => (item ? (item as Item).text : '')}
       {...args}
@@ -178,17 +153,15 @@ const sharedArgs = {
   direction: 'bottom',
   disabled: false,
   invalid: false,
-  invalidText:
-    'Error message that is really long can wrap to more lines but should not be excessively long.',
-  label: 'Choose an option',
+  invalidText: 'Choose at least one payment term.',
+  label: 'Choose payment terms',
   locale: 'en',
   readOnly: false,
   selectionFeedback: 'top-after-reopen',
-  titleText: 'Label',
+  titleText: 'Payment terms offered',
   useTitleInItem: false,
   warn: false,
-  warnText:
-    'Warning message that is really long can wrap to more lines but should not be excessively long.',
+  warnText: 'Customers usually pick the longest term offered.',
 } satisfies Partial<FluidMultiSelectProps<unknown>>;
 
 const filterableArgTypes: ArgTypes = {
@@ -223,8 +196,8 @@ export const Filterable: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
     <FluidMultiSelect
       initialSelectedItems={items.slice(2, 3)}
       id="default"
-      titleText="Label"
-      label="Choose an option"
+      titleText="Payment terms offered"
+      label="Choose payment terms"
       items={items}
       itemToString={(item: unknown) => (item ? (item as Item).text : '')}
       {...args}
@@ -255,8 +228,8 @@ export const FilterableWithLayer: StoryFn<
       {(layer) => (
         <FluidMultiSelect
           id={`carbon-multiselect-example-${layer}`}
-          titleText="Multiselect title"
-          label="Choose an option"
+          titleText="Payment terms offered"
+          label="Choose payment terms"
           items={items}
           itemToString={(item: unknown) => (item ? (item as Item).text : '')}
           {...args}
@@ -269,7 +242,7 @@ export const FilterableWithLayer: StoryFn<
 FilterableWithLayer.args = {
   ...sharedArgs,
   isFilterable: true,
-  titleText: 'Multiselect title',
+  titleText: 'Payment terms offered',
 };
 
 FilterableWithLayer.argTypes = Filterable.argTypes;
@@ -281,8 +254,8 @@ export const Condensed: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
   return (
     <FluidMultiSelect
       id="default"
-      titleText="Label"
-      label="Choose an option"
+      titleText="Payment terms offered"
+      label="Choose payment terms"
       items={items}
       itemToString={(item: unknown) => (item ? (item as Item).text : '')}
       {...args}
@@ -342,8 +315,8 @@ export const WithAILabel: StoryFn<Partial<FluidMultiSelectProps<unknown>>> = (
     <FluidMultiSelect
       initialSelectedItems={items.slice(2, 3)}
       id="default"
-      titleText="Label"
-      label="Choose an option"
+      titleText="Payment terms offered"
+      label="Choose payment terms"
       items={items}
       itemToString={(item: unknown) => (item ? (item as Item).text : '')}
       decorator={aiLabel}
@@ -359,6 +332,42 @@ WithAILabel.args = {
 WithAILabel.argTypes = {
   ...sharedArgTypes,
 };
+
+export const Disabled: StoryFn<Partial<FluidMultiSelectProps<unknown>>> =
+  Default.bind({});
+Disabled.args = { ...sharedArgs, disabled: true };
+Disabled.argTypes = Default.argTypes;
+// Carbon greys out disabled text below 4.5:1. WCAG 1.4.3 exempts inactive
+// components, but axe checks the helper text anyway.
+Disabled.parameters = {
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<Partial<FluidMultiSelectProps<unknown>>> =
+  Default.bind({});
+ReadOnly.args = {
+  ...sharedArgs,
+  readOnly: true,
+  initialSelectedItems: items.slice(2, 4),
+};
+ReadOnly.argTypes = Default.argTypes;
+
+// Carbon 1.118 gives the error text no id, links nothing to it and sets no
+// aria-invalid; MultiSelect takes no extra props to fix it from outside.
+// This is an upstream bug.
+export const Invalid: StoryFn<Partial<FluidMultiSelectProps<unknown>>> =
+  Default.bind({});
+Invalid.args = { ...sharedArgs, invalid: true };
+Invalid.argTypes = Default.argTypes;
+
+export const Warning: StoryFn<Partial<FluidMultiSelectProps<unknown>>> =
+  Default.bind({});
+Warning.args = {
+  ...sharedArgs,
+  warn: true,
+  initialSelectedItems: items.slice(2, 4),
+};
+Warning.argTypes = Default.argTypes;
 
 export const Skeleton: StoryFn = () => {
   return <FluidMultiSelectSkeleton />;
