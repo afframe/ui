@@ -380,6 +380,27 @@ test('single mode: dropping several files keeps the first and says the rest were
   expect(screen.getAllByRole('listitem')).toHaveLength(1);
 });
 
+test('files dropped while an import runs do not count toward a later ignored note', async () => {
+  let reject: (error: Error) => void = () => undefined;
+  const onImport = () =>
+    new Promise<void>((_, fail) => {
+      reject = fail;
+    });
+  renderHarness({ onImport });
+  await openByKeyboard();
+  await userEvent.upload(fileInput(), csv('a.csv'));
+  await userEvent.click(importButton());
+  await until(() =>
+    expect(screen.getAllByText('Working').length).toBeGreaterThan(0)
+  );
+  dropFiles([csv('b.csv'), csv('c.csv'), csv('d.csv')]);
+  reject(new Error('no'));
+  await screen.findByRole('alert');
+  await userEvent.upload(fileInput(), csv('e.csv'));
+  await until(() => expect(status().textContent).toBe('e.csv added.'));
+  expect(document.body.textContent).not.toContain('ignored');
+});
+
 test('ref and rest props reach the root', async () => {
   const ref = createRef<HTMLDivElement>();
   render(
