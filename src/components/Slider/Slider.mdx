@@ -1,9 +1,10 @@
 import { ArgTypes, Story, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as SliderStories from './Slider.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, Afframe notes on narrow screens and the unlinked invalid text, field chooser added.
 
 <Meta isTemplate />
 
@@ -23,6 +24,20 @@ Sliders provide a visual indication of adjustable content, where the user can
 increase or decrease the value by moving the handle along a horizontal track.
 
 <Canvas of={SliderStories.Default} />
+
+In Afframe UI, `Slider` is used as Carbon ships it:
+
+- Below the `md` breakpoint (672 px), set `hideTextInput`. Carbon keeps the
+  track at least 200 px wide with the number input beside it, so on a phone
+  the slider is wider than the screen.
+- With `invalid`, the number input gets `aria-invalid`, but the `invalidText`
+  has no id and the input no `aria-describedby`, so screen readers do not
+  read the message with the field. Repeat the reason in `labelText` or near
+  the form's submit button (upstream issue drafted, not filed).
+
+## Which component to use
+
+<FieldChooser />
 
 ## Controlled Slider
 

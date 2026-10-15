@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, noValidate (not a Slider prop) removed, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, noValidate (not a Slider prop) removed, source tag, story names unified, Disabled, ReadOnly, Invalid and Warning stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState } from 'react';
@@ -315,6 +315,33 @@ TwoHandleWithHiddenInputs.argTypes = {
   ...hiddenInputArgTypes,
 };
 TwoHandleWithHiddenInputs.parameters = twoHandleParameters;
+
+export const Disabled: StoryFn<typeof Slider> = (args) => <Slider {...args} />;
+Disabled.args = { ...sharedArgs, disabled: true };
+Disabled.argTypes = { ...sharedArgTypes };
+// WCAG 1.4.3 exempts inactive components; Carbon greys the label and range
+// labels of a disabled slider (1.7:1).
+Disabled.parameters = {
+  ...singleHandleParameters,
+  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+};
+
+export const ReadOnly: StoryFn<typeof Slider> = (args) => <Slider {...args} />;
+ReadOnly.args = { ...sharedArgs, readOnly: true };
+ReadOnly.argTypes = { ...sharedArgTypes };
+ReadOnly.parameters = singleHandleParameters;
+
+// The invalid text is not linked to the input (upstream issue drafted, not
+// filed); axe does not flag it.
+export const Invalid: StoryFn<typeof Slider> = (args) => <Slider {...args} />;
+Invalid.args = { ...sharedArgs, invalid: true };
+Invalid.argTypes = { ...sharedArgTypes };
+Invalid.parameters = singleHandleParameters;
+
+export const Warning: StoryFn<typeof Slider> = (args) => <Slider {...args} />;
+Warning.args = { ...sharedArgs, value: 92, warn: true };
+Warning.argTypes = { ...sharedArgTypes };
+Warning.parameters = singleHandleParameters;
 
 const skeletonArgs: SliderSkeletonProps = {
   ariaLabel: 'Slider handle',
