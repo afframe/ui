@@ -41,8 +41,7 @@ makeDraggable({
     aria-expanded={isOpen}
     onClick={() => {
       setIsOpen(!isOpen);
-    }}
-  >
+    }}>
     Toggle
   </Button>
 
@@ -52,15 +51,13 @@ makeDraggable({
         kind="ghost"
         ref={dragRef}
         className="drag-icon"
-        onClick={() => console.log('clicked')}
-      >
+        onClick={() => console.log('clicked')}>
         <Draggable />
       </Button>
       <Button
         kind="ghost"
         onClick={() => setIsOpen(false)}
-        className="close-icon"
-      >
+        className="close-icon">
         <Close />
       </Button>
     </header>
