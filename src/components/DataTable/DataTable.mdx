@@ -345,14 +345,16 @@ _Note: press "Show code" above to view a code snippet of this example_
 
 In Afframe UI, batch actions behave as Carbon ships them: at narrow widths the
 action list runs past the table container and the page scrolls sideways. Keep
-batch actions few, two or three, so the bar fits on small screens.
+batch actions few.
 
 ## AI label
 
 In Afframe UI, the AI label stories follow Carbon's. The tables with an AI label
-in a column header turn off the table's horizontal scroll so the AI label
-callout is not clipped, so at 375 px those tables run past the page (upstream
-issue drafted, not filed). In an app, keep the scroll on narrow screens.
+in a column header turn off the table's horizontal scroll so that the AI label
+callout is not clipped; at 375 px those tables run past the page. With the
+scroll on, the callout is cut at the table edge, even with `autoAlign` (upstream
+issue drafted, not filed). Choose per table: horizontal scroll on narrow
+screens, or a fully visible callout.
 
 ## Toolbar
 
