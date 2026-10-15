@@ -32,15 +32,14 @@ export default {
 // Only on the size stories: around Gallery its flex row shrinks the grid to
 // its text, so the column count changed with the "Copied" message.
 const sizeLabel: Decorator = (Story, { args }) => {
+  const { size } = args as { size?: number | string };
   return (
     <section className="demo-icon-example">
       <Story />
       <span className="demo-icon-example__label">
-        {args.size} {typeof args.size === 'number' && 'pixel'}{' '}
-        {args.size === 16 && '(default)'}
-        {typeof args.size === 'string' &&
-          args.size.includes('rem') &&
-          '(responsive)'}
+        {size} {typeof size === 'number' && 'pixel'}{' '}
+        {size === 16 && '(default)'}
+        {typeof size === 'string' && size.includes('rem') && '(responsive)'}
       </span>
     </section>
   );
