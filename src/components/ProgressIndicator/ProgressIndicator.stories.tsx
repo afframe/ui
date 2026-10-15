@@ -7,10 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, Default story first. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, Default story first, Afframe example data, Default without the step props that currentIndex overrides, Interactive keeps currentIndex in state and logs onChange as an action. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
+import { useState } from 'react';
+import { fn } from 'storybook/test';
 import {
   ProgressIndicator,
   ProgressIndicatorSkeleton,
@@ -36,36 +38,34 @@ export default {
 export const Default: StoryFn<typeof ProgressIndicator> = (args) => (
   <ProgressIndicator {...args}>
     <ProgressStep
-      complete
-      label="First step"
-      description="Step 1: Getting started with Carbon Design System"
-      secondaryLabel="Optional label"
+      label="Customer"
+      description="Step 1: Choose the customer"
+      secondaryLabel="Lakeside Furniture"
     />
     <ProgressStep
-      current
-      label="Second step with tooltip"
-      description="Step 2: Getting started with Carbon Design System"
+      label="Invoice items"
+      description="Step 2: Add the invoice items"
     />
     <ProgressStep
-      label="Third step with tooltip"
-      description="Step 3: Getting started with Carbon Design System"
+      label="Payment terms"
+      description="Step 3: Set the payment terms"
     />
     <ProgressStep
-      label="Fourth step"
-      description="Step 4: Getting started with Carbon Design System"
+      label="Review"
+      description="Step 4: Review the invoice"
       invalid
-      secondaryLabel="Example invalid step"
+      secondaryLabel="Missing tax ID"
     />
     <ProgressStep
-      label="Fifth step"
-      description="Step 5: Getting started with Carbon Design System"
+      label="Send"
+      description="Step 5: Send the invoice"
       disabled
     />
   </ProgressIndicator>
 );
 
 Default.args = {
-  currentIndex: 0,
+  currentIndex: 1,
   spaceEqually: false,
   vertical: false,
 };
@@ -82,23 +82,32 @@ Default.argTypes = {
   },
 };
 
-export const Interactive: StoryFn<typeof ProgressIndicator> = () => {
+export const Interactive: StoryFn<typeof ProgressIndicator> = ({
+  onChange,
+}) => {
+  const [currentIndex, setCurrentIndex] = useState(1);
   return (
-    <ProgressIndicator currentIndex={1} onChange={() => alert('Clicked')}>
+    <ProgressIndicator
+      currentIndex={currentIndex}
+      onChange={(index) => {
+        onChange?.(index);
+        setCurrentIndex(index);
+      }}>
       <ProgressStep
-        label="Click me"
-        description="Step 1: Register an onChange event"
+        label="Customer"
+        description="Step 1: Choose the customer"
       />
       <ProgressStep
-        label="Really long label"
-        description="The progress indicator will listen for clicks on the steps"
+        label="Payment terms and late fees"
+        description="Step 2: Set the payment terms and late fees"
       />
-      <ProgressStep
-        label="Third step"
-        description="The progress indicator will listen for clicks on the steps"
-      />
+      <ProgressStep label="Review" description="Step 3: Review the invoice" />
     </ProgressIndicator>
   );
+};
+
+Interactive.args = {
+  onChange: fn(),
 };
 
 export const Skeleton: StoryFn<typeof ProgressIndicatorSkeleton> = () => {
