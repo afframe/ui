@@ -1,5 +1,6 @@
 import { AnchorMdx } from '@storybook/addon-docs/blocks';
 import type { ReactNode } from 'react';
+import { ChooserTable } from './chooser';
 
 // Which dialog or flow fits a task. Every docs page of the family shows this
 // one table, so the guidance lives here and not in each MDX page. AnchorMdx
@@ -120,26 +121,15 @@ function link(name: string, id: string) {
 
 export function DialogChooser() {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Size</th>
-          <th>Surface</th>
-          <th>Component</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map(([task, size, surface, ...component]) => (
-          <tr key={task}>
-            <td>{task}</td>
-            <td>{size}</td>
-            <td>{surface}</td>
-            <td>{component}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <ChooserTable
+      head={['Task', 'Size', 'Surface', 'Component']}
+      rows={rows.map(([task, size, surface, ...component]) => [
+        task,
+        size,
+        surface,
+        component,
+      ])}
+    />
   );
 }
 

@@ -13,6 +13,10 @@ export function docsLink(name: string, id: string) {
   );
 }
 
+// Storybook stripes even rows with its own palette; in dark that grey leaves
+// link text under 4.5:1, so the stripe takes the Carbon layer token instead.
+const stripe = { backgroundColor: 'var(--cds-layer-01)' };
+
 /** A static table; a cell given as an array renders its parts in a row. */
 export function ChooserTable({
   caption,
@@ -35,7 +39,7 @@ export function ChooserTable({
       </thead>
       <tbody>
         {rows.map((row, i) => (
-          <tr key={i}>
+          <tr key={i} style={i % 2 ? stripe : undefined}>
             {row.map((cell, j) => (
               <td key={j}>{cell}</td>
             ))}
