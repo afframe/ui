@@ -1,10 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as TextInputStories from './TextInput.stories';
-import * as PasswordInputStories from './PasswordInput.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, stray trailing text removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, stray trailing text removed, source label added, story names unified, upstream Feedback section and table of contents removed, PasswordInput links made local, state stories, error message note and field chooser added.
 
 <Meta isTemplate />
 
@@ -30,6 +30,18 @@ default text input is for short, one-line content.
 
 <Canvas of={TextInputStories.ReadOnly} />
 
+### Disabled
+
+<Canvas of={TextInputStories.Disabled} />
+
+### Invalid
+
+<Canvas of={TextInputStories.Invalid} />
+
+### Warning
+
+<Canvas of={TextInputStories.Warning} />
+
 ### Skeleton
 
 <Canvas of={TextInputStories.Skeleton} />
@@ -44,8 +56,8 @@ default text input is for short, one-line content.
 
 ### Password Input
 
-Password input is a variant of text input in it's on story called
-[PasswordInput](https://react.carbondesignsystem.com/?path=/story/components-passwordinput--default).
+Password input is a variant of text input in its own story called
+[PasswordInput](?path=/docs/components-passwordinput--overview).
 It is used to collect private data and will hide the characters as a user enters
 them. A user can choose to toggle on the character visibility by clicking the
 view icon on the far right of the input field. When using a password input be
@@ -53,8 +65,34 @@ sure to provide detailed helper text listing any requirements related to the
 data format, such as types of characters allowed or date structure.
 
 `TextInput.Password` is deprecated, use
-[PasswordInput](https://react.carbondesignsystem.com/?path=/story/components-passwordinput--default)
+[PasswordInput](?path=/docs/components-passwordinput--overview)
 component instead.
+
+## Error message and screen readers
+
+In Carbon 1.118, an invalid TextInput or PasswordInput points
+`aria-errormessage` at its error text, but the text has no live region and no
+`aria-describedby` link, so screen readers may not read it and axe reports
+`aria-valid-attr-value`. Pass the error id while `invalid` is set; Carbon
+renders it as `<id>-error-msg` and keeps your `aria-describedby`:
+
+```tsx
+<TextInput
+  id="company-name"
+  labelText="Company name"
+  invalid={invalid}
+  invalidText="Enter a company name."
+  {...(invalid && { 'aria-describedby': 'company-name-error-msg' })}
+/>
+```
+
+Set it only while `invalid` is true: otherwise it replaces the link to the
+helper text. On an inline PasswordInput with helper text, Carbon overwrites it
+with the helper id. A warning is linked by Carbon already.
+
+## Choosing a field
+
+<FieldChooser />
 
 ## Component API
 
