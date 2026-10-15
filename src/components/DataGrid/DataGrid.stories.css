@@ -5,3 +5,10 @@
   gap: var(--cds-spacing-05);
   grid-template-columns: 16rem 1fr;
 }
+
+/* Narrow viewports: the panel stacks above the grid. */
+@media (width < 42rem) {
+  .afframe-data-grid-demo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

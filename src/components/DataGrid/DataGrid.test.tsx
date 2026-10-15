@@ -1,6 +1,6 @@
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
-import { render, screen, within } from '@testing-library/react';
-import { useState } from 'react';
+import { cleanup, render, screen, within } from '@testing-library/react';
+import { createRef, useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
@@ -816,4 +816,223 @@ test('follows controlled state and reports changes', async () => {
   await userEvent.click(previous);
   expect(onChange).toHaveBeenCalledWith(1);
   expect(screen.getByText('11–20 of 60 items')).toBeTruthy();
+});
+
+test('passes ref and rest props to the table container', () => {
+  const ref = createRef<HTMLElement>();
+  render(
+    <DataGrid
+      ref={ref}
+      id="invoices"
+      data-testid="grid"
+      aria-busy="false"
+      options={{ features: sortFeatures, columns: sortColumns, data: few }}
+    />
+  );
+  const container = document.querySelector('.cds--data-table-container');
+  expect(ref.current).toBe(container);
+  expect(screen.getByTestId('grid')).toBe(container);
+  expect(container?.id).toBe('invoices');
+});
+
+test('virtualizes with a consumer id on the container', async () => {
+  render(
+    <DataGrid
+      id="many"
+      maxHeight="10rem"
+      virtualize
+      options={{
+        features: selectFeatures,
+        columns: selectColumns,
+        data: manyInvoices,
+      }}
+    />
+  );
+  // The row renders only when the virtualizer found the scroller.
+  document
+    .querySelector('.cds--data-table-content')
+    ?.scrollTo({ top: 48 * 900 });
+  expect(await screen.findByText('2026-0905')).toBeTruthy();
+});
+
+test('renders the emptyState slot in one cell spanning every column', () => {
+  render(
+    <DataGrid
+      options={{ features: selectFeatures, columns: selectColumns, data: [] }}
+      emptyState={<p>Create your first invoice</p>}
+    />
+  );
+  const cell = screen.getByText('Create your first invoice').closest('td');
+  expect(cell?.colSpan).toBe(selectColumns.length + 1);
+  expect(screen.queryByText('No rows to show')).toBeNull();
+  cleanup();
+  render(
+    <DataGrid
+      options={{ features: selectFeatures, columns: selectColumns, data: [] }}
+    />
+  );
+  expect(screen.getByText('No rows to show').closest('td')?.colSpan).toBe(
+    selectColumns.length + 1
+  );
+});
+
+const alignFeatures = tableFeatures({
+  ...dataGridSorting,
+  ...dataGridInlineEdit,
+});
+const alignHelper = createColumnHelper<
+  typeof alignFeatures,
+  (typeof invoices)[number]
+>();
+const alignColumns = alignHelper.columns([
+  alignHelper.accessor('number', { header: 'Number' }),
+  alignHelper.accessor('amount', { header: 'Amount', meta: { align: 'end' } }),
+]);
+
+const plainFeatures = tableFeatures({ ...dataGridInlineEdit });
+const plainHelper = createColumnHelper<
+  typeof plainFeatures,
+  (typeof invoices)[number]
+>();
+const plainColumns = plainHelper.columns([
+  plainHelper.accessor('amount', { header: 'Amount', meta: { align: 'end' } }),
+]);
+
+test('end-aligns a column with meta.align on its header and cells', () => {
+  render(
+    <DataGrid
+      options={{ features: alignFeatures, columns: alignColumns, data: few }}
+      onCellEdit={vi.fn()}
+    />
+  );
+  // dataGridInlineEdit only types the meta: no column is editable here.
+  expect(screen.queryByText(/^Edit /)).toBeNull();
+  const amount = screen.getByRole('columnheader', { name: /Amount/ });
+  expect(amount.classList).toContain('afframe-data-grid__align-end');
+  const cells = screen
+    .getAllByRole('row')
+    .slice(1)
+    .map((row) => within(row).getAllByRole('cell'));
+  expect(
+    cells.every((row) =>
+      row[1]?.classList.contains('afframe-data-grid__align-end')
+    )
+  ).toBe(true);
+  expect(
+    cells.some((row) =>
+      row[0]?.classList.contains('afframe-data-grid__align-end')
+    )
+  ).toBe(false);
+  // A sortable header end-aligns its label too.
+  const label = amount.querySelector('.cds--table-header-label');
+  if (!label) throw new Error('no label');
+  expect(label.getBoundingClientRect().right).toBeGreaterThan(
+    amount.getBoundingClientRect().right - 48
+  );
+  cleanup();
+  render(
+    <DataGrid
+      options={{ features: plainFeatures, columns: plainColumns, data: few }}
+    />
+  );
+  const plain = screen.getByRole('columnheader', { name: 'Amount' });
+  const text = plain.querySelector('.cds--table-header-label');
+  if (!text) throw new Error('no label');
+  const range = document.createRange();
+  range.selectNodeContents(text);
+  expect(range.getBoundingClientRect().right).toBeCloseTo(
+    plain.getBoundingClientRect().right - 16,
+    0
+  );
+});
+
+function BatchGrid({ onDelete }: { onDelete?: () => void }) {
+  const [data, setData] = useState(few);
+  return (
+    <DataGrid
+      options={{
+        features: selectFeatures,
+        columns: selectColumns,
+        data,
+        getRowId: (row) => row.id,
+      }}
+      batchActions={[
+        {
+          id: 'delete',
+          label: 'Delete',
+          onClick: (rows) => {
+            onDelete?.();
+            setData((all) => all.filter((row) => !rows.includes(row)));
+          },
+        },
+      ]}
+    />
+  );
+}
+
+test('moves focus to select all after batch Cancel or an emptying action', async () => {
+  render(<BatchGrid />);
+  const all = screen.getByRole('checkbox', { name: 'Select all rows' });
+  screen.getByRole('checkbox', { name: 'Select row 2026-0002' }).focus();
+  await userEvent.keyboard(' ');
+  screen.getByRole('button', { name: 'Cancel' }).focus();
+  await userEvent.keyboard('{Enter}');
+  expect(document.activeElement).toBe(all);
+  // Mouse path.
+  screen.getByRole('checkbox', { name: 'Select row 2026-0003' }).focus();
+  await userEvent.keyboard(' ');
+  await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+  expect(document.activeElement).toBe(all);
+  // An action that removes the selected rows.
+  screen.getByRole('checkbox', { name: 'Select row 2026-0004' }).focus();
+  await userEvent.keyboard(' ');
+  await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+  expect(screen.queryByText('2026-0004')).toBeNull();
+  expect(document.activeElement).toBe(all);
+  // Unchecking the last row keeps focus on its checkbox.
+  const row = screen.getByRole('checkbox', { name: 'Select row 2026-0001' });
+  row.focus();
+  await userEvent.keyboard('  ');
+  expect(document.activeElement).toBe(row);
+});
+
+test('a sized grid uses static width and stays inside its parent', () => {
+  render(
+    <div style={{ inlineSize: '400px' }}>
+      <DataGrid
+        title="Invoices"
+        options={{ features: sizeFeatures, columns: sizeColumns, data: few }}
+      />
+      <DataGrid
+        title="Wide"
+        maxHeight="10rem"
+        options={{
+          features: stickyFeatures,
+          columns: stickyColumns,
+          data: invoices,
+          initialState: { columnPinning: { start: ['number'], end: [] } },
+        }}
+      />
+    </div>
+  );
+  const [sized, wide] = document.querySelectorAll<HTMLElement>(
+    '.cds--data-table-container'
+  );
+  expect(sized?.classList).toContain('cds--data-table-container--static');
+  const table = sized?.querySelector('table');
+  // The container is as wide as the sized table, not the parent.
+  expect(sized?.getBoundingClientRect().width).toBeLessThanOrEqual(400);
+  expect(wide?.getBoundingClientRect().width).toBeLessThanOrEqual(400);
+  const scroller = wide?.querySelector('.cds--data-table-content');
+  expect(scroller?.scrollWidth).toBeGreaterThan(scroller?.clientWidth ?? 0);
+  expect(table?.getBoundingClientRect().width).toBeGreaterThan(0);
+  cleanup();
+  render(
+    <DataGrid
+      options={{ features: sortFeatures, columns: sortColumns, data: few }}
+    />
+  );
+  expect(
+    document.querySelector('.cds--data-table-container--static')
+  ).toBeNull();
 });
