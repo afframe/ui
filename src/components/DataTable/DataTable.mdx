@@ -10,7 +10,7 @@ import {
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, section on the 1.0.x toolbar menu items added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, section on the toolbar menu with MenuItems added, upstream Feedback section and table of contents removed.
 
 <Meta isTemplate />
 
@@ -342,20 +342,20 @@ _Note: press "Show code" above to view a code snippet of this example_
 
 <Canvas id="components-datatable-toolbar--default" />
 
-### Toolbar menu items from 1.0.1
+### Toolbar menu with MenuItems
 
 `TableToolbarMenu` takes `TableToolbarAction` children and is named by
-`iconDescription`. Code written for `@afframe/ui` 1.0.x still works: a `label`
-prop, or `MenuItem` children (also `MenuItemDivider`, `MenuItemGroup`,
-`MenuItemRadioGroup`, `MenuItemSelectable`) placed directly or in one Fragment,
-switch that one menu to Carbon's newer menu. It
-renders Carbon's `Menu` with its v11 look and works by keyboard; `label` names
-the trigger and the menu. MenuItems inside your own wrapper component, or
-passed from a React Server Component, are not detected, so pass `label` there.
-The `TableToolbarMenu` types from Carbon omit `label`, the Afframe ones include
-it.
+`iconDescription`. In Afframe UI it also takes a `label` prop and `MenuItem`
+children (also `MenuItemDivider`, `MenuItemGroup`, `MenuItemRadioGroup`,
+`MenuItemSelectable`), placed directly or in one Fragment. Either one switches
+that menu to Carbon's newer menu: it renders Carbon's `Menu` with its v11 look
+and works by keyboard. `label` names the trigger and the menu; each `MenuItem`
+is one menu entry with its own `label` and `onClick`. MenuItems inside your own
+wrapper component, or passed from a React Server Component, are not detected,
+so pass `label` there. The `TableToolbarMenu` types from Carbon omit `label`,
+the Afframe ones include it.
 
-<Canvas id="components-datatable-toolbar--menu-items-from-101" />
+<Canvas id="components-datatable-toolbar--with-menu-items" />
 
 ```jsx
 import { MenuItem, MenuItemDivider, TableToolbarMenu } from '@afframe/ui';
