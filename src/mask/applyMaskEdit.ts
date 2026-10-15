@@ -1,0 +1,272 @@
+import type { MaskSpec } from './spec.js';
+
+export interface MaskState {
+  value: string;
+  selectionStart: number;
+  selectionEnd: number;
+}
+
+/** The `inputType` and `data` of a `beforeinput` event. */
+export interface MaskEdit {
+  inputType: string;
+  data: string | null;
+}
+
+interface Digits {
+  digits: string;
+  /** Caret as a count of digits before it. */
+  k: number;
+}
+
+const capacity = (spec: MaskSpec) =>
+  spec.parts.reduce((sum, part) => sum + part.length, 0);
+
+/** The part holding digit index `k`, if `k` is within capacity. */
+function locate(spec: MaskSpec, k: number) {
+  let start = 0;
+  for (const [index, part] of spec.parts.entries()) {
+    if (k < start + part.length) {
+      return { part, start, last: index === spec.parts.length - 1 };
+    }
+    start += part.length;
+  }
+  return undefined;
+}
+
+function render(digits: string, spec: MaskSpec) {
+  let out = '';
+  let start = 0;
+  for (const [index, part] of spec.parts.entries()) {
+    const chunk = digits.slice(start, start + part.length);
+    out += chunk;
+    start += part.length;
+    if (chunk.length < part.length || index === spec.parts.length - 1) break;
+    out += spec.separator;
+  }
+  return out;
+}
+
+const isDigit = (char: string | undefined) =>
+  char !== undefined && char >= '0' && char <= '9';
+
+function toState({ digits, k }: Digits, spec: MaskSpec): MaskState {
+  const value = render(digits, spec);
+  let offset = 0;
+  for (let seen = 0; seen < k; offset++) {
+    if (isDigit(value[offset])) seen++;
+  }
+  // A caret left in front of a separator would make the next digit land
+  // visually before it.
+  if (value.startsWith(spec.separator, offset)) {
+    offset += spec.separator.length;
+  }
+  return { value, selectionStart: offset, selectionEnd: offset };
+}
+
+/**
+ * Reads digits out of free text. A two-digit part left with one digit by a
+ * following non-digit is padded (`1.2` -> `0102`). `from` is the digit index
+ * the text starts at, so padding follows the parts it lands in.
+ */
+function tokenize(text: string, caret: number, spec: MaskSpec, from = 0) {
+  let digits = '';
+  let k = 0;
+  for (const run of text.matchAll(/\d+/g)) {
+    const end = run.index + run[0].length;
+    k += Math.min(Math.max(caret - run.index, 0), run[0].length);
+    digits += run[0];
+    if (end === text.length) continue;
+    const at = locate(spec, from + digits.length - 1);
+    if (
+      at &&
+      !at.last &&
+      at.part.length === 2 &&
+      from + digits.length - at.start === 1
+    ) {
+      digits = digits.slice(0, -1) + '0' + digits.slice(-1);
+      if (caret > end - 1) k++;
+    }
+  }
+  return { digits, k };
+}
+
+// fallow-ignore-next-line complexity -- one branch per range rule of the design
+function insertDigit(
+  { digits, k }: Digits,
+  digit: string,
+  spec: MaskSpec
+): Digits | undefined {
+  const room = capacity(spec) - digits.length;
+  const at = locate(spec, k);
+  if (room < 1 || !at) return undefined;
+  const { part } = at;
+  const position = k - at.start;
+  if (
+    position === 0 &&
+    part.firstMax !== undefined &&
+    Number(digit) > part.firstMax
+  ) {
+    if (room < 2) return undefined;
+    return {
+      digits: digits.slice(0, k) + '0' + digit + digits.slice(k),
+      k: k + 2,
+    };
+  }
+  if (position === 1 && part.min !== undefined && part.max !== undefined) {
+    const value = Number(digits.charAt(k - 1) + digit);
+    if (value < part.min || value > part.max) return undefined;
+  }
+  return { digits: digits.slice(0, k) + digit + digits.slice(k), k: k + 1 };
+}
+
+/** A typed non-digit: pads a one-digit part or steps past a full one. */
+function separate({ digits, k }: Digits, spec: MaskSpec): Digits | undefined {
+  const at = k === digits.length && k > 0 ? locate(spec, k - 1) : undefined;
+  if (!at) return undefined;
+  const filled = k - at.start;
+  if (filled === at.part.length) return { digits, k };
+  if (filled === 1 && at.part.length === 2 && !at.last) {
+    return { digits: digits.slice(0, -1) + '0' + digits.slice(-1), k: k + 1 };
+  }
+  return undefined;
+}
+
+/** Inserts digits at the caret, stopping at the first one the parts reject. */
+function insertDigits(state: Digits, text: string, spec: MaskSpec) {
+  let next = state;
+  for (const digit of text) {
+    const inserted = insertDigit(next, digit, spec);
+    if (!inserted) break;
+    next = inserted;
+  }
+  return next;
+}
+
+const isoDate = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+function pasted(text: string, spec: MaskSpec, from: number) {
+  const iso = isoDate.exec(text.trim());
+  const kinds = spec.parts.map((part) => part.kind).sort();
+  if (iso && kinds.join() === 'day,month,year') {
+    const [, year, month, day] = iso;
+    const parts = { day, month, year } as Record<string, string>;
+    return spec.parts.map((part) => parts[part.kind]).join('');
+  }
+  return tokenize(text, text.length, spec, from).digits;
+}
+
+interface EditContext {
+  digits: string;
+  start: number;
+  selected: boolean;
+  /** The digits with the selection removed. */
+  base: Digits;
+  data: string;
+  spec: MaskSpec;
+  cut: (from: number, to: number) => Digits;
+}
+
+type Handler = (context: EditContext) => Digits | undefined;
+
+const changed = (base: Digits, next: Digits) =>
+  next === base ? undefined : next;
+
+const deleteBackward =
+  (toStart: boolean): Handler =>
+  ({ selected, base, start, cut }) => {
+    if (selected) return base;
+    return start > 0 ? cut(toStart ? 0 : start - 1, start) : undefined;
+  };
+
+const deleteForward =
+  (toEnd: boolean): Handler =>
+  ({ selected, base, start, digits, cut }) => {
+    if (selected) return base;
+    return start < digits.length
+      ? cut(start, toEnd ? digits.length : start + 1)
+      : undefined;
+  };
+
+const paste: Handler = ({ base, data, spec }) =>
+  changed(base, insertDigits(base, pasted(data, spec, base.k), spec));
+
+const typeText: Handler = ({ base, data, spec }) => {
+  let typed = base;
+  for (const char of data) {
+    const step = isDigit(char)
+      ? insertDigit(typed, char, spec)
+      : separate(typed, spec);
+    if (!step) break;
+    typed = step;
+  }
+  return changed(base, typed);
+};
+
+const handlers = new Map<string, Handler>([
+  ['insertText', typeText],
+  ['insertFromPaste', paste],
+  ['insertFromDrop', paste],
+  ['insertReplacementText', paste],
+  ['deleteContentBackward', deleteBackward(false)],
+  ['deleteWordBackward', deleteBackward(true)],
+  ['deleteSoftLineBackward', deleteBackward(true)],
+  ['deleteHardLineBackward', deleteBackward(true)],
+  ['deleteContentForward', deleteForward(false)],
+  ['deleteWordForward', deleteForward(true)],
+  ['deleteSoftLineForward', deleteForward(true)],
+  ['deleteHardLineForward', deleteForward(true)],
+]);
+
+/**
+ * Applies one `beforeinput` edit to a masked value. Returns `null` for an
+ * input type the mask does not handle (let the browser apply it), and the
+ * unchanged state for a handled edit that changes nothing (a rejected digit);
+ * the caller cancels the event in both of the other cases.
+ */
+export function applyMaskEdit(
+  state: MaskState,
+  edit: MaskEdit,
+  spec: MaskSpec
+): MaskState | null {
+  const handler = handlers.get(edit.inputType);
+  if (!handler) return null;
+  const { digits, k: start } = tokenize(
+    state.value,
+    state.selectionStart,
+    spec
+  );
+  const end = tokenize(state.value, state.selectionEnd, spec).k;
+  const selected = state.selectionStart !== state.selectionEnd;
+  const cut = (from: number, to: number): Digits => ({
+    digits: digits.slice(0, from) + digits.slice(to),
+    k: from,
+  });
+  const next = handler({
+    digits,
+    start,
+    selected,
+    base: selected ? cut(start, end) : { digits, k: start },
+    data: edit.data ?? '',
+    spec,
+    cut,
+  });
+  return next ? toState(next, spec) : state;
+}
+
+/**
+ * Rewrites free text (composition, autofill, undo) into the mask, without
+ * range checks. `caret` is the caret offset in `raw`.
+ */
+export function normalizeMaskValue(
+  raw: string,
+  caret: number,
+  spec: MaskSpec
+): { value: string; caret: number } {
+  const { digits, k } = tokenize(raw, caret, spec);
+  const max = capacity(spec);
+  const state = toState(
+    { digits: digits.slice(0, max), k: Math.min(k, max) },
+    spec
+  );
+  return { value: state.value, caret: state.selectionStart };
+}
