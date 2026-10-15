@@ -14,8 +14,9 @@ import { SourceLabel } from '../../.storybook/SourceLabel';
 
 Functions for amounts, numbers, dates and date-range presets. They run on the
 server and in the browser (no `'use client'`). Defaults: locale `cs-CZ`,
-currency `CZK`, time zone `Europe/Prague` (`defaultLocale`,
-`defaultCurrency`, `defaultTimeZone`). Every default can be overridden per
+currency `CZK`, time zone `Europe/Prague`, plain numbers at most 2 decimals
+(`defaultLocale`, `defaultCurrency`, `defaultTimeZone`,
+`defaultMaxFractionDigits`). Every default can be overridden per
 call. Import them from `@afframe/ui`, or from `@afframe/ui/format` in server
 code that should not load the components.
 
@@ -60,7 +61,20 @@ An amount is a `number` in major units (crowns, not hellers).
 | `formatAmount(value, options?)`              | Formatted amount. Options: `locale`, `currency`, `digits`, `signDisplay`, `currencyDisplay`, `currencySign`, `trailingZeroDisplay`. |
 | `roundAmount(value, { currency?, digits? })` | The amount rounded to the currency's minor digits, or to `digits`.                                                                  |
 | `currencyDigits(currency?)`                  | Minor digits from the engine's locale data: CZK and EUR 2, JPY 0.                                                                   |
-| `formatNumber(value, options?)`              | A plain number; Intl `NumberFormat` options pass through.                                                                           |
+| `formatNumber(value, options?)`              | A plain number, at most 2 decimals; Intl `NumberFormat` options pass through.                                                       |
+
+Decimals:
+
+- Money always shows the currency's minor digits: `1234.5` CZK gives
+  `1 234,50 Kč`, `12` gives `12,00 Kč`. `digits` changes it;
+  `trailingZeroDisplay: 'stripIfInteger'` drops `,00` from whole amounts.
+- A plain number shows at most 2 decimals, without padding: `1234567.891`
+  gives `1 234 567,89`, `1234.5` gives `1 234,5`, `12` gives `12`. Any of
+  `minimumFractionDigits`, `maximumFractionDigits`,
+  `minimumSignificantDigits` or `maximumSignificantDigits` replaces the
+  default: `{ maximumFractionDigits: 3 }` gives `1 234 567,891`.
+- Percent, currency and compact numbers through `formatNumber` keep Intl's
+  own rounding: `0.256` as a percent gives `26 %`.
 
 Money rules:
 

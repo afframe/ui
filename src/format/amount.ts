@@ -1,4 +1,8 @@
-import { defaultCurrency, defaultLocale } from './defaults.js';
+import {
+  defaultCurrency,
+  defaultLocale,
+  defaultMaxFractionDigits,
+} from './defaults.js';
 
 // Rounding, zero and NaN rules: src/format/Formatting.mdx.
 
@@ -11,15 +15,20 @@ export interface AmountOptions {
   digits?: number;
 }
 
-export interface FormatAmountOptions extends AmountOptions {
+type IntlAmountOptions = Pick<
+  Intl.NumberFormatOptions,
+  'signDisplay' | 'currencyDisplay' | 'currencySign' | 'trailingZeroDisplay'
+>;
+
+export interface FormatAmountOptions extends AmountOptions, IntlAmountOptions {
   /** Intl `signDisplay`. Default `negative` (no sign on zero). */
-  signDisplay?: 'auto' | 'always' | 'exceptZero' | 'negative' | 'never';
+  signDisplay?: IntlAmountOptions['signDisplay'];
   /** Intl `currencyDisplay`. Default `symbol`. */
-  currencyDisplay?: 'code' | 'symbol' | 'narrowSymbol' | 'name';
+  currencyDisplay?: IntlAmountOptions['currencyDisplay'];
   /** Intl `currencySign`. `accounting` puts negatives in parentheses in some locales. */
-  currencySign?: 'standard' | 'accounting';
+  currencySign?: IntlAmountOptions['currencySign'];
   /** Intl `trailingZeroDisplay`. `stripIfInteger` prints `12 Kč` for 12. */
-  trailingZeroDisplay?: 'auto' | 'stripIfInteger';
+  trailingZeroDisplay?: IntlAmountOptions['trailingZeroDisplay'];
 }
 
 // Intl formatters are slow to build; a table renders thousands of amounts.
@@ -111,7 +120,8 @@ export function formatAmount(
 
 /**
  * Formats a plain number. Intl options pass through; zero never shows a minus
- * sign; NaN and Infinity throw a RangeError.
+ * sign; NaN and Infinity throw a RangeError. Decimal and unit numbers show at
+ * most 2 decimals unless the options set fraction or significant digits.
  */
 export function formatNumber(
   value: number,
@@ -119,8 +129,22 @@ export function formatNumber(
 ): string {
   assertFinite(value);
   const { locale = defaultLocale, ...intl } = options ?? {};
+  // Only where Intl's own default is 3: percent (0), currency (its digits) and
+  // compact notation (significant digits) keep Intl's rounding. Any digit
+  // option skips it, so a minimumFractionDigits above 2 cannot throw. Applied
+  // after the spread, so a digit option passed as undefined keeps it.
+  const twoDecimals =
+    (intl.style === undefined ||
+      intl.style === 'decimal' ||
+      intl.style === 'unit') &&
+    intl.notation !== 'compact' &&
+    intl.minimumFractionDigits === undefined &&
+    intl.maximumFractionDigits === undefined &&
+    intl.minimumSignificantDigits === undefined &&
+    intl.maximumSignificantDigits === undefined;
   return numberFormat(locale, {
     signDisplay: 'negative',
     ...intl,
+    ...(twoDecimals ? { maximumFractionDigits: defaultMaxFractionDigits } : {}),
   }).format(value);
 }

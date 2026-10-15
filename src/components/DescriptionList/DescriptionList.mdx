@@ -26,13 +26,19 @@ render.
 ## Usage and props
 
 ```tsx
-import { DescriptionList, DescriptionListItem } from '@afframe/ui';
+import {
+  Amount,
+  DescriptionList,
+  DescriptionListItem,
+  formatDate,
+} from '@afframe/ui';
 
 <DescriptionList
   aria-label="Invoice details"
   items={[
     { term: 'Invoice', description: 'FV-2026-0042' },
-    { term: 'Issued', description: '07.10.2026' },
+    { term: 'Issued', description: formatDate('2026-10-07') },
+    { term: 'Total', description: <Amount value={12100} /> },
   ]}
 />;
 
@@ -43,6 +49,10 @@ import { DescriptionList, DescriptionListItem } from '@afframe/ui';
   <DescriptionListItem term="VAT ID">{vatId}</DescriptionListItem>
 </DescriptionList>;
 ```
+
+Format values before passing them: dates with `formatDate`, money with
+`Amount` or `formatAmount` ([Formatting](?path=/docs/getting-started-formatting--overview)), not with raw `Intl`. Both
+are server-safe.
 
 `items` and `DescriptionListItem` children render the same markup. One of
 `aria-label` or `aria-labelledby` is required. `size` sets padding and type

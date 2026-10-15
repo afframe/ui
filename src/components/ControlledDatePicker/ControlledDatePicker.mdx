@@ -64,6 +64,9 @@ function DueDate() {
   or `range`; `simple` has no calendar), `value`, `onChange`, `onOpen`,
   `onClose` and the rest. `ref` gives Carbon's handle,
   `{ calendar }`.
+- `onChange` gives local-midnight `Date`s, as Carbon's `DatePicker` does.
+  Turn each into a civil date with `localDateToCivilDate` and show it with
+  `formatDate` ([Formatting](?path=/docs/getting-started-formatting--overview)), not with `Intl.DateTimeFormat`.
 - Setting `open` does not move focus. When a control elsewhere opens the
   calendar, move focus to the date input, as the example does, so Escape and
   the calendar keys work.

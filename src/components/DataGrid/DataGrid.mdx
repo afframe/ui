@@ -19,20 +19,32 @@ pagination. Each feature is opt in: spread its fragment into TanStack's
 
 ```tsx
 'use client';
-import { DataGrid, dataGridSorting } from '@afframe/ui';
+import { Amount, DataGrid, dataGridSorting, formatDate } from '@afframe/ui';
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 
 const features = tableFeatures({ ...dataGridSorting });
 const helper = createColumnHelper<typeof features, Invoice>();
 const columns = helper.columns([
   helper.accessor('number', { header: 'Number' }),
-  helper.accessor('amount', { header: 'Amount' }),
+  helper.accessor('issued', {
+    header: 'Issued',
+    cell: (info) => formatDate(info.getValue()),
+  }),
+  helper.accessor('amount', {
+    header: 'Amount',
+    cell: (info) => <Amount value={info.getValue()} />,
+  }),
 ]);
 
 export function Invoices({ data }: { data: Invoice[] }) {
   return <DataGrid title="Invoices" options={{ features, columns, data }} />;
 }
 ```
+
+Cells show the raw value unless the column has a `cell`. Format dates with
+`formatDate` and money with `Amount` or `formatAmount`
+([Formatting](?path=/docs/getting-started-formatting--overview)), not with raw `Intl`; sorting and filtering still use
+the raw value.
 
 Each fragment registers only its own TanStack features, and the grid draws a
 feature's controls only when that feature is registered. The pagination bar

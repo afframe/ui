@@ -3,7 +3,7 @@ import * as ThemeStories from './Theme.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, code samples import from @afframe/ui, Sass setup replaced by the Afframe theme model (styles.css and data-afframe-theme), global theme set by AfframeProvider instead of by hand, inline theme sample fixed, second canvas shows every theme, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, code samples import from @afframe/ui, Sass setup replaced by the Afframe theme model (styles.css and data-afframe-theme), global theme set by AfframeProvider instead of by hand, inline theme sample fixed, second canvas shows every theme with a note on which ones are page themes, upstream Feedback section and table of contents removed.
 
 <Meta isTemplate />
 
@@ -65,6 +65,10 @@ function ExamplePage() {
 ```
 
 <Canvas of={ThemeStories.AllThemes} />
+
+Afframe's page themes are White (light) and Gray 100 (dark), set by
+`data-afframe-theme` on `<html>`. Gray 10 and Gray 90 work only as inline
+`Theme` zones like the ones above.
 
 ## Getting the current theme in a component
 

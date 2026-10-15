@@ -10,7 +10,7 @@ import * as DatePickerStories from './DatePicker.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added.
 
 <Meta isTemplate />
 
@@ -120,6 +120,24 @@ the date correction behavior that is sometimes undesirable due to
   <DatePickerInput placeholder="mm/dd/yyyy" />
 </DatePicker>
 ```
+
+`dateFormat` only sets the text in the input. To show the picked date
+elsewhere, or to send it to a server, turn each `Date` from `onChange` into a
+civil date and format that with `formatDate`, not with `Intl.DateTimeFormat`:
+
+```jsx
+import { formatDate, localDateToCivilDate } from '@afframe/ui';
+
+<DatePicker
+  datePickerType="single"
+  onChange={([date]) =>
+    setLabel(date ? formatDate(localDateToCivilDate(date)) : '')
+  }>
+  <DatePickerInput id="due-date" labelText="Due date" />
+</DatePicker>;
+```
+
+See [Formatting](?path=/docs/getting-started-formatting--overview).
 
 ### DatePicker `parseDate`
 

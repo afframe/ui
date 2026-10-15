@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, Default story first, docs page, bordered items, HStackAndVStack story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, Default story first, docs page, bordered items, HStackAndVStack story named after the exports. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -91,6 +91,9 @@ export const HStackAndVStack: StoryFn<typeof Stack> = () => {
     </VStack>
   );
 };
+
+// Storybook's case split would read "H Stack And V Stack".
+HStackAndVStack.storyName = 'HStack and VStack';
 
 HStackAndVStack.parameters = {
   controls: { disable: true },

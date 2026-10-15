@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, a Default story with every family and weight, Czech sample text, plain CSS with Carbon type tokens instead of Sass font mixins, docs page, source tag, stories for the Arabic, Devanagari, Hebrew and Thai families removed (not shipped; Arabic and Hebrew are right-to-left, which Afframe UI does not support). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, a Default story with every family and weight, Czech sample text, plain CSS with Carbon type tokens instead of Sass font mixins, docs page, source tag, stories for the Arabic, Devanagari, Hebrew and Thai families removed (not shipped; Arabic and Hebrew are right-to-left, which Afframe UI does not support), page moved under Elements/Typography. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { CSSProperties } from 'react';
@@ -18,7 +18,7 @@ import './Plex.stories.css';
 type PlexArgs = { fontWeight: CSSProperties['fontWeight'] };
 
 export default {
-  title: 'Elements/IBM Plex',
+  title: 'Elements/Typography/IBM Plex',
   tags: ['carbon'],
   parameters: {
     docs: {

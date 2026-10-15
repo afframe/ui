@@ -3,7 +3,7 @@ import * as DatePickerStories from './DatePickerV2.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: docs page of the stories file (template instead of Meta of), em-dashes replaced, source label added, code samples import from @afframe/ui, primitives link pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: docs page of the stories file (template instead of Meta of), em-dashes replaced, source label added, code samples import from @afframe/ui, primitives link pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, onChange samples format with formatDate.
 
 <Meta isTemplate />
 
@@ -143,9 +143,15 @@ namespace from `@afframe/ui`. Destructure before use:
 ```diff
 - const handleChange = (selectedDates, dateStr, instance) => setValue(dateStr);
 + const handleChange = (dates) => {
-+   const [start, end] = dates; // format yourself, e.g. Intl.DateTimeFormat
++   const [start, end] = dates;
++   setValue(start ? formatDate(localDateToCivilDate(start)) : '');
 + };
 ```
+
+`formatDate` and `localDateToCivilDate` come from `@afframe/ui`. The picker
+gives a `Date` at local midnight; `localDateToCivilDate` keeps that calendar
+day, so the text does not shift in another time zone. See
+[Formatting](?path=/docs/getting-started-formatting--overview).
 
 **`onClose` signature.** The v11 component passed
 `(selectedDates, dateStr, instance)`; `preview__DatePicker` calls `onClose()`
@@ -374,9 +380,13 @@ Once destructured, usage is identical:
    ```diff
    - const handleChange = (selectedDates, dateStr, instance) => setValue(dateStr);
    + const handleChange = (dates) => {
-   +   const [start, end] = dates; // format yourself, e.g. Intl.DateTimeFormat
+   +   const [start, end] = dates;
+   +   setValue(start ? formatDate(localDateToCivilDate(start)) : '');
    + };
    ```
+
+   Format the dates with `formatDate(localDateToCivilDate(date))` from
+   `@afframe/ui` ([Formatting](?path=/docs/getting-started-formatting--overview)).
 
 2. **`onClose` signature.** Classic passed `(selectedDates, dateStr, instance)`;
    preview\_\_DatePicker calls **`onClose()`** with no arguments. Read the value
