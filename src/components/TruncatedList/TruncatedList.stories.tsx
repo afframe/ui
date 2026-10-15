@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, previewCandidate__TruncatedList and ListItem from @afframe/ui, source tag, scss styles replaced by truncated-list-story.css (the top-alignment override of the centered root is dropped), story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, previewCandidate__TruncatedList and ListItem from @afframe/ui, source tag, scss styles replaced by truncated-list-story.css (the top-alignment override of the centered root is dropped), story names unified, items are example invoice numbers. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -19,6 +19,11 @@ import './truncated-list-story.css';
 const TruncatedList = previewCandidate__TruncatedList;
 
 const storyClass = 'truncated-list-stories';
+
+const invoiceNumbers = Array.from(
+  { length: 16 },
+  (_, i) => `INV-2026-${String(i + 1).padStart(4, '0')}`
+);
 
 export default {
   title: 'Preview/previewCandidate__TruncatedList',
@@ -40,22 +45,9 @@ const Template: StoryFn<typeof TruncatedList> = (args) => {
           action(`clicked, is ${isCollapsed ? 'collapsed' : 'expanded'}`)();
         }}
         {...args}>
-        <ListItem>Item 1</ListItem>
-        <ListItem>Item 2</ListItem>
-        <ListItem>Item 3</ListItem>
-        <ListItem>Item 4</ListItem>
-        <ListItem>Item 5</ListItem>
-        <ListItem>Item 6</ListItem>
-        <ListItem>Item 7</ListItem>
-        <ListItem>Item 8</ListItem>
-        <ListItem>Item 9</ListItem>
-        <ListItem>Item 10</ListItem>
-        <ListItem>Item 11</ListItem>
-        <ListItem>Item 12</ListItem>
-        <ListItem>Item 13</ListItem>
-        <ListItem>Item 14</ListItem>
-        <ListItem>Item 15</ListItem>
-        <ListItem>Item 16</ListItem>
+        {invoiceNumbers.map((invoice) => (
+          <ListItem key={invoice}>Invoice {invoice}</ListItem>
+        ))}
       </TruncatedList>
     </div>
   );

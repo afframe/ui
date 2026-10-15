@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, items from the Afframe example invoice flow. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -56,19 +56,9 @@ export default {
 
 export const Default: StoryFn<typeof OrderedList> = (args) => (
   <OrderedList {...args}>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
-    <ListItem>Ordered List level 1</ListItem>
+    <ListItem>Create the invoice</ListItem>
+    <ListItem>Send it to the customer</ListItem>
+    <ListItem>Record the payment</ListItem>
   </OrderedList>
 );
 
@@ -78,21 +68,21 @@ export const Nested: StoryFn<typeof OrderedList> = ({
 }) => {
   return (
     <OrderedList {...listArgs}>
+      <ListItem>Create the invoice</ListItem>
+      <ListItem>Send it to the customer</ListItem>
       <ListItem>
-        Ordered List level 1
+        Record the payment
         <OrderedList {...listArgs} nested={nested}>
-          <ListItem>Ordered List level 2</ListItem>
           <ListItem>
-            Ordered List level 2
+            Match the bank transfer
             <OrderedList {...listArgs} nested={nested}>
-              <ListItem>Ordered List level 3</ListItem>
-              <ListItem>Ordered List level 3</ListItem>
+              <ListItem>Check the invoice number</ListItem>
+              <ListItem>Check the amount</ListItem>
             </OrderedList>
           </ListItem>
+          <ListItem>Mark the invoice as Paid</ListItem>
         </OrderedList>
       </ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
     </OrderedList>
   );
 };
@@ -113,26 +103,18 @@ export const NativeListStyles: StoryFn<typeof OrderedList> = ({
 }) => {
   return (
     <OrderedList {...listArgs}>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
+      <ListItem>Create the invoice</ListItem>
+      <ListItem>Send it to the customer</ListItem>
       <ListItem>
-        Ordered List level 1
+        Record the payment
         <OrderedList {...listArgs} nested={nested}>
-          <ListItem>Ordered List level 2</ListItem>
-          <ListItem>Ordered List level 2</ListItem>
-          <ListItem>Ordered List level 2</ListItem>
-          <ListItem>Ordered List level 2</ListItem>
+          <ListItem>Match the bank transfer</ListItem>
+          <ListItem>Check the amount</ListItem>
+          <ListItem>Mark the invoice as Paid</ListItem>
+          <ListItem>Send a receipt</ListItem>
         </OrderedList>
       </ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
-      <ListItem>Ordered List level 1</ListItem>
+      <ListItem>Archive the invoice</ListItem>
     </OrderedList>
   );
 };

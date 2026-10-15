@@ -4,7 +4,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { ListChooser } from '../../../.storybook/ListChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added, note on focus after the expandable search collapses.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, links to the current Carbon site, list chooser table added, note on focus after the expandable search collapses, code samples use the customer example data.
 
 <Meta isTemplate />
 
@@ -44,10 +44,11 @@ export const WithExpandableSearch = () => {
 
   useEffect(() => {
     const listItems = [
-      'List item 1',
-      'List item 2',
-      'List item 3',
-      'List item 4',
+      'Lakeside Furniture',
+      'Acme Trading',
+      'Birch Studio',
+      'Cedar Logistics',
+      'Delta Foods',
     ];
 
     const results = listItems.filter((listItem) =>
@@ -58,7 +59,7 @@ export const WithExpandableSearch = () => {
 
   return (
     <ContainedList
-      label="List title"
+      label="Customers"
       kind="on-page"
       action={
         <ExpandableSearch
@@ -104,10 +105,11 @@ export const WithPersistentSearch = () => {
 
   useEffect(() => {
     const listItems = [
-      'List item 1',
-      'List item 2',
-      'List item 3',
-      'List item 4',
+      'Lakeside Furniture',
+      'Acme Trading',
+      'Birch Studio',
+      'Cedar Logistics',
+      'Delta Foods',
     ];
 
     const results = listItems.filter((listItem) =>
@@ -117,7 +119,7 @@ export const WithPersistentSearch = () => {
   }, [searchTerm]);
 
   return (
-    <ContainedList label="List title" kind="on-page" action={''}>
+    <ContainedList label="Customers" kind="on-page" action={''}>
       <Search
         placeholder="Filterable search"
         value={searchTerm}
