@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, deprecated TableSlugRow dropped from subcomponents, AILabel callout styles from AILabel/ailabel-story.css, docs page is DataTable.mdx, visually hidden text in empty header cells and expanded row heading h6 to h3 (axe empty-table-header, heading-order), story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, deprecated TableSlugRow dropped from subcomponents, AILabel callout styles from AILabel/ailabel-story.css, docs page is DataTable.mdx, visually hidden text in empty header cells and expanded row heading h6 to h3 (axe empty-table-header, heading-order), story names unified, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -192,32 +192,40 @@ export const Default: StoryFn<DataTableStoryArgs> = (args) => (
               <TableSelectAll
                 {...(getSelectionProps() as TableSelectAllProps)}
               />
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({ header });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, i) => (
-              <TableRow {...getRowProps({ row })}>
-                {i === 3 || i === 4 || i === 1 ? (
-                  <TableDecoratorRow decorator={aiLabel} />
-                ) : (
-                  <TableCell />
-                )}
-                <TableSelectRow
-                  {...(getSelectionProps({ row }) as TableSelectRowProps)}
-                />
-                {row.cells.map((cell) => (
-                  <TableCell {...getCellProps({ cell })}>
-                    {cell.value}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {rows.map((row, i) => {
+              const { key, ...rowProps } = getRowProps({ row });
+              return (
+                <TableRow key={key} {...rowProps}>
+                  {i === 3 || i === 4 || i === 1 ? (
+                    <TableDecoratorRow decorator={aiLabel} />
+                  ) : (
+                    <TableCell />
+                  )}
+                  <TableSelectRow
+                    {...(getSelectionProps({ row }) as TableSelectRowProps)}
+                  />
+                  {row.cells.map((cell) => {
+                    const { key, ...cellProps } = getCellProps({ cell });
+                    return (
+                      <TableCell key={key} {...cellProps}>
+                        {cell.value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -250,32 +258,40 @@ export const WithRadioSelection: StoryFn<DataTableStoryArgs> = (args) => (
               <th scope="col">
                 <span className="cds--visually-hidden">Row decorator</span>
               </th>
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({ header });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, i) => (
-              <TableRow {...getRowProps({ row })}>
-                {i === 3 || i === 4 || i === 1 ? (
-                  <TableDecoratorRow decorator={aiLabel} />
-                ) : (
-                  <TableCell />
-                )}
-                <TableSelectRow
-                  {...(getSelectionProps({ row }) as TableSelectRowProps)}
-                />
-                {row.cells.map((cell) => (
-                  <TableCell {...getCellProps({ cell })}>
-                    {cell.value}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {rows.map((row, i) => {
+              const { key, ...rowProps } = getRowProps({ row });
+              return (
+                <TableRow key={key} {...rowProps}>
+                  {i === 3 || i === 4 || i === 1 ? (
+                    <TableDecoratorRow decorator={aiLabel} />
+                  ) : (
+                    <TableCell />
+                  )}
+                  <TableSelectRow
+                    {...(getSelectionProps({ row }) as TableSelectRowProps)}
+                  />
+                  {row.cells.map((cell) => {
+                    const { key, ...cellProps } = getCellProps({ cell });
+                    return (
+                      <TableCell key={key} {...cellProps}>
+                        {cell.value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -321,41 +337,49 @@ export const WithSelectionAndExpansion: StoryFn<DataTableStoryArgs> = (
               <TableSelectAll
                 {...(getSelectionProps() as TableSelectAllProps)}
               />
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({ header });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, i) => (
-              <Fragment key={row.id}>
-                <TableExpandRow {...getRowProps({ row })}>
-                  {i === 3 || i === 4 || i === 1 ? (
-                    <TableDecoratorRow decorator={aiLabel} />
-                  ) : (
-                    <TableDecoratorRow decorator={null} />
-                  )}
-                  <TableSelectRow
-                    {...(getSelectionProps({ row }) as TableSelectRowProps)}
-                  />
-                  {row.cells.map((cell) => (
-                    <TableCell {...getCellProps({ cell })}>
-                      {cell.value}
-                    </TableCell>
-                  ))}
-                </TableExpandRow>
-                <TableExpandedRow
-                  colSpan={headers.length + 3}
-                  className="demo-expanded-td"
-                  {...getExpandedRowProps({ row })}>
-                  <h3>Expandable row content</h3>
-                  <div>Description here</div>
-                </TableExpandedRow>
-              </Fragment>
-            ))}
+            {rows.map((row, i) => {
+              const { key, ...rowProps } = getRowProps({ row });
+              return (
+                <Fragment key={key}>
+                  <TableExpandRow {...rowProps}>
+                    {i === 3 || i === 4 || i === 1 ? (
+                      <TableDecoratorRow decorator={aiLabel} />
+                    ) : (
+                      <TableDecoratorRow decorator={null} />
+                    )}
+                    <TableSelectRow
+                      {...(getSelectionProps({ row }) as TableSelectRowProps)}
+                    />
+                    {row.cells.map((cell) => {
+                      const { key, ...cellProps } = getCellProps({ cell });
+                      return (
+                        <TableCell key={key} {...cellProps}>
+                          {cell.value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableExpandRow>
+                  <TableExpandedRow
+                    colSpan={headers.length + 3}
+                    className="demo-expanded-td"
+                    {...getExpandedRowProps({ row })}>
+                    <h3>Expandable row content</h3>
+                    <div>Description here</div>
+                  </TableExpandedRow>
+                </Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -390,38 +414,46 @@ export const WithExpansion: StoryFn<DataTableStoryArgs> = (args) => (
                 enableToggle={true}
                 {...getExpandHeaderProps()}
               />
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({ header });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, i) => (
-              <Fragment key={row.id}>
-                <TableExpandRow {...getRowProps({ row })}>
-                  {i === 3 || i === 4 || i === 1 ? (
-                    <TableDecoratorRow decorator={aiLabel} />
-                  ) : (
-                    <TableDecoratorRow decorator={null} />
-                  )}
-                  {row.cells.map((cell) => (
-                    <TableCell {...getCellProps({ cell })}>
-                      {cell.value}
-                    </TableCell>
-                  ))}
-                </TableExpandRow>
-                <TableExpandedRow
-                  colSpan={headers.length + 2}
-                  className="demo-expanded-td"
-                  {...getExpandedRowProps({ row })}>
-                  <h3>Expandable row content</h3>
-                  <div>Description here</div>
-                </TableExpandedRow>
-              </Fragment>
-            ))}
+            {rows.map((row, i) => {
+              const { key, ...rowProps } = getRowProps({ row });
+              return (
+                <Fragment key={key}>
+                  <TableExpandRow {...rowProps}>
+                    {i === 3 || i === 4 || i === 1 ? (
+                      <TableDecoratorRow decorator={aiLabel} />
+                    ) : (
+                      <TableDecoratorRow decorator={null} />
+                    )}
+                    {row.cells.map((cell) => {
+                      const { key, ...cellProps } = getCellProps({ cell });
+                      return (
+                        <TableCell key={key} {...cellProps}>
+                          {cell.value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableExpandRow>
+                  <TableExpandedRow
+                    colSpan={headers.length + 2}
+                    className="demo-expanded-td"
+                    {...getExpandedRowProps({ row })}>
+                    <h3>Expandable row content</h3>
+                    <div>Description here</div>
+                  </TableExpandedRow>
+                </Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -462,27 +494,31 @@ export const ColumnAILabelWithSelectionAndExpansion: StoryFn<
               <TableSelectAll
                 {...(getSelectionProps() as TableSelectAllProps)}
               />
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({
-                    header,
-                  }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({
+                  header,
+                });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map((row) => {
+              const { key, ...rowProps } = getRowProps({ row });
               return (
-                <Fragment key={row.id}>
-                  <TableExpandRow {...getRowProps({ row })}>
+                <Fragment key={key}>
+                  <TableExpandRow {...rowProps}>
                     <TableSelectRow
                       {...(getSelectionProps({ row }) as TableSelectRowProps)}
                     />
                     {row.cells.map((cell) => {
+                      const { key, ...cellProps } = getCellProps({ cell });
                       return (
-                        <TableCell {...getCellProps({ cell })}>
+                        <TableCell key={key} {...cellProps}>
                           {cell.value}
                         </TableCell>
                       );
@@ -522,27 +558,35 @@ export const ColumnAILabelSort: StoryFn<DataTableStoryArgs> = (args) => (
         <Table {...getTableProps()} aria-label="sample table">
           <TableHead>
             <TableRow>
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({
-                    header,
-                    isSortable: args.isSortable,
-                  }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({
+                  header,
+                  isSortable: args.isSortable,
+                });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow {...getRowProps({ row })}>
-                {row.cells.map((cell) => (
-                  <TableCell {...getCellProps({ cell })}>
-                    {cell.value}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {rows.map((row) => {
+              const { key, ...rowProps } = getRowProps({ row });
+              return (
+                <TableRow key={key} {...rowProps}>
+                  {row.cells.map((cell) => {
+                    const { key, ...cellProps } = getCellProps({ cell });
+                    return (
+                      <TableCell key={key} {...cellProps}>
+                        {cell.value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -575,27 +619,35 @@ export const FullTableAI: StoryFn<DataTableStoryArgs> = (args) => (
         <Table {...getTableProps()} aria-label="sample table">
           <TableHead>
             <TableRow>
-              {headers.map((header) => (
-                <TableHeader
-                  {...(getHeaderProps({
-                    header,
-                    isSortable: args.isSortable,
-                  }) as TableHeaderProps)}>
-                  {header.header}
-                </TableHeader>
-              ))}
+              {headers.map((header) => {
+                const { key, ...headerProps } = getHeaderProps({
+                  header,
+                  isSortable: args.isSortable,
+                });
+                return (
+                  <TableHeader key={key} {...(headerProps as TableHeaderProps)}>
+                    {header.header}
+                  </TableHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow {...getRowProps({ row })}>
-                {row.cells.map((cell) => (
-                  <TableCell {...getCellProps({ cell })}>
-                    {cell.value}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {rows.map((row) => {
+              const { key, ...rowProps } = getRowProps({ row });
+              return (
+                <TableRow key={key} {...rowProps}>
+                  {row.cells.map((cell) => {
+                    const { key, ...cellProps } = getCellProps({ cell });
+                    return (
+                      <TableCell key={key} {...cellProps}>
+                        {cell.value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, docs page and source tag added, expanded row heading h6 to h3 (axe heading-order), empty-table-header off, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, story styles in CSS, docs page and source tag added, expanded row heading h6 to h3 (axe heading-order), empty-table-header off, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import './story.css';
@@ -274,40 +274,54 @@ class DynamicRows extends Component<
                         {...(getSelectionProps() as TableSelectAllProps)}
                       />
                     )}
-                    {headers.map((header) => (
-                      <TableHeader
-                        {...(getHeaderProps({ header }) as TableHeaderProps)}>
-                        {header.header}
-                      </TableHeader>
-                    ))}
+                    {headers.map((header) => {
+                      const { key, ...headerProps } = getHeaderProps({
+                        header,
+                      });
+                      return (
+                        <TableHeader
+                          key={key}
+                          {...(headerProps as TableHeaderProps)}>
+                          {header.header}
+                        </TableHeader>
+                      );
+                    })}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {showEmptyState
                     ? null
-                    : rows.map((row) => (
-                        <Fragment key={row.id}>
-                          <TableExpandRow {...getRowProps({ row })}>
-                            <TableSelectRow
-                              {...(getSelectionProps({
-                                row,
-                              }) as TableSelectRowProps)}
-                            />
-                            {row.cells.map((cell) => (
-                              <TableCell {...getCellProps({ cell })}>
-                                {cell.value}
-                              </TableCell>
-                            ))}
-                          </TableExpandRow>
-                          <TableExpandedRow
-                            colSpan={headers.length + 3}
-                            className="demo-expanded-td"
-                            {...getExpandedRowProps({ row })}>
-                            <h3>Expandable row content</h3>
-                            <div>Description here</div>
-                          </TableExpandedRow>
-                        </Fragment>
-                      ))}
+                    : rows.map((row) => {
+                        const { key, ...rowProps } = getRowProps({ row });
+                        return (
+                          <Fragment key={key}>
+                            <TableExpandRow {...rowProps}>
+                              <TableSelectRow
+                                {...(getSelectionProps({
+                                  row,
+                                }) as TableSelectRowProps)}
+                              />
+                              {row.cells.map((cell) => {
+                                const { key, ...cellProps } = getCellProps({
+                                  cell,
+                                });
+                                return (
+                                  <TableCell key={key} {...cellProps}>
+                                    {cell.value}
+                                  </TableCell>
+                                );
+                              })}
+                            </TableExpandRow>
+                            <TableExpandedRow
+                              colSpan={headers.length + 3}
+                              className="demo-expanded-td"
+                              {...getExpandedRowProps({ row })}>
+                              <h3>Expandable row content</h3>
+                              <div>Description here</div>
+                            </TableExpandedRow>
+                          </Fragment>
+                        );
+                      })}
                 </TableBody>
               </Table>
               {showEmptyState && (
