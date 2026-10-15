@@ -7,13 +7,13 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, commented-out styles import dropped, console.log fallback kept, the action boolean control split from the component props, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, commented-out styles import dropped, the action logs through Storybook actions only, illustration follows the Storybook theme, invoice data, links to #, headingAs in meta args, the action boolean control split from the component props, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
 import { action as storybookAction } from 'storybook/actions';
 import { Add } from '../../icons.js';
-import { UnauthorizedEmptyState } from '../../index.js';
+import { UnauthorizedEmptyState, useColorScheme } from '../../index.js';
 import type { UnauthorizedEmptyStateProps } from '../../index.js';
 import mdx from './UnauthorizedEmptyState.mdx';
 
@@ -21,6 +21,7 @@ export default {
   title: 'Components/Empty States/UnauthorizedEmptyState',
   component: UnauthorizedEmptyState,
   tags: ['ibm-products'],
+  args: { headingAs: 'h3' },
   parameters: {
     docs: {
       page: mdx,
@@ -33,32 +34,26 @@ type TemplateArgs = Omit<UnauthorizedEmptyStateProps, 'action'> & {
 };
 
 const defaultStoryProps = {
-  headingAs: 'h3',
-  title: 'Empty state title',
-  subtitle: 'Description text explaining why this section is empty.',
-  illustrationDescription: 'Test alt text',
+  title: 'You do not have access to invoices',
+  subtitle: 'Ask an administrator to give you access.',
+  illustrationDescription: 'Lock',
 };
 
-const Template: StoryFn<TemplateArgs> = ({ ...args }, context) => {
-  const sbDocs = context.viewMode !== 'docs';
+const Template: StoryFn<TemplateArgs> = ({ ...args }) => {
   const { action, ...rest } = args;
+  // IBM draws the light illustration unless the app passes the theme.
+  const scheme = useColorScheme();
   const getAction = (icon = false) => {
     const actionObj = {
-      text: 'Create new',
-      onClick: () => {
-        if (sbDocs) {
-          storybookAction('Clicked empty state action button')();
-        } else {
-          console.log('Clicked empty state action button');
-        }
-      },
+      text: 'Request access',
+      onClick: storybookAction('Clicked empty state action button'),
     };
 
     if (icon) {
       return {
         ...actionObj,
         renderIcon: (props: object) => <Add size={20} {...props} />,
-        iconDescription: 'Add icon',
+        iconDescription: 'Add',
       };
     }
 
@@ -67,6 +62,7 @@ const Template: StoryFn<TemplateArgs> = ({ ...args }, context) => {
   return (
     <UnauthorizedEmptyState
       {...rest}
+      illustrationTheme={rest.illustrationTheme ?? scheme}
       {...(typeof action === 'boolean' ? { action: getAction(action) } : {})}
     />
   );
@@ -99,8 +95,8 @@ export const WithLink = Template.bind({});
 WithLink.args = {
   ...defaultStoryProps,
   link: {
-    text: 'View documentation',
-    href: 'https://www.carbondesignsystem.com',
+    text: 'Contact an administrator',
+    href: '#',
   },
 };
 
@@ -109,7 +105,7 @@ WithActionAndLink.args = {
   ...defaultStoryProps,
   action: true,
   link: {
-    text: 'View documentation',
-    href: 'https://www.carbondesignsystem.com',
+    text: 'Contact an administrator',
+    href: '#',
   },
 };

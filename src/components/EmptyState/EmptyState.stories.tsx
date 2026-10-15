@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, illustration loaded by URL, console.log fallback kept, the action boolean control split from the component props, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, Stackblitz removed, illustration loaded by URL, the action logs through Storybook actions only, customer data, decorative illustration with empty alt, links to #, headingAs in meta args, the action boolean control split from the component props, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -26,6 +26,7 @@ export default {
   title: 'Components/Empty States/EmptyState',
   component: EmptyState,
   tags: ['ibm-products'],
+  args: { headingAs: 'h3' },
   argTypes: {
     subtitle: {
       control: {
@@ -52,26 +53,19 @@ type TemplateArgs = Omit<EmptyStateProps, 'action' | 'subtitle'> & {
 };
 
 const emptyStateCommonProps = {
-  title: 'Start by adding data assets',
+  title: 'No customers yet',
   subtitle: 'default',
 };
 
-const Template: StoryFn<TemplateArgs> = ({ ...args }, context) => {
-  const sbDocs = context.viewMode !== 'docs';
+const Template: StoryFn<TemplateArgs> = ({ ...args }) => {
   const { subtitle, action, ...rest } = args;
 
-  const getSubTitle = () => {
-    return (
-      <>
-        Click <span>Upload assets</span> to upload your data
-      </>
-    );
-  };
+  const getSubTitle = () => 'Add a customer to send them invoices.';
   const getSubTitleWithTooltip = () => {
     return (
       <>
-        Click <span>here</span> to upload your data
-        <Tooltip label="Facts and statistics collected together for reference or analysis">
+        Add a customer to send them invoices.
+        <Tooltip label="A customer is a company or person you invoice">
           <Information size="16" />
         </Tooltip>
       </>
@@ -80,21 +74,15 @@ const Template: StoryFn<TemplateArgs> = ({ ...args }, context) => {
 
   const getAction = (icon = false) => {
     const actionObj = {
-      text: 'Create new',
-      onClick: () => {
-        if (sbDocs) {
-          storybookAction('Clicked empty state action button')();
-        } else {
-          console.log('Clicked empty state action button');
-        }
-      },
+      text: 'Add customer',
+      onClick: storybookAction('Clicked empty state action button'),
     };
 
     if (icon) {
       return {
         ...actionObj,
         renderIcon: (props: object) => <Add size={20} {...props} />,
-        iconDescription: 'Add icon',
+        iconDescription: 'Add',
       };
     }
 
@@ -127,7 +115,7 @@ export const WithCustomIllustration = Template.bind({});
 WithCustomIllustration.args = {
   ...emptyStateCommonProps,
   illustration: CustomIllustration,
-  illustrationDescription: 'Test alt text',
+  illustrationDescription: '',
 };
 
 export const WithAction = Template.bind({});
@@ -146,9 +134,8 @@ export const WithLink = Template.bind({});
 WithLink.args = {
   ...emptyStateCommonProps,
   link: {
-    text: 'View documentation',
-    href: 'https://www.carbondesignsystem.com',
-    target: '_blank',
+    text: 'Import customers',
+    href: '#',
   },
 };
 
@@ -157,7 +144,7 @@ WithActionAndLink.args = {
   ...emptyStateCommonProps,
   action: true,
   link: {
-    text: 'View documentation',
-    href: 'https://www.carbondesignsystem.com',
+    text: 'Import customers',
+    href: '#',
   },
 };
