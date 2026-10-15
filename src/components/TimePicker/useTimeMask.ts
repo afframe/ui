@@ -1,3 +1,4 @@
+'use client';
 import { useMemo, type InputHTMLAttributes } from 'react';
 import { defaultTimePattern, timePlaceholder } from '../../format/index.js';
 import { timeMaskSpec, useInputMask } from '../../mask/index.js';
