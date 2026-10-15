@@ -152,6 +152,9 @@ test('formatNumber shows at most 2 decimals by default', () => {
   expect(formatNumber(1.5, { style: 'unit', unit: 'kilometer' })).toBe(
     '1,5 km'
   );
+  expect(formatNumber(1234567.891, { maximumFractionDigits: undefined })).toBe(
+    `1${nbsp}234${nbsp}567,89`
+  );
 });
 
 test('formatNumber digit options override the 2-decimal default', () => {

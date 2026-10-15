@@ -131,7 +131,8 @@ export function formatNumber(
   const { locale = defaultLocale, ...intl } = options ?? {};
   // Only where Intl's own default is 3: percent (0), currency (its digits) and
   // compact notation (significant digits) keep Intl's rounding. Any digit
-  // option skips it, so a minimumFractionDigits above 2 cannot throw.
+  // option skips it, so a minimumFractionDigits above 2 cannot throw. Applied
+  // after the spread, so a digit option passed as undefined keeps it.
   const twoDecimals =
     (intl.style === undefined ||
       intl.style === 'decimal' ||
@@ -143,7 +144,7 @@ export function formatNumber(
     intl.maximumSignificantDigits === undefined;
   return numberFormat(locale, {
     signDisplay: 'negative',
-    ...(twoDecimals ? { maximumFractionDigits: defaultMaxFractionDigits } : {}),
     ...intl,
+    ...(twoDecimals ? { maximumFractionDigits: defaultMaxFractionDigits } : {}),
   }).format(value);
 }
