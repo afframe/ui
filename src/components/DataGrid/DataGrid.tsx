@@ -38,7 +38,9 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import {
   Fragment,
   useCallback,
+  useEffect,
   useId,
+  useRef,
   useState,
   type ComponentPropsWithoutRef,
   type CSSProperties,
@@ -318,6 +320,17 @@ export function DataGrid<
     },
     [ref]
   );
+  // Batch Cancel, or an action that clears the selection, hides the bar with
+  // focus inside it; select-all is the control that started the selection.
+  const wasOpen = useRef(batchOpen);
+  useEffect(() => {
+    if (wasOpen.current && !batchOpen) {
+      const bar = container?.querySelector('.cds--batch-actions');
+      if (bar?.contains(document.activeElement))
+        document.getElementById(`${id}-select-all`)?.focus();
+    }
+    wasOpen.current = batchOpen;
+  }, [batchOpen, container, id]);
   // A detail panel is not part of its row's measured size, so a grid with
   // `renderExpandedRow` is not virtualized.
   const virtual =
@@ -379,6 +392,7 @@ export function DataGrid<
       {...{ ref: containerRef }}
       title={title}
       description={description}
+      useStaticWidth={sizing}
       style={containerStyle}
       className={[
         'afframe-data-grid',

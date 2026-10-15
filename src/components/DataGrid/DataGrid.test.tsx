@@ -917,3 +917,94 @@ test('end-aligns a column with meta.align on its header and cells', () => {
     amount.getBoundingClientRect().right - 48
   );
 });
+
+function BatchGrid({ onDelete }: { onDelete?: () => void }) {
+  const [data, setData] = useState(few);
+  return (
+    <DataGrid
+      options={{
+        features: selectFeatures,
+        columns: selectColumns,
+        data,
+        getRowId: (row) => row.id,
+      }}
+      batchActions={[
+        {
+          id: 'delete',
+          label: 'Delete',
+          onClick: (rows) => {
+            onDelete?.();
+            setData((all) => all.filter((row) => !rows.includes(row)));
+          },
+        },
+      ]}
+    />
+  );
+}
+
+test('moves focus to select all after batch Cancel or an emptying action', async () => {
+  render(<BatchGrid />);
+  const all = screen.getByRole('checkbox', { name: 'Select all rows' });
+  screen.getByRole('checkbox', { name: 'Select row 2026-0002' }).focus();
+  await userEvent.keyboard(' ');
+  screen.getByRole('button', { name: 'Cancel' }).focus();
+  await userEvent.keyboard('{Enter}');
+  expect(document.activeElement).toBe(all);
+  // Mouse path.
+  screen.getByRole('checkbox', { name: 'Select row 2026-0003' }).focus();
+  await userEvent.keyboard(' ');
+  await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+  expect(document.activeElement).toBe(all);
+  // An action that removes the selected rows.
+  screen.getByRole('checkbox', { name: 'Select row 2026-0004' }).focus();
+  await userEvent.keyboard(' ');
+  await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+  expect(screen.queryByText('2026-0004')).toBeNull();
+  expect(document.activeElement).toBe(all);
+  // Unchecking the last row keeps focus on its checkbox.
+  const row = screen.getByRole('checkbox', { name: 'Select row 2026-0001' });
+  row.focus();
+  await userEvent.keyboard('  ');
+  expect(document.activeElement).toBe(row);
+});
+
+test('a sized grid uses static width and stays inside its parent', () => {
+  render(
+    <div style={{ inlineSize: '400px' }}>
+      <DataGrid
+        title="Invoices"
+        options={{ features: sizeFeatures, columns: sizeColumns, data: few }}
+      />
+      <DataGrid
+        title="Wide"
+        maxHeight="10rem"
+        options={{
+          features: stickyFeatures,
+          columns: stickyColumns,
+          data: invoices,
+          initialState: { columnPinning: { start: ['number'], end: [] } },
+        }}
+      />
+    </div>
+  );
+  const [sized, wide] = document.querySelectorAll<HTMLElement>(
+    '.cds--data-table-container'
+  );
+  expect(sized?.classList).toContain('cds--data-table-container--static');
+  const table = sized?.querySelector('table');
+  // The container is as wide as the sized table, not the parent.
+  expect(sized?.getBoundingClientRect().width).toBeLessThanOrEqual(400);
+  expect(wide?.getBoundingClientRect().width).toBeLessThanOrEqual(400);
+  const scroller = wide?.querySelector('.cds--data-table-content');
+  expect(scroller?.scrollWidth).toBeGreaterThan(scroller?.clientWidth ?? 0);
+  expect(table?.getBoundingClientRect().width).toBeGreaterThan(0);
+  cleanup();
+  render(
+    <DataGrid
+      options={{ features: sortFeatures, columns: sortColumns, data: few }}
+    />
+  );
+  expect(
+    document.querySelector('.cds--data-table-container--static')
+  ).toBeNull();
+});
