@@ -1,5 +1,6 @@
 import { DatePickerInput } from '@carbon/react';
 import { render, screen } from '@testing-library/react';
+import { useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { DatePicker, type DatePickerProps } from './DatePicker.js';
@@ -107,4 +108,188 @@ test('a range masks both inputs', async () => {
   expect(input('From').value).toBe('01.10.2026');
   await userEvent.type(input('To'), '0510');
   expect(input('To').value).toBe('05.10.');
+});
+
+// The app owns the value and takes every onChange.
+function Controlled({ onChange }: { onChange: (dates: Date[]) => void }) {
+  const [value, setValue] = useState<Date[]>([]);
+  return (
+    <DatePicker
+      datePickerType="single"
+      value={value}
+      onChange={(dates) => {
+        onChange(dates);
+        setValue(dates);
+      }}>
+      <DatePickerInput id="due" labelText="Due date" />
+    </DatePicker>
+  );
+}
+
+const lengths = (onChange: ReturnType<typeof vi.fn>) =>
+  (onChange.mock.calls as [Date[]][]).map(([dates]) => dates.length);
+
+// Carbon closes the calendar in an effect after Enter.
+const settle = () => new Promise((resolve) => setTimeout(resolve, 50));
+
+async function retype(text: string, label = 'Due date') {
+  await userEvent.click(input(label));
+  input(label).setSelectionRange(0, input(label).value.length);
+  await userEvent.keyboard(text);
+}
+
+async function expectKeptInvalid(text: string, label = 'Due date') {
+  await vi.waitFor(() =>
+    expect(input(label).getAttribute('aria-invalid')).toBe('true')
+  );
+  expect(input(label).value).toBe(text);
+}
+
+test('Enter on an impossible date keeps it, marked invalid', async () => {
+  render(<Single />);
+  await userEvent.type(input(), '31022026');
+  await userEvent.keyboard('{Enter}');
+  await settle();
+  await expectKeptInvalid('31.02.2026');
+});
+
+test('Enter on a date edited to an impossible one keeps it, marked invalid', async () => {
+  render(<Single />);
+  await userEvent.type(input(), '01102026');
+  await leave();
+  await retype('31022026');
+  await userEvent.keyboard('{Enter}');
+  await settle();
+  await expectKeptInvalid('31.02.2026');
+});
+
+test('controlled: Enter on an edited impossible date keeps it and tells the app once', async () => {
+  const onChange = vi.fn();
+  render(<Controlled onChange={onChange} />);
+  await userEvent.type(input(), '01102026');
+  await leave();
+  await retype('31022026');
+  await userEvent.keyboard('{Enter}');
+  await settle();
+  await expectKeptInvalid('31.02.2026');
+  expect(lengths(onChange)).toEqual([1, 0]);
+});
+
+test('controlled: leaving an edited impossible date tells the app once', async () => {
+  const onChange = vi.fn();
+  render(<Controlled onChange={onChange} />);
+  await userEvent.type(input(), '01102026');
+  await leave();
+  await retype('3102');
+  await leave();
+  await expectKeptInvalid('31.02.');
+  await userEvent.click(input());
+  await leave();
+  expect(input().value).toBe('31.02.');
+  expect(lengths(onChange)).toEqual([1, 0]);
+});
+
+test('an impossible date with no date before does not call onChange', async () => {
+  const onChange = vi.fn();
+  render(<Single onChange={onChange} />);
+  await userEvent.type(input(), '3102');
+  await leave();
+  await expectKeptInvalid('31.02.');
+  expect(onChange).not.toHaveBeenCalled();
+});
+
+test('a date before minDate stays as typed, marked invalid', async () => {
+  const onChange = vi.fn();
+  render(<Single minDate={new Date(2026, 0, 1)} onChange={onChange} />);
+  await userEvent.type(input(), '01012020');
+  await leave();
+  await expectKeptInvalid('01.01.2020');
+  expect(onChange).not.toHaveBeenCalled();
+});
+
+test('controlled: a date edited to before minDate tells the app once', async () => {
+  const onChange = vi.fn();
+  function WithMin() {
+    const [value, setValue] = useState<Date[]>([]);
+    return (
+      <DatePicker
+        datePickerType="single"
+        minDate={new Date(2026, 0, 1)}
+        value={value}
+        onChange={(dates) => {
+          onChange(dates);
+          setValue(dates);
+        }}>
+        <DatePickerInput id="due" labelText="Due date" />
+      </DatePicker>
+    );
+  }
+  render(<WithMin />);
+  await userEvent.type(input(), '01102026');
+  await leave();
+  await retype('01012020');
+  await leave();
+  await expectKeptInvalid('01.01.2020');
+  expect(lengths(onChange)).toEqual([1, 0]);
+});
+
+test('a range keeps an invalid end date, marked invalid', async () => {
+  render(
+    <DatePicker datePickerType="range">
+      <DatePickerInput id="from" labelText="From" />
+      <DatePickerInput id="to" labelText="To" />
+    </DatePicker>
+  );
+  await userEvent.type(input('From'), '01102026');
+  await userEvent.type(input('To'), '3102');
+  await leave();
+  await expectKeptInvalid('31.02.', 'To');
+  expect(input('From').value).toBe('01.10.2026');
+  expect(input('From').getAttribute('aria-invalid')).toBeNull();
+});
+
+test('a valid date with Enter, or edited away and back, stays valid', async () => {
+  const onChange = vi.fn();
+  render(<Single onChange={onChange} />);
+  await userEvent.type(input(), '01102026');
+  await userEvent.keyboard('{Enter}');
+  await settle();
+  expect(input().value).toBe('01.10.2026');
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+  await userEvent.click(input());
+  await userEvent.keyboard('{Backspace}6');
+  expect(input().value).toBe('01.10.2026');
+  await leave();
+  expect(input().value).toBe('01.10.2026');
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+  expect(lengths(onChange).every((length) => length === 1)).toBe(true);
+});
+
+test('the app emptying its value empties text kept invalid', async () => {
+  const { rerender } = render(<Single value={[new Date(2026, 9, 1)]} />);
+  expect(input().value).toBe('01.10.2026');
+  await retype('3102');
+  await leave();
+  await expectKeptInvalid('31.02.');
+  rerender(<Single value={[]} />);
+  await vi.waitFor(() => expect(input().value).toBe(''));
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+});
+
+test('the app emptying its value while a date is held empties the edit', async () => {
+  const { rerender } = render(<Single value={[new Date(2026, 9, 1)]} />);
+  await retype('0110');
+  rerender(<Single value={[]} />);
+  await vi.waitFor(() => expect(input().value).toBe(''));
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+});
+
+test('a new key resets text kept invalid', async () => {
+  const { rerender } = render(<Single key="a" />);
+  await userEvent.type(input(), '3102');
+  await leave();
+  await expectKeptInvalid('31.02.');
+  rerender(<Single key="b" />);
+  expect(input().value).toBe('');
+  expect(input().getAttribute('aria-invalid')).toBeNull();
 });

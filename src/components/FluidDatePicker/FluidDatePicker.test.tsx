@@ -46,6 +46,16 @@ test('an impossible date stays as typed and the input turns invalid', async () =
   ).toBeInTheDocument();
 });
 
+test('Enter on an impossible date keeps it, marked invalid', async () => {
+  render(<Single />);
+  await userEvent.type(input(), '31022026');
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() =>
+    expect(input().getAttribute('aria-invalid')).toBe('true')
+  );
+  expect(input().value).toBe('31.02.2026');
+});
+
 test('inputMask={false} keeps Carbon’s typing', async () => {
   render(<Single inputMask={false} />);
   await userEvent.type(input(), '01102026');

@@ -122,6 +122,13 @@ interface DateInputProps {
 
 type Pair<T> = [T, T];
 
+/** The part of the flatpickr instance the wrapper uses. */
+interface Flatpickr {
+  selectedDates: Date[];
+  isEnabled: (date: Date) => boolean;
+  setDate: (dates: Date[], triggerChange: boolean) => void;
+}
+
 interface DateFieldOptions {
   inputMask: boolean | undefined;
   messages: Partial<DatePickerMessages> | undefined;
@@ -131,7 +138,7 @@ interface DateFieldOptions {
   children: unknown;
   dateFormat: string | undefined;
   allowInput: boolean | undefined;
-  /** The picker's value: when it becomes empty, the typed text is forgotten. */
+  /** The picker's value: when the app empties it, the inputs are emptied too. */
   value: unknown;
   /**
    * flatpickr empties an input whose text it cannot parse, on blur and on a
@@ -160,10 +167,12 @@ const replaced = <T>(pair: Pair<T>, index: number, value: T): Pair<T> => {
 /**
  * The shared part of the Afframe date pickers. Resolves `dateFormat` (the
  * system format by default) and clones the first two children (the start and
- * end inputs) with the mask. On blur an incomplete or impossible date stays
- * as typed and the input is marked invalid, unless the input sets `invalid`
- * itself. Call `pickerChanged` with the dates the picker reports.
+ * end inputs) with the mask. On blur, on Enter and in a range end, an
+ * incomplete, impossible or unavailable date stays as typed and the input is
+ * marked invalid, unless the input sets `invalid` itself. Call
+ * `pickerChanged` with the dates the picker reports.
  */
+// fallow-ignore-next-line complexity -- one hook keeps the typed text, the picker's reports and the app's value in step
 export function useDateField({
   name,
   children,
@@ -189,31 +198,126 @@ export function useDateField({
   const inputs = useRef<Pair<HTMLInputElement | null>>([null, null]);
   // The text typed last into each input.
   const typed = useRef<Pair<string>>(['', '']);
+  // Typed since the picker last took a date for the input.
+  const dirty = useRef<Pair<boolean>>([false, false]);
+  // onChange already told the app the typed text holds no date.
+  const told = useRef<Pair<boolean>>([false, false]);
+  // Whether the dates the picker reported last had a date per input.
+  const reported = useRef<Pair<boolean>>([false, false]);
+  // Typed text was kept in this render: an empty value is the app taking
+  // the picker's onChange([]), not a reset.
+  const kept = useRef(false);
   const [invalid, setInvalid] = useState<Pair<boolean>>([false, false]);
   const [shown, setShown] = useState<Pair<string>>(['', '']);
 
   const cleared = isEmpty(value);
+  const wasCleared = useRef(cleared);
   useEffect(() => {
-    if (!cleared) return;
+    const emptied = cleared && !wasCleared.current;
+    wasCleared.current = cleared;
+    if (!emptied) return;
+    // The app taking the picker's onChange([]) renders with the invalid mark
+    // set in the same batch; Carbon's reset reaches the picker only in its
+    // own effect, after this render.
+    if (kept.current && invalid.some(Boolean)) {
+      if (!restoreText) return;
+      for (const [n, input] of inputs.current.entries()) {
+        if (input && !input.value) input.value = typed.current[n] ?? '';
+      }
+      return;
+    }
+    if (restoreText) {
+      for (const input of inputs.current) if (input) input.value = '';
+    }
     typed.current = ['', ''];
+    dirty.current = [false, false];
+    told.current = [false, false];
     setShown(['', '']);
     setInvalid([false, false]);
-  }, [cleared]);
+  }, [cleared, restoreText, invalid]);
+  useEffect(() => {
+    kept.current = false;
+  });
 
   const isInvalid = (input: string) =>
     input !== '' && parseStrictDate(input, effective) === undefined;
   const parseDate = (input: string) =>
     parseStrictDate(input, effective) ?? (false as const);
+  // flatpickr keeps its instance on the input it was created on: the start.
+  const instance = () =>
+    (inputs.current[0] as { _flatpickr?: Flatpickr } | null)?._flatpickr;
+  // A real date that minDate, maxDate, enable or disable rule out.
+  const unavailable = (input: string) => {
+    const date = parseStrictDate(input, effective);
+    const picker = instance();
+    return (
+      date !== undefined && picker !== undefined && !picker.isEnabled(date)
+    );
+  };
+  const appHolds = (index: number) =>
+    value === undefined
+      ? reported.current[index]
+      : Array.isArray(value)
+        ? !isEmpty(value[index])
+        : index === 0 && !isEmpty(value);
 
-  /** The picker selected dates: its text replaces the typed one. */
+  /**
+   * The picker reported dates: their text replaces the typed one. flatpickr
+   * empties text it cannot take (Enter, a range end, minDate): typed text
+   * with no date stays and is marked invalid. Returns whether it kept any.
+   */
   const pickerChanged = (dates: readonly unknown[]) => {
-    if (!masked || dates.length === 0) return;
-    typed.current = [
-      inputs.current[0]?.value ?? '',
-      inputs.current[1]?.value ?? '',
-    ];
-    setShown(['', '']);
-    setInvalid([false, false]);
+    reported.current = [dates[0] != null, dates[1] != null];
+    if (!masked) return false;
+    if (!restoreText) {
+      if (dates.length === 0) return false;
+      typed.current = [
+        inputs.current[0]?.value ?? '',
+        inputs.current[1]?.value ?? '',
+      ];
+      setShown(['', '']);
+      setInvalid([false, false]);
+      return false;
+    }
+    const next: Pair<boolean> = [false, false];
+    for (const n of [0, 1] as const) {
+      const input = inputs.current[n];
+      if (dates[n] == null && dirty.current[n] && typed.current[n] !== '') {
+        const text = typed.current[n];
+        const write = () => {
+          if (input && input.value === '') input.value = text;
+        };
+        // Carbon's blur handler on a range end sets the dates again when it
+        // finds text there (it takes an unparsable date for a valid one), so
+        // a focused end gets its text after the blur.
+        if (n === 1 && input === document.activeElement) setTimeout(write);
+        else write();
+        told.current[n] = true;
+        next[n] = true;
+      } else {
+        typed.current[n] = input?.value ?? '';
+        dirty.current[n] = false;
+      }
+    }
+    if (next.some(Boolean)) kept.current = true;
+    setInvalid(next);
+    return next.some(Boolean);
+  };
+
+  /**
+   * Text that turned invalid on leave: flatpickr dropped the date without
+   * onChange, so the app is told once, unless it holds no date already.
+   */
+  const tellApp = (index: 0 | 1) => {
+    const picker = instance();
+    if (!picker || told.current[index] || !appHolds(index)) return;
+    told.current[index] = true;
+    kept.current = true;
+    const before = inputs.current.map((input) => input?.value ?? '');
+    picker.setDate(index === 0 ? [] : picker.selectedDates.slice(0, 1), true);
+    inputs.current.forEach((input, n) => {
+      if (input && !input.value) input.value = before[n] ?? '';
+    });
   };
 
   // The written-back text of every input, not only the blurred one: in a
@@ -240,7 +344,12 @@ export function useDateField({
       onChange: (event) => {
         mask.onChange(event);
         const current = event.currentTarget.value;
-        typed.current[index] = current;
+        // Carbon's own input listener runs first and may have taken the date.
+        if (current !== typed.current[index]) {
+          typed.current[index] = current;
+          dirty.current[index] = true;
+          told.current[index] = false;
+        }
         if (controlText) setShown((pair) => replaced(pair, index, current));
         if (!isInvalid(current))
           setInvalid((pair) => replaced(pair, index, false));
@@ -257,8 +366,10 @@ export function useDateField({
         if (restoreText) restore();
         // Tab moves focus into the calendar: the date is not entered yet.
         if (!inCalendar(event.relatedTarget)) {
-          const bad = isInvalid(event.currentTarget.value);
+          const current = event.currentTarget.value;
+          const bad = isInvalid(current) || unavailable(current);
           setInvalid((pair) => replaced(pair, index, bad));
+          if (bad && restoreText && dirty.current[index]) tellApp(index);
         }
         own.onBlur?.(event);
       },

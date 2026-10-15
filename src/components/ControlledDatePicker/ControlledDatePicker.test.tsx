@@ -225,3 +225,19 @@ test("a caller's onKeyDown still runs", async () => {
   expect(isOpen()).toBe(false);
   unmount();
 });
+
+test('Enter on an impossible date keeps it, marked invalid', async () => {
+  const { unmount } = render(
+    <ControlledDatePicker datePickerType="single">
+      <DatePickerInput id="due" labelText="Due date" />
+    </ControlledDatePicker>
+  );
+  const input = screen.getByLabelText<HTMLInputElement>('Due date');
+  await userEvent.type(input, '31022026');
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() =>
+    expect(input.getAttribute('aria-invalid')).toBe('true')
+  );
+  expect(input.value).toBe('31.02.2026');
+  unmount();
+});
