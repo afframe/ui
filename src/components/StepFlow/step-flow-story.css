@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: the side panel rules of IBM's step tearsheet and step side panel story styles, SCSS rewritten to CSS with Carbon custom properties, prefixes as literals, nesting flattened; the step container, form and heading rules come from tearsheet-story.css. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: the side panel rules of IBM's step tearsheet and step side panel story styles, SCSS rewritten to CSS with Carbon custom properties, prefixes as literals, nesting flattened; the step container, form and heading rules come from tearsheet-story.css, the #root centring on a story wrapper class. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 .my-custom-action-set {
@@ -59,4 +59,11 @@
 .c4p--step-actions__button-container.my-custom-action-set button {
   inline-size: 100%;
   max-inline-size: none;
+}
+
+.step-flow-story {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 100vh;
 }

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: IBM's StepFlow SidePanel example, StepSidePanel and StepActions in one file, TypeScript, components and the step flow from @afframe/ui, form values read as strings, the panel props the example always passes made required (exactOptionalPropertyTypes), the unused container ref and rest props dropped, the disabled-state helpers shortened (same results), the influencer builder without its unused showIntro argument (the caller checks it). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: IBM's StepFlow SidePanel example, StepSidePanel and StepActions in one file, TypeScript, components and the step flow from @afframe/ui, form values read as strings, the panel props the example always passes made required (exactOptionalPropertyTypes), the unused container ref and rest props dropped, the disabled-state helpers shortened (same results), the influencer builder without its unused showIntro argument (the caller checks it). The intro screen labels its button Next: Carbon's published step context starts totalSteps at 1, IBM's internal one at undefined. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useEffect, useState } from 'react';
@@ -326,7 +326,9 @@ export const SidePanelExample = () => {
                           handleNext();
                         }
                       }}>
-                      {currentStep === totalSteps ? 'Submit' : 'Next'}
+                      {!showIntro && currentStep === totalSteps
+                        ? 'Submit'
+                        : 'Next'}
                     </Button>
                   </>
                 )}
