@@ -13,7 +13,6 @@ const meta = {
   tags: ['afframe'],
   args: {
     datePickerType: 'single',
-    dateFormat: 'd.m.Y',
     value: '15.10.2026',
     onOpenChange: action('onOpenChange'),
     children: null,
@@ -61,11 +60,7 @@ export const Default: Story = {
             args.onOpenChange?.(next);
             setOpen(next);
           }}>
-          <DatePickerInput
-            id="due-date"
-            labelText="Due date"
-            placeholder="dd.mm.yyyy"
-          />
+          <DatePickerInput id="due-date" labelText="Due date" />
         </ControlledDatePicker>
       </div>
     );
@@ -95,11 +90,7 @@ export const Open: Story = {
   render: (args) => (
     <div style={frame}>
       <ControlledDatePicker {...args}>
-        <DatePickerInput
-          id="open-date"
-          labelText="Invoice date"
-          placeholder="dd.mm.yyyy"
-        />
+        <DatePickerInput id="open-date" labelText="Invoice date" />
       </ControlledDatePicker>
     </div>
   ),
@@ -113,11 +104,7 @@ export const Uncontrolled: Story = {
   render: (args) => (
     <div style={frame}>
       <ControlledDatePicker {...args}>
-        <DatePickerInput
-          id="uncontrolled-date"
-          labelText="Payment date"
-          placeholder="dd.mm.yyyy"
-        />
+        <DatePickerInput id="uncontrolled-date" labelText="Payment date" />
       </ControlledDatePicker>
     </div>
   ),
@@ -145,16 +132,8 @@ export const Range: Story = {
           Choose period
         </Button>
         <ControlledDatePicker {...args} open={open} onOpenChange={setOpen}>
-          <DatePickerInput
-            id="period-from"
-            labelText="From"
-            placeholder="dd.mm.yyyy"
-          />
-          <DatePickerInput
-            id="period-to"
-            labelText="To"
-            placeholder="dd.mm.yyyy"
-          />
+          <DatePickerInput id="period-from" labelText="From" />
+          <DatePickerInput id="period-to" labelText="To" />
         </ControlledDatePicker>
       </div>
     );

@@ -7,12 +7,14 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, useDocumentLang from .storybook, source tag, story names unified, args split between DatePicker and DatePickerInput, Czech date format and example data, datePickerType control, state stories and WeekStartsMonday added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, useDocumentLang from .storybook, source tag, story names unified, args split between DatePicker and DatePickerInput, Czech date format and example data, datePickerType control, state stories and WeekStartsMonday added; date format and placeholders from the system setting, TypingADate story added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { useDocumentLang } from '../../../.storybook/useDocumentLang.js';
 import { WithLayer } from '../../../.storybook/templates/WithLayer/index.js';
+import { datePlaceholder, defaultDatePattern } from '../../format/index.js';
 import { FolderOpen, Folders, View } from '../../icons.js';
 import {
   AILabel,
@@ -25,6 +27,7 @@ import {
   DatePickerSkeleton,
 } from '../../index.js';
 import mdx from './DatePicker.mdx';
+import { playTypingADate } from './playTypingADate.js';
 
 interface DatePickerStoryArgs {
   datePickerType?: 'simple' | 'single' | 'range';
@@ -60,9 +63,6 @@ export default {
       exclude: ['appendTo', 'disable', 'enable', 'inline', 'locale', 'value'],
     },
   },
-  args: {
-    dateFormat: 'd.m.Y',
-  },
   argTypes: {
     light: {
       table: {
@@ -72,7 +72,7 @@ export default {
   },
 } satisfies Meta;
 
-const invalidText = 'Enter the date as dd.mm.yyyy.';
+const invalidText = `Enter the date as ${datePlaceholder(defaultDatePattern)}.`;
 const warnText = 'The date is in the past.';
 
 const sharedArgs = { invalidText, warnText };
@@ -168,14 +168,12 @@ export const Default: StoryFn<DatePickerStoryArgs> = (args) => {
   return (
     <DatePicker datePickerType="single" {...picker} locale={locale}>
       <DatePickerInput
-        placeholder="dd.mm.yyyy"
         labelText={range ? 'Billing period start' : 'Due date'}
         id="date-picker-single"
         {...input}
       />
       {range && (
         <DatePickerInput
-          placeholder="dd.mm.yyyy"
           labelText="Billing period end"
           size="md"
           id="date-picker-input-2"
@@ -201,7 +199,6 @@ export const Simple: StoryFn<DatePickerStoryArgs> = (args) => {
   return (
     <DatePicker datePickerType="simple" {...picker}>
       <DatePickerInput
-        placeholder="dd.mm.yyyy"
         labelText="Due date"
         id="date-picker-simple"
         {...input}
@@ -218,7 +215,6 @@ export const SingleWithCalendar: StoryFn<DatePickerStoryArgs> = (args) => {
   return (
     <DatePicker datePickerType="single" {...picker}>
       <DatePickerInput
-        placeholder="dd.mm.yyyy"
         labelText="Due date"
         id="date-picker-single"
         size="md"
@@ -237,14 +233,12 @@ export const RangeWithCalendar: StoryFn<DatePickerStoryArgs> = (args) => {
     <DatePicker datePickerType="range" {...picker}>
       <DatePickerInput
         id="date-picker-input-id-start"
-        placeholder="dd.mm.yyyy"
         labelText="Billing period start"
         size="md"
         {...input}
       />
       <DatePickerInput
         id="date-picker-input-id-finish"
-        placeholder="dd.mm.yyyy"
         labelText="Billing period end"
         size="md"
         {...input}
@@ -263,7 +257,6 @@ export const SimpleWithLayer: StoryFn<DatePickerStoryArgs> = (args) => {
       {(layer) => (
         <DatePicker datePickerType="simple" {...picker}>
           <DatePickerInput
-            placeholder="dd.mm.yyyy"
             labelText="Due date"
             id={`date-picker-simple-${layer}`}
             size="md"
@@ -288,7 +281,6 @@ export const SingleWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
       {(layer) => (
         <DatePicker datePickerType="single" {...picker}>
           <DatePickerInput
-            placeholder="dd.mm.yyyy"
             labelText="Due date"
             id={`date-picker-single-${layer}`}
             size="md"
@@ -314,14 +306,12 @@ export const RangeWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
         <DatePicker datePickerType="range" {...picker}>
           <DatePickerInput
             id={`date-picker-input-id-start-${layer}`}
-            placeholder="dd.mm.yyyy"
             labelText="Billing period start"
             size="md"
             {...input}
           />
           <DatePickerInput
             id={`date-picker-input-id-finish-${layer}`}
-            placeholder="dd.mm.yyyy"
             labelText="Billing period end"
             size="md"
             {...input}
@@ -344,7 +334,6 @@ export const WeekStartsMonday: StoryFn<DatePickerStoryArgs> = (args) => {
   return (
     <DatePicker datePickerType="single" {...picker} locale={mondayEnglish}>
       <DatePickerInput
-        placeholder="dd.mm.yyyy"
         labelText="Invoice date"
         id="date-picker-week-starts-monday"
         size="md"
@@ -423,7 +412,6 @@ export const WithAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
     <div style={{ width: 400 }}>
       <DatePicker datePickerType="single" {...picker}>
         <DatePickerInput
-          placeholder="dd.mm.yyyy"
           labelText="Due date"
           size="md"
           id="date-picker"
@@ -437,3 +425,14 @@ export const WithAILabel: StoryFn<DatePickerStoryArgs> = (args) => {
 
 WithAILabel.args = { ...sharedArgs };
 WithAILabel.argTypes = { ...sharedArgTypes };
+
+export const TypingADate: StoryObj<DatePickerStoryArgs> = {
+  tags: ['afframe'],
+  parameters: { ...afframeA11y },
+  render: (args) => (
+    <DatePicker datePickerType="single" {...splitArgs(args).picker}>
+      <DatePickerInput labelText="Due date" id="date-picker-typing" />
+    </DatePicker>
+  ),
+  play: ({ canvasElement }) => playTypingADate(canvasElement),
+};

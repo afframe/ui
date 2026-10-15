@@ -7,10 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args; datePickerType comes from args; unsupported skeleton props removed, story names unified, args split between FluidDatePicker and FluidDatePickerInput, Czech date format and example data, state stories added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; typed args; datePickerType comes from args; unsupported skeleton props removed, story names unified, args split between FluidDatePicker and FluidDatePickerInput, Czech date format and example data, state stories added; date format and placeholders from the system setting, TypingADate story added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import { afframeA11y } from '../../../.storybook/afframeA11y.js';
+import { datePlaceholder, defaultDatePattern } from '../../format/index.js';
 import { Information } from '../../icons.js';
 import {
   FluidDatePicker,
@@ -25,6 +27,7 @@ import {
 } from '../../index.js';
 import styles from './fluid-date-picker-story.css?inline';
 import mdx from './FluidDatePicker.mdx';
+import { playTypingADate } from '../DatePicker/playTypingADate.js';
 
 export default {
   title: 'Components/Fluid Inputs/FluidDatePicker',
@@ -65,14 +68,12 @@ type FluidDatePickerArgs = FluidDatePickerProps &
 const sharedArgs: FluidDatePickerArgs = {
   allowInput: true,
   closeOnSelect: true,
-  dateFormat: 'd.m.Y',
   disabled: false,
   helperText: '',
   invalid: false,
-  invalidText: 'Enter the due date as dd.mm.yyyy, for example 15.10.2026.',
+  invalidText: `Enter the due date as ${datePlaceholder(defaultDatePattern)}.`,
   maxDate: '',
   minDate: '',
-  placeholder: 'dd.mm.yyyy',
   readOnly: false,
   short: false,
   size: 'md',
@@ -212,7 +213,6 @@ export const Default: StoryFn<FluidDatePickerArgs> = (args) => {
       <LabelToggletip />
       <FluidDatePicker {...picker}>
         <FluidDatePickerInput
-          placeholder="dd.mm.yyyy"
           labelText="Due date"
           id="date-picker-simple"
           {...input}
@@ -243,7 +243,6 @@ export const SingleWithCalendar: StoryFn<FluidDatePickerArgs> = (args) => {
       <FluidDatePicker {...picker}>
         <FluidDatePickerInput
           style={{ width: defaultWidth }}
-          placeholder="dd.mm.yyyy"
           labelText="Due date"
           id="date-picker-single"
           {...input}
@@ -276,14 +275,12 @@ export const RangeWithCalendar: StoryFn<FluidDatePickerArgs> = (args) => {
       <FluidDatePicker {...picker}>
         <FluidDatePickerInput
           id="date-picker-input-id-start"
-          placeholder="dd.mm.yyyy"
           labelText="Billing period start"
           size="md"
           {...input}
         />
         <FluidDatePickerInput
           id="date-picker-input-id-finish"
-          placeholder="dd.mm.yyyy"
           labelText="Billing period end"
           size="md"
           {...input}
@@ -355,4 +352,17 @@ Skeleton.argTypes = {
 
 Skeleton.parameters = {
   controls: { include: Object.keys(Skeleton.argTypes) },
+};
+
+export const TypingADate: StateStory = {
+  tags: ['afframe'],
+  parameters: { ...afframeA11y },
+  render: () => (
+    <div className="fluid-date-picker-story" style={{ width: 288 }}>
+      <FluidDatePicker datePickerType="single">
+        <FluidDatePickerInput labelText="Due date" id="date-picker-typing" />
+      </FluidDatePicker>
+    </div>
+  ),
+  play: ({ canvasElement }) => playTypingADate(canvasElement),
 };
