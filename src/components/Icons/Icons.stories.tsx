@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, icons from @afframe/ui/icons, unused IconButton import removed, plain CSS, source tag, numeric size control, size label beside the icon instead of a heading, searchable Gallery story, the size decorator applied to the size stories only. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, icons from @afframe/ui/icons, unused IconButton import removed, plain CSS, source tag, numeric size control, size label beside the icon instead of a heading, searchable Gallery story, the size decorator applied to the size stories only, a Gallery play that checks the grid fills the canvas. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useMemo, useState } from 'react';
@@ -15,6 +15,7 @@ import type { ComponentType } from 'react';
 import type { Decorator, Meta, StoryFn } from '@storybook/react-vite';
 import * as icons from '../../icons.js';
 import { Bee, Edit } from '../../icons.js';
+import { expect } from 'storybook/test';
 import { Search } from '../../index.js';
 import mdx from './Icons.mdx';
 import './Icons.stories.css';
@@ -135,3 +136,11 @@ export const Gallery: StoryFn = () => {
 };
 
 Gallery.parameters = { controls: { disable: true } };
+
+// A grid narrower than the canvas follows its text and changes columns.
+Gallery.play = async ({ canvasElement }) => {
+  const grid = canvasElement.querySelector('.demo-icon-gallery__grid');
+  await expect(grid?.getBoundingClientRect().width).toBeGreaterThan(
+    canvasElement.getBoundingClientRect().width * 0.9
+  );
+};
