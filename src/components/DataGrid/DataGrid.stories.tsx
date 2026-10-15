@@ -5,7 +5,14 @@ import { useState } from 'react';
 import { expect, fn, within } from 'storybook/test';
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import { FilterPanel, type FilterPanelValue } from '../../index.js';
+import {
+  Amount,
+  DataTableSkeleton,
+  FilterPanel,
+  formatDate,
+  NoDataEmptyState,
+  type FilterPanelValue,
+} from '../../index.js';
 import { DataGrid } from './DataGrid.js';
 import mdx from './DataGrid.mdx';
 import './DataGrid.stories.css';
@@ -41,14 +48,30 @@ type Story = StoryObj<typeof meta>;
 
 const few = invoices.slice(0, 8);
 
-const sortingFeatures = tableFeatures({ ...dataGridSorting });
+// Amounts end-aligned through `meta.align`, which `dataGridInlineEdit` types.
+const amount = {
+  header: 'Amount',
+  cell: (info: { getValue: () => number }) => (
+    <Amount value={info.getValue()} />
+  ),
+  meta: { align: 'end' as const },
+};
+const issued = {
+  header: 'Issued',
+  cell: (info: { getValue: () => string }) => formatDate(info.getValue()),
+};
+
+const sortingFeatures = tableFeatures({
+  ...dataGridSorting,
+  ...dataGridInlineEdit,
+});
 const sortingHelper = createColumnHelper<typeof sortingFeatures, Invoice>();
 const sortingColumns = sortingHelper.columns([
   sortingHelper.accessor('number', { header: 'Number' }),
   sortingHelper.accessor('customer', { header: 'Customer' }),
   sortingHelper.accessor('status', { header: 'Status' }),
-  sortingHelper.accessor('amount', { header: 'Amount' }),
-  sortingHelper.accessor('issued', { header: 'Issued' }),
+  sortingHelper.accessor('amount', amount),
+  sortingHelper.accessor('issued', issued),
 ]);
 
 export const Default: Story = {
@@ -67,6 +90,7 @@ export const Default: Story = {
 
 const filteringFeatures = tableFeatures({
   ...dataGridSorting,
+  ...dataGridInlineEdit,
   ...dataGridFiltering,
 });
 const filteringHelper = createColumnHelper<typeof filteringFeatures, Invoice>();
@@ -74,7 +98,7 @@ const filteringColumns = filteringHelper.columns([
   filteringHelper.accessor('number', { header: 'Number' }),
   filteringHelper.accessor('customer', { header: 'Customer' }),
   filteringHelper.accessor('status', { header: 'Status' }),
-  filteringHelper.accessor('amount', { header: 'Amount' }),
+  filteringHelper.accessor('amount', amount),
 ]);
 
 export const Filtering: Story = {
@@ -104,6 +128,7 @@ export const TestFiltering: Story = {
 
 const paginationFeatures = tableFeatures({
   ...dataGridSorting,
+  ...dataGridInlineEdit,
   ...dataGridFiltering,
   ...dataGridPagination,
 });
@@ -114,7 +139,7 @@ const paginationHelper = createColumnHelper<
 const paginationColumns = paginationHelper.columns([
   paginationHelper.accessor('number', { header: 'Number' }),
   paginationHelper.accessor('customer', { header: 'Customer' }),
-  paginationHelper.accessor('amount', { header: 'Amount' }),
+  paginationHelper.accessor('amount', amount),
 ]);
 
 export const Pagination: Story = {
@@ -144,13 +169,14 @@ export const TestPagination: Story = {
 
 const selectionFeatures = tableFeatures({
   ...dataGridSorting,
+  ...dataGridInlineEdit,
   ...dataGridSelection,
 });
 const selectionHelper = createColumnHelper<typeof selectionFeatures, Invoice>();
 const selectionColumns = selectionHelper.columns([
   selectionHelper.accessor('number', { header: 'Number' }),
   selectionHelper.accessor('customer', { header: 'Customer' }),
-  selectionHelper.accessor('amount', { header: 'Amount' }),
+  selectionHelper.accessor('amount', amount),
 ]);
 const selectionOptions = {
   features: selectionFeatures,
@@ -259,13 +285,14 @@ export const TestRowActions: Story = {
 
 const expansionFeatures = tableFeatures({
   ...dataGridExpansion,
+  ...dataGridInlineEdit,
   ...dataGridSelection,
 });
 const expansionHelper = createColumnHelper<typeof expansionFeatures, Invoice>();
 const expansionColumns = expansionHelper.columns([
   expansionHelper.accessor('number', { header: 'Number' }),
   expansionHelper.accessor('customer', { header: 'Customer' }),
-  expansionHelper.accessor('amount', { header: 'Amount' }),
+  expansionHelper.accessor('amount', amount),
 ]);
 
 export const Expansion: Story = {
@@ -302,6 +329,7 @@ export const TestExpansion: Story = {
 
 const customizationFeatures = tableFeatures({
   ...dataGridSorting,
+  ...dataGridInlineEdit,
   ...dataGridColumnCustomization,
 });
 const customizationHelper = createColumnHelper<
@@ -315,7 +343,7 @@ const customizationColumns = customizationHelper.columns([
   }),
   customizationHelper.accessor('customer', { header: 'Customer' }),
   customizationHelper.accessor('status', { header: 'Status' }),
-  customizationHelper.accessor('amount', { header: 'Amount' }),
+  customizationHelper.accessor('amount', amount),
 ]);
 
 export const ColumnCustomization: Story = {
@@ -351,6 +379,7 @@ export const TestColumnCustomization: Story = {
 
 const resizingFeatures = tableFeatures({
   ...dataGridSorting,
+  ...dataGridInlineEdit,
   ...dataGridResizing,
 });
 const resizingHelper = createColumnHelper<typeof resizingFeatures, Invoice>();
@@ -358,7 +387,7 @@ const resizingColumns = resizingHelper.columns([
   resizingHelper.accessor('number', { header: 'Number', size: 140 }),
   resizingHelper.accessor('customer', { header: 'Customer', size: 220 }),
   resizingHelper.accessor('status', { header: 'Status', size: 120 }),
-  resizingHelper.accessor('amount', { header: 'Amount', size: 120 }),
+  resizingHelper.accessor('amount', { ...amount, size: 120 }),
 ]);
 
 export const Resizing: Story = {
@@ -390,6 +419,7 @@ export const TestResizing: Story = {
 
 const stickyFeatures = tableFeatures({
   ...dataGridSorting,
+  ...dataGridInlineEdit,
   ...dataGridSelection,
   ...dataGridStickyColumns,
 });
@@ -404,8 +434,8 @@ const stickyColumns = stickyHelper.columns([
   }),
   stickyHelper.accessor('customer', { header: 'Customer', size: 400 }),
   stickyHelper.accessor('status', { header: 'Status', size: 320 }),
-  stickyHelper.accessor('issued', { header: 'Issued', size: 320 }),
-  stickyHelper.accessor('amount', { header: 'Amount', size: 320 }),
+  stickyHelper.accessor('issued', { ...issued, size: 320 }),
+  stickyHelper.accessor('amount', { ...amount, size: 320 }),
 ]);
 
 /** True when the element's centre is not covered by another element. */
@@ -518,7 +548,11 @@ const editColumns = editHelper.columns([
     header: 'Customer',
     meta: { editable: true },
   }),
-  editHelper.accessor('amount', { header: 'Amount', meta: { editable: true } }),
+  editHelper.accessor('amount', {
+    header: 'Amount',
+    cell: amount.cell,
+    meta: { editable: true },
+  }),
 ]);
 
 function InlineEditDemo() {
@@ -613,7 +647,7 @@ const fullColumns = fullHelper.columns([
     size: 240,
     meta: { editable: true },
   }),
-  fullHelper.accessor('amount', { header: 'Amount', size: 160 }),
+  fullHelper.accessor('amount', { ...amount, size: 160 }),
 ]);
 const fullOptions = {
   features: fullFeatures,
@@ -674,6 +708,7 @@ export const AllFeaturesExtraSmall: Story = {
 
 const panelFeatures = tableFeatures({
   ...dataGridSorting,
+  ...dataGridInlineEdit,
   ...dataGridFiltering,
 });
 const panelHelper = createColumnHelper<typeof panelFeatures, Invoice>();
@@ -689,7 +724,7 @@ const panelColumns = panelHelper.columns([
   panelHelper.accessor('number', { header: 'Number' }),
   panelHelper.accessor('customer', { header: 'Customer', ...oneOf }),
   panelHelper.accessor('status', { header: 'Status', ...oneOf }),
-  panelHelper.accessor('amount', { header: 'Amount' }),
+  panelHelper.accessor('amount', amount),
 ]);
 const panelGroups = [
   {
@@ -756,6 +791,53 @@ export const TestWithFilterPanel: Story = {
     await userEvent.click(canvas.getByRole('checkbox', { name: 'Overdue' }));
     await expect(table.getAllByRole('row')).toHaveLength(9);
   },
+};
+
+const emptyFeatures = tableFeatures({ ...dataGridSorting });
+const emptyHelper = createColumnHelper<typeof emptyFeatures, Invoice>();
+const emptyColumns = emptyHelper.columns([
+  emptyHelper.accessor('number', { header: 'Number' }),
+  emptyHelper.accessor('customer', { header: 'Customer' }),
+  emptyHelper.accessor('amount', { header: 'Amount' }),
+]);
+const noInvoices: Invoice[] = [];
+
+/** `emptyState` replaces the default message in the full-width cell. */
+export const Empty: Story = {
+  render: () => (
+    <DataGrid
+      title="Invoices"
+      options={{
+        features: emptyFeatures,
+        columns: emptyColumns,
+        data: noInvoices,
+      }}
+      emptyState={
+        <NoDataEmptyState
+          size="sm"
+          title="No invoices yet"
+          subtitle="Invoices you create show up here."
+        />
+      }
+    />
+  ),
+};
+
+/** While data loads, render Carbon's `DataTableSkeleton` in place of the grid. */
+export const Skeleton: Story = {
+  render: () => (
+    <DataTableSkeleton
+      headers={[
+        { header: 'Number' },
+        { header: 'Customer' },
+        { header: 'Amount' },
+      ]}
+      columnCount={3}
+      rowCount={5}
+      showHeader
+      showToolbar
+    />
+  ),
 };
 
 export const Dark: Story = {
