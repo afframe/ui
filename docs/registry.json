@@ -3668,7 +3668,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/EditInPlace/EditInPlace.mdx"
     },
     {
       "name": "FullPageError",

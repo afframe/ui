@@ -1,0 +1,70 @@
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as EditInPlaceStories from './EditInPlace.stories';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { FieldChooser } from '../../../.storybook/FieldChooser';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta isTemplate />
+
+# EditInPlace
+
+<SourceLabel name="ibm-products" />
+
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/EditInPlace)
+
+`EditInPlace` shows one text value on a page and lets the user edit it there,
+without a form or a dialog. It is IBM Products' component, re-exported as is.
+The value is controlled: pass `value` and update it in `onChange`.
+
+<Canvas of={EditInPlaceStories.Default} />
+
+## Which component to use
+
+<FieldChooser />
+
+## Usage and props
+
+```tsx
+import { EditInPlace } from '@afframe/ui';
+
+<EditInPlace
+  id="project-name"
+  labelText="Project name"
+  value={name}
+  onChange={setName}
+  onSave={() => api.rename(name)}
+  onCancel={(initial) => setName(initial)}
+  editLabel="Edit"
+  saveLabel="Save"
+  cancelLabel="Cancel"
+/>;
+```
+
+<ArgTypes />
+
+## Keyboard and screen readers
+
+- Enter saves a changed value and leaves edit mode. Escape restores the value
+  from the last save and keeps focus in the field.
+- Moving focus out saves a changed value, unless `onBlur` is set; then
+  `onBlur` receives the last saved value and decides.
+- `labelText` is the input's `aria-label`; there is no visible label.
+
+## States
+
+<Canvas of={EditInPlaceStories.Invalid} />
+
+<Canvas of={EditInPlaceStories.ReadOnly} />
+
+## Afframe notes
+
+- **Error text is not linked.** With `invalid`, the input gets
+  `aria-invalid`, but `invalidText` renders as a plain paragraph with no id,
+  so screen readers do not announce it with the field. The TextInput
+  workaround (`aria-describedby` on the component) does not apply: EditInPlace
+  passes extra props to its wrapper, not to the input. Upstream issue drafted,
+  not filed.
+- **Read-only toggletip stays open.** In `readOnly` mode the toggletip opens
+  on click but does not close when Tab moves focus on. Upstream issue
+  drafted, not filed.

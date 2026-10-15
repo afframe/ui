@@ -338,7 +338,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | ConditionBuilder                   | component | ibm-products | client  | preview-candidate | [page](../src/components/ConditionBuilder/ConditionBuilder.mdx)       |
 | ConditionBuilderContext            | util      | ibm-products | client  | stable            |                                                                       |
 | getEmptyState                      | util      | ibm-products | client  | stable            |                                                                       |
-| EditInPlace                        | component | ibm-products | client  | stable            |                                                                       |
+| EditInPlace                        | component | ibm-products | client  | stable            | [page](../src/components/EditInPlace/EditInPlace.mdx)                 |
 | FullPageError                      | component | ibm-products | client  | stable            | [page](../src/components/FullPageError/FullPageError.mdx)             |
 | Guidebanner                        | component | ibm-products | client  | preview-candidate | [page](../src/components/Guidebanner/Guidebanner.mdx)                 |
 | GuidebannerElement                 | component | ibm-products | client  | preview-candidate |                                                                       |
