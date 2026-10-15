@@ -1,4 +1,8 @@
-import { defaultCurrency, defaultLocale } from './defaults.js';
+import {
+  defaultCurrency,
+  defaultLocale,
+  defaultMaxFractionDigits,
+} from './defaults.js';
 
 // Rounding, zero and NaN rules: src/format/Formatting.mdx.
 
@@ -139,7 +143,7 @@ export function formatNumber(
     intl.maximumSignificantDigits === undefined;
   return numberFormat(locale, {
     signDisplay: 'negative',
-    ...(twoDecimals ? { maximumFractionDigits: 2 } : {}),
+    ...(twoDecimals ? { maximumFractionDigits: defaultMaxFractionDigits } : {}),
     ...intl,
   }).format(value);
 }

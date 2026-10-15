@@ -3,3 +3,4 @@
 export const defaultLocale = 'cs-CZ';
 export const defaultCurrency = 'CZK';
 export const defaultTimeZone = 'Europe/Prague';
+export const defaultMaxFractionDigits = 2;
