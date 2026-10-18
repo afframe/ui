@@ -630,3 +630,136 @@ test('date range: a new end typed into an end-only range stays end-only', async 
   expect(startDate().value).toBe('');
   expect(endDate().value).toBe('20.10.2026');
 });
+
+const issuedGroup: FilterPanelGroup[] = [
+  { id: 'issued', label: 'Issued', variant: 'dateRange' },
+];
+
+function OutsideRange(props: Partial<Omit<FilterPanelProps, 'value'>>) {
+  const [value, setValue] = useState<FilterPanelValue>({
+    issued: ['2026-10-01', '2026-10-05'],
+  });
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setValue({ issued: [null, '2026-10-05'] })}>
+        End only
+      </button>
+      <button type="button" onClick={() => setValue({})}>
+        Empty
+      </button>
+      <FilterPanel
+        groups={issuedGroup}
+        value={value}
+        {...props}
+        onChange={(next) => {
+          props.onChange?.(next);
+          setValue(next);
+        }}
+      />
+    </>
+  );
+}
+
+test('date range: Clear and an outside empty value empty an end-only End', async () => {
+  render(<EndOnly />);
+  await afterClearTimer();
+  await userEvent.click(button('Clear'));
+  await afterClearTimer();
+  expect(endDate().value).toBe('');
+  cleanup();
+  render(<OutsideRange updateMethod="instant" />);
+  await userEvent.click(button('End only'));
+  await afterClearTimer();
+  await userEvent.click(button('Empty'));
+  await afterClearTimer();
+  expect(startDate().value).toBe('');
+  expect(endDate().value).toBe('');
+});
+
+test('date range: a new end typed into an end-only End applies on leaving it', async () => {
+  const onChange = vi.fn();
+  render(<EndOnly onChange={onChange} />);
+  await userEvent.click(endDate());
+  endDate().setSelectionRange(0, endDate().value.length);
+  await userEvent.keyboard('20102026');
+  await userEvent.click(document.body);
+  await afterClearTimer();
+  expect(onChange).toHaveBeenLastCalledWith({ issued: [null, '2026-10-20'] });
+  expect(endDate().value).toBe('20.10.2026');
+});
+
+test('date range: leaving an invalid end-only End removes the filter, marked invalid', async () => {
+  const onChange = vi.fn();
+  render(<EndOnly onChange={onChange} />);
+  await userEvent.click(endDate());
+  endDate().setSelectionRange(0, endDate().value.length);
+  await userEvent.keyboard('3102');
+  await userEvent.click(document.body);
+  await afterClearTimer();
+  expect(onChange).toHaveBeenLastCalledWith({});
+  expect(endDate().value).toBe('31.02.');
+  await vi.waitFor(() =>
+    expect(endDate().getAttribute('aria-invalid')).toBe('true')
+  );
+});
+
+test.each([
+  [15, [null, '2026-10-15']],
+  [25, [null, '2026-10-25']],
+])(
+  'date range: day %i picked from End’s calendar sets an end-only end',
+  async (date, issued) => {
+    const onChange = vi.fn();
+    render(
+      <Harness
+        groups={issuedGroup}
+        initial={{ issued: [null, '2026-10-20'] }}
+        updateMethod="instant"
+        onChange={onChange}
+      />
+    );
+    await afterClearTimer();
+    await userEvent.click(endDate());
+    (
+      startDate() as HTMLInputElement & {
+        _flatpickr: { jumpToDate: (date: Date) => void };
+      }
+    )._flatpickr.jumpToDate(new Date(2026, 9, 1));
+    const day = document.querySelector<HTMLElement>(
+      `.flatpickr-calendar.open .flatpickr-day[aria-label$="October ${date}, 2026"]`
+    );
+    if (!day) throw new Error(`No October ${date} in the open calendar`);
+    await userEvent.click(day);
+    await afterClearTimer();
+    expect(onChange).toHaveBeenLastCalledWith({ issued });
+    expect(startDate().value).toBe('');
+  }
+);
+
+test('date range: an outside change to end-only keeps the filter (instant)', async () => {
+  const onChange = vi.fn();
+  render(<OutsideRange updateMethod="instant" onChange={onChange} />);
+  await userEvent.click(button('End only'));
+  await afterClearTimer();
+  expect(onChange).not.toHaveBeenCalled();
+  expect(startDate().value).toBe('');
+  expect(endDate().value).toBe('05.10.2026');
+});
+
+test('date range: Close in batch returns a picked start to the end-only value', async () => {
+  const onChange = vi.fn();
+  render(
+    <EndOnly updateMethod="batch" onChange={onChange} onClose={() => {}} />
+  );
+  await userEvent.type(startDate(), '01102026{Enter}');
+  await afterClearTimer();
+  expect(button('Apply')).toHaveProperty('disabled', false);
+  await userEvent.click(page.getByRole('button', { name: 'Close' }));
+  await afterClearTimer();
+  expect(button('Apply')).toHaveProperty('disabled', true);
+  expect(startDate().value).toBe('');
+  expect(endDate().value).toBe('05.10.2026');
+  expect(onChange).not.toHaveBeenCalled();
+});
