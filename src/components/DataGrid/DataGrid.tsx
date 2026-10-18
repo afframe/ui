@@ -2,6 +2,7 @@
 // Afframe data grid: TanStack Table state rendered with Carbon DataTable
 // markup. Carbon parts come from @carbon/react directly: importing the
 // package barrel here would be a cycle and would pull the other extras in.
+import { NoDataEmptyState } from '@carbon/ibm-products';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -39,6 +40,7 @@ import {
   Fragment,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
   type ComponentPropsWithoutRef,
@@ -48,9 +50,18 @@ import {
   type Ref,
 } from 'react';
 import { resolveMessages } from '../../messages.js';
+import { FilterSummary } from '../FilterPanel/FilterSummary.js';
+import type { FilterPanelGroup } from '../FilterPanel/value.js';
 import { useMergedRefs } from '../FlowParts/refs.js';
 import { ColumnResizer } from './ColumnResizer.js';
 import { ColumnSettings } from './ColumnSettings.js';
+import {
+  FilterPanelLayout,
+  FilterPanelTrigger,
+  useFilterPanel,
+  withFilterFns,
+  type DataGridFilterPanelSettings,
+} from './DataGridFilterPanel.js';
 import { EditableCell } from './EditableCell.js';
 import {
   defaultDataGridMessages,
@@ -80,15 +91,32 @@ export interface DataGridRowAction<TData extends RowData> {
   onClick: (row: TData) => void;
 }
 
+type Defaulted = 'label' | 'options' | 'min' | 'max';
+
+/**
+ * The filter panel field of a column: a `FilterPanelGroup` without `id`.
+ * `label` defaults to the header text; `options`, and the slider's `min` and
+ * `max`, default to the column's values in the data.
+ */
+// Distributes over the variants; a plain Omit would merge them into one type.
+export type DataGridColumnFilter = FilterPanelGroup extends infer Group
+  ? Group extends FilterPanelGroup
+    ? Omit<Group, 'id' | Defaulted> &
+        Partial<Pick<Group, Extract<keyof Group, Defaulted>>>
+    : never
+  : never;
+
 /**
  * Column meta read by the grid; register it with `dataGridColumnMeta`, or with
- * `dataGridInlineEdit` for editable columns.
+ * `dataGridInlineEdit` for editable columns, or `dataGridFilterPanel`.
  */
 export interface DataGridColumnMeta {
   /** The column's cells can be edited inline. */
   editable?: boolean;
   /** Aligns the header and cells; `'end'` for amounts and other numbers. */
   align?: 'start' | 'end';
+  /** A field for the column in the filter panel (`dataGridFilterPanel`). */
+  filter?: DataGridColumnFilter;
 }
 
 /** A saved inline edit. */
@@ -141,9 +169,23 @@ export interface DataGridProps<
   pageSizes?: number[];
   /**
    * Shown in one full-width cell when there are no rows, in place of the
-   * `emptyState` message; for example an `EmptyState`.
+   * `emptyState` message; for example an `EmptyState`. Also shown when
+   * filters leave no rows, unless `filteredEmptyState` is set.
    */
   emptyState?: ReactNode;
+  /**
+   * Shown when filters or the search leave no rows. Default: `emptyState`,
+   * else a `NoDataEmptyState` with the `filteredEmpty` messages.
+   */
+  filteredEmptyState?: ReactNode;
+  /**
+   * Shown between the toolbar and the table, for example a FilterSummary.
+   * With `dataGridFilterPanel` the grid shows its own summary unless this is
+   * set; `null` hides it.
+   */
+  filterSummary?: ReactNode;
+  /** The filter panel of `dataGridFilterPanel`. */
+  filterPanel?: DataGridFilterPanelSettings;
   messages?: Partial<DataGridMessages>;
 }
 
@@ -202,6 +244,9 @@ export function DataGrid<
   getRowLabel,
   virtualize = false,
   emptyState,
+  filteredEmptyState,
+  filterSummary,
+  filterPanel,
   messages,
   className,
   ref,
@@ -209,12 +254,22 @@ export function DataGrid<
   ...rest
 }: DataGridProps<TFeatures, TData>) {
   const text = resolveMessages(defaultDataGridMessages, messages);
+  const { columns: columnDefs } = options;
+  const filterable = 'columnFilteringFeature' in options.features;
+  // Filter panel columns get their filter function by name.
+  const filterColumns = useMemo(
+    () => (filterable ? withFilterFns(columnDefs) : columnDefs),
+    [filterable, columnDefs]
+  );
   // A detail panel can open on every row unless the app decides per row.
-  const tableOptions =
-    renderExpandedRow && !('getRowCanExpand' in options)
-      ? { ...options, getRowCanExpand: always }
-      : options;
+  const tableOptions = {
+    ...options,
+    columns: filterColumns,
+    ...(renderExpandedRow &&
+      !('getRowCanExpand' in options) && { getRowCanExpand: always }),
+  };
   const table = useTable(tableOptions) as unknown as Grid<TData>;
+  const panel = useFilterPanel(table, columnLabel, filterPanel);
   const id = useId();
   const has = (feature: keyof StockFeatures) => feature in table._features;
   const sorting = has('rowSortingFeature');
@@ -235,7 +290,7 @@ export function DataGrid<
     : table.getCoreRowModel().flatRows.length;
   const batchOpen = batching && selected.length > 0;
   const customizing = has('columnVisibilityFeature');
-  const toolbar = filtering || batching || customizing;
+  const toolbar = filtering || batching || customizing || panel !== undefined;
   const acting = rowActions !== undefined && rowActions.length > 0;
   const menuSize = size === 'xl' ? 'lg' : size;
   const inputSize =
@@ -252,6 +307,31 @@ export function DataGrid<
       ? table.getVisibleLeafColumns()
       : table.getAllLeafColumns();
   const rows = table.getRowModel().rows;
+  const filtersSet =
+    (has('columnFilteringFeature') && table.state.columnFilters.length > 0) ||
+    (filtering && Boolean(table.state.globalFilter));
+  const filteredEmpty =
+    rows.length === 0 && filtersSet && table.getCoreRowModel().rows.length > 0;
+  // Upstream's empty state layout fits only the default NoDataEmptyState.
+  const defaultFilteredEmpty =
+    filteredEmpty &&
+    filteredEmptyState === undefined &&
+    emptyState === undefined;
+  const wrap = (content: ReactNode) =>
+    panel ? (
+      <FilterPanelLayout
+        panel={panel}
+        settings={filterPanel}
+        resultCount={
+          paginating
+            ? table.getRowCount()
+            : table.getFilteredRowModel().rows.length
+        }>
+        {content}
+      </FilterPanelLayout>
+    ) : (
+      content
+    );
   const cellsOf = (row: (typeof rows)[number]) =>
     pinning
       ? [
@@ -431,6 +511,7 @@ export function DataGrid<
             </TableBatchActions>
           )}
           <TableToolbarContent aria-hidden={batchOpen} inert={batchOpen}>
+            {panel && <FilterPanelTrigger panel={panel} />}
             {filtering && (
               <TableToolbarSearch
                 persistent
@@ -447,261 +528,292 @@ export function DataGrid<
           </TableToolbarContent>
         </TableToolbar>
       )}
-      <Table
-        {...(size && { size })}
-        useZebraStyles={useZebraStyles ?? false}
-        isSortable={sorting}
-        {...(virtual && { 'aria-rowcount': rows.length + headerRows })}>
-        {sizing && (
-          <colgroup>
-            {expanding && <col className="afframe-data-grid__control" />}
-            {selecting && <col className="afframe-data-grid__control" />}
-            {columns.map((column) => (
-              <col key={column.id} style={{ inlineSize: column.getSize() }} />
-            ))}
-            {acting && <col className="afframe-data-grid__control" />}
-          </colgroup>
-        )}
-        <TableHead>
-          {table.getHeaderGroups().map((group, depth) => (
-            <TableRow
-              key={group.id}
-              {...(virtual && { 'aria-rowindex': depth + 1 })}>
-              {expanding &&
-                (depth === lastGroup ? (
-                  <TableExpandHeader
-                    id={`${id}-expand`}
-                    enableToggle
-                    aria-label={text.expandAll}
-                    isExpanded={table.getIsAllRowsExpanded()}
-                    onExpand={() => table.toggleAllRowsExpanded()}
+      {filterSummary !== undefined
+        ? filterSummary
+        : panel && (
+            <FilterSummary
+              groups={panel.groups}
+              value={panel.value}
+              onChange={panel.onChange}
+              {...(filterPanel?.summaryMessages && {
+                messages: filterPanel.summaryMessages,
+              })}
+            />
+          )}
+      {wrap(
+        <>
+          <Table
+            {...(size && { size })}
+            useZebraStyles={useZebraStyles ?? false}
+            isSortable={sorting}
+            {...(virtual && { 'aria-rowcount': rows.length + headerRows })}>
+            {sizing && (
+              <colgroup>
+                {expanding && <col className="afframe-data-grid__control" />}
+                {selecting && <col className="afframe-data-grid__control" />}
+                {columns.map((column) => (
+                  <col
+                    key={column.id}
+                    style={{ inlineSize: column.getSize() }}
                   />
-                ) : (
-                  <TableHeader />
                 ))}
-              {selecting &&
-                (depth === lastGroup ? (
-                  <TableSelectAll
-                    id={`${id}-select-all`}
-                    name={`${id}-select`}
-                    aria-label={text.selectAll}
-                    checked={table.getIsAllRowsSelected()}
-                    indeterminate={
-                      table.getIsSomeRowsSelected() &&
-                      !table.getIsAllRowsSelected()
-                    }
-                    onSelect={() => table.toggleAllRowsSelected()}
-                  />
-                ) : (
-                  <TableHeader />
-                ))}
-              {group.headers.map((header) => {
-                const { column } = header;
-                const sortable = sorting && column.getCanSort();
-                const sorted = sortable ? column.getIsSorted() : false;
-                const pin = sticky(column);
-                const align = alignClass(column);
-                return (
-                  <TableHeader
-                    key={header.id}
-                    {...(align && { className: align })}
-                    {...(pin && {
-                      className: [pin.className, align]
-                        .filter(Boolean)
-                        .join(' '),
-                      // Carbon passes `style` to the sort button, not the th.
-                      ref: (th: HTMLTableCellElement | null) =>
-                        th?.style.setProperty(
-                          '--afframe-data-grid-sticky',
-                          pin.offset
-                        ),
-                    })}
-                    colSpan={header.colSpan}
-                    isSortable={sortable}
-                    isSortHeader={sorted !== false}
-                    sortDirection={sorted ? carbonSort[sorted] : 'NONE'}
-                    {...(sortable && {
-                      onClick: (event) =>
-                        column.getToggleSortingHandler()?.(event),
-                    })}
-                    translateWithId={() =>
-                      text.sortDescription(
-                        columnLabel(column),
-                        nextSortAction(column)
-                      )
-                    }
-                    {...(resizing &&
-                      column.getCanResize() &&
-                      !header.isPlaceholder && {
-                        decorator: (
-                          <ColumnResizer
-                            header={header}
-                            label={text.resizeColumn(columnLabel(column))}
-                          />
-                        ),
-                      })}>
-                    {header.isPlaceholder ? null : (
-                      <table.FlexRender header={header} />
+                {acting && <col className="afframe-data-grid__control" />}
+              </colgroup>
+            )}
+            <TableHead>
+              {table.getHeaderGroups().map((group, depth) => (
+                <TableRow
+                  key={group.id}
+                  {...(virtual && { 'aria-rowindex': depth + 1 })}>
+                  {expanding &&
+                    (depth === lastGroup ? (
+                      <TableExpandHeader
+                        id={`${id}-expand`}
+                        enableToggle
+                        aria-label={text.expandAll}
+                        isExpanded={table.getIsAllRowsExpanded()}
+                        onExpand={() => table.toggleAllRowsExpanded()}
+                      />
+                    ) : (
+                      <TableHeader />
+                    ))}
+                  {selecting &&
+                    (depth === lastGroup ? (
+                      <TableSelectAll
+                        id={`${id}-select-all`}
+                        name={`${id}-select`}
+                        aria-label={text.selectAll}
+                        checked={table.getIsAllRowsSelected()}
+                        indeterminate={
+                          table.getIsSomeRowsSelected() &&
+                          !table.getIsAllRowsSelected()
+                        }
+                        onSelect={() => table.toggleAllRowsSelected()}
+                      />
+                    ) : (
+                      <TableHeader />
+                    ))}
+                  {group.headers.map((header) => {
+                    const { column } = header;
+                    const sortable = sorting && column.getCanSort();
+                    const sorted = sortable ? column.getIsSorted() : false;
+                    const pin = sticky(column);
+                    const align = alignClass(column);
+                    return (
+                      <TableHeader
+                        key={header.id}
+                        {...(align && { className: align })}
+                        {...(pin && {
+                          className: [pin.className, align]
+                            .filter(Boolean)
+                            .join(' '),
+                          // Carbon passes `style` to the sort button, not the th.
+                          ref: (th: HTMLTableCellElement | null) =>
+                            th?.style.setProperty(
+                              '--afframe-data-grid-sticky',
+                              pin.offset
+                            ),
+                        })}
+                        colSpan={header.colSpan}
+                        isSortable={sortable}
+                        isSortHeader={sorted !== false}
+                        sortDirection={sorted ? carbonSort[sorted] : 'NONE'}
+                        {...(sortable && {
+                          onClick: (event) =>
+                            column.getToggleSortingHandler()?.(event),
+                        })}
+                        translateWithId={() =>
+                          text.sortDescription(
+                            columnLabel(column),
+                            nextSortAction(column)
+                          )
+                        }
+                        {...(resizing &&
+                          column.getCanResize() &&
+                          !header.isPlaceholder && {
+                            decorator: (
+                              <ColumnResizer
+                                header={header}
+                                label={text.resizeColumn(columnLabel(column))}
+                              />
+                            ),
+                          })}>
+                        {header.isPlaceholder ? null : (
+                          <table.FlexRender header={header} />
+                        )}
+                      </TableHeader>
+                    );
+                  })}
+                  {acting && (
+                    <TableHeader className="cds--table-column-menu">
+                      {depth === lastGroup && (
+                        <span className="cds--visually-hidden">
+                          {text.rowActionsHeader}
+                        </span>
+                      )}
+                    </TableHeader>
+                  )}
+                </TableRow>
+              ))}
+            </TableHead>
+            <TableBody>
+              {spacer(before)}
+              {windowRows.map(({ row, index }) => {
+                const cells = (
+                  <>
+                    {selecting && (
+                      <TableSelectRow
+                        id={`${id}-select-${row.id}`}
+                        name={`${id}-select`}
+                        aria-label={text.selectRow(rowLabel(row))}
+                        checked={row.getIsSelected()}
+                        disabled={!row.getCanSelect()}
+                        onSelect={() => row.toggleSelected()}
+                      />
                     )}
-                  </TableHeader>
+                    {cellsOf(row).map((cell, index) => (
+                      <TableCell key={cell.id} {...cellClass(cell.column)}>
+                        {onCellEdit &&
+                        (
+                          cell.column.columnDef.meta as
+                            DataGridColumnMeta | undefined
+                        )?.editable ? (
+                          <EditableCell
+                            value={cell.getValue()}
+                            label={text.editCell(
+                              columnLabel(cell.column),
+                              rowLabel(row)
+                            )}
+                            size={inputSize}
+                            onSave={(value) =>
+                              onCellEdit({
+                                row: row.original,
+                                rowId: row.id,
+                                columnId: cell.column.id,
+                                value,
+                              })
+                            }>
+                            <table.FlexRender cell={cell} />
+                          </EditableCell>
+                        ) : index === 0 && row.depth > 0 ? (
+                          // Nested rows: the first cell is indented by depth.
+                          <span
+                            className="afframe-data-grid__nested"
+                            style={
+                              {
+                                '--afframe-data-grid-depth': row.depth,
+                              } as CSSProperties
+                            }>
+                            <table.FlexRender cell={cell} />
+                          </span>
+                        ) : (
+                          <table.FlexRender cell={cell} />
+                        )}
+                      </TableCell>
+                    ))}
+                    {acting && (
+                      <TableCell className="cds--table-column-menu">
+                        <OverflowMenu
+                          aria-label={text.rowActions(rowLabel(row))}
+                          iconDescription={text.rowActions(rowLabel(row))}
+                          flipped
+                          {...(menuSize && { size: menuSize })}>
+                          {rowActions.map((action) => (
+                            <OverflowMenuItem
+                              key={action.id}
+                              itemText={action.label}
+                              isDelete={action.danger ?? false}
+                              onClick={() => action.onClick(row.original)}
+                            />
+                          ))}
+                        </OverflowMenu>
+                      </TableCell>
+                    )}
+                  </>
+                );
+                const isSelected = selecting && row.getIsSelected();
+                if (!expanding)
+                  return (
+                    <TableRow
+                      key={row.id}
+                      isSelected={isSelected}
+                      {...position(index)}>
+                      {cells}
+                    </TableRow>
+                  );
+                // Nested rows: a row without children keeps an empty expand cell.
+                if (!renderExpandedRow && !row.getCanExpand())
+                  return (
+                    <TableRow
+                      key={row.id}
+                      isSelected={isSelected}
+                      {...position(index)}>
+                      <TableCell className="cds--table-expand" />
+                      {cells}
+                    </TableRow>
+                  );
+                const detailId = `${id}-detail-${row.id}`;
+                const open = row.getIsExpanded();
+                return (
+                  <Fragment key={row.id}>
+                    <TableExpandRow
+                      aria-label={text.expandRow(rowLabel(row))}
+                      {...(renderExpandedRow && { 'aria-controls': detailId })}
+                      expandHeader={`${id}-expand`}
+                      isExpanded={open}
+                      isSelected={isSelected}
+                      {...position(index)}
+                      onExpand={() => row.toggleExpanded()}>
+                      {cells}
+                    </TableExpandRow>
+                    {open && renderExpandedRow && (
+                      <TableExpandedRow id={detailId} colSpan={span}>
+                        {renderExpandedRow(row.original)}
+                      </TableExpandedRow>
+                    )}
+                  </Fragment>
                 );
               })}
-              {acting && (
-                <TableHeader className="cds--table-column-menu">
-                  {depth === lastGroup && (
-                    <span className="cds--visually-hidden">
-                      {text.rowActionsHeader}
-                    </span>
-                  )}
-                </TableHeader>
+              {spacer(after)}
+              {rows.length === 0 && (
+                <TableRow
+                  {...(defaultFilteredEmpty && {
+                    className: 'afframe-data-grid__filtered-empty',
+                  })}>
+                  <TableCell colSpan={span}>
+                    {filteredEmpty
+                      ? (filteredEmptyState ??
+                        emptyState ?? (
+                          <NoDataEmptyState
+                            size="sm"
+                            title={text.filteredEmptyTitle}
+                            subtitle={text.filteredEmptySubtitle}
+                          />
+                        ))
+                      : (emptyState ?? text.emptyState)}
+                  </TableCell>
+                </TableRow>
               )}
-            </TableRow>
-          ))}
-        </TableHead>
-        <TableBody>
-          {spacer(before)}
-          {windowRows.map(({ row, index }) => {
-            const cells = (
-              <>
-                {selecting && (
-                  <TableSelectRow
-                    id={`${id}-select-${row.id}`}
-                    name={`${id}-select`}
-                    aria-label={text.selectRow(rowLabel(row))}
-                    checked={row.getIsSelected()}
-                    disabled={!row.getCanSelect()}
-                    onSelect={() => row.toggleSelected()}
-                  />
-                )}
-                {cellsOf(row).map((cell, index) => (
-                  <TableCell key={cell.id} {...cellClass(cell.column)}>
-                    {onCellEdit &&
-                    (
-                      cell.column.columnDef.meta as
-                        DataGridColumnMeta | undefined
-                    )?.editable ? (
-                      <EditableCell
-                        value={cell.getValue()}
-                        label={text.editCell(
-                          columnLabel(cell.column),
-                          rowLabel(row)
-                        )}
-                        size={inputSize}
-                        onSave={(value) =>
-                          onCellEdit({
-                            row: row.original,
-                            rowId: row.id,
-                            columnId: cell.column.id,
-                            value,
-                          })
-                        }>
-                        <table.FlexRender cell={cell} />
-                      </EditableCell>
-                    ) : index === 0 && row.depth > 0 ? (
-                      // Nested rows: the first cell is indented by depth.
-                      <span
-                        className="afframe-data-grid__nested"
-                        style={
-                          {
-                            '--afframe-data-grid-depth': row.depth,
-                          } as CSSProperties
-                        }>
-                        <table.FlexRender cell={cell} />
-                      </span>
-                    ) : (
-                      <table.FlexRender cell={cell} />
-                    )}
-                  </TableCell>
-                ))}
-                {acting && (
-                  <TableCell className="cds--table-column-menu">
-                    <OverflowMenu
-                      aria-label={text.rowActions(rowLabel(row))}
-                      iconDescription={text.rowActions(rowLabel(row))}
-                      flipped
-                      {...(menuSize && { size: menuSize })}>
-                      {rowActions.map((action) => (
-                        <OverflowMenuItem
-                          key={action.id}
-                          itemText={action.label}
-                          isDelete={action.danger ?? false}
-                          onClick={() => action.onClick(row.original)}
-                        />
-                      ))}
-                    </OverflowMenu>
-                  </TableCell>
-                )}
-              </>
-            );
-            const isSelected = selecting && row.getIsSelected();
-            if (!expanding)
-              return (
-                <TableRow
-                  key={row.id}
-                  isSelected={isSelected}
-                  {...position(index)}>
-                  {cells}
-                </TableRow>
-              );
-            // Nested rows: a row without children keeps an empty expand cell.
-            if (!renderExpandedRow && !row.getCanExpand())
-              return (
-                <TableRow
-                  key={row.id}
-                  isSelected={isSelected}
-                  {...position(index)}>
-                  <TableCell className="cds--table-expand" />
-                  {cells}
-                </TableRow>
-              );
-            const detailId = `${id}-detail-${row.id}`;
-            const open = row.getIsExpanded();
-            return (
-              <Fragment key={row.id}>
-                <TableExpandRow
-                  aria-label={text.expandRow(rowLabel(row))}
-                  {...(renderExpandedRow && { 'aria-controls': detailId })}
-                  expandHeader={`${id}-expand`}
-                  isExpanded={open}
-                  isSelected={isSelected}
-                  {...position(index)}
-                  onExpand={() => row.toggleExpanded()}>
-                  {cells}
-                </TableExpandRow>
-                {open && renderExpandedRow && (
-                  <TableExpandedRow id={detailId} colSpan={span}>
-                    {renderExpandedRow(row.original)}
-                  </TableExpandedRow>
-                )}
-              </Fragment>
-            );
-          })}
-          {spacer(after)}
-          {rows.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={span}>
-                {emptyState ?? text.emptyState}
-              </TableCell>
-            </TableRow>
+            </TableBody>
+          </Table>
+          {paginating && (
+            <Pagination
+              page={table.state.pagination.pageIndex + 1}
+              pageSize={table.state.pagination.pageSize}
+              pageSizes={pageSizes}
+              totalItems={table.getRowCount()}
+              backwardText={text.previousPage}
+              forwardText={text.nextPage}
+              itemsPerPageText={text.itemsPerPage}
+              itemRangeText={text.itemRange}
+              pageRangeText={text.pageRange}
+              pageSelectLabelText={text.pageSelectLabel}
+              onChange={({ page, pageSize }) =>
+                table.setPagination({ pageIndex: page - 1, pageSize })
+              }
+            />
           )}
-        </TableBody>
-      </Table>
-      {paginating && (
-        <Pagination
-          page={table.state.pagination.pageIndex + 1}
-          pageSize={table.state.pagination.pageSize}
-          pageSizes={pageSizes}
-          totalItems={table.getRowCount()}
-          backwardText={text.previousPage}
-          forwardText={text.nextPage}
-          itemsPerPageText={text.itemsPerPage}
-          itemRangeText={text.itemRange}
-          pageRangeText={text.pageRange}
-          pageSelectLabelText={text.pageSelectLabel}
-          onChange={({ page, pageSize }) =>
-            table.setPagination({ pageIndex: page - 1, pageSize })
-          }
-        />
+        </>
       )}
     </TableContainer>
   );

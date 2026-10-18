@@ -1,0 +1,43 @@
+// Filter summary styles, Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+
+.afframe-filter-summary {
+  display: flex;
+  align-items: center;
+  gap: $spacing-03;
+}
+
+.afframe-filter-summary-tags {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+/* stylelint-disable selector-class-pattern -- Carbon's and IBM's BEM class names */
+
+// TagOverflow leaves a bottom margin on tags and "+N" for wrapped lines; in
+// the one-line bar it pushes them above the centre.
+.afframe-filter-summary
+  :is(.c4p--tag-overflow__item--tag, .c4p--tag-overflow__indicator) {
+  margin-block-end: 0;
+}
+
+// IBM's TagOverflow caps every span in a tag (`.c4p--tag-overflow__item--tag
+// span`: 6rem, overflow hidden, inline-block). In a DismissibleTag the first
+// span wraps the label and the dismiss button, so the button gets cut off,
+// and the closed dismiss tooltip shows. Without the cap the label keeps
+// Carbon's own ellipsis at the tag's maximum width.
+.afframe-filter-summary .c4p--tag-overflow__item--tag span {
+  overflow: visible;
+  max-inline-size: none;
+}
+
+.afframe-filter-summary .c4p--tag-overflow__item--tag .cds--tag__label {
+  overflow: hidden;
+}
+
+.afframe-filter-summary
+  .c4p--tag-overflow__item--tag
+  .cds--popover-container:not(.cds--popover--open)
+  :is(.cds--popover-content, .cds--popover-caret) {
+  display: none;
+}

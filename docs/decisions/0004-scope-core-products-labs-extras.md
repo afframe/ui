@@ -2,11 +2,11 @@
 
 Date: 2026-10-05
 
-Amended: 2026-10-15
+Amended: 2026-10-18
 
 ## Status
 
-Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the render checks run without the v12 flags. Amended 2026-10-15: Carbon's utilities. Amended by [ADR 0021](0021-system-date-and-time-format-and-input-masks.md): the date and time pickers are wrapped.
+Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the render checks run without the v12 flags. Amended 2026-10-15: Carbon's utilities. Amended by [ADR 0021](0021-system-date-and-time-format-and-input-masks.md): the date and time pickers are wrapped. Amended by [ADR 0022](0022-filtering-follows-tanstack-carbon.md): the filter panel follows Carbon's tanstack-carbon examples.
 
 ## Context
 
@@ -21,7 +21,7 @@ In scope:
 - IBM Products (`@carbon/ibm-products`): the non-deprecated components (the deprecated `CreateFullPage`, `CreateTearsheet` and `Saving` are dropped), including the onboarding set, AddSelect, ConditionBuilder, ScrollGradient and the selected preview and preview-candidate components.
 - Carbon Labs: every live Labs React package, except `@carbon-labs/react-style-picker` (cannot be installed), `@carbon-labs/react-plane-stack-3d` (React 18 only), `@carbon-labs/react-date-picker` (replaced by the core `DatePicker`), `@carbon-labs/react-animated-header` (global theme CSS and IBM brand assets), `@carbon-labs/react-registration-flow` (only its wrapper is published), `@carbon-labs/react-split-panel` (deprecated), `@carbon-labs/react-example-button` (scaffold), `@carbon-labs/mdx-components` and `@carbon-labs/vscode-snippets` (no use in the package). Each exclusion is rechecked on a Labs release.
 - Extras: Carbon Charts, Apache ECharts with `@carbon/echarts-theme`, `@carbon/ai-chat`, a data grid on TanStack Table with Carbon DataTable styling (built feature by feature), business formatting.
-- Afframe improvements where Carbon has gaps (filter panel, create and edit dialogs, status indicator, description list and similar).
+- Afframe improvements where Carbon has gaps (filter panel, see [ADR 0022](0022-filtering-follows-tanstack-carbon.md); create and edit dialogs, status indicator, description list and similar).
 
 Out: other frameworks, deprecated and archived packages, marketing sections, dead Labs experiments, Figma and other design-tool parity, and new pages, sections and templates (built later, only when a real use needs one).
 

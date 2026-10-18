@@ -59,8 +59,12 @@ export interface DataGridMessages {
   resizeColumn: (column: string) => string;
   /** Inline edit: name of a cell's edit button and field. */
   editCell: (column: string, row: string) => string;
-  /** Shown in the body when the table has no rows to show. */
+  /** Shown in the body when the data has no rows. */
   emptyState: string;
+  /** Title of the empty state when filters or the search leave no rows. */
+  filteredEmptyTitle: string;
+  /** Subtitle of the empty state when filters or the search leave no rows. */
+  filteredEmptySubtitle: string;
 }
 
 export const defaultDataGridMessages: DataGridMessages = {
@@ -98,4 +102,7 @@ export const defaultDataGridMessages: DataGridMessages = {
   resizeColumn: (column) => `Resize ${column} column`,
   editCell: (column, row) => `Edit ${column} of row ${row}`,
   emptyState: 'No rows to show',
+  filteredEmptyTitle: 'No results found',
+  filteredEmptySubtitle:
+    "Try adjusting your search or filter options to find what you're looking for.",
 };

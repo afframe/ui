@@ -490,8 +490,7 @@ test('controlled range: a reset empties an end date kept invalid', async () => {
   await leave();
   await expectKeptInvalid('31.02.', 'To');
   expect(input('From').value).toBe('01.10.2026');
-  // The open calendar covers the button; the app resets on its own.
-  screen.getByRole('button', { name: 'Reset' }).click();
+  await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
   await settle();
   expect(input('From').value).toBe('');
   expect(input('To').value).toBe('');
@@ -534,5 +533,211 @@ test('range: a new date from the app drops an end kept invalid, with only the en
   await expectKeptInvalid('31.02.', 'To');
   rerender(<Range value={[october(1), october(20)]} />);
   await vi.waitFor(() => expect(input('To').value).toBe('20.10.2026'));
+  expect(input('To').getAttribute('aria-invalid')).toBeNull();
+});
+
+function AppRange({ next }: { next: Date[] }) {
+  const [value, setValue] = useState<Date[]>([]);
+  return (
+    <>
+      <DatePicker datePickerType="range" value={value} onChange={setValue}>
+        <DatePickerInput id="from" labelText="From" />
+        <DatePickerInput id="to" labelText="To" />
+      </DatePicker>
+      <button type="button" onClick={() => setValue(next)}>
+        Set
+      </button>
+    </>
+  );
+}
+
+const calendarOpen = () =>
+  document.querySelector('.flatpickr-calendar.open') !== null;
+
+async function typeRange() {
+  await userEvent.type(input('From'), '01102026');
+  await userEvent.type(input('To'), '05102026{Enter}');
+  await settle();
+}
+
+test.each([
+  ['a new range', [october(10), october(12)]],
+  ['an empty value', []],
+])(
+  'range: after the end had focus, %s from the app leaves focus where it is',
+  async (_, next) => {
+    render(<AppRange next={next} />);
+    await typeRange();
+    const set = screen.getByRole('button', { name: 'Set' });
+    set.focus();
+    set.click();
+    await settle();
+    expect(document.activeElement).toBe(set);
+    expect(calendarOpen()).toBe(false);
+  }
+);
+
+test('range: leaving a typed end keeps focus outside', async () => {
+  render(<AppRange next={[]} />);
+  await userEvent.type(input('From'), '01102026');
+  await userEvent.type(input('To'), '05102026');
+  await leave();
+  await settle();
+  expect(document.activeElement).toBe(document.body);
+  expect(calendarOpen()).toBe(false);
+});
+
+test('range: an end kept invalid on leave keeps focus outside', async () => {
+  render(<ControlledRange initial={[october(1), october(5)]} />);
+  await retype('3102', 'To');
+  await leave();
+  await settle();
+  await expectKeptInvalid('31.02.', 'To');
+  expect(document.activeElement).toBe(document.body);
+  expect(calendarOpen()).toBe(false);
+});
+
+test('range: a day picked with the end focused returns focus to the end', async () => {
+  render(<ControlledRange />);
+  await userEvent.click(input('To'));
+  const day = document.querySelector<HTMLElement>(
+    '.flatpickr-calendar.open .flatpickr-day[aria-label$="10, 2026"]'
+  );
+  if (!day) throw new Error('No day 10 in the open calendar');
+  await userEvent.click(day);
+  await vi.waitFor(() => expect(document.activeElement).toBe(input('To')));
+  expect(calendarOpen()).toBe(true);
+});
+
+type WithPicker = HTMLInputElement & {
+  _flatpickr: { setDate: (dates: Date[], triggerChange: boolean) => void };
+};
+
+test('range: a change while the last change’s guard ends leaves focus where it is', async () => {
+  render(<AppRange next={[]} />);
+  await typeRange();
+  const picker = (input('From') as WithPicker)._flatpickr;
+  const outside = screen.getByRole('button', { name: 'Set' });
+  outside.focus();
+  picker.setDate([october(10), october(12)], true);
+  // One timer turn: the first change's guard has one turn left.
+  await new Promise((resolve) => setTimeout(resolve));
+  picker.setDate([october(14), october(16)], true);
+  await settle();
+  expect(document.activeElement).toBe(outside);
+  expect(calendarOpen()).toBe(false);
+});
+
+function TypedRange() {
+  return (
+    <DatePicker datePickerType="range">
+      <DatePickerInput id="from" labelText="From" />
+      <DatePickerInput id="to" labelText="To" />
+    </DatePicker>
+  );
+}
+
+async function expectCaretAtEndStart() {
+  await vi.waitFor(() => expect(document.activeElement).toBe(input('To')));
+  await settle();
+  expect(document.activeElement).toBe(input('To'));
+  expect(input('To').selectionStart).toBe(0);
+  expect(input('To').selectionEnd).toBe(0);
+}
+
+test('range: a typed full start moves focus to the end, where typing goes on', async () => {
+  render(<TypedRange />);
+  await userEvent.type(input('From'), '01102026');
+  await expectCaretAtEndStart();
+  await userEvent.keyboard('05102026');
+  expect(input('To').value).toBe('05.10.2026');
+  expect(input('From').value).toBe('01.10.2026');
+});
+
+test('range: a typed full start moves to an end that holds a date, caret first', async () => {
+  render(<ControlledRange initial={[october(1), october(5)]} />);
+  await retype('02102026', 'From');
+  await expectCaretAtEndStart();
+});
+
+test.each([
+  ['an incomplete date', '0110', '01.10.'],
+  ['an impossible date', '31022026', '31.02.2026'],
+])('range: %s in the start keeps focus there', async (_, keys, text) => {
+  render(<TypedRange />);
+  await userEvent.type(input('From'), keys);
+  await settle();
+  expect(input('From').value).toBe(text);
+  expect(document.activeElement).toBe(input('From'));
+});
+
+test('range: editing a digit inside a full start keeps focus there', async () => {
+  render(<ControlledRange initial={[october(1), october(5)]} />);
+  await userEvent.click(input('From'));
+  // Over a digit: the start was full before the edit.
+  input('From').setSelectionRange(1, 2);
+  await userEvent.keyboard('2');
+  await settle();
+  expect(input('From').value).toBe('02.10.2026');
+  expect(document.activeElement).toBe(input('From'));
+  // Deleted, then typed back: the caret is not at the end.
+  input('From').setSelectionRange(2, 2);
+  await userEvent.keyboard('{Backspace}3');
+  await settle();
+  expect(input('From').value).toBe('03.10.2026');
+  expect(document.activeElement).toBe(input('From'));
+});
+
+test('range: a full date pasted into the start moves focus to the end', async () => {
+  render(<TypedRange />);
+  await userEvent.click(input('From'));
+  input('From').dispatchEvent(
+    new InputEvent('beforeinput', {
+      inputType: 'insertFromPaste',
+      data: '01.10.2026',
+      bubbles: true,
+      cancelable: true,
+    })
+  );
+  expect(input('From').value).toBe('01.10.2026');
+  await expectCaretAtEndStart();
+});
+
+test('range: a start day picked in the calendar leaves focus as flatpickr does', async () => {
+  render(<ControlledRange />);
+  await userEvent.click(input('From'));
+  const day = document.querySelector<HTMLElement>(
+    '.flatpickr-calendar.open .flatpickr-day[aria-label$="10, 2026"]'
+  );
+  if (!day) throw new Error('No day 10 in the open calendar');
+  await userEvent.click(day);
+  await settle();
+  expect(input('From').value).toBe('10.10.2026');
+  expect(document.activeElement).not.toBe(input('To'));
+});
+
+test('range: leaving after the start moved focus to the end keeps focus outside', async () => {
+  render(<AppRange next={[]} />);
+  await userEvent.type(input('From'), '01102026');
+  await vi.waitFor(() => expect(document.activeElement).toBe(input('To')));
+  await leave();
+  await settle();
+  expect(document.activeElement).toBe(document.body);
+  expect(calendarOpen()).toBe(false);
+  expect(input('From').value).toBe('01.10.2026');
+  expect(input('From').getAttribute('aria-invalid')).toBeNull();
+  expect(input('To').value).toBe('');
+  expect(input('To').getAttribute('aria-invalid')).toBeNull();
+});
+
+test('range: Enter after the start moved focus to the end keeps both valid', async () => {
+  render(<AppRange next={[]} />);
+  await userEvent.type(input('From'), '01102026');
+  await vi.waitFor(() => expect(document.activeElement).toBe(input('To')));
+  await userEvent.keyboard('{Enter}');
+  await settle();
+  expect(input('From').value).toBe('01.10.2026');
+  expect(input('From').getAttribute('aria-invalid')).toBeNull();
+  expect(input('To').value).toBe('');
   expect(input('To').getAttribute('aria-invalid')).toBeNull();
 });

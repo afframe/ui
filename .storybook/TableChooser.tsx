@@ -17,7 +17,7 @@ const rows = [
     link('DataTableSkeleton', 'components-datatable-skeleton'),
   ],
   [
-    'Filter by checkbox groups, in a side panel or a toolbar popover',
+    'Filter fields of eight kinds, in a side panel or a toolbar flyout; DataGrid has its own filter panel feature',
     link('FilterPanel', 'components-filterpanel'),
   ],
   [

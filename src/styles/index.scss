@@ -31,6 +31,7 @@
 @use 'add-select';
 @use '../components/DataGrid/data-grid';
 @use '../components/FilterPanel/filter-panel';
+@use '../components/FilterPanel/filter-summary';
 @use '../components/Amount/amount';
 @use '../components/CreateModal/create-modal';
 @use '../components/CreateSidePanel/create-side-panel';

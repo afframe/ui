@@ -28,6 +28,7 @@
         "dataGridColumnCustomization",
         "dataGridColumnMeta",
         "dataGridExpansion",
+        "dataGridFilterPanel",
         "dataGridFiltering",
         "dataGridInlineEdit",
         "dataGridPagination",
@@ -40,9 +41,11 @@
       "types": [
         "DataGridBatchAction",
         "DataGridCellEdit",
+        "DataGridColumnFilter",
         "DataGridColumnMeta",
         "DataGridProps",
         "DataGridRowAction",
+        "DataGridFilterPanelSettings",
         "DataGridMessages",
         "DataGridSortAction"
       ],
@@ -64,20 +67,25 @@
       "storyTitle": "Components/FilterPanel",
       "status": "stable",
       "exports": [
-        "countFilterPanelSelections",
         "defaultFilterPanelMessages",
         "FilterPanel",
+        "countFilterPanelSelections",
         "defaultFilterFlyoutMessages",
-        "FilterFlyout"
+        "FilterFlyout",
+        "defaultFilterSummaryMessages",
+        "FilterSummary"
       ],
       "types": [
-        "FilterPanelGroup",
         "FilterPanelMessages",
-        "FilterPanelOption",
         "FilterPanelProps",
+        "FilterPanelFieldValue",
+        "FilterPanelGroup",
+        "FilterPanelOption",
         "FilterPanelValue",
         "FilterFlyoutMessages",
-        "FilterFlyoutProps"
+        "FilterFlyoutProps",
+        "FilterSummaryMessages",
+        "FilterSummaryProps"
       ],
       "parts": {
         "stories": true,

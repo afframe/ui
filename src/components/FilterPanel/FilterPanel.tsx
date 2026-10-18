@@ -1,62 +1,92 @@
 'use client';
+/**
+ * Copyright IBM Corp. 2024, 2025
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2025
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: from tanstack-carbon react/filterPanel FilterPanel.tsx (header, fields and Clear and Apply button set); controlled value with a draft per group, batch or instant update, flat or accordion layout, heading level, result count, focus to the title after Apply and Clear, text from messages, no panel animation. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
+import { Close } from '@carbon/icons-react';
 import {
   Accordion,
   AccordionItem,
   Button,
-  Checkbox,
-  DismissibleTag,
-  Search,
-  usePrefix,
+  ButtonSet,
+  IconButton,
+  Layer,
 } from '@carbon/react';
 import { useId, useRef, useState } from 'react';
 import type { ComponentPropsWithoutRef, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
+import { FilterField } from './fields.js';
+import {
+  countFilterPanelSelections,
+  sameField,
+  sameFilterValue,
+  setGroupValue,
+} from './value.js';
+import type {
+  FilterPanelFieldValue,
+  FilterPanelGroup,
+  FilterPanelValue,
+} from './value.js';
 
-/** One checkbox in a filter group. `value` is stored in `FilterPanelValue`. */
-export interface FilterPanelOption {
-  value: string;
-  label: string;
-}
-
-/** A group of checkbox options, shown as one accordion item. */
-export interface FilterPanelGroup {
-  id: string;
-  label: string;
-  options: readonly FilterPanelOption[];
-  /** Shows a search field that narrows the options by label. */
-  searchable?: boolean;
-  /** Opens the accordion item on first render. */
-  defaultOpen?: boolean;
-}
-
-/** Selected option values per group id. A missing group has nothing selected. */
-export type FilterPanelValue = Readonly<Record<string, readonly string[]>>;
+export { countFilterPanelSelections } from './value.js';
+export type { FilterPanelGroup, FilterPanelValue } from './value.js';
 
 export interface FilterPanelMessages {
   title: string;
-  /** Accordion heading of a group; `count` is the number of selected options. */
+  /** Accordion heading of a group; `count` is the number of selected options, 1 for another set field. */
   groupTitle: (label: string, count: number) => string;
   resultCount: (count: number) => string;
-  selectedFilters: string;
-  clearAll: string;
-  removeFilter: (label: string) => string;
   searchLabel: (groupLabel: string) => string;
   searchPlaceholder: string;
   clearSearch: string;
   noMatches: string;
+  /** First option of a radio or select group; it removes the group's filter. */
+  allOption: string;
+  selectPlaceholder: string;
+  multiselectPlaceholder: string;
+  textPlaceholder: (groupLabel: string) => string;
+  dateStart: string;
+  dateEnd: string;
+  /** Batch update: applies the draft. */
+  apply: string;
+  /** Removes every filter. */
+  clear: string;
+  /** Label of the close button, shown when `onClose` is set. */
+  close: string;
+  /** Dropdown and multiselect menu button. */
+  openMenu: string;
+  closeMenu: string;
+  /** Multiselect button that clears its selection. */
+  clearSelection: string;
 }
 
 export const defaultFilterPanelMessages: FilterPanelMessages = {
-  title: 'Filters',
+  title: 'Filter',
   groupTitle: (label, count) => (count > 0 ? `${label} (${count})` : label),
   resultCount: (count) => (count === 1 ? '1 result' : `${count} results`),
-  selectedFilters: 'Selected filters',
-  clearAll: 'Clear all',
-  removeFilter: (label) => `Remove filter ${label}`,
   searchLabel: (groupLabel) => `Search ${groupLabel}`,
   searchPlaceholder: 'Search',
   clearSearch: 'Clear search',
   noMatches: 'No matching options',
+  allOption: 'All',
+  selectPlaceholder: 'Choose an option',
+  multiselectPlaceholder: 'Choose options',
+  textPlaceholder: (groupLabel) => `Filter ${groupLabel}`,
+  dateStart: 'Date from',
+  dateEnd: 'Date to',
+  apply: 'Apply',
+  clear: 'Clear',
+  close: 'Close',
+  openMenu: 'Open menu',
+  closeMenu: 'Close menu',
+  clearSelection: 'Clear all selected items',
 };
 
 export interface FilterPanelProps extends Omit<
@@ -67,8 +97,18 @@ export interface FilterPanelProps extends Omit<
   ref?: Ref<HTMLElement>;
   groups: readonly FilterPanelGroup[];
   value: FilterPanelValue;
+  /** Called on Apply and Clear (`batch`) or per change (`instant`). */
   onChange: (value: FilterPanelValue) => void;
-  /** Number of results with the current filters; shown and announced when set. */
+  /**
+   * `batch` keeps a draft until Apply, with Clear and Apply at the bottom;
+   * `instant` applies every change, with Clear only. Default `batch`.
+   */
+  updateMethod?: 'batch' | 'instant';
+  /** `flat` shows each group as a section; `accordion` as an accordion item. Default `flat`. */
+  layout?: 'flat' | 'accordion';
+  /** Shows a close button in the title row; in batch update it discards the draft first. */
+  onClose?: () => void;
+  /** Number of results with the applied `value`; shown and announced when set. */
   resultCount?: number;
   messages?: Partial<FilterPanelMessages>;
   /** Level of the title heading. Default 2. */
@@ -76,36 +116,34 @@ export interface FilterPanelProps extends Omit<
   className?: string;
 }
 
-/** Number of selected options across all groups; values matching no option are ignored. */
-export function countFilterPanelSelections(
+/** The draft with the groups whose applied value changed from `from` to `to`. */
+function rebase(
   groups: readonly FilterPanelGroup[],
-  value: FilterPanelValue
-): number {
+  draft: FilterPanelValue,
+  from: FilterPanelValue,
+  to: FilterPanelValue
+): FilterPanelValue {
   return groups.reduce(
-    (sum, group) =>
-      sum +
-      group.options.filter((option) => value[group.id]?.includes(option.value))
-        .length,
-    0
+    (next, group) =>
+      sameField(group, from[group.id], to[group.id])
+        ? next
+        : setGroupValue(next, group, to[group.id]),
+    draft
   );
 }
 
-function setGroup(
-  value: FilterPanelValue,
-  groupId: string,
-  selected: readonly string[]
-): FilterPanelValue {
-  return Object.fromEntries([
-    ...Object.entries(value).filter(([key]) => key !== groupId),
-    ...(selected.length > 0 ? [[groupId, selected]] : []),
-  ]);
-}
-
-/** A side panel of checkbox filter groups with a dismissible summary. Controlled. */
+/**
+ * A side panel of filter fields, one per group, applied in a batch on Apply
+ * or per change. Controlled.
+ */
+// fallow-ignore-next-line complexity -- both update methods, both layouts and the optional close button and count
 export function FilterPanel({
   groups,
   value,
   onChange,
+  updateMethod = 'batch',
+  layout = 'flat',
+  onClose,
   resultCount,
   messages,
   headingLevel = 2,
@@ -114,42 +152,67 @@ export function FilterPanel({
   ...rest
 }: FilterPanelProps) {
   const text = resolveMessages(defaultFilterPanelMessages, messages);
-  const prefix = usePrefix();
   const id = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const tagsRef = useRef<HTMLUListElement>(null);
-  const [search, setSearch] = useState<Record<string, string>>({});
+  const batch = updateMethod === 'batch';
 
-  const selected = groups.flatMap((group) =>
-    group.options
-      .filter((option) => value[group.id]?.includes(option.value))
-      .map((option) => ({ group, option }))
-  );
+  // An outside `value` change reaches only the groups it changed; the others
+  // keep their draft. Compared by content, so an inline `value` object does
+  // not reset the draft on every render.
+  const [applied, setApplied] = useState(value);
+  const [draft, setDraft] = useState(value);
+  if (!sameFilterValue(groups, applied, value)) {
+    setApplied(value);
+    setDraft(rebase(groups, draft, applied, value));
+  }
+  const shown = batch ? draft : value;
+  const isEmpty = (filters: FilterPanelValue) =>
+    sameFilterValue(groups, filters, {});
+  const canApply = batch && !sameFilterValue(groups, draft, value);
+  const canClear = !isEmpty(value) || (batch && !isEmpty(draft));
 
-  const toggle = (groupId: string, optionValue: string, checked: boolean) => {
-    const current = value[groupId] ?? [];
-    const next = checked
-      ? [...current, optionValue]
-      : current.filter((item) => item !== optionValue);
-    onChange(setGroup(value, groupId, next));
+  const change = (
+    group: FilterPanelGroup,
+    field: FilterPanelFieldValue | undefined
+  ) => {
+    const next = setGroupValue(shown, group, field);
+    if (batch) setDraft(next);
+    else onChange(next);
   };
 
-  // Removing the focused tag would drop focus to the page, so focus moves to
-  // the next tag, else the previous one, else the panel title first.
-  const remove = (index: number, groupId: string, optionValue: string) => {
-    const buttons = tagsRef.current?.querySelectorAll('button');
-    const target = buttons?.[index + 1] ?? buttons?.[index - 1];
-    (target ?? titleRef.current)?.focus();
-    toggle(groupId, optionValue, false);
-  };
-
-  const clearAll = () => {
+  // Apply and Clear disable themselves, which would drop focus to the page.
+  // The title takes it first, so a caller that moves focus on the callback
+  // (the flyout returning it to its button) still wins.
+  const apply = () => {
     titleRef.current?.focus();
+    onChange(draft);
+  };
+
+  const clear = () => {
+    titleRef.current?.focus();
+    setDraft({});
     onChange({});
+  };
+
+  const close = () => {
+    setDraft(value);
+    onClose?.();
   };
 
   const classes = ['afframe-filter-panel', className].filter(Boolean).join(' ');
   const Heading = headingLevel === 3 ? 'h3' : 'h2';
+  const accordion = layout === 'accordion';
+
+  const field = (group: FilterPanelGroup, index: number) => (
+    <FilterField
+      group={group}
+      field={shown[group.id]}
+      onChange={(next) => change(group, next)}
+      id={`${id}-${index}`}
+      text={text}
+      hideLabel={accordion}
+    />
+  );
 
   return (
     <section
@@ -158,94 +221,73 @@ export function FilterPanel({
       ref={ref}
       className={classes}>
       <div className="afframe-filter-panel-header">
-        <Heading
-          id={`${id}-title`}
-          ref={titleRef}
-          tabIndex={-1}
-          className="afframe-filter-panel-title">
-          {text.title}
-        </Heading>
-        {resultCount !== undefined && (
-          <p role="status" className="afframe-filter-panel-count">
-            {text.resultCount(resultCount)}
-          </p>
+        <div className="afframe-filter-panel-heading">
+          <Heading
+            id={`${id}-title`}
+            ref={titleRef}
+            tabIndex={-1}
+            className="afframe-filter-panel-title">
+            {text.title}
+          </Heading>
+          {resultCount !== undefined && (
+            <p role="status" className="afframe-filter-panel-count">
+              {text.resultCount(resultCount)}
+            </p>
+          )}
+        </div>
+        {onClose && (
+          <IconButton
+            kind="ghost"
+            align="bottom-end"
+            label={text.close}
+            onClick={close}
+            className="afframe-filter-panel-close">
+            <Close />
+          </IconButton>
         )}
       </div>
-      {selected.length > 0 && (
-        <div className="afframe-filter-panel-summary">
-          <ul
-            ref={tagsRef}
-            aria-label={text.selectedFilters}
-            className="afframe-filter-panel-tags">
-            {selected.map(({ group, option }, index) => (
-              <li key={`${group.id}:${option.value}`}>
-                <DismissibleTag
-                  size="md"
-                  type="high-contrast"
-                  text={option.label}
-                  title={text.removeFilter(option.label)}
-                  dismissTooltipLabel={text.removeFilter(option.label)}
-                  onClose={() => remove(index, group.id, option.value)}
-                />
-              </li>
-            ))}
-          </ul>
-          <Button kind="ghost" size="sm" onClick={clearAll}>
-            {text.clearAll}
-          </Button>
-        </div>
-      )}
-      <Accordion>
-        {groups.map((group, groupIndex) => {
-          const groupSelected = value[group.id] ?? [];
-          const query = (search[group.id] ?? '').trim().toLowerCase();
-          const options = query
-            ? group.options.filter((option) =>
-                option.label.toLowerCase().includes(query)
-              )
-            : group.options;
-          return (
-            <AccordionItem
-              key={group.id}
-              title={text.groupTitle(group.label, groupSelected.length)}
-              open={group.defaultOpen ?? false}>
-              {group.searchable && (
-                <Search
-                  id={`${id}-${groupIndex}-search`}
-                  size="sm"
-                  labelText={text.searchLabel(group.label)}
-                  placeholder={text.searchPlaceholder}
-                  closeButtonLabelText={text.clearSearch}
-                  value={search[group.id] ?? ''}
-                  onChange={(event) =>
-                    setSearch({ ...search, [group.id]: event.target.value })
-                  }
-                  className="afframe-filter-panel-search"
-                />
-              )}
-              <fieldset className="afframe-filter-panel-options">
-                <legend className={`${prefix}--visually-hidden`}>
-                  {group.label}
-                </legend>
-                {options.map((option) => (
-                  <Checkbox
-                    key={option.value}
-                    id={`${id}-${groupIndex}-${group.options.indexOf(option)}`}
-                    labelText={option.label}
-                    checked={groupSelected.includes(option.value)}
-                    onChange={(_event, { checked }) =>
-                      toggle(group.id, option.value, checked)
-                    }
-                  />
-                ))}
-                {options.length === 0 && (
-                  <p className="afframe-filter-panel-empty">{text.noMatches}</p>
+      {/* Fields take the next layer's colours, as upstream. */}
+      <Layer className="afframe-filter-panel-fields">
+        {accordion ? (
+          <Accordion>
+            {groups.map((group, index) => (
+              <AccordionItem
+                key={group.id}
+                title={text.groupTitle(
+                  group.label,
+                  countFilterPanelSelections([group], shown)
                 )}
-              </fieldset>
-            </AccordionItem>
-          );
-        })}
-      </Accordion>
+                open={group.defaultOpen ?? false}>
+                {field(group, index)}
+              </AccordionItem>
+            ))}
+          </Accordion>
+        ) : (
+          groups.map((group, index) => (
+            <div key={group.id} className="afframe-filter-panel-group">
+              {field(group, index)}
+            </div>
+          ))
+        )}
+      </Layer>
+      <ButtonSet className="afframe-filter-panel-actions">
+        <Button
+          kind="secondary"
+          disabled={!canClear}
+          onClick={clear}
+          className="afframe-filter-panel-action">
+          {text.clear}
+        </Button>
+        {batch && (
+          <Button
+            kind="primary"
+            disabled={!canApply}
+            onClick={apply}
+            className="afframe-filter-panel-action">
+            {text.apply}
+          </Button>
+        )}
+      </ButtonSet>
     </section>
   );
 }

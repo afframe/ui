@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, useDocumentLang from .storybook, source tag, story names unified, args split between DatePicker and DatePickerInput, Czech date format and example data, datePickerType control, state stories and WeekStartsMonday added; date format and placeholders from the system setting, TypingADate story added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, unused imports removed, useDocumentLang from .storybook, source tag, story names unified, args split between DatePicker and DatePickerInput, Czech date format and example data, datePickerType control, state stories and WeekStartsMonday added; date format and placeholders from the system setting, TypingADate story and range focus test added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -27,6 +27,7 @@ import {
   DatePickerSkeleton,
 } from '../../index.js';
 import mdx from './DatePicker.mdx';
+import { expect, waitFor } from 'storybook/test';
 import { playTypingADate } from './playTypingADate.js';
 
 interface DatePickerStoryArgs {
@@ -437,4 +438,36 @@ export const TypingADate: StoryObj<DatePickerStoryArgs> = {
     </DatePicker>
   ),
   play: ({ canvasElement }) => playTypingADate(canvasElement),
+};
+
+/**
+ * Storybook's play tests share one focus method for every element through a
+ * setter on the prototype: picking a range must not replace it, or the next
+ * focus recurses.
+ */
+export const TestRangeFocus: StoryObj<DatePickerStoryArgs> = {
+  tags: ['!dev', '!autodocs'],
+  render: (args) => (
+    <DatePicker datePickerType="range" {...splitArgs(args).picker}>
+      <DatePickerInput labelText="Start date" id="date-picker-range-start" />
+      <DatePickerInput labelText="End date" id="date-picker-range-end" />
+    </DatePicker>
+  ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByLabelText('Start date'));
+    // flatpickr puts the calendar on body and redraws its days after a pick.
+    const day = (n: number) =>
+      waitFor(() => {
+        const found = document.querySelector<HTMLElement>(
+          `.flatpickr-calendar.open .flatpickr-day:not(.prevMonthDay):not(.nextMonthDay)[aria-label$=" ${n}, ${new Date().getFullYear()}"]`
+        );
+        if (!found) throw new Error(`No day ${n} in the open calendar`);
+        return found;
+      });
+    await userEvent.click(await day(1));
+    await userEvent.click(await day(5));
+    await expect(canvas.getByLabelText('End date')).not.toHaveValue('');
+    await userEvent.click(canvas.getByLabelText('End date'));
+    await expect(canvas.getByLabelText('End date')).toHaveFocus();
+  },
 };

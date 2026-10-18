@@ -106,7 +106,9 @@ digits are typed, a typed separator pads the part (`1.1.2026` becomes
 impossible or unavailable date (`31.02.2026`, or one outside `minDate` or
 `maxDate`) stays as typed on blur, on Enter and in a range end, and the input
 shows the message for the reason (below); an `invalid` set on the input wins,
-and the input's own `invalidText` replaces the message. If the app
+and the input's own `invalidText` replaces the message. In a range, typing or
+pasting that completes a valid start date moves focus to the start of the end
+input, so typing goes on there. If the app
 held a date for that input, `onChange` reports it gone once. Emptying a filled
 `value` empties the inputs, a range end kept invalid too, and a new date in
 `value` replaces kept text; to clear kept text while `value` is already empty,

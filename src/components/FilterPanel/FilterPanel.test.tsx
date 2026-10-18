@@ -1,14 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen, within } from '@testing-library/react';
 import { createRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
-import { cleanup } from '@testing-library/react';
 import { page, userEvent } from 'vitest/browser';
-import { FilterFlyout } from './FilterFlyout.js';
-import type {
-  FilterFlyoutMessages,
-  FilterFlyoutProps,
-} from './FilterFlyout.js';
-import { countFilterPanelSelections, FilterPanel } from './FilterPanel.js';
+import { FilterPanel } from './FilterPanel.js';
+import type { FilterPanelMessages, FilterPanelProps } from './FilterPanel.js';
 import type { FilterPanelGroup, FilterPanelValue } from './FilterPanel.js';
 
 afterEach(cleanup);
@@ -34,27 +29,63 @@ const groups: FilterPanelGroup[] = [
   },
 ];
 
+const allVariants: FilterPanelGroup[] = [
+  {
+    id: 'status',
+    label: 'Status',
+    options: [
+      { value: 'paid', label: 'Paid' },
+      { value: 'overdue', label: 'Overdue' },
+    ],
+  },
+  {
+    id: 'kind',
+    label: 'Kind',
+    variant: 'radio',
+    options: [
+      { value: 'invoice', label: 'Invoice' },
+      { value: 'credit', label: 'Credit note' },
+    ],
+  },
+  {
+    id: 'currency',
+    label: 'Currency',
+    variant: 'select',
+    options: [
+      { value: 'czk', label: 'CZK' },
+      { value: 'eur', label: 'EUR' },
+    ],
+  },
+  {
+    id: 'tags',
+    label: 'Tags',
+    variant: 'multiselect',
+    options: [
+      { value: 'urgent', label: 'Urgent' },
+      { value: 'export', label: 'Export' },
+    ],
+  },
+  { id: 'reference', label: 'Reference', variant: 'text' },
+  { id: 'lines', label: 'Lines', variant: 'number' },
+  { id: 'issued', label: 'Issued', variant: 'dateRange' },
+  { id: 'amount', label: 'Amount', variant: 'slider', min: 0, max: 100 },
+];
+
 function Harness({
-  flyout = false,
   initial = {},
   onChange,
-  messages,
-}: {
-  flyout?: boolean;
-  initial?: FilterPanelValue;
-  onChange?: (value: FilterPanelValue) => void;
-  messages?: Partial<FilterFlyoutMessages>;
-}) {
+  groups: shownGroups = groups,
+  ...props
+}: Partial<Omit<FilterPanelProps, 'value'>> & { initial?: FilterPanelValue }) {
   const [value, setValue] = useState(initial);
-  const Component = flyout ? FilterFlyout : FilterPanel;
   return (
     <>
       <button type="button">Before</button>
-      <Component
-        groups={groups}
+      <FilterPanel
+        groups={shownGroups}
         value={value}
         resultCount={Object.values(value).flat().length}
-        {...(messages ? { messages } : {})}
+        {...props}
         onChange={(next) => {
           onChange?.(next);
           setValue(next);
@@ -65,99 +96,18 @@ function Harness({
 }
 
 const active = () => document.activeElement;
-// The dismiss button is named through Carbon's tooltip (aria-labelledby).
-const dismiss = (label: string) =>
-  screen.getByLabelText(`Remove filter ${label}`, { selector: 'button' });
+const button = (name: string) => screen.getByRole('button', { name });
+const checkbox = (name: string) =>
+  screen.getByRole<HTMLInputElement>('checkbox', { name });
+const title = () => screen.getByRole('heading', { name: 'Filter' });
 
-test('flyout: open, tab through groups, toggle, clear all, Escape', async () => {
-  const onChange = vi.fn();
-  render(<Harness flyout onChange={onChange} />);
-  const toggle = screen.getByRole('button', { name: 'Filter' });
-  expect(toggle.getAttribute('aria-expanded')).toBe('false');
-
-  await userEvent.tab();
-  await userEvent.tab();
-  expect(active()).toBe(toggle);
-  await userEvent.keyboard('{Enter}');
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  expect(active()).toBe(toggle);
-
-  // Tab into the panel: first group heading, then its checkboxes.
-  await userEvent.tab();
-  expect(active()?.textContent).toBe('Status');
-  expect(active()?.getAttribute('aria-expanded')).toBe('true');
-  await userEvent.tab();
-  expect(active()).toBe(screen.getByRole('checkbox', { name: 'Paid' }));
-  await userEvent.keyboard(' ');
-  expect(onChange).toHaveBeenLastCalledWith({ status: ['paid'] });
-  expect(screen.getByRole('button', { name: 'Filter (1)' })).toBe(toggle);
-  expect(screen.getByRole('status').textContent).toBe('1 result');
-
-  await userEvent.tab();
-  await userEvent.keyboard(' ');
-  await userEvent.tab();
-  expect(active()?.textContent).toBe('Customer');
-
-  // Clear all keeps the flyout open and moves focus to the panel title.
-  screen.getByRole('button', { name: 'Clear all' }).focus();
-  await userEvent.keyboard('{Enter}');
-  expect(onChange).toHaveBeenLastCalledWith({});
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  expect(active()).toBe(screen.getByRole('heading', { name: 'Filters' }));
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-
-  await userEvent.keyboard('{Escape}');
-  expect(toggle.getAttribute('aria-expanded')).toBe('false');
-  expect(active()).toBe(toggle);
-});
-
-test('flyout: Escape on the button closes it', async () => {
-  render(<Harness flyout />);
-  const toggle = screen.getByRole('button', { name: 'Filter' });
-  await userEvent.click(toggle);
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  await userEvent.keyboard('{Escape}');
-  expect(toggle.getAttribute('aria-expanded')).toBe('false');
-  expect(active()).toBe(toggle);
-});
-
-test('flyout: Escape in a search with text clears it first', async () => {
-  render(<Harness flyout />);
-  const toggle = screen.getByRole('button', { name: 'Filter' });
-  await userEvent.click(toggle);
-  await userEvent.click(screen.getByRole('button', { name: 'Customer' }));
-  const search = screen.getByRole('searchbox', { name: 'Search Customer' });
-  await userEvent.type(search, 'birch');
-  expect(screen.queryByRole('checkbox', { name: 'Acme Trading' })).toBeNull();
-  await userEvent.keyboard('{Escape}');
-  expect((search as HTMLInputElement).value).toBe('');
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  await userEvent.keyboard('{Escape}');
-  expect(toggle.getAttribute('aria-expanded')).toBe('false');
-  expect(active()).toBe(toggle);
-});
-
-test('panel: dismissing a tag moves focus to the next tag, then the title', async () => {
-  render(<Harness initial={{ status: ['paid', 'overdue'] }} />);
-  expect(
-    screen.getByRole('list', { name: 'Selected filters' }).children
-  ).toHaveLength(2);
-  dismiss('Paid').focus();
-  await userEvent.keyboard('{Enter}');
-  const overdue = dismiss('Overdue');
-  expect(active()).toBe(overdue);
-  expect(screen.getByRole('checkbox', { name: 'Paid' })).toHaveProperty(
-    'checked',
-    false
-  );
-  await userEvent.keyboard('{Enter}');
-  expect(active()).toBe(screen.getByRole('heading', { name: 'Filters' }));
-  expect(screen.queryByRole('list', { name: 'Selected filters' })).toBeNull();
-});
+// Carbon names these buttons through a hidden tooltip (aria-labelledby),
+// which Testing Library's role query does not read.
+const byLabel = (label: string) =>
+  screen.queryAllByLabelText<HTMLButtonElement>(label, { selector: 'button' });
 
 test('panel: search narrows the options and shows an empty message', async () => {
   render(<Harness />);
-  await userEvent.click(screen.getByRole('button', { name: 'Customer' }));
   const search = screen.getByRole('searchbox', { name: 'Search Customer' });
   await userEvent.type(search, 'acm');
   expect(screen.getByRole('checkbox', { name: 'Acme Trading' })).toBeTruthy();
@@ -166,9 +116,10 @@ test('panel: search narrows the options and shows an empty message', async () =>
   expect(screen.getByText('No matching options')).toBeTruthy();
 });
 
-test('panel: names, counts and message overrides', () => {
+test('accordion: names, counts and message overrides', () => {
   render(
     <Harness
+      layout="accordion"
       initial={{ status: ['paid'] }}
       messages={{
         title: 'Filtry',
@@ -183,80 +134,21 @@ test('panel: names, counts and message overrides', () => {
   expect(screen.getByRole('group', { name: 'Status' })).toBeTruthy();
 });
 
-test('flyout: removing filters keeps it open; a click outside closes it', async () => {
-  render(<Harness flyout initial={{ status: ['paid', 'overdue'] }} />);
-  const toggle = screen.getByRole('button', { name: 'Filter (2)' });
-  await userEvent.click(toggle);
-  await userEvent.click(dismiss('Paid'));
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  dismiss('Overdue').focus();
-  await userEvent.keyboard('{Enter}');
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  expect(toggle.textContent).toBe('Filter');
-  await userEvent.click(screen.getByRole('button', { name: 'Before' }));
-  expect(toggle.getAttribute('aria-expanded')).toBe('false');
-});
-
-test('flyout: Escape from a checkbox closes it and returns focus', async () => {
-  render(<Harness flyout />);
-  const toggle = screen.getByRole('button', { name: 'Filter' });
-  await userEvent.click(toggle);
-  screen.getByRole('checkbox', { name: 'Paid' }).focus();
-  await userEvent.keyboard('{Escape}');
-  expect(toggle.getAttribute('aria-expanded')).toBe('false');
-  expect(active()).toBe(toggle);
-});
-
-test('panel: Enter opens a group, Space removes a tag, names are exposed', async () => {
-  render(<Harness initial={{ status: ['paid'] }} />);
-  await expect
-    .element(page.getByRole('button', { name: 'Remove filter Paid' }))
-    .toBeInTheDocument();
-  const customer = screen.getByRole('button', { name: 'Customer' });
-  customer.focus();
-  await userEvent.keyboard('{Enter}');
-  expect(customer.getAttribute('aria-expanded')).toBe('true');
-  dismiss('Paid').focus();
-  await userEvent.keyboard(' ');
-  expect(active()).toBe(screen.getByRole('heading', { name: 'Filters' }));
-  expect(screen.getByRole('status').textContent).toBe('0 results');
-});
-
-test('count ignores values that match no option', async () => {
-  const value = { status: ['paid', 'gone'], missing: ['x'] };
-  expect(countFilterPanelSelections(groups, value)).toBe(1);
-  render(<Harness flyout initial={value} />);
-  const toggle = screen.getByRole('button', { name: 'Filter (1)' });
-  await userEvent.click(toggle);
-  expect(
-    screen.getByRole('list', { name: 'Selected filters' }).children
-  ).toHaveLength(1);
-});
-
-test('ids stay valid when group ids and values contain spaces', async () => {
-  const onChange = vi.fn();
-  render(
-    <FilterPanel
-      groups={[
-        {
-          id: 'cost centre',
-          label: 'Cost centre',
-          defaultOpen: true,
-          searchable: true,
-          options: [{ value: 'head office', label: 'Head office' }],
-        },
-      ]}
-      value={{}}
-      onChange={onChange}
-    />
+test('ids are unique across groups and panels', () => {
+  const { container } = render(
+    <>
+      <FilterPanel groups={allVariants} value={{}} onChange={() => {}} />
+      <FilterPanel
+        groups={allVariants}
+        layout="accordion"
+        value={{}}
+        onChange={() => {}}
+      />
+    </>
   );
-  const checkbox = screen.getByRole('checkbox', { name: 'Head office' });
-  expect(checkbox.id).not.toMatch(/\s/);
-  expect(
-    screen.getByRole('searchbox', { name: 'Search Cost centre' }).id
-  ).not.toMatch(/\s/);
-  await userEvent.click(screen.getByText('Head office'));
-  expect(onChange).toHaveBeenLastCalledWith({ 'cost centre': ['head office'] });
+  const ids = [...container.querySelectorAll('[id]')].map((node) => node.id);
+  expect(ids.length).toBeGreaterThan(20);
+  expect(new Set(ids).size).toBe(ids.length);
 });
 
 test('panel: ref and rest props reach the section', () => {
@@ -272,7 +164,7 @@ test('panel: ref and rest props reach the section', () => {
       className="extra"
     />
   );
-  const region = screen.getByRole('region', { name: 'Filters' });
+  const region = screen.getByRole('region', { name: 'Filter' });
   expect(ref.current).toBe(region);
   expect(region.tagName).toBe('SECTION');
   expect(region.dataset.testid).toBe('filters');
@@ -280,85 +172,366 @@ test('panel: ref and rest props reach the section', () => {
   expect(region.className).toBe('afframe-filter-panel extra');
 });
 
+test('flat: fieldsets and legends for checkbox, radio, date range and slider; labels for the rest', () => {
+  render(<FilterPanel groups={allVariants} value={{}} onChange={() => {}} />);
+  for (const name of ['Status', 'Kind', 'Issued', 'Amount']) {
+    const group = screen.getByRole('group', { name });
+    expect(group.tagName).toBe('FIELDSET');
+    expect(within(group).getByText(name, { selector: 'legend' })).toBeTruthy();
+  }
+  expect(screen.getByRole('combobox', { name: 'Currency' })).toBeTruthy();
+  expect(screen.getByRole('combobox', { name: 'Tags' })).toBeTruthy();
+  expect(screen.getByRole('textbox', { name: 'Reference' })).toBeTruthy();
+  expect(screen.getByRole('spinbutton', { name: 'Lines' })).toBeTruthy();
+  expect(screen.getByRole('slider', { name: 'Amount' })).toBeTruthy();
+  // Carbon's range labels show the bounds; no value input.
+  const rangeLabels = document.querySelectorAll('.cds--slider__range-label');
+  expect([...rangeLabels].map((label) => label.textContent)).toEqual([
+    '0',
+    '100',
+  ]);
+  expect(screen.queryByRole('spinbutton', { name: 'Amount' })).toBeNull();
+});
+
+/** Sets one value in every variant of `allVariants`. */
+async function fillEveryVariant() {
+  await userEvent.click(screen.getByText('Paid'));
+  await userEvent.click(screen.getByText('Credit note'));
+  await userEvent.click(screen.getByRole('combobox', { name: 'Currency' }));
+  await userEvent.click(screen.getByRole('option', { name: 'EUR' }));
+  await userEvent.click(screen.getByRole('combobox', { name: 'Tags' }));
+  await userEvent.click(screen.getByRole('option', { name: 'Urgent' }));
+  await userEvent.keyboard('{Escape}');
+  await userEvent.type(
+    screen.getByRole('textbox', { name: 'Reference' }),
+    'A1'
+  );
+  await userEvent.type(screen.getByRole('spinbutton', { name: 'Lines' }), '0');
+  // Before the date range: an open calendar takes the arrow keys.
+  screen.getByRole('slider', { name: 'Amount' }).focus();
+  await userEvent.keyboard('{ArrowLeft}');
+  await userEvent.type(screen.getByLabelText('Date from'), '01102026');
+  await userEvent.type(screen.getByLabelText('Date to'), '05102026');
+  await userEvent.click(document.body);
+}
+
+const everyVariant = {
+  status: ['paid'],
+  kind: 'credit',
+  currency: 'eur',
+  tags: ['urgent'],
+  reference: 'A1',
+  lines: 0,
+  issued: ['2026-10-01', '2026-10-05'],
+  amount: 99,
+};
+
+test('batch: every variant changes the draft; Apply sends it', async () => {
+  const onChange = vi.fn();
+  render(<Harness groups={allVariants} onChange={onChange} />);
+  await fillEveryVariant();
+  expect(onChange).not.toHaveBeenCalled();
+  await userEvent.click(button('Apply'));
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith(everyVariant);
+});
+
+test('instant: every variant calls onChange; only Clear is shown', async () => {
+  const onChange = vi.fn();
+  render(
+    <Harness groups={allVariants} updateMethod="instant" onChange={onChange} />
+  );
+  expect(screen.queryByRole('button', { name: 'Apply' })).toBeNull();
+  expect(button('Clear')).toHaveProperty('disabled', true);
+  await fillEveryVariant();
+  expect(onChange).toHaveBeenLastCalledWith(everyVariant);
+  expect(button('Clear')).toHaveProperty('disabled', false);
+  await userEvent.click(button('Clear'));
+  expect(onChange).toHaveBeenLastCalledWith({});
+  expect(active()).toBe(title());
+  expect(checkbox('Paid').checked).toBe(false);
+  expect(
+    screen.getByRole<HTMLInputElement>('textbox', { name: 'Reference' }).value
+  ).toBe('');
+  expect(screen.getByLabelText<HTMLInputElement>('Date from').value).toBe('');
+  expect(button('Clear')).toHaveProperty('disabled', true);
+});
+
+test('batch: onChange only on Apply, with the draft; focus moves to the title', async () => {
+  const onChange = vi.fn();
+  render(<Harness layout="accordion" onChange={onChange} />);
+  const apply = button('Apply');
+  const clear = button('Clear');
+  expect(apply).toHaveProperty('disabled', true);
+  expect(clear).toHaveProperty('disabled', true);
+  await userEvent.click(screen.getByText('Paid'));
+  await userEvent.click(screen.getByText('Overdue'));
+  expect(onChange).not.toHaveBeenCalled();
+  expect(checkbox('Paid').checked).toBe(true);
+  expect(button('Status (2)')).toBeTruthy();
+  expect(screen.getByRole('status').textContent).toBe('0 results');
+  expect(apply).toHaveProperty('disabled', false);
+  expect(clear).toHaveProperty('disabled', false);
+  // Unchecking back to the applied value disables both again.
+  await userEvent.click(screen.getByText('Overdue'));
+  await userEvent.click(screen.getByText('Paid'));
+  expect(apply).toHaveProperty('disabled', true);
+  expect(clear).toHaveProperty('disabled', true);
+  await userEvent.click(screen.getByText('Paid'));
+  apply.focus();
+  await userEvent.keyboard('{Enter}');
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith({ status: ['paid'] });
+  expect(active()).toBe(title());
+  expect(apply).toHaveProperty('disabled', true);
+  expect(screen.getByRole('status').textContent).toBe('1 result');
+});
+
+function PanelHarness(props: {
+  onChange?: (value: FilterPanelValue) => void;
+  onClose?: () => void;
+  messages?: Partial<FilterPanelMessages>;
+}) {
+  const [value, setValue] = useState<FilterPanelValue>({ status: ['paid'] });
+  const [, setTick] = useState(0);
+  return (
+    <>
+      <button type="button" onClick={() => setTick((tick) => tick + 1)}>
+        Rerender
+      </button>
+      <button type="button" onClick={() => setValue({ status: ['overdue'] })}>
+        Outside
+      </button>
+      <FilterPanel
+        groups={groups}
+        // A new object with the same content on every render.
+        value={{ status: [...((value.status ?? []) as readonly string[])] }}
+        {...(props.onClose ? { onClose: props.onClose } : {})}
+        {...(props.messages ? { messages: props.messages } : {})}
+        onChange={(next) => {
+          props.onChange?.(next);
+          setValue(next);
+        }}
+      />
+    </>
+  );
+}
+
+test('batch: Clear empties the draft and the value, focuses the title', async () => {
+  const onChange = vi.fn();
+  render(<PanelHarness onChange={onChange} />);
+  // A value is applied, so Clear is on; Apply waits for a change.
+  expect(button('Clear')).toHaveProperty('disabled', false);
+  expect(button('Apply')).toHaveProperty('disabled', true);
+  await userEvent.click(screen.getByText('Overdue'));
+  await userEvent.click(screen.getByText('Acme Trading'));
+  await userEvent.click(button('Clear'));
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith({});
+  expect(checkbox('Paid').checked).toBe(false);
+  expect(checkbox('Overdue').checked).toBe(false);
+  expect(checkbox('Acme Trading').checked).toBe(false);
+  expect(active()).toBe(title());
+  expect(button('Clear')).toHaveProperty('disabled', true);
+  expect(button('Apply')).toHaveProperty('disabled', true);
+});
+
+test('batch: an inline value keeps the draft; an outside change rebases only the groups it changed', async () => {
+  render(<PanelHarness />);
+  await userEvent.click(screen.getByText('Overdue'));
+  await userEvent.click(screen.getByText('Acme Trading'));
+  await userEvent.click(button('Rerender'));
+  expect(checkbox('Overdue').checked).toBe(true);
+  expect(button('Apply')).toHaveProperty('disabled', false);
+  await userEvent.click(button('Outside'));
+  // Status took the outside value; Customer kept its draft.
+  expect(checkbox('Paid').checked).toBe(false);
+  expect(checkbox('Overdue').checked).toBe(true);
+  expect(checkbox('Acme Trading').checked).toBe(true);
+  expect(button('Apply')).toHaveProperty('disabled', false);
+  await userEvent.click(screen.getByText('Acme Trading'));
+  expect(button('Apply')).toHaveProperty('disabled', true);
+});
+
+test('close button: only with onClose; in batch it discards the draft', async () => {
+  render(<PanelHarness />);
+  expect(byLabel('Close')).toHaveLength(0);
+  cleanup();
+  const onClose = vi.fn();
+  const onChange = vi.fn();
+  render(<PanelHarness onClose={onClose} onChange={onChange} />);
+  await userEvent.click(screen.getByText('Overdue'));
+  await userEvent.click(page.getByRole('button', { name: 'Close' }));
+  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(onChange).not.toHaveBeenCalled();
+  expect(checkbox('Overdue').checked).toBe(false);
+  expect(button('Apply')).toHaveProperty('disabled', true);
+});
+
+test('accordion: Enter opens a group', async () => {
+  render(<Harness layout="accordion" />);
+  const customer = button('Customer');
+  expect(customer.getAttribute('aria-expanded')).toBe('false');
+  customer.focus();
+  await userEvent.keyboard('{Enter}');
+  expect(customer.getAttribute('aria-expanded')).toBe('true');
+});
+
 test('panel: headingLevel 3 renders an h3 that keeps the id and focus target', async () => {
   render(
     <FilterPanel
       headingLevel={3}
       groups={groups}
-      value={{ status: ['paid'] }}
+      value={{}}
       onChange={() => undefined}
     />
   );
-  const heading = screen.getByRole('heading', { name: 'Filters', level: 3 });
+  const heading = screen.getByRole('heading', { name: 'Filter', level: 3 });
   expect(heading.tagName).toBe('H3');
   expect(heading.getAttribute('tabindex')).toBe('-1');
-  const region = screen.getByRole('region', { name: 'Filters' });
+  const region = screen.getByRole('region', { name: 'Filter' });
   expect(region.getAttribute('aria-labelledby')).toBe(heading.id);
-  screen.getByRole('button', { name: 'Clear all' }).focus();
-  await userEvent.keyboard('{Enter}');
+  await userEvent.click(screen.getByText('Paid'));
+  await userEvent.click(button('Apply'));
   expect(active()).toBe(heading);
 });
-
-test('flyout: ref and rest props reach the root; closing still works', async () => {
-  const ref = createRef<HTMLDivElement>();
-  render(
-    <>
-      <button type="button">Before</button>
-      <FilterFlyoutHarness ref={ref} data-testid="flyout" />
-    </>
-  );
-  expect(ref.current?.classList.contains('afframe-filter-flyout')).toBe(true);
-  expect(ref.current?.dataset.testid).toBe('flyout');
-  const toggle = screen.getByRole('button', { name: 'Filter (2)' });
-  expect(ref.current?.contains(toggle)).toBe(true);
-
-  // Dismissing a tag keeps it open only while the internal wrapper ref is set.
-  await userEvent.click(toggle);
-  await userEvent.click(dismiss('Paid'));
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-
-  screen.getByRole('checkbox', { name: 'Overdue' }).focus();
-  await userEvent.keyboard('{Escape}');
-  expect(toggle.getAttribute('aria-expanded')).toBe('false');
-  expect(active()).toBe(toggle);
-
-  await userEvent.click(toggle);
-  await userEvent.click(screen.getByRole('button', { name: 'Before' }));
-  expect(toggle.getAttribute('aria-expanded')).toBe('false');
-});
-
-test('flyout: defaultOpen renders it open', () => {
-  render(<FilterFlyoutHarness defaultOpen />);
-  const toggle = screen.getByRole('button', { name: 'Filter (2)' });
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  expect(screen.getByRole('region', { name: 'Filters' })).toBeTruthy();
-  expect(screen.getByRole('checkbox', { name: 'Paid' })).toBeTruthy();
-});
-
-function FilterFlyoutHarness(
-  props: Omit<FilterFlyoutProps, 'groups' | 'value' | 'onChange'>
-) {
-  const [value, setValue] = useState<FilterPanelValue>({
-    status: ['paid', 'overdue'],
-  });
-  return (
-    <FilterFlyout
-      {...props}
-      groups={groups}
-      value={value}
-      onChange={setValue}
-    />
-  );
-}
 
 test('panel: the focused title shows a focus outline', async () => {
-  render(<Harness initial={{ status: ['paid'] }} />);
-  screen.getByRole('button', { name: 'Clear all' }).focus();
-  await userEvent.keyboard('{Enter}');
-  const heading = screen.getByRole('heading', { name: 'Filters' });
-  expect(active()).toBe(heading);
-  const style = getComputedStyle(heading);
+  render(<Harness />);
+  await userEvent.click(screen.getByText('Paid'));
+  await userEvent.click(button('Apply'));
+  expect(active()).toBe(title());
+  const style = getComputedStyle(title());
   expect(style.outlineStyle).toBe('solid');
   expect(style.outlineWidth).toBe('2px');
   expect(style.outlineOffset).toBe('-2px');
+});
+
+const startDate = () => screen.getByLabelText<HTMLInputElement>('Date from');
+
+test('date range: text kept invalid stays when another field changes', async () => {
+  render(
+    <Harness
+      groups={[
+        groups[0] as FilterPanelGroup,
+        {
+          id: 'issued',
+          label: 'Issued',
+          variant: 'dateRange',
+          minDate: '2026-01-01',
+          maxDate: '2026-12-31',
+        },
+      ]}
+      initial={{ issued: ['2026-10-01', '2026-10-05'] }}
+    />
+  );
+  await userEvent.click(startDate());
+  startDate().setSelectionRange(0, startDate().value.length);
+  await userEvent.keyboard('0310');
+  await userEvent.click(screen.getByText('Paid'));
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  expect(checkbox('Paid').checked).toBe(true);
+  expect(startDate().value).toBe('03.10.');
+});
+
+test('date range: a stored day or bound that is not an ISO day is no date', () => {
+  render(
+    <Harness
+      groups={[
+        { id: 'issued', label: 'Issued', variant: 'dateRange', minDate: 'x' },
+      ]}
+      initial={{ issued: ['2026-10-01', 'soon'] }}
+    />
+  );
+  expect(startDate().value).toBe('01.10.2026');
+  expect(screen.getByLabelText<HTMLInputElement>('Date to').value).toBe('');
+});
+
+test('date range: a range without a start shows both inputs empty', async () => {
+  render(
+    <Harness
+      groups={[{ id: 'issued', label: 'Issued', variant: 'dateRange' }]}
+      initial={{ issued: [null, '2026-10-05'] }}
+    />
+  );
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  expect(startDate().value).toBe('');
+  expect(screen.getByLabelText<HTMLInputElement>('Date to').value).toBe('');
+});
+
+test('text: spaces stay as typed; the stored value is trimmed', async () => {
+  const onChange = vi.fn();
+  render(
+    <Harness
+      groups={[{ id: 'reference', label: 'Reference', variant: 'text' }]}
+      updateMethod="instant"
+      onChange={onChange}
+    />
+  );
+  const field = screen.getByRole<HTMLInputElement>('textbox', {
+    name: 'Reference',
+  });
+  await userEvent.type(field, ' A1 ');
+  expect(field.value).toBe(' A1 ');
+  expect(onChange).toHaveBeenLastCalledWith({ reference: 'A1' });
+  await userEvent.click(button('Clear'));
+  expect(field.value).toBe('');
+});
+
+test.each(['flat', 'accordion'] as const)(
+  'searchable multiselect: the input is named by the group label (%s)',
+  (layout) => {
+    render(
+      <Harness
+        layout={layout}
+        groups={[
+          {
+            id: 'customer',
+            label: 'Customer',
+            variant: 'multiselect',
+            searchable: true,
+            defaultOpen: true,
+            options: [{ value: 'acme', label: 'Acme Trading' }],
+          },
+        ]}
+      />
+    );
+    expect(screen.getByRole('combobox', { name: 'Customer' })).toBeTruthy();
+  }
+);
+
+test('radio and select: "All" is first, selected without a value, and removes the filter', async () => {
+  const onChange = vi.fn();
+  render(
+    <Harness
+      groups={allVariants.filter(
+        (group) => group.id === 'kind' || group.id === 'currency'
+      )}
+      initial={{ kind: 'credit', currency: 'eur' }}
+      updateMethod="instant"
+      onChange={onChange}
+    />
+  );
+  const radios = screen.getAllByRole<HTMLInputElement>('radio');
+  expect(radios.map((radio) => radio.labels?.[0]?.textContent)).toEqual([
+    'All',
+    'Invoice',
+    'Credit note',
+  ]);
+  expect(radios[0]?.checked).toBe(false);
+  await userEvent.click(screen.getByText('All'));
+  expect(onChange).toHaveBeenLastCalledWith({ currency: 'eur' });
+  expect(radios[0]?.checked).toBe(true);
+  const select = screen.getByRole('combobox', { name: 'Currency' });
+  expect(select.textContent).toContain('EUR');
+  await userEvent.click(select);
+  const options = screen.getAllByRole('option');
+  expect(options.map((option) => option.textContent)).toEqual([
+    'All',
+    'CZK',
+    'EUR',
+  ]);
+  await userEvent.click(screen.getByRole('option', { name: 'All' }));
+  expect(onChange).toHaveBeenLastCalledWith({});
+  expect(select.textContent).toContain('All');
 });

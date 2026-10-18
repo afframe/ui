@@ -143,9 +143,11 @@ interface Problem {
 }
 
 /** The part of the flatpickr instance the wrapper uses. */
-interface Flatpickr {
+export interface Flatpickr {
   selectedDates: Date[];
   input: HTMLInputElement;
+  calendarContainer?: HTMLElement;
+  isOpen: boolean;
   config: {
     onChange: ((dates: Date[], text: string, picker: Flatpickr) => void)[];
   };
@@ -167,6 +169,10 @@ interface DateFieldOptions {
   /** Whether the caller passed `onChange`, so it can take the picker's reports. */
   hasOnChange: boolean;
 }
+
+/** The flatpickr instance that Carbon attaches to a date input. */
+export const pickerOf = (input: Element | null | undefined) =>
+  (input as { _flatpickr?: Flatpickr } | null | undefined)?._flatpickr;
 
 const inCalendar = (target: EventTarget | null) =>
   target instanceof Element && target.closest('.flatpickr-calendar') !== null;
@@ -194,6 +200,86 @@ function setRangeStart(picker: Flatpickr, start: Date) {
   for (const hook of picker.config.onChange) {
     hook(picker.selectedDates, picker.input.value, picker);
   }
+}
+
+/**
+ * flatpickr 4.6.13's rangePlugin marks the end input focused on its focus
+ * (rangePlugin.js:44), clears the mark only when the start input takes focus
+ * (:85), and on every onChange while marked refocuses the end on a timer
+ * (:114-116). So once the end had focus, a later change (the app emptying the
+ * value, Carbon's blur handler, tellApp) pulls focus back and opens the
+ * calendar. For one timer turn after a change, the end's focus() only goes
+ * through while focus is in the picker or its open calendar. A picked day is
+ * redrawn, so focus is on the body then. Every change re-arms the guard, so
+ * an earlier change's end does not lift it before a later change's timer.
+ */
+const guards = new WeakMap<
+  HTMLInputElement,
+  { generation: number; installed: unknown }
+>();
+
+// fallow-ignore-next-line complexity -- re-arm and the guarded focus checks
+function guardEndRefocus(picker: Flatpickr, prefix: string) {
+  const field = picker.input.closest(`.${prefix}--date-picker`);
+  const end = field?.querySelectorAll<HTMLInputElement>(
+    `.${prefix}--date-picker__input`
+  )[1];
+  if (!field || !end) return;
+  const armed = guards.get(end);
+  const generation = (armed?.generation ?? 0) + 1;
+  // The plugin's timer may be queued after this hook: the nested timer runs
+  // after it.
+  setTimeout(() =>
+    setTimeout(() => {
+      const guard = guards.get(end);
+      if (guard?.generation !== generation) return;
+      guards.delete(end);
+      if (end.focus === guard.installed) Reflect.deleteProperty(end, 'focus');
+    })
+  );
+  if (armed && end.focus === armed.installed) {
+    guards.set(end, { ...armed, generation });
+    return;
+  }
+  const focus = end.focus;
+  // An own property: an assignment would reach a setter on the prototype
+  // (Storybook's play tests share one focus for every element through one).
+  Object.defineProperty(end, 'focus', {
+    configurable: true,
+    writable: true,
+    value(this: HTMLInputElement, options?: FocusOptions) {
+      const active = document.activeElement;
+      const inCalendar =
+        picker.isOpen &&
+        (active === document.body ||
+          picker.calendarContainer?.contains(active) === true);
+      if (!field.contains(active) && !inCalendar) return;
+      focus.call(this, options);
+    },
+  });
+  guards.set(end, { generation, installed: end.focus });
+}
+
+/** The range end input of a start input, unless it takes no typing. */
+function rangeEndOf(start: HTMLInputElement, prefix: string) {
+  const end = start
+    .closest(`.${prefix}--date-picker`)
+    ?.querySelectorAll<HTMLInputElement>(`.${prefix}--date-picker__input`)[1];
+  return end && !end.disabled && !end.readOnly ? end : undefined;
+}
+
+/** An edit that inserted text (typed, pasted, composed) and left the caret at its end. */
+function insertedAtEnd(event: ChangeEvent<HTMLInputElement>) {
+  const { value, selectionStart, selectionEnd } = event.currentTarget;
+  // flatpickr's calendar picks dispatch plain events with no inputType.
+  const inserted = (event.nativeEvent as InputEvent).inputType?.startsWith(
+    'insert'
+  );
+  return (
+    inserted === true &&
+    selectionStart === value.length &&
+    selectionEnd === value.length
+  );
 }
 
 const datesKey = (dates: readonly unknown[]) =>
@@ -334,8 +420,7 @@ export function useDateField({
       if (found && !dirty.current[n]) typed.current[n] = found.value;
     }
   };
-  const instance = () =>
-    (inputs.current[0] as { _flatpickr?: Flatpickr } | null)?._flatpickr;
+  const instance = () => pickerOf(inputs.current[0]);
   // A real date that minDate, maxDate, enable or disable rule out.
   const unavailable = (input: string) => {
     const date = parseStrictDate(input, effective);
@@ -369,10 +454,12 @@ export function useDateField({
   /**
    * The picker reported dates: their text replaces the typed one. flatpickr
    * empties text it cannot take (Enter, a range end, minDate): typed text
-   * with no date stays and is marked invalid. Returns whether it kept any.
+   * with no date stays and is marked invalid. Pass the flatpickr instance
+   * too, so a range end does not pull focus back after the change. Returns whether it kept any.
    */
   // fallow-ignore-next-line complexity -- per input: keep the typed text or take the picker's
-  const pickerChanged = (dates: readonly unknown[]) => {
+  const pickerChanged = (dates: readonly unknown[], picker?: unknown) => {
+    if (picker) guardEndRefocus(picker as Flatpickr, prefix);
     reported.current = [dates[0] != null, dates[1] != null];
     lastReport.current = dates;
     if (!masked || emptiedBy.current === 'reset') return false;
@@ -433,6 +520,24 @@ export function useDateField({
     }
   };
 
+  /**
+   * Typing that just completed a usable start date, ending at the caret,
+   * moves focus to the end input with the caret first.
+   */
+  const advanceToEnd = (
+    event: ChangeEvent<HTMLInputElement>,
+    before: string
+  ) => {
+    const current = event.currentTarget.value;
+    const end = rangeEndOf(event.currentTarget, prefix);
+    const completed =
+      !fullDateParts(before, effective) && current !== '' && !problem(current);
+    if (!end || !completed || !insertedAtEnd(event)) return;
+    end.focus();
+    // The start's commit on blur rewrites the end's text, which moves its caret.
+    end.setSelectionRange(0, 0);
+  };
+
   const inputProps = (index: 0 | 1, own: DateInputProps) => {
     const mask = masks[index];
     const props: DateInputProps & Record<string, unknown> = {
@@ -447,6 +552,7 @@ export function useDateField({
       },
       onChange: (event) => {
         mask.onChange(event);
+        const before = typed.current[index];
         const current = event.currentTarget.value;
         // Carbon's own input listener runs first and may have taken the date.
         if (current !== typed.current[index]) {
@@ -465,6 +571,7 @@ export function useDateField({
             : pair
         );
         own.onChange?.(event);
+        if (index === 0) advanceToEnd(event, before);
       },
       onCompositionEnd: (event) => {
         mask.onCompositionEnd(event);

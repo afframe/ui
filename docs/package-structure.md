@@ -38,39 +38,39 @@ Only Afframe-owned components get a full folder; the Carbon docs folders `Overfl
 
 Folders with code:
 
-| Folder                 | What                                                                                                      | Label     |
-| ---------------------- | --------------------------------------------------------------------------------------------------------- | --------- |
-| `DataGrid`             | data grid on TanStack Table (`@tanstack/react-table`, `@tanstack/react-virtual`) and Carbon               | `afframe` |
-| `FilterPanel`          | filter panel and filter flyout, controlled                                                                | `afframe` |
-| `ControlledDatePicker` | Carbon's classic `DatePicker` with a controlled `open` prop, through its flatpickr instance               | `afframe` |
-| `Amount`               | an amount formatted by `src/format`, server-safe                                                          | `afframe` |
-| `AmountInput`          | money field on Carbon `NumberInput`                                                                       | `afframe` |
-| `Charts`               | Carbon Charts (`@carbon/charts-react`) by IBM's names, themed by `useCarbonTheme`                         | `extras`  |
-| `ECharts`              | `EChart`, a thin ECharts wrapper (`echarts/core`) with the Carbon theme (`@carbon/echarts-theme`)         | `extras`  |
-| `AIChat`               | IBM's AI chat (`@carbon/ai-chat`) by IBM's names                                                          | `extras`  |
-| `CreateModal`          | create form in a Carbon `Modal`                                                                           | `afframe` |
-| `CreateSidePanel`      | create form in IBM Products' `SidePanel`                                                                  | `afframe` |
-| `EditSidePanel`        | edit form in IBM Products' `SidePanel`                                                                    | `afframe` |
-| `EditTearsheet`        | edit form in IBM Products' `Tearsheet` (`preview__Tearsheet`), with `EditTearsheetForm`                   | `afframe` |
-| `EditFullPage`         | edit form on a page, with a sticky action bar                                                             | `afframe` |
-| `RemoveModal`          | delete or remove confirmation, optionally by typing the name                                              | `afframe` |
-| `ImportModal`          | file or URL import, with its own file type and size checks                                                | `afframe` |
-| `ExportModal`          | export with a file name, format and optional password                                                     | `afframe` |
-| `APIKeyModal`          | name and generate an API key, shown once; rename in edit mode                                             | `afframe` |
-| `StatusIndicator`      | status on Carbon's preview `IconIndicator` and `ShapeIndicator`, server-safe                              | `afframe` |
-| `DescriptionList`      | key and value list on Carbon's `StructuredList`, server-safe                                              | `afframe` |
-| `AccentTag`            | clickable Carbon `OperationalTag` with a tooltip and a coloured strip, sizes `md` (default) and `lg`      | `afframe` |
-| `EnvironmentSwitcher`  | header action named by the current environment, with a panel of radio buttons to switch it                | `afframe` |
-| `HelpMenu`             | header help action with a panel of links and actions (Carbon `HeaderPanel` and `Switcher`)                | `afframe` |
-| `LogoutTile`           | signed-in user tile with the log-out action, for a header profile panel                                   | `afframe` |
-| `LogoutBanner`         | session ending and signed-out banner on Carbon's `ActionableNotification`                                 | `afframe` |
-| `ChatElements`         | chart renderer for `user_defined` items of IBM's AI chat, also usable alone                               | `afframe` |
-| `OverflowMenu`         | Carbon's `OverflowMenu`, with Carbon's newer menu turned on for the 1.0.x shape (`docs/feature-flags.md`) | `carbon`  |
-| `DataTable`            | Carbon's `TableToolbarMenu`, wrapped the same way                                                         | `carbon`  |
-| `DatePicker`           | Carbon's `DatePicker` and `preview__DatePicker` in the system date format with a typing mask (ADR 0021)   | `carbon`  |
-| `FluidDatePicker`      | Carbon's `FluidDatePicker`, wrapped the same way                                                          | `carbon`  |
-| `TimePicker`           | Carbon's `TimePicker`, 24-hour by default, with a typing mask (ADR 0021)                                  | `carbon`  |
-| `FluidTimePicker`      | Carbon's `FluidTimePicker`, wrapped the same way                                                          | `carbon`  |
+| Folder                 | What                                                                                                                                      | Label     |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| `DataGrid`             | data grid on TanStack Table (`@tanstack/react-table`, `@tanstack/react-virtual`) and Carbon, with a filter panel feature on `FilterPanel` | `afframe` |
+| `FilterPanel`          | filter panel, flyout and summary adapted from IBM's tanstack-carbon examples (ADR 0022), controlled                                       | `afframe` |
+| `ControlledDatePicker` | Carbon's classic `DatePicker` with a controlled `open` prop, through its flatpickr instance                                               | `afframe` |
+| `Amount`               | an amount formatted by `src/format`, server-safe                                                                                          | `afframe` |
+| `AmountInput`          | money field on Carbon `NumberInput`                                                                                                       | `afframe` |
+| `Charts`               | Carbon Charts (`@carbon/charts-react`) by IBM's names, themed by `useCarbonTheme`                                                         | `extras`  |
+| `ECharts`              | `EChart`, a thin ECharts wrapper (`echarts/core`) with the Carbon theme (`@carbon/echarts-theme`)                                         | `extras`  |
+| `AIChat`               | IBM's AI chat (`@carbon/ai-chat`) by IBM's names                                                                                          | `extras`  |
+| `CreateModal`          | create form in a Carbon `Modal`                                                                                                           | `afframe` |
+| `CreateSidePanel`      | create form in IBM Products' `SidePanel`                                                                                                  | `afframe` |
+| `EditSidePanel`        | edit form in IBM Products' `SidePanel`                                                                                                    | `afframe` |
+| `EditTearsheet`        | edit form in IBM Products' `Tearsheet` (`preview__Tearsheet`), with `EditTearsheetForm`                                                   | `afframe` |
+| `EditFullPage`         | edit form on a page, with a sticky action bar                                                                                             | `afframe` |
+| `RemoveModal`          | delete or remove confirmation, optionally by typing the name                                                                              | `afframe` |
+| `ImportModal`          | file or URL import, with its own file type and size checks                                                                                | `afframe` |
+| `ExportModal`          | export with a file name, format and optional password                                                                                     | `afframe` |
+| `APIKeyModal`          | name and generate an API key, shown once; rename in edit mode                                                                             | `afframe` |
+| `StatusIndicator`      | status on Carbon's preview `IconIndicator` and `ShapeIndicator`, server-safe                                                              | `afframe` |
+| `DescriptionList`      | key and value list on Carbon's `StructuredList`, server-safe                                                                              | `afframe` |
+| `AccentTag`            | clickable Carbon `OperationalTag` with a tooltip and a coloured strip, sizes `md` (default) and `lg`                                      | `afframe` |
+| `EnvironmentSwitcher`  | header action named by the current environment, with a panel of radio buttons to switch it                                                | `afframe` |
+| `HelpMenu`             | header help action with a panel of links and actions (Carbon `HeaderPanel` and `Switcher`)                                                | `afframe` |
+| `LogoutTile`           | signed-in user tile with the log-out action, for a header profile panel                                                                   | `afframe` |
+| `LogoutBanner`         | session ending and signed-out banner on Carbon's `ActionableNotification`                                                                 | `afframe` |
+| `ChatElements`         | chart renderer for `user_defined` items of IBM's AI chat, also usable alone                                                               | `afframe` |
+| `OverflowMenu`         | Carbon's `OverflowMenu`, with Carbon's newer menu turned on for the 1.0.x shape (`docs/feature-flags.md`)                                 | `carbon`  |
+| `DataTable`            | Carbon's `TableToolbarMenu`, wrapped the same way                                                                                         | `carbon`  |
+| `DatePicker`           | Carbon's `DatePicker` and `preview__DatePicker` in the system date format with a typing mask (ADR 0021)                                   | `carbon`  |
+| `FluidDatePicker`      | Carbon's `FluidDatePicker`, wrapped the same way                                                                                          | `carbon`  |
+| `TimePicker`           | Carbon's `TimePicker`, 24-hour by default, with a typing mask (ADR 0021)                                                                  | `carbon`  |
+| `FluidTimePicker`      | Carbon's `FluidTimePicker`, wrapped the same way                                                                                          | `carbon`  |
 
 Two internal folders hold shared code and are not exported, have no `index.ts` and no docs page: `FlowParts` (the engine behind the five create and edit components and the four task modals: `useFlow` for pending and error state, dirty state and the discard dialog, initial focus, error focus and focus return; the form, error alert, live region and side panel parts; `useHeaderOffset`, which starts the side panels below the page header; common messages; `refs.ts`, the ref helpers for the dialog roots; `storyForm.tsx`, the story-only demo form, harness and shared stories with country-neutral example data) and `MenuParts` (the 1.0.x menu shape check of the `OverflowMenu` and `TableToolbarMenu` wrappers).
 

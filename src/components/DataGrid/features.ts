@@ -18,6 +18,8 @@ import {
   filterFn_equalsString,
   filterFn_inNumberRange,
   filterFn_includesString,
+  filterFn_lessThanOrEqualTo,
+  filterFn_weakEquals,
   globalFilteringFeature,
   metaHelper,
   rowExpandingFeature,
@@ -30,6 +32,7 @@ import {
   sortFn_text,
 } from '@tanstack/react-table';
 import type { DataGridColumnMeta } from './DataGrid.js';
+import { filterFn_inDayRange, filterFn_inOptions } from './filterFns.js';
 
 /** Sortable headers: click or Enter cycles ascending, descending, none. */
 export const dataGridSorting = {
@@ -43,6 +46,21 @@ export const dataGridSorting = {
   },
 };
 
+// One row model and one set of filter functions for both filtering fragments:
+// spreading two different `filterFns` objects would let the second win.
+const filteredRowModel = createFilteredRowModel();
+const filterFns = {
+  arrIncludesSome: filterFn_arrIncludesSome,
+  equals: filterFn_equals,
+  equalsString: filterFn_equalsString,
+  inNumberRange: filterFn_inNumberRange,
+  includesString: filterFn_includesString,
+  weakEquals: filterFn_weakEquals,
+  lessThanOrEqualTo: filterFn_lessThanOrEqualTo,
+  inOptions: filterFn_inOptions,
+  inDayRange: filterFn_inDayRange,
+};
+
 /**
  * Filtering: a search field in the toolbar filters every column
  * (`globalFilter`); column filters (`columnFilters`) narrow single columns.
@@ -50,14 +68,20 @@ export const dataGridSorting = {
 export const dataGridFiltering = {
   columnFilteringFeature,
   globalFilteringFeature,
-  filteredRowModel: createFilteredRowModel(),
-  filterFns: {
-    arrIncludesSome: filterFn_arrIncludesSome,
-    equals: filterFn_equals,
-    equalsString: filterFn_equalsString,
-    inNumberRange: filterFn_inNumberRange,
-    includesString: filterFn_includesString,
-  },
+  filteredRowModel,
+  filterFns,
+};
+
+/**
+ * Filter panel: a toolbar button opens a panel beside the table with a field
+ * per column that has `meta: { filter }`; it sets `columnFilters`. Combine
+ * with `dataGridFiltering` for a search field too.
+ */
+export const dataGridFilterPanel = {
+  columnFilteringFeature,
+  filteredRowModel,
+  filterFns,
+  columnMeta: metaHelper<DataGridColumnMeta>(),
 };
 
 /** Pagination: Carbon's pagination bar under the table. */

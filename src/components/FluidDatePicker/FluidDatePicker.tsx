@@ -41,7 +41,7 @@ export const FluidDatePicker = forwardRef<
     dateFormat: field.dateFormat,
     ...(parser && { parseDate: parser }),
     onChange: ((dates, dateString, instance, data) => {
-      field.pickerChanged(dates);
+      field.pickerChanged(dates, instance);
       onChange?.(dates, dateString, instance, data);
     }) satisfies CarbonDatePickerProps['onChange'],
   };

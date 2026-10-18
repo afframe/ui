@@ -198,7 +198,7 @@ const sharedParameters = {
 const LabelToggletip = () => (
   // Keep the toggletip outside `labelText`; interactive content is invalid in labels.
   <span className="fluid-date-picker-story__toggletip">
-    <Toggletip align="top-left">
+    <Toggletip align="top-left" autoAlign>
       <ToggletipButton label="Show information">
         <Information />
       </ToggletipButton>
@@ -279,13 +279,13 @@ export const RangeWithCalendar: StoryFn<FluidDatePickerArgs> = (args) => {
       <FluidDatePicker {...picker}>
         <FluidDatePickerInput
           id="date-picker-input-id-start"
-          labelText="Billing period start"
+          labelText="Start date"
           size="md"
           {...input}
         />
         <FluidDatePickerInput
           id="date-picker-input-id-finish"
-          labelText="Billing period end"
+          labelText="End date"
           size="md"
           {...input}
         />

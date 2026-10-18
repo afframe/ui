@@ -8,18 +8,16 @@ import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import {
   Amount,
   DataTableSkeleton,
-  FilterPanel,
   formatDate,
   NoDataEmptyState,
-  type FilterPanelValue,
 } from '../../index.js';
 import { DataGrid } from './DataGrid.js';
 import mdx from './DataGrid.mdx';
-import './DataGrid.stories.css';
 import {
   dataGridColumnCustomization,
   dataGridColumnMeta,
   dataGridExpansion,
+  dataGridFilterPanel,
   dataGridFiltering,
   dataGridInlineEdit,
   dataGridPagination,
@@ -709,89 +707,73 @@ export const AllFeaturesExtraSmall: Story = {
 
 const panelFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridColumnMeta,
-  ...dataGridFiltering,
+  ...dataGridFilterPanel,
 });
-const panelHelper = createColumnHelper<typeof panelFeatures, Invoice>();
-// A row matches when its value is one of the selected options.
-const oneOf = {
-  filterFn: (
-    row: { getValue: (id: string) => unknown },
-    id: string,
-    value: readonly string[]
-  ) => value.includes(String(row.getValue(id))),
-};
+type PanelInvoice = Invoice & { currency: string };
+// Statuses repeat Paid, Open, Overdue; USD only on Paid invoices, so Overdue
+// and USD together match no row.
+const panelInvoices: PanelInvoice[] = invoices.slice(0, 12).map((row, i) => ({
+  ...row,
+  currency: i % 2 === 0 ? 'CZK' : row.status === 'Paid' ? 'USD' : 'EUR',
+}));
+const panelHelper = createColumnHelper<typeof panelFeatures, PanelInvoice>();
 const panelColumns = panelHelper.columns([
   panelHelper.accessor('number', { header: 'Number' }),
-  panelHelper.accessor('customer', { header: 'Customer', ...oneOf }),
-  panelHelper.accessor('status', { header: 'Status', ...oneOf }),
-  panelHelper.accessor('amount', amount),
+  panelHelper.accessor('customer', { header: 'Customer' }),
+  panelHelper.accessor('status', { header: 'Status', meta: { filter: {} } }),
+  panelHelper.accessor('currency', {
+    header: 'Currency',
+    meta: { filter: { variant: 'select' } },
+  }),
+  panelHelper.accessor('amount', {
+    ...amount,
+    meta: { ...amount.meta, filter: { variant: 'slider', step: 1000 } },
+  }),
+  panelHelper.accessor('issued', {
+    ...issued,
+    meta: { filter: { variant: 'dateRange' } },
+  }),
 ]);
-const panelGroups = [
-  {
-    id: 'status',
-    label: 'Status',
-    defaultOpen: true,
-    options: ['Paid', 'Open', 'Overdue'].map((v) => ({ value: v, label: v })),
-  },
-  {
-    id: 'customer',
-    label: 'Customer',
-    options: [...new Set(few.map((row) => row.customer))].map((v) => ({
-      value: v,
-      label: v,
-    })),
-  },
-];
 
-function FilterPanelDemo() {
-  const [filters, setFilters] = useState<FilterPanelValue>({});
-  const columnFilters = Object.entries(filters)
-    .filter(([, selected]) => selected.length > 0)
-    .map(([id, value]) => ({ id, value }));
-  const resultCount = few.filter((row) =>
-    columnFilters.every(({ id, value }) =>
-      value.includes(String(row[id as keyof Invoice]))
-    )
-  ).length;
-  return (
-    <div className="afframe-data-grid-demo">
-      <FilterPanel
-        groups={panelGroups}
-        value={filters}
-        onChange={setFilters}
-        resultCount={resultCount}
-      />
-      <DataGrid
-        title="Invoices"
-        options={{
-          features: panelFeatures,
-          columns: panelColumns,
-          data: few,
-          state: { columnFilters },
-        }}
-      />
-    </div>
-  );
-}
-
-/** A filter panel beside the grid sets `columnFilters` as controlled state. */
+/**
+ * `dataGridFilterPanel`: a field per column with `meta.filter`, the toolbar
+ * button, the panel beside the table and the summary of applied filters.
+ */
 export const WithFilterPanel: Story = {
-  render: () => <FilterPanelDemo />,
+  render: () => (
+    <DataGrid
+      title="Invoices"
+      options={{
+        features: panelFeatures,
+        columns: panelColumns,
+        data: panelInvoices,
+      }}
+      filterPanel={{ defaultOpen: true }}
+    />
+  ),
 };
 
-export const TestWithFilterPanel: Story = {
-  ...WithFilterPanel,
-  tags: ['!dev', '!autodocs'],
-  play: async ({ canvas, userEvent }) => {
-    const table = within(canvas.getByRole('table'));
-    await expect(table.getAllByRole('row')).toHaveLength(9);
-    await userEvent.click(canvas.getByRole('checkbox', { name: 'Overdue' }));
-    // Header row plus the two overdue invoices.
-    await expect(table.getAllByRole('row')).toHaveLength(3);
-    await userEvent.click(canvas.getByRole('checkbox', { name: 'Overdue' }));
-    await expect(table.getAllByRole('row')).toHaveLength(9);
-  },
+/**
+ * Filters that leave no rows show `filteredEmptyState`, else `emptyState`,
+ * else this `NoDataEmptyState`.
+ */
+export const FilteredEmpty: Story = {
+  render: () => (
+    <DataGrid
+      title="Invoices"
+      options={{
+        features: panelFeatures,
+        columns: panelColumns,
+        data: panelInvoices,
+        initialState: {
+          columnFilters: [
+            { id: 'status', value: ['Overdue'] },
+            { id: 'currency', value: 'USD' },
+          ],
+        },
+      }}
+    />
+  ),
 };
 
 const emptyFeatures = tableFeatures({ ...dataGridSorting });
