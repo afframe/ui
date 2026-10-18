@@ -8,19 +8,16 @@ import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import {
   Amount,
   DataTableSkeleton,
-  FilterPanel,
-  FilterSummary,
   formatDate,
   NoDataEmptyState,
-  type FilterPanelValue,
 } from '../../index.js';
 import { DataGrid } from './DataGrid.js';
 import mdx from './DataGrid.mdx';
-import './DataGrid.stories.css';
 import {
   dataGridColumnCustomization,
   dataGridColumnMeta,
   dataGridExpansion,
+  dataGridFilterPanel,
   dataGridFiltering,
   dataGridInlineEdit,
   dataGridPagination,
@@ -47,6 +44,7 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+type Canvas = Parameters<NonNullable<Story['play']>>[0]['canvas'];
 
 const few = invoices.slice(0, 8);
 
@@ -710,114 +708,139 @@ export const AllFeaturesExtraSmall: Story = {
 
 const panelFeatures = tableFeatures({
   ...dataGridSorting,
-  ...dataGridColumnMeta,
-  ...dataGridFiltering,
+  ...dataGridFilterPanel,
 });
-const panelHelper = createColumnHelper<typeof panelFeatures, Invoice>();
-// A row matches when its value is one of the selected options.
-const oneOf = {
-  filterFn: (
-    row: { getValue: (id: string) => unknown },
-    id: string,
-    value: readonly string[]
-  ) => value.includes(String(row.getValue(id))),
-};
+type PanelInvoice = Invoice & { currency: string };
+// Statuses repeat Paid, Open, Overdue; USD only on Paid invoices, so Overdue
+// and USD together match no row.
+const panelInvoices: PanelInvoice[] = invoices.slice(0, 12).map((row, i) => ({
+  ...row,
+  currency: i % 2 === 0 ? 'CZK' : row.status === 'Paid' ? 'USD' : 'EUR',
+}));
+const panelHelper = createColumnHelper<typeof panelFeatures, PanelInvoice>();
 const panelColumns = panelHelper.columns([
   panelHelper.accessor('number', { header: 'Number' }),
-  panelHelper.accessor('customer', { header: 'Customer', ...oneOf }),
-  panelHelper.accessor('status', { header: 'Status', ...oneOf }),
-  panelHelper.accessor('amount', amount),
+  panelHelper.accessor('customer', { header: 'Customer' }),
+  panelHelper.accessor('status', { header: 'Status', meta: { filter: {} } }),
+  panelHelper.accessor('currency', {
+    header: 'Currency',
+    meta: { filter: { variant: 'select' } },
+  }),
+  panelHelper.accessor('amount', {
+    ...amount,
+    meta: { ...amount.meta, filter: { variant: 'slider', step: 1000 } },
+  }),
+  panelHelper.accessor('issued', {
+    ...issued,
+    meta: { filter: { variant: 'dateRange' } },
+  }),
 ]);
-const panelGroups = [
-  {
-    id: 'status',
-    label: 'Status',
-    defaultOpen: true,
-    options: ['Paid', 'Open', 'Overdue'].map((v) => ({ value: v, label: v })),
-  },
-  {
-    id: 'customer',
-    label: 'Customer',
-    options: [...new Set(few.map((row) => row.customer))].map((v) => ({
-      value: v,
-      label: v,
-    })),
-  },
-];
-
-function FilterPanelDemo() {
-  const [filters, setFilters] = useState<FilterPanelValue>({});
-  const columnFilters = Object.entries(filters).flatMap(([id, value]) =>
-    typeof value === 'object' && value.length > 0 ? [{ id, value }] : []
-  );
-  const resultCount = few.filter((row) =>
-    columnFilters.every(({ id, value }) =>
-      value.includes(String(row[id as keyof Invoice]))
-    )
-  ).length;
-  return (
-    <div className="afframe-data-grid-demo">
-      <FilterPanel
-        groups={panelGroups}
-        value={filters}
-        onChange={setFilters}
-        updateMethod="batch"
-        resultCount={resultCount}
-      />
-      <DataGrid
-        title="Invoices"
-        filterSummary={
-          <FilterSummary
-            groups={panelGroups}
-            value={filters}
-            onChange={setFilters}
-          />
-        }
-        options={{
-          features: panelFeatures,
-          columns: panelColumns,
-          data: few,
-          state: { columnFilters },
-        }}
-      />
-    </div>
-  );
-}
 
 /**
- * A batch filter panel beside the grid sets `columnFilters` as controlled
- * state; `filterSummary` shows the applied filters between toolbar and table.
+ * `dataGridFilterPanel`: a field per column with `meta.filter`, the toolbar
+ * button, the panel beside the table and the summary of applied filters.
  */
 export const WithFilterPanel: Story = {
-  render: () => <FilterPanelDemo />,
+  render: () => (
+    <DataGrid
+      title="Invoices"
+      options={{
+        features: panelFeatures,
+        columns: panelColumns,
+        data: panelInvoices,
+      }}
+      filterPanel={{ defaultOpen: true }}
+    />
+  ),
 };
+
+// Carbon names icon buttons and tag dismiss buttons through a hidden tooltip,
+// which the role query does not read; the copies inside aria-hidden markup do
+// not count.
+const shownButton = (canvas: Canvas, label: string | RegExp) =>
+  waitFor(() => {
+    const [found] = canvas
+      .queryAllByLabelText<HTMLButtonElement>(label, { selector: 'button' })
+      .filter((item) => !item.closest('[aria-hidden="true"]'));
+    if (!found) throw new Error(`No ${String(label)} button`);
+    return found;
+  });
 
 export const TestWithFilterPanel: Story = {
   ...WithFilterPanel,
   tags: ['!dev', '!autodocs'],
   play: async ({ canvas, userEvent }) => {
-    const table = within(canvas.getByRole('table'));
-    await expect(table.getAllByRole('row')).toHaveLength(9);
-    await userEvent.click(canvas.getByRole('checkbox', { name: 'Overdue' }));
+    const trigger = await shownButton(canvas, /^Filter( \(\d+\))?$/);
+    const rows = () => within(canvas.getByRole('table')).getAllByRole('row');
+    const panel = () => canvas.getByRole('region', { name: 'Filter' });
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await expect(within(panel()).getByRole('status')).toHaveTextContent(
+      '12 results'
+    );
+    await userEvent.click(
+      within(panel()).getByRole('checkbox', { name: 'Overdue' })
+    );
     // Batch update: the rows change only on Apply.
-    await expect(table.getAllByRole('row')).toHaveLength(9);
-    await userEvent.click(canvas.getByRole('button', { name: 'Apply' }));
-    // Header row plus the two overdue invoices.
-    await expect(table.getAllByRole('row')).toHaveLength(3);
-    // Carbon names the dismiss button through a hidden tooltip, which the
-    // role query does not read; TagSet also keeps a hidden copy of each tag.
-    const remove = await waitFor(() => {
-      const [found] = canvas
-        .queryAllByLabelText('Remove filter Status: Overdue', {
-          selector: 'button',
-        })
-        .filter((item) => !item.closest('[aria-hidden="true"]'));
-      if (!found) throw new Error('No Status: Overdue tag');
-      return found;
-    });
-    await userEvent.click(remove);
-    await expect(table.getAllByRole('row')).toHaveLength(9);
+    await expect(rows()).toHaveLength(13);
+    await userEvent.click(
+      within(panel()).getByRole('button', { name: 'Apply' })
+    );
+    await expect(canvas.queryByRole('region', { name: 'Filter' })).toBeNull();
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await expect(trigger).toHaveFocus();
+    await expect(trigger).toHaveAccessibleName('Filter (1)');
+    // Header row plus the four overdue invoices.
+    await expect(rows()).toHaveLength(5);
+    await expect(canvas.getByRole('status')).toHaveTextContent('4 results');
+    await userEvent.click(
+      await shownButton(canvas, 'Remove filter Status: Overdue')
+    );
+    await expect(rows()).toHaveLength(13);
+
+    // Overdue and USD: no row matches.
+    await userEvent.click(trigger);
+    await userEvent.click(
+      within(panel()).getByRole('checkbox', { name: 'Overdue' })
+    );
+    await userEvent.click(
+      within(panel()).getByRole('combobox', { name: 'Currency' })
+    );
+    await userEvent.click(canvas.getByRole('option', { name: 'USD' }));
+    await userEvent.click(
+      within(panel()).getByRole('button', { name: 'Apply' })
+    );
+    await expect(
+      canvas.getByRole('heading', { name: 'No results found' })
+    ).toBeVisible();
+    await expect(canvas.getByRole('status')).toHaveTextContent('0 results');
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Clear filters' })
+    );
+    await expect(rows()).toHaveLength(13);
   },
+};
+
+/**
+ * Filters that leave no rows show `filteredEmptyState`, else `emptyState`,
+ * else this `NoDataEmptyState`.
+ */
+export const FilteredEmpty: Story = {
+  render: () => (
+    <DataGrid
+      title="Invoices"
+      options={{
+        features: panelFeatures,
+        columns: panelColumns,
+        data: panelInvoices,
+        initialState: {
+          columnFilters: [
+            { id: 'status', value: ['Overdue'] },
+            { id: 'currency', value: 'USD' },
+          ],
+        },
+      }}
+    />
+  ),
 };
 
 const emptyFeatures = tableFeatures({ ...dataGridSorting });

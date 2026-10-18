@@ -3,7 +3,8 @@ import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import * as stories from './DataGrid.stories.js';
 
-const { Default, Dark } = composeStories(stories);
+const { Default, Dark, WithFilterPanel, FilteredEmpty } =
+  composeStories(stories);
 
 async function snap(name: string) {
   await document.fonts.load('400 14px "IBM Plex Sans"');
@@ -16,6 +17,8 @@ async function snap(name: string) {
 test.each([
   ['data-grid-light', Default],
   ['data-grid-dark', Dark],
+  ['data-grid-filter-panel-open', WithFilterPanel],
+  ['data-grid-filtered-empty', FilteredEmpty],
 ] as const)('%s', async (name, story) => {
   await story.run();
   await snap(name);

@@ -95,8 +95,15 @@ a new array on every render makes TanStack rebuild its rows each time.
 - `pageSizes`: page sizes offered by the pagination bar, default 10, 20, 50.
 - `emptyState`: content of the full-width cell shown when there are no rows,
   such as an `EmptyState`. Without it the cell shows the `emptyState` message.
+  It also shows when filters leave no rows, unless `filteredEmptyState` is
+  set.
+- `filteredEmptyState`: shown when filters or the search leave no rows
+  ([Filter panel](#filter-panel)).
 - `filterSummary`: content shown between the toolbar and the table, such as a
-  `FilterSummary` of the applied filters.
+  `FilterSummary` of the applied filters. With `dataGridFilterPanel` the grid
+  shows its own summary unless this is set; `null` hides it.
+- `filterPanel`: settings of the `dataGridFilterPanel` panel
+  ([Filter panel](#filter-panel)).
 - `messages`: overrides for any string (below).
 - `ref` and other HTML attributes (`id`, `data-*`, `aria-*`, `style`) go to
   the table container, Carbon's `section.cds--data-table-container`.
@@ -107,22 +114,92 @@ a new array on every render makes TanStack rebuild its rows each time.
   `align`, and `dataGridInlineEdit` when it has `meta: { editable: true }`
   columns.
 
-| Feature    | Fragment             |
-| ---------- | -------------------- |
-| Sorting    | `dataGridSorting`    |
-| Filtering  | `dataGridFiltering`  |
-| Pagination | `dataGridPagination` |
-| Selection  | `dataGridSelection`  |
+| Feature      | Fragment              |
+| ------------ | --------------------- |
+| Sorting      | `dataGridSorting`     |
+| Filtering    | `dataGridFiltering`   |
+| Filter panel | `dataGridFilterPanel` |
+| Pagination   | `dataGridPagination`  |
+| Selection    | `dataGridSelection`   |
+
+## Filter panel
+
+`dataGridFilterPanel` adds a filter button to the toolbar, a `FilterPanel`
+left of the table and pagination, a `FilterSummary` of the applied filters
+between the toolbar and the table, and an empty state for no matches, as
+tanstack-carbon's filter panel does. Each column with `meta: { filter }` gets
+a field; the panel sets TanStack's `columnFilters` for those columns and
+keeps the filters of other columns. Spread `dataGridFiltering` too for the
+search field.
+
+```tsx
+const features = tableFeatures({ ...dataGridSorting, ...dataGridFilterPanel });
+const helper = createColumnHelper<typeof features, Invoice>();
+const columns = helper.columns([
+  helper.accessor('status', { header: 'Status', meta: { filter: {} } }),
+  helper.accessor('currency', {
+    header: 'Currency',
+    meta: { filter: { variant: 'select' } },
+  }),
+  helper.accessor('issued', {
+    header: 'Issued',
+    meta: { filter: { variant: 'dateRange' } },
+  }),
+]);
+```
+
+`meta.filter` is a `FilterPanelGroup` without `id`
+([FilterPanel](?path=/docs/components-filterpanel--overview)): `label`
+defaults to the header text, and `options` and the slider's `min` and `max`
+default to the column's values in all rows, not only the filtered ones. The
+variant picks the column's `filterFn`; a column with its own `filterFn`
+keeps it.
+
+| Variant              | Field                               | `filterFn`          |
+| -------------------- | ----------------------------------- | ------------------- |
+| `checkbox` (default) | Checkboxes                          | `inOptions`         |
+| `radio`              | Radio buttons                       | `inOptions`         |
+| `select`             | Dropdown                            | `inOptions`         |
+| `multiselect`        | Multiselect                         | `inOptions`         |
+| `text`               | Text input                          | `includesString`    |
+| `number`             | Number input, exact match           | `weakEquals`        |
+| `dateRange`          | Date range picker, both days in     | `inDayRange`        |
+| `slider`             | Slider, the value is an upper bound | `lessThanOrEqualTo` |
+
+`inOptions` compares the cell as a string, and an array cell matches when
+any item does. `inDayRange` compares calendar days, so a row with a time on
+the end day still matches.
+
+`filterPanel` takes:
+
+- `defaultOpen`: opens the panel on first render, without moving focus.
+- `updateMethod`: `batch` (default) applies on Apply; Apply and Clear close
+  the panel. `instant` applies every change and keeps the panel open.
+- `layout` and `headingLevel`: as on `FilterPanel`.
+- `messages`: the panel's own text; `summaryMessages`: the summary's.
+
+When filters or the search leave no rows, the body shows
+`filteredEmptyState ?? emptyState ?? NoDataEmptyState`, the last with the
+`filteredEmptyTitle` and `filteredEmptySubtitle` messages. Pass
+`filterSummary` to replace the grid's summary, or `null` to hide it.
+
+<Canvas of={DataGridStories.WithFilterPanel} />
+
+<Canvas of={DataGridStories.FilteredEmpty} />
 
 ## Messages
 
 Every string comes from `defaultDataGridMessages`; pass `messages` to replace
 any of them.
 
-| Key                             | Default                                           |
-| ------------------------------- | ------------------------------------------------- |
-| `sortDescription(header, next)` | "Click to sort rows by Number in ascending order" |
-| `emptyState`                    | "No rows to show"                                 |
+| Key                             | Default                                                                        |
+| ------------------------------- | ------------------------------------------------------------------------------ |
+| `sortDescription(header, next)` | "Click to sort rows by Number in ascending order"                              |
+| `emptyState`                    | "No rows to show"                                                              |
+| `filterPanelToggle(count)`      | "Filter", "Filter (2)"                                                         |
+| `resultCount(count)`            | "1 result", "12 results"                                                       |
+| `filteredEmptyTitle`            | "No results found"                                                             |
+| `filteredEmptySubtitle`         | "Try adjusting your search or filter options to find what you're looking for." |
 
 ## Keyboard and screen reader behaviour
 
@@ -198,9 +275,18 @@ any of them.
   header rows) and each rendered row, header rows included, `aria-rowindex`, so a screen reader reports
   the position in the whole list. Rows out of view are not in the DOM, so Tab
   reaches only rendered rows; scrolling brings more in.
+- With the filter panel, the toolbar has a button named by
+  `filterPanelToggle`, with the count of set filters, and `aria-expanded`;
+  `aria-controls` points at the panel while it is open. Opening it moves
+  focus to the panel title. In batch update Apply and Clear close the panel
+  and return focus to the button; Close always does. The panel is a `region` named by its title. While it is open its
+  own `status` announces the result count, while it is closed the grid's
+  does (`resultCount`). Each summary tag has a dismiss button named by
+  `removeFilter`.
 - With a title, the table is named by it.
 - A table with no rows shows `emptyState` in one cell that spans every
-  column.
+  column; when filters or the search leave no rows, the cell shows the
+  filtered empty state.
 
 ## Stories
 
@@ -211,7 +297,8 @@ any of them.
 ### Filtering
 
 The search field sets TanStack's `globalFilter`. Column filters go in
-`columnFilters` state, for example from a filter panel.
+`columnFilters` state; `dataGridFilterPanel` sets them from a panel
+([Filter panel](#filter-panel)).
 
 <Canvas of={DataGridStories.Filtering} />
 
@@ -268,18 +355,6 @@ Pass `getSubRows` in `options` and leave out `renderExpandedRow`.
 
 <Canvas of={DataGridStories.Virtualization} />
 
-### With a filter panel
-
-A `FilterPanel` beside the grid keeps its selection in app state; the app
-turns it into TanStack's `columnFilters` and passes it in `options.state`.
-Each filtered column gets a `filterFn` that keeps a row when its value is one
-of the selected options. Here the panel uses batch update, so the rows change
-on Apply. A `FilterSummary` with the same `value` and `onChange`, passed in
-`filterSummary`, shows the applied filters as tags between the toolbar and the
-table.
-
-<Canvas of={DataGridStories.WithFilterPanel} />
-
 ### Loading and empty
 
 While data loads, render Carbon's `DataTableSkeleton` with the grid's
@@ -289,6 +364,8 @@ headers in place of the grid. `DataGrid` has no loading prop.
 
 With no rows, `emptyState` fills the full-width cell, here with
 `NoDataEmptyState`. Without it the cell shows the `emptyState` message.
+Filters that leave no rows show the filtered empty state
+([Filter panel](#filter-panel)).
 
 <Canvas of={DataGridStories.Empty} />
 

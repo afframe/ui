@@ -451,13 +451,26 @@ export const TestFlyoutMenus: FlyoutStory = {
   play: async ({ canvas, userEvent }) => {
     const toggle = flyoutTrigger(canvas);
     await userEvent.click(toggle);
-    const currency = canvas.getByRole('combobox', { name: 'Currency' });
-    await userEvent.click(currency);
-    await expect(currency).toHaveAttribute('aria-expanded', 'true');
-    // A simulated click leaves focus on the body; a real one on the combobox.
-    currency.focus();
-    // Not clipped by the scrolling content: the last option is the element
-    // at its own centre.
+    // Customer sits in the lower row: opened down, its menu would run past
+    // the flyout's scrolling content and be clipped. The whole list stays in
+    // the viewport, and its last option is the element at its own centre.
+    // Its input is named only by the placeholder, the one multiselect here.
+    const customer = canvas.getByPlaceholderText('Choose options');
+    await userEvent.click(customer);
+    await expect(customer).toHaveAttribute('aria-expanded', 'true');
+    const list = must(
+      must(customer.closest('.cds--list-box__wrapper')).querySelector(
+        '[role="listbox"]'
+      )
+    ).getBoundingClientRect();
+    const content = must(
+      customer.closest('.afframe-filter-flyout-content')
+    ).getBoundingClientRect();
+    await expect(
+      customer.getBoundingClientRect().bottom + list.height
+    ).toBeGreaterThan(content.bottom);
+    await expect(list.top).toBeGreaterThanOrEqual(0);
+    await expect(list.bottom).toBeLessThanOrEqual(window.innerHeight);
     const last = must(canvas.getAllByRole('option').at(-1));
     const box = last.getBoundingClientRect();
     const hit = document.elementFromPoint(
@@ -465,6 +478,17 @@ export const TestFlyoutMenus: FlyoutStory = {
       box.top + box.height / 2
     );
     await expect(last.contains(hit)).toBe(true);
+    // A simulated click leaves focus on the body; a real one on the field.
+    customer.focus();
+    await userEvent.keyboard('{Escape}');
+    await expect(customer).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    // The flyout's Escape comes from Currency: from the Customer input it
+    // closes the flyout but leaves focus in the input.
+    const currency = canvas.getByRole('combobox', { name: 'Currency' });
+    await userEvent.click(currency);
+    await expect(currency).toHaveAttribute('aria-expanded', 'true');
+    currency.focus();
     await userEvent.keyboard('{Escape}');
     await expect(currency).toHaveAttribute('aria-expanded', 'false');
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
