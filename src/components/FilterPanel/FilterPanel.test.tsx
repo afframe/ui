@@ -622,7 +622,6 @@ test('summary: narrow, "+N" holds the rest and View all toggles multiline', asyn
   render(<SummaryHarness initial={allSelected} width={narrow} />);
   await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
   expect(removeButtons()).toHaveLength(2);
-  // The button remounts on collapse, so it is found again each time.
   const viewAll = () => {
     const [found] = shownByLabel('View all');
     if (!found) throw new Error('No View all');
@@ -637,6 +636,39 @@ test('summary: narrow, "+N" holds the rest and View all toggles multiline', asyn
   await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
   expect(viewAll().getAttribute('aria-expanded')).toBe('false');
   expect(summaryRoot().className).not.toContain('--filter-summary__expanded');
+  expect(removeButtons()).toHaveLength(2);
+});
+
+test('summary: narrow, View all keeps keyboard focus when it collapses', async () => {
+  render(<SummaryHarness initial={allSelected} width={narrow} />);
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+  const [viewAll] = shownByLabel('View all');
+  if (!viewAll) throw new Error('No View all');
+  viewAll.focus();
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() => expect(removeButtons()).toHaveLength(4));
+  expect(active()).toBe(viewAll);
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+  expect(viewAll.isConnected).toBe(true);
+  expect(viewAll.getAttribute('aria-expanded')).toBe('false');
+  expect(active()).toBe(viewAll);
+});
+
+test('summary: narrow, View all collapsing with nothing left to overflow focuses the root', async () => {
+  render(<SummaryHarness initial={allSelected} width={narrow} />);
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+  const [viewAll] = shownByLabel('View all');
+  if (!viewAll) throw new Error('No View all');
+  await userEvent.click(viewAll);
+  await vi.waitFor(() => expect(removeButtons()).toHaveLength(4));
+  await userEvent.click(dismiss('Customer: Birch Studio'));
+  await userEvent.click(dismiss('Customer: Acme Trading'));
+  await vi.waitFor(() => expect(removeButtons()).toHaveLength(2));
+  viewAll.focus();
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() => expect(viewAll.isConnected).toBe(false));
+  await vi.waitFor(() => expect(active()).toBe(summaryRoot()));
   expect(removeButtons()).toHaveLength(2);
 });
 

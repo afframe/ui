@@ -385,11 +385,23 @@ test('a new date from the app after a kept invalid date drops the kept text', as
   expect(input().getAttribute('aria-invalid')).toBeNull();
 });
 
-function ControlledRange() {
-  const [value, setValue] = useState<Date[]>([]);
+function ControlledRange({
+  initial = [],
+  onChange,
+}: {
+  initial?: Date[];
+  onChange?: (dates: Date[]) => void;
+}) {
+  const [value, setValue] = useState<Date[]>(initial);
   return (
     <>
-      <DatePicker datePickerType="range" value={value} onChange={setValue}>
+      <DatePicker
+        datePickerType="range"
+        value={value}
+        onChange={(dates) => {
+          onChange?.(dates);
+          setValue(dates);
+        }}>
         <DatePickerInput id="from" labelText="From" />
         <DatePickerInput id="to" labelText="To" />
       </DatePicker>
@@ -416,4 +428,40 @@ test('controlled range: a reset empties an end date kept invalid', async () => {
   await userEvent.click(input('To'));
   await leave();
   expect(input('To').value).toBe('');
+});
+
+const october = (day: number) => new Date(2026, 9, day);
+
+function Range({ value }: { value: Date[] }) {
+  return (
+    <DatePicker datePickerType="range" value={value} onChange={() => {}}>
+      <DatePickerInput id="from" labelText="From" />
+      <DatePickerInput id="to" labelText="To" />
+    </DatePicker>
+  );
+}
+
+test('controlled range: an invalid end keeps the start and tells the app once', async () => {
+  const onChange = vi.fn();
+  render(
+    <ControlledRange initial={[october(1), october(5)]} onChange={onChange} />
+  );
+  await retype('3102', 'To');
+  await leave();
+  await settle();
+  await expectKeptInvalid('31.02.', 'To');
+  expect(input('From').value).toBe('01.10.2026');
+  expect(input('From').getAttribute('aria-invalid')).toBeNull();
+  expect(lengths(onChange)).toEqual([1]);
+});
+
+test('range: a new date from the app drops an end kept invalid, with only the end focused', async () => {
+  const { rerender } = render(<Range value={[october(1), october(5)]} />);
+  await retype('3102', 'To');
+  await leave();
+  await settle();
+  await expectKeptInvalid('31.02.', 'To');
+  rerender(<Range value={[october(1), october(20)]} />);
+  await vi.waitFor(() => expect(input('To').value).toBe('20.10.2026'));
+  expect(input('To').getAttribute('aria-invalid')).toBeNull();
 });

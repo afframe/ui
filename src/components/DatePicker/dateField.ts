@@ -20,6 +20,7 @@ import {
   toFlatpickrFormat,
   type DatePattern,
 } from '../../format/index.js';
+import { usePrefix } from '@carbon/react';
 import { useInputMask, dateMaskSpec } from '../../mask/index.js';
 import { resolveMessages } from '../../messages.js';
 
@@ -126,6 +127,10 @@ type Pair<T> = [T, T];
 /** The part of the flatpickr instance the wrapper uses. */
 interface Flatpickr {
   selectedDates: Date[];
+  input: HTMLInputElement;
+  config: {
+    onChange: ((dates: Date[], text: string, picker: Flatpickr) => void)[];
+  };
   isEnabled: (date: Date) => boolean;
   setDate: (dates: Date[], triggerChange: boolean) => void;
 }
@@ -159,6 +164,19 @@ const replaced = <T>(pair: Pair<T>, index: number, value: T): Pair<T> => {
   next[index] = value;
   return next;
 };
+
+/**
+ * Leaves only the start date selected, with onChange. With a change, the
+ * range plugin rebuilds a shorter selection from the dates before it
+ * ([start, start] after the end had focus), so the date is set silently and
+ * flatpickr's change hooks run as it would run them.
+ */
+function setRangeStart(picker: Flatpickr, start: Date) {
+  picker.setDate([start], false);
+  for (const hook of picker.config.onChange) {
+    hook(picker.selectedDates, picker.input.value, picker);
+  }
+}
 
 const datesKey = (dates: readonly unknown[]) =>
   dates.map((date) => (date instanceof Date ? date.getTime() : '')).join();
@@ -279,6 +297,22 @@ export function useDateField({
       parseStrictDate(input, effectiveRef.current) ?? (false as const)
   );
   // flatpickr keeps its instance on the input it was created on: the start.
+  const prefix = usePrefix();
+  // Carbon puts its own refs on the inputs, so they are found in the DOM
+  // from the one in focus. Text the app set (not typed) is taken as typed, so
+  // it can be written back after flatpickr empties it: on leave, a range with
+  // one date clears both inputs without onChange.
+  const track = (index: 0 | 1, input: HTMLInputElement) => {
+    inputs.current[index] = input;
+    const all = input
+      .closest(`.${prefix}--date-picker`)
+      ?.querySelectorAll<HTMLInputElement>(`.${prefix}--date-picker__input`);
+    for (const n of [0, 1] as const) {
+      const found = inputs.current[n] ?? all?.[n] ?? null;
+      inputs.current[n] = found;
+      if (found && !dirty.current[n]) typed.current[n] = found.value;
+    }
+  };
   const instance = () =>
     (inputs.current[0] as { _flatpickr?: Flatpickr } | null)?._flatpickr;
   // A real date that minDate, maxDate, enable or disable rule out.
@@ -340,7 +374,13 @@ export function useDateField({
     if (!picker || told.current[index] || !appHolds(index)) return;
     told.current[index] = true;
     const before = inputs.current.map((input) => input?.value ?? '');
-    picker.setDate(index === 0 ? [] : picker.selectedDates.slice(0, 1), true);
+    // A range start whose date flatpickr dropped on leave comes from its
+    // written-back text.
+    const start =
+      picker.selectedDates[0] ??
+      parseStrictDate(inputs.current[0]?.value ?? '', effective);
+    if (index === 1 && start) setRangeStart(picker, start);
+    else picker.setDate([], true);
     inputs.current.forEach((input, n) => {
       if (input && !input.value) input.value = before[n] ?? '';
     });
@@ -363,7 +403,7 @@ export function useDateField({
       pattern: mask.pattern,
       placeholder: own.placeholder ?? mask.placeholder,
       onFocus: (event) => {
-        inputs.current[index] = event.currentTarget;
+        track(index, event.currentTarget);
         mask.onFocus(event);
         own.onFocus?.(event);
       },

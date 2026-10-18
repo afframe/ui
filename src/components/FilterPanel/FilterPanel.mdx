@@ -172,19 +172,20 @@ inside an open group, its search field and then its checkboxes; in batch
 update, Cancel and Apply. In the summary: each tag's dismiss button, the "+N"
 tag, Clear filters, then View all while tags overflow.
 
-| Key          | Where                    | Action                                                                                                                   |
-| ------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| Tab          | anywhere                 | Moves to the next button, heading or checkbox.                                                                           |
-| Enter        | group heading            | Opens or closes the group.                                                                                               |
-| Space        | checkbox                 | Selects or clears the option.                                                                                            |
-| Enter, Space | Apply, Cancel            | Applies or discards the draft; focus moves to the panel title. In the flyout, it closes and focus returns to its button. |
-| Enter, Space | close button             | Discards the draft and calls `onClose`.                                                                                  |
-| Enter, Space | tag dismiss button       | Removes that filter; focus stays on the tag that takes its place, else moves to the last shown tag, else to the summary. |
-| Enter, Space | "+N" tag                 | Opens or closes the popover of hidden tags.                                                                              |
-| Enter, Space | Clear filters            | Clears every filter; focus moves to the summary.                                                                         |
-| Enter        | flyout button            | Opens or closes the flyout. Tab moves into it.                                                                           |
-| Escape       | flyout button or content | Closes the flyout, discards a batch draft and returns focus to its button.                                               |
-| Escape       | search field with text   | Clears the search; a second Escape closes the flyout.                                                                    |
+| Key          | Where                    | Action                                                                                                                       |
+| ------------ | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Tab          | anywhere                 | Moves to the next button, heading or checkbox.                                                                               |
+| Enter, Space | group heading            | Opens or closes the group.                                                                                                   |
+| Space        | checkbox                 | Selects or clears the option.                                                                                                |
+| Enter, Space | Apply, Cancel            | Applies or discards the draft; focus moves to the panel title. In the flyout, it closes and focus returns to its button.     |
+| Enter, Space | close button             | Discards the draft and calls `onClose`.                                                                                      |
+| Enter, Space | tag dismiss button       | Removes that filter; focus stays on the tag that takes its place, else moves to the last shown tag, else to the summary.     |
+| Enter, Space | "+N" tag                 | Opens or closes the popover of hidden tags.                                                                                  |
+| Enter, Space | View all                 | Shows every tag on several lines, or one line again; focus stays on View all while tags overflow, else moves to the summary. |
+| Enter, Space | Clear filters            | Clears every filter; focus moves to the summary.                                                                             |
+| Enter, Space | flyout button            | Opens or closes the flyout. Tab moves into it.                                                                               |
+| Escape       | flyout button or content | Closes the flyout, discards a batch draft and returns focus to its button.                                                   |
+| Escape       | search field with text   | Clears the search; a second Escape closes the flyout.                                                                        |
 
 Screen readers announce:
 

@@ -75,29 +75,23 @@ function focusShownTag(
   (shown[Math.min(index, shown.length - 1)] ?? root)?.focus();
 }
 
-// TagSet keys its tags by position, so after a dismiss the focused button
-// usually stays and shows the next tag. TagSet lays out the new tags in its
-// own renders, which may then remove the focused button (the last tag, one
-// in "+N", or a tag that no longer fits). Focus then falls to the body:
-// move it to the tag in its place, else the last shown tag, else the root.
-// The next key or pointer press ends the watch.
-function useFocusAfterDismiss(
-  rootRef: RefObject<HTMLElement | null>,
-  prefix: string
-) {
-  const dismissed = useRef<number | null>(null);
+// TagSet lays out new tags in its own renders, which may remove the focused
+// button after a dismiss or a collapse (the last tag, one in "+N", a tag that
+// no longer fits, View all once nothing overflows). Focus then falls to the
+// body; `refocus` puts it back. The next key or pointer press ends the watch.
+function useRefocusWhenLost(rootRef: RefObject<HTMLElement | null>) {
+  const refocus = useRef<(() => void) | null>(null);
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     const observer = new MutationObserver(() => {
       const active = document.activeElement;
-      if (dismissed.current === null || (active && active !== document.body))
-        return;
-      focusShownTag(root, prefix, dismissed.current);
+      if (active && active !== document.body) return;
+      refocus.current?.();
     });
     observer.observe(root, { childList: true, subtree: true });
     const end = () => {
-      dismissed.current = null;
+      refocus.current = null;
     };
     document.addEventListener('keydown', end, true);
     document.addEventListener('pointerdown', end, true);
@@ -106,8 +100,8 @@ function useFocusAfterDismiss(
       document.removeEventListener('keydown', end, true);
       document.removeEventListener('pointerdown', end, true);
     };
-  }, [rootRef, prefix]);
-  return dismissed;
+  }, [rootRef]);
+  return refocus;
 }
 
 export interface FilterSummaryProps
@@ -144,6 +138,7 @@ export function FilterSummary({
   const [multiline, setMultiline] = useState(false);
   const [clearWidth, setClearWidth] = useState(0);
   const { tagLabel, removeFilter } = text;
+  const refocus = useRefocusWhenLost(rootRef);
 
   const tags = useMemo(() => {
     const selected = groups.flatMap((group) =>
@@ -162,15 +157,16 @@ export function FilterSummary({
         title: removeFilter(label),
         dismissTooltipLabel: removeFilter(label),
         onClose: () => {
-          dismissed.current = index;
+          // TagSet keys its tags by position, so the focused button usually
+          // stays and shows the next tag; else the tag in its place, the last
+          // shown tag, or the root.
+          refocus.current = () => focusShownTag(rootRef.current, prefix, index);
           const rest = value[group.id]?.filter((item) => item !== option.value);
           onChange(setGroup(value, group.id, rest ?? []));
         },
       };
     });
-  }, [groups, value, onChange, tagLabel, removeFilter]);
-
-  const dismissed = useFocusAfterDismiss(rootRef, prefix);
+  }, [groups, value, onChange, tagLabel, removeFilter, refocus, prefix]);
 
   const onOverflowTagChange = useCallback((overflow: ReactNode) => {
     setOverflowCount(Array.isArray(overflow) ? overflow.length : 0);
@@ -218,7 +214,9 @@ export function FilterSummary({
               multiline={multiline}
               containingElementRef={rootRef}
               measurementOffset={measurementOffset}
-              onOverflowTagChange={onOverflowTagChange}
+              // A multiline TagSet reports no overflow. Keeping the one-line
+              // count keeps View all mounted, and focused, as it collapses.
+              {...(!multiline && { onOverflowTagChange })}
               showAllTagsLabel={text.showAllTags}
               allTagsModalTitle={text.allTagsModalTitle}
               allTagsModalSearchLabel={text.allTagsModalSearchLabel}
@@ -244,7 +242,11 @@ export function FilterSummary({
                 align="left"
                 label={text.viewAll}
                 aria-expanded={multiline}
-                onClick={() => setMultiline(overflowCount > 0 && !multiline)}
+                onClick={() => {
+                  if (multiline)
+                    refocus.current = () => rootRef.current?.focus();
+                  setMultiline(!multiline);
+                }}
                 className={`${block}__view-all--trigger`}>
                 <ChevronDown
                   className={`${block}__view-all--chevron${multiline ? ` ${block}__view-all--chevron-multiline` : ''}`}
