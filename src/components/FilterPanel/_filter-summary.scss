@@ -1,22 +1,46 @@
-// Filter summary styles.
+// Filter summary styles, Carbon tokens only.
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/theme' as *;
 
-// IBM's summary bar has no positioning for its absolute View all button.
 .afframe-filter-summary {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $spacing-03;
 }
 
-// TagSet gives every tag, "+N" included, an 8 px bottom margin as the row
-// gap of its multiline layout. On one line that margin makes each tag slot
-// 32 px with the tag at its top, above the centre of Clear filters and View
-// all, so it goes until View all expands the tags.
-/* stylelint-disable selector-class-pattern -- IBM's and Carbon's class names */
-.afframe-filter-summary:not(.c4p--filter-summary__expanded)
-  .c4p--tag-set__tag-container {
-  align-items: center;
+// The overflow handler hides whole tags; shrunk tags would never overflow.
+.afframe-filter-summary-tags > * {
+  flex: none;
+}
 
-  .c4p--tag-set__displayed-tag > .cds--tag,
-  .c4p--tag-set-overflow__popover-trigger {
-    margin-block-end: 0;
-  }
+// createOverflowHandler measures this container's width, so it takes the
+// free space instead of growing with its tags.
+.afframe-filter-summary-tags {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-inline-size: 0;
+  gap: $spacing-03;
+}
+
+// Tags and "+N" the overflow handler hides.
+.afframe-filter-summary-tags > [data-hidden] {
+  display: none;
+}
+
+.afframe-filter-summary-popover {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-03;
+  padding: $spacing-05;
+  background-color: $background-inverse;
+  color: $text-inverse;
+}
+
+// Carbon's tag margins would add to the gap the overflow handler counts.
+/* stylelint-disable selector-class-pattern -- Carbon's class names */
+.afframe-filter-summary .cds--tag {
+  margin: 0;
 }
 /* stylelint-enable selector-class-pattern */

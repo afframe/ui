@@ -1,117 +1,117 @@
 'use client';
 /**
- * Copyright IBM Corp. 2022, 2024
+ * Copyright IBM Corp. 2024, 2025
  *
  * This source code is licensed under the Apache-2.0 license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2024
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: from FilterSummary of @carbon/ibm-products@2.100.0; dismissible tags built from FilterPanel groups and value, text from messages, Clear filters measured after layout, focus kept on the tags after a dismiss, empty root while nothing is selected, no enter animation or resize collapse. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: from the filter summary of tanstack-carbon react/filterPanel (src/Example/FilterPanel.tsx); tags built from FilterPanel groups and value, text from messages, measured with createOverflowHandler instead of a hidden copy, focus kept on the tags after a dismiss, empty root while nothing is applied. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
-import { TagSet, usePrefix as useProductsPrefix } from '@carbon/ibm-products';
-import { ChevronDown } from '@carbon/icons-react';
-import { Button, IconButton, usePrefix } from '@carbon/react';
 import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import type {
-  ComponentPropsWithoutRef,
-  ReactNode,
-  Ref,
-  RefObject,
-} from 'react';
+  Button,
+  DismissibleTag,
+  OperationalTag,
+  Popover,
+  PopoverContent,
+  usePrefix,
+} from '@carbon/react';
+import { createOverflowHandler } from '@carbon/utilities';
+import { useId, useLayoutEffect, useRef, useState } from 'react';
+import type { ComponentPropsWithoutRef, Ref } from 'react';
+import { flushSync } from 'react-dom';
 import { resolveMessages } from '../../messages.js';
 import { useMergedRefs } from '../FlowParts/refs.js';
 import type { FilterPanelProps } from './FilterPanel.js';
-import { checkedValues, selectedOptions, setGroupValue } from './value.js';
+import { filterTags } from './value.js';
+import type { FilterTag } from './value.js';
 
 export interface FilterSummaryMessages {
   /** Accessible name of the summary group. */
   selectedFilters: string;
-  /** Text of one tag. */
-  tagLabel: (groupLabel: string, optionLabel: string) => string;
+  /** Text of one tag; `value` is the option label or the formatted value. */
+  tagLabel: (groupLabel: string, value: string) => string;
   /** Name of a tag's dismiss button; `label` is the tag text. */
   removeFilter: (label: string) => string;
   clearFilters: string;
-  /** Button that shows every tag on several lines, shown while tags overflow. */
-  viewAll: string;
-  /** Link in the "+N" popover to the dialog of all tags (over 10 hidden tags). */
-  showAllTags: string;
-  allTagsModalTitle: string;
-  allTagsModalSearchLabel: string;
-  allTagsModalSearchPlaceholder: string;
+  /** Name of the "+N" tag that opens the hidden tags. */
+  moreFilters: (count: number) => string;
+  /** Date range value; a missing end is `null`. */
+  dateRangeValue: (start: string | null, end: string | null) => string;
+  /** Slider value: its upper bound. */
+  atMostValue: (value: string) => string;
 }
 
 export const defaultFilterSummaryMessages: FilterSummaryMessages = {
   selectedFilters: 'Selected filters',
-  tagLabel: (groupLabel, optionLabel) => `${groupLabel}: ${optionLabel}`,
+  tagLabel: (groupLabel, value) => `${groupLabel}: ${value}`,
   removeFilter: (label) => `Remove filter ${label}`,
   clearFilters: 'Clear filters',
-  viewAll: 'View all',
-  showAllTags: 'View all tags',
-  allTagsModalTitle: 'All tags',
-  allTagsModalSearchLabel: 'Search all tags',
-  allTagsModalSearchPlaceholder: 'Search all tags',
+  moreFilters: (count) => `${count} more filters`,
+  dateRangeValue: (start, end) => {
+    if (start && end) return `${start} – ${end}`;
+    return start ? `from ${start}` : `until ${end ?? ''}`;
+  },
+  atMostValue: (value) => `up to ${value}`,
 };
 
-// TagSet also renders a hidden copy of every tag for measuring.
+const isTag = (item: Element) => !item.hasAttribute('data-offset');
+
+// Focuses the dismiss button of the tag at `index`, else of the last tag,
+// else the first fallback that exists.
 function focusShownTag(
-  root: HTMLElement | null,
+  tags: Element[],
   prefix: string,
-  index: number
+  index: number,
+  fallbacks: (HTMLElement | null)[]
 ) {
-  const shown = [
-    ...(root?.querySelectorAll<HTMLButtonElement>(
-      `.${prefix}--tag__close-icon`
-    ) ?? []),
-  ].filter((button) => !button.closest('[aria-hidden="true"]'));
-  (shown[Math.min(index, shown.length - 1)] ?? root)?.focus();
+  const buttons = tags.flatMap((tag) => [
+    ...tag.querySelectorAll<HTMLButtonElement>(`.${prefix}--tag__close-icon`),
+  ]);
+  (
+    buttons[Math.min(index, buttons.length - 1)] ?? fallbacks.find(Boolean)
+  )?.focus();
 }
 
-// TagSet lays out new tags in its own renders, which may remove the focused
-// button after a dismiss or a collapse (the last tag, one in "+N", a tag that
-// no longer fits, View all once nothing overflows). Focus then falls to the
-// body; the armed callback puts it back. The next key or pointer press, or
-// 1.5 s once TagSet has settled, ends the watch, so a later unrelated focus
-// loss is left alone.
-function useRefocusWhenLost(rootRef: RefObject<HTMLElement | null>) {
-  const refocus = useRef<(() => void) | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const observer = new MutationObserver(() => {
-      const active = document.activeElement;
-      if (active && active !== document.body) return;
-      refocus.current?.();
-    });
-    observer.observe(root, { childList: true, subtree: true });
-    const end = () => {
-      refocus.current = null;
-    };
-    document.addEventListener('keydown', end, true);
-    document.addEventListener('pointerdown', end, true);
-    return () => {
-      observer.disconnect();
-      clearTimeout(timer.current);
-      document.removeEventListener('keydown', end, true);
-      document.removeEventListener('pointerdown', end, true);
-    };
-  }, [rootRef]);
-  return useCallback((next: () => void) => {
-    refocus.current = next;
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      refocus.current = null;
-    }, 1500);
-  }, []);
+type PendingFocus = { in: 'line' | 'popover'; index: number };
+
+interface Settle {
+  container: Element;
+  popover: Element | null;
+  more: HTMLElement | null;
+  root: HTMLElement | null;
+  prefix: string;
+  pending: PendingFocus | null;
+  setHidden: (count: number) => void;
+}
+
+// Takes the hidden count from the DOM, then moves focus after a dismiss: in
+// the line to the shown tag in its place or the root; in the popover to the
+// next hidden tag, "+N" or the root.
+function settle({
+  container,
+  popover,
+  more,
+  root,
+  prefix,
+  pending,
+  setHidden,
+}: Settle) {
+  const tags = [...container.children].filter(isTag);
+  const count = tags.filter((tag) => tag.hasAttribute('data-hidden')).length;
+  flushSync(() => setHidden(count));
+  if (pending?.in === 'line') {
+    const shown = tags.filter((tag) => !tag.hasAttribute('data-hidden'));
+    focusShownTag(shown, prefix, pending.index, [root]);
+  } else if (pending) {
+    const listed = [...(popover?.children ?? [])];
+    focusShownTag(listed, prefix, pending.index, [
+      count > 0 ? more : null,
+      root,
+    ]);
+  }
 }
 
 export interface FilterSummaryProps
@@ -124,11 +124,11 @@ export interface FilterSummaryProps
 }
 
 /**
- * The applied filters as one line of dismissible tags with a "+N" overflow,
- * then Clear filters, as IBM's Datagrid shows them above the table.
- * Controlled; renders an empty root while nothing is selected.
+ * The applied filters as one line of dismissible tags, a "+N" tag that opens
+ * the rest in a popover, then Clear filters, as in tanstack-carbon's filter
+ * panel example. Controlled; renders an empty root while nothing is applied.
  */
-// fallow-ignore-next-line complexity -- IBM's FilterSummary render: tags, Clear filters and View all only while tags overflow, with their widths for TagSet
+// fallow-ignore-next-line complexity -- one render: the overflow effect, the tag line, the "+N" popover and Clear filters
 export function FilterSummary({
   groups,
   value,
@@ -140,79 +140,98 @@ export function FilterSummary({
 }: FilterSummaryProps) {
   const text = resolveMessages(defaultFilterSummaryMessages, messages);
   const prefix = usePrefix();
-  const productsPrefix = useProductsPrefix();
   const rootRef = useRef<HTMLDivElement>(null);
   const mergedRef = useMergedRefs(rootRef, ref);
-  const clearRef = useRef<HTMLButtonElement>(null);
-  const [overflowCount, setOverflowCount] = useState(0);
-  const [multiline, setMultiline] = useState(false);
-  const [clearWidth, setClearWidth] = useState(0);
-  const { tagLabel, removeFilter } = text;
-  const armRefocus = useRefocusWhenLost(rootRef);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const moreRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const pendingFocus = useRef<PendingFocus | null>(null);
+  const keepOpen = useRef(false);
+  const popoverId = useId();
+  const [hidden, setHidden] = useState(0);
+  const [open, setOpen] = useState(false);
+  if (open && hidden === 0) setOpen(false);
 
-  const tags = useMemo(() => {
-    const selected = groups.flatMap((group) =>
-      selectedOptions(group, value[group.id]).map((option) => ({
-        group,
-        option,
-      }))
-    );
-    return selected.map(({ group, option }, index) => {
-      const label = tagLabel(group.label, option.label);
-      return {
-        label,
-        type: 'gray' as const,
-        size: 'md',
-        // Carbon names the dismiss button with `title`, or with
-        // `dismissTooltipLabel` when the tag text is truncated.
-        title: removeFilter(label),
-        dismissTooltipLabel: removeFilter(label),
-        onClose: () => {
-          // TagSet keys its tags by position, so the focused button usually
-          // stays and shows the next tag; else the tag in its place, the last
-          // shown tag, or the root.
-          armRefocus(() => focusShownTag(rootRef.current, prefix, index));
-          const rest = checkedValues(value[group.id]).filter(
-            (item) => item !== option.value
-          );
-          onChange(setGroupValue(value, group, rest));
-        },
-      };
+  const tags = filterTags(groups, value, {
+    tagLabel: text.tagLabel,
+    dateFrom: (date) => text.dateRangeValue(date, null),
+    dateUntil: (date) => text.dateRangeValue(null, date),
+    upTo: text.atMostValue,
+  });
+  // Labels too: a new text changes the tag widths.
+  const layoutKey = tags.map((tag) => `${tag.key}\n${tag.label}`).join('\n');
+
+  // The handler reads the container's children once, so it is created again
+  // whenever the tags change. Its onChange only fires when the hidden set
+  // differs from its own previous one, which starts empty, so a frame queued
+  // after its first update reads the outcome from the DOM.
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      // The last tag went with its focused button.
+      if (pendingFocus.current) rootRef.current?.focus();
+      pendingFocus.current = null;
+      return;
+    }
+    const handler = createOverflowHandler({
+      container,
+      maxVisibleItems: 10,
+      gap: parseFloat(getComputedStyle(container).columnGap) || 0,
+      onChange: (_, hiddenItems) => setHidden(hiddenItems.length),
     });
-  }, [groups, value, onChange, tagLabel, removeFilter, armRefocus, prefix]);
+    const frame = requestAnimationFrame(() => {
+      const pending = pendingFocus.current;
+      pendingFocus.current = null;
+      settle({
+        container,
+        popover: popoverRef.current,
+        more: moreRef.current,
+        root: rootRef.current,
+        prefix,
+        pending,
+        setHidden,
+      });
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      handler.disconnect();
+    };
+  }, [layoutKey, prefix]);
 
-  const onOverflowTagChange = useCallback((overflow: ReactNode) => {
-    setOverflowCount(Array.isArray(overflow) ? overflow.length : 0);
-  }, []);
-
-  const clearFilters = () => {
-    rootRef.current?.focus();
-    setMultiline(false);
-    onChange({});
+  const dismiss = (tag: FilterTag, focus: PendingFocus) => {
+    pendingFocus.current = focus;
+    if (focus.in === 'popover') {
+      // The dismissed button leaves the DOM within this event, so Carbon's
+      // focusout and click-outside checks see it outside the popover.
+      keepOpen.current = true;
+      setTimeout(() => {
+        keepOpen.current = false;
+      });
+    }
+    onChange(tag.without());
   };
 
-  const block = `${productsPrefix}--filter-summary`;
-  const hasTags = tags.length > 0;
-  // With the last tag gone, the next filters start on one line, unmeasured.
-  if (!hasTags && (multiline || overflowCount > 0)) {
-    setMultiline(false);
-    setOverflowCount(0);
-  }
-  useLayoutEffect(() => {
-    setClearWidth(clearRef.current?.offsetWidth ?? 0);
-  }, [hasTags, text.clearFilters]);
-  // IBM's classes only while there are tags: its bar has a fixed height.
-  const classes = [
-    'afframe-filter-summary',
-    hasTags && block,
-    hasTags && multiline && `${block}__expanded`,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
-  // As IBM's FilterSummary: TagSet leaves room for Clear filters and, while
-  // tags overflow, the 48 px View all button.
-  const measurementOffset = clearWidth + (overflowCount > 0 ? 48 : 0);
+  const closePopover = () => {
+    if (keepOpen.current) return;
+    // The list unmounts on close; focus inside it goes back to "+N".
+    if (popoverRef.current?.contains(document.activeElement)) {
+      moreRef.current?.focus();
+    }
+    setOpen(false);
+  };
+
+  const tagProps = (tag: FilterTag) => ({
+    type: 'gray' as const,
+    size: 'md' as const,
+    text: tag.label,
+    // Carbon names the dismiss button with `title`, or with
+    // `dismissTooltipLabel` when the tag text is truncated.
+    title: text.removeFilter(tag.label),
+    dismissTooltipLabel: text.removeFilter(tag.label),
+  });
+
+  // Hidden tags are always the last ones.
+  const hiddenTags = tags.slice(tags.length - hidden);
 
   return (
     <div
@@ -221,56 +240,62 @@ export function FilterSummary({
       tabIndex={-1}
       {...rest}
       ref={mergedRef}
-      className={classes}>
-      {hasTags && (
+      className={['afframe-filter-summary', className]
+        .filter(Boolean)
+        .join(' ')}>
+      {tags.length > 0 && (
         <>
-          <div>
-            <TagSet
-              key={multiline ? 'multiline' : 'single'}
-              tags={tags}
-              overflowType="tag"
-              multiline={multiline}
-              containingElementRef={rootRef}
-              measurementOffset={measurementOffset}
-              // A multiline TagSet reports no overflow. Keeping the one-line
-              // count keeps View all mounted, and focused, as it collapses.
-              {...(!multiline && { onOverflowTagChange })}
-              showAllTagsLabel={text.showAllTags}
-              allTagsModalTitle={text.allTagsModalTitle}
-              allTagsModalSearchLabel={text.allTagsModalSearchLabel}
-              allTagsModalSearchPlaceholderText={
-                text.allTagsModalSearchPlaceholder
-              }
-              className={`${block}__clear-button-inline`}
-            />
+          <div ref={containerRef} className="afframe-filter-summary-tags">
+            {tags.map((tag, index) => (
+              <DismissibleTag
+                key={tag.key}
+                {...tagProps(tag)}
+                onClose={() => dismiss(tag, { in: 'line', index })}
+              />
+            ))}
+            <span data-offset>
+              <Popover
+                open={open && hidden > 0}
+                isTabTip
+                align="bottom-end"
+                autoAlign
+                onRequestClose={closePopover}>
+                <OperationalTag
+                  ref={moreRef}
+                  type="gray"
+                  size="md"
+                  text={`+${hidden}`}
+                  aria-label={text.moreFilters(hidden)}
+                  aria-expanded={open}
+                  aria-controls={popoverId}
+                  onClick={() => (open ? closePopover() : setOpen(true))}
+                />
+                <PopoverContent id={popoverId}>
+                  <div
+                    ref={popoverRef}
+                    className="afframe-filter-summary-popover">
+                    {open &&
+                      hiddenTags.map((tag, index) => (
+                        <DismissibleTag
+                          key={tag.key}
+                          {...tagProps(tag)}
+                          onClose={() => dismiss(tag, { in: 'popover', index })}
+                        />
+                      ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </span>
           </div>
           <Button
-            ref={clearRef}
             kind="ghost"
             size="sm"
-            onClick={clearFilters}
-            className={`${block}__clear-all-button`}>
+            onClick={() => {
+              rootRef.current?.focus();
+              onChange({});
+            }}>
             {text.clearFilters}
           </Button>
-          {(overflowCount > 0 || multiline) && (
-            <div className={`${block}__view-all--wrapper`}>
-              <IconButton
-                kind="ghost"
-                size="sm"
-                align="left"
-                label={text.viewAll}
-                aria-expanded={multiline}
-                onClick={() => {
-                  if (multiline) armRefocus(() => rootRef.current?.focus());
-                  setMultiline(!multiline);
-                }}
-                className={`${block}__view-all--trigger`}>
-                <ChevronDown
-                  className={`${block}__view-all--chevron${multiline ? ` ${block}__view-all--chevron-multiline` : ''}`}
-                />
-              </IconButton>
-            </div>
-          )}
         </>
       )}
     </div>
