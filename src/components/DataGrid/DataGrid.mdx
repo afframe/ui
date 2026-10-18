@@ -149,26 +149,27 @@ const columns = helper.columns([
 ```
 
 `meta.filter` is a `FilterPanelGroup` without `id`
-([FilterPanel](?path=/docs/components-filterpanel--overview)): `label`
-defaults to the header text, and `options` and the slider's `min` and `max`
-default to the column's values in all rows, not only the filtered ones. The
-variant picks the column's `filterFn`; a column with its own `filterFn`
-keeps it.
+([FilterPanel](?path=/docs/components-filterpanel--overview), which lists
+the variants and their fields): `label` defaults to the header text, else the
+column id, and `options` and the slider's `min` and `max` default to the
+column's values in all rows, not only the filtered ones. A slider column with
+no numbers and no bounds gets no field. The variant picks the column's
+`filterFn`; a column with its own `filterFn` keeps it.
 
-| Variant              | Field                               | `filterFn`          |
-| -------------------- | ----------------------------------- | ------------------- |
-| `checkbox` (default) | Checkboxes                          | `inOptions`         |
-| `radio`              | Radio buttons                       | `inOptions`         |
-| `select`             | Dropdown                            | `inOptions`         |
-| `multiselect`        | Multiselect                         | `inOptions`         |
-| `text`               | Text input                          | `includesString`    |
-| `number`             | Number input, exact match           | `weakEquals`        |
-| `dateRange`          | Date range picker, both days in     | `inDayRange`        |
-| `slider`             | Slider, the value is an upper bound | `lessThanOrEqualTo` |
+| Variant              | `filterFn`          |
+| -------------------- | ------------------- |
+| `checkbox` (default) | `inOptions`         |
+| `radio`              | `inOptions`         |
+| `select`             | `inOptions`         |
+| `multiselect`        | `inOptions`         |
+| `text`               | `includesString`    |
+| `number`             | `weakEquals`        |
+| `dateRange`          | `inDayRange`        |
+| `slider`             | `lessThanOrEqualTo` |
 
 `inOptions` compares the cell as a string, and an array cell matches when
 any item does. `inDayRange` compares calendar days, so a row with a time on
-the end day still matches.
+the end day still matches; a range without a start is no filter.
 
 `filterPanel` takes:
 
@@ -176,7 +177,9 @@ the end day still matches.
 - `updateMethod`: `batch` (default) applies on Apply; Apply and Clear close
   the panel. `instant` applies every change and keeps the panel open.
 - `layout` and `headingLevel`: as on `FilterPanel`.
-- `messages`: the panel's own text; `summaryMessages`: the summary's.
+- `messages`: the panel's text, a `Partial<FilterFlyoutMessages>`: the
+  `FilterPanel` keys plus `toggle` (the toolbar button) and `resultCount`.
+  `summaryMessages`: the summary's.
 
 When filters or the search leave no rows, the body shows
 `filteredEmptyState ?? emptyState ?? NoDataEmptyState`, the last with the
@@ -196,8 +199,6 @@ any of them.
 | ------------------------------- | ------------------------------------------------------------------------------ |
 | `sortDescription(header, next)` | "Click to sort rows by Number in ascending order"                              |
 | `emptyState`                    | "No rows to show"                                                              |
-| `filterPanelToggle(count)`      | "Filter", "Filter (2)"                                                         |
-| `resultCount(count)`            | "1 result", "12 results"                                                       |
 | `filteredEmptyTitle`            | "No results found"                                                             |
 | `filteredEmptySubtitle`         | "Try adjusting your search or filter options to find what you're looking for." |
 
@@ -276,12 +277,12 @@ any of them.
   the position in the whole list. Rows out of view are not in the DOM, so Tab
   reaches only rendered rows; scrolling brings more in.
 - With the filter panel, the toolbar has a button named by
-  `filterPanelToggle`, with the count of set filters, and `aria-expanded`;
+  `filterPanel.messages.toggle`, with the count of set filters, and `aria-expanded`;
   `aria-controls` points at the panel while it is open. Opening it moves
   focus to the panel title. In batch update Apply and Clear close the panel
   and return focus to the button; Close always does. The panel is a `region` named by its title. While it is open its
   own `status` announces the result count, while it is closed the grid's
-  does (`resultCount`). Each summary tag has a dismiss button named by
+  does (`filterPanel.messages.resultCount`). Each summary tag has a dismiss button named by
   `removeFilter`.
 - With a title, the table is named by it.
 - A table with no rows shows `emptyState` in one cell that spans every

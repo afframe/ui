@@ -8,7 +8,7 @@ Accepted. Amends [ADR 0004](0004-scope-core-products-labs-extras.md) (the "filte
 
 ## Context
 
-IBM Products deprecated its Datagrid in v2.54.0, keeps sev 1 fixes in v3 and removes it in v4. The deprecation points to [tanstack-carbon](https://github.com/carbon-design-system/tanstack-carbon): example apps, not a package, with a filter panel, a filter flyout and a selected-filter summary. They target TanStack Table v8 and React 18. Afframe is on TanStack v9 and React 19, so the code is adapted, not installed.
+IBM Products deprecated its Datagrid in v2.54.0, keeps sev 1 fixes in v3 and removes it in v4. The deprecation points to [tanstack-carbon](https://github.com/carbon-design-system/tanstack-carbon): the official examples (the repo also has `react/community/tanstack-table-carbon`), not a package, with a filter panel, a filter flyout and a selected-filter summary. They target TanStack Table v8 and React 18. Afframe is on TanStack v9 and React 19, so the code is adapted, not installed.
 
 ## Decision
 
@@ -19,17 +19,18 @@ IBM Products deprecated its Datagrid in v2.54.0, keeps sev 1 fixes in v3 and rem
 - Search: per checkbox and radio group.
 - Title "Filter". The result count stays.
 - `FilterFlyout`: an icon trigger by default, with the count in its accessible name; a text trigger "Filter (n)" is an option.
-- `FilterSummary`: one line of tags, the overflow measured by `createOverflowHandler` from `@carbon/utilities` and shown in a "+N" popover, then Clear filters.
+- `FilterSummary`: one line of tags in IBM Products' `TagOverflow`, the overflow shown in a "+N" popover, then Clear filters. IBM's component replaces an own overflow measurement; it moves focus to the summary group after a dismiss, names "+N" only by its text, and has a "View all" modal for many hidden tags.
 - DataGrid: an inline left panel that pushes the table, and a filtered-empty state.
 - Files adapted from tanstack-carbon carry IBM's Apache-2.0 header in the repo format, with a "Modified by Afframe" line ([ADR 0011](0011-licence.md)). The upstream files have no header.
 
 ## Afframe additions
 
 - Options come from the table's core rows, so they stay stable while another filter is applied.
-- A date range filters by inclusive ISO days.
+- A date range filters by inclusive ISO days and needs a start; a value without one is no filter.
 - A flyout discards its draft when dismissed.
+- A range picker does not pull focus back to the end input after a change (flatpickr's range plugin does), and a click in the calendar does not close the flyout.
 - Strings are overridable through `messages` ([ADR 0014](0014-overridable-strings-through-a-messages-prop.md)).
-- Accessibility fixes: headings, `aria-expanded` on the trigger, focus returned to the trigger, unique ids, and a result count announced.
+- Accessibility fixes: headings, `aria-expanded` on the trigger, focus returned to the trigger on Escape and click-outside too (upstream does it on Clear and Filter), unique ids, and a result count announced.
 
 ## Options not chosen
 
@@ -46,6 +47,8 @@ IBM Products deprecated its Datagrid in v2.54.0, keeps sev 1 fixes in v3 and rem
   - Groups are flat sections; set `layout="accordion"` for accordion items (`defaultOpen` applies only there).
   - The default title is "Filter" (was "Filters").
   - `FilterPanelValue` values are `FilterPanelFieldValue`, not only `string[]`; narrow by the group's variant.
-  - `countFilterPanelSelections` counts each set non-option field as one.
+  - `FilterPanelGroup` is a union type keyed by `variant`, no longer an interface, so it cannot be extended or merged.
   - The `FilterFlyout` trigger is an icon button with the count in its name; set `trigger="text"` for the "Filter (n)" button. Its content is up to 642 px wide in two columns.
+  - `DataGrid` without `emptyState` shows `NoDataEmptyState` ("No results found") instead of "No rows to show" when a search or column filter leaves no rows; set `filteredEmptyState` or `emptyState` to replace it.
+- Changes that break no input main accepted: `countFilterPanelSelections` counts each set non-option field as one.
 - Each tanstack-carbon update is read and adapted by hand; nothing is pulled in automatically.

@@ -21,8 +21,8 @@ filter panel and filter flyout examples of
 (`react/filterPanel`, `react/filterFlyout`), adapted to a value that does not
 depend on a table.
 
-IBM Products deprecates its Datagrid and its FilterPanel, and points to
-tanstack-carbon as the successor. Carbon's DataTable filters with
+IBM Products deprecates its Datagrid, pointing to tanstack-carbon as the
+successor, and its FilterPanel. Carbon's DataTable filters with
 `TableToolbarSearch` (`filterRows`) and a `TableToolbarFilter` example to copy
 ([DataTable filtering](?path=/docs/components-datatable-filtering--overview)).
 Why Afframe follows tanstack-carbon:
@@ -36,7 +36,8 @@ Why Afframe follows tanstack-carbon:
 
 ## Anatomy
 
-As in tanstack-carbon's filter panel:
+Adapted from tanstack-carbon's filter panel. The result count, the "Apply"
+label (upstream: "Filter") and the instant update are Afframe's.
 
 1. Header: the title (Filter), the result count when `resultCount` is set,
    and a close button when `onClose` is set.
@@ -45,30 +46,32 @@ As in tanstack-carbon's filter panel:
    only Clear, full width.
 
 The flyout adds a trigger and a tab-tip popover, up to 642 px wide, with the
-fields in two columns. The summary is a line of tags, a "+N" tag for the
-ones that do not fit, then Clear filters.
+fields in two columns (flat layout). The summary is IBM Products'
+`TagOverflow`: a line of tags, a "+N" tag for the ones that do not fit, then
+Clear filters.
 
 ## Variants and values
 
 Each group has an `id`, a `label` and a `variant` (default `checkbox`). The
 value holds one entry per group id; a group without a filter is left out.
 
-| `variant`     | Field                                                     | Group props                             | Value                      |
-| ------------- | --------------------------------------------------------- | --------------------------------------- | -------------------------- |
-| `checkbox`    | Checkboxes                                                | `options`, `searchable`                 | `string[]`, option values  |
-| `radio`       | Radio buttons, "All" first                                | `options`, `searchable`                 | `string`, one option value |
-| `select`      | Dropdown, "All" first                                     | `options`                               | `string`, one option value |
-| `multiselect` | MultiSelect; FilterableMultiSelect with `searchable`      | `options`, `searchable`                 | `string[]`, option values  |
-| `text`        | TextInput                                                 | `placeholder`                           | `string`, contains         |
-| `number`      | NumberInput without steppers                              | `min`, `max`, `step`                    | `number`, equals           |
-| `dateRange`   | Afframe's DatePicker, range, two inputs                   | `minDate`, `maxDate` (ISO `YYYY-MM-DD`) | `[start, end]`, ISO days   |
-| `slider`      | Slider with one handle, the upper bound, with Min and Max | `min`, `max`, `step`                    | `number`, at most          |
+| `variant`     | Field                                                     | Group props                             | Value                                    |
+| ------------- | --------------------------------------------------------- | --------------------------------------- | ---------------------------------------- |
+| `checkbox`    | Checkboxes                                                | `options`, `searchable`                 | `string[]`, option values                |
+| `radio`       | Radio buttons, "All" first                                | `options`, `searchable`                 | `string`, one option value               |
+| `select`      | Dropdown, "All" first                                     | `options`                               | `string`, one option value               |
+| `multiselect` | MultiSelect; FilterableMultiSelect with `searchable`      | `options`, `searchable`                 | `string[]`, option values                |
+| `text`        | TextInput                                                 | `placeholder`                           | `string`, contains                       |
+| `number`      | NumberInput without steppers                              | `min`, `max`, `step`                    | `number`, equals                         |
+| `dateRange`   | Afframe's DatePicker, range, two inputs                   | `minDate`, `maxDate` (ISO `YYYY-MM-DD`) | `[start, end]`, ISO days, start required |
+| `slider`      | Slider with one handle, the upper bound, with Min and Max | `min`, `max`, `step`                    | `number`, at most                        |
 
 In a radio or select group "All" is selected while the group has no value;
 choosing it removes the filter. A radio search does not hide it.
 
 These count as no filter and remove the key: `[]`, `''` or only spaces,
-`NaN`, `[null, null]`, and a slider at `max`. `0` is a filter.
+`NaN`, a date range without an ISO start (`[null, null]`, `[null, end]`), and
+a slider at `max`. `0` is a filter.
 `countFilterPanelSelections(groups, value)` counts the selected options of a
 checkbox or multiselect group and 1 for every other group with a value; the
 flyout trigger and the accordion titles show it.
@@ -126,9 +129,9 @@ opens its item on first render.
 
 ## Props
 
-- `groups`, `value`, `onChange`: see above.
-- `updateMethod`: `batch` (default) or `instant`.
-- `layout`: `flat` (default) or `accordion`.
+`groups`, `value`, `onChange`, `updateMethod` and `layout` are described
+above. The others:
+
 - `onClose`: shows a close button in the header; in batch update it
   discards the draft first.
 - `resultCount`: the number of results with the applied `value`; shown and
@@ -164,10 +167,17 @@ update the flyout stays open while fields change.
 `FilterSummary` shows the applied filters as gray tags, named
 `Group: Value`, then Clear filters. Option groups get one tag per selected
 option; other groups one tag with the formatted value: a number, a date
-range, or "up to" for a slider. Tags that do not fit in one line, and every
-tag after the tenth, move into a "+N" tag that opens a popover with them.
-Dismissing a tag removes that filter; Clear filters calls `onChange({})`.
-With nothing applied it renders an empty root.
+range, or "up to" for a slider. The tags are IBM Products'
+`TagOverflow`: tags that do not fit in one line, and every tag after the
+tenth, move into a "+N" tag that opens a popover with them; with more than ten
+hidden tags the popover adds "View all", a modal with a search field. Until
+the line is measured every tag shows as "+N". Dismissing a tag removes that
+filter and moves focus to the summary group; Clear filters calls
+`onChange({})` and does the same. With nothing applied it renders an empty
+root.
+
+`FilterSummary` needs `AfframeProvider`: without it IBM's closed "All filters"
+modal paints on screen.
 
 It takes `groups`, `value`, `onChange` and `messages`; `ref` and other HTML
 attributes go to its root `div`. Render it right before the data it filters,
@@ -222,15 +232,18 @@ the summary and an empty state for no matches. See
 `FilterSummary` takes `messages?: Partial<FilterSummaryMessages>`; defaults in
 `defaultFilterSummaryMessages`.
 
-| Key               | Default                                           |
-| ----------------- | ------------------------------------------------- |
-| `selectedFilters` | Selected filters                                  |
-| `tagLabel`        | `group label`: `value`                            |
-| `removeFilter`    | Remove filter `label`                             |
-| `clearFilters`    | Clear filters                                     |
-| `moreFilters`     | `count` more filters                              |
-| `dateRangeValue`  | both days as one range; from `start`; until `end` |
-| `atMostValue`     | up to `value`                                     |
+| Key                        | Default                              |
+| -------------------------- | ------------------------------------ |
+| `selectedFilters`          | Selected filters                     |
+| `tagLabel`                 | `group label`: `value`               |
+| `removeFilter`             | Remove filter `label`                |
+| `clearFilters`             | Clear filters                        |
+| `showAllFilters`           | View all                             |
+| `allFiltersTitle`          | All filters                          |
+| `searchFiltersLabel`       | Search filters                       |
+| `searchFiltersPlaceholder` | Search filters                       |
+| `dateRangeValue`           | both days as one range; from `start` |
+| `atMostValue`              | up to `value`                        |
 
 ## Keyboard and screen reader behaviour
 
@@ -246,9 +259,9 @@ fields; then Clear and Apply. In the summary: each tag's dismiss button, the
 | Space        | checkbox                  | Selects or clears the option.                                                                                                        |
 | Enter, Space | Apply, Clear              | Applies the draft or clears every filter; focus moves to the panel title. In the flyout, it closes and focus returns to its trigger. |
 | Enter, Space | close button              | Discards the draft and calls `onClose`.                                                                                              |
-| Enter, Space | tag dismiss button        | Removes that filter; focus moves to the tag that takes its place, else the last shown tag, else the summary.                         |
+| Enter, Space | tag dismiss button        | Removes that filter; focus moves to the summary group.                                                                               |
 | Enter, Space | "+N" tag                  | Opens or closes the popover of hidden tags.                                                                                          |
-| Escape       | "+N" popover              | Closes it; focus returns to "+N".                                                                                                    |
+| Escape       | "+N" popover              | Closes it.                                                                                                                           |
 | Enter, Space | Clear filters             | Clears every filter; focus moves to the summary.                                                                                     |
 | Enter, Space | flyout trigger            | Opens or closes the flyout. Tab moves into it.                                                                                       |
 | Escape       | flyout trigger or content | Closes the flyout, discards a batch draft and returns focus to its trigger.                                                          |
@@ -264,4 +277,4 @@ Screen readers announce:
   button with its expanded state;
 - the flyout trigger with its count and expanded state;
 - the summary as a group named Selected filters; each dismiss button is named
-  Remove filter `label`, and "+N" as `count` more filters.
+  Remove filter `label`; the "+N" tag is named by its text.
