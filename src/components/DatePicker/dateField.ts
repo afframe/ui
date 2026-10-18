@@ -146,6 +146,8 @@ interface Problem {
 interface Flatpickr {
   selectedDates: Date[];
   input: HTMLInputElement;
+  calendarContainer?: HTMLElement;
+  isOpen: boolean;
   config: {
     onChange: ((dates: Date[], text: string, picker: Flatpickr) => void)[];
   };
@@ -194,6 +196,41 @@ function setRangeStart(picker: Flatpickr, start: Date) {
   for (const hook of picker.config.onChange) {
     hook(picker.selectedDates, picker.input.value, picker);
   }
+}
+
+/**
+ * flatpickr 4.6.13's rangePlugin marks the end input focused on its focus
+ * (rangePlugin.js:44), clears the mark only when the start input takes focus
+ * (:85), and on every onChange while marked refocuses the end on a timer
+ * (:114-116). So once the end had focus, a later change (the app emptying the
+ * value, Carbon's blur handler, tellApp) pulls focus back and opens the
+ * calendar. For one timer turn after a change, the end's focus() only goes
+ * through while focus is in the picker or its open calendar. A picked day is
+ * redrawn, so focus is on the body then.
+ */
+function guardEndRefocus(picker: Flatpickr, prefix: string) {
+  const field = picker.input.closest(`.${prefix}--date-picker`);
+  const end = field?.querySelectorAll<HTMLInputElement>(
+    `.${prefix}--date-picker__input`
+  )[1];
+  if (!field || !end || Object.hasOwn(end, 'focus')) return;
+  end.focus = function (options) {
+    const active = document.activeElement;
+    const inCalendar =
+      picker.isOpen &&
+      (active === document.body ||
+        picker.calendarContainer?.contains(active) === true);
+    if (field.contains(active) || inCalendar) {
+      HTMLElement.prototype.focus.call(this, options);
+    }
+  };
+  // The plugin's timer may be queued after this hook: the nested timer runs
+  // after it.
+  setTimeout(() =>
+    setTimeout(() => {
+      Reflect.deleteProperty(end, 'focus');
+    })
+  );
 }
 
 const datesKey = (dates: readonly unknown[]) =>
@@ -369,10 +406,12 @@ export function useDateField({
   /**
    * The picker reported dates: their text replaces the typed one. flatpickr
    * empties text it cannot take (Enter, a range end, minDate): typed text
-   * with no date stays and is marked invalid. Returns whether it kept any.
+   * with no date stays and is marked invalid. Pass the flatpickr instance
+   * too, so a range end does not pull focus back after the change. Returns whether it kept any.
    */
   // fallow-ignore-next-line complexity -- per input: keep the typed text or take the picker's
-  const pickerChanged = (dates: readonly unknown[]) => {
+  const pickerChanged = (dates: readonly unknown[], picker?: unknown) => {
+    if (picker) guardEndRefocus(picker as Flatpickr, prefix);
     reported.current = [dates[0] != null, dates[1] != null];
     lastReport.current = dates;
     if (!masked || emptiedBy.current === 'reset') return false;

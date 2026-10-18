@@ -267,10 +267,6 @@ test('instant: every variant calls onChange; only Clear is shown', async () => {
   await fillEveryVariant();
   expect(onChange).toHaveBeenLastCalledWith(everyVariant);
   expect(button('Clear')).toHaveProperty('disabled', false);
-  // flatpickr's range plugin refocuses the end input on any later change
-  // while the end was focused last (a DatePicker bug, reported apart).
-  screen.getByLabelText('Start date').focus();
-  await userEvent.keyboard('{Escape}');
   await userEvent.click(button('Clear'));
   expect(onChange).toHaveBeenLastCalledWith({});
   expect(active()).toBe(title());

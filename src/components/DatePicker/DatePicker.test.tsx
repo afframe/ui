@@ -490,8 +490,7 @@ test('controlled range: a reset empties an end date kept invalid', async () => {
   await leave();
   await expectKeptInvalid('31.02.', 'To');
   expect(input('From').value).toBe('01.10.2026');
-  // The open calendar covers the button; the app resets on its own.
-  screen.getByRole('button', { name: 'Reset' }).click();
+  await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
   await settle();
   expect(input('From').value).toBe('');
   expect(input('To').value).toBe('');
@@ -535,4 +534,77 @@ test('range: a new date from the app drops an end kept invalid, with only the en
   rerender(<Range value={[october(1), october(20)]} />);
   await vi.waitFor(() => expect(input('To').value).toBe('20.10.2026'));
   expect(input('To').getAttribute('aria-invalid')).toBeNull();
+});
+
+function AppRange({ next }: { next: Date[] }) {
+  const [value, setValue] = useState<Date[]>([]);
+  return (
+    <>
+      <DatePicker datePickerType="range" value={value} onChange={setValue}>
+        <DatePickerInput id="from" labelText="From" />
+        <DatePickerInput id="to" labelText="To" />
+      </DatePicker>
+      <button type="button" onClick={() => setValue(next)}>
+        Set
+      </button>
+    </>
+  );
+}
+
+const calendarOpen = () =>
+  document.querySelector('.flatpickr-calendar.open') !== null;
+
+async function typeRange() {
+  await userEvent.type(input('From'), '01102026');
+  await userEvent.type(input('To'), '05102026{Enter}');
+  await settle();
+}
+
+test.each([
+  ['a new range', [october(10), october(12)]],
+  ['an empty value', []],
+])(
+  'range: after the end had focus, %s from the app leaves focus where it is',
+  async (_, next) => {
+    render(<AppRange next={next} />);
+    await typeRange();
+    const set = screen.getByRole('button', { name: 'Set' });
+    set.focus();
+    set.click();
+    await settle();
+    expect(document.activeElement).toBe(set);
+    expect(calendarOpen()).toBe(false);
+  }
+);
+
+test('range: leaving a typed end keeps focus outside', async () => {
+  render(<AppRange next={[]} />);
+  await userEvent.type(input('From'), '01102026');
+  await userEvent.type(input('To'), '05102026');
+  await leave();
+  await settle();
+  expect(document.activeElement).toBe(document.body);
+  expect(calendarOpen()).toBe(false);
+});
+
+test('range: an end kept invalid on leave keeps focus outside', async () => {
+  render(<ControlledRange initial={[october(1), october(5)]} />);
+  await retype('3102', 'To');
+  await leave();
+  await settle();
+  await expectKeptInvalid('31.02.', 'To');
+  expect(document.activeElement).toBe(document.body);
+  expect(calendarOpen()).toBe(false);
+});
+
+test('range: a day picked with the end focused returns focus to the end', async () => {
+  render(<ControlledRange />);
+  await userEvent.click(input('To'));
+  const day = document.querySelector<HTMLElement>(
+    '.flatpickr-calendar.open .flatpickr-day[aria-label$="10, 2026"]'
+  );
+  if (!day) throw new Error('No day 10 in the open calendar');
+  await userEvent.click(day);
+  await vi.waitFor(() => expect(document.activeElement).toBe(input('To')));
+  expect(calendarOpen()).toBe(true);
 });
