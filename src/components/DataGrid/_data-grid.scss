@@ -42,6 +42,12 @@
   flex-direction: row-reverse;
 }
 
+// Carbon pads the sort button at the start only; reversed, the label would
+// end at the column edge, past the cells' end padding.
+.afframe-data-grid .afframe-data-grid__align-end.cds--table-sort {
+  padding-inline-end: $spacing-05;
+}
+
 // Sized columns (resizing): widths come from a colgroup, and the container
 // takes Carbon's static width (`fit-content`) so the title band and batch bar
 // end with the table. A table wider than its parent scrolls inside it.
