@@ -198,7 +198,7 @@ const sharedParameters = {
 const LabelToggletip = () => (
   // Keep the toggletip outside `labelText`; interactive content is invalid in labels.
   <span className="fluid-date-picker-story__toggletip">
-    <Toggletip align="top-left">
+    <Toggletip align="top-left" autoAlign>
       <ToggletipButton label="Show information">
         <Information />
       </ToggletipButton>

@@ -154,7 +154,7 @@ export const WithToggletip: StoryFn<FluidTextInputProps> = (args) => {
   const labelToggletip = (
     // Keep the toggletip outside `labelText`; interactive content is invalid in labels.
     <span className="fluid-text-input-story__toggletip">
-      <Toggletip align="top-left">
+      <Toggletip align="top-left" autoAlign>
         <ToggletipButton label="Show information">
           <Information />
         </ToggletipButton>
