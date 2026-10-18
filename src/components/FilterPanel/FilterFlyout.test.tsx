@@ -188,7 +188,7 @@ test('Escape with the calendar open closes only the calendar', async () => {
   render(<Harness groups={menuGroups} />);
   const toggle = trigger();
   await userEvent.click(toggle);
-  await userEvent.click(screen.getByLabelText('Start date'));
+  await userEvent.click(screen.getByLabelText('Date from'));
   expect(openCalendar()).not.toBeNull();
   await userEvent.keyboard('{Escape}');
   expect(openCalendar()).toBeNull();
@@ -202,7 +202,7 @@ test('picking a range in the calendar keeps the flyout open', async () => {
   render(<Harness groups={menuGroups} onChange={onChange} />);
   const toggle = trigger();
   await userEvent.click(toggle);
-  await userEvent.click(screen.getByLabelText('Start date'));
+  await userEvent.click(screen.getByLabelText('Date from'));
   const calendar = must(openCalendar());
   await userEvent.click(must(calendar.querySelector('.flatpickr-next-month')));
   // The calendar redraws its days after each pick.
@@ -215,7 +215,7 @@ test('picking a range in the calendar keeps the flyout open', async () => {
   await userEvent.click(day(0));
   await userEvent.click(day(4));
   expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  expect(screen.getByLabelText<HTMLInputElement>('Start date').value).not.toBe(
+  expect(screen.getByLabelText<HTMLInputElement>('Date from').value).not.toBe(
     ''
   );
   await userEvent.click(button('Apply'));
@@ -229,7 +229,7 @@ test('a click outside with a picked day closes and discards the draft', async ()
   render(<Harness groups={menuGroups} onChange={onChange} />);
   const toggle = trigger();
   await userEvent.click(toggle);
-  await userEvent.click(screen.getByLabelText('Start date'));
+  await userEvent.click(screen.getByLabelText('Date from'));
   await userEvent.click(
     must(
       openCalendar()?.querySelector<HTMLElement>(
@@ -240,7 +240,7 @@ test('a click outside with a picked day closes and discards the draft', async ()
   await userEvent.click(button('Before'));
   expect(toggle.getAttribute('aria-expanded')).toBe('false');
   await userEvent.click(toggle);
-  expect(screen.getByLabelText<HTMLInputElement>('Start date').value).toBe('');
+  expect(screen.getByLabelText<HTMLInputElement>('Date from').value).toBe('');
   expect(onChange).not.toHaveBeenCalled();
 });
 

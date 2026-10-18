@@ -210,8 +210,8 @@ async function fillEveryVariant() {
   // Before the date range: an open calendar takes the arrow keys.
   screen.getByRole('slider', { name: 'Amount' }).focus();
   await userEvent.keyboard('{ArrowLeft}');
-  await userEvent.type(screen.getByLabelText('Start date'), '01102026');
-  await userEvent.type(screen.getByLabelText('End date'), '05102026');
+  await userEvent.type(screen.getByLabelText('Date from'), '01102026');
+  await userEvent.type(screen.getByLabelText('Date to'), '05102026');
   await userEvent.click(document.body);
 }
 
@@ -253,7 +253,7 @@ test('instant: every variant calls onChange; only Clear is shown', async () => {
   expect(
     screen.getByRole<HTMLInputElement>('textbox', { name: 'Reference' }).value
   ).toBe('');
-  expect(screen.getByLabelText<HTMLInputElement>('Start date').value).toBe('');
+  expect(screen.getByLabelText<HTMLInputElement>('Date from').value).toBe('');
   expect(button('Clear')).toHaveProperty('disabled', true);
 });
 
@@ -407,7 +407,7 @@ test('panel: the focused title shows a focus outline', async () => {
   expect(style.outlineOffset).toBe('-2px');
 });
 
-const startDate = () => screen.getByLabelText<HTMLInputElement>('Start date');
+const startDate = () => screen.getByLabelText<HTMLInputElement>('Date from');
 
 test('date range: text kept invalid stays when another field changes', async () => {
   render(
@@ -444,7 +444,7 @@ test('date range: a stored day or bound that is not an ISO day is no date', () =
     />
   );
   expect(startDate().value).toBe('01.10.2026');
-  expect(screen.getByLabelText<HTMLInputElement>('End date').value).toBe('');
+  expect(screen.getByLabelText<HTMLInputElement>('Date to').value).toBe('');
 });
 
 test('date range: a range without a start shows both inputs empty', async () => {
@@ -456,7 +456,7 @@ test('date range: a range without a start shows both inputs empty', async () => 
   );
   await new Promise((resolve) => setTimeout(resolve, 50));
   expect(startDate().value).toBe('');
-  expect(screen.getByLabelText<HTMLInputElement>('End date').value).toBe('');
+  expect(screen.getByLabelText<HTMLInputElement>('Date to').value).toBe('');
 });
 
 test('text: spaces stay as typed; the stored value is trimmed', async () => {

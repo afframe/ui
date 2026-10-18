@@ -286,7 +286,7 @@ const toLocalDate = (day: string | null | undefined) => {
 };
 
 function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
-  const { group, field, onChange, id, text, hideLabel } = props;
+  const { group, field, onChange, id, text } = props;
   const [start, end] =
     typeof field === 'object' ? [isoDay(field[0]), isoDay(field[1])] : [];
   const { minDate, maxDate } = group;
@@ -299,7 +299,8 @@ function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
   const min = useMemo(() => toLocalDate(minDate), [minDate]);
   const max = useMemo(() => toLocalDate(maxDate), [maxDate]);
   return (
-    <GroupFieldset legend={group.label} hideLabel={hideLabel}>
+    // The inputs' own labels show; the group name stays for screen readers.
+    <GroupFieldset legend={group.label} hideLabel>
       <DatePicker
         datePickerType="range"
         // [] empties both inputs on Clear; Dates, not ISO text, because
@@ -311,13 +312,8 @@ function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
           const [from, to] = dates.map(localDateToCivilDate);
           onChange([from ?? null, to ?? null]);
         }}>
-        {/* The group label names the field; these stay the inputs' names. */}
-        <DatePickerInput
-          id={`${id}-start`}
-          labelText={text.dateStart}
-          hideLabel
-        />
-        <DatePickerInput id={`${id}-end`} labelText={text.dateEnd} hideLabel />
+        <DatePickerInput id={`${id}-start`} labelText={text.dateStart} />
+        <DatePickerInput id={`${id}-end`} labelText={text.dateEnd} />
       </DatePicker>
     </GroupFieldset>
   );

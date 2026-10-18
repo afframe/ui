@@ -119,9 +119,10 @@ const [value, setValue] = useState<FilterPanelValue>({});
 
 ## Layout
 
-`layout="flat"` (default) shows every group as a section: checkbox, radio,
-date range and slider groups as a fieldset with a visible legend, the others
-with their control's label. `layout="accordion"` puts each group in an
+`layout="flat"` (default) shows every group as a section: checkbox, radio
+and slider groups as a fieldset with a visible legend, a date range with its
+"Date from" and "Date to" labels (the group label stays for screen readers),
+the others with their control's label. `layout="accordion"` puts each group in an
 accordion item titled with its label and count; `defaultOpen` on a group
 opens its item on first render.
 
@@ -211,8 +212,8 @@ the summary and an empty state for no matches. See
 | `selectPlaceholder`      | Choose an option                     |
 | `multiselectPlaceholder` | Choose options                       |
 | `textPlaceholder`        | Filter `group label`                 |
-| `dateStart`              | Start date                           |
-| `dateEnd`                | End date                             |
+| `dateStart`              | Date from                            |
+| `dateEnd`                | Date to                              |
 | `apply`                  | Apply                                |
 | `clear`                  | Clear                                |
 | `close`                  | Close                                |
