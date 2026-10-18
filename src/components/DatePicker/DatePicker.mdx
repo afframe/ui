@@ -109,8 +109,10 @@ shows `messages.invalidDate`; an `invalid` set on the input wins. If the app
 held a date for that input, `onChange` reports it gone once. Emptying a filled
 `value` empties the inputs; to clear kept text while `value` is already empty,
 remount the picker with a new `key`. A `dateFormat` of `d`, `m` and `Y` with
-one separator is masked too; any other format is not. `inputMask={false}`
-turns the mask and the kept text off.
+one separator is masked too; any other format is not. Changing `dateFormat`
+after mount between a masked format and another, or an app with `onChange`
+that ignores `onChange([])` and empties `value` later, needs a new `key` on
+the picker. `inputMask={false}` turns the mask and the kept text off.
 
 <Canvas of={DatePickerStories.TypingADate} />
 
