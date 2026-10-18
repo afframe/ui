@@ -1,5 +1,5 @@
 'use client';
-// Filter panel and flyout (Afframe-owned).
+// Filter panel, flyout and summary (Afframe-owned).
 export {
   countFilterPanelSelections,
   defaultFilterPanelMessages,
@@ -17,3 +17,11 @@ export type {
   FilterFlyoutMessages,
   FilterFlyoutProps,
 } from './FilterFlyout.js';
+export {
+  defaultFilterSummaryMessages,
+  FilterSummary,
+} from './FilterSummary.js';
+export type {
+  FilterSummaryMessages,
+  FilterSummaryProps,
+} from './FilterSummary.js';

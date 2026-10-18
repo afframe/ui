@@ -144,6 +144,8 @@ export interface DataGridProps<
    * `emptyState` message; for example an `EmptyState`.
    */
   emptyState?: ReactNode;
+  /** Shown between the toolbar and the table, for example a FilterSummary. */
+  filterSummary?: ReactNode;
   messages?: Partial<DataGridMessages>;
 }
 
@@ -202,6 +204,7 @@ export function DataGrid<
   getRowLabel,
   virtualize = false,
   emptyState,
+  filterSummary,
   messages,
   className,
   ref,
@@ -447,6 +450,7 @@ export function DataGrid<
           </TableToolbarContent>
         </TableToolbar>
       )}
+      {filterSummary}
       <Table
         {...(size && { size })}
         useZebraStyles={useZebraStyles ?? false}

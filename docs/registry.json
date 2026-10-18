@@ -68,7 +68,9 @@
         "defaultFilterPanelMessages",
         "FilterPanel",
         "defaultFilterFlyoutMessages",
-        "FilterFlyout"
+        "FilterFlyout",
+        "defaultFilterSummaryMessages",
+        "FilterSummary"
       ],
       "types": [
         "FilterPanelGroup",
@@ -77,7 +79,9 @@
         "FilterPanelProps",
         "FilterPanelValue",
         "FilterFlyoutMessages",
-        "FilterFlyoutProps"
+        "FilterFlyoutProps",
+        "FilterSummaryMessages",
+        "FilterSummaryProps"
       ],
       "parts": {
         "stories": true,

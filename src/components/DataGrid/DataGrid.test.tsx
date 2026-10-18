@@ -1064,3 +1064,29 @@ test('a sized grid uses static width and stays inside its parent', () => {
     document.querySelector('.cds--data-table-container--static')
   ).toBeNull();
 });
+
+test('renders the filterSummary slot between the toolbar and the table', () => {
+  const follows = (a: Node, b: Node) =>
+    Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+  render(
+    <DataGrid
+      options={{ features: filterFeatures, columns: filterColumns, data: few }}
+      filterSummary={<div data-testid="summary" />}
+    />
+  );
+  const summary = screen.getByTestId('summary');
+  const toolbar = screen.getByRole('group', { name: 'Table toolbar' });
+  expect(follows(toolbar, summary)).toBe(true);
+  expect(follows(summary, screen.getByRole('table'))).toBe(true);
+  cleanup();
+  render(
+    <DataGrid
+      options={{ features: sortFeatures, columns: sortColumns, data: few }}
+      filterSummary={<div data-testid="summary" />}
+    />
+  );
+  expect(screen.queryByRole('group', { name: 'Table toolbar' })).toBeNull();
+  expect(
+    follows(screen.getByTestId('summary'), screen.getByRole('table'))
+  ).toBe(true);
+});

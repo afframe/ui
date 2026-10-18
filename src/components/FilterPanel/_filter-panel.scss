@@ -1,4 +1,4 @@
-// Filter panel and flyout styles, Carbon tokens only.
+// Filter panel, flyout and summary styles, Carbon tokens only.
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
@@ -10,18 +10,25 @@
 
 .afframe-filter-panel-header {
   display: flex;
+  align-items: flex-start;
+  gap: $spacing-03;
+  padding: $spacing-05 $spacing-05 $spacing-03;
+}
+
+.afframe-filter-panel-heading {
+  display: flex;
+  flex: 1;
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: $spacing-03;
-  padding: $spacing-05 $spacing-05 $spacing-03;
 }
 
 .afframe-filter-panel-title {
   @include type.type-style('heading-compact-02');
 }
 
-// The title takes focus after Clear all or the last tag is removed.
+// The title takes focus after Apply or Cancel.
 .afframe-filter-panel-title:focus {
   @include focus-outline('outline');
 }
@@ -30,23 +37,6 @@
   @include type.type-style('label-01');
 
   color: $text-secondary;
-}
-
-.afframe-filter-panel-summary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: $spacing-03;
-  padding: 0 $spacing-05 $spacing-03;
-}
-
-.afframe-filter-panel-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $spacing-03;
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
 .afframe-filter-panel-search {
@@ -63,6 +53,19 @@
   @include type.type-style('helper-text-01');
 
   color: $text-helper;
+}
+
+// Batch actions stay visible at the bottom of the flyout's scroll area, as
+// IBM's panel actions do; IBM's action set class gives the background.
+.afframe-filter-panel-actions {
+  position: sticky;
+  z-index: 1;
+  inset-block-end: 0;
+}
+
+// IBM's summary bar has no positioning for its absolute View all button.
+.afframe-filter-summary {
+  position: relative;
 }
 
 .afframe-filter-flyout-content {

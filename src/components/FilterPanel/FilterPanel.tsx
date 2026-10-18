@@ -1,10 +1,13 @@
 'use client';
+import { usePrefix as useProductsPrefix } from '@carbon/ibm-products';
+import { Close } from '@carbon/icons-react';
 import {
   Accordion,
   AccordionItem,
   Button,
+  ButtonSet,
   Checkbox,
-  DismissibleTag,
+  IconButton,
   Search,
   usePrefix,
 } from '@carbon/react';
@@ -37,26 +40,29 @@ export interface FilterPanelMessages {
   /** Accordion heading of a group; `count` is the number of selected options. */
   groupTitle: (label: string, count: number) => string;
   resultCount: (count: number) => string;
-  selectedFilters: string;
-  clearAll: string;
-  removeFilter: (label: string) => string;
   searchLabel: (groupLabel: string) => string;
   searchPlaceholder: string;
   clearSearch: string;
   noMatches: string;
+  /** Batch update: applies the draft. */
+  apply: string;
+  /** Batch update: discards the draft. */
+  cancel: string;
+  /** Label of the close button, shown when `onClose` is set. */
+  close: string;
 }
 
 export const defaultFilterPanelMessages: FilterPanelMessages = {
   title: 'Filters',
   groupTitle: (label, count) => (count > 0 ? `${label} (${count})` : label),
   resultCount: (count) => (count === 1 ? '1 result' : `${count} results`),
-  selectedFilters: 'Selected filters',
-  clearAll: 'Clear all',
-  removeFilter: (label) => `Remove filter ${label}`,
   searchLabel: (groupLabel) => `Search ${groupLabel}`,
   searchPlaceholder: 'Search',
   clearSearch: 'Clear search',
   noMatches: 'No matching options',
+  apply: 'Apply',
+  cancel: 'Cancel',
+  close: 'Close filter panel',
 };
 
 export interface FilterPanelProps extends Omit<
@@ -67,8 +73,18 @@ export interface FilterPanelProps extends Omit<
   ref?: Ref<HTMLElement>;
   groups: readonly FilterPanelGroup[];
   value: FilterPanelValue;
+  /** Called per toggle (`instant`) or on Apply (`batch`). */
   onChange: (value: FilterPanelValue) => void;
-  /** Number of results with the current filters; shown and announced when set. */
+  /**
+   * `instant` applies every toggle; `batch` keeps a draft until Apply, with
+   * Apply and Cancel at the bottom. Default `instant`.
+   */
+  updateMethod?: 'batch' | 'instant';
+  /** Batch update: called after Cancel restores the applied value. Keeps Cancel enabled. */
+  onCancel?: () => void;
+  /** Shows a close button in the title row; in batch update it discards the draft first. */
+  onClose?: () => void;
+  /** Number of results with the applied `value`; shown and announced when set. */
   resultCount?: number;
   messages?: Partial<FilterPanelMessages>;
   /** Level of the title heading. Default 2. */
@@ -90,7 +106,7 @@ export function countFilterPanelSelections(
   );
 }
 
-function setGroup(
+export function setGroup(
   value: FilterPanelValue,
   groupId: string,
   selected: readonly string[]
@@ -101,11 +117,24 @@ function setGroup(
   ]);
 }
 
-/** A side panel of checkbox filter groups with a dismissible summary. Controlled. */
+// Same selections per group, in any order; a missing group equals an empty one.
+function sameFilterValue(a: FilterPanelValue, b: FilterPanelValue): boolean {
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  return [...keys].every((key) => {
+    const left = new Set(a[key] ?? []);
+    const right = new Set(b[key] ?? []);
+    return left.size === right.size && [...left].every((v) => right.has(v));
+  });
+}
+
+/** A side panel of checkbox filter groups, applied per toggle or in a batch. Controlled. */
 export function FilterPanel({
   groups,
   value,
   onChange,
+  updateMethod = 'instant',
+  onCancel,
+  onClose,
   resultCount,
   messages,
   headingLevel = 2,
@@ -115,41 +144,61 @@ export function FilterPanel({
 }: FilterPanelProps) {
   const text = resolveMessages(defaultFilterPanelMessages, messages);
   const prefix = usePrefix();
+  const productsPrefix = useProductsPrefix();
   const id = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const tagsRef = useRef<HTMLUListElement>(null);
   const [search, setSearch] = useState<Record<string, string>>({});
+  const batch = updateMethod === 'batch';
 
-  const selected = groups.flatMap((group) =>
-    group.options
-      .filter((option) => value[group.id]?.includes(option.value))
-      .map((option) => ({ group, option }))
-  );
+  // The draft follows an outside `value` change. Compared by content, so an
+  // inline `value` object does not reset the draft on every render.
+  const [applied, setApplied] = useState(value);
+  const [draft, setDraft] = useState(value);
+  if (!sameFilterValue(applied, value)) {
+    setApplied(value);
+    setDraft(value);
+  }
+  const shown = batch ? draft : value;
+  const dirty = batch && !sameFilterValue(draft, value);
 
   const toggle = (groupId: string, optionValue: string, checked: boolean) => {
-    const current = value[groupId] ?? [];
-    const next = checked
-      ? [...current, optionValue]
-      : current.filter((item) => item !== optionValue);
-    onChange(setGroup(value, groupId, next));
+    const current = shown[groupId] ?? [];
+    const next = setGroup(
+      shown,
+      groupId,
+      checked
+        ? [...current, optionValue]
+        : current.filter((item) => item !== optionValue)
+    );
+    if (batch) setDraft(next);
+    else onChange(next);
   };
 
-  // Removing the focused tag would drop focus to the page, so focus moves to
-  // the next tag, else the previous one, else the panel title first.
-  const remove = (index: number, groupId: string, optionValue: string) => {
-    const buttons = tagsRef.current?.querySelectorAll('button');
-    const target = buttons?.[index + 1] ?? buttons?.[index - 1];
-    (target ?? titleRef.current)?.focus();
-    toggle(groupId, optionValue, false);
-  };
-
-  const clearAll = () => {
+  // Apply and Cancel disable themselves, which would drop focus to the page.
+  // The title takes it first, so a caller that moves focus on the callback
+  // (the flyout returning it to its button) still wins.
+  const apply = () => {
     titleRef.current?.focus();
-    onChange({});
+    onChange(draft);
+  };
+
+  const cancel = () => {
+    titleRef.current?.focus();
+    setDraft(value);
+    onCancel?.();
+  };
+
+  const close = () => {
+    setDraft(value);
+    onClose?.();
   };
 
   const classes = ['afframe-filter-panel', className].filter(Boolean).join(' ');
   const Heading = headingLevel === 3 ? 'h3' : 'h2';
+  // IBM ActionSet (ibm-products 2.100.0, not exported) renders this markup
+  // for two buttons in a medium set; its classes give the 64 px buttons.
+  const actionSet = `${productsPrefix}--action-set`;
+  const actionButton = `${actionSet}__action-button ${actionSet}__action-button--expressive`;
 
   return (
     <section
@@ -158,46 +207,34 @@ export function FilterPanel({
       ref={ref}
       className={classes}>
       <div className="afframe-filter-panel-header">
-        <Heading
-          id={`${id}-title`}
-          ref={titleRef}
-          tabIndex={-1}
-          className="afframe-filter-panel-title">
-          {text.title}
-        </Heading>
-        {resultCount !== undefined && (
-          <p role="status" className="afframe-filter-panel-count">
-            {text.resultCount(resultCount)}
-          </p>
+        <div className="afframe-filter-panel-heading">
+          <Heading
+            id={`${id}-title`}
+            ref={titleRef}
+            tabIndex={-1}
+            className="afframe-filter-panel-title">
+            {text.title}
+          </Heading>
+          {resultCount !== undefined && (
+            <p role="status" className="afframe-filter-panel-count">
+              {text.resultCount(resultCount)}
+            </p>
+          )}
+        </div>
+        {onClose && (
+          <IconButton
+            kind="ghost"
+            align="bottom-end"
+            label={text.close}
+            onClick={close}
+            className="afframe-filter-panel-close">
+            <Close />
+          </IconButton>
         )}
       </div>
-      {selected.length > 0 && (
-        <div className="afframe-filter-panel-summary">
-          <ul
-            ref={tagsRef}
-            aria-label={text.selectedFilters}
-            className="afframe-filter-panel-tags">
-            {selected.map(({ group, option }, index) => (
-              <li key={`${group.id}:${option.value}`}>
-                <DismissibleTag
-                  size="md"
-                  type="high-contrast"
-                  text={option.label}
-                  title={text.removeFilter(option.label)}
-                  dismissTooltipLabel={text.removeFilter(option.label)}
-                  onClose={() => remove(index, group.id, option.value)}
-                />
-              </li>
-            ))}
-          </ul>
-          <Button kind="ghost" size="sm" onClick={clearAll}>
-            {text.clearAll}
-          </Button>
-        </div>
-      )}
       <Accordion>
         {groups.map((group, groupIndex) => {
-          const groupSelected = value[group.id] ?? [];
+          const groupSelected = shown[group.id] ?? [];
           const query = (search[group.id] ?? '').trim().toLowerCase();
           const options = query
             ? group.options.filter((option) =>
@@ -246,6 +283,27 @@ export function FilterPanel({
           );
         })}
       </Accordion>
+      {batch && (
+        <ButtonSet
+          className={`${actionSet} ${actionSet}--row-double ${actionSet}--md afframe-filter-panel-actions`}>
+          <Button
+            kind="secondary"
+            isExpressive
+            disabled={!dirty && !onCancel}
+            onClick={cancel}
+            className={actionButton}>
+            {text.cancel}
+          </Button>
+          <Button
+            kind="primary"
+            isExpressive
+            disabled={!dirty}
+            onClick={apply}
+            className={actionButton}>
+            {text.apply}
+          </Button>
+        </ButtonSet>
+      )}
     </section>
   );
 }
