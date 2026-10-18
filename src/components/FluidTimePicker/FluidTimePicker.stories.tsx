@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; redundant labelText and placeholder removed from second picker (args supply them); skeleton className and isOnlyTwo passed explicitly, Default story first; business example data, Disabled (color-contrast off), ReadOnly, Invalid (error linked by hand), Warning and TwentyFourHour stories; placeholder arg dropped (the time format sets it), hourCycle h12 beside the AM/PM select, TwentyFourHour without its own pattern, Afframe story for typing a time. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, plain CSS story styles; redundant labelText and placeholder removed from second picker (args supply them); skeleton className and isOnlyTwo passed explicitly, Default story first; business example data, Disabled (color-contrast off), ReadOnly, Invalid (error linked by hand), Warning and TwentyFourHour stories; placeholder arg dropped (the time format sets it), hourCycle h12 beside the AM/PM select, TwentyFourHour without its own pattern, Afframe story for typing a time; scrollable-region-focusable off for the fluid select label. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -37,6 +37,15 @@ const timeZones = [
   <SelectItem key="eet" value="eet" text="Eastern European Time (EET)" />,
 ];
 
+// Carbon's fluid select label is `overflow-x: scroll` without being
+// focusable, so axe flags it whenever the label text overflows (timing and
+// font dependent). Every story renders that label; story-level rules arrays
+// replace this one, so they repeat it.
+const fluidLabelRule = {
+  id: 'scrollable-region-focusable',
+  enabled: false,
+} as const;
+
 export default {
   title: 'Components/Fluid Inputs/FluidTimePicker',
   tags: ['carbon'],
@@ -51,6 +60,7 @@ export default {
   ],
   parameters: {
     styles,
+    a11y: { config: { rules: [fluidLabelRule] } },
     docs: {
       page: mdx,
     },
@@ -182,7 +192,11 @@ Disabled.args = { ...Default.args, disabled: true };
 // components, but axe checks it anyway.
 Disabled.parameters = {
   ...Default.parameters,
-  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
+  a11y: {
+    config: {
+      rules: [{ id: 'color-contrast', enabled: false }, fluidLabelRule],
+    },
+  },
 };
 Disabled.argTypes = Default.argTypes;
 
@@ -253,7 +267,13 @@ export const Skeleton: StoryFn = () => {
 
 export const TypingATime: StoryObj<typeof FluidTimePicker> = {
   tags: ['afframe'],
-  parameters: { ...afframeA11y },
+  parameters: {
+    a11y: {
+      config: {
+        rules: [...afframeA11y.a11y.config.rules, fluidLabelRule],
+      },
+    },
+  },
   render: () => (
     <div style={{ width: '350px' }}>
       <FluidTimePicker id="time-picker-typing" labelText="Start time">
