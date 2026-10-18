@@ -293,3 +293,77 @@ test('a new key resets text kept invalid', async () => {
   expect(input().value).toBe('');
   expect(input().getAttribute('aria-invalid')).toBeNull();
 });
+
+// The app takes every onChange only after an await, then can clear on its own.
+function AsyncControlled({ onChange }: { onChange: (dates: Date[]) => void }) {
+  const [value, setValue] = useState<Date[]>([]);
+  return (
+    <>
+      <DatePicker
+        datePickerType="single"
+        value={value}
+        onChange={async (dates) => {
+          onChange(dates);
+          await new Promise((resolve) => setTimeout(resolve, 20));
+          setValue(dates);
+        }}>
+        <DatePickerInput id="due" labelText="Due date" />
+      </DatePicker>
+      <button type="button" onClick={() => setValue([])}>
+        Clear
+      </button>
+    </>
+  );
+}
+
+test('controlled after an await: an impossible date stays; a later clear empties', async () => {
+  const onChange = vi.fn();
+  render(<AsyncControlled onChange={onChange} />);
+  await userEvent.type(input(), '01102026');
+  await leave();
+  await settle();
+  await retype('31022026');
+  await leave();
+  await settle();
+  await expectKeptInvalid('31.02.2026');
+  expect(lengths(onChange)).toEqual([1, 0]);
+  await retype('05102026');
+  await leave();
+  await settle();
+  expect(input().value).toBe('05.10.2026');
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+  await userEvent.click(screen.getByRole('button', { name: 'Clear' }));
+  await vi.waitFor(() => expect(input().value).toBe(''));
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+});
+
+test('a dateFormat change after mount parses typed text in the new format', async () => {
+  const onChange = vi.fn();
+  const { rerender } = render(<Single onChange={onChange} />);
+  rerender(<Single dateFormat="Y-m-d" onChange={onChange} />);
+  await userEvent.type(input(), '20261001');
+  await leave();
+  expect(input().value).toBe('2026-10-01');
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+  const dates = onChange.mock.lastCall?.[0] as Date[];
+  expect(dates[0]?.toDateString()).toBe(new Date(2026, 9, 1).toDateString());
+});
+
+test('an empty value right after onChange([]) is the echo only with onChange', async () => {
+  const { rerender } = render(
+    <Single value={[new Date(2026, 9, 1)]} onChange={() => {}} />
+  );
+  await retype('3102');
+  await leave();
+  await expectKeptInvalid('31.02.');
+  rerender(<Single value={[]} onChange={() => {}} />);
+  await settle();
+  await expectKeptInvalid('31.02.');
+  rerender(<Single key="b" value={[new Date(2026, 9, 1)]} />);
+  await retype('3102');
+  await leave();
+  await expectKeptInvalid('31.02.');
+  rerender(<Single key="b" value={[]} />);
+  await vi.waitFor(() => expect(input().value).toBe(''));
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+});

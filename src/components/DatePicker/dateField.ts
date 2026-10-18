@@ -4,6 +4,7 @@ import {
   cloneElement,
   isValidElement,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -140,6 +141,8 @@ interface DateFieldOptions {
   allowInput: boolean | undefined;
   /** The picker's value: when the app empties it, the inputs are emptied too. */
   value: unknown;
+  /** Whether the caller passed `onChange`, so it can take the picker's reports. */
+  hasOnChange: boolean;
 }
 
 const inCalendar = (target: EventTarget | null) =>
@@ -174,8 +177,12 @@ export function useDateField({
   inputMask = true,
   messages,
   value,
+  hasOnChange,
 }: DateFieldOptions) {
-  const { dateFormat, pattern } = resolveDateFormat(dateFormatProp);
+  const { dateFormat, pattern } = useMemo(
+    () => resolveDateFormat(dateFormatProp),
+    [dateFormatProp]
+  );
   const typeable = inputMask && allowInput !== false;
   const masked = typeable && pattern !== undefined;
   useUnmaskableFormatWarning(name, dateFormatProp, typeable);
@@ -195,9 +202,6 @@ export function useDateField({
   const told = useRef<Pair<boolean>>([false, false]);
   // Whether the dates the picker reported last had a date per input.
   const reported = useRef<Pair<boolean>>([false, false]);
-  // Typed text was kept in this render: an empty value is the app taking
-  // the picker's onChange([]), not a reset.
-  const kept = useRef(false);
   const [invalid, setInvalid] = useState<Pair<boolean>>([false, false]);
 
   const cleared = isEmpty(value);
@@ -206,13 +210,15 @@ export function useDateField({
     const emptied = cleared && !wasCleared.current;
     wasCleared.current = cleared;
     if (!emptied) return;
-    // The app taking the picker's onChange([]) renders with the invalid mark
-    // set in the same batch; Carbon's reset reaches the picker only in its
-    // own effect, after this render.
-    if (kept.current && invalid.some(Boolean)) {
+    // Text still kept invalid after onChange told the app it holds no date:
+    // the empty value is the app taking that onChange([]), now or after an
+    // await, not a reset. With no onChange, nothing can take it. Carbon's
+    // reset reaches the picker only in its own effect, after this render.
+    if (hasOnChange && told.current.some(Boolean) && invalid.some(Boolean)) {
       for (const [n, input] of inputs.current.entries()) {
         if (input && !input.value) input.value = typed.current[n] ?? '';
       }
+      told.current = [false, false];
       return;
     }
     for (const input of inputs.current) if (input) input.value = '';
@@ -220,15 +226,21 @@ export function useDateField({
     dirty.current = [false, false];
     told.current = [false, false];
     setInvalid([false, false]);
-  }, [cleared, invalid]);
-  useEffect(() => {
-    kept.current = false;
-  });
+  }, [cleared, invalid, hasOnChange]);
 
   const isInvalid = (input: string) =>
     input !== '' && parseStrictDate(input, effective) === undefined;
-  const parseDate = (input: string) =>
-    parseStrictDate(input, effective) ?? (false as const);
+  // Carbon creates flatpickr once with the first parseDate, so the parser is
+  // one function that reads the current pattern. A layout effect updates it
+  // before Carbon's passive effect hands flatpickr a new dateFormat.
+  const effectiveRef = useRef(effective);
+  useLayoutEffect(() => {
+    effectiveRef.current = effective;
+  }, [effective]);
+  const [parseDate] = useState(
+    () => (input: string) =>
+      parseStrictDate(input, effectiveRef.current) ?? (false as const)
+  );
   // flatpickr keeps its instance on the input it was created on: the start.
   const instance = () =>
     (inputs.current[0] as { _flatpickr?: Flatpickr } | null)?._flatpickr;
@@ -273,9 +285,9 @@ export function useDateField({
       } else {
         typed.current[n] = input?.value ?? '';
         dirty.current[n] = false;
+        told.current[n] = false;
       }
     }
-    if (next.some(Boolean)) kept.current = true;
     setInvalid(next);
     return next.some(Boolean);
   };
@@ -288,7 +300,6 @@ export function useDateField({
     const picker = instance();
     if (!picker || told.current[index] || !appHolds(index)) return;
     told.current[index] = true;
-    kept.current = true;
     const before = inputs.current.map((input) => input?.value ?? '');
     picker.setDate(index === 0 ? [] : picker.selectedDates.slice(0, 1), true);
     inputs.current.forEach((input, n) => {
