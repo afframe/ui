@@ -129,8 +129,9 @@ const summaryValue: FilterPanelValue = {
 function SummaryHarness(args: FilterSummaryProps) {
   const [, updateArgs] = useArgs<FilterSummaryProps>();
   return (
-    // A fixed width keeps the measured overflow the same in every run.
-    <div style={{ inlineSize: '48rem' }}>
+    // A capped width keeps the measured overflow the same in every wide run;
+    // narrower frames shrink it.
+    <div style={{ maxInlineSize: '48rem' }}>
       <FilterSummary
         {...args}
         onChange={(value) => {
