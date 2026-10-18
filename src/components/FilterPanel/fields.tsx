@@ -311,15 +311,20 @@ function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
           const [from, to] = dates.map(localDateToCivilDate);
           onChange([from ?? null, to ?? null]);
         }}>
-        <DatePickerInput id={`${id}-start`} labelText={text.dateStart} />
-        <DatePickerInput id={`${id}-end`} labelText={text.dateEnd} />
+        {/* The group label names the field; these stay the inputs' names. */}
+        <DatePickerInput
+          id={`${id}-start`}
+          labelText={text.dateStart}
+          hideLabel
+        />
+        <DatePickerInput id={`${id}-end`} labelText={text.dateEnd} hideLabel />
       </DatePicker>
     </GroupFieldset>
   );
 }
 
 function SliderField(props: FieldProps<GroupOf<'slider'>>) {
-  const { group, field, onChange, id, text, hideLabel } = props;
+  const { group, field, onChange, id, hideLabel } = props;
   const value = typeof field === 'number' ? field : group.max;
   return (
     <GroupFieldset legend={group.label} hideLabel={hideLabel}>
@@ -331,16 +336,10 @@ function SliderField(props: FieldProps<GroupOf<'slider'>>) {
         max={group.max}
         {...(group.step !== undefined && { step: group.step })}
         value={value}
+        hideTextInput
+        formatLabel={(number) => formatNumber(number)}
         onChange={({ value: next }) => onChange(next)}
       />
-      <div className="afframe-filter-panel-slider-range">
-        <span>
-          {text.sliderMin}: {formatNumber(group.min)}
-        </span>
-        <span>
-          {text.sliderMax}: {formatNumber(value)}
-        </span>
-      </div>
     </GroupFieldset>
   );
 }

@@ -54,10 +54,6 @@ export interface FilterPanelMessages {
   textPlaceholder: (groupLabel: string) => string;
   dateStart: string;
   dateEnd: string;
-  /** Caption before the slider's minimum. */
-  sliderMin: string;
-  /** Caption before the slider's upper bound. */
-  sliderMax: string;
   /** Batch update: applies the draft. */
   apply: string;
   /** Removes every filter. */
@@ -85,8 +81,6 @@ export const defaultFilterPanelMessages: FilterPanelMessages = {
   textPlaceholder: (groupLabel) => `Filter ${groupLabel}`,
   dateStart: 'Start date',
   dateEnd: 'End date',
-  sliderMin: 'Min',
-  sliderMax: 'Max',
   apply: 'Apply',
   clear: 'Clear',
   close: 'Close',

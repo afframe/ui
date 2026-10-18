@@ -55,16 +55,16 @@ Clear filters.
 Each group has an `id`, a `label` and a `variant` (default `checkbox`). The
 value holds one entry per group id; a group without a filter is left out.
 
-| `variant`     | Field                                                     | Group props                             | Value                                    |
-| ------------- | --------------------------------------------------------- | --------------------------------------- | ---------------------------------------- |
-| `checkbox`    | Checkboxes                                                | `options`, `searchable`                 | `string[]`, option values                |
-| `radio`       | Radio buttons, "All" first                                | `options`, `searchable`                 | `string`, one option value               |
-| `select`      | Dropdown, "All" first                                     | `options`                               | `string`, one option value               |
-| `multiselect` | MultiSelect; FilterableMultiSelect with `searchable`      | `options`, `searchable`                 | `string[]`, option values                |
-| `text`        | TextInput                                                 | `placeholder`                           | `string`, contains                       |
-| `number`      | NumberInput without steppers                              | `min`, `max`, `step`                    | `number`, equals                         |
-| `dateRange`   | Afframe's DatePicker, range, two inputs                   | `minDate`, `maxDate` (ISO `YYYY-MM-DD`) | `[start, end]`, ISO days, start required |
-| `slider`      | Slider with one handle, the upper bound, with Min and Max | `min`, `max`, `step`                    | `number`, at most                        |
+| `variant`     | Field                                                | Group props                             | Value                                    |
+| ------------- | ---------------------------------------------------- | --------------------------------------- | ---------------------------------------- |
+| `checkbox`    | Checkboxes                                           | `options`, `searchable`                 | `string[]`, option values                |
+| `radio`       | Radio buttons, "All" first                           | `options`, `searchable`                 | `string`, one option value               |
+| `select`      | Dropdown, "All" first                                | `options`                               | `string`, one option value               |
+| `multiselect` | MultiSelect; FilterableMultiSelect with `searchable` | `options`, `searchable`                 | `string[]`, option values                |
+| `text`        | TextInput                                            | `placeholder`                           | `string`, contains                       |
+| `number`      | NumberInput without steppers                         | `min`, `max`, `step`                    | `number`, equals                         |
+| `dateRange`   | Afframe's DatePicker, range, two inputs              | `minDate`, `maxDate` (ISO `YYYY-MM-DD`) | `[start, end]`, ISO days, start required |
+| `slider`      | Slider with one handle, the upper bound              | `min`, `max`, `step`                    | `number`, at most                        |
 
 In a radio or select group "All" is selected while the group has no value;
 choosing it removes the filter. A radio search does not hide it.
@@ -213,8 +213,6 @@ the summary and an empty state for no matches. See
 | `textPlaceholder`        | Filter `group label`                 |
 | `dateStart`              | Start date                           |
 | `dateEnd`                | End date                             |
-| `sliderMin`              | Min                                  |
-| `sliderMax`              | Max                                  |
 | `apply`                  | Apply                                |
 | `clear`                  | Clear                                |
 | `close`                  | Close                                |

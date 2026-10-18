@@ -14,6 +14,13 @@
 
 /* stylelint-disable selector-class-pattern -- Carbon's and IBM's BEM class names */
 
+// TagOverflow leaves a bottom margin on tags and "+N" for wrapped lines; in
+// the one-line bar it pushes them above the centre.
+.afframe-filter-summary
+  :is(.c4p--tag-overflow__item--tag, .c4p--tag-overflow__indicator) {
+  margin-block-end: 0;
+}
+
 // IBM's TagOverflow caps every span in a tag (`.c4p--tag-overflow__item--tag
 // span`: 6rem, overflow hidden, inline-block). In a DismissibleTag the first
 // span wraps the label and the dismiss button, so the button gets cut off,

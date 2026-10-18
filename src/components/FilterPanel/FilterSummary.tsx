@@ -10,7 +10,10 @@
  *
  * Modified by Afframe in 2026: from the filter summary of tanstack-carbon react/filterPanel (src/Example/FilterPanel.tsx); tags built from FilterPanel groups and value, text from messages, the overflow from IBM Products TagOverflow, empty root while nothing is applied. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
-import { TagOverflow } from '@carbon/ibm-products';
+import {
+  TagOverflow,
+  usePrefix as useProductsPrefix,
+} from '@carbon/ibm-products';
 import type { TagOverflowProps } from '@carbon/ibm-products';
 import { Button } from '@carbon/react';
 import { useRef } from 'react';
@@ -94,6 +97,7 @@ export function FilterSummary({
   const rootRef = useRef<HTMLDivElement>(null);
   const mergedRef = useMergedRefs(rootRef, ref);
 
+  const productsPrefix = useProductsPrefix();
   const items: SummaryItem[] = filterTags(groups, value, text).map((tag) => ({
     id: tag.key,
     label: tag.label,
@@ -115,7 +119,12 @@ export function FilterSummary({
       tabIndex={-1}
       {...rest}
       ref={mergedRef}
-      className={['afframe-filter-summary', className]
+      // IBM's FilterSummary bar, only while there are tags.
+      className={[
+        'afframe-filter-summary',
+        items.length > 0 && `${productsPrefix}--filter-summary`,
+        className,
+      ]
         .filter(Boolean)
         .join(' ')}>
       {items.length > 0 && (

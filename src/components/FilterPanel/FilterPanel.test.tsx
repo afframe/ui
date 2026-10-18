@@ -184,8 +184,13 @@ test('flat: fieldsets and legends for checkbox, radio, date range and slider; la
   expect(screen.getByRole('textbox', { name: 'Reference' })).toBeTruthy();
   expect(screen.getByRole('spinbutton', { name: 'Lines' })).toBeTruthy();
   expect(screen.getByRole('slider', { name: 'Amount' })).toBeTruthy();
-  expect(screen.getByText('Min: 0')).toBeTruthy();
-  expect(screen.getByText('Max: 100')).toBeTruthy();
+  // Carbon's range labels show the bounds; no value input.
+  const rangeLabels = document.querySelectorAll('.cds--slider__range-label');
+  expect([...rangeLabels].map((label) => label.textContent)).toEqual([
+    '0',
+    '100',
+  ]);
+  expect(screen.queryByRole('spinbutton', { name: 'Amount' })).toBeNull();
 });
 
 /** Sets one value in every variant of `allVariants`. */
