@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TrashCan } from '@carbon/icons-react';
 import { Link } from '@carbon/react';
 import { useState } from 'react';
-import { expect, fn, waitFor, within } from 'storybook/test';
+import { expect, fn, within } from 'storybook/test';
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import {
@@ -44,7 +44,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-type Canvas = Parameters<NonNullable<Story['play']>>[0]['canvas'];
 
 const few = invoices.slice(0, 8);
 
@@ -752,72 +751,6 @@ export const WithFilterPanel: Story = {
       filterPanel={{ defaultOpen: true }}
     />
   ),
-};
-
-// Carbon names icon buttons and tag dismiss buttons through a hidden tooltip,
-// which the role query does not read; the copies inside aria-hidden markup do
-// not count.
-const shownButton = (canvas: Canvas, label: string | RegExp) =>
-  waitFor(() => {
-    const [found] = canvas
-      .queryAllByLabelText<HTMLButtonElement>(label, { selector: 'button' })
-      .filter((item) => !item.closest('[aria-hidden="true"]'));
-    if (!found) throw new Error(`No ${String(label)} button`);
-    return found;
-  });
-
-export const TestWithFilterPanel: Story = {
-  ...WithFilterPanel,
-  tags: ['!dev', '!autodocs'],
-  play: async ({ canvas, userEvent }) => {
-    const trigger = await shownButton(canvas, /^Filter( \(\d+\))?$/);
-    const rows = () => within(canvas.getByRole('table')).getAllByRole('row');
-    const panel = () => canvas.getByRole('region', { name: 'Filter' });
-    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-    await expect(within(panel()).getByRole('status')).toHaveTextContent(
-      '12 results'
-    );
-    await userEvent.click(
-      within(panel()).getByRole('checkbox', { name: 'Overdue' })
-    );
-    // Batch update: the rows change only on Apply.
-    await expect(rows()).toHaveLength(13);
-    await userEvent.click(
-      within(panel()).getByRole('button', { name: 'Apply' })
-    );
-    await expect(canvas.queryByRole('region', { name: 'Filter' })).toBeNull();
-    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-    await expect(trigger).toHaveFocus();
-    await expect(trigger).toHaveAccessibleName('Filter (1)');
-    // Header row plus the four overdue invoices.
-    await expect(rows()).toHaveLength(5);
-    await expect(canvas.getByRole('status')).toHaveTextContent('4 results');
-    await userEvent.click(
-      await shownButton(canvas, 'Remove filter Status: Overdue')
-    );
-    await expect(rows()).toHaveLength(13);
-
-    // Overdue and USD: no row matches.
-    await userEvent.click(trigger);
-    await userEvent.click(
-      within(panel()).getByRole('checkbox', { name: 'Overdue' })
-    );
-    await userEvent.click(
-      within(panel()).getByRole('combobox', { name: 'Currency' })
-    );
-    await userEvent.click(canvas.getByRole('option', { name: 'USD' }));
-    await userEvent.click(
-      within(panel()).getByRole('button', { name: 'Apply' })
-    );
-    await expect(
-      canvas.getByRole('heading', { name: 'No results found' })
-    ).toBeVisible();
-    await expect(canvas.getByRole('status')).toHaveTextContent('0 results');
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Clear filters' })
-    );
-    await expect(rows()).toHaveLength(13);
-  },
 };
 
 /**

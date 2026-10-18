@@ -1,6 +1,12 @@
 import { ClassPrefix } from '@carbon/react';
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
-import { cleanup, render, screen, within } from '@testing-library/react';
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { createRef, useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test, vi } from 'vitest';
@@ -1145,6 +1151,7 @@ test('inDayRange includes both end days, for timestamps and local dates', () => 
   ).toBe(false);
   expect(runFilter(filterFn_inDayRange, 'soon', march)).toBe(false);
   expect(filterFn_inDayRange.autoRemove?.([null, null])).toBe(true);
+  expect(filterFn_inDayRange.autoRemove?.([null, '2026-05-05'])).toBe(true);
 });
 
 test('sets the filter function of panel columns by variant, keeping set ones', () => {
@@ -1181,14 +1188,18 @@ const panelColumns = panelHelper.columns([
 ]);
 // Statuses of `few`: Paid, Open, Overdue, Paid, Open.
 
-/** The shown dismiss button of a summary tag (named through a tooltip). */
-const removeTag = (label: string) => {
-  const [button] = screen
-    .getAllByLabelText(`Remove filter ${label}`, { selector: 'button' })
-    .filter((item) => !item.closest('[aria-hidden="true"]'));
-  if (!button) throw new Error(label);
-  return button;
-};
+/**
+ * The shown dismiss button of a summary tag (named through a tooltip). The
+ * summary first renders its tags as "+N" and shows them once measured.
+ */
+const removeTag = (label: string) =>
+  waitFor(() => {
+    const [button] = screen
+      .getAllByLabelText(`Remove filter ${label}`, { selector: 'button' })
+      .filter((item) => !item.closest('[aria-hidden="true"]'));
+    if (!button) throw new Error(label);
+    return button;
+  });
 
 test('the filter panel opens from the toolbar, applies on Apply and returns focus', async () => {
   render(
@@ -1220,7 +1231,7 @@ test('the filter panel opens from the toolbar, applies on Apply and returns focu
   expect(iconButton('Filter (1)')).toBe(trigger);
   expect(screen.getByRole('status').textContent).toBe('2 results');
   // The grid's own summary: dismissing the tag removes the filter.
-  await userEvent.click(removeTag('State: Open'));
+  await userEvent.click(await removeTag('State: Open'));
   expect(screen.getAllByRole('row')).toHaveLength(6);
 });
 
@@ -1356,13 +1367,16 @@ test('the filter panel, summary and empty state take custom messages', async () 
         initialState: { columnFilters: [{ id: 'status', value: ['Gone'] }] },
       }}
       messages={{
-        filterPanelToggle: (count) => `Filters: ${count}`,
-        resultCount: (count) => `${count} invoices`,
         filteredEmptyTitle: 'No invoices match',
         filteredEmptySubtitle: 'Change the filters.',
       }}
       filterPanel={{
-        messages: { title: 'Refine', apply: 'Use' },
+        messages: {
+          title: 'Refine',
+          apply: 'Use',
+          toggle: (count) => `Filters: ${count}`,
+          resultCount: (count) => `${count} invoices`,
+        },
         summaryMessages: { clearFilters: 'Reset all' },
       }}
     />

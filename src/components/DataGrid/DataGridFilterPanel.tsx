@@ -10,9 +10,8 @@
  *
  * Modified by Afframe in 2026: from tanstack-carbon react/filterPanel FilterPanel.tsx (toolbar filter button and the no-results empty state); groups built from column meta and the core rows, column filters merged with the grid's other filters, aria-expanded and a count in the button name, focus to the panel title on open and to the button on Close, Apply and Clear, an inline panel in a grid layout without animation, text from messages. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
-import { NoDataEmptyState } from '@carbon/ibm-products';
 import { Filter } from '@carbon/icons-react';
-import { IconButton, usePrefix } from '@carbon/react';
+import { IconButton } from '@carbon/react';
 import type {
   Column,
   ReactTable,
@@ -22,15 +21,17 @@ import type {
 } from '@tanstack/react-table';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { ReactNode, RefObject } from 'react';
+import { resolveMessages } from '../../messages.js';
+import {
+  defaultFilterFlyoutMessages,
+  LiveStatus,
+  type FilterFlyoutMessages,
+} from '../FilterPanel/FilterFlyout.js';
 import {
   FilterPanel,
-  type FilterPanelMessages,
   type FilterPanelProps,
 } from '../FilterPanel/FilterPanel.js';
-import {
-  FilterSummary,
-  type FilterSummaryMessages,
-} from '../FilterPanel/FilterSummary.js';
+import type { FilterSummaryMessages } from '../FilterPanel/FilterSummary.js';
 import { countFilterPanelSelections } from '../FilterPanel/value.js';
 import type {
   FilterPanelFieldValue,
@@ -38,7 +39,6 @@ import type {
   FilterPanelValue,
 } from '../FilterPanel/value.js';
 import type { DataGridColumnFilter, DataGridColumnMeta } from './DataGrid.js';
-import type { DataGridMessages } from './messages.js';
 
 /** Settings of the filter panel that `dataGridFilterPanel` adds. */
 export interface DataGridFilterPanelSettings extends Pick<
@@ -47,7 +47,8 @@ export interface DataGridFilterPanelSettings extends Pick<
 > {
   /** Opens the panel on first render. */
   defaultOpen?: boolean;
-  messages?: Partial<FilterPanelMessages>;
+  /** Panel text, and the toolbar button's name in `toggle`. */
+  messages?: Partial<FilterFlyoutMessages>;
   /** Text of the grid's own FilterSummary. */
   summaryMessages?: Partial<FilterSummaryMessages>;
 }
@@ -149,6 +150,7 @@ function groupOf(
 interface FilterPanelState {
   groups: FilterPanelGroup[];
   value: FilterPanelValue;
+  messages: FilterFlyoutMessages;
   onChange: (value: FilterPanelValue) => void;
   open: boolean;
   setOpen: (open: boolean, focus: 'title' | 'trigger') => void;
@@ -212,6 +214,7 @@ export function useFilterPanel<TData extends RowData>(
   return {
     groups,
     value,
+    messages: resolveMessages(defaultFilterFlyoutMessages, settings?.messages),
     // Filters on the other columns stay.
     onChange: (next) =>
       table.setColumnFilters((previous) => [
@@ -230,19 +233,13 @@ export function useFilterPanel<TData extends RowData>(
 }
 
 /** The toolbar button that opens and closes the panel. */
-export function FilterPanelTrigger({
-  panel,
-  text,
-}: {
-  panel: FilterPanelState;
-  text: DataGridMessages;
-}) {
+export function FilterPanelTrigger({ panel }: { panel: FilterPanelState }) {
   const { open } = panel;
   return (
     <IconButton
       ref={panel.triggerRef}
       kind="ghost"
-      label={text.filterPanelToggle(
+      label={panel.messages.toggle(
         countFilterPanelSelections(panel.groups, panel.value)
       )}
       aria-expanded={open}
@@ -260,24 +257,6 @@ export function FilterPanelTrigger({
   );
 }
 
-/** The grid's own summary of the panel's applied filters. */
-export function FilterPanelSummary({
-  panel,
-  messages,
-}: {
-  panel: FilterPanelState;
-  messages: Partial<FilterSummaryMessages> | undefined;
-}) {
-  return (
-    <FilterSummary
-      groups={panel.groups}
-      value={panel.value}
-      onChange={panel.onChange}
-      {...(messages && { messages })}
-    />
-  );
-}
-
 /**
  * The panel beside the table and pagination, and a status that announces
  * the result count while the panel is closed (the panel's own speaks while
@@ -288,17 +267,14 @@ export function FilterPanelLayout({
   panel,
   settings,
   resultCount,
-  text,
   children,
 }: {
   panel: FilterPanelState;
   settings: DataGridFilterPanelSettings | undefined;
   resultCount: number;
-  text: DataGridMessages;
   children: ReactNode;
 }) {
   const { open } = panel;
-  const prefix = usePrefix();
   const { updateMethod = 'batch', layout, headingLevel } = settings ?? {};
   return (
     <div
@@ -321,27 +297,14 @@ export function FilterPanelLayout({
           }}
           onClose={() => panel.setOpen(false, 'trigger')}
           resultCount={resultCount}
-          messages={{ resultCount: text.resultCount, ...settings?.messages }}
+          messages={panel.messages}
           updateMethod={updateMethod}
           {...(layout && { layout })}
           {...(headingLevel && { headingLevel })}
         />
       )}
       <div className="afframe-data-grid-filter-main">{children}</div>
-      <p role="status" className={`${prefix}--visually-hidden`}>
-        {open ? '' : text.resultCount(resultCount)}
-      </p>
+      <LiveStatus text={open ? '' : panel.messages.resultCount(resultCount)} />
     </div>
-  );
-}
-
-/** The default empty state when filters or the search leave no rows. */
-export function FilteredEmptyState({ text }: { text: DataGridMessages }) {
-  return (
-    <NoDataEmptyState
-      size="sm"
-      title={text.filteredEmptyTitle}
-      subtitle={text.filteredEmptySubtitle}
-    />
   );
 }

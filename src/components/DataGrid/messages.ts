@@ -61,10 +61,6 @@ export interface DataGridMessages {
   editCell: (column: string, row: string) => string;
   /** Shown in the body when the data has no rows. */
   emptyState: string;
-  /** Filter panel: name and tooltip of the toolbar button; `count` is the number of set filters. */
-  filterPanelToggle: (count: number) => string;
-  /** Filter panel: the number of rows the filters show. */
-  resultCount: (count: number) => string;
   /** Title of the empty state when filters or the search leave no rows. */
   filteredEmptyTitle: string;
   /** Subtitle of the empty state when filters or the search leave no rows. */
@@ -106,8 +102,6 @@ export const defaultDataGridMessages: DataGridMessages = {
   resizeColumn: (column) => `Resize ${column} column`,
   editCell: (column, row) => `Edit ${column} of row ${row}`,
   emptyState: 'No rows to show',
-  filterPanelToggle: (count) => (count > 0 ? `Filter (${count})` : 'Filter'),
-  resultCount: (count) => (count === 1 ? '1 result' : `${count} results`),
   filteredEmptyTitle: 'No results found',
   filteredEmptySubtitle:
     "Try adjusting your search or filter options to find what you're looking for.",

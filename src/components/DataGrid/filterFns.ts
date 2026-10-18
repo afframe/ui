@@ -1,6 +1,7 @@
 'use client';
 // Filter functions of the filter panel's column filters.
 import { constructFilterFn } from '@tanstack/react-table';
+import { localDateToCivilDate } from '../../format/date.js';
 import { isoDay } from '../FilterPanel/value.js';
 
 const listOf = (value: unknown): unknown[] =>
@@ -21,15 +22,13 @@ export const filterFn_inOptions = constructFilterFn({
     value == null || value === '' || (Array.isArray(value) && !value.length),
 });
 
-const pad = (value: number) => String(value).padStart(2, '0');
-
 /** The cell's calendar day as `YYYY-MM-DD`; a `Date` uses its local day. */
 // fallow-ignore-next-line complexity -- Date, invalid Date, ISO string or other cell
 function dayOf(value: unknown): string | undefined {
   if (value instanceof Date)
     return Number.isNaN(value.getTime())
       ? undefined
-      : `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}`;
+      : localDateToCivilDate(value);
   return typeof value === 'string' && value.length >= 10
     ? value.slice(0, 10)
     : undefined;
@@ -52,6 +51,5 @@ export const filterFn_inDayRange = constructFilterFn({
   // An end that is not an ISO day is open.
   resolveFilterValue: (value: unknown): DayRange =>
     Array.isArray(value) ? [isoDay(value[0]), isoDay(value[1])] : [null, null],
-  autoRemove: (value: unknown) =>
-    !Array.isArray(value) || (!isoDay(value[0]) && !isoDay(value[1])),
+  autoRemove: (value: unknown) => !Array.isArray(value) || !isoDay(value[0]),
 });

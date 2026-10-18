@@ -2,6 +2,7 @@
 // Afframe data grid: TanStack Table state rendered with Carbon DataTable
 // markup. Carbon parts come from @carbon/react directly: importing the
 // package barrel here would be a cycle and would pull the other extras in.
+import { NoDataEmptyState } from '@carbon/ibm-products';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -49,14 +50,13 @@ import {
   type Ref,
 } from 'react';
 import { resolveMessages } from '../../messages.js';
+import { FilterSummary } from '../FilterPanel/FilterSummary.js';
 import type { FilterPanelGroup } from '../FilterPanel/value.js';
 import { useMergedRefs } from '../FlowParts/refs.js';
 import { ColumnResizer } from './ColumnResizer.js';
 import { ColumnSettings } from './ColumnSettings.js';
 import {
-  FilteredEmptyState,
   FilterPanelLayout,
-  FilterPanelSummary,
   FilterPanelTrigger,
   useFilterPanel,
   withFilterFns,
@@ -326,8 +326,7 @@ export function DataGrid<
           paginating
             ? table.getRowCount()
             : table.getFilteredRowModel().rows.length
-        }
-        text={text}>
+        }>
         {content}
       </FilterPanelLayout>
     ) : (
@@ -512,7 +511,7 @@ export function DataGrid<
             </TableBatchActions>
           )}
           <TableToolbarContent aria-hidden={batchOpen} inert={batchOpen}>
-            {panel && <FilterPanelTrigger panel={panel} text={text} />}
+            {panel && <FilterPanelTrigger panel={panel} />}
             {filtering && (
               <TableToolbarSearch
                 persistent
@@ -532,9 +531,13 @@ export function DataGrid<
       {filterSummary !== undefined
         ? filterSummary
         : panel && (
-            <FilterPanelSummary
-              panel={panel}
-              messages={filterPanel?.summaryMessages}
+            <FilterSummary
+              groups={panel.groups}
+              value={panel.value}
+              onChange={panel.onChange}
+              {...(filterPanel?.summaryMessages && {
+                messages: filterPanel.summaryMessages,
+              })}
             />
           )}
       {wrap(
@@ -780,7 +783,13 @@ export function DataGrid<
                   <TableCell colSpan={span}>
                     {filteredEmpty
                       ? (filteredEmptyState ??
-                        emptyState ?? <FilteredEmptyState text={text} />)
+                        emptyState ?? (
+                          <NoDataEmptyState
+                            size="sm"
+                            title={text.filteredEmptyTitle}
+                            subtitle={text.filteredEmptySubtitle}
+                          />
+                        ))
                       : (emptyState ?? text.emptyState)}
                   </TableCell>
                 </TableRow>
