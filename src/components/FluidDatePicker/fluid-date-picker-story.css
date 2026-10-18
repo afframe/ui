@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties instead of Sass, literal spacing, colour and type values as Carbon tokens, toggletip offsets for the example labels. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties instead of Sass, literal colour and type values as Carbon tokens, toggletip offsets for the example labels. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 .fluid-date-picker-story {
@@ -17,12 +17,13 @@
 .fluid-date-picker-story__toggletip {
   position: absolute;
   z-index: 2;
-  inset-block-start: var(--cds-spacing-04);
+  /* stylelint-disable-next-line carbon/layout-use -- Carbon's label top, no token */
+  inset-block-start: 0.8125rem;
   /* stylelint-disable-next-line carbon/layout-use -- offset past the label text, no token */
-  inset-inline-start: calc(4rem + var(--cds-spacing-03));
+  inset-inline-start: calc(4.25rem + var(--cds-spacing-03));
 }
 
 .fluid-date-picker-story--range .fluid-date-picker-story__toggletip {
   /* stylelint-disable-next-line carbon/layout-use -- offset past the label text, no token */
-  inset-inline-start: calc(7.5rem + var(--cds-spacing-03));
+  inset-inline-start: calc(4.625rem + var(--cds-spacing-03));
 }

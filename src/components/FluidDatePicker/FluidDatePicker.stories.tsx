@@ -279,13 +279,13 @@ export const RangeWithCalendar: StoryFn<FluidDatePickerArgs> = (args) => {
       <FluidDatePicker {...picker}>
         <FluidDatePickerInput
           id="date-picker-input-id-start"
-          labelText="Billing period start"
+          labelText="Start date"
           size="md"
           {...input}
         />
         <FluidDatePickerInput
           id="date-picker-input-id-finish"
-          labelText="Billing period end"
+          labelText="End date"
           size="md"
           {...input}
         />
