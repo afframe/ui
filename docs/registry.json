@@ -64,19 +64,20 @@
       "storyTitle": "Components/FilterPanel",
       "status": "stable",
       "exports": [
-        "countFilterPanelSelections",
         "defaultFilterPanelMessages",
         "FilterPanel",
+        "countFilterPanelSelections",
         "defaultFilterFlyoutMessages",
         "FilterFlyout",
         "defaultFilterSummaryMessages",
         "FilterSummary"
       ],
       "types": [
-        "FilterPanelGroup",
         "FilterPanelMessages",
-        "FilterPanelOption",
         "FilterPanelProps",
+        "FilterPanelFieldValue",
+        "FilterPanelGroup",
+        "FilterPanelOption",
         "FilterPanelValue",
         "FilterFlyoutMessages",
         "FilterFlyoutProps",

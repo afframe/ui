@@ -1,4 +1,4 @@
-// Filter panel, flyout and summary styles, Carbon tokens only.
+// Filter panel and flyout styles, Carbon tokens only.
 @use '@carbon/styles/scss/spacing' as *;
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/type';
@@ -69,27 +69,6 @@
   z-index: 1;
   inset-block-end: 0;
 }
-
-// IBM's summary bar has no positioning for its absolute View all button.
-.afframe-filter-summary {
-  position: relative;
-}
-
-// TagSet gives every tag, "+N" included, an 8 px bottom margin as the row
-// gap of its multiline layout. On one line that margin makes each tag slot
-// 32 px with the tag at its top, above the centre of Clear filters and View
-// all, so it goes until View all expands the tags.
-/* stylelint-disable selector-class-pattern -- IBM's and Carbon's class names */
-.afframe-filter-summary:not(.c4p--filter-summary__expanded)
-  .c4p--tag-set__tag-container {
-  align-items: center;
-
-  .c4p--tag-set__displayed-tag > .cds--tag,
-  .c4p--tag-set-overflow__popover-trigger {
-    margin-block-end: 0;
-  }
-}
-/* stylelint-enable selector-class-pattern */
 
 .afframe-filter-flyout-content {
   inline-size: 20rem;

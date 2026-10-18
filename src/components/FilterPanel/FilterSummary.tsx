@@ -29,8 +29,8 @@ import type {
 } from 'react';
 import { resolveMessages } from '../../messages.js';
 import { useMergedRefs } from '../FlowParts/refs.js';
-import { setGroup } from './FilterPanel.js';
 import type { FilterPanelProps } from './FilterPanel.js';
+import { checkedValues, selectedOptions, setGroupValue } from './value.js';
 
 export interface FilterSummaryMessages {
   /** Accessible name of the summary group. */
@@ -152,9 +152,10 @@ export function FilterSummary({
 
   const tags = useMemo(() => {
     const selected = groups.flatMap((group) =>
-      group.options
-        .filter((option) => value[group.id]?.includes(option.value))
-        .map((option) => ({ group, option }))
+      selectedOptions(group, value[group.id]).map((option) => ({
+        group,
+        option,
+      }))
     );
     return selected.map(({ group, option }, index) => {
       const label = tagLabel(group.label, option.label);
@@ -171,8 +172,10 @@ export function FilterSummary({
           // stays and shows the next tag; else the tag in its place, the last
           // shown tag, or the root.
           armRefocus(() => focusShownTag(rootRef.current, prefix, index));
-          const rest = value[group.id]?.filter((item) => item !== option.value);
-          onChange(setGroup(value, group.id, rest ?? []));
+          const rest = checkedValues(value[group.id]).filter(
+            (item) => item !== option.value
+          );
+          onChange(setGroupValue(value, group, rest));
         },
       };
     });

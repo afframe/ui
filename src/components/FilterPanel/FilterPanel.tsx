@@ -14,26 +14,15 @@ import {
 import { useId, useRef, useState } from 'react';
 import type { ComponentPropsWithoutRef, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
+import { checkedValues, sameFilterValue, setGroupValue } from './value.js';
+import type { FilterPanelGroup, FilterPanelValue } from './value.js';
 
-/** One checkbox in a filter group. `value` is stored in `FilterPanelValue`. */
-export interface FilterPanelOption {
-  value: string;
-  label: string;
-}
-
-/** A group of checkbox options, shown as one accordion item. */
-export interface FilterPanelGroup {
-  id: string;
-  label: string;
-  options: readonly FilterPanelOption[];
-  /** Shows a search field that narrows the options by label. */
-  searchable?: boolean;
-  /** Opens the accordion item on first render. */
-  defaultOpen?: boolean;
-}
-
-/** Selected option values per group id. A missing group has nothing selected. */
-export type FilterPanelValue = Readonly<Record<string, readonly string[]>>;
+export { countFilterPanelSelections } from './value.js';
+export type {
+  FilterPanelGroup,
+  FilterPanelOption,
+  FilterPanelValue,
+} from './value.js';
 
 export interface FilterPanelMessages {
   title: string;
@@ -92,41 +81,6 @@ export interface FilterPanelProps extends Omit<
   className?: string;
 }
 
-/** Number of selected options across all groups; values matching no option are ignored. */
-export function countFilterPanelSelections(
-  groups: readonly FilterPanelGroup[],
-  value: FilterPanelValue
-): number {
-  return groups.reduce(
-    (sum, group) =>
-      sum +
-      group.options.filter((option) => value[group.id]?.includes(option.value))
-        .length,
-    0
-  );
-}
-
-export function setGroup(
-  value: FilterPanelValue,
-  groupId: string,
-  selected: readonly string[]
-): FilterPanelValue {
-  return Object.fromEntries([
-    ...Object.entries(value).filter(([key]) => key !== groupId),
-    ...(selected.length > 0 ? [[groupId, selected]] : []),
-  ]);
-}
-
-// Same selections per group, in any order; a missing group equals an empty one.
-function sameFilterValue(a: FilterPanelValue, b: FilterPanelValue): boolean {
-  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
-  return [...keys].every((key) => {
-    const left = new Set(a[key] ?? []);
-    const right = new Set(b[key] ?? []);
-    return left.size === right.size && [...left].every((v) => right.has(v));
-  });
-}
-
 /** A side panel of checkbox filter groups, applied per toggle or in a batch. Controlled. */
 // fallow-ignore-next-line complexity -- one render covers both update methods, search per group and the optional close button and count
 export function FilterPanel({
@@ -155,18 +109,22 @@ export function FilterPanel({
   // inline `value` object does not reset the draft on every render.
   const [applied, setApplied] = useState(value);
   const [draft, setDraft] = useState(value);
-  if (!sameFilterValue(applied, value)) {
+  if (!sameFilterValue(groups, applied, value)) {
     setApplied(value);
     setDraft(value);
   }
   const shown = batch ? draft : value;
-  const dirty = batch && !sameFilterValue(draft, value);
+  const dirty = batch && !sameFilterValue(groups, draft, value);
 
-  const toggle = (groupId: string, optionValue: string, checked: boolean) => {
-    const current = shown[groupId] ?? [];
-    const next = setGroup(
+  const toggle = (
+    group: FilterPanelGroup,
+    optionValue: string,
+    checked: boolean
+  ) => {
+    const current = checkedValues(shown[group.id]);
+    const next = setGroupValue(
       shown,
-      groupId,
+      group,
       checked
         ? [...current, optionValue]
         : current.filter((item) => item !== optionValue)
@@ -235,7 +193,8 @@ export function FilterPanel({
       </div>
       <Accordion>
         {groups.map((group, groupIndex) => {
-          const groupSelected = shown[group.id] ?? [];
+          if (group.variant && group.variant !== 'checkbox') return null;
+          const groupSelected = checkedValues(shown[group.id]);
           const query = (search[group.id] ?? '').trim().toLowerCase();
           const options = query
             ? group.options.filter((option) =>
@@ -272,7 +231,7 @@ export function FilterPanel({
                     labelText={option.label}
                     checked={groupSelected.includes(option.value)}
                     onChange={(_event, { checked }) =>
-                      toggle(group.id, option.value, checked)
+                      toggle(group, option.value, checked)
                     }
                   />
                 ))}

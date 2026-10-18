@@ -74,8 +74,10 @@ const invoices = [
 // Fixed data: the count is the number of invoices that match every group.
 function countResults(value: FilterPanelValue): number {
   return invoices.filter((invoice) =>
-    Object.entries(value).every(([group, selected]) =>
-      selected.includes(invoice[group as keyof typeof invoice])
+    Object.entries(value).every(
+      ([group, selected]) =>
+        typeof selected === 'object' &&
+        selected.includes(invoice[group as keyof typeof invoice])
     )
   ).length;
 }
@@ -159,14 +161,14 @@ const gridGroups: FilterPanelGroup[] = [
 // Eight tags overflow the grid's width, so the summary shows "+N".
 const summaryValue: FilterPanelValue = {
   status: ['Paid', 'Overdue'],
-  customer: gridGroups[1]?.options.map((option) => option.value) ?? [],
+  customer: [...new Set(gridInvoices.map((row) => row.customer))],
 };
 
 function SummaryHarness(args: FilterSummaryProps) {
   const [, updateArgs] = useArgs<FilterSummaryProps>();
-  const columnFilters = Object.entries(args.value)
-    .filter(([, selected]) => selected.length > 0)
-    .map(([id, value]) => ({ id, value }));
+  const columnFilters = Object.entries(args.value).flatMap(([id, value]) =>
+    typeof value === 'object' && value.length > 0 ? [{ id, value }] : []
+  );
   return (
     <DataGrid
       title="Invoices"

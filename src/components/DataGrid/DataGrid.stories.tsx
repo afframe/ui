@@ -747,9 +747,9 @@ const panelGroups = [
 
 function FilterPanelDemo() {
   const [filters, setFilters] = useState<FilterPanelValue>({});
-  const columnFilters = Object.entries(filters)
-    .filter(([, selected]) => selected.length > 0)
-    .map(([id, value]) => ({ id, value }));
+  const columnFilters = Object.entries(filters).flatMap(([id, value]) =>
+    typeof value === 'object' && value.length > 0 ? [{ id, value }] : []
+  );
   const resultCount = few.filter((row) =>
     columnFilters.every(({ id, value }) =>
       value.includes(String(row[id as keyof Invoice]))
