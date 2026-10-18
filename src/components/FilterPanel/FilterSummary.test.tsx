@@ -229,7 +229,8 @@ test('summary: custom messages', async () => {
           tagLabel: (group, value) => `${group} = ${value}`,
           removeFilter: (label) => `Odebrat ${label}`,
           clearFilters: 'Zrušit filtry',
-          dateRangeValue: (start, end) => `${start ?? '…'} až ${end ?? '…'}`,
+          dateRangeValue: (start, end, range) =>
+            range ?? `${start ?? '…'} až ${end ?? '…'}`,
           atMostValue: (value) => `nejvýše ${value}`,
         }}
       />

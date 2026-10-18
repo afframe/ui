@@ -230,3 +230,25 @@ test('countFilterPanelSelections counts known options and 1 per other filter', (
     })
   ).toBe(0);
 });
+
+test('filterTags: a custom dateRange gets both ends and the joined range', () => {
+  const calls: unknown[] = [];
+  filterTags(
+    [issued],
+    { issued: ['2026-10-01', '2026-10-31'] },
+    {
+      ...defaultFilterTagMessages,
+      dateRange: (...args) => {
+        calls.push(args);
+        return '';
+      },
+    }
+  );
+  expect(calls).toEqual([
+    [
+      formatDate('2026-10-01'),
+      formatDate('2026-10-31'),
+      formatDateRange('2026-10-01', '2026-10-31'),
+    ],
+  ]);
+});

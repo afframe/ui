@@ -25,7 +25,7 @@ import { flushSync } from 'react-dom';
 import { resolveMessages } from '../../messages.js';
 import { useMergedRefs } from '../FlowParts/refs.js';
 import type { FilterPanelProps } from './FilterPanel.js';
-import { filterTags } from './value.js';
+import { defaultFilterTagMessages, filterTags } from './value.js';
 import type { FilterTag } from './value.js';
 
 export interface FilterSummaryMessages {
@@ -38,8 +38,15 @@ export interface FilterSummaryMessages {
   clearFilters: string;
   /** Name of the "+N" tag that opens the hidden tags. */
   moreFilters: (count: number) => string;
-  /** Date range value; a missing end is `null`. */
-  dateRangeValue: (start: string | null, end: string | null) => string;
+  /**
+   * Date range value; `start` and `end` are formatted days, `null` when
+   * missing. `range` is both ends formatted together, `null` unless both are set.
+   */
+  dateRangeValue: (
+    start: string | null,
+    end: string | null,
+    range: string | null
+  ) => string;
   /** Slider value: its upper bound. */
   atMostValue: (value: string) => string;
 }
@@ -50,10 +57,7 @@ export const defaultFilterSummaryMessages: FilterSummaryMessages = {
   removeFilter: (label) => `Remove filter ${label}`,
   clearFilters: 'Clear filters',
   moreFilters: (count) => `${count} more filters`,
-  dateRangeValue: (start, end) => {
-    if (start && end) return `${start} – ${end}`;
-    return start ? `from ${start}` : `until ${end ?? ''}`;
-  },
+  dateRangeValue: defaultFilterTagMessages.dateRange,
   atMostValue: (value) => `up to ${value}`,
 };
 
@@ -154,8 +158,7 @@ export function FilterSummary({
 
   const tags = filterTags(groups, value, {
     tagLabel: text.tagLabel,
-    dateFrom: (date) => text.dateRangeValue(date, null),
-    dateUntil: (date) => text.dateRangeValue(null, date),
+    dateRange: text.dateRangeValue,
     upTo: text.atMostValue,
   });
   // Labels too: a new text changes the tag widths.

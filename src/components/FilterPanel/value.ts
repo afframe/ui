@@ -72,18 +72,24 @@ export type FilterPanelValue = Readonly<Record<string, FilterPanelFieldValue>>;
 export interface FilterTagMessages {
   /** Text of one tag; `valueText` is the option label or the formatted value. */
   tagLabel: (groupLabel: string, valueText: string) => string;
-  /** Date range with only a start. */
-  dateFrom: (date: string) => string;
-  /** Date range with only an end. */
-  dateUntil: (date: string) => string;
+  /**
+   * Date range; `start` and `end` are formatted days, `null` when missing.
+   * `range` is both ends formatted together (`1.–31. 10. 2026`), `null`
+   * unless both are set.
+   */
+  dateRange: (
+    start: string | null,
+    end: string | null,
+    range: string | null
+  ) => string;
   /** Slider upper bound. */
   upTo: (value: string) => string;
 }
 
 export const defaultFilterTagMessages: FilterTagMessages = {
   tagLabel: (groupLabel, valueText) => `${groupLabel}: ${valueText}`,
-  dateFrom: (date) => `from ${date}`,
-  dateUntil: (date) => `until ${date}`,
+  dateRange: (start, end, range) =>
+    range ?? (start ? `from ${start}` : `until ${end ?? ''}`),
   upTo: (value) => `up to ${value}`,
 };
 
@@ -217,10 +223,11 @@ function valueText(
     return selectedOptions(group, field)[0]?.label ?? field;
   }
   const [start, end] = field;
-  if (start && end) return formatDateRange(start, end);
-  return start
-    ? text.dateFrom(formatDate(start))
-    : text.dateUntil(formatDate(end ?? ''));
+  return text.dateRange(
+    start ? formatDate(start) : null,
+    end ? formatDate(end) : null,
+    start && end ? formatDateRange(start, end) : null
+  );
 }
 
 /**
