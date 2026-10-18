@@ -457,26 +457,29 @@ export const TestFlyoutMenus: FlyoutStory = {
     const customer = canvas.getByRole('combobox', { name: 'Customer' });
     await userEvent.click(customer);
     await expect(customer).toHaveAttribute('aria-expanded', 'true');
-    const list = must(
-      must(customer.closest('.cds--list-box__wrapper')).querySelector(
-        '[role="listbox"]'
-      )
-    ).getBoundingClientRect();
-    const content = must(
-      customer.closest('.afframe-filter-flyout-content')
-    ).getBoundingClientRect();
-    await expect(
-      customer.getBoundingClientRect().bottom + list.height
-    ).toBeGreaterThan(content.bottom);
-    await expect(list.top).toBeGreaterThanOrEqual(0);
-    await expect(list.bottom).toBeLessThanOrEqual(window.innerHeight);
-    const last = must(canvas.getAllByRole('option').at(-1));
-    const box = last.getBoundingClientRect();
-    const hit = document.elementFromPoint(
-      box.left + box.width / 2,
-      box.top + box.height / 2
-    );
-    await expect(last.contains(hit)).toBe(true);
+    // autoAlign places the menu after it opens.
+    await waitFor(() => {
+      const list = must(
+        must(customer.closest('.cds--list-box__wrapper')).querySelector(
+          '[role="listbox"]'
+        )
+      ).getBoundingClientRect();
+      const content = must(
+        customer.closest('.afframe-filter-flyout-content')
+      ).getBoundingClientRect();
+      expect(
+        customer.getBoundingClientRect().bottom + list.height
+      ).toBeGreaterThan(content.bottom);
+      expect(list.top).toBeGreaterThanOrEqual(0);
+      expect(list.bottom).toBeLessThanOrEqual(window.innerHeight);
+      const last = must(canvas.getAllByRole('option').at(-1));
+      const box = last.getBoundingClientRect();
+      const hit = document.elementFromPoint(
+        box.left + box.width / 2,
+        box.top + box.height / 2
+      );
+      expect(last.contains(hit)).toBe(true);
+    });
     // A simulated click leaves focus on the body; a real one on the field.
     customer.focus();
     await userEvent.keyboard('{Escape}');
