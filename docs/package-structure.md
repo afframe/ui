@@ -41,7 +41,7 @@ Folders with code:
 | Folder                 | What                                                                                                      | Label     |
 | ---------------------- | --------------------------------------------------------------------------------------------------------- | --------- |
 | `DataGrid`             | data grid on TanStack Table (`@tanstack/react-table`, `@tanstack/react-virtual`) and Carbon               | `afframe` |
-| `FilterPanel`          | filter panel and filter flyout, controlled                                                                | `afframe` |
+| `FilterPanel`          | filter panel, filter flyout and filter summary (`FilterSummary`), controlled                              | `afframe` |
 | `ControlledDatePicker` | Carbon's classic `DatePicker` with a controlled `open` prop, through its flatpickr instance               | `afframe` |
 | `Amount`               | an amount formatted by `src/format`, server-safe                                                          | `afframe` |
 | `AmountInput`          | money field on Carbon `NumberInput`                                                                       | `afframe` |

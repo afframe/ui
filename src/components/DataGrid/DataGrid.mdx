@@ -95,6 +95,8 @@ a new array on every render makes TanStack rebuild its rows each time.
 - `pageSizes`: page sizes offered by the pagination bar, default 10, 20, 50.
 - `emptyState`: content of the full-width cell shown when there are no rows,
   such as an `EmptyState`. Without it the cell shows the `emptyState` message.
+- `filterSummary`: content shown between the toolbar and the table, such as a
+  `FilterSummary` of the applied filters.
 - `messages`: overrides for any string (below).
 - `ref` and other HTML attributes (`id`, `data-*`, `aria-*`, `style`) go to
   the table container, Carbon's `section.cds--data-table-container`.
@@ -271,7 +273,10 @@ Pass `getSubRows` in `options` and leave out `renderExpandedRow`.
 A `FilterPanel` beside the grid keeps its selection in app state; the app
 turns it into TanStack's `columnFilters` and passes it in `options.state`.
 Each filtered column gets a `filterFn` that keeps a row when its value is one
-of the selected options.
+of the selected options. Here the panel uses batch update, so the rows change
+on Apply. A `FilterSummary` with the same `value` and `onChange`, passed in
+`filterSummary`, shows the applied filters as tags between the toolbar and the
+table.
 
 <Canvas of={DataGridStories.WithFilterPanel} />
 

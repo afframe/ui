@@ -2,13 +2,14 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TrashCan } from '@carbon/icons-react';
 import { Link } from '@carbon/react';
 import { useState } from 'react';
-import { expect, fn, within } from 'storybook/test';
+import { expect, fn, waitFor, within } from 'storybook/test';
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import {
   Amount,
   DataTableSkeleton,
   FilterPanel,
+  FilterSummary,
   formatDate,
   NoDataEmptyState,
   type FilterPanelValue,
@@ -760,10 +761,18 @@ function FilterPanelDemo() {
         groups={panelGroups}
         value={filters}
         onChange={setFilters}
+        updateMethod="batch"
         resultCount={resultCount}
       />
       <DataGrid
         title="Invoices"
+        filterSummary={
+          <FilterSummary
+            groups={panelGroups}
+            value={filters}
+            onChange={setFilters}
+          />
+        }
         options={{
           features: panelFeatures,
           columns: panelColumns,
@@ -775,7 +784,10 @@ function FilterPanelDemo() {
   );
 }
 
-/** A filter panel beside the grid sets `columnFilters` as controlled state. */
+/**
+ * A batch filter panel beside the grid sets `columnFilters` as controlled
+ * state; `filterSummary` shows the applied filters between toolbar and table.
+ */
 export const WithFilterPanel: Story = {
   render: () => <FilterPanelDemo />,
 };
@@ -787,9 +799,23 @@ export const TestWithFilterPanel: Story = {
     const table = within(canvas.getByRole('table'));
     await expect(table.getAllByRole('row')).toHaveLength(9);
     await userEvent.click(canvas.getByRole('checkbox', { name: 'Overdue' }));
+    // Batch update: the rows change only on Apply.
+    await expect(table.getAllByRole('row')).toHaveLength(9);
+    await userEvent.click(canvas.getByRole('button', { name: 'Apply' }));
     // Header row plus the two overdue invoices.
     await expect(table.getAllByRole('row')).toHaveLength(3);
-    await userEvent.click(canvas.getByRole('checkbox', { name: 'Overdue' }));
+    // Carbon names the dismiss button through a hidden tooltip, which the
+    // role query does not read; TagSet also keeps a hidden copy of each tag.
+    const remove = await waitFor(() => {
+      const [found] = canvas
+        .queryAllByLabelText('Remove filter Status: Overdue', {
+          selector: 'button',
+        })
+        .filter((item) => !item.closest('[aria-hidden="true"]'));
+      if (!found) throw new Error('No Status: Overdue tag');
+      return found;
+    });
+    await userEvent.click(remove);
     await expect(table.getAllByRole('row')).toHaveLength(9);
   },
 };

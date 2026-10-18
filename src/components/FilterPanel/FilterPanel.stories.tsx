@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useArgs } from 'storybook/preview-api';
+import { expect, fn, waitFor } from 'storybook/test';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { FilterFlyout } from './FilterFlyout.js';
 import type { FilterFlyoutProps } from './FilterFlyout.js';
@@ -9,6 +10,8 @@ import type {
   FilterPanelProps,
   FilterPanelValue,
 } from './FilterPanel.js';
+import { FilterSummary } from './FilterSummary.js';
+import type { FilterSummaryProps } from './FilterSummary.js';
 import mdx from './FilterPanel.mdx';
 
 const groups: FilterPanelGroup[] = [
@@ -99,6 +102,28 @@ function FlyoutHarness(args: FilterFlyoutProps) {
   );
 }
 
+// Seven tags overflow the narrow wrapper, so the summary shows "+N".
+const summaryValue: FilterPanelValue = {
+  status: ['paid', 'overdue'],
+  currency: ['CZK', 'EUR'],
+  customer: ['acme', 'birch', 'cedar'],
+};
+
+function SummaryHarness(args: FilterSummaryProps) {
+  const [, updateArgs] = useArgs<FilterSummaryProps>();
+  return (
+    <div style={{ maxInlineSize: '30rem' }}>
+      <FilterSummary
+        {...args}
+        onChange={(value) => {
+          updateArgs({ value });
+          args.onChange(value);
+        }}
+      />
+    </div>
+  );
+}
+
 const meta = {
   title: 'Components/FilterPanel',
   component: FilterPanel,
@@ -114,9 +139,51 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 type FlyoutStory = StoryObj<FilterFlyoutProps>;
+type SummaryStory = StoryObj<FilterSummaryProps>;
 
 export const Default: Story = {
   render: PanelHarness,
+};
+
+/** Batch update: toggles change a draft; Apply calls `onChange`. */
+export const Batch: Story = {
+  render: PanelHarness,
+  args: { updateMethod: 'batch', onClose: fn() },
+};
+
+export const TestBatch: Story = {
+  ...Batch,
+  tags: ['!dev', '!autodocs'],
+  args: { ...Batch.args, onChange: fn() },
+  play: async ({ args, canvas, userEvent }) => {
+    const apply = canvas.getByRole('button', { name: 'Apply' });
+    await expect(apply).toBeDisabled();
+    await userEvent.click(canvas.getByRole('checkbox', { name: 'Draft' }));
+    await expect(apply).toBeEnabled();
+    await expect(args.onChange).not.toHaveBeenCalled();
+    await userEvent.click(apply);
+    await expect(args.onChange).toHaveBeenLastCalledWith({
+      status: ['paid', 'overdue', 'draft'],
+    });
+    await expect(
+      canvas.getByRole('heading', { name: 'Filters' })
+    ).toHaveFocus();
+  },
+};
+
+/** The applied filters as tags above the data; the rest overflow into "+N". */
+export const Summary: SummaryStory = {
+  render: SummaryHarness,
+  args: { value: summaryValue },
+  play: async ({ canvas }) => {
+    // TagSet measures after render and keeps a hidden copy for measuring.
+    await waitFor(() => {
+      const shown = canvas
+        .queryAllByText(/^\+\d+$/)
+        .filter((item) => !item.closest('[aria-hidden="true"]'));
+      return expect(shown).toHaveLength(1);
+    });
+  },
 };
 
 export const Flyout: FlyoutStory = {
@@ -132,6 +199,18 @@ export const FlyoutOpen: FlyoutStory = {
 
 export const Dark: Story = {
   ...Default,
+  tags: ['!dev', '!autodocs'],
+  globals: { theme: 'dark' },
+};
+
+export const BatchDark: Story = {
+  ...Batch,
+  tags: ['!dev', '!autodocs'],
+  globals: { theme: 'dark' },
+};
+
+export const SummaryDark: SummaryStory = {
+  ...Summary,
   tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
 };

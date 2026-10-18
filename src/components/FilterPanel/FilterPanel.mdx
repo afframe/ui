@@ -14,11 +14,10 @@ import { TableChooser } from '../../../.storybook/TableChooser';
 [Source code](https://github.com/afframe/ui/tree/main/src/components/FilterPanel). See also [Filtering pattern](https://www.carbondesignsystem.com/building-blocks/core/patterns/filtering).
 
 `FilterPanel` is a side panel of checkbox filter groups. `FilterFlyout` is a
-toolbar button that opens the same panel in a popover. Both are built on
-Carbon's Accordion, Checkbox, Search, DismissibleTag, Button and Popover.
-They replace IBM Products' deprecated FilterPanel.
-
-Filtering is instant: every change calls `onChange`. There is no Apply button.
+toolbar button that opens the same panel in a popover. `FilterSummary` shows
+the applied filters as tags above the data. They are built on Carbon's
+Accordion, Checkbox, Search, Button and Popover and IBM Products' TagSet, and
+replace IBM Products' deprecated FilterPanel.
 
 <Canvas of={FilterPanelStories.Default} />
 
@@ -28,14 +27,29 @@ Filtering is instant: every change calls `onChange`. There is no Apply button.
 
 <TableChooser />
 
+## Update method
+
+`updateMethod` follows the update methods of Carbon's
+[filtering pattern](https://www.carbondesignsystem.com/building-blocks/core/patterns/filtering).
+
+- `instant` (default): every toggle calls `onChange`. Use it when filtering
+  is fast and each change is cheap, such as data already on the client.
+- `batch`: toggles change a draft, and Apply and Cancel sit at the bottom.
+  Apply calls `onChange` with the draft; Cancel restores the applied value.
+  Use it when each change costs a request, or when users pick several options
+  before they look at the result. Apply is disabled while the draft equals
+  the applied value; Cancel too, unless `onCancel` is set.
+
+<Canvas of={FilterPanelStories.Batch} />
+
 ## Usage and props
 
-Both components are controlled. The app keeps the selection in state and
-filters its own data; the components keep only the open state and the search
-text.
+The components are controlled. The app keeps the applied selection in state
+and filters its own data; the components keep only the open state, the
+search text and, in batch update, the draft.
 
 ```tsx
-import { FilterFlyout, FilterPanel } from '@afframe/ui';
+import { FilterFlyout, FilterPanel, FilterSummary } from '@afframe/ui';
 import type { FilterPanelGroup, FilterPanelValue } from '@afframe/ui';
 
 const groups: FilterPanelGroup[] = [
@@ -57,31 +71,62 @@ const [value, setValue] = useState<FilterPanelValue>({});
   groups={groups}
   value={value}
   onChange={setValue}
+  updateMethod="batch"
   resultCount={rows.length}
 />;
+<FilterSummary groups={groups} value={value} onChange={setValue} />;
 ```
 
 - `groups`: each group is one accordion item with checkbox options.
   `searchable` adds a search field that narrows the options by label;
   `defaultOpen` opens the item on first render.
-- `value`: the selected option values per group id, for example
-  `{ status: ['paid'] }`. A group with nothing selected is left out.
-- `onChange`: called with the next value.
-- `resultCount`: when set, the panel shows and announces it.
+- `value`: the applied option values per group id, for example
+  `{ status: ['paid'] }`. A group with nothing selected is left out. A new
+  `value` from outside replaces the batch draft.
+- `onChange`: called with the next value, per toggle or on Apply.
+- `updateMethod`: `instant` (default) or `batch`, see above.
+- `onCancel`: batch update, called after Cancel restores the applied value.
+- `onClose`: shows a close button in the title row; in batch update it
+  discards the draft first.
+- `resultCount`: the number of results with the applied `value`; when set,
+  the panel shows and announces it.
 - `messages`: overrides for the strings below.
 - `headingLevel`: level of the title heading, 2 (default) or 3. Use 3 when
   the panel sits under a page section heading.
 - `ref` and other HTML attributes go to the root `section`.
 
-`FilterFlyout` takes the same filter props. Its toggle button shows the number
-of selected options. `defaultOpen` opens it on first render. `ref` and other
-HTML attributes go to its root `div`, Carbon's Popover.
+`FilterFlyout` takes the same filter props and `updateMethod`, without
+`onCancel` and `onClose`. Its toggle button shows the number of selected
+options. `defaultOpen` opens it on first render. In batch update Apply applies
+and closes; Cancel, Escape and a click outside close and discard the draft.
+The flyout has no close button. `ref` and other HTML attributes go to its root
+`div`, Carbon's Popover.
 
 <ArgTypes of={FilterPanelStories} />
 
+## FilterSummary
+
+`FilterSummary` shows the applied filters as one line of gray tags, named
+`Group: Option`, then Clear filters. Tags that do not fit move into a "+N" tag
+that opens a popover with the rest; with more than 10 hidden tags the popover
+links to a dialog of all tags. While tags overflow, View all shows every tag
+on several lines. Dismissing a tag removes that option; Clear filters calls
+`onChange({})`. With nothing selected it renders an empty root.
+
+It takes `groups`, `value`, `onChange` and `messages`; `ref` and other HTML
+attributes go to its root `div`. Above a `DataGrid`, pass it in the grid's
+`filterSummary` prop, which places it between the toolbar and the table, as
+IBM's Datagrid does. Above other data, render it right before that data.
+
+The tags come from IBM Products' TagSet, which has two limits: the "+N" text
+cannot be translated, and its popover has a fixed id, so two summaries on one
+page share it.
+
+<Canvas of={FilterPanelStories.Summary} />
+
 ## Messages
 
-`messages?: Partial<FilterPanelMessages>`; defaults in
+`FilterPanel` takes `messages?: Partial<FilterPanelMessages>`; defaults in
 `defaultFilterPanelMessages`.
 
 | Key                 | Default                          |
@@ -89,43 +134,66 @@ HTML attributes go to its root `div`, Carbon's Popover.
 | `title`             | Filters                          |
 | `groupTitle`        | `label`, then `(count)` when set |
 | `resultCount`       | 1 result, `count` results        |
-| `selectedFilters`   | Selected filters                 |
-| `clearAll`          | Clear all                        |
-| `removeFilter`      | Remove filter `label`            |
 | `searchLabel`       | Search `group label`             |
 | `searchPlaceholder` | Search                           |
 | `clearSearch`       | Clear search                     |
 | `noMatches`         | No matching options              |
+| `apply`             | Apply                            |
+| `cancel`            | Cancel                           |
+| `close`             | Close filter panel               |
 
-`FilterFlyout` takes `messages?: Partial<FilterFlyoutMessages>` (defaults in
-`defaultFilterFlyoutMessages`): the keys above plus `toggle`, the button text
-(Filter, or Filter (`count`) when options are selected).
+`FilterFlyout` takes `messages?: Partial<FilterFlyoutMessages>`; defaults in
+`defaultFilterFlyoutMessages`: the keys above plus this one.
+
+| Key      | Default                                  |
+| -------- | ---------------------------------------- |
+| `toggle` | Filter, or Filter (`count`) when counted |
+
+`FilterSummary` takes `messages?: Partial<FilterSummaryMessages>`; defaults in
+`defaultFilterSummaryMessages`.
+
+| Key                             | Default                       |
+| ------------------------------- | ----------------------------- |
+| `selectedFilters`               | Selected filters              |
+| `tagLabel`                      | `group label`: `option label` |
+| `removeFilter`                  | Remove filter `label`         |
+| `clearFilters`                  | Clear filters                 |
+| `viewAll`                       | View all                      |
+| `showAllTags`                   | View all tags                 |
+| `allTagsModalTitle`             | All tags                      |
+| `allTagsModalSearchLabel`       | Search all tags               |
+| `allTagsModalSearchPlaceholder` | Search all tags               |
 
 ## Keyboard and screen reader behaviour
 
-Focus order in the panel: the selected filter tags, Clear all, then each group
-heading; inside an open group, its search field and then its checkboxes.
+Focus order in the panel: the close button when set, each group heading;
+inside an open group, its search field and then its checkboxes; in batch
+update, Cancel and Apply. In the summary: each tag's dismiss button, the "+N"
+tag, Clear filters, then View all while tags overflow.
 
-| Key          | Where                    | Action                                                                                         |
-| ------------ | ------------------------ | ---------------------------------------------------------------------------------------------- |
-| Tab          | anywhere                 | Moves to the next tag, button, heading or checkbox.                                            |
-| Enter        | group heading            | Opens or closes the group.                                                                     |
-| Space        | checkbox                 | Selects or clears the option.                                                                  |
-| Enter, Space | tag dismiss button       | Removes that filter; focus moves to the next tag, else the previous one, else the panel title. |
-| Enter        | Clear all                | Clears every filter; focus moves to the panel title.                                           |
-| Enter        | flyout button            | Opens or closes the flyout. Tab moves into it.                                                 |
-| Escape       | flyout button or content | Closes the flyout and returns focus to its button.                                             |
-| Escape       | search field with text   | Clears the search; a second Escape closes the flyout.                                          |
+| Key          | Where                    | Action                                                                                                                   |
+| ------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Tab          | anywhere                 | Moves to the next button, heading or checkbox.                                                                           |
+| Enter        | group heading            | Opens or closes the group.                                                                                               |
+| Space        | checkbox                 | Selects or clears the option.                                                                                            |
+| Enter, Space | Apply, Cancel            | Applies or discards the draft; focus moves to the panel title. In the flyout, it closes and focus returns to its button. |
+| Enter, Space | close button             | Discards the draft and calls `onClose`.                                                                                  |
+| Enter, Space | tag dismiss button       | Removes that filter; focus stays on the tag in its place, else the previous tag, else the summary.                       |
+| Enter, Space | "+N" tag                 | Opens or closes the popover of hidden tags.                                                                              |
+| Enter        | Clear filters            | Clears every filter; focus moves to the summary.                                                                         |
+| Enter        | flyout button            | Opens or closes the flyout. Tab moves into it.                                                                           |
+| Escape       | flyout button or content | Closes the flyout, discards a batch draft and returns focus to its button.                                               |
+| Escape       | search field with text   | Clears the search; a second Escape closes the flyout.                                                                    |
 
 Screen readers announce:
 
 - the panel as a region named by its title (Filters);
 - the result count as a status message when it changes;
-- the selected filters as a list named Selected filters; each dismiss button
-  is named Remove filter `label`;
 - each group heading as a button with its expanded state, and its options as a
   group named by the group label;
-- the flyout button with its expanded state.
+- the flyout button with its expanded state;
+- the summary as a group named Selected filters; each dismiss button is named
+  Remove filter `label`.
 
 ## Stories
 
