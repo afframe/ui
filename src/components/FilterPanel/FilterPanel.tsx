@@ -1,57 +1,94 @@
 'use client';
-import { usePrefix as useProductsPrefix } from '@carbon/ibm-products';
+/**
+ * Copyright IBM Corp. 2024, 2025
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2025
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: from tanstack-carbon react/filterPanel FilterPanel.tsx (header, fields and Clear and Apply button set); controlled value with a draft per group, batch or instant update, flat or accordion layout, heading level, result count, focus to the title after Apply and Clear, text from messages, no panel animation. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
 import { Close } from '@carbon/icons-react';
 import {
   Accordion,
   AccordionItem,
   Button,
   ButtonSet,
-  Checkbox,
   IconButton,
-  Search,
-  usePrefix,
+  Layer,
 } from '@carbon/react';
 import { useId, useRef, useState } from 'react';
 import type { ComponentPropsWithoutRef, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { checkedValues, sameFilterValue, setGroupValue } from './value.js';
-import type { FilterPanelGroup, FilterPanelValue } from './value.js';
-
-export { countFilterPanelSelections } from './value.js';
-export type {
+import { FilterField } from './fields.js';
+import {
+  countFilterPanelSelections,
+  sameFilterValue,
+  setGroupValue,
+} from './value.js';
+import type {
+  FilterPanelFieldValue,
   FilterPanelGroup,
-  FilterPanelOption,
   FilterPanelValue,
 } from './value.js';
 
+export { countFilterPanelSelections } from './value.js';
+export type { FilterPanelGroup, FilterPanelValue } from './value.js';
+
 export interface FilterPanelMessages {
   title: string;
-  /** Accordion heading of a group; `count` is the number of selected options. */
+  /** Accordion heading of a group; `count` is the number of selected options, 1 for another set field. */
   groupTitle: (label: string, count: number) => string;
   resultCount: (count: number) => string;
   searchLabel: (groupLabel: string) => string;
   searchPlaceholder: string;
   clearSearch: string;
   noMatches: string;
+  selectPlaceholder: string;
+  multiselectPlaceholder: string;
+  textPlaceholder: (groupLabel: string) => string;
+  dateStart: string;
+  dateEnd: string;
+  /** Caption before the slider's minimum. */
+  sliderMin: string;
+  /** Caption before the slider's upper bound. */
+  sliderMax: string;
   /** Batch update: applies the draft. */
   apply: string;
-  /** Batch update: discards the draft. */
-  cancel: string;
+  /** Removes every filter. */
+  clear: string;
   /** Label of the close button, shown when `onClose` is set. */
   close: string;
+  /** Dropdown and multiselect menu button. */
+  openMenu: string;
+  closeMenu: string;
+  /** Multiselect button that clears its selection. */
+  clearSelection: string;
 }
 
 export const defaultFilterPanelMessages: FilterPanelMessages = {
-  title: 'Filters',
+  title: 'Filter',
   groupTitle: (label, count) => (count > 0 ? `${label} (${count})` : label),
   resultCount: (count) => (count === 1 ? '1 result' : `${count} results`),
   searchLabel: (groupLabel) => `Search ${groupLabel}`,
   searchPlaceholder: 'Search',
   clearSearch: 'Clear search',
   noMatches: 'No matching options',
+  selectPlaceholder: 'Choose an option',
+  multiselectPlaceholder: 'Choose options',
+  textPlaceholder: (groupLabel) => `Filter ${groupLabel}`,
+  dateStart: 'Start date',
+  dateEnd: 'End date',
+  sliderMin: 'Min',
+  sliderMax: 'Max',
   apply: 'Apply',
-  cancel: 'Cancel',
-  close: 'Close filter panel',
+  clear: 'Clear',
+  close: 'Close',
+  openMenu: 'Open menu',
+  closeMenu: 'Close menu',
+  clearSelection: 'Clear all selected items',
 };
 
 export interface FilterPanelProps extends Omit<
@@ -62,15 +99,15 @@ export interface FilterPanelProps extends Omit<
   ref?: Ref<HTMLElement>;
   groups: readonly FilterPanelGroup[];
   value: FilterPanelValue;
-  /** Called per toggle (`instant`) or on Apply (`batch`). */
+  /** Called on Apply and Clear (`batch`) or per change (`instant`). */
   onChange: (value: FilterPanelValue) => void;
   /**
-   * `instant` applies every toggle; `batch` keeps a draft until Apply, with
-   * Apply and Cancel at the bottom. Default `instant`.
+   * `batch` keeps a draft until Apply, with Clear and Apply at the bottom;
+   * `instant` applies every change, with Clear only. Default `batch`.
    */
   updateMethod?: 'batch' | 'instant';
-  /** Batch update: called after Cancel restores the applied value. Keeps Cancel enabled. */
-  onCancel?: () => void;
+  /** `flat` shows each group as a section; `accordion` as an accordion item. Default `flat`. */
+  layout?: 'flat' | 'accordion';
   /** Shows a close button in the title row; in batch update it discards the draft first. */
   onClose?: () => void;
   /** Number of results with the applied `value`; shown and announced when set. */
@@ -81,14 +118,36 @@ export interface FilterPanelProps extends Omit<
   className?: string;
 }
 
-/** A side panel of checkbox filter groups, applied per toggle or in a batch. Controlled. */
-// fallow-ignore-next-line complexity -- one render covers both update methods, search per group and the optional close button and count
+const only = (value: FilterPanelValue, id: string): FilterPanelValue =>
+  value[id] === undefined ? {} : { [id]: value[id] };
+
+/** The draft with the groups whose applied value changed from `from` to `to`. */
+function rebase(
+  groups: readonly FilterPanelGroup[],
+  draft: FilterPanelValue,
+  from: FilterPanelValue,
+  to: FilterPanelValue
+): FilterPanelValue {
+  return groups.reduce(
+    (next, group) =>
+      sameFilterValue(groups, only(from, group.id), only(to, group.id))
+        ? next
+        : setGroupValue(next, group, to[group.id]),
+    draft
+  );
+}
+
+/**
+ * A side panel of filter fields, one per group, applied in a batch on Apply
+ * or per change. Controlled.
+ */
+// fallow-ignore-next-line complexity -- both update methods, both layouts and the optional close button and count
 export function FilterPanel({
   groups,
   value,
   onChange,
-  updateMethod = 'instant',
-  onCancel,
+  updateMethod = 'batch',
+  layout = 'flat',
   onClose,
   resultCount,
   messages,
@@ -98,42 +157,35 @@ export function FilterPanel({
   ...rest
 }: FilterPanelProps) {
   const text = resolveMessages(defaultFilterPanelMessages, messages);
-  const prefix = usePrefix();
-  const productsPrefix = useProductsPrefix();
   const id = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const [search, setSearch] = useState<Record<string, string>>({});
   const batch = updateMethod === 'batch';
 
-  // The draft follows an outside `value` change. Compared by content, so an
-  // inline `value` object does not reset the draft on every render.
+  // An outside `value` change reaches only the groups it changed; the others
+  // keep their draft. Compared by content, so an inline `value` object does
+  // not reset the draft on every render.
   const [applied, setApplied] = useState(value);
   const [draft, setDraft] = useState(value);
   if (!sameFilterValue(groups, applied, value)) {
     setApplied(value);
-    setDraft(value);
+    setDraft(rebase(groups, draft, applied, value));
   }
   const shown = batch ? draft : value;
-  const dirty = batch && !sameFilterValue(groups, draft, value);
+  const isEmpty = (filters: FilterPanelValue) =>
+    sameFilterValue(groups, filters, {});
+  const canApply = batch && !sameFilterValue(groups, draft, value);
+  const canClear = !isEmpty(value) || (batch && !isEmpty(draft));
 
-  const toggle = (
+  const change = (
     group: FilterPanelGroup,
-    optionValue: string,
-    checked: boolean
+    field: FilterPanelFieldValue | undefined
   ) => {
-    const current = checkedValues(shown[group.id]);
-    const next = setGroupValue(
-      shown,
-      group,
-      checked
-        ? [...current, optionValue]
-        : current.filter((item) => item !== optionValue)
-    );
+    const next = setGroupValue(shown, group, field);
     if (batch) setDraft(next);
     else onChange(next);
   };
 
-  // Apply and Cancel disable themselves, which would drop focus to the page.
+  // Apply and Clear disable themselves, which would drop focus to the page.
   // The title takes it first, so a caller that moves focus on the callback
   // (the flyout returning it to its button) still wins.
   const apply = () => {
@@ -141,10 +193,10 @@ export function FilterPanel({
     onChange(draft);
   };
 
-  const cancel = () => {
+  const clear = () => {
     titleRef.current?.focus();
-    setDraft(value);
-    onCancel?.();
+    setDraft({});
+    onChange({});
   };
 
   const close = () => {
@@ -154,10 +206,18 @@ export function FilterPanel({
 
   const classes = ['afframe-filter-panel', className].filter(Boolean).join(' ');
   const Heading = headingLevel === 3 ? 'h3' : 'h2';
-  // IBM ActionSet (ibm-products 2.100.0, not exported) renders this markup
-  // for two buttons in a medium set; its classes give the 64 px buttons.
-  const actionSet = `${productsPrefix}--action-set`;
-  const actionButton = `${actionSet}__action-button ${actionSet}__action-button--expressive`;
+  const accordion = layout === 'accordion';
+
+  const field = (group: FilterPanelGroup, index: number) => (
+    <FilterField
+      group={group}
+      field={shown[group.id]}
+      onChange={(next) => change(group, next)}
+      id={`${id}-${index}`}
+      text={text}
+      hideLabel={accordion}
+    />
+  );
 
   return (
     <section
@@ -191,79 +251,48 @@ export function FilterPanel({
           </IconButton>
         )}
       </div>
-      <Accordion>
-        {groups.map((group, groupIndex) => {
-          if (group.variant && group.variant !== 'checkbox') return null;
-          const groupSelected = checkedValues(shown[group.id]);
-          const query = (search[group.id] ?? '').trim().toLowerCase();
-          const options = query
-            ? group.options.filter((option) =>
-                option.label.toLowerCase().includes(query)
-              )
-            : group.options;
-          return (
-            <AccordionItem
-              key={group.id}
-              title={text.groupTitle(group.label, groupSelected.length)}
-              open={group.defaultOpen ?? false}>
-              {group.searchable && (
-                <Search
-                  id={`${id}-${groupIndex}-search`}
-                  size="sm"
-                  labelText={text.searchLabel(group.label)}
-                  placeholder={text.searchPlaceholder}
-                  closeButtonLabelText={text.clearSearch}
-                  value={search[group.id] ?? ''}
-                  onChange={(event) =>
-                    setSearch({ ...search, [group.id]: event.target.value })
-                  }
-                  className="afframe-filter-panel-search"
-                />
-              )}
-              <fieldset className="afframe-filter-panel-options">
-                <legend className={`${prefix}--visually-hidden`}>
-                  {group.label}
-                </legend>
-                {options.map((option) => (
-                  <Checkbox
-                    key={option.value}
-                    id={`${id}-${groupIndex}-${group.options.indexOf(option)}`}
-                    labelText={option.label}
-                    checked={groupSelected.includes(option.value)}
-                    onChange={(_event, { checked }) =>
-                      toggle(group, option.value, checked)
-                    }
-                  />
-                ))}
-                {options.length === 0 && (
-                  <p className="afframe-filter-panel-empty">{text.noMatches}</p>
+      {/* Fields take the next layer's colours, as upstream. */}
+      <Layer className="afframe-filter-panel-fields">
+        {accordion ? (
+          <Accordion>
+            {groups.map((group, index) => (
+              <AccordionItem
+                key={group.id}
+                title={text.groupTitle(
+                  group.label,
+                  countFilterPanelSelections([group], shown)
                 )}
-              </fieldset>
-            </AccordionItem>
-          );
-        })}
-      </Accordion>
-      {batch && (
-        <ButtonSet
-          className={`${actionSet} ${actionSet}--row-double ${actionSet}--md afframe-filter-panel-actions`}>
-          <Button
-            kind="secondary"
-            isExpressive
-            disabled={!dirty && !onCancel}
-            onClick={cancel}
-            className={actionButton}>
-            {text.cancel}
-          </Button>
+                open={group.defaultOpen ?? false}>
+                {field(group, index)}
+              </AccordionItem>
+            ))}
+          </Accordion>
+        ) : (
+          groups.map((group, index) => (
+            <div key={group.id} className="afframe-filter-panel-group">
+              {field(group, index)}
+            </div>
+          ))
+        )}
+      </Layer>
+      <ButtonSet className="afframe-filter-panel-actions">
+        <Button
+          kind="secondary"
+          disabled={!canClear}
+          onClick={clear}
+          className="afframe-filter-panel-action">
+          {text.clear}
+        </Button>
+        {batch && (
           <Button
             kind="primary"
-            isExpressive
-            disabled={!dirty}
+            disabled={!canApply}
             onClick={apply}
-            className={actionButton}>
+            className="afframe-filter-panel-action">
             {text.apply}
           </Button>
-        </ButtonSet>
-      )}
+        )}
+      </ButtonSet>
     </section>
   );
 }

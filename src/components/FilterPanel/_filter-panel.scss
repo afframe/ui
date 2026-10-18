@@ -35,7 +35,7 @@
   @include type.type-style('heading-compact-02');
 }
 
-// The title takes focus after Apply or Cancel.
+// The title takes focus after Apply or Clear.
 .afframe-filter-panel-title:focus {
   @include focus-outline('outline');
 }
@@ -44,6 +44,24 @@
   @include type.type-style('label-01');
 
   color: $text-secondary;
+}
+
+.afframe-filter-panel-fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.afframe-filter-panel-group {
+  padding: $spacing-03 $spacing-05 $spacing-05;
+}
+
+.afframe-filter-panel-fieldset {
+  min-inline-size: 0;
+}
+
+// The legend reads as a Carbon field label; Carbon's label class sets the type.
+.afframe-filter-panel-legend {
+  margin-block-end: $spacing-03;
 }
 
 .afframe-filter-panel-search {
@@ -62,12 +80,29 @@
   color: $text-helper;
 }
 
-// Batch actions stay visible at the bottom of the flyout's scroll area, as
-// IBM's panel actions do; IBM's action set class gives the background.
+// Min and Max captions under the slider, as in tanstack-carbon's community
+// slider field.
+.afframe-filter-panel-slider-range {
+  @include type.type-style('helper-text-01');
+
+  display: flex;
+  justify-content: space-between;
+  color: $text-secondary;
+}
+
+// Clear and Apply share the row 50/50 (one Clear fills it) and stay visible at
+// the bottom of a scrolling panel, as upstream's button set.
 .afframe-filter-panel-actions {
   position: sticky;
   z-index: 1;
   inset-block-end: 0;
+  display: flex;
+  background-color: $layer;
+}
+
+.afframe-filter-panel-action {
+  flex: 1 1 50%;
+  max-inline-size: none;
 }
 
 .afframe-filter-flyout-content {
