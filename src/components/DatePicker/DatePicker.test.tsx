@@ -367,3 +367,53 @@ test('an empty value right after onChange([]) is the echo only with onChange', a
   await vi.waitFor(() => expect(input().value).toBe(''));
   expect(input().getAttribute('aria-invalid')).toBeNull();
 });
+
+test('a new date from the app after a kept invalid date drops the kept text', async () => {
+  const { rerender } = render(
+    <Single value={[new Date(2026, 9, 1)]} onChange={() => {}} />
+  );
+  await retype('3102');
+  await leave();
+  await expectKeptInvalid('31.02.');
+  rerender(<Single value={[new Date(2026, 9, 5)]} onChange={() => {}} />);
+  await vi.waitFor(() => expect(input().value).toBe('05.10.2026'));
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+  rerender(<Single value={[]} onChange={() => {}} />);
+  await vi.waitFor(() => expect(input().value).toBe(''));
+  await settle();
+  expect(input().value).toBe('');
+  expect(input().getAttribute('aria-invalid')).toBeNull();
+});
+
+function ControlledRange() {
+  const [value, setValue] = useState<Date[]>([]);
+  return (
+    <>
+      <DatePicker datePickerType="range" value={value} onChange={setValue}>
+        <DatePickerInput id="from" labelText="From" />
+        <DatePickerInput id="to" labelText="To" />
+      </DatePicker>
+      <button type="button" onClick={() => setValue([])}>
+        Reset
+      </button>
+    </>
+  );
+}
+
+test('controlled range: a reset empties an end date kept invalid', async () => {
+  render(<ControlledRange />);
+  await userEvent.type(input('From'), '01102026');
+  await userEvent.type(input('To'), '3102');
+  await leave();
+  await expectKeptInvalid('31.02.', 'To');
+  expect(input('From').value).toBe('01.10.2026');
+  // The open calendar covers the button; the app resets on its own.
+  screen.getByRole('button', { name: 'Reset' }).click();
+  await settle();
+  expect(input('From').value).toBe('');
+  expect(input('To').value).toBe('');
+  expect(input('To').getAttribute('aria-invalid')).toBeNull();
+  await userEvent.click(input('To'));
+  await leave();
+  expect(input('To').value).toBe('');
+});

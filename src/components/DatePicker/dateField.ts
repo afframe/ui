@@ -160,6 +160,9 @@ const replaced = <T>(pair: Pair<T>, index: number, value: T): Pair<T> => {
   return next;
 };
 
+const datesKey = (dates: readonly unknown[]) =>
+  dates.map((date) => (date instanceof Date ? date.getTime() : '')).join();
+
 /**
  * The shared part of the Afframe date pickers. Resolves `dateFormat` (the
  * system format by default) and clones the first two children (the start and
@@ -202,31 +205,65 @@ export function useDateField({
   const told = useRef<Pair<boolean>>([false, false]);
   // Whether the dates the picker reported last had a date per input.
   const reported = useRef<Pair<boolean>>([false, false]);
+  const lastReport = useRef<readonly unknown[]>([]);
   const [invalid, setInvalid] = useState<Pair<boolean>>([false, false]);
 
+  const forget = () => {
+    typed.current = ['', ''];
+    dirty.current = [false, false];
+    told.current = [false, false];
+    setInvalid([false, false]);
+  };
+
+  // How the value was emptied, decided in a layout effect before Carbon's
+  // reset in its passive effect: that reset clears flatpickr, whose
+  // onChange([]) then keeps no typed text. The inputs are written in a
+  // passive effect, after Carbon's effects have rewritten them.
+  const emptiedBy = useRef<'echo' | 'reset' | null>(null);
   const cleared = isEmpty(value);
   const wasCleared = useRef(cleared);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const emptied = cleared && !wasCleared.current;
     wasCleared.current = cleared;
     if (!emptied) return;
     // Text still kept invalid after onChange told the app it holds no date:
     // the empty value is the app taking that onChange([]), now or after an
-    // await, not a reset. With no onChange, nothing can take it. Carbon's
-    // reset reaches the picker only in its own effect, after this render.
-    if (hasOnChange && told.current.some(Boolean) && invalid.some(Boolean)) {
+    // await, not a reset. With no onChange, nothing can take it. A range end
+    // kept invalid reports the start date, so that app still held a date.
+    const echo =
+      hasOnChange &&
+      told.current.some(Boolean) &&
+      invalid.some(Boolean) &&
+      !reported.current.some(Boolean);
+    emptiedBy.current = echo ? 'echo' : 'reset';
+  }, [cleared, invalid, hasOnChange]);
+  useEffect(() => {
+    const by = emptiedBy.current;
+    emptiedBy.current = null;
+    if (by === 'echo') {
       for (const [n, input] of inputs.current.entries()) {
         if (input && !input.value) input.value = typed.current[n] ?? '';
       }
       told.current = [false, false];
-      return;
+    } else if (by === 'reset') {
+      for (const input of inputs.current) if (input) input.value = '';
+      forget();
     }
-    for (const input of inputs.current) if (input) input.value = '';
-    typed.current = ['', ''];
-    dirty.current = [false, false];
-    told.current = [false, false];
-    setInvalid([false, false]);
-  }, [cleared, invalid, hasOnChange]);
+  });
+
+  // A new date from the app: Carbon sets it without onChange, so typed text
+  // and its error are stale. The app taking the picker's report is not new.
+  const valueKey = isEmpty(value) ? '' : JSON.stringify(value);
+  const lastValueKey = useRef(valueKey);
+  useEffect(() => {
+    const changed = valueKey !== lastValueKey.current;
+    lastValueKey.current = valueKey;
+    const picker = instance();
+    if (!changed || valueKey === '' || !picker) return;
+    if (datesKey(picker.selectedDates) !== datesKey(lastReport.current)) {
+      forget();
+    }
+  }, [valueKey]);
 
   const isInvalid = (input: string) =>
     input !== '' && parseStrictDate(input, effective) === undefined;
@@ -264,9 +301,11 @@ export function useDateField({
    * empties text it cannot take (Enter, a range end, minDate): typed text
    * with no date stays and is marked invalid. Returns whether it kept any.
    */
+  // fallow-ignore-next-line complexity -- per input: keep the typed text or take the picker's
   const pickerChanged = (dates: readonly unknown[]) => {
     reported.current = [dates[0] != null, dates[1] != null];
-    if (!masked) return false;
+    lastReport.current = dates;
+    if (!masked || emptiedBy.current === 'reset') return false;
     const next: Pair<boolean> = [false, false];
     for (const n of [0, 1] as const) {
       const input = inputs.current[n];
