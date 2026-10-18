@@ -148,11 +148,13 @@ const sharedArgTypes = {
 
 // DatePicker spreads unknown props onto its div and DatePickerInput onto its
 // input, so each gets only its own args. DatePicker clones readOnly, invalid
-// and warn into its inputs.
+// and warn into its inputs. invalidText goes only with a hand-set invalid: an
+// input's invalidText replaces the message of a typed invalid date.
 function splitArgs(args: DatePickerStoryArgs) {
   const picker: Partial<DatePickerStoryArgs> = {};
   const input: Partial<DatePickerStoryArgs> = {};
   for (const [key, value] of Object.entries(args)) {
+    if (key === 'invalidText' && !args.invalid) continue;
     const argType = (sharedArgTypes as ArgTypes)[key];
     const target =
       argType?.table?.category === 'DatePickerInput' ? input : picker;
@@ -260,7 +262,6 @@ export const SimpleWithLayer: StoryFn<DatePickerStoryArgs> = (args) => {
             labelText="Due date"
             id={`date-picker-simple-${layer}`}
             size="md"
-            invalidText={invalidText}
             warnText={warnText}
             {...input}
           />
@@ -270,6 +271,7 @@ export const SimpleWithLayer: StoryFn<DatePickerStoryArgs> = (args) => {
   );
 };
 
+SimpleWithLayer.args = { ...sharedArgs };
 SimpleWithLayer.argTypes = { ...sharedArgTypes };
 
 export const SingleWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
@@ -284,7 +286,6 @@ export const SingleWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
             labelText="Due date"
             id={`date-picker-single-${layer}`}
             size="md"
-            invalidText={invalidText}
             warnText={warnText}
             {...input}
           />
@@ -294,6 +295,7 @@ export const SingleWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
   );
 };
 
+SingleWithCalendarWithLayer.args = { ...sharedArgs };
 SingleWithCalendarWithLayer.argTypes = { ...sharedArgTypes };
 
 export const RangeWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (

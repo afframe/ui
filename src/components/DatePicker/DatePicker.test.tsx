@@ -51,7 +51,7 @@ test('an impossible date stays as typed and the input turns invalid', async () =
   expect(input().value).toBe('31.02.2026');
   expect(input().getAttribute('aria-invalid')).toBe('true');
   expect(
-    screen.getByText('Enter a valid date as dd.mm.yyyy.')
+    screen.getByText('31.02.2026 is not a real date.')
   ).toBeInTheDocument();
   // No date rolled over into March.
   for (const [dates] of onChange.mock.calls as [Date[]][]) {
@@ -68,6 +68,77 @@ test('an incomplete date stays as typed; a fix clears the error', async () => {
   await userEvent.type(input(), '2026');
   expect(input().value).toBe('01.10.2026');
   expect(input().getAttribute('aria-invalid')).toBeNull();
+});
+
+test('an incomplete date asks for the full date', async () => {
+  render(<Single />);
+  await userEvent.type(input(), '3102');
+  await leave();
+  expect(input().value).toBe('31.02.');
+  expect(
+    screen.getByText('Enter the full date as dd.mm.yyyy.')
+  ).toBeInTheDocument();
+});
+
+test('a date after maxDate cannot be selected', async () => {
+  render(<Single maxDate={new Date(2026, 0, 1)} />);
+  await userEvent.type(input(), '01102026');
+  await leave();
+  expect(input().value).toBe('01.10.2026');
+  expect(
+    screen.getByText('01.10.2026 cannot be selected.')
+  ).toBeInTheDocument();
+});
+
+test('Enter on an impossible date says it is not a real date', async () => {
+  render(<Single />);
+  await userEvent.type(input(), '31022026');
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() =>
+    expect(
+      screen.getByText('31.02.2026 is not a real date.')
+    ).toBeInTheDocument()
+  );
+});
+
+test('custom messages replace the impossible and unavailable ones', async () => {
+  render(
+    <Single
+      maxDate={new Date(2026, 0, 1)}
+      messages={{
+        impossibleDate: (t) => `No ${t}`,
+        unavailableDate: (t) => `Off ${t}`,
+      }}
+    />
+  );
+  await userEvent.type(input(), '31022026');
+  await leave();
+  expect(screen.getByText('No 31.02.2026')).toBeInTheDocument();
+  await userEvent.clear(input());
+  await userEvent.type(input(), '01102026');
+  await leave();
+  expect(screen.getByText('Off 01.10.2026')).toBeInTheDocument();
+});
+
+test('the message follows an edit while the error shows', async () => {
+  render(<Single />);
+  await userEvent.type(input(), '31022026');
+  await leave();
+  expect(
+    screen.getByText('31.02.2026 is not a real date.')
+  ).toBeInTheDocument();
+  await userEvent.type(input(), '{Backspace}');
+  expect(
+    screen.getByText('Enter the full date as dd.mm.yyyy.')
+  ).toBeInTheDocument();
+});
+
+test('the input’s own invalidText wins over the automatic message', async () => {
+  render(<Single inputProps={{ invalidText: 'Mine' }} />);
+  await userEvent.type(input(), '31022026');
+  await leave();
+  expect(input().getAttribute('aria-invalid')).toBe('true');
+  expect(screen.getByText('Mine')).toBeInTheDocument();
 });
 
 test('the input’s own invalid wins', async () => {
