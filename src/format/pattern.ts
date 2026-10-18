@@ -1,4 +1,5 @@
 import { defaultDateFormat, defaultTimeFormat } from './defaults.js';
+import { escapeRegExp } from './regexp.js';
 
 // The grammar of the system date and time format (ADR 0021) and its
 // translations for flatpickr, placeholders and the input `pattern` attribute.
@@ -91,11 +92,6 @@ export function datePlaceholder(pattern: DatePattern): string {
     .map((part) => placeholderTokens[part])
     .join(pattern.separator);
 }
-
-// Browsers compile the `pattern` attribute with the `v` flag, where escaping
-// a non-syntax character (`\-`) is an error that drops the constraint.
-const escapeRegExp = (text: string) =>
-  text.replace(/[\\^$.*+?()[\]{}|/]/g, String.raw`\$&`);
 
 /** The input `pattern` attribute of a date field: `\d{2}\.\d{2}\.\d{4}`. */
 export function dateInputPattern(pattern: DatePattern): string {
