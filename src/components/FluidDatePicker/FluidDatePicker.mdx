@@ -36,8 +36,8 @@ Afframe's `FluidDatePicker` defaults `dateFormat` and the input placeholder to
 the system date format, `defaultDateFormat` in `@afframe/ui/format`
 (`dd.mm.yyyy`), and masks typing like `DatePicker`: separators appear as digits
 are typed and a typed separator pads the part. An incomplete, impossible or
-unavailable date stays as typed and the input shows `messages.invalidDate`,
-as in `DatePicker`. `inputMask={false}` turns the mask and the kept text off.
+unavailable date stays as typed and the input shows the message for the
+reason, with the same `messages`, as in `DatePicker`. `inputMask={false}` turns the mask and the kept text off.
 
 <Canvas of={FluidDatePickerStories.TypingADate} />
 

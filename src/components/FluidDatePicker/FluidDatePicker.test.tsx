@@ -42,7 +42,7 @@ test('an impossible date stays as typed and the input turns invalid', async () =
   expect(input().value).toBe('31.02.2026');
   expect(input().getAttribute('aria-invalid')).toBe('true');
   expect(
-    screen.getByText('Enter a valid date as dd.mm.yyyy.')
+    screen.getByText('31.02.2026 is not a real date.')
   ).toBeInTheDocument();
 });
 

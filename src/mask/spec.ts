@@ -1,3 +1,5 @@
+import { escapeRegExp } from '../format/regexp.js';
+
 export type MaskPartKind =
   'day' | 'month' | 'year' | 'hour' | 'minute' | 'second';
 
@@ -49,11 +51,6 @@ const placeholders: Record<MaskPartKind, string> = {
   second: 'ss',
 };
 
-// Browsers compile `pattern` with the `v` flag, where escaping a character
-// that is not syntax (such as `-`) is an error.
-const escapeForPattern = (text: string) =>
-  text.replaceAll(/[\\^$.*+?()[\]{}|/]/g, String.raw`\$&`);
-
 function buildSpec(parts: MaskPart[], separator: string): MaskSpec {
   return {
     parts,
@@ -61,7 +58,7 @@ function buildSpec(parts: MaskPart[], separator: string): MaskSpec {
     placeholder: parts.map((p) => placeholders[p.kind]).join(separator),
     pattern: parts
       .map((p) => String.raw`\d{${p.length}}`)
-      .join(escapeForPattern(separator)),
+      .join(escapeRegExp(separator)),
   };
 }
 

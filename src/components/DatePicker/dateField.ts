@@ -4,6 +4,7 @@ import {
   cloneElement,
   isValidElement,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -19,16 +20,23 @@ import {
   toFlatpickrFormat,
   type DatePattern,
 } from '../../format/index.js';
+import { usePrefix } from '@carbon/react';
 import { useInputMask, dateMaskSpec } from '../../mask/index.js';
 import { resolveMessages } from '../../messages.js';
 
 export interface DatePickerMessages {
-  /** Shown under a date field whose text is not a complete, real date; `format` is the expected format, `dd.mm.yyyy`. */
+  /** Shown under a date field whose text is incomplete or malformed; `format` is the expected format, `dd.mm.yyyy`. */
   invalidDate: (format: string) => string;
+  /** Shown under a date field whose full date does not exist, `31.02.2026`; `text` is the typed text. */
+  impossibleDate: (text: string) => string;
+  /** Shown under a date field whose real date `minDate`, `maxDate`, `enable` or `disable` rule out; `text` is the typed text. */
+  unavailableDate: (text: string) => string;
 }
 
 export const defaultDatePickerMessages: DatePickerMessages = {
-  invalidDate: (format) => `Enter a valid date as ${format}.`,
+  invalidDate: (format) => `Enter the full date as ${format}.`,
+  impossibleDate: (text) => `${text} is not a real date.`,
+  unavailableDate: (text) => `${text} cannot be selected.`,
 };
 
 /** Props the Afframe date pickers add to Carbon's. */
@@ -75,15 +83,8 @@ function useUnmaskableFormatWarning(
   }, [name, dateFormat, masked]);
 }
 
-/**
- * A complete, zero-padded, real date in `pattern` (`31.01.2026`), or
- * `undefined`: no rollover of `31.02` into March.
- */
-// fallow-ignore-next-line complexity -- one guard per part and per calendar field
-export function parseStrictDate(
-  text: string,
-  pattern: DatePattern
-): Date | undefined {
+/** The parts of a complete, zero-padded date in `pattern`, real or not. */
+function fullDateParts(text: string, pattern: DatePattern) {
   const parts = text.split(pattern.separator);
   if (parts.length !== 3) return undefined;
   const values = { day: 0, month: 0, year: 0 };
@@ -94,6 +95,19 @@ export function parseStrictDate(
     }
     values[part] = Number(digits);
   }
+  return values;
+}
+
+/**
+ * A complete, zero-padded, real date in `pattern` (`31.01.2026`), or
+ * `undefined`: no rollover of `31.02` into March.
+ */
+export function parseStrictDate(
+  text: string,
+  pattern: DatePattern
+): Date | undefined {
+  const values = fullDateParts(text, pattern);
+  if (!values) return undefined;
   const date = new Date(2000, 0, 1);
   // setFullYear keeps years below 100 as typed; the Date constructor would
   // move them to 19xx.
@@ -122,9 +136,19 @@ interface DateInputProps {
 
 type Pair<T> = [T, T];
 
+/** Why kept text is invalid, with the text, for its message. */
+interface Problem {
+  reason: 'incomplete' | 'impossible' | 'unavailable';
+  text: string;
+}
+
 /** The part of the flatpickr instance the wrapper uses. */
 interface Flatpickr {
   selectedDates: Date[];
+  input: HTMLInputElement;
+  config: {
+    onChange: ((dates: Date[], text: string, picker: Flatpickr) => void)[];
+  };
   isEnabled: (date: Date) => boolean;
   setDate: (dates: Date[], triggerChange: boolean) => void;
 }
@@ -140,6 +164,8 @@ interface DateFieldOptions {
   allowInput: boolean | undefined;
   /** The picker's value: when the app empties it, the inputs are emptied too. */
   value: unknown;
+  /** Whether the caller passed `onChange`, so it can take the picker's reports. */
+  hasOnChange: boolean;
 }
 
 const inCalendar = (target: EventTarget | null) =>
@@ -158,6 +184,22 @@ const replaced = <T>(pair: Pair<T>, index: number, value: T): Pair<T> => {
 };
 
 /**
+ * Leaves only the start date selected, with onChange. With a change, the
+ * range plugin rebuilds a shorter selection from the dates before it
+ * ([start, start] after the end had focus), so the date is set silently and
+ * flatpickr's change hooks run as it would run them.
+ */
+function setRangeStart(picker: Flatpickr, start: Date) {
+  picker.setDate([start], false);
+  for (const hook of picker.config.onChange) {
+    hook(picker.selectedDates, picker.input.value, picker);
+  }
+}
+
+const datesKey = (dates: readonly unknown[]) =>
+  dates.map((date) => (date instanceof Date ? date.getTime() : '')).join();
+
+/**
  * The shared part of the Afframe date pickers. Resolves `dateFormat` (the
  * system format by default) and clones the first two children (the start and
  * end inputs) with the mask. On blur, on Enter and in a range end, an
@@ -174,8 +216,12 @@ export function useDateField({
   inputMask = true,
   messages,
   value,
+  hasOnChange,
 }: DateFieldOptions) {
-  const { dateFormat, pattern } = resolveDateFormat(dateFormatProp);
+  const { dateFormat, pattern } = useMemo(
+    () => resolveDateFormat(dateFormatProp),
+    [dateFormatProp]
+  );
   const typeable = inputMask && allowInput !== false;
   const masked = typeable && pattern !== undefined;
   useUnmaskableFormatWarning(name, dateFormatProp, typeable);
@@ -195,41 +241,99 @@ export function useDateField({
   const told = useRef<Pair<boolean>>([false, false]);
   // Whether the dates the picker reported last had a date per input.
   const reported = useRef<Pair<boolean>>([false, false]);
-  // Typed text was kept in this render: an empty value is the app taking
-  // the picker's onChange([]), not a reset.
-  const kept = useRef(false);
-  const [invalid, setInvalid] = useState<Pair<boolean>>([false, false]);
+  const lastReport = useRef<readonly unknown[]>([]);
+  const [invalid, setInvalid] = useState<Pair<Problem | undefined>>([
+    undefined,
+    undefined,
+  ]);
 
-  const cleared = isEmpty(value);
-  const wasCleared = useRef(cleared);
-  useEffect(() => {
-    const emptied = cleared && !wasCleared.current;
-    wasCleared.current = cleared;
-    if (!emptied) return;
-    // The app taking the picker's onChange([]) renders with the invalid mark
-    // set in the same batch; Carbon's reset reaches the picker only in its
-    // own effect, after this render.
-    if (kept.current && invalid.some(Boolean)) {
-      for (const [n, input] of inputs.current.entries()) {
-        if (input && !input.value) input.value = typed.current[n] ?? '';
-      }
-      return;
-    }
-    for (const input of inputs.current) if (input) input.value = '';
+  const forget = () => {
     typed.current = ['', ''];
     dirty.current = [false, false];
     told.current = [false, false];
-    setInvalid([false, false]);
-  }, [cleared, invalid]);
+    setInvalid([undefined, undefined]);
+  };
+
+  // How the value was emptied, decided in a layout effect before Carbon's
+  // reset in its passive effect: that reset clears flatpickr, whose
+  // onChange([]) then keeps no typed text. The inputs are written in a
+  // passive effect, after Carbon's effects have rewritten them.
+  const emptiedBy = useRef<'echo' | 'reset' | null>(null);
+  const cleared = isEmpty(value);
+  const wasCleared = useRef(cleared);
+  useLayoutEffect(() => {
+    const emptied = cleared && !wasCleared.current;
+    wasCleared.current = cleared;
+    if (!emptied) return;
+    // Text still kept invalid after onChange told the app it holds no date:
+    // the empty value is the app taking that onChange([]), now or after an
+    // await, not a reset. With no onChange, nothing can take it. A range end
+    // kept invalid reports the start date, so that app still held a date.
+    const echo =
+      hasOnChange &&
+      told.current.some(Boolean) &&
+      invalid.some(Boolean) &&
+      !reported.current.some(Boolean);
+    emptiedBy.current = echo ? 'echo' : 'reset';
+  }, [cleared, invalid, hasOnChange]);
   useEffect(() => {
-    kept.current = false;
+    const by = emptiedBy.current;
+    emptiedBy.current = null;
+    if (by === 'echo') {
+      for (const [n, input] of inputs.current.entries()) {
+        if (input && !input.value) input.value = typed.current[n] ?? '';
+      }
+      told.current = [false, false];
+    } else if (by === 'reset') {
+      for (const input of inputs.current) if (input) input.value = '';
+      forget();
+    }
   });
+
+  // A new date from the app: Carbon sets it without onChange, so typed text
+  // and its error are stale. The app taking the picker's report is not new.
+  const valueKey = isEmpty(value) ? '' : JSON.stringify(value);
+  const lastValueKey = useRef(valueKey);
+  useEffect(() => {
+    const changed = valueKey !== lastValueKey.current;
+    lastValueKey.current = valueKey;
+    const picker = instance();
+    if (!changed || valueKey === '' || !picker) return;
+    if (datesKey(picker.selectedDates) !== datesKey(lastReport.current)) {
+      forget();
+    }
+  }, [valueKey]);
 
   const isInvalid = (input: string) =>
     input !== '' && parseStrictDate(input, effective) === undefined;
-  const parseDate = (input: string) =>
-    parseStrictDate(input, effective) ?? (false as const);
+  // Carbon creates flatpickr once with the first parseDate, so the parser is
+  // one function that reads the current pattern. A layout effect updates it
+  // before Carbon's passive effect hands flatpickr a new dateFormat.
+  const effectiveRef = useRef(effective);
+  useLayoutEffect(() => {
+    effectiveRef.current = effective;
+  }, [effective]);
+  const [parseDate] = useState(
+    () => (input: string) =>
+      parseStrictDate(input, effectiveRef.current) ?? (false as const)
+  );
   // flatpickr keeps its instance on the input it was created on: the start.
+  const prefix = usePrefix();
+  // Carbon puts its own refs on the inputs, so they are found in the DOM
+  // from the one in focus. Text the app set (not typed) is taken as typed, so
+  // it can be written back after flatpickr empties it: on leave, a range with
+  // one date clears both inputs without onChange.
+  const track = (index: 0 | 1, input: HTMLInputElement) => {
+    inputs.current[index] = input;
+    const all = input
+      .closest(`.${prefix}--date-picker`)
+      ?.querySelectorAll<HTMLInputElement>(`.${prefix}--date-picker__input`);
+    for (const n of [0, 1] as const) {
+      const found = inputs.current[n] ?? all?.[n] ?? null;
+      inputs.current[n] = found;
+      if (found && !dirty.current[n]) typed.current[n] = found.value;
+    }
+  };
   const instance = () =>
     (inputs.current[0] as { _flatpickr?: Flatpickr } | null)?._flatpickr;
   // A real date that minDate, maxDate, enable or disable rule out.
@@ -240,6 +344,21 @@ export function useDateField({
       date !== undefined && picker !== undefined && !picker.isEnabled(date)
     );
   };
+  const problem = (input: string): Problem | undefined => {
+    if (input === '') return undefined;
+    if (!fullDateParts(input, effective)) {
+      return { reason: 'incomplete', text: input };
+    }
+    if (isInvalid(input)) return { reason: 'impossible', text: input };
+    if (unavailable(input)) return { reason: 'unavailable', text: input };
+    return undefined;
+  };
+  const message = ({ reason, text: typedText }: Problem) =>
+    reason === 'impossible'
+      ? text.impossibleDate(typedText)
+      : reason === 'unavailable'
+        ? text.unavailableDate(typedText)
+        : text.invalidDate(datePlaceholder(effective));
   const appHolds = (index: number) =>
     value === undefined
       ? reported.current[index]
@@ -252,10 +371,12 @@ export function useDateField({
    * empties text it cannot take (Enter, a range end, minDate): typed text
    * with no date stays and is marked invalid. Returns whether it kept any.
    */
+  // fallow-ignore-next-line complexity -- per input: keep the typed text or take the picker's
   const pickerChanged = (dates: readonly unknown[]) => {
     reported.current = [dates[0] != null, dates[1] != null];
-    if (!masked) return false;
-    const next: Pair<boolean> = [false, false];
+    lastReport.current = dates;
+    if (!masked || emptiedBy.current === 'reset') return false;
+    const next: Pair<Problem | undefined> = [undefined, undefined];
     for (const n of [0, 1] as const) {
       const input = inputs.current[n];
       if (dates[n] == null && dirty.current[n] && typed.current[n] !== '') {
@@ -269,13 +390,15 @@ export function useDateField({
         if (n === 1 && input === document.activeElement) setTimeout(write);
         else write();
         told.current[n] = true;
-        next[n] = true;
+        // A full, real date the picker still refused (a range end flatpickr
+        // would not take) is unavailable.
+        next[n] = problem(text) ?? { reason: 'unavailable', text };
       } else {
         typed.current[n] = input?.value ?? '';
         dirty.current[n] = false;
+        told.current[n] = false;
       }
     }
-    if (next.some(Boolean)) kept.current = true;
     setInvalid(next);
     return next.some(Boolean);
   };
@@ -288,9 +411,14 @@ export function useDateField({
     const picker = instance();
     if (!picker || told.current[index] || !appHolds(index)) return;
     told.current[index] = true;
-    kept.current = true;
     const before = inputs.current.map((input) => input?.value ?? '');
-    picker.setDate(index === 0 ? [] : picker.selectedDates.slice(0, 1), true);
+    // A range start whose date flatpickr dropped on leave comes from its
+    // written-back text.
+    const start =
+      picker.selectedDates[0] ??
+      parseStrictDate(inputs.current[0]?.value ?? '', effective);
+    if (index === 1 && start) setRangeStart(picker, start);
+    else picker.setDate([], true);
     inputs.current.forEach((input, n) => {
       if (input && !input.value) input.value = before[n] ?? '';
     });
@@ -313,7 +441,7 @@ export function useDateField({
       pattern: mask.pattern,
       placeholder: own.placeholder ?? mask.placeholder,
       onFocus: (event) => {
-        inputs.current[index] = event.currentTarget;
+        track(index, event.currentTarget);
         mask.onFocus(event);
         own.onFocus?.(event);
       },
@@ -326,8 +454,16 @@ export function useDateField({
           dirty.current[index] = true;
           told.current[index] = false;
         }
-        if (!isInvalid(current))
-          setInvalid((pair) => replaced(pair, index, false));
+        // A shown error follows the edit, so its message quotes this text.
+        setInvalid((pair) =>
+          pair[index]
+            ? replaced(
+                pair,
+                index,
+                isInvalid(current) ? problem(current) : undefined
+              )
+            : pair
+        );
         own.onChange?.(event);
       },
       onCompositionEnd: (event) => {
@@ -342,17 +478,17 @@ export function useDateField({
         // Tab moves focus into the calendar: the date is not entered yet.
         if (!inCalendar(event.relatedTarget)) {
           const current = event.currentTarget.value;
-          const bad = isInvalid(current) || unavailable(current);
+          const bad = problem(current);
           setInvalid((pair) => replaced(pair, index, bad));
           if (bad && dirty.current[index]) tellApp(index);
         }
         own.onBlur?.(event);
       },
     };
-    if (own.invalid === undefined && invalid[index]) {
+    const kept = invalid[index];
+    if (own.invalid === undefined && kept) {
       props.invalid = true;
-      props.invalidText =
-        own.invalidText ?? text.invalidDate(datePlaceholder(effective));
+      props.invalidText = own.invalidText ?? message(kept);
     }
     return props;
   };

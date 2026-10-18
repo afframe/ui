@@ -34,6 +34,7 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
       inputMask,
       messages,
       value: props.value,
+      hasOnChange: onChange !== undefined,
     });
     const parser = parseDate ?? field.parseDate;
     return (

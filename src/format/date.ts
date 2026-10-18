@@ -35,7 +35,7 @@ const instantPattern =
 // ponytail: cleared when full, as in amount.ts.
 const formatters = new Map<string, Intl.DateTimeFormat>();
 
-function dateTimeFormat(
+function cachedDateTimeFormat(
   locale: string,
   options: Intl.DateTimeFormatOptions
 ): Intl.DateTimeFormat {
@@ -184,8 +184,8 @@ function formatter(
   // Parsed for every locale, so a bad format throws even where it is unused.
   const pattern =
     format === undefined ? defaultDatePattern : parseDatePattern(format);
-  if (!cs) return [dateTimeFormat(locale, resolved), date, undefined];
-  return [dateTimeFormat(locale, czechOptions(resolved)), date, pattern];
+  if (!cs) return [cachedDateTimeFormat(locale, resolved), date, undefined];
+  return [cachedDateTimeFormat(locale, czechOptions(resolved)), date, pattern];
 }
 
 /**
@@ -241,7 +241,7 @@ export function civilDateIn(
   instant: Date | number,
   timeZone: string = defaultTimeZone
 ): CivilDate {
-  const parts = dateTimeFormat('en-US', {
+  const parts = cachedDateTimeFormat('en-US', {
     timeZone,
     year: 'numeric',
     month: '2-digit',
@@ -253,7 +253,7 @@ export function civilDateIn(
 }
 
 function offsetAt(instant: number, timeZone: string): number {
-  const parts = dateTimeFormat('en-US', {
+  const parts = cachedDateTimeFormat('en-US', {
     timeZone,
     hourCycle: 'h23',
     year: 'numeric',
