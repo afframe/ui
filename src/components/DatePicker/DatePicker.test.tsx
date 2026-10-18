@@ -627,22 +627,3 @@ test('range: a change while the last change’s guard ends leaves focus where it
   expect(document.activeElement).toBe(outside);
   expect(calendarOpen()).toBe(false);
 });
-
-test('range: the end-refocus guard leaves an own focus it did not install', async () => {
-  render(<AppRange next={[]} />);
-  await typeRange();
-  const end = input('To');
-  const foreign = vi.fn();
-  Object.defineProperty(end, 'focus', {
-    configurable: true,
-    writable: true,
-    value: foreign,
-  });
-  (input('From') as WithPicker)._flatpickr.setDate(
-    [october(10), october(12)],
-    true
-  );
-  await settle();
-  expect(Object.hasOwn(end, 'focus')).toBe(true);
-  expect(end.focus).toBe(foreign);
-});

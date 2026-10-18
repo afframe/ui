@@ -21,6 +21,7 @@ import {
 import { useId, useRef, useState } from 'react';
 import type { ComponentPropsWithoutRef, KeyboardEvent, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
+import { pickerOf } from '../DatePicker/dateField.js';
 import {
   countFilterPanelSelections,
   defaultFilterPanelMessages,
@@ -68,11 +69,7 @@ export interface FilterFlyoutProps
 const hasOpenCalendar = (root: Element | null) =>
   Array.from(root?.querySelectorAll('input') ?? []).some((input) =>
     // Carbon closes the calendar on Escape by its class only, so isOpen lags.
-    (
-      input as HTMLInputElement & {
-        _flatpickr?: { calendarContainer?: HTMLElement };
-      }
-    )._flatpickr?.calendarContainer?.classList.contains('open')
+    pickerOf(input)?.calendarContainer?.classList.contains('open')
   );
 
 /** Escape that an open menu or date calendar inside `root` closes first. */
@@ -83,7 +80,7 @@ const isInnerEscape = (root: Element, target: EventTarget) =>
 
 // A component, not an element: with autoAlign Carbon's Popover makes every
 // element child its anchor through a ref, and the last one would win.
-function LiveStatus({ text }: { text: string }) {
+export function LiveStatus({ text }: { text: string }) {
   const prefix = usePrefix();
   return (
     <p role="status" className={`${prefix}--visually-hidden`}>
@@ -116,9 +113,6 @@ export function FilterFlyout({
 }: FilterFlyoutProps) {
   const text = resolveMessages(defaultFilterFlyoutMessages, messages);
   const [open, setOpen] = useState(defaultOpen);
-  // PopoverContent stays mounted while closed, so a batch panel gets a new
-  // key per opening to start from the applied value.
-  const [opening, setOpening] = useState(0);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const contentId = useId();
 
@@ -152,10 +146,7 @@ export function FilterFlyout({
     closeToTrigger();
   };
 
-  const toggleOpen = () => {
-    if (!open && updateMethod === 'batch') setOpening(opening + 1);
-    setOpen(!open);
-  };
+  const toggleOpen = () => setOpen(!open);
 
   const label = text.toggle(countFilterPanelSelections(groups, value));
   const triggerProps = {
@@ -204,17 +195,18 @@ export function FilterFlyout({
         }
       />
       <PopoverContent id={contentId} className="afframe-filter-flyout-content">
-        <FilterPanel
-          key={opening}
-          groups={groups}
-          value={value}
-          updateMethod={updateMethod}
-          onChange={updateMethod === 'batch' ? applyAndClose : onChange}
-          {...(layout !== undefined ? { layout } : {})}
-          {...(resultCount !== undefined ? { resultCount } : {})}
-          {...(headingLevel !== undefined ? { headingLevel } : {})}
-          messages={text}
-        />
+        {open && (
+          <FilterPanel
+            groups={groups}
+            value={value}
+            updateMethod={updateMethod}
+            onChange={updateMethod === 'batch' ? applyAndClose : onChange}
+            {...(layout !== undefined ? { layout } : {})}
+            {...(resultCount !== undefined ? { resultCount } : {})}
+            {...(headingLevel !== undefined ? { headingLevel } : {})}
+            messages={text}
+          />
+        )}
       </PopoverContent>
     </Popover>
   );

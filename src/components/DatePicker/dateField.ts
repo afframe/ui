@@ -143,7 +143,7 @@ interface Problem {
 }
 
 /** The part of the flatpickr instance the wrapper uses. */
-interface Flatpickr {
+export interface Flatpickr {
   selectedDates: Date[];
   input: HTMLInputElement;
   calendarContainer?: HTMLElement;
@@ -169,6 +169,10 @@ interface DateFieldOptions {
   /** Whether the caller passed `onChange`, so it can take the picker's reports. */
   hasOnChange: boolean;
 }
+
+/** The flatpickr instance that Carbon attaches to a date input. */
+export const pickerOf = (input: Element | null | undefined) =>
+  (input as { _flatpickr?: Flatpickr } | null | undefined)?._flatpickr;
 
 const inCalendar = (target: EventTarget | null) =>
   target instanceof Element && target.closest('.flatpickr-calendar') !== null;
@@ -214,7 +218,7 @@ const guards = new WeakMap<
   { generation: number; installed: unknown }
 >();
 
-// fallow-ignore-next-line complexity -- re-arm, a foreign own focus, and the guarded focus checks
+// fallow-ignore-next-line complexity -- re-arm and the guarded focus checks
 function guardEndRefocus(picker: Flatpickr, prefix: string) {
   const field = picker.input.closest(`.${prefix}--date-picker`);
   const end = field?.querySelectorAll<HTMLInputElement>(
@@ -222,8 +226,6 @@ function guardEndRefocus(picker: Flatpickr, prefix: string) {
   )[1];
   if (!field || !end) return;
   const armed = guards.get(end);
-  // An own focus the guard did not install belongs to someone else.
-  if (Object.hasOwn(end, 'focus') && end.focus !== armed?.installed) return;
   const generation = (armed?.generation ?? 0) + 1;
   // The plugin's timer may be queued after this hook: the nested timer runs
   // after it.
@@ -240,27 +242,19 @@ function guardEndRefocus(picker: Flatpickr, prefix: string) {
     return;
   }
   const focus = end.focus;
-  let focusing = false;
   // An own property: an assignment would reach a setter on the prototype
   // (Storybook's play tests share one focus for every element through one).
   Object.defineProperty(end, 'focus', {
     configurable: true,
     writable: true,
     value(this: HTMLInputElement, options?: FocusOptions) {
-      // A focus handler that focuses the end again would recurse.
-      if (focusing) return;
       const active = document.activeElement;
       const inCalendar =
         picker.isOpen &&
         (active === document.body ||
           picker.calendarContainer?.contains(active) === true);
       if (!field.contains(active) && !inCalendar) return;
-      focusing = true;
-      try {
-        focus.call(this, options);
-      } finally {
-        focusing = false;
-      }
+      focus.call(this, options);
     },
   });
   guards.set(end, { generation, installed: end.focus });
@@ -404,8 +398,7 @@ export function useDateField({
       if (found && !dirty.current[n]) typed.current[n] = found.value;
     }
   };
-  const instance = () =>
-    (inputs.current[0] as { _flatpickr?: Flatpickr } | null)?._flatpickr;
+  const instance = () => pickerOf(inputs.current[0]);
   // A real date that minDate, maxDate, enable or disable rule out.
   const unavailable = (input: string) => {
     const date = parseStrictDate(input, effective);
