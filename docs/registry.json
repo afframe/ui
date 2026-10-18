@@ -28,6 +28,7 @@
         "dataGridColumnCustomization",
         "dataGridColumnMeta",
         "dataGridExpansion",
+        "dataGridFilterPanel",
         "dataGridFiltering",
         "dataGridInlineEdit",
         "dataGridPagination",
@@ -40,9 +41,11 @@
       "types": [
         "DataGridBatchAction",
         "DataGridCellEdit",
+        "DataGridColumnFilter",
         "DataGridColumnMeta",
         "DataGridProps",
         "DataGridRowAction",
+        "DataGridFilterPanelSettings",
         "DataGridMessages",
         "DataGridSortAction"
       ],

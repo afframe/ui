@@ -207,3 +207,44 @@
 @include sticky-body-cells('tbody tr.cds--data-table--selected:hover') {
   background-color: $layer-selected-hover;
 }
+
+// Filter panel (dataGridFilterPanel): the panel is a grid column that pushes
+// the table and pagination, as in tanstack-carbon's example.
+.afframe-data-grid-filter-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.afframe-data-grid-filter-layout--open {
+  grid-template-columns: 20rem minmax(0, 1fr);
+}
+
+.afframe-data-grid-filter-panel {
+  border-inline-end: 1px solid $border-subtle;
+  background-color: $layer;
+}
+
+.afframe-data-grid-filter-main {
+  min-inline-size: 0;
+}
+
+.afframe-data-grid .afframe-data-grid-filter-trigger--open.cds--btn--ghost {
+  background-color: $layer;
+}
+
+// The default empty state when filters leave no rows: a tall row with the
+// empty state at its top, no row hover.
+.afframe-data-grid .afframe-data-grid__filtered-empty {
+  block-size: 14rem;
+}
+
+.afframe-data-grid .afframe-data-grid__filtered-empty td {
+  padding-block-start: $spacing-07;
+  border-block-end: 0;
+  vertical-align: top;
+}
+
+.afframe-data-grid tbody .afframe-data-grid__filtered-empty:hover,
+.afframe-data-grid tbody .afframe-data-grid__filtered-empty:hover td {
+  background-color: transparent;
+}

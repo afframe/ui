@@ -10,6 +10,7 @@ import {
   dataGridColumnCustomization,
   dataGridColumnMeta,
   dataGridExpansion,
+  dataGridFilterPanel,
   dataGridFiltering,
   dataGridInlineEdit,
   dataGridPagination,
@@ -18,6 +19,8 @@ import {
   dataGridSorting,
   dataGridStickyColumns,
 } from './features.js';
+import { withFilterFns } from './DataGridFilterPanel.js';
+import { filterFn_inDayRange, filterFn_inOptions } from './filterFns.js';
 import { invoices, manyInvoices, nestedInvoices } from './fixtures.js';
 
 const sortFeatures = tableFeatures({ ...dataGridSorting });
@@ -107,7 +110,10 @@ test('filters rows from the toolbar search and shows the empty state', async () 
   expect(screen.getAllByRole('row')).toHaveLength(2);
   expect(screen.getByText('Cedar Foods')).toBeTruthy();
   await userEvent.type(search, 'zzz');
-  expect(screen.getByText('No rows to show')).toBeTruthy();
+  // Rows exist but the search leaves none: the filtered-empty state.
+  expect(
+    screen.getByRole('heading', { name: 'No results found' })
+  ).toBeTruthy();
   await userEvent.keyboard('{Escape}');
   expect(screen.getAllByRole('row')).toHaveLength(6);
 });
@@ -1089,4 +1095,286 @@ test('renders the filterSummary slot between the toolbar and the table', () => {
   expect(
     follows(screen.getByTestId('summary'), screen.getByRole('table'))
   ).toBe(true);
+});
+
+// Called outside a table, a filter function gets its filter value resolved
+// by hand, as the table does once per filter.
+const runFilter = (
+  fn: typeof filterFn_inOptions,
+  cell: unknown,
+  filterValue: unknown
+) =>
+  fn(
+    { getValue: () => cell } as never,
+    'column',
+    fn.resolveFilterValue?.(filterValue) ?? filterValue
+  );
+
+test('inOptions matches cells converted to strings, and array items', () => {
+  expect(runFilter(filterFn_inOptions, 3, ['3', '5'])).toBe(true);
+  expect(runFilter(filterFn_inOptions, 4, ['3', '5'])).toBe(false);
+  expect(runFilter(filterFn_inOptions, 0, '0')).toBe(true);
+  expect(runFilter(filterFn_inOptions, ['a', 'b'], ['b'])).toBe(true);
+  expect(runFilter(filterFn_inOptions, null, ['null'])).toBe(false);
+  expect(filterFn_inOptions.autoRemove?.([])).toBe(true);
+  expect(filterFn_inOptions.autoRemove?.(['a'])).toBe(false);
+});
+
+test('inDayRange includes both end days, for timestamps and local dates', () => {
+  const march = ['2026-03-01', '2026-03-31'] as const;
+  expect(runFilter(filterFn_inDayRange, '2026-03-31T23:59:00Z', march)).toBe(
+    true
+  );
+  expect(runFilter(filterFn_inDayRange, '2026-03-01T00:00:00Z', march)).toBe(
+    true
+  );
+  expect(runFilter(filterFn_inDayRange, '2026-04-01T00:00:00Z', march)).toBe(
+    false
+  );
+  expect(runFilter(filterFn_inDayRange, '2026-02-28', march)).toBe(false);
+  // A Date uses its local day.
+  expect(
+    runFilter(filterFn_inDayRange, new Date(2026, 2, 31, 23, 30), march)
+  ).toBe(true);
+  expect(
+    runFilter(filterFn_inDayRange, '2026-05-05', [null, '2026-05-05'])
+  ).toBe(true);
+  expect(
+    runFilter(filterFn_inDayRange, '2026-05-04', ['2026-05-05', null])
+  ).toBe(false);
+  expect(runFilter(filterFn_inDayRange, 'soon', march)).toBe(false);
+  expect(filterFn_inDayRange.autoRemove?.([null, null])).toBe(true);
+});
+
+test('sets the filter function of panel columns by variant, keeping set ones', () => {
+  const [plain, text, own, group] = withFilterFns([
+    { id: 'plain' },
+    { id: 'text', meta: { filter: { variant: 'text' } } },
+    { id: 'own', filterFn: 'equals', meta: { filter: {} } },
+    {
+      id: 'group',
+      columns: [{ id: 'day', meta: { filter: { variant: 'dateRange' } } }],
+    },
+  ] as const);
+  expect(plain).not.toHaveProperty('filterFn');
+  expect(text).toHaveProperty('filterFn', 'includesString');
+  expect(own).toHaveProperty('filterFn', 'equals');
+  expect(group?.columns?.[0]).toHaveProperty('filterFn', 'inDayRange');
+});
+
+const panelFeatures = tableFeatures({ ...dataGridFilterPanel });
+const panelHelper = createColumnHelper<
+  typeof panelFeatures,
+  (typeof invoices)[number]
+>();
+const panelColumns = panelHelper.columns([
+  panelHelper.accessor('number', { header: 'Number' }),
+  panelHelper.accessor('customer', {
+    header: 'Customer',
+    meta: { filter: {} },
+  }),
+  panelHelper.accessor('status', {
+    header: 'Status',
+    meta: { filter: { label: 'State' } },
+  }),
+]);
+// Statuses of `few`: Paid, Open, Overdue, Paid, Open.
+
+/** The shown dismiss button of a summary tag (named through a tooltip). */
+const removeTag = (label: string) => {
+  const [button] = screen
+    .getAllByLabelText(`Remove filter ${label}`, { selector: 'button' })
+    .filter((item) => !item.closest('[aria-hidden="true"]'));
+  if (!button) throw new Error(label);
+  return button;
+};
+
+test('the filter panel opens from the toolbar, applies on Apply and returns focus', async () => {
+  render(
+    <DataGrid
+      title="Invoices"
+      options={{ features: panelFeatures, columns: panelColumns, data: few }}
+    />
+  );
+  const trigger = iconButton('Filter');
+  expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  expect(trigger.hasAttribute('aria-controls')).toBe(false);
+  expect(screen.queryByRole('region', { name: 'Filter' })).toBeNull();
+  await userEvent.click(trigger);
+  expect(trigger.getAttribute('aria-expanded')).toBe('true');
+  const panel = screen.getByRole('region', { name: 'Filter' });
+  expect(trigger.getAttribute('aria-controls')).toBe(panel.id);
+  expect(document.activeElement).toBe(
+    within(panel).getByRole('heading', { name: 'Filter' })
+  );
+  expect(within(panel).getByRole('status').textContent).toBe('5 results');
+  await userEvent.click(within(panel).getByText('Open'));
+  // Batch update: the rows change only on Apply.
+  expect(screen.getAllByRole('row')).toHaveLength(6);
+  await userEvent.click(within(panel).getByRole('button', { name: 'Apply' }));
+  expect(screen.getAllByRole('row')).toHaveLength(3);
+  expect(screen.queryByRole('region', { name: 'Filter' })).toBeNull();
+  expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  expect(document.activeElement).toBe(trigger);
+  expect(iconButton('Filter (1)')).toBe(trigger);
+  expect(screen.getByRole('status').textContent).toBe('2 results');
+  // The grid's own summary: dismissing the tag removes the filter.
+  await userEvent.click(removeTag('State: Open'));
+  expect(screen.getAllByRole('row')).toHaveLength(6);
+});
+
+test('the filter panel Clear and Close return focus to the trigger', async () => {
+  render(
+    <DataGrid
+      options={{
+        features: panelFeatures,
+        columns: panelColumns,
+        data: few,
+        initialState: { columnFilters: [{ id: 'status', value: ['Paid'] }] },
+      }}
+      filterPanel={{ defaultOpen: true }}
+    />
+  );
+  // Open on mount, without taking focus.
+  const panel = screen.getByRole('region', { name: 'Filter' });
+  expect(panel.contains(document.activeElement)).toBe(false);
+  expect(screen.getAllByRole('row')).toHaveLength(3);
+  await userEvent.click(within(panel).getByRole('button', { name: 'Clear' }));
+  expect(screen.getAllByRole('row')).toHaveLength(6);
+  const trigger = iconButton('Filter');
+  expect(document.activeElement).toBe(trigger);
+  expect(screen.queryByRole('region', { name: 'Filter' })).toBeNull();
+  await userEvent.click(trigger);
+  await userEvent.click(iconButton('Close'));
+  expect(screen.queryByRole('region', { name: 'Filter' })).toBeNull();
+  expect(document.activeElement).toBe(trigger);
+});
+
+test('the filter panel keeps the filters of other columns', async () => {
+  const columns = panelHelper.columns([
+    panelHelper.accessor('customer', { header: 'Customer' }),
+    panelHelper.accessor('status', { header: 'Status', meta: { filter: {} } }),
+  ]);
+  render(
+    <DataGrid
+      options={{
+        features: panelFeatures,
+        columns,
+        data: few,
+        // Every customer but Fir Consulting (an Open invoice).
+        initialState: { columnFilters: [{ id: 'customer', value: 'e' }] },
+      }}
+      filterSummary={null}
+      filterPanel={{ defaultOpen: true }}
+    />
+  );
+  expect(screen.getAllByRole('row')).toHaveLength(5);
+  const panel = screen.getByRole('region', { name: 'Filter' });
+  await userEvent.click(within(panel).getByText('Open'));
+  await userEvent.click(within(panel).getByRole('button', { name: 'Apply' }));
+  // Open and not Fir Consulting: Cedar Foods.
+  expect(screen.getAllByRole('row')).toHaveLength(2);
+  expect(screen.getByText('Cedar Foods')).toBeTruthy();
+  // `null` hides the grid's own summary.
+  expect(screen.queryByRole('button', { name: 'Clear filters' })).toBeNull();
+});
+
+test('panel options come from every row, not only the filtered ones', () => {
+  render(
+    <DataGrid
+      options={{
+        features: panelFeatures,
+        columns: panelColumns,
+        data: few,
+        initialState: { columnFilters: [{ id: 'status', value: ['Overdue'] }] },
+      }}
+      filterPanel={{ defaultOpen: true }}
+    />
+  );
+  expect(screen.getAllByRole('row')).toHaveLength(2);
+  const panel = screen.getByRole('region', { name: 'Filter' });
+  expect(
+    within(panel)
+      .getAllByRole('checkbox')
+      .map((box) => box.closest('.cds--checkbox-wrapper')?.textContent)
+  ).toEqual([
+    'Alder Studio',
+    'Cedar Foods',
+    'Dogwood Media',
+    'Elm Engineering',
+    'Fir Consulting',
+    'Open',
+    'Overdue',
+    'Paid',
+  ]);
+  expect(within(panel).getByText('State')).toBeTruthy();
+});
+
+test('shows the filtered-empty state, else emptyState, when filters leave no rows', () => {
+  const filtered = {
+    features: panelFeatures,
+    columns: panelColumns,
+    data: few,
+    initialState: { columnFilters: [{ id: 'customer', value: ['Nobody'] }] },
+  };
+  render(<DataGrid options={filtered} />);
+  expect(
+    screen.getByRole('heading', { name: 'No results found' })
+  ).toBeTruthy();
+  expect(
+    screen.getByText(
+      "Try adjusting your search or filter options to find what you're looking for."
+    )
+  ).toBeTruthy();
+  cleanup();
+  render(<DataGrid options={filtered} emptyState="Custom empty" />);
+  expect(screen.getByText('Custom empty')).toBeTruthy();
+  cleanup();
+  render(
+    <DataGrid
+      options={filtered}
+      emptyState="Custom empty"
+      filteredEmptyState="Nothing matches"
+    />
+  );
+  expect(screen.getByText('Nothing matches')).toBeTruthy();
+  cleanup();
+  // No data at all: the plain empty state.
+  render(<DataGrid options={{ ...filtered, data: [] }} />);
+  expect(screen.getByText('No rows to show')).toBeTruthy();
+});
+
+test('the filter panel, summary and empty state take custom messages', async () => {
+  render(
+    <DataGrid
+      options={{
+        features: panelFeatures,
+        columns: panelColumns,
+        data: few,
+        // Not an option, so the button counts no selection.
+        initialState: { columnFilters: [{ id: 'status', value: ['Gone'] }] },
+      }}
+      messages={{
+        filterPanelToggle: (count) => `Filters: ${count}`,
+        resultCount: (count) => `${count} invoices`,
+        filteredEmptyTitle: 'No invoices match',
+        filteredEmptySubtitle: 'Change the filters.',
+      }}
+      filterPanel={{
+        messages: { title: 'Refine', apply: 'Use' },
+        summaryMessages: { clearFilters: 'Reset all' },
+      }}
+    />
+  );
+  expect(
+    screen.getByRole('heading', { name: 'No invoices match' })
+  ).toBeTruthy();
+  expect(screen.getByText('Change the filters.')).toBeTruthy();
+  expect(screen.getByRole('status').textContent).toBe('0 invoices');
+  await userEvent.click(iconButton('Filters: 0'));
+  const panel = screen.getByRole('region', { name: 'Refine' });
+  expect(within(panel).getByRole('status').textContent).toBe('0 invoices');
+  await userEvent.click(within(panel).getByText('Paid'));
+  await userEvent.click(within(panel).getByRole('button', { name: 'Use' }));
+  expect(screen.getByRole('button', { name: 'Reset all' })).toBeTruthy();
 });

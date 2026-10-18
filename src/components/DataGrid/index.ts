@@ -3,14 +3,17 @@ export { DataGrid } from './DataGrid.js';
 export type {
   DataGridBatchAction,
   DataGridCellEdit,
+  DataGridColumnFilter,
   DataGridColumnMeta,
   DataGridProps,
   DataGridRowAction,
 } from './DataGrid.js';
+export type { DataGridFilterPanelSettings } from './DataGridFilterPanel.js';
 export {
   dataGridColumnCustomization,
   dataGridColumnMeta,
   dataGridExpansion,
+  dataGridFilterPanel,
   dataGridFiltering,
   dataGridInlineEdit,
   dataGridPagination,
