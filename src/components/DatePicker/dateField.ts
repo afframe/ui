@@ -260,6 +260,28 @@ function guardEndRefocus(picker: Flatpickr, prefix: string) {
   guards.set(end, { generation, installed: end.focus });
 }
 
+/** The range end input of a start input, unless it takes no typing. */
+function rangeEndOf(start: HTMLInputElement, prefix: string) {
+  const end = start
+    .closest(`.${prefix}--date-picker`)
+    ?.querySelectorAll<HTMLInputElement>(`.${prefix}--date-picker__input`)[1];
+  return end && !end.disabled && !end.readOnly ? end : undefined;
+}
+
+/** An edit that inserted text (typed, pasted, composed) and left the caret at its end. */
+function insertedAtEnd(event: ChangeEvent<HTMLInputElement>) {
+  const { value, selectionStart, selectionEnd } = event.currentTarget;
+  // flatpickr's calendar picks dispatch plain events with no inputType.
+  const inserted = (event.nativeEvent as InputEvent).inputType?.startsWith(
+    'insert'
+  );
+  return (
+    inserted === true &&
+    selectionStart === value.length &&
+    selectionEnd === value.length
+  );
+}
+
 const datesKey = (dates: readonly unknown[]) =>
   dates.map((date) => (date instanceof Date ? date.getTime() : '')).join();
 
@@ -498,6 +520,24 @@ export function useDateField({
     }
   };
 
+  /**
+   * Typing that just completed a usable start date, ending at the caret,
+   * moves focus to the end input with the caret first.
+   */
+  const advanceToEnd = (
+    event: ChangeEvent<HTMLInputElement>,
+    before: string
+  ) => {
+    const current = event.currentTarget.value;
+    const end = rangeEndOf(event.currentTarget, prefix);
+    const completed =
+      !fullDateParts(before, effective) && current !== '' && !problem(current);
+    if (!end || !completed || !insertedAtEnd(event)) return;
+    end.focus();
+    // The start's commit on blur rewrites the end's text, which moves its caret.
+    end.setSelectionRange(0, 0);
+  };
+
   const inputProps = (index: 0 | 1, own: DateInputProps) => {
     const mask = masks[index];
     const props: DateInputProps & Record<string, unknown> = {
@@ -512,6 +552,7 @@ export function useDateField({
       },
       onChange: (event) => {
         mask.onChange(event);
+        const before = typed.current[index];
         const current = event.currentTarget.value;
         // Carbon's own input listener runs first and may have taken the date.
         if (current !== typed.current[index]) {
@@ -530,6 +571,7 @@ export function useDateField({
             : pair
         );
         own.onChange?.(event);
+        if (index === 0) advanceToEnd(event, before);
       },
       onCompositionEnd: (event) => {
         mask.onCompositionEnd(event);

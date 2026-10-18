@@ -74,3 +74,32 @@ test('a range masks both inputs', async () => {
   await userEvent.type(input('To'), '0510');
   expect(input('To').value).toBe('05.10.');
 });
+
+function Range() {
+  return (
+    <FluidDatePicker datePickerType="range">
+      <FluidDatePickerInput id="from" labelText="From" />
+      <FluidDatePickerInput id="to" labelText="To" />
+    </FluidDatePicker>
+  );
+}
+
+test('range: a typed full start moves focus to the end, where typing goes on', async () => {
+  render(<Range />);
+  await userEvent.type(input('From'), '01102026');
+  await vi.waitFor(() => expect(document.activeElement).toBe(input('To')));
+  // The start's commit on blur may rewrite the end after a timer.
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  expect(document.activeElement).toBe(input('To'));
+  expect(input('To').selectionStart).toBe(0);
+  expect(input('To').selectionEnd).toBe(0);
+  await userEvent.keyboard('05102026');
+  expect(input('To').value).toBe('05.10.2026');
+  expect(input('From').value).toBe('01.10.2026');
+});
+
+test('range: an incomplete start keeps focus there', async () => {
+  render(<Range />);
+  await userEvent.type(input('From'), '0110');
+  expect(document.activeElement).toBe(input('From'));
+});
