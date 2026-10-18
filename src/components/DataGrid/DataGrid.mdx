@@ -129,8 +129,9 @@ left of the table and pagination, a `FilterSummary` of the applied filters
 between the toolbar and the table, and an empty state for no matches, as
 tanstack-carbon's filter panel does. Each column with `meta: { filter }` gets
 a field; the panel sets TanStack's `columnFilters` for those columns and
-keeps the filters of other columns. Spread `dataGridFiltering` too for the
-search field.
+keeps the filters of other columns. The panel is as tall as the table, as
+upstream's; its fields scroll inside it, above Clear and Apply. Spread
+`dataGridFiltering` too for the search field.
 
 ```tsx
 const features = tableFeatures({ ...dataGridSorting, ...dataGridFilterPanel });
