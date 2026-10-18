@@ -7,6 +7,8 @@ import {
   formatDateRange,
   formatNumber,
 } from '../../format/index.js';
+import type { CivilDate } from '../../format/index.js';
+import type { FilterSummaryMessages } from './FilterSummary.js';
 
 /** One option of a filter group. `value` is stored in `FilterPanelValue`. */
 export interface FilterPanelOption {
@@ -68,30 +70,10 @@ export type FilterPanelFieldValue =
 /** Value per group id. A missing group has no filter. */
 export type FilterPanelValue = Readonly<Record<string, FilterPanelFieldValue>>;
 
-/** Text of the tags `filterTags` returns. */
-export interface FilterTagMessages {
-  /** Text of one tag; `valueText` is the option label or the formatted value. */
-  tagLabel: (groupLabel: string, valueText: string) => string;
-  /**
-   * Date range; `start` and `end` are formatted days, `null` when missing.
-   * `range` is both ends formatted together (`1.–31. 10. 2026`), `null`
-   * unless both are set.
-   */
-  dateRange: (
-    start: string | null,
-    end: string | null,
-    range: string | null
-  ) => string;
-  /** Slider upper bound. */
-  upTo: (value: string) => string;
-}
-
-export const defaultFilterTagMessages: FilterTagMessages = {
-  tagLabel: (groupLabel, valueText) => `${groupLabel}: ${valueText}`,
-  dateRange: (start, end, range) =>
-    range ?? (start ? `from ${start}` : `until ${end ?? ''}`),
-  upTo: (value) => `up to ${value}`,
-};
+type TagText = Pick<
+  FilterSummaryMessages,
+  'tagLabel' | 'dateRangeValue' | 'atMostValue'
+>;
 
 export interface FilterTag {
   key: string;
@@ -113,21 +95,21 @@ export function checkedValues(
 }
 
 /** `day` when it is an ISO `YYYY-MM-DD` day, else `null`. */
-export function isoDay(day: unknown): string | null {
+export function isoDay(day: unknown): CivilDate | null {
   if (typeof day !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return null;
   const utc = new Date(`${day}T00:00:00Z`);
   return !Number.isNaN(utc.getTime()) && utc.toISOString().startsWith(day)
-    ? day
+    ? (day as CivilDate)
     : null;
 }
 
-// An app may restore a value from a URL: an end that is not an ISO day is
-// open, as the formatters throw on it.
+// An app may restore a value from a URL: a day that is not an ISO day is
+// missing, as the formatters throw on it.
 const dayRange = (field: FilterPanelFieldValue) =>
   typeof field === 'object' ? [isoDay(field[0]), isoDay(field[1])] : [];
 
 // "No filter" is a missing key. table-core's testFalsy treats only undefined,
-// null and '' as empty, so 0 stays a filter.
+// null and '' as empty, so 0 stays a filter. A date range needs a start.
 // fallow-ignore-next-line complexity -- one branch per filter variant
 function isEmpty(
   group: FilterPanelGroup | undefined,
@@ -139,8 +121,7 @@ function isEmpty(
     if (!Number.isFinite(field)) return true;
     return group?.variant === 'slider' && field >= group.max;
   }
-  if (variantOf(group) === 'dateRange')
-    return dayRange(field).every((day) => !day);
+  if (variantOf(group) === 'dateRange') return !dayRange(field)[0];
   return field.every((item) => item === null || item === '');
 }
 
@@ -158,8 +139,9 @@ export function setGroupValue(
   ]);
 }
 
+/** Same filter of one group; an empty value equals a missing one. */
 // fallow-ignore-next-line complexity -- one branch per filter variant
-function sameField(
+export function sameField(
   group: FilterPanelGroup | undefined,
   a: FilterPanelFieldValue | undefined,
   b: FilterPanelFieldValue | undefined
@@ -229,21 +211,23 @@ export function countFilterPanelSelections(
 function valueText(
   group: FilterPanelGroup,
   field: FilterPanelFieldValue,
-  text: FilterTagMessages
+  text: TagText
 ): string {
   if (typeof field === 'number') {
     const number = formatNumber(field);
-    return group.variant === 'slider' ? text.upTo(number) : number;
+    return group.variant === 'slider' ? text.atMostValue(number) : number;
   }
   if (typeof field === 'string') {
     // A radio or select value that matches no option shows as stored.
     return selectedOptions(group, field)[0]?.label ?? field;
   }
   const [start, end] = dayRange(field);
-  return text.dateRange(
-    start ? formatDate(start) : null,
+  // isEmpty already dropped a range without a start.
+  if (!start) return '';
+  return text.dateRangeValue(
+    formatDate(start),
     end ? formatDate(end) : null,
-    start && end ? formatDateRange(start, end) : null
+    end ? formatDateRange(start, end) : null
   );
 }
 
@@ -254,7 +238,7 @@ function valueText(
 export function filterTags(
   groups: readonly FilterPanelGroup[],
   value: FilterPanelValue,
-  text: FilterTagMessages
+  text: TagText
 ): FilterTag[] {
   return groups.flatMap((group): FilterTag[] => {
     const field = value[group.id];

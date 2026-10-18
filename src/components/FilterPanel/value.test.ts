@@ -4,9 +4,9 @@ import {
   formatDateRange,
   formatNumber,
 } from '../../format/index.js';
+import { defaultFilterSummaryMessages } from './FilterSummary.js';
 import {
   countFilterPanelSelections,
-  defaultFilterTagMessages,
   filterTags,
   sameFilterValue,
   setGroupValue,
@@ -108,7 +108,10 @@ test('sameFilterValue compares per variant', () => {
     same({ issued: ['2026-10-01', null] }, { issued: ['2026-10-01', null] })
   ).toBe(true);
   expect(
-    same({ issued: ['2026-10-01', null] }, { issued: [null, '2026-10-01'] })
+    same(
+      { issued: ['2026-10-01', null] },
+      { issued: ['2026-10-01', '2026-10-31'] }
+    )
   ).toBe(false);
   expect(same({ issued: [null, null] }, {})).toBe(true);
 });
@@ -118,7 +121,7 @@ test('filterTags: one tag per known option, without() drops only it', () => {
     status: ['paid', 'gone', 'overdue'],
     tags: ['overdue'],
   };
-  const result = filterTags(groups, value, defaultFilterTagMessages);
+  const result = filterTags(groups, value, defaultFilterSummaryMessages);
   expect(result.map((tag) => tag.label)).toEqual([
     'Status: Paid',
     'Status: Overdue',
@@ -142,7 +145,7 @@ test('filterTags: single-value variants', () => {
     total: 1234.5,
     amount: 5000,
   };
-  const result = filterTags(groups, value, defaultFilterTagMessages);
+  const result = filterTags(groups, value, defaultFilterSummaryMessages);
   expect(result.map((tag) => tag.label)).toEqual([
     'Kind: Paid',
     'State: unknown',
@@ -159,9 +162,9 @@ test('filterTags: single-value variants', () => {
   expect(result[4]?.without()).not.toHaveProperty('amount');
 });
 
-test('filterTags: date range text for both ends, only start, only end', () => {
+test('filterTags: date range text for both ends and only a start', () => {
   const label = (issuedValue: readonly [string | null, string | null]) =>
-    filterTags(groups, { issued: issuedValue }, defaultFilterTagMessages)[0]
+    filterTags(groups, { issued: issuedValue }, defaultFilterSummaryMessages)[0]
       ?.label;
   expect(label(['2026-10-01', '2026-10-31'])).toBe(
     `Issued: ${formatDateRange('2026-10-01', '2026-10-31')}`
@@ -169,15 +172,12 @@ test('filterTags: date range text for both ends, only start, only end', () => {
   expect(label(['2026-10-01', null])).toBe(
     `Issued: from ${formatDate('2026-10-01')}`
   );
-  expect(label([null, '2026-10-31'])).toBe(
-    `Issued: until ${formatDate('2026-10-31')}`
-  );
   expect(label([null, null])).toBeUndefined();
   expect(
     filterTags(
       groups,
       { issued: ['2026-10-01', null] },
-      defaultFilterTagMessages
+      defaultFilterSummaryMessages
     )[0]?.without()
   ).toEqual({});
 });
@@ -187,16 +187,16 @@ test('filterTags: empty values give no tag; messages shape the text', () => {
     filterTags(
       groups,
       { note: ' ', amount: 10000, total: Number.NaN, status: [] },
-      defaultFilterTagMessages
+      defaultFilterSummaryMessages
     )
   ).toEqual([]);
   const [tag] = filterTags(
     groups,
     { amount: 5 },
     {
-      ...defaultFilterTagMessages,
+      ...defaultFilterSummaryMessages,
       tagLabel: (group, text) => `${group} = ${text}`,
-      upTo: (text) => `≤ ${text}`,
+      atMostValue: (text) => `≤ ${text}`,
     }
   );
   expect(tag?.label).toBe(`Amount = ≤ ${formatNumber(5)}`);
@@ -217,7 +217,7 @@ test('countFilterPanelSelections counts known options and 1 per other filter', (
       state: 'unknown',
       note: 'acme',
       total: 0,
-      issued: [null, '2026-10-31'],
+      issued: ['2026-10-01', null],
       amount: 5,
     })
   ).toBe(6);
@@ -237,8 +237,8 @@ test('filterTags: a custom dateRange gets both ends and the joined range', () =>
     [issued],
     { issued: ['2026-10-01', '2026-10-31'] },
     {
-      ...defaultFilterTagMessages,
-      dateRange: (...args) => {
+      ...defaultFilterSummaryMessages,
+      dateRangeValue: (...args) => {
         calls.push(args);
         return '';
       },
@@ -253,17 +253,25 @@ test('filterTags: a custom dateRange gets both ends and the joined range', () =>
   ]);
 });
 
-test('a date end that is not an ISO day counts as missing', () => {
+test('a date day that is not an ISO day counts as missing', () => {
   // From a URL, for example: none of these may throw.
   const bad = { issued: ['soon', '2026-02-30'] } as const;
   expect(countFilterPanelSelections(groups, bad)).toBe(0);
-  expect(filterTags(groups, bad, defaultFilterTagMessages)).toEqual([]);
+  expect(filterTags(groups, bad, defaultFilterSummaryMessages)).toEqual([]);
   expect(setGroupValue({}, issued, bad.issued)).toEqual({});
   expect(sameFilterValue(groups, bad, {})).toBe(true);
   const [tag] = filterTags(
     groups,
-    { issued: ['2026-10-01T00:00:00Z', '2026-10-31'] },
-    defaultFilterTagMessages
+    { issued: ['2026-10-01', '2026-10-31T00:00:00Z'] },
+    defaultFilterSummaryMessages
   );
-  expect(tag?.label).toBe(`Issued: until ${formatDate('2026-10-31')}`);
+  expect(tag?.label).toBe(`Issued: from ${formatDate('2026-10-01')}`);
+});
+
+test('a date range without a start is no filter', () => {
+  const endOnly = { issued: [null, '2026-10-31'] } as const;
+  expect(setGroupValue({}, issued, endOnly.issued)).toEqual({});
+  expect(filterTags(groups, endOnly, defaultFilterSummaryMessages)).toEqual([]);
+  expect(countFilterPanelSelections(groups, endOnly)).toBe(0);
+  expect(sameFilterValue(groups, endOnly, {})).toBe(true);
 });

@@ -2,8 +2,11 @@ import { render, screen } from '@testing-library/react';
 import { createRef, useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { FilterSummary } from './FilterSummary.js';
-import { defaultFilterTagMessages, filterTags } from './value.js';
+import {
+  defaultFilterSummaryMessages,
+  FilterSummary,
+} from './FilterSummary.js';
+import { filterTags } from './value.js';
 import type { FilterPanelGroup, FilterPanelValue } from './value.js';
 
 const groups: FilterPanelGroup[] = [
@@ -61,27 +64,23 @@ const summaryRoot = () =>
 
 // Carbon names the dismiss buttons through a hidden tooltip
 // (aria-labelledby), which Testing Library's role query does not read.
-const closeButtons = (label: string | RegExp) =>
-  screen.queryAllByLabelText<HTMLButtonElement>(label, { selector: 'button' });
-// Tags in the line: not hidden by the overflow handler, not in the popover.
+const closeButtons = (label: string | RegExp, within: string) =>
+  screen
+    .queryAllByLabelText<HTMLButtonElement>(label, { selector: 'button' })
+    .filter((item) => item.closest(within));
+// TagOverflow keeps its popover list in the DOM while closed.
 const lineButtons = (label: string | RegExp = /^Remove filter /) =>
-  closeButtons(label).filter(
-    (item) => !item.closest('[data-hidden]') && !item.closest('[data-offset]')
-  );
+  closeButtons(label, '.c4p--tag-overflow__tag-container');
 const popoverButtons = (label: string | RegExp = /^Remove filter /) =>
-  closeButtons(label).filter((item) =>
-    item.closest('.afframe-filter-summary-popover')
-  );
-const one = (found: HTMLButtonElement[], label: string) => {
-  const [item] = found;
+  closeButtons(label, '.c4p--tag-overflow-popover__tag-list');
+const names = (found: HTMLButtonElement[]) =>
+  found.map((item) => item.getAttribute('aria-label'));
+const dismiss = (label: string) => {
+  const [item] = lineButtons(`Remove filter ${label}`);
   if (!item) throw new Error(`No tag ${label}`);
   return item;
 };
-const dismiss = (label: string) =>
-  one(lineButtons(`Remove filter ${label}`), label);
-const dismissInPopover = (label: string) =>
-  one(popoverButtons(`Remove filter ${label}`), label);
-const moreTag = () => screen.queryByRole('button', { name: /more filters$/ });
+const moreTag = () => screen.queryByRole('button', { name: /^\+\d+$/ });
 
 function SummaryHarness({
   initial,
@@ -118,18 +117,14 @@ test('summary: a "Group: Option" tag per known selected option', async () => {
       }}
     />
   );
-  await vi.waitFor(() => expect(lineButtons()).toHaveLength(2));
-  expect(lineButtons().map((item) => item.getAttribute('aria-label'))).toEqual([
-    'Remove filter Status: Paid',
-    'Remove filter Customer: Birch Studio',
-  ]);
+  await vi.waitFor(() =>
+    expect(names(lineButtons())).toEqual([
+      'Remove filter Status: Paid',
+      'Remove filter Customer: Birch Studio',
+    ])
+  );
   expect(summaryRoot().textContent).toContain('Status: Paid');
   expect(button('Clear filters')).toBeTruthy();
-  await vi.waitFor(() =>
-    expect(
-      document.querySelector('[data-offset]')?.hasAttribute('data-hidden')
-    ).toBe(true)
-  );
   expect(moreTag()).toBeNull();
 });
 
@@ -146,17 +141,13 @@ test('summary: a tag per applied value of every variant, as filterTags', async (
   const expected = filterTags(
     variantGroups,
     variantValue,
-    defaultFilterTagMessages
+    defaultFilterSummaryMessages
   ).map((tag) => `Remove filter ${tag.label}`);
   expect(expected).toHaveLength(10);
-  await vi.waitFor(() =>
-    expect(
-      lineButtons().map((item) => item.getAttribute('aria-label'))
-    ).toEqual(expected)
-  );
+  await vi.waitFor(() => expect(names(lineButtons())).toEqual(expected));
 });
 
-test('summary: dismissing a tag removes its value and keeps focus on the tags', async () => {
+test('summary: dismissing a tag removes its value and focuses the root', async () => {
   const onChange = vi.fn();
   render(
     <SummaryHarness
@@ -171,15 +162,8 @@ test('summary: dismissing a tag removes its value and keeps focus on the tags', 
     status: ['overdue'],
     customer: ['acme'],
   });
-  await vi.waitFor(() => expect(active()).toBe(dismiss('Status: Overdue')));
-  // The last tag hands focus to the one before it, then to the root.
-  dismiss('Customer: Acme Trading').focus();
-  await userEvent.keyboard('{Enter}');
-  expect(onChange).toHaveBeenLastCalledWith({ status: ['overdue'] });
-  await vi.waitFor(() => expect(active()).toBe(dismiss('Status: Overdue')));
-  await userEvent.keyboard('{Enter}');
-  expect(onChange).toHaveBeenLastCalledWith({});
   expect(active()).toBe(summaryRoot());
+  await vi.waitFor(() => expect(lineButtons()).toHaveLength(2));
 });
 
 test('summary: Clear filters calls onChange({}) and focuses the root', async () => {
@@ -221,6 +205,7 @@ test('summary: custom messages', async () => {
         value={{
           checkbox: ['a'],
           range: ['2026-01-05', null],
+          // No start: no filter.
           from: [null, '2026-02-10'],
           slider: 40,
         }}
@@ -230,129 +215,57 @@ test('summary: custom messages', async () => {
           removeFilter: (label) => `Odebrat ${label}`,
           clearFilters: 'Zrušit filtry',
           dateRangeValue: (start, end, range) =>
-            range ?? `${start ?? '…'} až ${end ?? '…'}`,
+            range ?? `${start} až ${end ?? '…'}`,
           atMostValue: (value) => `nejvýše ${value}`,
         }}
       />
     </div>
   );
-  const names = () =>
-    lineButtons(/^Odebrat /).map((item) => item.getAttribute('aria-label'));
-  await vi.waitFor(() => expect(names()).toHaveLength(4));
-  const [checkbox, start, end, slider] = names();
+  await vi.waitFor(() => expect(lineButtons(/^Odebrat /)).toHaveLength(3));
+  const [checkbox, start, slider] = names(lineButtons(/^Odebrat /));
   expect(checkbox).toBe('Odebrat Checkbox = Alpha');
   expect(start).toMatch(/^Odebrat Range = .+ až …$/);
-  expect(end).toMatch(/^Odebrat From = … až .+$/);
   expect(slider).toBe('Odebrat Slider = nejvýše 40');
   expect(button('Zrušit filtry')).toBeTruthy();
 });
 
-// At 470 px two tags and "+2" fit (tags 102, 125, 174 and 165 px, an 8 px
-// gap, Clear filters 106 px).
-const narrow = '470px';
-const allSelected = {
-  status: ['paid', 'overdue'],
-  customer: ['acme', 'birch'],
-};
-
-test('summary: narrow, "+N" names and counts the hidden tags', async () => {
-  render(<SummaryHarness initial={allSelected} width={narrow} />);
-  await vi.waitFor(() => expect(moreTag()?.textContent).toBe('+2'));
-  expect(moreTag()?.getAttribute('aria-label')).toBe('2 more filters');
-  expect(moreTag()?.getAttribute('aria-expanded')).toBe('false');
-  expect(lineButtons()).toHaveLength(2);
-  expect(popoverButtons()).toHaveLength(0);
-});
-
-test('summary: narrow, "+N" lists the hidden tags; dismissing there moves focus to the next, then the root', async () => {
-  const onChange = vi.fn();
+test('summary: narrow, "+N" counts the hidden tags and lists them', async () => {
   render(
-    <SummaryHarness initial={allSelected} width={narrow} onChange={onChange} />
+    <SummaryHarness
+      initial={{
+        status: ['paid', 'overdue'],
+        customer: ['acme', 'birch'],
+      }}
+      width="470px"
+    />
   );
-  await vi.waitFor(() => expect(moreTag()?.textContent).toBe('+2'));
-  const more = moreTag();
-  if (!more) throw new Error('No "+N" tag');
-  await userEvent.click(more);
-  expect(more.getAttribute('aria-expanded')).toBe('true');
-  expect(
-    document.getElementById(more.getAttribute('aria-controls') ?? '')
-  ).toBeTruthy();
-  expect(
-    popoverButtons().map((item) => item.getAttribute('aria-label'))
-  ).toEqual([
-    'Remove filter Customer: Acme Trading',
-    'Remove filter Customer: Birch Studio',
-  ]);
-  // A click there leaves the popover open while tags stay hidden.
-  await userEvent.click(dismissInPopover('Customer: Birch Studio'));
-  expect(onChange).toHaveBeenLastCalledWith({
-    status: ['paid', 'overdue'],
-    customer: ['acme'],
+  // The first render shows "+4" before the tags are measured.
+  await vi.waitFor(() => {
+    expect(moreTag()).toBeTruthy();
+    expect(lineButtons().length).toBeGreaterThan(0);
   });
-  await vi.waitFor(() => expect(more.textContent).toBe('+1'));
-  await vi.waitFor(() =>
-    expect(active()).toBe(dismissInPopover('Customer: Acme Trading'))
-  );
-  expect(more.getAttribute('aria-expanded')).toBe('true');
-  await userEvent.keyboard('{Enter}');
-  await vi.waitFor(() => expect(moreTag()).toBeNull());
-  expect(more.getAttribute('aria-expanded')).toBe('false');
-  expect(popoverButtons()).toHaveLength(0);
-  expect(lineButtons()).toHaveLength(2);
-  expect(active()).toBe(summaryRoot());
-});
-
-test('summary: narrow, Escape closes the popover and focuses "+N"', async () => {
-  render(<SummaryHarness initial={allSelected} width={narrow} />);
-  await vi.waitFor(() => expect(moreTag()?.textContent).toBe('+2'));
+  const shown = lineButtons().length;
+  expect(shown).toBeLessThan(4);
   const more = moreTag();
   if (!more) throw new Error('No "+N" tag');
+  expect(more.textContent).toBe(`+${4 - shown}`);
+  expect(popoverButtons().some((item) => item.checkVisibility())).toBe(false);
   await userEvent.click(more);
-  dismissInPopover('Customer: Acme Trading').focus();
-  // The first Escape closes the dismiss button's tooltip (Carbon).
-  await userEvent.keyboard('{Escape}');
   expect(more.getAttribute('aria-expanded')).toBe('true');
-  await userEvent.keyboard('{Escape}');
-  expect(more.getAttribute('aria-expanded')).toBe('false');
-  expect(active()).toBe(more);
-});
-
-test('summary: narrow, dismissing the last shown tag focuses the shown tag in its place', async () => {
-  render(<SummaryHarness initial={allSelected} width={narrow} />);
-  await vi.waitFor(() => expect(moreTag()?.textContent).toBe('+2'));
-  dismiss('Status: Overdue').focus();
-  await userEvent.keyboard('{Enter}');
-  // Customer: Acme Trading moves up into the line.
-  await vi.waitFor(() => expect(moreTag()?.textContent).toBe('+1'));
   await vi.waitFor(() =>
-    expect(active()).toBe(dismiss('Customer: Acme Trading'))
+    expect(popoverButtons().every((item) => item.checkVisibility())).toBe(true)
   );
-  expect(active()).not.toBe(document.body);
+  expect(names(popoverButtons())).toEqual(
+    [
+      'Remove filter Status: Paid',
+      'Remove filter Status: Overdue',
+      'Remove filter Customer: Acme Trading',
+      'Remove filter Customer: Birch Studio',
+    ].slice(shown)
+  );
 });
 
-test('summary: after the last tag goes, new filters are measured again', async () => {
-  const at = (value: FilterPanelValue) => (
-    <div style={{ inlineSize: narrow }}>
-      <FilterSummary groups={groups} value={value} onChange={() => undefined} />
-    </div>
-  );
-  const { rerender } = render(at(allSelected));
-  await vi.waitFor(() => expect(moreTag()?.textContent).toBe('+2'));
-  rerender(at({}));
-  expect(summaryRoot().childElementCount).toBe(0);
-  rerender(at({ status: ['paid'] }));
-  await vi.waitFor(() =>
-    expect(
-      document.querySelector('[data-offset]')?.hasAttribute('data-hidden')
-    ).toBe(true)
-  );
-  expect(lineButtons()).toHaveLength(1);
-  expect(moreTag()).toBeNull();
-  rerender(at(allSelected));
-  await vi.waitFor(() => expect(moreTag()?.textContent).toBe('+2'));
-});
-
-test('summary: at most 10 tags in the line; custom "+N" name', async () => {
+test('summary: at most 10 tags in the line', async () => {
   const many: FilterPanelGroup[] = [
     {
       id: 'n',
@@ -369,26 +282,9 @@ test('summary: at most 10 tags in the line; custom "+N" name', async () => {
         groups={many}
         value={{ n: Array.from({ length: 11 }, (_, index) => String(index)) }}
         onChange={() => undefined}
-        messages={{ moreFilters: (count) => `Další filtry: ${count}` }}
       />
     </div>
   );
-  const more = () => screen.queryByRole('button', { name: /^Další filtry/ });
-  await vi.waitFor(() => expect(more()?.textContent).toBe('+1'));
-  expect(more()?.getAttribute('aria-label')).toBe('Další filtry: 1');
+  await vi.waitFor(() => expect(moreTag()?.textContent).toBe('+1'));
   expect(lineButtons()).toHaveLength(10);
-});
-
-test('"+N" is hidden from the first paint, before the overflow is measured', () => {
-  render(
-    <FilterSummary
-      groups={groups}
-      value={{ status: ['paid'] }}
-      onChange={() => {}}
-    />
-  );
-  // Synchronously after render: the overflow handler runs on a frame.
-  expect(
-    document.querySelector('[data-offset]')?.hasAttribute('data-hidden')
-  ).toBe(true);
 });

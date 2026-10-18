@@ -25,6 +25,7 @@ import { resolveMessages } from '../../messages.js';
 import { FilterField } from './fields.js';
 import {
   countFilterPanelSelections,
+  sameField,
   sameFilterValue,
   setGroupValue,
 } from './value.js';
@@ -121,9 +122,6 @@ export interface FilterPanelProps extends Omit<
   className?: string;
 }
 
-const only = (value: FilterPanelValue, id: string): FilterPanelValue =>
-  value[id] === undefined ? {} : { [id]: value[id] };
-
 /** The draft with the groups whose applied value changed from `from` to `to`. */
 function rebase(
   groups: readonly FilterPanelGroup[],
@@ -133,7 +131,7 @@ function rebase(
 ): FilterPanelValue {
   return groups.reduce(
     (next, group) =>
-      sameFilterValue(groups, only(from, group.id), only(to, group.id))
+      sameField(group, from[group.id], to[group.id])
         ? next
         : setGroupValue(next, group, to[group.id]),
     draft

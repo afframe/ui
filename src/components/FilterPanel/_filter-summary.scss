@@ -1,6 +1,5 @@
 // Filter summary styles, Carbon tokens only.
 @use '@carbon/styles/scss/spacing' as *;
-@use '@carbon/styles/scss/theme' as *;
 
 .afframe-filter-summary {
   display: flex;
@@ -8,39 +7,7 @@
   gap: $spacing-03;
 }
 
-// The overflow handler hides whole tags; shrunk tags would never overflow.
-.afframe-filter-summary-tags > * {
-  flex: none;
-}
-
-// createOverflowHandler measures this container's width, so it takes the
-// free space instead of growing with its tags.
 .afframe-filter-summary-tags {
-  display: flex;
   flex: 1 1 0;
-  align-items: center;
   min-inline-size: 0;
-  gap: $spacing-03;
 }
-
-// Tags and "+N" the overflow handler hides.
-.afframe-filter-summary-tags > [data-hidden] {
-  display: none;
-}
-
-.afframe-filter-summary-popover {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: $spacing-03;
-  padding: $spacing-05;
-  background-color: $background-inverse;
-  color: $text-inverse;
-}
-
-// Carbon's tag margins would add to the gap the overflow handler counts.
-/* stylelint-disable selector-class-pattern -- Carbon's class names */
-.afframe-filter-summary .cds--tag {
-  margin: 0;
-}
-/* stylelint-enable selector-class-pattern */
