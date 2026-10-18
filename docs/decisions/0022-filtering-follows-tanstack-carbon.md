@@ -21,7 +21,7 @@ IBM Products deprecated its Datagrid in v2.54.0, keeps sev 1 fixes in v3 and rem
 - `FilterFlyout`: an icon trigger by default, with the count in its accessible name; a text trigger "Filter (n)" is an option.
 - `FilterSummary`: one line of tags, the overflow measured by `createOverflowHandler` from `@carbon/utilities` and shown in a "+N" popover, then Clear filters.
 - DataGrid: an inline left panel that pushes the table, and a filtered-empty state.
-- Copied files keep IBM's Apache-2.0 header with a "Modified by Afframe" line ([ADR 0011](0011-licence.md)).
+- Files adapted from tanstack-carbon carry IBM's Apache-2.0 header in the repo format, with a "Modified by Afframe" line ([ADR 0011](0011-licence.md)). The upstream files have no header.
 
 ## Afframe additions
 

@@ -1,6 +1,7 @@
 'use client';
 // Filter functions of the filter panel's column filters.
 import { constructFilterFn } from '@tanstack/react-table';
+import { isoDay } from '../FilterPanel/value.js';
 
 const listOf = (value: unknown): unknown[] =>
   Array.isArray(value) ? value : [value];
@@ -48,6 +49,9 @@ export const filterFn_inDayRange = constructFilterFn({
     (start === null || day >= start) &&
     (end === null || day <= end),
   resolveDataValue: dayOf,
+  // An end that is not an ISO day is open.
+  resolveFilterValue: (value: unknown): DayRange =>
+    Array.isArray(value) ? [isoDay(value[0]), isoDay(value[1])] : [null, null],
   autoRemove: (value: unknown) =>
-    !Array.isArray(value) || (value[0] == null && value[1] == null),
+    !Array.isArray(value) || (!isoDay(value[0]) && !isoDay(value[1])),
 });

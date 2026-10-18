@@ -252,3 +252,18 @@ test('filterTags: a custom dateRange gets both ends and the joined range', () =>
     ],
   ]);
 });
+
+test('a date end that is not an ISO day counts as missing', () => {
+  // From a URL, for example: none of these may throw.
+  const bad = { issued: ['soon', '2026-02-30'] } as const;
+  expect(countFilterPanelSelections(groups, bad)).toBe(0);
+  expect(filterTags(groups, bad, defaultFilterTagMessages)).toEqual([]);
+  expect(setGroupValue({}, issued, bad.issued)).toEqual({});
+  expect(sameFilterValue(groups, bad, {})).toBe(true);
+  const [tag] = filterTags(
+    groups,
+    { issued: ['2026-10-01T00:00:00Z', '2026-10-31'] },
+    defaultFilterTagMessages
+  );
+  expect(tag?.label).toBe(`Issued: until ${formatDate('2026-10-31')}`);
+});

@@ -141,6 +141,9 @@ export function FilterFlyout({
     event.preventDefault();
     // preventDefault also keeps Carbon's window handler from closing.
     if (isInnerEscape(event.currentTarget, target)) return;
+    // FilterableMultiSelect takes Escape with its menu closed to clear its
+    // selection and refocus its input, which would undo the focus return.
+    event.stopPropagation();
     closeToTrigger();
   };
 

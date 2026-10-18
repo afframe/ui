@@ -256,7 +256,9 @@ export function FilterSummary({
                 onClose={() => dismiss(tag, { in: 'line', index })}
               />
             ))}
-            <span data-offset>
+            {/* Hidden until the overflow handler measures, so "+0" never
+                paints; it measures hidden items with a display override. */}
+            <span data-offset {...(hidden === 0 && { 'data-hidden': '' })}>
               <Popover
                 open={open && hidden > 0}
                 isTabTip

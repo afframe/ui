@@ -206,14 +206,29 @@ function setRangeStart(picker: Flatpickr, start: Date) {
  * value, Carbon's blur handler, tellApp) pulls focus back and opens the
  * calendar. For one timer turn after a change, the end's focus() only goes
  * through while focus is in the picker or its open calendar. A picked day is
- * redrawn, so focus is on the body then.
+ * redrawn, so focus is on the body then. Every change re-arms the guard, so
+ * an earlier change's end does not lift it before a later change's timer.
  */
+const guardGenerations = new WeakMap<HTMLInputElement, number>();
+
 function guardEndRefocus(picker: Flatpickr, prefix: string) {
   const field = picker.input.closest(`.${prefix}--date-picker`);
   const end = field?.querySelectorAll<HTMLInputElement>(
     `.${prefix}--date-picker__input`
   )[1];
-  if (!field || !end || Object.hasOwn(end, 'focus')) return;
+  if (!field || !end) return;
+  const generation = (guardGenerations.get(end) ?? 0) + 1;
+  guardGenerations.set(end, generation);
+  // The plugin's timer may be queued after this hook: the nested timer runs
+  // after it.
+  setTimeout(() =>
+    setTimeout(() => {
+      if (guardGenerations.get(end) === generation) {
+        Reflect.deleteProperty(end, 'focus');
+      }
+    })
+  );
+  if (Object.hasOwn(end, 'focus')) return;
   const focus = end.focus;
   let focusing = false;
   // An own property: an assignment would reach a setter on the prototype
@@ -238,13 +253,6 @@ function guardEndRefocus(picker: Flatpickr, prefix: string) {
       }
     },
   });
-  // The plugin's timer may be queued after this hook: the nested timer runs
-  // after it.
-  setTimeout(() =>
-    setTimeout(() => {
-      Reflect.deleteProperty(end, 'focus');
-    })
-  );
 }
 
 const datesKey = (dates: readonly unknown[]) =>

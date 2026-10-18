@@ -358,3 +358,31 @@ test('ref, rest props and onKeyDownCapture reach the root; Escape and a click ou
   await userEvent.click(button('Before'));
   expect(toggle.getAttribute('aria-expanded')).toBe('false');
 });
+
+test('Escape in a filterable multiselect with its menu closed only closes to the trigger', async () => {
+  const onChange = vi.fn();
+  render(
+    <Harness
+      groups={[
+        {
+          id: 'customer',
+          label: 'Customer',
+          variant: 'multiselect',
+          searchable: true,
+          options: [{ value: 'acme', label: 'Acme Trading' }],
+        },
+      ]}
+      initial={{ customer: ['acme'] }}
+      updateMethod="instant"
+      onChange={onChange}
+    />
+  );
+  const toggle = trigger('Filter (1)');
+  await userEvent.click(toggle);
+  screen.getByRole('combobox', { name: 'Customer' }).focus();
+  await userEvent.keyboard('{Escape}');
+  expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  expect(active()).toBe(toggle);
+  // Carbon's own Escape would clear the selection and refocus the input.
+  expect(onChange).not.toHaveBeenCalled();
+});

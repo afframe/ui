@@ -112,6 +112,20 @@ export function checkedValues(
   return items.filter((item) => item !== null);
 }
 
+/** `day` when it is an ISO `YYYY-MM-DD` day, else `null`. */
+export function isoDay(day: unknown): string | null {
+  if (typeof day !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return null;
+  const utc = new Date(`${day}T00:00:00Z`);
+  return !Number.isNaN(utc.getTime()) && utc.toISOString().startsWith(day)
+    ? day
+    : null;
+}
+
+// An app may restore a value from a URL: an end that is not an ISO day is
+// open, as the formatters throw on it.
+const dayRange = (field: FilterPanelFieldValue) =>
+  typeof field === 'object' ? [isoDay(field[0]), isoDay(field[1])] : [];
+
 // "No filter" is a missing key. table-core's testFalsy treats only undefined,
 // null and '' as empty, so 0 stays a filter.
 // fallow-ignore-next-line complexity -- one branch per filter variant
@@ -125,6 +139,8 @@ function isEmpty(
     if (!Number.isFinite(field)) return true;
     return group?.variant === 'slider' && field >= group.max;
   }
+  if (variantOf(group) === 'dateRange')
+    return dayRange(field).every((day) => !day);
   return field.every((item) => item === null || item === '');
 }
 
@@ -154,7 +170,8 @@ function sameField(
     return left === right;
   }
   if (variantOf(group) === 'dateRange') {
-    return left[0] === right[0] && left[1] === right[1];
+    const [start, end] = dayRange(left);
+    return start === dayRange(right)[0] && end === dayRange(right)[1];
   }
   const set = new Set(right);
   return new Set(left).size === set.size && left.every((v) => set.has(v));
@@ -222,7 +239,7 @@ function valueText(
     // A radio or select value that matches no option shows as stored.
     return selectedOptions(group, field)[0]?.label ?? field;
   }
-  const [start, end] = field;
+  const [start, end] = dayRange(field);
   return text.dateRange(
     start ? formatDate(start) : null,
     end ? formatDate(end) : null,

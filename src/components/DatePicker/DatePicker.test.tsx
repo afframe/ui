@@ -608,3 +608,22 @@ test('range: a day picked with the end focused returns focus to the end', async 
   await vi.waitFor(() => expect(document.activeElement).toBe(input('To')));
   expect(calendarOpen()).toBe(true);
 });
+
+type WithPicker = HTMLInputElement & {
+  _flatpickr: { setDate: (dates: Date[], triggerChange: boolean) => void };
+};
+
+test('range: a change while the last change’s guard ends leaves focus where it is', async () => {
+  render(<AppRange next={[]} />);
+  await typeRange();
+  const picker = (input('From') as WithPicker)._flatpickr;
+  const outside = screen.getByRole('button', { name: 'Set' });
+  outside.focus();
+  picker.setDate([october(10), october(12)], true);
+  // One timer turn: the first change's guard has one turn left.
+  await new Promise((resolve) => setTimeout(resolve));
+  picker.setDate([october(14), october(16)], true);
+  await settle();
+  expect(document.activeElement).toBe(outside);
+  expect(calendarOpen()).toBe(false);
+});

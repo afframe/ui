@@ -434,3 +434,120 @@ test('count ignores values that match no option', () => {
   render(<Harness layout="accordion" initial={value} />);
   expect(button('Status (1)')).toBeTruthy();
 });
+
+const startDate = () => screen.getByLabelText<HTMLInputElement>('Start date');
+
+test('date range: text kept invalid stays when another field changes', async () => {
+  render(
+    <Harness
+      groups={[
+        groups[0] as FilterPanelGroup,
+        {
+          id: 'issued',
+          label: 'Issued',
+          variant: 'dateRange',
+          minDate: '2026-01-01',
+          maxDate: '2026-12-31',
+        },
+      ]}
+      initial={{ issued: ['2026-10-01', '2026-10-05'] }}
+    />
+  );
+  await userEvent.click(startDate());
+  startDate().setSelectionRange(0, startDate().value.length);
+  await userEvent.keyboard('0310');
+  await userEvent.click(screen.getByText('Paid'));
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  expect(checkbox('Paid').checked).toBe(true);
+  expect(startDate().value).toBe('03.10.');
+});
+
+test('date range: a stored day or bound that is not an ISO day is no date', () => {
+  render(
+    <Harness
+      groups={[
+        { id: 'issued', label: 'Issued', variant: 'dateRange', minDate: 'x' },
+      ]}
+      initial={{ issued: ['2026-10-01', 'soon'] }}
+    />
+  );
+  expect(startDate().value).toBe('01.10.2026');
+  expect(screen.getByLabelText<HTMLInputElement>('End date').value).toBe('');
+});
+
+test('text: spaces stay as typed; the stored value is trimmed', async () => {
+  const onChange = vi.fn();
+  render(
+    <Harness
+      groups={[{ id: 'reference', label: 'Reference', variant: 'text' }]}
+      updateMethod="instant"
+      onChange={onChange}
+    />
+  );
+  const field = screen.getByRole<HTMLInputElement>('textbox', {
+    name: 'Reference',
+  });
+  await userEvent.type(field, ' A1 ');
+  expect(field.value).toBe(' A1 ');
+  expect(onChange).toHaveBeenLastCalledWith({ reference: 'A1' });
+  await userEvent.click(button('Clear'));
+  expect(field.value).toBe('');
+});
+
+test.each(['flat', 'accordion'] as const)(
+  'searchable multiselect: the input is named by the group label (%s)',
+  (layout) => {
+    render(
+      <Harness
+        layout={layout}
+        groups={[
+          {
+            id: 'customer',
+            label: 'Customer',
+            variant: 'multiselect',
+            searchable: true,
+            defaultOpen: true,
+            options: [{ value: 'acme', label: 'Acme Trading' }],
+          },
+        ]}
+      />
+    );
+    expect(screen.getByRole('combobox', { name: 'Customer' })).toBeTruthy();
+  }
+);
+
+test('radio and select: "All" is first, selected without a value, and removes the filter', async () => {
+  const onChange = vi.fn();
+  render(
+    <Harness
+      groups={allVariants.filter(
+        (group) => group.id === 'kind' || group.id === 'currency'
+      )}
+      initial={{ kind: 'credit', currency: 'eur' }}
+      updateMethod="instant"
+      onChange={onChange}
+    />
+  );
+  const radios = screen.getAllByRole<HTMLInputElement>('radio');
+  expect(radios.map((radio) => radio.labels?.[0]?.textContent)).toEqual([
+    'All',
+    'Invoice',
+    'Credit note',
+  ]);
+  expect(radios[0]?.checked).toBe(false);
+  await userEvent.click(screen.getByText('All'));
+  expect(onChange).toHaveBeenLastCalledWith({ currency: 'eur' });
+  expect(radios[0]?.checked).toBe(true);
+  const select = screen.getByRole('combobox', { name: 'Currency' });
+  expect(select.textContent).toContain('EUR');
+  await userEvent.click(select);
+  const options = screen.getAllByRole('option');
+  expect(options.map((option) => option.textContent)).toEqual([
+    'All',
+    'CZK',
+    'EUR',
+  ]);
+  await userEvent.click(screen.getByRole('option', { name: 'All' }));
+  expect(onChange).toHaveBeenLastCalledWith({});
+  expect(select.textContent).toContain('All');
+});

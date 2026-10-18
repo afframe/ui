@@ -23,7 +23,7 @@ import {
   TextInput,
   usePrefix,
 } from '@carbon/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   civilDateToLocalDate,
@@ -33,7 +33,7 @@ import {
 import type { CivilDate } from '../../format/index.js';
 import { DatePicker } from '../DatePicker/index.js';
 import type { FilterPanelMessages } from './FilterPanel.js';
-import { checkedValues, selectedOptions } from './value.js';
+import { checkedValues, isoDay, selectedOptions } from './value.js';
 import type {
   FilterPanelFieldValue,
   FilterPanelGroup,
@@ -144,6 +144,14 @@ function RadioField(props: FieldProps<GroupOf<'radio'>>) {
     <GroupFieldset legend={group.label} hideLabel={hideLabel}>
       {search}
       <div className="afframe-filter-panel-options">
+        <RadioButton
+          id={`${id}-all`}
+          name={id}
+          value=""
+          labelText={text.allOption}
+          checked={field === undefined}
+          onChange={() => onChange(undefined)}
+        />
         {shown.map((option) => (
           <RadioButton
             key={option.value}
@@ -174,6 +182,8 @@ const listBoxText = (text: FilterPanelMessages) => (messageId: string) =>
 
 function SelectField(props: FieldProps<GroupOf<'select'>>) {
   const { group, field, onChange, id, text, hideLabel } = props;
+  // '' is no filter: setGroupValue removes it.
+  const all = { value: '', label: text.allOption };
   return (
     // autoAlign keeps the menu inside a scrolling panel or flyout.
     <Dropdown<FilterPanelOption | null>
@@ -181,10 +191,13 @@ function SelectField(props: FieldProps<GroupOf<'select'>>) {
       titleText={group.label}
       hideLabel={hideLabel}
       label={text.selectPlaceholder}
-      items={[...group.options]}
+      items={[all, ...group.options]}
       itemToString={optionText}
       // null, not undefined: Dropdown is controlled only with a defined item.
-      selectedItem={selectedOptions(group, field)[0] ?? null}
+      // A value that matches no option shows the placeholder.
+      selectedItem={
+        field === undefined ? all : (selectedOptions(group, field)[0] ?? null)
+      }
       onChange={({ selectedItem }) => onChange(selectedItem?.value)}
       translateWithId={listBoxText(text)}
       autoAlign
@@ -214,6 +227,9 @@ function MultiSelectField(props: FieldProps<GroupOf<'multiselect'>>) {
     <FilterableMultiSelect<FilterPanelOption>
       {...shared}
       placeholder={text.multiselectPlaceholder}
+      // Carbon's label also holds a hidden selection count, which would end
+      // up in the input's name; MultiSelect is named by the label alone.
+      inputProps={{ 'aria-label': group.label }}
     />
   ) : (
     <MultiSelect<FilterPanelOption>
@@ -225,14 +241,21 @@ function MultiSelectField(props: FieldProps<GroupOf<'multiselect'>>) {
 
 function TextField(props: FieldProps<GroupOf<'text'>>) {
   const { group, field, onChange, id, text, hideLabel } = props;
+  const stored = typeof field === 'string' ? field : '';
+  // The filter is the trimmed text; the input keeps the spaces as typed
+  // until the value changes from outside (Clear, a tag).
+  const [typed, setTyped] = useState(stored);
   return (
     <TextInput
       id={id}
       labelText={group.label}
       hideLabel={hideLabel}
       placeholder={group.placeholder ?? text.textPlaceholder(group.label)}
-      value={typeof field === 'string' ? field : ''}
-      onChange={(event) => onChange(event.target.value)}
+      value={typed.trim() === stored ? typed : stored}
+      onChange={(event) => {
+        setTyped(event.target.value);
+        onChange(event.target.value.trim());
+      }}
     />
   );
 }
@@ -258,19 +281,32 @@ function NumberField(props: FieldProps<GroupOf<'number'>>) {
   );
 }
 
-const toLocalDate = (day: string) => civilDateToLocalDate(day as CivilDate);
+const toLocalDate = (day: string | null | undefined) => {
+  const valid = isoDay(day);
+  return valid === null ? undefined : civilDateToLocalDate(valid as CivilDate);
+};
 
 function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
   const { group, field, onChange, id, text, hideLabel } = props;
+  const [start, end] = checkedValues(field).filter((day) => isoDay(day));
+  const { minDate, maxDate } = group;
+  // Carbon sets the picker's dates on every new value object and redraws on
+  // new bounds, which overwrites text kept invalid: same days, same Dates.
+  const value = useMemo(
+    () => [start, end].flatMap((day) => toLocalDate(day) ?? []),
+    [start, end]
+  );
+  const min = useMemo(() => toLocalDate(minDate), [minDate]);
+  const max = useMemo(() => toLocalDate(maxDate), [maxDate]);
   return (
     <GroupFieldset legend={group.label} hideLabel={hideLabel}>
       <DatePicker
         datePickerType="range"
         // [] empties both inputs on Clear; Dates, not ISO text, because
         // flatpickr parses text in the picker's display format.
-        value={checkedValues(field).map(toLocalDate)}
-        {...(group.minDate && { minDate: toLocalDate(group.minDate) })}
-        {...(group.maxDate && { maxDate: toLocalDate(group.maxDate) })}
+        value={value}
+        {...(min && { minDate: min })}
+        {...(max && { maxDate: max })}
         onChange={(dates) => {
           const [from, to] = dates.map(localDateToCivilDate);
           onChange([from ?? null, to ?? null]);

@@ -378,3 +378,17 @@ test('summary: at most 10 tags in the line; custom "+N" name', async () => {
   expect(more()?.getAttribute('aria-label')).toBe('Další filtry: 1');
   expect(lineButtons()).toHaveLength(10);
 });
+
+test('"+N" is hidden from the first paint, before the overflow is measured', () => {
+  render(
+    <FilterSummary
+      groups={groups}
+      value={{ status: ['paid'] }}
+      onChange={() => {}}
+    />
+  );
+  // Synchronously after render: the overflow handler runs on a frame.
+  expect(
+    document.querySelector('[data-offset]')?.hasAttribute('data-hidden')
+  ).toBe(true);
+});

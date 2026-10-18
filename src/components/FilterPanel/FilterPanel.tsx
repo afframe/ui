@@ -46,6 +46,8 @@ export interface FilterPanelMessages {
   searchPlaceholder: string;
   clearSearch: string;
   noMatches: string;
+  /** First option of a radio or select group; it removes the group's filter. */
+  allOption: string;
   selectPlaceholder: string;
   multiselectPlaceholder: string;
   textPlaceholder: (groupLabel: string) => string;
@@ -76,6 +78,7 @@ export const defaultFilterPanelMessages: FilterPanelMessages = {
   searchPlaceholder: 'Search',
   clearSearch: 'Clear search',
   noMatches: 'No matching options',
+  allOption: 'All',
   selectPlaceholder: 'Choose an option',
   multiselectPlaceholder: 'Choose options',
   textPlaceholder: (groupLabel) => `Filter ${groupLabel}`,

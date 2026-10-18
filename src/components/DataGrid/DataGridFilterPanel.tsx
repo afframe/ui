@@ -12,7 +12,7 @@
  */
 import { NoDataEmptyState } from '@carbon/ibm-products';
 import { Filter } from '@carbon/icons-react';
-import { IconButton } from '@carbon/react';
+import { IconButton, usePrefix } from '@carbon/react';
 import type {
   Column,
   ReactTable,
@@ -20,7 +20,7 @@ import type {
   RowData,
   StockFeatures,
 } from '@tanstack/react-table';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import {
   FilterPanel,
@@ -126,17 +126,20 @@ function groupOf(
   label: string,
   filter: DataGridColumnFilter,
   values: () => unknown[]
-): FilterPanelGroup {
+): FilterPanelGroup | undefined {
   const base = { ...filter, id, label: filter.label ?? label };
   if (base.variant === 'slider') {
     const numbers = values().filter((value) => typeof value === 'number');
-    return {
-      ...base,
-      min:
-        base.min ?? numbers.reduce((a, b) => Math.min(a, b), numbers[0] ?? 0),
-      max:
-        base.max ?? numbers.reduce((a, b) => Math.max(a, b), numbers[0] ?? 0),
-    };
+    const some = numbers.length > 0;
+    // reduce, not Math.min(...): a spread of every row can overflow the stack.
+    const min =
+      base.min ?? (some ? numbers.reduce((a, b) => Math.min(a, b)) : undefined);
+    const max =
+      base.max ?? (some ? numbers.reduce((a, b) => Math.max(a, b)) : undefined);
+    // Carbon's Slider needs both bounds: no numbers, no group.
+    return min === undefined || max === undefined
+      ? undefined
+      : { ...base, min, max };
   }
   if (optionVariants.has(base.variant) && 'options' in base === false)
     return { ...base, options: optionsOf(values()) } as FilterPanelGroup;
@@ -177,23 +180,30 @@ export function useFilterPanel<TData extends RowData>(
     if (title) document.getElementById(title)?.focus();
   }, [open, panelId]);
 
-  const columns =
-    'columnFilteringFeature' in table._features
-      ? table
-          .getAllLeafColumns()
-          .filter((column) => filterOf(column.columnDef.meta))
+  const filtering = 'columnFilteringFeature' in table._features;
+  const leafColumns = table.getAllLeafColumns();
+  const coreRows = table.getCoreRowModel();
+  // Scans every core row: once per data or column change, not per render.
+  const { ids, groups } = useMemo(() => {
+    const columns = filtering
+      ? leafColumns.filter((column) => filterOf(column.columnDef.meta))
       : [];
-  if (columns.length === 0) return undefined;
-  const ids = new Set(columns.map((column) => column.id));
-  const rows = table.getCoreRowModel().flatRows;
-  const groups = columns.map((column) =>
-    groupOf(
-      column.id,
-      label(column),
-      filterOf(column.columnDef.meta) as DataGridColumnFilter,
-      () => cellValues(rows, column.id)
-    )
-  );
+    return {
+      // Every filter column, also one without a group: its filter stays
+      // under the panel's Clear.
+      ids: new Set(columns.map((column) => column.id)),
+      groups: columns.flatMap((column) => {
+        const group = groupOf(
+          column.id,
+          label(column),
+          filterOf(column.columnDef.meta) as DataGridColumnFilter,
+          () => cellValues(coreRows.flatRows, column.id)
+        );
+        return group ? [group] : [];
+      }),
+    };
+  }, [filtering, leafColumns, coreRows, label]);
+  if (ids.size === 0) return undefined;
   const value: FilterPanelValue = Object.fromEntries(
     table.state.columnFilters
       .filter((filter) => ids.has(filter.id))
@@ -288,6 +298,7 @@ export function FilterPanelLayout({
   children: ReactNode;
 }) {
   const { open } = panel;
+  const prefix = usePrefix();
   const { updateMethod = 'batch', layout, headingLevel } = settings ?? {};
   return (
     <div
@@ -317,7 +328,7 @@ export function FilterPanelLayout({
         />
       )}
       <div className="afframe-data-grid-filter-main">{children}</div>
-      <p role="status" className="cds--visually-hidden">
+      <p role="status" className={`${prefix}--visually-hidden`}>
         {open ? '' : text.resultCount(resultCount)}
       </p>
     </div>

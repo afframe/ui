@@ -1,3 +1,4 @@
+import { ClassPrefix } from '@carbon/react';
 import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 import { cleanup, render, screen, within } from '@testing-library/react';
 import { createRef, useState } from 'react';
@@ -1377,4 +1378,47 @@ test('the filter panel, summary and empty state take custom messages', async () 
   await userEvent.click(within(panel).getByText('Paid'));
   await userEvent.click(within(panel).getByRole('button', { name: 'Use' }));
   expect(screen.getByRole('button', { name: 'Reset all' })).toBeTruthy();
+});
+
+test('inDayRange treats an end that is not an ISO day as open', () => {
+  expect(
+    runFilter(filterFn_inDayRange, '2026-05-05', ['soon', '2026-05-31'])
+  ).toBe(true);
+  expect(
+    runFilter(filterFn_inDayRange, '2026-06-05', ['2026-05-01', '2026-13-01'])
+  ).toBe(true);
+  expect(filterFn_inDayRange.autoRemove?.(['soon', 'later'])).toBe(true);
+});
+
+test('a slider column with no numbers and no bounds gets no group', () => {
+  const columns = panelHelper.columns([
+    panelHelper.accessor('customer', {
+      header: 'Customer',
+      meta: { filter: { variant: 'slider' } },
+    }),
+    panelHelper.accessor('amount', {
+      header: 'Amount',
+      meta: { filter: { variant: 'slider' } },
+    }),
+  ]);
+  render(
+    <DataGrid
+      options={{ features: panelFeatures, columns, data: few }}
+      filterPanel={{ defaultOpen: true }}
+    />
+  );
+  const panel = screen.getByRole('region', { name: 'Filter' });
+  expect(within(panel).getAllByRole('slider')).toHaveLength(1);
+  expect(within(panel).getByRole('slider', { name: 'Amount' })).toBeTruthy();
+});
+
+test('the result status uses the Carbon class prefix', () => {
+  render(
+    <ClassPrefix prefix="app">
+      <DataGrid
+        options={{ features: panelFeatures, columns: panelColumns, data: few }}
+      />
+    </ClassPrefix>
+  );
+  expect(screen.getByRole('status').className).toBe('app--visually-hidden');
 });
