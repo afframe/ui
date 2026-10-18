@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Tooltip and Button from @afframe/ui, icons from @afframe/ui/icons, story styles as plain CSS, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Tooltip and Button from @afframe/ui, icons from @afframe/ui/icons, story styles as plain CSS, source tag, story names per ADR 0019. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useEffect } from 'react';
@@ -118,7 +118,7 @@ const autoAlignStoryContainerStyle: CSSProperties = {
   minHeight: '1200px',
 };
 
-export const ExperimentalAutoAlign: StoryFn<TooltipStoryArgs> = (args) => {
+export const AutoAlign: StoryFn<TooltipStoryArgs> = (args) => {
   const ref = useRef<HTMLButtonElement>(null);
   const tooltipLabel =
     'Scroll the container up, down, left or right to observe how the tooltip will automatically change its position in attempt to stay within the viewport. This works on initial render in addition to on scroll.';

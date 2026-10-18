@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Popover, Checkbox and RadioButton parts from @afframe/ui, icons from @afframe/ui/icons, story styles as plain CSS, `story` decorators moved to `decorators`, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Popover, Checkbox and RadioButton parts from @afframe/ui, icons from @afframe/ui/icons, story styles as plain CSS, `story` decorators moved to `decorators`, source tag, story names per ADR 0019. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState, useEffect, useRef } from 'react';
@@ -300,7 +300,7 @@ const autoAlignStoryContainerStyle: CSSProperties = {
   minHeight: '1200px',
 };
 
-export const ExperimentalAutoAlign: StoryFn<PopoverStoryArgs> = (args) => {
+export const AutoAlign: StoryFn<PopoverStoryArgs> = (args) => {
   const { onRequestClose, open: openArg, ...popoverProps } = args;
   const [open, setOpen] = useOpenState(openArg);
   const ref = useRef<HTMLSpanElement>(null);
@@ -346,15 +346,13 @@ export const ExperimentalAutoAlign: StoryFn<PopoverStoryArgs> = (args) => {
   );
 };
 
-ExperimentalAutoAlign.args = autoAlignArgs;
-ExperimentalAutoAlign.parameters = {
+AutoAlign.args = autoAlignArgs;
+AutoAlign.parameters = {
   controls: {
     include: autoAlignControls,
   },
 };
-export const ExperimentalAutoAlignBoundary: StoryFn<PopoverStoryArgs> = (
-  args
-) => {
+export const AutoAlignBoundary: StoryFn<PopoverStoryArgs> = (args) => {
   const { onRequestClose, open: openArg, ...popoverProps } = args;
   const [open, setOpen] = useOpenState(openArg);
   const ref = useRef<HTMLSpanElement>(null);
@@ -430,16 +428,14 @@ export const ExperimentalAutoAlignBoundary: StoryFn<PopoverStoryArgs> = (
   );
 };
 
-ExperimentalAutoAlignBoundary.args = autoAlignArgs;
-ExperimentalAutoAlignBoundary.parameters = {
+AutoAlignBoundary.args = autoAlignArgs;
+AutoAlignBoundary.parameters = {
   controls: {
     include: autoAlignControls,
   },
 };
 
-export const TabTipExperimentalAutoAlign: StoryFn<PopoverStoryArgs> = (
-  args
-) => {
+export const TabTipAutoAlign: StoryFn<PopoverStoryArgs> = (args) => {
   const { onRequestClose, open: openArg, ...popoverProps } = args;
   const [open, setOpen] = useOpenState(openArg);
   const ref = useRef<HTMLSpanElement>(null);
@@ -488,12 +484,12 @@ export const TabTipExperimentalAutoAlign: StoryFn<PopoverStoryArgs> = (
   );
 };
 
-TabTipExperimentalAutoAlign.args = {
+TabTipAutoAlign.args = {
   ...autoAlignArgs,
   align: 'bottom-end',
   caret: false,
 };
-TabTipExperimentalAutoAlign.parameters = {
+TabTipAutoAlign.parameters = {
   controls: {
     include: autoAlignControls.filter((control) => control !== 'caret'),
   },

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Toggletip parts, Button and Link from @afframe/ui, icons from @afframe/ui/icons, `story` decorators moved to `decorators`, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Toggletip parts, Button and Link from @afframe/ui, icons from @afframe/ui/icons, `story` decorators moved to `decorators`, source tag, story names per ADR 0019. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useEffect } from 'react';
@@ -224,7 +224,7 @@ Default.decorators = [
   ),
 ];
 
-export const ExperimentalAutoAlign: StoryFn<ToggletipStoryArgs> = (args) => {
+export const AutoAlign: StoryFn<ToggletipStoryArgs> = (args) => {
   const ref = useRef<SVGSVGElement>(null);
   useEffect(() => {
     ref?.current?.scrollIntoView({ block: 'center', inline: 'center' });
@@ -271,11 +271,11 @@ export const ExperimentalAutoAlign: StoryFn<ToggletipStoryArgs> = (args) => {
   );
 };
 
-ExperimentalAutoAlign.args = {
+AutoAlign.args = {
   ...defaultArgs,
   autoAlign: true,
   bodyText:
     'Scroll the container up, down, left or right to observe how the Toggletip will automatically change its position in attempt to stay within the viewport. This works on initial render in addition to on scroll.',
   defaultOpen: true,
 };
-ExperimentalAutoAlign.argTypes = experimentalArgTypes;
+AutoAlign.argTypes = experimentalArgTypes;
