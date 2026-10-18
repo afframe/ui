@@ -41,9 +41,11 @@ label (upstream: "Filter") and the instant update are Afframe's.
 
 1. Header: the title (Filter), the result count when `resultCount` is set,
    and a close button when `onClose` is set.
-2. Fields: one per group, in the next layer's colours.
-3. Footer: Clear and Apply, 50/50, sticky at the bottom; in instant update
-   only Clear, full width.
+2. Fields: one per group, in the next layer's colours. In a panel of bounded
+   height (the flyout, the DataGrid panel at the table's height) only the
+   fields scroll.
+3. Footer: Clear and Apply, 50/50, below the fields; in instant update only
+   Clear, full width.
 
 The flyout adds a trigger and a tab-tip popover, up to 642 px wide, with the
 fields in two columns (flat layout). The summary is IBM Products'

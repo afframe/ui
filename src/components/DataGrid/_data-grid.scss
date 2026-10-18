@@ -219,7 +219,11 @@
   grid-template-columns: 20rem minmax(0, 1fr);
 }
 
+// As tall as the table, as upstream's panel: no height of its own in the row,
+// then the row's full height; the fields scroll inside.
 .afframe-data-grid-filter-panel {
+  block-size: 0;
+  min-block-size: 100%;
   border-inline-end: 1px solid $border-subtle;
   background-color: $layer;
 }

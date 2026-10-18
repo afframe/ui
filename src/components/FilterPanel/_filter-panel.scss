@@ -6,6 +6,8 @@
 @use '@carbon/styles/scss/utilities/focus-outline' as *;
 
 .afframe-filter-panel {
+  display: flex;
+  flex-direction: column;
   color: $text-primary;
 }
 
@@ -48,9 +50,14 @@
   color: $text-secondary;
 }
 
+// In a panel of bounded height only the fields scroll, as upstream's panel;
+// the header and buttons stay outside, so they never cover a field.
 .afframe-filter-panel-fields {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
+  min-block-size: 0;
+  overflow-y: auto;
 }
 
 .afframe-filter-panel-group {
@@ -103,12 +110,9 @@
 }
 /* stylelint-enable selector-class-pattern */
 
-// Clear and Apply share the row 50/50 (one Clear fills it) and stay visible at
-// the bottom of a scrolling panel, as upstream's button set.
+// Clear and Apply share the row 50/50 (one Clear fills it), as upstream's
+// button set.
 .afframe-filter-panel-actions {
-  position: sticky;
-  z-index: 1;
-  inset-block-end: 0;
   display: flex;
   background-color: $layer;
 }
@@ -125,8 +129,10 @@
 .afframe-filter-flyout .afframe-filter-flyout-content {
   inline-size: min(40.125rem, calc(100vw - #{$spacing-07}));
   max-inline-size: none;
+}
+
+.afframe-filter-flyout-content .afframe-filter-panel {
   max-block-size: 30rem;
-  overflow-y: auto;
 }
 
 // tanstack-carbon's filterFlyout: 1rem around the content, 1rem under the
