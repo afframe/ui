@@ -161,11 +161,15 @@ const sharedArgTypes: ArgTypes = {
 // FluidDatePicker passes unknown props to DatePicker, which spreads them onto
 // its div; FluidDatePickerInput spreads its own onto the input. So each gets
 // only its own args. The picker sets the fluid invalid, warn and read-only
-// classes and clones those three into its inputs.
+// classes and clones those three into its inputs. invalidText goes only with
+// a hand-set invalid: an input's invalidText replaces the message of a typed
+// invalid date.
 function splitArgs(args: FluidDatePickerArgs) {
   const picker: Partial<FluidDatePickerArgs> = {};
   const input: Partial<FluidDatePickerArgs> = {};
   for (const [key, value] of Object.entries(args)) {
+    // `invalid: false` would switch off the picker's own check of typed dates.
+    if ((key === 'invalidText' || key === 'invalid') && !args.invalid) continue;
     const target =
       sharedArgTypes[key]?.table?.category === 'DatePickerInput'
         ? input

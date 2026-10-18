@@ -25,12 +25,18 @@ import { useInputMask, dateMaskSpec } from '../../mask/index.js';
 import { resolveMessages } from '../../messages.js';
 
 export interface DatePickerMessages {
-  /** Shown under a date field whose text is not a complete, real date; `format` is the expected format, `dd.mm.yyyy`. */
+  /** Shown under a date field whose text is incomplete or malformed; `format` is the expected format, `dd.mm.yyyy`. */
   invalidDate: (format: string) => string;
+  /** Shown under a date field whose full date does not exist, `31.02.2026`; `text` is the typed text. */
+  impossibleDate: (text: string) => string;
+  /** Shown under a date field whose real date `minDate`, `maxDate`, `enable` or `disable` rule out; `text` is the typed text. */
+  unavailableDate: (text: string) => string;
 }
 
 export const defaultDatePickerMessages: DatePickerMessages = {
-  invalidDate: (format) => `Enter a valid date as ${format}.`,
+  invalidDate: (format) => `Enter the full date as ${format}.`,
+  impossibleDate: (text) => `${text} is not a real date.`,
+  unavailableDate: (text) => `${text} cannot be selected.`,
 };
 
 /** Props the Afframe date pickers add to Carbon's. */
@@ -77,15 +83,8 @@ function useUnmaskableFormatWarning(
   }, [name, dateFormat, masked]);
 }
 
-/**
- * A complete, zero-padded, real date in `pattern` (`31.01.2026`), or
- * `undefined`: no rollover of `31.02` into March.
- */
-// fallow-ignore-next-line complexity -- one guard per part and per calendar field
-export function parseStrictDate(
-  text: string,
-  pattern: DatePattern
-): Date | undefined {
+/** The parts of a complete, zero-padded date in `pattern`, real or not. */
+function fullDateParts(text: string, pattern: DatePattern) {
   const parts = text.split(pattern.separator);
   if (parts.length !== 3) return undefined;
   const values = { day: 0, month: 0, year: 0 };
@@ -96,6 +95,19 @@ export function parseStrictDate(
     }
     values[part] = Number(digits);
   }
+  return values;
+}
+
+/**
+ * A complete, zero-padded, real date in `pattern` (`31.01.2026`), or
+ * `undefined`: no rollover of `31.02` into March.
+ */
+export function parseStrictDate(
+  text: string,
+  pattern: DatePattern
+): Date | undefined {
+  const values = fullDateParts(text, pattern);
+  if (!values) return undefined;
   const date = new Date(2000, 0, 1);
   // setFullYear keeps years below 100 as typed; the Date constructor would
   // move them to 19xx.
@@ -123,6 +135,12 @@ interface DateInputProps {
 }
 
 type Pair<T> = [T, T];
+
+/** Why kept text is invalid, with the text, for its message. */
+interface Problem {
+  reason: 'incomplete' | 'impossible' | 'unavailable';
+  text: string;
+}
 
 /** The part of the flatpickr instance the wrapper uses. */
 interface Flatpickr {
@@ -224,13 +242,16 @@ export function useDateField({
   // Whether the dates the picker reported last had a date per input.
   const reported = useRef<Pair<boolean>>([false, false]);
   const lastReport = useRef<readonly unknown[]>([]);
-  const [invalid, setInvalid] = useState<Pair<boolean>>([false, false]);
+  const [invalid, setInvalid] = useState<Pair<Problem | undefined>>([
+    undefined,
+    undefined,
+  ]);
 
   const forget = () => {
     typed.current = ['', ''];
     dirty.current = [false, false];
     told.current = [false, false];
-    setInvalid([false, false]);
+    setInvalid([undefined, undefined]);
   };
 
   // How the value was emptied, decided in a layout effect before Carbon's
@@ -323,6 +344,21 @@ export function useDateField({
       date !== undefined && picker !== undefined && !picker.isEnabled(date)
     );
   };
+  const problem = (input: string): Problem | undefined => {
+    if (input === '') return undefined;
+    if (!fullDateParts(input, effective)) {
+      return { reason: 'incomplete', text: input };
+    }
+    if (isInvalid(input)) return { reason: 'impossible', text: input };
+    if (unavailable(input)) return { reason: 'unavailable', text: input };
+    return undefined;
+  };
+  const message = ({ reason, text: typedText }: Problem) =>
+    reason === 'impossible'
+      ? text.impossibleDate(typedText)
+      : reason === 'unavailable'
+        ? text.unavailableDate(typedText)
+        : text.invalidDate(datePlaceholder(effective));
   const appHolds = (index: number) =>
     value === undefined
       ? reported.current[index]
@@ -340,7 +376,7 @@ export function useDateField({
     reported.current = [dates[0] != null, dates[1] != null];
     lastReport.current = dates;
     if (!masked || emptiedBy.current === 'reset') return false;
-    const next: Pair<boolean> = [false, false];
+    const next: Pair<Problem | undefined> = [undefined, undefined];
     for (const n of [0, 1] as const) {
       const input = inputs.current[n];
       if (dates[n] == null && dirty.current[n] && typed.current[n] !== '') {
@@ -354,7 +390,9 @@ export function useDateField({
         if (n === 1 && input === document.activeElement) setTimeout(write);
         else write();
         told.current[n] = true;
-        next[n] = true;
+        // A full, real date the picker still refused (a range end flatpickr
+        // would not take) is unavailable.
+        next[n] = problem(text) ?? { reason: 'unavailable', text };
       } else {
         typed.current[n] = input?.value ?? '';
         dirty.current[n] = false;
@@ -416,8 +454,16 @@ export function useDateField({
           dirty.current[index] = true;
           told.current[index] = false;
         }
-        if (!isInvalid(current))
-          setInvalid((pair) => replaced(pair, index, false));
+        // A shown error follows the edit, so its message quotes this text.
+        setInvalid((pair) =>
+          pair[index]
+            ? replaced(
+                pair,
+                index,
+                isInvalid(current) ? problem(current) : undefined
+              )
+            : pair
+        );
         own.onChange?.(event);
       },
       onCompositionEnd: (event) => {
@@ -432,17 +478,17 @@ export function useDateField({
         // Tab moves focus into the calendar: the date is not entered yet.
         if (!inCalendar(event.relatedTarget)) {
           const current = event.currentTarget.value;
-          const bad = isInvalid(current) || unavailable(current);
+          const bad = problem(current);
           setInvalid((pair) => replaced(pair, index, bad));
           if (bad && dirty.current[index]) tellApp(index);
         }
         own.onBlur?.(event);
       },
     };
-    if (own.invalid === undefined && invalid[index]) {
+    const kept = invalid[index];
+    if (own.invalid === undefined && kept) {
       props.invalid = true;
-      props.invalidText =
-        own.invalidText ?? text.invalidDate(datePlaceholder(effective));
+      props.invalidText = own.invalidText ?? message(kept);
     }
     return props;
   };
