@@ -117,7 +117,8 @@ on several lines. Dismissing a tag removes that option; Clear filters calls
 It takes `groups`, `value`, `onChange` and `messages`; `ref` and other HTML
 attributes go to its root `div`. Above a `DataGrid`, pass it in the grid's
 `filterSummary` prop, which places it between the toolbar and the table, as
-IBM's Datagrid does. Above other data, render it right before that data.
+IBM's Datagrid does; the example below shows it there. Above other data,
+render it right before that data.
 
 The tags come from IBM Products' TagSet, which has two limits: the "+N" text
 cannot be translated, and its popover has a fixed id, so two summaries on one

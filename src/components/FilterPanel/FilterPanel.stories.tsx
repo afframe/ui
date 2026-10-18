@@ -1,7 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 import { useArgs } from 'storybook/preview-api';
 import { expect, fn, waitFor } from 'storybook/test';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
+import {
+  Amount,
+  DataGrid,
+  dataGridColumnMeta,
+  dataGridFiltering,
+  dataGridSorting,
+} from '../../index.js';
+import {
+  invoices as gridFixtures,
+  type Invoice,
+} from '../DataGrid/fixtures.js';
 import { FilterFlyout } from './FilterFlyout.js';
 import type { FilterFlyoutProps } from './FilterFlyout.js';
 import { FilterPanel } from './FilterPanel.js';
@@ -102,25 +114,78 @@ function FlyoutHarness(args: FilterFlyoutProps) {
   );
 }
 
-// Seven tags overflow the narrow wrapper, so the summary shows "+N".
+// The invoices of the DataGrid stories; the summary sits in the grid's
+// filterSummary slot, as in IBM's Datagrid.
+const gridInvoices = gridFixtures.slice(0, 8);
+const gridFeatures = tableFeatures({
+  ...dataGridSorting,
+  ...dataGridColumnMeta,
+  ...dataGridFiltering,
+});
+const gridHelper = createColumnHelper<typeof gridFeatures, Invoice>();
+// A row matches when its value is one of the selected options.
+const oneOf = {
+  filterFn: (
+    row: { getValue: (id: string) => unknown },
+    id: string,
+    value: readonly string[]
+  ) => value.includes(String(row.getValue(id))),
+};
+const gridColumns = gridHelper.columns([
+  gridHelper.accessor('number', { header: 'Number' }),
+  gridHelper.accessor('customer', { header: 'Customer', ...oneOf }),
+  gridHelper.accessor('status', { header: 'Status', ...oneOf }),
+  gridHelper.accessor('amount', {
+    header: 'Amount',
+    cell: (info) => <Amount value={info.getValue()} />,
+    meta: { align: 'end' },
+  }),
+]);
+const options = (values: string[]) =>
+  [...new Set(values)].map((value) => ({ value, label: value }));
+const gridGroups: FilterPanelGroup[] = [
+  {
+    id: 'status',
+    label: 'Status',
+    options: options(gridInvoices.map((row) => row.status)),
+  },
+  {
+    id: 'customer',
+    label: 'Customer',
+    options: options(gridInvoices.map((row) => row.customer)),
+  },
+];
+
+// Eight tags overflow the grid's width, so the summary shows "+N".
 const summaryValue: FilterPanelValue = {
-  status: ['paid', 'overdue'],
-  currency: ['CZK', 'EUR'],
-  customer: ['acme', 'birch', 'cedar'],
+  status: ['Paid', 'Overdue'],
+  customer: gridGroups[1]?.options.map((option) => option.value) ?? [],
 };
 
 function SummaryHarness(args: FilterSummaryProps) {
   const [, updateArgs] = useArgs<FilterSummaryProps>();
+  const columnFilters = Object.entries(args.value)
+    .filter(([, selected]) => selected.length > 0)
+    .map(([id, value]) => ({ id, value }));
   return (
-    <div style={{ maxInlineSize: '30rem' }}>
-      <FilterSummary
-        {...args}
-        onChange={(value) => {
-          updateArgs({ value });
-          args.onChange(value);
-        }}
-      />
-    </div>
+    <DataGrid
+      title="Invoices"
+      filterSummary={
+        <FilterSummary
+          {...args}
+          onChange={(value) => {
+            updateArgs({ value });
+            args.onChange(value);
+          }}
+        />
+      }
+      options={{
+        features: gridFeatures,
+        columns: gridColumns,
+        data: gridInvoices,
+        state: { columnFilters },
+      }}
+    />
   );
 }
 
@@ -171,10 +236,13 @@ export const TestBatch: Story = {
   },
 };
 
-/** The applied filters as tags above the data; the rest overflow into "+N". */
+/**
+ * The applied filters as tags in a DataGrid, between toolbar and table; the
+ * rest overflow into "+N".
+ */
 export const Summary: SummaryStory = {
   render: SummaryHarness,
-  args: { value: summaryValue },
+  args: { groups: gridGroups, value: summaryValue },
   play: async ({ canvas }) => {
     // TagSet measures after render and keeps a hidden copy for measuring.
     await waitFor(() => {
