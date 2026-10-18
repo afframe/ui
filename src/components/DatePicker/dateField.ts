@@ -214,16 +214,30 @@ function guardEndRefocus(picker: Flatpickr, prefix: string) {
     `.${prefix}--date-picker__input`
   )[1];
   if (!field || !end || Object.hasOwn(end, 'focus')) return;
-  end.focus = function (options) {
-    const active = document.activeElement;
-    const inCalendar =
-      picker.isOpen &&
-      (active === document.body ||
-        picker.calendarContainer?.contains(active) === true);
-    if (field.contains(active) || inCalendar) {
-      HTMLElement.prototype.focus.call(this, options);
-    }
-  };
+  const focus = end.focus;
+  let focusing = false;
+  // An own property: an assignment would reach a setter on the prototype
+  // (Storybook's play tests share one focus for every element through one).
+  Object.defineProperty(end, 'focus', {
+    configurable: true,
+    writable: true,
+    value(this: HTMLInputElement, options?: FocusOptions) {
+      // A focus handler that focuses the end again would recurse.
+      if (focusing) return;
+      const active = document.activeElement;
+      const inCalendar =
+        picker.isOpen &&
+        (active === document.body ||
+          picker.calendarContainer?.contains(active) === true);
+      if (!field.contains(active) && !inCalendar) return;
+      focusing = true;
+      try {
+        focus.call(this, options);
+      } finally {
+        focusing = false;
+      }
+    },
+  });
   // The plugin's timer may be queued after this hook: the nested timer runs
   // after it.
   setTimeout(() =>
