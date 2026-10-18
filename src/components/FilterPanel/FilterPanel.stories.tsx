@@ -1,19 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { createColumnHelper, tableFeatures } from '@tanstack/react-table';
 import { useArgs } from 'storybook/preview-api';
-import { expect, fn, waitFor } from 'storybook/test';
+import { expect, fn, waitFor, within } from 'storybook/test';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import {
-  Amount,
-  DataGrid,
-  dataGridColumnMeta,
-  dataGridFiltering,
-  dataGridSorting,
-} from '../../index.js';
-import {
-  invoices as gridFixtures,
-  type Invoice,
-} from '../DataGrid/fixtures.js';
 import { FilterFlyout } from './FilterFlyout.js';
 import type { FilterFlyoutProps } from './FilterFlyout.js';
 import { FilterPanel } from './FilterPanel.js';
@@ -24,69 +12,243 @@ import type {
 } from './FilterPanel.js';
 import { FilterSummary } from './FilterSummary.js';
 import type { FilterSummaryProps } from './FilterSummary.js';
+import type { FilterPanelFieldValue } from './value.js';
 import mdx from './FilterPanel.mdx';
 
+const options = (labels: string[]) =>
+  labels.map((label) => ({ value: label.toLowerCase(), label }));
+
+// One group per variant, in the order of the variant table in the docs.
 const groups: FilterPanelGroup[] = [
   {
     id: 'status',
     label: 'Status',
     defaultOpen: true,
-    options: [
-      { value: 'draft', label: 'Draft' },
-      { value: 'sent', label: 'Sent' },
-      { value: 'paid', label: 'Paid' },
-      { value: 'overdue', label: 'Overdue' },
-    ],
+    options: options(['Draft', 'Sent', 'Paid', 'Overdue']),
+  },
+  {
+    id: 'payment',
+    label: 'Payment method',
+    variant: 'radio',
+    options: options(['Transfer', 'Card', 'Cash']),
   },
   {
     id: 'currency',
     label: 'Currency',
-    options: [
-      { value: 'CZK', label: 'CZK' },
-      { value: 'EUR', label: 'EUR' },
-      { value: 'USD', label: 'USD' },
-    ],
+    variant: 'select',
+    options: options(['CZK', 'EUR', 'USD']),
   },
   {
     id: 'customer',
     label: 'Customer',
+    variant: 'multiselect',
     searchable: true,
-    options: [
-      { value: 'acme', label: 'Acme Trading' },
-      { value: 'birch', label: 'Birch Studio' },
-      { value: 'cedar', label: 'Cedar Logistics' },
-      { value: 'delta', label: 'Delta Foods' },
-    ],
+    options: options([
+      'Acme Trading',
+      'Birch Studio',
+      'Cedar Logistics',
+      'Delta Foods',
+      'Elm Consulting',
+    ]),
+  },
+  { id: 'number', label: 'Invoice number', variant: 'text' },
+  { id: 'vat', label: 'VAT rate (%)', variant: 'number', min: 0, max: 21 },
+  {
+    id: 'issued',
+    label: 'Issued',
+    variant: 'dateRange',
+    minDate: '2026-01-01',
+    maxDate: '2026-12-31',
+  },
+  {
+    id: 'amount',
+    label: 'Amount (CZK)',
+    variant: 'slider',
+    min: 0,
+    max: 200_000,
+    step: 5_000,
   },
 ];
 
-const invoices = [
-  { status: 'draft', currency: 'CZK', customer: 'acme' },
-  { status: 'sent', currency: 'CZK', customer: 'birch' },
-  { status: 'paid', currency: 'EUR', customer: 'cedar' },
-  { status: 'overdue', currency: 'CZK', customer: 'delta' },
-  { status: 'paid', currency: 'CZK', customer: 'acme' },
-  { status: 'sent', currency: 'USD', customer: 'birch' },
-  { status: 'paid', currency: 'CZK', customer: 'delta' },
-  { status: 'overdue', currency: 'EUR', customer: 'acme' },
-] as const;
+// Four groups fit the flyout without scrolling; a longer list scrolls under
+// the sticky Clear and Apply.
+const flyoutGroups = groups.filter((group) =>
+  ['status', 'currency', 'customer', 'issued'].includes(group.id)
+);
 
-// Fixed data: the count is the number of invoices that match every group.
-function countResults(value: FilterPanelValue): number {
-  return invoices.filter((invoice) =>
-    Object.entries(value).every(
-      ([group, selected]) =>
-        typeof selected === 'object' &&
-        selected.includes(invoice[group as keyof typeof invoice])
-    )
-  ).length;
+interface Invoice {
+  number: string;
+  status: string;
+  payment: string;
+  currency: string;
+  customer: string;
+  vat: number;
+  issued: string;
+  amount: number;
 }
 
-const initialValue: FilterPanelValue = { status: ['paid', 'overdue'] };
+const row = (
+  number: string,
+  status: string,
+  payment: string,
+  currency: string,
+  customer: string,
+  vat: number,
+  issued: string,
+  amount: number
+): Invoice => ({
+  number,
+  status,
+  payment,
+  currency,
+  customer,
+  vat,
+  issued,
+  amount,
+});
+
+const invoices: Invoice[] = [
+  row(
+    '2026-0101',
+    'paid',
+    'transfer',
+    'czk',
+    'acme trading',
+    21,
+    '2026-09-02',
+    48_400
+  ),
+  row(
+    '2026-0102',
+    'sent',
+    'transfer',
+    'eur',
+    'birch studio',
+    21,
+    '2026-09-05',
+    12_100
+  ),
+  row(
+    '2026-0103',
+    'overdue',
+    'card',
+    'czk',
+    'cedar logistics',
+    12,
+    '2026-09-11',
+    96_800
+  ),
+  row(
+    '2026-0104',
+    'draft',
+    'transfer',
+    'czk',
+    'delta foods',
+    12,
+    '2026-09-18',
+    7_260
+  ),
+  row(
+    '2026-0105',
+    'paid',
+    'cash',
+    'czk',
+    'elm consulting',
+    21,
+    '2026-09-23',
+    3_630
+  ),
+  row(
+    '2026-0106',
+    'sent',
+    'transfer',
+    'usd',
+    'acme trading',
+    0,
+    '2026-10-01',
+    150_000
+  ),
+  row(
+    '2026-0107',
+    'overdue',
+    'transfer',
+    'czk',
+    'birch studio',
+    21,
+    '2026-10-03',
+    24_200
+  ),
+  row(
+    '2026-0108',
+    'paid',
+    'card',
+    'eur',
+    'cedar logistics',
+    21,
+    '2026-10-08',
+    60_500
+  ),
+  row(
+    '2026-0109',
+    'sent',
+    'transfer',
+    'czk',
+    'delta foods',
+    12,
+    '2026-10-12',
+    18_150
+  ),
+  row(
+    '2026-0110',
+    'draft',
+    'transfer',
+    'czk',
+    'acme trading',
+    21,
+    '2026-10-15',
+    121_000
+  ),
+];
+
+function matches(
+  invoice: Invoice,
+  group: FilterPanelGroup,
+  field: FilterPanelFieldValue
+): boolean {
+  const cell = invoice[group.id as keyof Invoice];
+  if (group.variant === 'text') {
+    return String(cell).includes(String(field).trim());
+  }
+  if (group.variant === 'slider') return Number(cell) <= Number(field);
+  if (group.variant === 'dateRange') {
+    const [start, end] = field as readonly [string | null, string | null];
+    const day = String(cell);
+    return (!start || day >= start) && (!end || day <= end);
+  }
+  return typeof field === 'object'
+    ? field.includes(String(cell))
+    : String(cell) === String(field);
+}
+
+// Fixed data: the count is the number of invoices that match every group.
+const countResults = (value: FilterPanelValue) =>
+  invoices.filter((invoice) =>
+    groups.every(
+      (group) =>
+        value[group.id] === undefined ||
+        matches(invoice, group, value[group.id] as FilterPanelFieldValue)
+    )
+  ).length;
+
+const initialValue: FilterPanelValue = {
+  status: ['sent', 'overdue'],
+  currency: 'czk',
+};
 
 function PanelHarness(args: FilterPanelProps) {
   const [, updateArgs] = useArgs<FilterPanelProps>();
   return (
+    // Upstream's panel width, as the DataGrid filter column.
     <div style={{ maxInlineSize: '20rem' }}>
       <FilterPanel
         resultCount={countResults(args.value)}
@@ -103,6 +265,7 @@ function PanelHarness(args: FilterPanelProps) {
 function FlyoutHarness(args: FilterFlyoutProps) {
   const [, updateArgs] = useArgs<FilterFlyoutProps>();
   return (
+    // At the right edge, as in a table toolbar.
     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
       <FilterFlyout
         resultCount={countResults(args.value)}
@@ -116,78 +279,31 @@ function FlyoutHarness(args: FilterFlyoutProps) {
   );
 }
 
-// The invoices of the DataGrid stories; the summary sits in the grid's
-// filterSummary slot, as in IBM's Datagrid.
-const gridInvoices = gridFixtures.slice(0, 8);
-const gridFeatures = tableFeatures({
-  ...dataGridSorting,
-  ...dataGridColumnMeta,
-  ...dataGridFiltering,
-});
-const gridHelper = createColumnHelper<typeof gridFeatures, Invoice>();
-// A row matches when its value is one of the selected options.
-const oneOf = {
-  filterFn: (
-    row: { getValue: (id: string) => unknown },
-    id: string,
-    value: readonly string[]
-  ) => value.includes(String(row.getValue(id))),
-};
-const gridColumns = gridHelper.columns([
-  gridHelper.accessor('number', { header: 'Number' }),
-  gridHelper.accessor('customer', { header: 'Customer', ...oneOf }),
-  gridHelper.accessor('status', { header: 'Status', ...oneOf }),
-  gridHelper.accessor('amount', {
-    header: 'Amount',
-    cell: (info) => <Amount value={info.getValue()} />,
-    meta: { align: 'end' },
-  }),
-]);
-const options = (values: string[]) =>
-  [...new Set(values)].map((value) => ({ value, label: value }));
-const gridGroups: FilterPanelGroup[] = [
-  {
-    id: 'status',
-    label: 'Status',
-    options: options(gridInvoices.map((row) => row.status)),
-  },
-  {
-    id: 'customer',
-    label: 'Customer',
-    options: options(gridInvoices.map((row) => row.customer)),
-  },
-];
-
-// Eight tags overflow the grid's width, so the summary shows "+N".
+// Eleven tags: more than the ten the line shows, so "+N" always appears.
 const summaryValue: FilterPanelValue = {
-  status: ['Paid', 'Overdue'],
-  customer: [...new Set(gridInvoices.map((row) => row.customer))],
+  status: ['sent', 'overdue'],
+  payment: 'transfer',
+  currency: 'czk',
+  customer: ['acme trading', 'birch studio', 'delta foods'],
+  number: '2026-01',
+  vat: 21,
+  issued: ['2026-09-01', '2026-10-31'],
+  amount: 100_000,
 };
 
 function SummaryHarness(args: FilterSummaryProps) {
   const [, updateArgs] = useArgs<FilterSummaryProps>();
-  const columnFilters = Object.entries(args.value).flatMap(([id, value]) =>
-    typeof value === 'object' && value.length > 0 ? [{ id, value }] : []
-  );
   return (
-    <DataGrid
-      title="Invoices"
-      filterSummary={
-        <FilterSummary
-          {...args}
-          onChange={(value) => {
-            updateArgs({ value });
-            args.onChange(value);
-          }}
-        />
-      }
-      options={{
-        features: gridFeatures,
-        columns: gridColumns,
-        data: gridInvoices,
-        state: { columnFilters },
-      }}
-    />
+    // A fixed width keeps the measured overflow the same in every run.
+    <div style={{ inlineSize: '48rem' }}>
+      <FilterSummary
+        {...args}
+        onChange={(value) => {
+          updateArgs({ value });
+          args.onChange(value);
+        }}
+      />
+    </div>
   );
 }
 
@@ -207,64 +323,37 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 type FlyoutStory = StoryObj<FilterFlyoutProps>;
 type SummaryStory = StoryObj<FilterSummaryProps>;
+type Canvas = Parameters<NonNullable<Story['play']>>[0]['canvas'];
 
+function must<T>(found: T | null | undefined): T {
+  if (found == null) throw new Error('Not found');
+  return found;
+}
+
+// Carbon names the icon trigger through a hidden tooltip; the hidden copy
+// inside aria-hidden markup does not count.
+const flyoutTrigger = (canvas: Canvas) =>
+  must(
+    canvas
+      .queryAllByLabelText<HTMLButtonElement>(/^Filter/, { selector: 'button' })
+      .find((item) => !item.closest('[aria-hidden="true"]'))
+  );
+
+/** Batch update, flat layout, one group per variant and the result count. */
 export const Default: Story = {
   render: PanelHarness,
 };
 
-/** Batch update: toggles change a draft; Apply calls `onChange`. */
-export const Batch: Story = {
-  render: PanelHarness,
-  args: { updateMethod: 'batch', onClose: fn() },
+/** Every change calls `onChange`; only Clear sits at the bottom. */
+export const Instant: Story = {
+  ...Default,
+  args: { updateMethod: 'instant' },
 };
 
-export const TestBatch: Story = {
-  ...Batch,
-  tags: ['!dev', '!autodocs'],
-  args: { ...Batch.args, onChange: fn() },
-  play: async ({ args, canvas, userEvent }) => {
-    const apply = canvas.getByRole('button', { name: 'Apply' });
-    await expect(apply).toBeDisabled();
-    await userEvent.click(canvas.getByRole('checkbox', { name: 'Draft' }));
-    await expect(apply).toBeEnabled();
-    await expect(args.onChange).not.toHaveBeenCalled();
-    await userEvent.click(apply);
-    await expect(args.onChange).toHaveBeenLastCalledWith({
-      status: ['paid', 'overdue', 'draft'],
-    });
-    await expect(
-      canvas.getByRole('heading', { name: 'Filters' })
-    ).toHaveFocus();
-  },
-};
-
-/**
- * The applied filters as tags in a DataGrid, between toolbar and table; the
- * rest overflow into "+N".
- */
-export const Summary: SummaryStory = {
-  render: SummaryHarness,
-  args: { groups: gridGroups, value: summaryValue },
-  play: async ({ canvas }) => {
-    // TagSet measures after render and keeps a hidden copy for measuring.
-    await waitFor(() => {
-      const shown = canvas
-        .queryAllByText(/^\+\d+$/)
-        .filter((item) => !item.closest('[aria-hidden="true"]'));
-      return expect(shown).toHaveLength(1);
-    });
-  },
-};
-
-export const Flyout: FlyoutStory = {
-  render: FlyoutHarness,
-  parameters: { layout: 'padded' },
-};
-
-export const FlyoutOpen: FlyoutStory = {
-  ...Flyout,
-  args: { defaultOpen: true },
-  parameters: { layout: 'padded', docs: { story: { height: '32rem' } } },
+/** Each group in an accordion item, opened by `defaultOpen`. */
+export const Accordion: Story = {
+  ...Default,
+  args: { layout: 'accordion' },
 };
 
 export const Dark: Story = {
@@ -273,10 +362,142 @@ export const Dark: Story = {
   globals: { theme: 'dark' },
 };
 
-export const BatchDark: Story = {
-  ...Batch,
+export const TestBatch: Story = {
+  ...Default,
+  tags: ['!dev', '!autodocs'],
+  args: { onChange: fn() },
+  play: async ({ args, canvas, userEvent }) => {
+    const apply = canvas.getByRole('button', { name: 'Apply' });
+    await expect(apply).toBeDisabled();
+    await expect(canvas.getByRole('status')).toHaveTextContent('3 results');
+    await userEvent.click(canvas.getByRole('checkbox', { name: 'Draft' }));
+    await expect(apply).toBeEnabled();
+    await expect(args.onChange).not.toHaveBeenCalled();
+    await userEvent.click(apply);
+    await expect(args.onChange).toHaveBeenLastCalledWith({
+      status: ['sent', 'overdue', 'draft'],
+      currency: 'czk',
+    });
+    await expect(canvas.getByRole('heading', { name: 'Filter' })).toHaveFocus();
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear' }));
+    await expect(args.onChange).toHaveBeenLastCalledWith({});
+  },
+};
+
+/** The icon trigger; the count of applied filters is in its name and tooltip. */
+export const Flyout: FlyoutStory = {
+  render: FlyoutHarness,
+  args: { groups: flyoutGroups },
+  parameters: { layout: 'padded' },
+};
+
+/** The text trigger, "Filter (n)". */
+export const FlyoutText: FlyoutStory = {
+  ...Flyout,
+  args: { ...Flyout.args, trigger: 'text' },
+};
+
+export const FlyoutOpen: FlyoutStory = {
+  ...Flyout,
+  args: { ...Flyout.args, defaultOpen: true },
+  parameters: { layout: 'padded', docs: { story: { height: '36rem' } } },
+};
+
+export const FlyoutOpenDark: FlyoutStory = {
+  ...FlyoutOpen,
   tags: ['!dev', '!autodocs'],
   globals: { theme: 'dark' },
+};
+
+export const TestFlyoutDateRange: FlyoutStory = {
+  ...Flyout,
+  tags: ['!dev', '!autodocs'],
+  args: { ...Flyout.args, onChange: fn() },
+  play: async ({ args, canvas, userEvent }) => {
+    const toggle = flyoutTrigger(canvas);
+    await userEvent.click(toggle);
+    await userEvent.click(canvas.getByLabelText('Start date'));
+    // flatpickr puts the calendar on body.
+    const calendar = await waitFor(() =>
+      must(document.querySelector('.flatpickr-calendar.open'))
+    );
+    await userEvent.click(
+      must(calendar.querySelector('.flatpickr-next-month'))
+    );
+    // The calendar redraws its days after each pick.
+    const day = (index: number) =>
+      must(
+        calendar.querySelectorAll<HTMLElement>(
+          '.flatpickr-day:not(.prevMonthDay):not(.nextMonthDay)'
+        )[index]
+      );
+    await userEvent.click(day(0));
+    await userEvent.click(day(4));
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.click(canvas.getByRole('button', { name: 'Apply' }));
+    await expect(args.onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        issued: [expect.any(String), expect.any(String)],
+      })
+    );
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toHaveFocus();
+  },
+};
+
+export const TestFlyoutMenus: FlyoutStory = {
+  ...Flyout,
+  tags: ['!dev', '!autodocs'],
+  play: async ({ canvas, userEvent }) => {
+    const toggle = flyoutTrigger(canvas);
+    await userEvent.click(toggle);
+    const currency = canvas.getByRole('combobox', { name: 'Currency' });
+    await userEvent.click(currency);
+    await expect(currency).toHaveAttribute('aria-expanded', 'true');
+    // A simulated click leaves focus on the body; a real one on the combobox.
+    currency.focus();
+    // Not clipped by the scrolling content: the last option is the element
+    // at its own centre.
+    const last = must(canvas.getAllByRole('option').at(-1));
+    const box = last.getBoundingClientRect();
+    const hit = document.elementFromPoint(
+      box.left + box.width / 2,
+      box.top + box.height / 2
+    );
+    await expect(last.contains(hit)).toBe(true);
+    await userEvent.keyboard('{Escape}');
+    await expect(currency).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.keyboard('{Escape}');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toHaveFocus();
+  },
+};
+
+// The "+N" tag once the overflow is measured.
+const moreTag = (canvas: Canvas) =>
+  waitFor(() =>
+    must(
+      canvas.queryAllByRole('button', { name: /^[1-9]\d* more filters$/ }).at(0)
+    )
+  );
+
+/** One line of tags; the ones that do not fit go into "+N". */
+export const Summary: SummaryStory = {
+  render: SummaryHarness,
+  args: { groups, value: summaryValue, onChange: () => undefined },
+  play: async ({ canvas }) => {
+    await moreTag(canvas);
+  },
+};
+
+export const SummaryOverflowOpen: SummaryStory = {
+  ...Summary,
+  tags: ['!autodocs'],
+  parameters: { layout: 'padded' },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(await moreTag(canvas));
+  },
 };
 
 export const SummaryDark: SummaryStory = {
@@ -285,8 +506,29 @@ export const SummaryDark: SummaryStory = {
   globals: { theme: 'dark' },
 };
 
-export const FlyoutOpenDark: FlyoutStory = {
-  ...FlyoutOpen,
+export const TestSummaryOverflow: SummaryStory = {
+  ...Summary,
   tags: ['!dev', '!autodocs'],
-  globals: { theme: 'dark' },
+  args: { ...Summary.args, onChange: fn() },
+  play: async ({ args, canvas, userEvent }) => {
+    const more = await moreTag(canvas);
+    const hidden = Number(more.textContent.slice(1));
+    await userEvent.click(more);
+    await expect(more).toHaveAttribute('aria-expanded', 'true');
+    const popover = within(
+      must(
+        document.querySelector<HTMLElement>('.afframe-filter-summary-popover')
+      )
+    );
+    const dismiss = popover.getAllByLabelText(/^Remove filter/, {
+      selector: 'button',
+    });
+    await expect(dismiss).toHaveLength(hidden);
+    await userEvent.click(must(dismiss[0]));
+    await expect(args.onChange).toHaveBeenCalledTimes(1);
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Clear filters' })
+    );
+    await expect(args.onChange).toHaveBeenLastCalledWith({});
+  },
 };

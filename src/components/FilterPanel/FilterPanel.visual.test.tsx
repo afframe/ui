@@ -6,12 +6,13 @@ import * as stories from './FilterPanel.stories.js';
 const {
   Default,
   Dark,
-  Batch,
-  BatchDark,
-  Summary,
-  SummaryDark,
+  Accordion,
   FlyoutOpen,
   FlyoutOpenDark,
+  FlyoutText,
+  Summary,
+  SummaryDark,
+  SummaryOverflowOpen,
 } = composeStories(stories);
 
 async function snapshot(name: string) {
@@ -25,23 +26,31 @@ async function snapshot(name: string) {
 test.each([
   ['filter-panel-light', Default],
   ['filter-panel-dark', Dark],
-  ['filter-panel-batch', Batch],
-  ['filter-panel-batch-dark', BatchDark],
-  ['filter-summary', Summary],
-  ['filter-summary-dark', SummaryDark],
+  ['filter-panel-accordion', Accordion],
   ['filter-flyout-open', FlyoutOpen],
   ['filter-flyout-open-dark', FlyoutOpenDark],
+  ['filter-summary', Summary],
+  ['filter-summary-dark', SummaryDark],
+  ['filter-summary-overflow-open', SummaryOverflowOpen],
 ] as const)('%s', async (name, story) => {
   await story.run();
   await snapshot(name);
 });
 
-// Focus ring on the first group heading; the title only takes focus after
-// Apply or Cancel.
+test('filter-flyout-text-open', async () => {
+  await FlyoutText.run();
+  await userEvent.click(page.getByRole('button', { name: 'Filter (3)' }));
+  await snapshot('filter-flyout-text-open');
+});
+
+// Focus ring on the first checkbox; the title only takes focus after Apply
+// or Clear.
 test('filter-panel-focus', async () => {
   await Default.run();
   await userEvent.tab();
-  expect(document.activeElement?.textContent).toBe('Status (2)');
+  expect(
+    (document.activeElement as HTMLInputElement).labels?.[0]?.textContent
+  ).toBe('Draft');
   await snapshot('filter-panel-focus');
 });
 
@@ -50,7 +59,7 @@ test('filter-panel-focus', async () => {
 // a tag would not be deterministic.
 test('filter-summary-focus', async () => {
   await Summary.run();
-  for (let step = 0; step < 12; step += 1) {
+  for (let step = 0; step < 14; step += 1) {
     if (document.activeElement?.textContent === 'Clear filters') break;
     await userEvent.tab();
   }
