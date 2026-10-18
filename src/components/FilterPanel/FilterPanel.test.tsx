@@ -691,3 +691,21 @@ test('summary: narrow, dismissing the last tag in "+N" keeps focus on a tag', as
   await vi.waitFor(() => expect(overflowTag().textContent).toBe('+1'));
   expect(active()).toBe(dismiss('Customer: Acme Trading'));
 });
+
+test('summary: after the last tag goes, new filters start on one line', async () => {
+  const at = (value: FilterPanelValue) => (
+    <div style={{ inlineSize: narrow }}>
+      <FilterSummary groups={groups} value={value} onChange={() => undefined} />
+    </div>
+  );
+  const { rerender } = render(at(allSelected));
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+  const [viewAll] = shownByLabel('View all');
+  if (!viewAll) throw new Error('No View all');
+  await userEvent.click(viewAll);
+  expect(summaryRoot().className).toContain('--filter-summary__expanded');
+  rerender(at({}));
+  rerender(at(allSelected));
+  expect(summaryRoot().className).not.toContain('--filter-summary__expanded');
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+});

@@ -78,9 +78,12 @@ function focusShownTag(
 // TagSet lays out new tags in its own renders, which may remove the focused
 // button after a dismiss or a collapse (the last tag, one in "+N", a tag that
 // no longer fits, View all once nothing overflows). Focus then falls to the
-// body; `refocus` puts it back. The next key or pointer press ends the watch.
+// body; the armed callback puts it back. The next key or pointer press, or
+// 1.5 s once TagSet has settled, ends the watch, so a later unrelated focus
+// loss is left alone.
 function useRefocusWhenLost(rootRef: RefObject<HTMLElement | null>) {
   const refocus = useRef<(() => void) | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -97,11 +100,18 @@ function useRefocusWhenLost(rootRef: RefObject<HTMLElement | null>) {
     document.addEventListener('pointerdown', end, true);
     return () => {
       observer.disconnect();
+      clearTimeout(timer.current);
       document.removeEventListener('keydown', end, true);
       document.removeEventListener('pointerdown', end, true);
     };
   }, [rootRef]);
-  return refocus;
+  return useCallback((next: () => void) => {
+    refocus.current = next;
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      refocus.current = null;
+    }, 1500);
+  }, []);
 }
 
 export interface FilterSummaryProps
@@ -138,7 +148,7 @@ export function FilterSummary({
   const [multiline, setMultiline] = useState(false);
   const [clearWidth, setClearWidth] = useState(0);
   const { tagLabel, removeFilter } = text;
-  const refocus = useRefocusWhenLost(rootRef);
+  const armRefocus = useRefocusWhenLost(rootRef);
 
   const tags = useMemo(() => {
     const selected = groups.flatMap((group) =>
@@ -160,13 +170,13 @@ export function FilterSummary({
           // TagSet keys its tags by position, so the focused button usually
           // stays and shows the next tag; else the tag in its place, the last
           // shown tag, or the root.
-          refocus.current = () => focusShownTag(rootRef.current, prefix, index);
+          armRefocus(() => focusShownTag(rootRef.current, prefix, index));
           const rest = value[group.id]?.filter((item) => item !== option.value);
           onChange(setGroup(value, group.id, rest ?? []));
         },
       };
     });
-  }, [groups, value, onChange, tagLabel, removeFilter, refocus, prefix]);
+  }, [groups, value, onChange, tagLabel, removeFilter, armRefocus, prefix]);
 
   const onOverflowTagChange = useCallback((overflow: ReactNode) => {
     setOverflowCount(Array.isArray(overflow) ? overflow.length : 0);
@@ -180,6 +190,11 @@ export function FilterSummary({
 
   const block = `${productsPrefix}--filter-summary`;
   const hasTags = tags.length > 0;
+  // With the last tag gone, the next filters start on one line, unmeasured.
+  if (!hasTags && (multiline || overflowCount > 0)) {
+    setMultiline(false);
+    setOverflowCount(0);
+  }
   useLayoutEffect(() => {
     setClearWidth(clearRef.current?.offsetWidth ?? 0);
   }, [hasTags, text.clearFilters]);
@@ -243,8 +258,7 @@ export function FilterSummary({
                 label={text.viewAll}
                 aria-expanded={multiline}
                 onClick={() => {
-                  if (multiline)
-                    refocus.current = () => rootRef.current?.focus();
+                  if (multiline) armRefocus(() => rootRef.current?.focus());
                   setMultiline(!multiline);
                 }}
                 className={`${block}__view-all--trigger`}>
