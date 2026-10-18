@@ -16,8 +16,12 @@ import { TableChooser } from '../../../.storybook/TableChooser';
 `FilterPanel` is a side panel of checkbox filter groups. `FilterFlyout` is a
 toolbar button that opens the same panel in a popover. `FilterSummary` shows
 the applied filters as tags above the data. They are built on Carbon's
-Accordion, Checkbox, Search, Button and Popover and IBM Products' TagSet, and
-replace IBM Products' deprecated FilterPanel.
+Accordion, Checkbox, Search, Button and Popover and IBM Products' TagSet.
+`FilterSummary` is derived from the internal FilterSummary of IBM Products'
+Datagrid. IBM Products deprecates its Datagrid and FilterPanel and points to
+the [tanstack-carbon](https://github.com/carbon-design-system/tanstack-carbon)
+examples; Carbon's DataTable documents filtering with `TableToolbarSearch` and
+a copied `TableToolbarFilter` example (see DataTable).
 
 <Canvas of={FilterPanelStories.Default} />
 
