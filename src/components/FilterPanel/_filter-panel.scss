@@ -80,6 +80,25 @@
   color: $text-helper;
 }
 
+// Carbon's slider track is at least 200 px (`.cds--slider`); with its range
+// labels and value input that overflows a 20rem panel. Without that minimum
+// the row shrinks to its content in Carbon's form item (align-items:
+// flex-start), so it stretches to the panel width instead.
+/* stylelint-disable selector-class-pattern -- Carbon's class names */
+.afframe-filter-panel .cds--slider-container {
+  align-self: stretch;
+}
+
+.afframe-filter-panel .cds--slider {
+  min-inline-size: 0;
+}
+
+// The Min and Max captions below show the bounds, locale formatted.
+.afframe-filter-panel .cds--slider__range-label {
+  display: none;
+}
+/* stylelint-enable selector-class-pattern */
+
 // Min and Max captions under the slider, as in tanstack-carbon's community
 // slider field.
 .afframe-filter-panel-slider-range {
