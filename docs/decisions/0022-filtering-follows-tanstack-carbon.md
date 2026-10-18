@@ -30,7 +30,7 @@ IBM Products deprecated its Datagrid in v2.54.0, keeps sev 1 fixes in v3 and rem
 - A flyout discards its draft when dismissed.
 - A range picker does not pull focus back to the end input after a change (flatpickr's range plugin does), and a click in the calendar does not close the flyout.
 - Strings are overridable through `messages` ([ADR 0014](0014-overridable-strings-through-a-messages-prop.md)).
-- Accessibility fixes: headings, `aria-expanded` on the trigger, focus returned to the trigger on Escape and click-outside too (upstream does it on Clear and Filter), unique ids, and a result count announced.
+- Accessibility fixes: headings, `aria-expanded` on the trigger, focus returned to the trigger on Escape too (upstream does it on Clear and Filter), unique ids, and a result count announced.
 
 ## Options not chosen
 

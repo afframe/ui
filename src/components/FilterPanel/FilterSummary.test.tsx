@@ -229,13 +229,15 @@ test('summary: custom messages', async () => {
   expect(button('Zrušit filtry')).toBeTruthy();
 });
 
-test('summary: narrow, "+N" counts the hidden tags and lists them', async () => {
+test('summary: narrow, "+N" counts, lists and dismisses the hidden tags', async () => {
+  const onChange = vi.fn();
   render(
     <SummaryHarness
       initial={{
         status: ['paid', 'overdue'],
         customer: ['acme', 'birch'],
       }}
+      onChange={onChange}
       width="470px"
     />
   );
@@ -263,6 +265,14 @@ test('summary: narrow, "+N" counts the hidden tags and lists them', async () => 
       'Remove filter Customer: Birch Studio',
     ].slice(shown)
   );
+  const last = popoverButtons().at(-1);
+  if (!last) throw new Error('No hidden tag');
+  await userEvent.click(last);
+  expect(onChange).toHaveBeenLastCalledWith({
+    status: ['paid', 'overdue'],
+    customer: ['acme'],
+  });
+  expect(active()).toBe(summaryRoot());
 });
 
 test('summary: at most 10 tags in the line', async () => {

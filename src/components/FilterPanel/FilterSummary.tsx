@@ -128,6 +128,7 @@ export function FilterSummary({
             autoAlign
             showAllTagsLabel={text.showAllFilters}
             allTagsModalTitle={text.allFiltersTitle}
+            allTagsModalAriaLabel={text.allFiltersTitle}
             allTagsModalSearchLabel={text.searchFiltersLabel}
             allTagsModalSearchPlaceholderText={text.searchFiltersPlaceholder}
           />

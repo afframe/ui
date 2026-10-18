@@ -1143,8 +1143,9 @@ test('inDayRange includes both end days, for timestamps and local dates', () => 
   expect(
     runFilter(filterFn_inDayRange, new Date(2026, 2, 31, 23, 30), march)
   ).toBe(true);
+  // A range without a start filters nothing, also when it skips autoRemove.
   expect(
-    runFilter(filterFn_inDayRange, '2026-05-05', [null, '2026-05-05'])
+    runFilter(filterFn_inDayRange, '2026-06-01', [null, '2026-05-05'])
   ).toBe(true);
   expect(
     runFilter(filterFn_inDayRange, '2026-05-04', ['2026-05-05', null])

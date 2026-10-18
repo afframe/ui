@@ -42,11 +42,12 @@ type DayRange = readonly [start: string | null, end: string | null];
  * day drop out, and it parses date-only strings as UTC.
  */
 export const filterFn_inDayRange = constructFilterFn({
-  // fallow-ignore-next-line complexity -- no day, and either end open
+  // A range without a start is no filter. autoRemove runs only in TanStack's
+  // setters, so a value from initial or controlled state reaches this.
+  // fallow-ignore-next-line complexity -- no start, no day, and an open end
   filter: (day: string | undefined, [start, end]: DayRange) =>
-    day !== undefined &&
-    (start === null || day >= start) &&
-    (end === null || day <= end),
+    start === null ||
+    (day !== undefined && day >= start && (end === null || day <= end)),
   resolveDataValue: dayOf,
   // An end that is not an ISO day is open.
   resolveFilterValue: (value: unknown): DayRange =>
