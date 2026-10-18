@@ -454,8 +454,7 @@ export const TestFlyoutMenus: FlyoutStory = {
     // Customer sits in the lower row: opened down, its menu would run past
     // the flyout's scrolling content and be clipped. The whole list stays in
     // the viewport, and its last option is the element at its own centre.
-    // Its input is named only by the placeholder, the one multiselect here.
-    const customer = canvas.getByPlaceholderText('Choose options');
+    const customer = canvas.getByRole('combobox', { name: 'Customer' });
     await userEvent.click(customer);
     await expect(customer).toHaveAttribute('aria-expanded', 'true');
     const list = must(
@@ -483,8 +482,8 @@ export const TestFlyoutMenus: FlyoutStory = {
     await userEvent.keyboard('{Escape}');
     await expect(customer).toHaveAttribute('aria-expanded', 'false');
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-    // The flyout's Escape comes from Currency: from the Customer input it
-    // closes the flyout but leaves focus in the input.
+    // An open dropdown takes Escape first; the next one closes the flyout
+    // and returns focus to the trigger.
     const currency = canvas.getByRole('combobox', { name: 'Currency' });
     await userEvent.click(currency);
     await expect(currency).toHaveAttribute('aria-expanded', 'true');

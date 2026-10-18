@@ -551,3 +551,82 @@ test('radio and select: "All" is first, selected without a value, and removes th
   expect(onChange).toHaveBeenLastCalledWith({});
   expect(select.textContent).toContain('All');
 });
+
+const endDate = () => screen.getByLabelText<HTMLInputElement>('End date');
+// After flatpickr's range plugin empties the end on a timer (10 ms).
+const afterClearTimer = () => new Promise((resolve) => setTimeout(resolve, 50));
+
+function EndOnly(props: Partial<Omit<FilterPanelProps, 'value'>>) {
+  return (
+    <Harness
+      groups={[{ id: 'issued', label: 'Issued', variant: 'dateRange' }]}
+      initial={{ issued: [null, '2026-10-05'] }}
+      updateMethod="instant"
+      {...props}
+    />
+  );
+}
+
+test('date range: an end-only range shows in End with Start empty', async () => {
+  render(<EndOnly />);
+  await afterClearTimer();
+  expect(startDate().value).toBe('');
+  expect(endDate().value).toBe('05.10.2026');
+});
+
+test('date range: a start typed before an end-only end keeps the end', async () => {
+  const onChange = vi.fn();
+  render(<EndOnly onChange={onChange} />);
+  await userEvent.type(startDate(), '01102026{Enter}');
+  await afterClearTimer();
+  expect(onChange).toHaveBeenLastCalledWith({
+    issued: ['2026-10-01', '2026-10-05'],
+  });
+  expect(startDate().value).toBe('01.10.2026');
+  expect(endDate().value).toBe('05.10.2026');
+});
+
+test('date range: a start picked in the calendar keeps an end-only end', async () => {
+  const onChange = vi.fn();
+  render(<EndOnly onChange={onChange} />);
+  await userEvent.click(startDate());
+  (
+    startDate() as HTMLInputElement & {
+      _flatpickr: { jumpToDate: (date: Date) => void };
+    }
+  )._flatpickr.jumpToDate(new Date(2026, 9, 1));
+  const day = document.querySelector<HTMLElement>(
+    '.flatpickr-calendar.open .flatpickr-day[aria-label$="October 2, 2026"]'
+  );
+  if (!day) throw new Error('No October 2 in the open calendar');
+  await userEvent.click(day);
+  await afterClearTimer();
+  expect(onChange).toHaveBeenLastCalledWith({
+    issued: ['2026-10-02', '2026-10-05'],
+  });
+  expect(endDate().value).toBe('05.10.2026');
+});
+
+test('date range: emptying an end-only end removes the filter', async () => {
+  const onChange = vi.fn();
+  render(<EndOnly onChange={onChange} />);
+  await userEvent.click(endDate());
+  endDate().setSelectionRange(0, endDate().value.length);
+  await userEvent.keyboard('{Backspace}');
+  await userEvent.click(document.body);
+  await afterClearTimer();
+  expect(onChange).toHaveBeenLastCalledWith({});
+  expect(endDate().value).toBe('');
+});
+
+test('date range: a new end typed into an end-only range stays end-only', async () => {
+  const onChange = vi.fn();
+  render(<EndOnly onChange={onChange} />);
+  await userEvent.click(endDate());
+  endDate().setSelectionRange(0, endDate().value.length);
+  await userEvent.keyboard('20102026{Enter}');
+  await afterClearTimer();
+  expect(onChange).toHaveBeenLastCalledWith({ issued: [null, '2026-10-20'] });
+  expect(startDate().value).toBe('');
+  expect(endDate().value).toBe('20.10.2026');
+});

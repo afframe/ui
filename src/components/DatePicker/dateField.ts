@@ -209,26 +209,36 @@ function setRangeStart(picker: Flatpickr, start: Date) {
  * redrawn, so focus is on the body then. Every change re-arms the guard, so
  * an earlier change's end does not lift it before a later change's timer.
  */
-const guardGenerations = new WeakMap<HTMLInputElement, number>();
+const guards = new WeakMap<
+  HTMLInputElement,
+  { generation: number; installed: unknown }
+>();
 
+// fallow-ignore-next-line complexity -- re-arm, a foreign own focus, and the guarded focus checks
 function guardEndRefocus(picker: Flatpickr, prefix: string) {
   const field = picker.input.closest(`.${prefix}--date-picker`);
   const end = field?.querySelectorAll<HTMLInputElement>(
     `.${prefix}--date-picker__input`
   )[1];
   if (!field || !end) return;
-  const generation = (guardGenerations.get(end) ?? 0) + 1;
-  guardGenerations.set(end, generation);
+  const armed = guards.get(end);
+  // An own focus the guard did not install belongs to someone else.
+  if (Object.hasOwn(end, 'focus') && end.focus !== armed?.installed) return;
+  const generation = (armed?.generation ?? 0) + 1;
   // The plugin's timer may be queued after this hook: the nested timer runs
   // after it.
   setTimeout(() =>
     setTimeout(() => {
-      if (guardGenerations.get(end) === generation) {
-        Reflect.deleteProperty(end, 'focus');
-      }
+      const guard = guards.get(end);
+      if (guard?.generation !== generation) return;
+      guards.delete(end);
+      if (end.focus === guard.installed) Reflect.deleteProperty(end, 'focus');
     })
   );
-  if (Object.hasOwn(end, 'focus')) return;
+  if (armed && end.focus === armed.installed) {
+    guards.set(end, { ...armed, generation });
+    return;
+  }
   const focus = end.focus;
   let focusing = false;
   // An own property: an assignment would reach a setter on the prototype
@@ -253,6 +263,7 @@ function guardEndRefocus(picker: Flatpickr, prefix: string) {
       }
     },
   });
+  guards.set(end, { generation, installed: end.focus });
 }
 
 const datesKey = (dates: readonly unknown[]) =>

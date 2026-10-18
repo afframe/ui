@@ -23,7 +23,7 @@ import {
   TextInput,
   usePrefix,
 } from '@carbon/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   civilDateToLocalDate,
@@ -286,18 +286,62 @@ const toLocalDate = (day: string | null | undefined) => {
   return valid === null ? undefined : civilDateToLocalDate(valid as CivilDate);
 };
 
+interface RangePicker {
+  clear: (triggerChange: boolean) => void;
+  formatDate: (date: Date, format: string) => string;
+  config: { dateFormat: string };
+}
+
+const pickerOf = (input: HTMLElement | null) =>
+  (input as { _flatpickr?: RangePicker } | null)?._flatpickr;
+
+// fallow-ignore-next-line complexity -- end-only ranges: the picker holds no dates, the field writes End
 function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
   const { group, field, onChange, id, text, hideLabel } = props;
-  const [start, end] = checkedValues(field).filter((day) => isoDay(day));
+  const [start, end] =
+    typeof field === 'object' ? [isoDay(field[0]), isoDay(field[1])] : [];
+  // flatpickr's range keeps its first date in Start, so an end-only range is
+  // no picker date: the field writes End and merges a start picked later.
+  const endOnly = !start && end ? end : null;
   const { minDate, maxDate } = group;
   // Carbon sets the picker's dates on every new value object and redraws on
   // new bounds, which overwrites text kept invalid: same days, same Dates.
   const value = useMemo(
-    () => [start, end].flatMap((day) => toLocalDate(day) ?? []),
-    [start, end]
+    () =>
+      endOnly ? [] : [start, end].flatMap((day) => toLocalDate(day) ?? []),
+    [start, end, endOnly]
   );
   const min = useMemo(() => toLocalDate(minDate), [minDate]);
   const max = useMemo(() => toLocalDate(maxDate), [maxDate]);
+  const latest = useRef(onChange);
+  useEffect(() => {
+    latest.current = onChange;
+  });
+  const endInput = () => document.getElementById(`${id}-end`);
+  const writeEnd = (picker: RangePicker | undefined, day: string) => {
+    const input = endInput() as HTMLInputElement | null;
+    const date = toLocalDate(day);
+    if (input && picker && date) {
+      input.value = picker.formatDate(date, picker.config.dateFormat);
+    }
+  };
+  useEffect(() => {
+    if (!endOnly) return;
+    // Carbon creates its picker again right after mount (its start-input ref
+    // sets state), and that empties both inputs: write End after it.
+    queueMicrotask(() =>
+      writeEnd(pickerOf(document.getElementById(`${id}-start`)), endOnly)
+    );
+    const input = endInput() as HTMLInputElement | null;
+    // The picker holds no date to clear: End left empty removes the filter.
+    // blur, not change: the mask edits the value without input events.
+    const emptied = () => {
+      if (input?.value === '') latest.current(undefined);
+    };
+    input?.addEventListener('blur', emptied);
+    return () => input?.removeEventListener('blur', emptied);
+    // Once per end-only day, not per render, so text typed into End stays.
+  }, [endOnly, id]);
   return (
     <GroupFieldset legend={group.label} hideLabel={hideLabel}>
       <DatePicker
@@ -307,8 +351,21 @@ function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
         value={value}
         {...(min && { minDate: min })}
         {...(max && { maxDate: max })}
-        onChange={(dates) => {
+        onChange={(dates, _text, picker) => {
           const [from, to] = dates.map(localDateToCivilDate);
+          if (endOnly && from && !to) {
+            if (document.activeElement === endInput()) {
+              // A new end typed into End: still end-only.
+              picker.clear(false);
+              writeEnd(picker, from);
+              onChange([null, from]);
+              return;
+            }
+            if (from <= endOnly) {
+              onChange([from, endOnly]);
+              return;
+            }
+          }
           onChange([from ?? null, to ?? null]);
         }}>
         <DatePickerInput id={`${id}-start`} labelText={text.dateStart} />
