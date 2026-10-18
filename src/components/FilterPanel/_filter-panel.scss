@@ -15,6 +15,13 @@
   padding: $spacing-05 $spacing-05 $spacing-03;
 }
 
+// As in IBM's panel, the close button sits in the corner, level with the
+// title, outside the header padding.
+.afframe-filter-panel-close {
+  margin-block-start: calc(-1 * #{$spacing-05});
+  margin-inline-end: calc(-1 * #{$spacing-05});
+}
+
 .afframe-filter-panel-heading {
   display: flex;
   flex: 1;
