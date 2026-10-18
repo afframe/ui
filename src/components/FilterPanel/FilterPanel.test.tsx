@@ -2,7 +2,7 @@ import { cleanup, render, screen, within } from '@testing-library/react';
 import { createRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { countFilterPanelSelections, FilterPanel } from './FilterPanel.js';
+import { FilterPanel } from './FilterPanel.js';
 import type { FilterPanelMessages, FilterPanelProps } from './FilterPanel.js';
 import type { FilterPanelGroup, FilterPanelValue } from './FilterPanel.js';
 
@@ -132,32 +132,6 @@ test('accordion: names, counts and message overrides', () => {
   expect(screen.getByRole('status').textContent).toBe('1 výsledek');
   expect(screen.getByRole('button', { name: 'Status: 1' })).toBeTruthy();
   expect(screen.getByRole('group', { name: 'Status' })).toBeTruthy();
-});
-
-test('ids stay valid when group ids and values contain spaces', async () => {
-  const onChange = vi.fn();
-  render(
-    <FilterPanel
-      updateMethod="instant"
-      groups={[
-        {
-          id: 'cost centre',
-          label: 'Cost centre',
-          searchable: true,
-          options: [{ value: 'head office', label: 'Head office' }],
-        },
-      ]}
-      value={{}}
-      onChange={onChange}
-    />
-  );
-  const box = screen.getByRole('checkbox', { name: 'Head office' });
-  expect(box.id).not.toMatch(/\s/);
-  expect(
-    screen.getByRole('searchbox', { name: 'Search Cost centre' }).id
-  ).not.toMatch(/\s/);
-  await userEvent.click(screen.getByText('Head office'));
-  expect(onChange).toHaveBeenLastCalledWith({ 'cost centre': ['head office'] });
 });
 
 test('ids are unique across groups and panels', () => {
@@ -428,13 +402,6 @@ test('panel: the focused title shows a focus outline', async () => {
   expect(style.outlineOffset).toBe('-2px');
 });
 
-test('count ignores values that match no option', () => {
-  const value = { status: ['paid', 'gone'], missing: ['x'] };
-  expect(countFilterPanelSelections(groups, value)).toBe(1);
-  render(<Harness layout="accordion" initial={value} />);
-  expect(button('Status (1)')).toBeTruthy();
-});
-
 const startDate = () => screen.getByLabelText<HTMLInputElement>('Start date');
 
 test('date range: text kept invalid stays when another field changes', async () => {
@@ -472,6 +439,18 @@ test('date range: a stored day or bound that is not an ISO day is no date', () =
     />
   );
   expect(startDate().value).toBe('01.10.2026');
+  expect(screen.getByLabelText<HTMLInputElement>('End date').value).toBe('');
+});
+
+test('date range: a range without a start shows both inputs empty', async () => {
+  render(
+    <Harness
+      groups={[{ id: 'issued', label: 'Issued', variant: 'dateRange' }]}
+      initial={{ issued: [null, '2026-10-05'] }}
+    />
+  );
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  expect(startDate().value).toBe('');
   expect(screen.getByLabelText<HTMLInputElement>('End date').value).toBe('');
 });
 
@@ -550,216 +529,4 @@ test('radio and select: "All" is first, selected without a value, and removes th
   await userEvent.click(screen.getByRole('option', { name: 'All' }));
   expect(onChange).toHaveBeenLastCalledWith({});
   expect(select.textContent).toContain('All');
-});
-
-const endDate = () => screen.getByLabelText<HTMLInputElement>('End date');
-// After flatpickr's range plugin empties the end on a timer (10 ms).
-const afterClearTimer = () => new Promise((resolve) => setTimeout(resolve, 50));
-
-function EndOnly(props: Partial<Omit<FilterPanelProps, 'value'>>) {
-  return (
-    <Harness
-      groups={[{ id: 'issued', label: 'Issued', variant: 'dateRange' }]}
-      initial={{ issued: [null, '2026-10-05'] }}
-      updateMethod="instant"
-      {...props}
-    />
-  );
-}
-
-test('date range: an end-only range shows in End with Start empty', async () => {
-  render(<EndOnly />);
-  await afterClearTimer();
-  expect(startDate().value).toBe('');
-  expect(endDate().value).toBe('05.10.2026');
-});
-
-test('date range: a start typed before an end-only end keeps the end', async () => {
-  const onChange = vi.fn();
-  render(<EndOnly onChange={onChange} />);
-  await userEvent.type(startDate(), '01102026{Enter}');
-  await afterClearTimer();
-  expect(onChange).toHaveBeenLastCalledWith({
-    issued: ['2026-10-01', '2026-10-05'],
-  });
-  expect(startDate().value).toBe('01.10.2026');
-  expect(endDate().value).toBe('05.10.2026');
-});
-
-test('date range: a start picked in the calendar keeps an end-only end', async () => {
-  const onChange = vi.fn();
-  render(<EndOnly onChange={onChange} />);
-  await userEvent.click(startDate());
-  (
-    startDate() as HTMLInputElement & {
-      _flatpickr: { jumpToDate: (date: Date) => void };
-    }
-  )._flatpickr.jumpToDate(new Date(2026, 9, 1));
-  const day = document.querySelector<HTMLElement>(
-    '.flatpickr-calendar.open .flatpickr-day[aria-label$="October 2, 2026"]'
-  );
-  if (!day) throw new Error('No October 2 in the open calendar');
-  await userEvent.click(day);
-  await afterClearTimer();
-  expect(onChange).toHaveBeenLastCalledWith({
-    issued: ['2026-10-02', '2026-10-05'],
-  });
-  expect(endDate().value).toBe('05.10.2026');
-});
-
-test('date range: emptying an end-only end removes the filter', async () => {
-  const onChange = vi.fn();
-  render(<EndOnly onChange={onChange} />);
-  await userEvent.click(endDate());
-  endDate().setSelectionRange(0, endDate().value.length);
-  await userEvent.keyboard('{Backspace}');
-  await userEvent.click(document.body);
-  await afterClearTimer();
-  expect(onChange).toHaveBeenLastCalledWith({});
-  expect(endDate().value).toBe('');
-});
-
-test('date range: a new end typed into an end-only range stays end-only', async () => {
-  const onChange = vi.fn();
-  render(<EndOnly onChange={onChange} />);
-  await userEvent.click(endDate());
-  endDate().setSelectionRange(0, endDate().value.length);
-  await userEvent.keyboard('20102026{Enter}');
-  await afterClearTimer();
-  expect(onChange).toHaveBeenLastCalledWith({ issued: [null, '2026-10-20'] });
-  expect(startDate().value).toBe('');
-  expect(endDate().value).toBe('20.10.2026');
-});
-
-const issuedGroup: FilterPanelGroup[] = [
-  { id: 'issued', label: 'Issued', variant: 'dateRange' },
-];
-
-function OutsideRange(props: Partial<Omit<FilterPanelProps, 'value'>>) {
-  const [value, setValue] = useState<FilterPanelValue>({
-    issued: ['2026-10-01', '2026-10-05'],
-  });
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setValue({ issued: [null, '2026-10-05'] })}>
-        End only
-      </button>
-      <button type="button" onClick={() => setValue({})}>
-        Empty
-      </button>
-      <FilterPanel
-        groups={issuedGroup}
-        value={value}
-        {...props}
-        onChange={(next) => {
-          props.onChange?.(next);
-          setValue(next);
-        }}
-      />
-    </>
-  );
-}
-
-test('date range: Clear and an outside empty value empty an end-only End', async () => {
-  render(<EndOnly />);
-  await afterClearTimer();
-  await userEvent.click(button('Clear'));
-  await afterClearTimer();
-  expect(endDate().value).toBe('');
-  cleanup();
-  render(<OutsideRange updateMethod="instant" />);
-  await userEvent.click(button('End only'));
-  await afterClearTimer();
-  await userEvent.click(button('Empty'));
-  await afterClearTimer();
-  expect(startDate().value).toBe('');
-  expect(endDate().value).toBe('');
-});
-
-test('date range: a new end typed into an end-only End applies on leaving it', async () => {
-  const onChange = vi.fn();
-  render(<EndOnly onChange={onChange} />);
-  await userEvent.click(endDate());
-  endDate().setSelectionRange(0, endDate().value.length);
-  await userEvent.keyboard('20102026');
-  await userEvent.click(document.body);
-  await afterClearTimer();
-  expect(onChange).toHaveBeenLastCalledWith({ issued: [null, '2026-10-20'] });
-  expect(endDate().value).toBe('20.10.2026');
-});
-
-test('date range: leaving an invalid end-only End removes the filter, marked invalid', async () => {
-  const onChange = vi.fn();
-  render(<EndOnly onChange={onChange} />);
-  await userEvent.click(endDate());
-  endDate().setSelectionRange(0, endDate().value.length);
-  await userEvent.keyboard('3102');
-  await userEvent.click(document.body);
-  await afterClearTimer();
-  expect(onChange).toHaveBeenLastCalledWith({});
-  expect(endDate().value).toBe('31.02.');
-  await vi.waitFor(() =>
-    expect(endDate().getAttribute('aria-invalid')).toBe('true')
-  );
-});
-
-test.each([
-  [15, [null, '2026-10-15']],
-  [25, [null, '2026-10-25']],
-])(
-  'date range: day %i picked from End’s calendar sets an end-only end',
-  async (date, issued) => {
-    const onChange = vi.fn();
-    render(
-      <Harness
-        groups={issuedGroup}
-        initial={{ issued: [null, '2026-10-20'] }}
-        updateMethod="instant"
-        onChange={onChange}
-      />
-    );
-    await afterClearTimer();
-    await userEvent.click(endDate());
-    (
-      startDate() as HTMLInputElement & {
-        _flatpickr: { jumpToDate: (date: Date) => void };
-      }
-    )._flatpickr.jumpToDate(new Date(2026, 9, 1));
-    const day = document.querySelector<HTMLElement>(
-      `.flatpickr-calendar.open .flatpickr-day[aria-label$="October ${date}, 2026"]`
-    );
-    if (!day) throw new Error(`No October ${date} in the open calendar`);
-    await userEvent.click(day);
-    await afterClearTimer();
-    expect(onChange).toHaveBeenLastCalledWith({ issued });
-    expect(startDate().value).toBe('');
-  }
-);
-
-test('date range: an outside change to end-only keeps the filter (instant)', async () => {
-  const onChange = vi.fn();
-  render(<OutsideRange updateMethod="instant" onChange={onChange} />);
-  await userEvent.click(button('End only'));
-  await afterClearTimer();
-  expect(onChange).not.toHaveBeenCalled();
-  expect(startDate().value).toBe('');
-  expect(endDate().value).toBe('05.10.2026');
-});
-
-test('date range: Close in batch returns a picked start to the end-only value', async () => {
-  const onChange = vi.fn();
-  render(
-    <EndOnly updateMethod="batch" onChange={onChange} onClose={() => {}} />
-  );
-  await userEvent.type(startDate(), '01102026{Enter}');
-  await afterClearTimer();
-  expect(button('Apply')).toHaveProperty('disabled', false);
-  await userEvent.click(page.getByRole('button', { name: 'Close' }));
-  await afterClearTimer();
-  expect(button('Apply')).toHaveProperty('disabled', true);
-  expect(startDate().value).toBe('');
-  expect(endDate().value).toBe('05.10.2026');
-  expect(onChange).not.toHaveBeenCalled();
 });

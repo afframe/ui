@@ -9,7 +9,6 @@ const {
   Accordion,
   FlyoutOpen,
   FlyoutOpenDark,
-  FlyoutText,
   Summary,
   SummaryDark,
   SummaryOverflowOpen,
@@ -35,12 +34,6 @@ test.each([
 ] as const)('%s', async (name, story) => {
   await story.run();
   await snapshot(name);
-});
-
-test('filter-flyout-text-open', async () => {
-  await FlyoutText.run();
-  await userEvent.click(page.getByRole('button', { name: 'Filter (3)' }));
-  await snapshot('filter-flyout-text-open');
 });
 
 // Focus ring on the first checkbox; the title only takes focus after Apply

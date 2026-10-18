@@ -119,15 +119,3 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
-
-// Carbon's slider thumb is a 14 px box, under the 24 px target of WCAG 2.5.8.
-// A transparent border makes the box 30 px (24 px has no spacing token); the
-// background and Carbon's inset focus rings stay inside the border, so the
-// circle still looks 14 px and centred.
-/* stylelint-disable selector-class-pattern -- Carbon's class names */
-.afframe-filter-panel .cds--slider__thumb {
-  border: $spacing-03 solid transparent;
-  background-clip: padding-box;
-  inset: calc(-1 * #{$spacing-03});
-}
-/* stylelint-enable selector-class-pattern */

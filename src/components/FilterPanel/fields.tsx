@@ -23,14 +23,13 @@ import {
   TextInput,
   usePrefix,
 } from '@carbon/react';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   civilDateToLocalDate,
   formatNumber,
   localDateToCivilDate,
 } from '../../format/index.js';
-import type { CivilDate } from '../../format/index.js';
 import { DatePicker } from '../DatePicker/index.js';
 import type { FilterPanelMessages } from './FilterPanel.js';
 import { checkedValues, isoDay, selectedOptions } from './value.js';
@@ -283,127 +282,22 @@ function NumberField(props: FieldProps<GroupOf<'number'>>) {
 
 const toLocalDate = (day: string | null | undefined) => {
   const valid = isoDay(day);
-  return valid === null ? undefined : civilDateToLocalDate(valid as CivilDate);
+  return valid === null ? undefined : civilDateToLocalDate(valid);
 };
 
-interface RangePicker {
-  clear: (triggerChange: boolean) => void;
-  formatDate: (date: Date, format: string) => string;
-  parseDate: (text: string, format: string) => Date | undefined;
-  isEnabled: (date: Date) => boolean;
-  selectedDates: Date[];
-  config: { dateFormat: string; errorHandler: (error: Error) => void };
-}
-
-const pickerOf = (input: HTMLElement | null) =>
-  (input as { _flatpickr?: RangePicker } | null)?._flatpickr;
-
-/** The day typed into an input, parsed strictly and enabled; else `null`. */
-function typedDay(picker: RangePicker, text: string) {
-  const { config } = picker;
-  const { errorHandler } = config;
-  // flatpickr reports text it cannot parse through errorHandler.
-  config.errorHandler = () => {};
-  try {
-    const date = picker.parseDate(text, config.dateFormat);
-    return date &&
-      picker.formatDate(date, config.dateFormat) === text &&
-      picker.isEnabled(date)
-      ? localDateToCivilDate(date)
-      : null;
-  } finally {
-    config.errorHandler = errorHandler;
-  }
-}
-
-// fallow-ignore-next-line complexity -- end-only ranges: the picker holds no dates, the field owns End
 function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
   const { group, field, onChange, id, text, hideLabel } = props;
   const [start, end] =
     typeof field === 'object' ? [isoDay(field[0]), isoDay(field[1])] : [];
-  // flatpickr's range keeps its first date in Start, so an end-only range is
-  // no picker date: the field writes and reads End, and merges a start
-  // picked later.
-  const endOnly = !start && end ? end : null;
   const { minDate, maxDate } = group;
   // Carbon sets the picker's dates on every new value object and redraws on
   // new bounds, which overwrites text kept invalid: same days, same Dates.
   const value = useMemo(
-    () =>
-      endOnly ? [] : [start, end].flatMap((day) => toLocalDate(day) ?? []),
-    [start, end, endOnly]
+    () => (start ? [start, end].flatMap((day) => toLocalDate(day) ?? []) : []),
+    [start, end]
   );
   const min = useMemo(() => toLocalDate(minDate), [minDate]);
   const max = useMemo(() => toLocalDate(maxDate), [maxDate]);
-  const latest = useRef(onChange);
-  useEffect(() => {
-    latest.current = onChange;
-  });
-  const startInput = () => document.getElementById(`${id}-start`);
-  const endInput = () =>
-    document.getElementById(`${id}-end`) as HTMLInputElement | null;
-  const writeEnd = (picker: RangePicker | undefined, day: string) => {
-    const input = endInput();
-    const date = toLocalDate(day);
-    if (input && picker && date) {
-      input.value = picker.formatDate(date, picker.config.dateFormat);
-    }
-  };
-  // The calendar a day is picked from belongs to the input focused last.
-  const lastFocused = useRef<'start' | 'end'>('start');
-  const keepEndText = useRef(false);
-  const wasEndOnly = useRef(endOnly);
-  // A layout effect runs before Carbon's value effect. Emptied here without
-  // a change event, the picker gives Carbon no dates to clear, so its
-  // clear() does not report an empty range (flatpickr index.js:819) nor
-  // start the range plugin's End-emptying timer (rangePlugin.js:106-110).
-  useLayoutEffect(() => {
-    const picker = pickerOf(startInput());
-    if (endOnly && picker?.selectedDates.length) picker.clear(false);
-    // From end-only to no range: nothing else empties End.
-    if (wasEndOnly.current && !endOnly && !start && !keepEndText.current) {
-      const input = endInput();
-      if (input) input.value = '';
-    }
-    keepEndText.current = false;
-    wasEndOnly.current = endOnly;
-  });
-  useEffect(() => {
-    const focusStart = () => (lastFocused.current = 'start');
-    const focusEnd = () => (lastFocused.current = 'end');
-    const from = startInput();
-    const to = endInput();
-    from?.addEventListener('focus', focusStart);
-    to?.addEventListener('focus', focusEnd);
-    return () => {
-      from?.removeEventListener('focus', focusStart);
-      to?.removeEventListener('focus', focusEnd);
-    };
-  }, [id]);
-  useEffect(() => {
-    if (!endOnly) return;
-    // Carbon creates its picker again right after mount (its start-input ref
-    // sets state), and that empties both inputs: write End after it.
-    queueMicrotask(() => writeEnd(pickerOf(startInput()), endOnly));
-    const input = endInput();
-    // The range plugin applies End only on Enter, and only with a picker
-    // date (rangePlugin.js:55): leaving End applies it here. blur, not
-    // change: the mask edits the value without input events.
-    const leave = () => {
-      const picker = pickerOf(startInput());
-      if (!input || !picker) return;
-      if (input.value === '') return latest.current(undefined);
-      const day = typedDay(picker, input.value);
-      if (day === endOnly) return;
-      // Text that is no day removes the end, as the picker does for a range,
-      // and stays as typed, marked invalid.
-      if (day === null) keepEndText.current = true;
-      latest.current(day === null ? undefined : [null, day]);
-    };
-    input?.addEventListener('blur', leave);
-    return () => input?.removeEventListener('blur', leave);
-    // Once per end-only day, not per render, so text typed into End stays.
-  }, [endOnly, id]);
   return (
     <GroupFieldset legend={group.label} hideLabel={hideLabel}>
       <DatePicker
@@ -413,21 +307,8 @@ function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
         value={value}
         {...(min && { minDate: min })}
         {...(max && { maxDate: max })}
-        onChange={(dates, _text, picker) => {
+        onChange={(dates) => {
           const [from, to] = dates.map(localDateToCivilDate);
-          if (endOnly && from && !to) {
-            if (lastFocused.current === 'end') {
-              // A new end typed or picked from End: still end-only.
-              picker.clear(false);
-              writeEnd(picker, from);
-              onChange([null, from]);
-              return;
-            }
-            if (from <= endOnly) {
-              onChange([from, endOnly]);
-              return;
-            }
-          }
           onChange([from ?? null, to ?? null]);
         }}>
         <DatePickerInput id={`${id}-start`} labelText={text.dateStart} />
