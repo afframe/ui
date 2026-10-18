@@ -1,6 +1,23 @@
 'use client';
+/**
+ * Copyright IBM Corp. 2024, 2025
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2025
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: from tanstack-carbon react/filterFlyout FilterFlyout.tsx (tab-tip Popover with an icon trigger, two-column fields, Clear and Apply); FilterPanel as the content, a text trigger option, the count in the trigger name, a draft discarded on Escape and a click outside, Escape rules for menus and the calendar, a live region for the result count, text from messages. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
 import { Filter } from '@carbon/icons-react';
-import { Button, Popover, PopoverContent } from '@carbon/react';
+import {
+  Button,
+  IconButton,
+  Popover,
+  PopoverContent,
+  usePrefix,
+} from '@carbon/react';
 import { useId, useRef, useState } from 'react';
 import type { ComponentPropsWithoutRef, KeyboardEvent, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
@@ -16,7 +33,7 @@ import type {
 } from './FilterPanel.js';
 
 export interface FilterFlyoutMessages extends FilterPanelMessages {
-  /** Toggle button text; `count` is the number of selected options. */
+  /** Trigger name, and the tooltip of the icon trigger; `count` is the number of selected options. */
   toggle: (count: number) => string;
 }
 
@@ -33,33 +50,64 @@ export interface FilterFlyoutProps
       | 'value'
       | 'onChange'
       | 'updateMethod'
+      | 'layout'
       | 'resultCount'
       | 'headingLevel'
-      | 'onCancel'
     >,
     Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'children'> {
   /** Ref to the root `div` (Carbon's Popover). */
   ref?: Ref<HTMLDivElement>;
   /** Opens the flyout on first render. */
   defaultOpen?: boolean;
+  /** `icon` is a ghost icon button with the text as its tooltip; `text` a ghost button with icon and text. Default `icon`. */
+  trigger?: 'icon' | 'text';
   messages?: Partial<FilterFlyoutMessages>;
 }
 
+/** A date field in `root` has its calendar open (flatpickr puts it on `body`). */
+const hasOpenCalendar = (root: Element | null) =>
+  Array.from(root?.querySelectorAll('input') ?? []).some((input) =>
+    // Carbon closes the calendar on Escape by its class only, so isOpen lags.
+    (
+      input as HTMLInputElement & {
+        _flatpickr?: { calendarContainer?: HTMLElement };
+      }
+    )._flatpickr?.calendarContainer?.classList.contains('open')
+  );
+
+/** Escape that an open menu or date calendar inside `root` closes first. */
+const isInnerEscape = (root: Element, target: EventTarget) =>
+  (target instanceof Element &&
+    target.closest('[role="combobox"][aria-expanded="true"]') !== null) ||
+  hasOpenCalendar(root);
+
+// A component, not an element: with autoAlign Carbon's Popover makes every
+// element child its anchor through a ref, and the last one would win.
+function LiveStatus({ text }: { text: string }) {
+  const prefix = usePrefix();
+  return (
+    <p role="status" className={`${prefix}--visually-hidden`}>
+      {text}
+    </p>
+  );
+}
+
 /**
- * A toolbar button that opens a `FilterPanel` in a popover. Controlled. In
- * batch update Apply applies and closes; Cancel, Escape and a click outside
+ * A toolbar button that opens a `FilterPanel` in a tab-tip popover. Controlled.
+ * In batch update Apply and Clear apply and close; Escape and a click outside
  * close and discard the draft.
  */
-// fallow-ignore-next-line complexity -- optional props passed through to the panel, and the Escape rules
+// fallow-ignore-next-line complexity -- optional props passed through to the panel, both triggers and the Escape rules
 export function FilterFlyout({
   groups,
   value,
   onChange,
-  updateMethod = 'instant',
+  updateMethod = 'batch',
+  layout,
   resultCount,
   headingLevel,
-  onCancel,
   defaultOpen = false,
+  trigger = 'icon',
   messages,
   className,
   ref,
@@ -80,8 +128,9 @@ export function FilterFlyout({
   };
 
   // Carbon closes on Escape only from inside the content, and Carbon's
-  // Search swallows Escape. Capturing it here also covers the toggle button,
-  // lets a search with text clear first, and always returns focus.
+  // Search swallows Escape. Capturing it here also covers the trigger, lets a
+  // search with text, an open menu or an open calendar take it first, and
+  // always returns focus.
   const onKeyDownCapture = (event: KeyboardEvent<HTMLDivElement>) => {
     onKeyDownCaptureProp?.(event);
     if (!open || event.key !== 'Escape') return;
@@ -90,6 +139,8 @@ export function FilterFlyout({
       target instanceof HTMLInputElement && target.type === 'search';
     if (isSearch && target.value) return;
     event.preventDefault();
+    // preventDefault also keeps Carbon's window handler from closing.
+    if (isInnerEscape(event.currentTarget, target)) return;
     closeToTrigger();
   };
 
@@ -103,6 +154,14 @@ export function FilterFlyout({
     setOpen(!open);
   };
 
+  const label = text.toggle(countFilterPanelSelections(groups, value));
+  const triggerProps = {
+    ref: triggerRef,
+    kind: 'ghost' as const,
+    'aria-expanded': open,
+    'aria-controls': contentId,
+    onClick: toggleOpen,
+  };
   const classes = ['afframe-filter-flyout', className]
     .filter(Boolean)
     .join(' ');
@@ -112,22 +171,35 @@ export function FilterFlyout({
       {...rest}
       as="div"
       open={open}
+      isTabTip
       align="bottom-end"
       autoAlign
-      caret={false}
       ref={ref}
-      onRequestClose={() => setOpen(false)}
+      // A click into a date input that opens the calendar reaches the window
+      // targeted at body, which Carbon takes as a click outside. flatpickr
+      // closes the calendar on the mousedown of a real outside click first.
+      onRequestClose={() => {
+        if (!hasOpenCalendar(document.getElementById(contentId)))
+          setOpen(false);
+      }}
       onKeyDownCapture={onKeyDownCapture}
       className={classes}>
-      <Button
-        ref={triggerRef}
-        kind="ghost"
-        renderIcon={Filter}
-        aria-expanded={open}
-        aria-controls={contentId}
-        onClick={toggleOpen}>
-        {text.toggle(countFilterPanelSelections(groups, value))}
-      </Button>
+      {trigger === 'text' ? (
+        <Button {...triggerProps} renderIcon={Filter}>
+          {label}
+        </Button>
+      ) : (
+        <IconButton {...triggerProps} label={label} align="bottom-end">
+          <Filter />
+        </IconButton>
+      )}
+      {/* Announces the count after Apply closes the flyout; while it is open
+          the panel's own status speaks. */}
+      <LiveStatus
+        text={
+          open || resultCount === undefined ? '' : text.resultCount(resultCount)
+        }
+      />
       <PopoverContent id={contentId} className="afframe-filter-flyout-content">
         <FilterPanel
           key={opening}
@@ -135,10 +207,7 @@ export function FilterFlyout({
           value={value}
           updateMethod={updateMethod}
           onChange={updateMethod === 'batch' ? applyAndClose : onChange}
-          onCancel={() => {
-            closeToTrigger();
-            onCancel?.();
-          }}
+          {...(layout !== undefined ? { layout } : {})}
           {...(resultCount !== undefined ? { resultCount } : {})}
           {...(headingLevel !== undefined ? { headingLevel } : {})}
           messages={text}

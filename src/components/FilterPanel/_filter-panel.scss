@@ -105,8 +105,17 @@
   max-inline-size: none;
 }
 
-.afframe-filter-flyout-content {
-  inline-size: 20rem;
+// Up to 642 px with the fields in two columns, as upstream's flyout; one
+// column when the viewport is narrower. Two classes beat Carbon's 368 px cap.
+// auto-fit collapses the empty track, so the accordion's one child spans.
+.afframe-filter-flyout .afframe-filter-flyout-content {
+  inline-size: min(40.125rem, calc(100vw - #{$spacing-07}));
+  max-inline-size: none;
   max-block-size: 30rem;
   overflow-y: auto;
+}
+
+.afframe-filter-flyout-content .afframe-filter-panel-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
