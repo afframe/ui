@@ -4,7 +4,6 @@ import { Button, Popover, PopoverContent } from '@carbon/react';
 import { useId, useRef, useState } from 'react';
 import type { ComponentPropsWithoutRef, KeyboardEvent, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { useMergedRefs } from '../FlowParts/refs.js';
 import {
   countFilterPanelSelections,
   defaultFilterPanelMessages,
@@ -36,6 +35,7 @@ export interface FilterFlyoutProps
       | 'updateMethod'
       | 'resultCount'
       | 'headingLevel'
+      | 'onCancel'
     >,
     Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'children'> {
   /** Ref to the root `div` (Carbon's Popover). */
@@ -50,6 +50,7 @@ export interface FilterFlyoutProps
  * batch update Apply applies and closes; Cancel, Escape and a click outside
  * close and discard the draft.
  */
+// fallow-ignore-next-line complexity -- optional props passed through to the panel, and the Escape rules
 export function FilterFlyout({
   groups,
   value,
@@ -57,6 +58,7 @@ export function FilterFlyout({
   updateMethod = 'instant',
   resultCount,
   headingLevel,
+  onCancel,
   defaultOpen = false,
   messages,
   className,
@@ -70,8 +72,6 @@ export function FilterFlyout({
   // key per opening to start from the applied value.
   const [opening, setOpening] = useState(0);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const rootRef = useMergedRefs(wrapperRef, ref);
   const contentId = useId();
 
   const closeToTrigger = () => {
@@ -115,14 +115,8 @@ export function FilterFlyout({
       align="bottom-end"
       autoAlign
       caret={false}
-      ref={rootRef}
-      // Carbon also closes on a click whose target a re-render has just
-      // removed from the document; such a click leaves focus inside.
-      onRequestClose={() => {
-        if (!wrapperRef.current?.contains(document.activeElement)) {
-          setOpen(false);
-        }
-      }}
+      ref={ref}
+      onRequestClose={() => setOpen(false)}
       onKeyDownCapture={onKeyDownCapture}
       className={classes}>
       <Button
@@ -141,7 +135,10 @@ export function FilterFlyout({
           value={value}
           updateMethod={updateMethod}
           onChange={updateMethod === 'batch' ? applyAndClose : onChange}
-          onCancel={closeToTrigger}
+          onCancel={() => {
+            closeToTrigger();
+            onCancel?.();
+          }}
           {...(resultCount !== undefined ? { resultCount } : {})}
           {...(headingLevel !== undefined ? { headingLevel } : {})}
           messages={text}

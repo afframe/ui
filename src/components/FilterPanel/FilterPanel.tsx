@@ -128,6 +128,7 @@ function sameFilterValue(a: FilterPanelValue, b: FilterPanelValue): boolean {
 }
 
 /** A side panel of checkbox filter groups, applied per toggle or in a batch. Controlled. */
+// fallow-ignore-next-line complexity -- one render covers both update methods, search per group and the optional close button and count
 export function FilterPanel({
   groups,
   value,

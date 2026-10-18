@@ -41,7 +41,9 @@ function Harness({
   onChange,
   messages,
   updateMethod = 'instant',
+  onCancel,
 }: {
+  onCancel?: () => void;
   flyout?: boolean;
   initial?: FilterPanelValue;
   onChange?: (value: FilterPanelValue) => void;
@@ -57,6 +59,7 @@ function Harness({
         groups={groups}
         value={value}
         updateMethod={updateMethod}
+        {...(onCancel ? { onCancel } : {})}
         resultCount={Object.values(value).flat().length}
         {...(messages ? { messages } : {})}
         onChange={(next) => {
@@ -340,9 +343,17 @@ test('close button: only with onClose; in batch it discards the draft', async ()
   expect(button('Apply')).toHaveProperty('disabled', true);
 });
 
-test('flyout batch: Apply applies, closes and focuses the trigger', async () => {
+test('flyout batch: Apply applies, closes and focuses the trigger; Cancel calls onCancel', async () => {
   const onChange = vi.fn();
-  render(<Harness flyout updateMethod="batch" onChange={onChange} />);
+  const onCancel = vi.fn();
+  render(
+    <Harness
+      flyout
+      updateMethod="batch"
+      onChange={onChange}
+      onCancel={onCancel}
+    />
+  );
   const toggle = button('Filter');
   await userEvent.click(toggle);
   await userEvent.click(screen.getByText('Paid'));
@@ -359,6 +370,7 @@ test('flyout batch: Apply applies, closes and focuses the trigger', async () => 
   await userEvent.click(screen.getByText('Overdue'));
   await userEvent.click(button('Cancel'));
   expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onCancel).toHaveBeenCalledTimes(1);
   expect(toggle.getAttribute('aria-expanded')).toBe('false');
   expect(active()).toBe(toggle);
   // No close button in the flyout, as IBM's.
@@ -433,12 +445,17 @@ test('count ignores values that match no option', () => {
   expect(button('Filter (1)')).toBeTruthy();
 });
 
-test('flyout: ref and rest props reach the root; closing still works', async () => {
+test('flyout: ref, rest props and onKeyDownCapture reach the root; Escape and a click outside still close', async () => {
   const ref = createRef<HTMLDivElement>();
+  const onKeyDownCapture = vi.fn();
   render(
     <>
       <button type="button">Before</button>
-      <FilterFlyoutHarness ref={ref} data-testid="flyout" />
+      <FilterFlyoutHarness
+        ref={ref}
+        data-testid="flyout"
+        onKeyDownCapture={onKeyDownCapture}
+      />
     </>
   );
   expect(ref.current?.classList.contains('afframe-filter-flyout')).toBe(true);
@@ -450,6 +467,9 @@ test('flyout: ref and rest props reach the root; closing still works', async () 
   expect(toggle.getAttribute('aria-expanded')).toBe('true');
   checkbox('Overdue').focus();
   await userEvent.keyboard('{Escape}');
+  expect(onKeyDownCapture).toHaveBeenCalledWith(
+    expect.objectContaining({ key: 'Escape' })
+  );
   expect(toggle.getAttribute('aria-expanded')).toBe('false');
   expect(active()).toBe(toggle);
   await userEvent.click(toggle);
@@ -474,14 +494,16 @@ const dismiss = (label: string) => {
 function SummaryHarness({
   initial,
   onChange,
+  // Wide enough that no tag overflows into "+N".
+  width = '60rem',
 }: {
   initial: FilterPanelValue;
   onChange?: (value: FilterPanelValue) => void;
+  width?: string;
 }) {
   const [value, setValue] = useState(initial);
   return (
-    // Wide enough that no tag overflows into "+N".
-    <div style={{ inlineSize: '60rem' }}>
+    <div style={{ inlineSize: width }}>
       <FilterSummary
         groups={groups}
         value={value}
@@ -576,4 +598,64 @@ test('summary: an empty value renders an empty root with ref and rest props', ()
   expect(root.className).toBe('afframe-filter-summary extra');
   expect(root.getAttribute('tabindex')).toBe('-1');
   expect(root.childElementCount).toBe(0);
+});
+
+// At 470 px two tags and "+2" fit (tag widths 113, 138, 189 and 180 px,
+// Clear filters 108 px, View all 48 px); without Status: Overdue the
+// Customer: Acme Trading tag does not take its place.
+const narrow = '470px';
+const allSelected = {
+  status: ['paid', 'overdue'],
+  customer: ['acme', 'birch'],
+};
+const overflowTag = () => {
+  const [found] = screen
+    .queryAllByRole('button', { name: /^\+\d+$/ })
+    .filter((item) => !item.closest('[aria-hidden="true"]'));
+  if (!found) throw new Error('No "+N" tag');
+  return found;
+};
+const summaryRoot = () =>
+  screen.getByRole('group', { name: 'Selected filters' });
+
+test('summary: narrow, "+N" holds the rest and View all toggles multiline', async () => {
+  render(<SummaryHarness initial={allSelected} width={narrow} />);
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+  expect(removeButtons()).toHaveLength(2);
+  // The button remounts on collapse, so it is found again each time.
+  const viewAll = () => {
+    const [found] = shownByLabel('View all');
+    if (!found) throw new Error('No View all');
+    return found;
+  };
+  expect(viewAll().getAttribute('aria-expanded')).toBe('false');
+  await userEvent.click(viewAll());
+  expect(viewAll().getAttribute('aria-expanded')).toBe('true');
+  expect(summaryRoot().className).toContain('--filter-summary__expanded');
+  await vi.waitFor(() => expect(removeButtons()).toHaveLength(4));
+  await userEvent.click(viewAll());
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+  expect(viewAll().getAttribute('aria-expanded')).toBe('false');
+  expect(summaryRoot().className).not.toContain('--filter-summary__expanded');
+  expect(removeButtons()).toHaveLength(2);
+});
+
+test('summary: narrow, dismissing the last shown tag keeps focus on a tag', async () => {
+  render(<SummaryHarness initial={allSelected} width={narrow} />);
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+  dismiss('Status: Overdue').focus();
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() => expect(removeButtons()).toHaveLength(1));
+  expect(active()).toBe(dismiss('Status: Paid'));
+});
+
+test('summary: narrow, dismissing the last tag in "+N" keeps focus on a tag', async () => {
+  render(<SummaryHarness initial={allSelected} width={narrow} />);
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+2'));
+  await userEvent.click(overflowTag());
+  await vi.waitFor(() => expect(removeButtons()).toHaveLength(4));
+  dismiss('Customer: Birch Studio').focus();
+  await userEvent.keyboard('{Enter}');
+  await vi.waitFor(() => expect(overflowTag().textContent).toBe('+1'));
+  expect(active()).toBe(dismiss('Customer: Acme Trading'));
 });

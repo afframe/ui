@@ -1,9 +1,32 @@
 'use client';
+/**
+ * Copyright IBM Corp. 2022, 2024
+ *
+ * This source code is licensed under the Apache-2.0 license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2024
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Modified by Afframe in 2026: from FilterSummary of @carbon/ibm-products@2.100.0; dismissible tags built from FilterPanel groups and value, text from messages, Clear filters measured after layout, focus kept on the tags after a dismiss, empty root while nothing is selected, no enter animation or resize collapse. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ */
 import { TagSet, usePrefix as useProductsPrefix } from '@carbon/ibm-products';
 import { ChevronDown } from '@carbon/icons-react';
-import { Button, IconButton } from '@carbon/react';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import type { ComponentPropsWithoutRef, ReactNode, Ref } from 'react';
+import { Button, IconButton, usePrefix } from '@carbon/react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import type {
+  ComponentPropsWithoutRef,
+  ReactNode,
+  Ref,
+  RefObject,
+} from 'react';
 import { resolveMessages } from '../../messages.js';
 import { useMergedRefs } from '../FlowParts/refs.js';
 import { setGroup } from './FilterPanel.js';
@@ -39,13 +62,52 @@ export const defaultFilterSummaryMessages: FilterSummaryMessages = {
 };
 
 // TagSet also renders a hidden copy of every tag for measuring.
-function focusShownTag(root: HTMLElement | null, index: number) {
+function focusShownTag(
+  root: HTMLElement | null,
+  prefix: string,
+  index: number
+) {
   const shown = [
     ...(root?.querySelectorAll<HTMLButtonElement>(
-      '[class$="--tag__close-icon"]'
+      `.${prefix}--tag__close-icon`
     ) ?? []),
   ].filter((button) => !button.closest('[aria-hidden="true"]'));
-  (shown[index] ?? root)?.focus();
+  (shown[Math.min(index, shown.length - 1)] ?? root)?.focus();
+}
+
+// TagSet keys its tags by position, so after a dismiss the focused button
+// usually stays and shows the next tag. TagSet lays out the new tags in its
+// own renders, which may then remove the focused button (the last tag, one
+// in "+N", or a tag that no longer fits). Focus then falls to the body:
+// move it to the tag in its place, else the last shown tag, else the root.
+// The next key or pointer press ends the watch.
+function useFocusAfterDismiss(
+  rootRef: RefObject<HTMLElement | null>,
+  prefix: string
+) {
+  const dismissed = useRef<number | null>(null);
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const observer = new MutationObserver(() => {
+      const active = document.activeElement;
+      if (dismissed.current === null || (active && active !== document.body))
+        return;
+      focusShownTag(root, prefix, dismissed.current);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+    const end = () => {
+      dismissed.current = null;
+    };
+    document.addEventListener('keydown', end, true);
+    document.addEventListener('pointerdown', end, true);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('keydown', end, true);
+      document.removeEventListener('pointerdown', end, true);
+    };
+  }, [rootRef, prefix]);
+  return dismissed;
 }
 
 export interface FilterSummaryProps
@@ -62,6 +124,7 @@ export interface FilterSummaryProps
  * then Clear filters, as IBM's Datagrid shows them above the table.
  * Controlled; renders an empty root while nothing is selected.
  */
+// fallow-ignore-next-line complexity -- IBM's FilterSummary render: tags, Clear filters and View all only while tags overflow, with their widths for TagSet
 export function FilterSummary({
   groups,
   value,
@@ -72,12 +135,14 @@ export function FilterSummary({
   ...rest
 }: FilterSummaryProps) {
   const text = resolveMessages(defaultFilterSummaryMessages, messages);
+  const prefix = usePrefix();
   const productsPrefix = useProductsPrefix();
   const rootRef = useRef<HTMLDivElement>(null);
   const mergedRef = useMergedRefs(rootRef, ref);
   const clearRef = useRef<HTMLButtonElement>(null);
   const [overflowCount, setOverflowCount] = useState(0);
   const [multiline, setMultiline] = useState(false);
+  const [clearWidth, setClearWidth] = useState(0);
   const { tagLabel, removeFilter } = text;
 
   const tags = useMemo(() => {
@@ -86,7 +151,6 @@ export function FilterSummary({
         .filter((option) => value[group.id]?.includes(option.value))
         .map((option) => ({ group, option }))
     );
-    const last = selected.length - 1;
     return selected.map(({ group, option }, index) => {
       const label = tagLabel(group.label, option.label);
       return {
@@ -98,16 +162,15 @@ export function FilterSummary({
         title: removeFilter(label),
         dismissTooltipLabel: removeFilter(label),
         onClose: () => {
-          // TagSet keys its tags by position, so after a dismiss the focused
-          // button stays in place and shows the next tag. Only the last tag
-          // moves focus: to the tag before it, else to the root.
-          if (index === last) focusShownTag(rootRef.current, index - 1);
+          dismissed.current = index;
           const rest = value[group.id]?.filter((item) => item !== option.value);
           onChange(setGroup(value, group.id, rest ?? []));
         },
       };
     });
   }, [groups, value, onChange, tagLabel, removeFilter]);
+
+  const dismissed = useFocusAfterDismiss(rootRef, prefix);
 
   const onOverflowTagChange = useCallback((overflow: ReactNode) => {
     setOverflowCount(Array.isArray(overflow) ? overflow.length : 0);
@@ -121,6 +184,9 @@ export function FilterSummary({
 
   const block = `${productsPrefix}--filter-summary`;
   const hasTags = tags.length > 0;
+  useLayoutEffect(() => {
+    setClearWidth(clearRef.current?.offsetWidth ?? 0);
+  }, [hasTags, text.clearFilters]);
   // IBM's classes only while there are tags: its bar has a fixed height.
   const classes = [
     'afframe-filter-summary',
@@ -132,8 +198,7 @@ export function FilterSummary({
     .join(' ');
   // As IBM's FilterSummary: TagSet leaves room for Clear filters and, while
   // tags overflow, the 48 px View all button.
-  const measurementOffset =
-    (clearRef.current?.offsetWidth ?? 0) + (overflowCount > 0 ? 48 : 0);
+  const measurementOffset = clearWidth + (overflowCount > 0 ? 48 : 0);
 
   return (
     <div
