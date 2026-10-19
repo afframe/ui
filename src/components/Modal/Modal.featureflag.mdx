@@ -2,7 +2,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, Afframe note on the flags it turns on and the focus wrap flag, duplicate enable-presence section removed, focus wrap under AfframeProvider.
+// Modified by Afframe in 2026: source label added, Afframe note on the flags it turns on, the focus wrap flag and its accepted warning, duplicate enable-presence section removed, focus wrap under AfframeProvider.
 
 <Meta title="Components/Modal/Feature Flags" name="Flag details" />
 
@@ -21,7 +21,10 @@ In Afframe UI, `AfframeProvider` turns on `enable-dialog-element` and
 without their own `FeatureFlags` wrapper. `AfframeProvider` also turns on
 `enable-focus-wrap-without-sentinels` for `ActionableNotification`; it has no
 effect with the dialog element, so this page has no story for it, and in
-development `Modal` logs a harmless warning that both flags are on.
+development `Modal` logs a warning that both flags are on. The warning is
+accepted: Carbon warns whenever both flags are on (`Modal.js:109` in
+`@carbon/react` 1.118.0), the modals ignore the flag under the dialog
+element, and it stays on for `ActionableNotification`.
 
 ## `enable-focus-wrap-without-sentinels`
 

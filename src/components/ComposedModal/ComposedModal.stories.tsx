@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, ComposedModal parts and form parts from @afframe/ui, icons from @afframe/ui/icons, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), source tag, inline spacing as Carbon spacing tokens, story names unified, descriptions for the story-arg props, Default with neutral business data, its launcher ref and an initial field, With AI Label, With State Manager, With Scrolling Content and With Inline Loading open on their first field, preventCloseOnClickOutside on by default (a footer is present), Passive story name. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, ComposedModal parts and form parts from @afframe/ui, icons from @afframe/ui/icons, `size: null` arg dropped (no size is the default), ModalFooter gets children={null} (its type requires children), source tag, inline spacing as Carbon spacing tokens, story names unified, descriptions for the story-arg props, Default with neutral business data, its launcher ref and an initial field, With AI Label, With State Manager, With Scrolling Content and With Inline Loading open on their first field, preventCloseOnClickOutside on by default (a footer is present), Passive story name, footer args kept off ComposedModal in Passive and With Inline Loading. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -341,12 +341,20 @@ FullWidth.argTypes = {
 
 export const Passive: StoryFn<ComposedModalStoryArgs> = (args) => {
   const [open, setOpen] = useState(true);
+  /* eslint-disable @typescript-eslint/no-unused-vars -- footer args left out of the spread: a passive modal has no footer */
   const {
     iconDescription = 'Close the modal',
     label,
     title = 'You have been successfully signed out',
+    primaryButtonText,
+    secondaryButtonText,
+    primaryButtonDisabled,
+    loadingStatus,
+    loadingDescription,
+    loadingIconDescription,
     ...modalArgs
   } = args;
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   return (
     <>
       <Button onClick={() => setOpen(true)}>Launch composed modal</Button>
@@ -579,6 +587,10 @@ export const WithInlineLoading: StoryFn<ComposedModalStoryArgs> = (args) => {
     primaryButtonText = 'Add',
     secondaryButtonText = 'Cancel',
     primaryButtonDisabled = false,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- left out of the spread, state drives the footer loading
+    loadingStatus,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- left out of the spread, state drives the footer loading
+    loadingDescription,
     loadingIconDescription,
     ...modalArgs
   } = args;
