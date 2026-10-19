@@ -221,7 +221,6 @@ const docsOf = (name) =>
 
 // Export statements of a module: `export { a, b as c } from 'x'`,
 // `export * from 'x'`, `export * as a from 'x'`, and local declarations.
-// fallow-ignore-next-line complexity: one branch per export form
 function exportsOf(file) {
   const code = read(file).replace(/^\s*\/\/.*$/gm, '');
   const statements = [];
