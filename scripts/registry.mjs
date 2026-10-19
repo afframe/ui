@@ -367,13 +367,7 @@ for (const { from, star, names } of exportsOf(index)) {
   const component = /^src\/components\/(\w+)$/.exec(dir)?.[1];
   if (component) {
     const info = folders.get(component.toLowerCase()) ?? {};
-    // A wrapper is named after its export (TableToolbarMenu, not DataTable).
-    const values = collected.filter((item) => !item.isType);
-    const name =
-      !info.wrapper || values.some((item) => item.name === component)
-        ? component
-        : (values[0]?.name ?? component);
-    family(name, info, { runtime }, collected);
+    family(component, info, { runtime }, collected);
   } else if (dir === 'src/labs') {
     await listUpstream(collected, 'labs', runtime, pathToFileURL(file).href);
   } else if (dir === 'src/utilities') {

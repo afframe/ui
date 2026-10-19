@@ -7,20 +7,12 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed, Afframe story for the 1.0.1 menu items added, story names unified, innerRef without a control, autoAlign on in the v11 stories, the 1.0.1 story renamed WithMenuItems with controls for the newer menu props and an auto-aligned tooltip. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, OverflowMenu and OverflowMenuItem from @afframe/ui, icons from @afframe/ui/icons, source tag, upstream v12 overflow menu branches removed, story names unified, innerRef without a control, autoAlign on in the v11 stories. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
-import { action } from 'storybook/actions';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { afframeA11y } from '../../../.storybook/afframeA11y.js';
-import {
-  MenuItem,
-  MenuItemDivider,
-  OverflowMenu,
-  OverflowMenuItem,
-} from '../../index.js';
-import type { IconButtonProps, OverflowMenuProps } from '../../index.js';
+import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
+import { OverflowMenu, OverflowMenuItem } from '../../index.js';
+import type { OverflowMenuProps } from '../../index.js';
 import { Filter } from '../../icons.js';
 import mdx from './OverflowMenu.mdx';
 
@@ -143,98 +135,3 @@ export const RenderCustomIcon: StoryFn<typeof OverflowMenu> = (args) => (
     <OverflowMenuItem itemText="Filter B" />
   </OverflowMenu>
 );
-
-type NewerMenuArgs = {
-  autoAlign: boolean;
-  label: string;
-  menuAlignment: 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end';
-  size: 'xs' | 'sm' | 'md' | 'lg';
-  tooltipAlignment?: IconButtonProps['align'];
-  tooltipAutoAlign: boolean;
-};
-
-// Afframe: the 1.0.x shape, `label` and MenuItem children. The Afframe
-// OverflowMenu turns on Carbon's newer menu for it, so the keyboard works.
-export const WithMenuItems: StoryObj<NewerMenuArgs> = {
-  tags: ['afframe'],
-  parameters: {
-    ...afframeA11y,
-    controls: {
-      include: [
-        'autoAlign',
-        'label',
-        'menuAlignment',
-        'size',
-        'tooltipAlignment',
-        'tooltipAutoAlign',
-      ],
-    },
-  },
-  args: {
-    autoAlign: false,
-    label: 'Row actions',
-    menuAlignment: 'bottom-start',
-    tooltipAutoAlign: true,
-  },
-  argTypes: {
-    autoAlign: {
-      control: { type: 'boolean' },
-      description:
-        'Will attempt to automatically align the menu to avoid collisions with the viewport',
-    },
-    label: { control: { type: 'text' } },
-    menuAlignment: {
-      options: ['top-start', 'top-end', 'bottom-start', 'bottom-end'],
-      control: { type: 'select' },
-    },
-    tooltipAlignment: {
-      options: argTypes.align?.options ?? [],
-      control: { type: 'select' },
-      description: 'Specify how the trigger tooltip should be aligned',
-    },
-    tooltipAutoAlign: {
-      control: { type: 'boolean' },
-      description:
-        'Will attempt to automatically align the trigger tooltip to avoid collisions with the viewport',
-    },
-  },
-  // Only the newer menu props: the v11 args in Meta would reach its div, and
-  // an undefined tooltipAlignment fails exactOptionalPropertyTypes.
-  render: ({
-    autoAlign,
-    label,
-    menuAlignment,
-    size,
-    tooltipAlignment,
-    tooltipAutoAlign,
-  }) => (
-    <OverflowMenu
-      autoAlign={autoAlign}
-      label={label}
-      menuAlignment={menuAlignment}
-      size={size}
-      {...(tooltipAlignment && { tooltipAlignment })}
-      tooltipAutoAlign={tooltipAutoAlign}>
-      <MenuItem label="Edit" onClick={action('Edit')} />
-      <MenuItem label="Duplicate" onClick={action('Duplicate')} />
-      <MenuItemDivider />
-      <MenuItem label="Delete" kind="danger" onClick={action('Delete')} />
-    </OverflowMenu>
-  ),
-  play: async ({ canvasElement }) => {
-    const trigger = within(canvasElement).getByRole('button');
-    trigger.focus();
-    await userEvent.keyboard('{Enter}');
-    // The menu renders in a portal on the body.
-    const body = within(document.body);
-    await waitFor(() =>
-      expect(body.getByRole('menuitem', { name: 'Edit' })).toHaveFocus()
-    );
-    await userEvent.keyboard('{ArrowDown}');
-    await expect(
-      body.getByRole('menuitem', { name: 'Duplicate' })
-    ).toHaveFocus();
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(trigger).toHaveFocus());
-  },
-};
