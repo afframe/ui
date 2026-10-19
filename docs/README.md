@@ -7,6 +7,7 @@ Index of the `docs/` folder. The project overview is the root [README.md](../REA
 | [developer-handbook.md](developer-handbook.md)         | Setup, commands, working rules, CI jobs, release checks, merge gate and release |
 | [package-structure.md](package-structure.md)           | Folders, entry points and what ships in the package                             |
 | [registry.md](registry.md)                             | Every public export family, generated; data in [registry.json](registry.json)   |
+| [agent-guide.md](agent-guide.md)                       | Agent guide for consumer repos, generated; ships as `dist/agents.md`            |
 | [testing.md](testing.md)                               | Test stack, Vitest projects, accessibility checks and visual baselines          |
 | [feature-flags.md](feature-flags.md)                   | Carbon flags Afframe turns on and accessibility exceptions                      |
 | [component-rubric.md](component-rubric.md)             | What a finished component has: look, behaviour, API, variations, docs, upkeep   |

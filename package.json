@@ -52,7 +52,7 @@
   },
   "packageManager": "pnpm@12.9.1",
   "scripts": {
-    "build": "pnpm build:js && pnpm build:types && pnpm build:css",
+    "build": "pnpm build:js && pnpm build:types && pnpm build:css && cp docs/agent-guide.md dist/agents.md",
     "build:js": "tsdown",
     "build:types": "tsc -p tsconfig.build.json",
     "build:css": "node scripts/build-css.mjs",
