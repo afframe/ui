@@ -101,7 +101,7 @@ const rows: [task: string, size: string, surface: string, ...ReactNode[]][] = [
     'A large task of your own, in steps or tabs',
     'Large',
     'Tearsheet',
-    link('preview__Tearsheet', 'components-tearsheet'),
+    link('Tearsheet', 'components-tearsheet'),
   ],
   [
     'Your own content next to the page',

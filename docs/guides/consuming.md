@@ -286,10 +286,24 @@ updates:
 - A `cooldown` delays every update by its days; exclude `@afframe/*` so a release arrives the day it ships.
 - In a monorepo with a catalog, Dependabot updates the catalog entry.
 
-## 9. Licence
+## 9. Agents
+
+The package ships `dist/agents.md`, generated from sections 4 and 5 of this guide and the package exports: the wiring and import rules, the exports Afframe renames from upstream, and every export with its runtime. It matches the installed version. Paste this into the consumer repo's `AGENTS.md`; it names the path because agent search tools skip `node_modules`:
+
+```md
+## UI: @afframe/ui
+
+Before choosing or writing UI code, read `node_modules/@afframe/ui/dist/agents.md` (in a monorepo: the app package's `node_modules`). It matches the installed version.
+
+- Import only from `@afframe/ui` and its subpaths, never `@carbon/*` or `@carbon-labs/*`, even when Carbon docs or the Carbon MCP show it.
+- Upstream docs use upstream names; use the Afframe name from the renamed exports table.
+- Server components use only server-safe exports; event handlers and function-valued messages come from a client component.
+```
+
+## 10. Licence
 
 `@afframe/ui` is under the PolyForm Noncommercial License 1.0.0 (README, ADR 0011 and its 2026-10-19 amendment). Commercial use needs a separate licence from the copyright holder, granted per product. The IBM parts stay under Apache-2.0.
 
-## 10. Known issues
+## 11. Known issues
 
 - Unmounting a `Modal` or `ComposedModal` during its exit animation logs an unhandled `AbortError` in the console. It comes from Carbon's `usePresence` ([carbon#23659](https://github.com/carbon-design-system/carbon/issues/23659)) and is harmless; IBM Products' `Tearsheet` does the same ([ibm-products#9944](https://github.com/carbon-design-system/ibm-products/issues/9944)). This repo patches the Carbon one for its own tests only (`docs/guides/updating-carbon.md`, Local patches).
