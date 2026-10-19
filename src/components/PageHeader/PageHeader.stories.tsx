@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (PageHeader sub-components through the namespace), story styles in CSS, images loaded with new URL, lg breakpoint as a literal, srcset as srcSet, optional icons passed only when set, ids on TruncatedText and a label on ScrollButton (both required by IBM's types), TabBarWithTabsAndTags title only from its args (the args overwrote it) and its story-only controls kept off PageHeader.Content (they reached the DOM), popover tags wrapped in a fragment, unused imports dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (PageHeader sub-components through the namespace), story styles in CSS, images loaded with new URL, lg breakpoint as a literal, srcset as srcSet, optional icons passed only when set, ids on TruncatedText and a label on ScrollButton (both required by IBM's types), TabBarWithTabsAndTags title only from its args (the args overwrote it) and its story-only controls kept off PageHeader.Content (they reached the DOM), popover tags wrapped in a fragment, unused imports dropped, fullscreen layout instead of the decorator that undid IBM's centered layout. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -74,30 +74,12 @@ export default {
     },
   },
   parameters: {
+    // The header spans the frame, as in IBM's Storybook.
+    layout: 'fullscreen',
     docs: {
       page: mdx,
     },
   },
-  decorators: [
-    (Story) => (
-      <>
-        <style>
-          {`
-          .sb-show-main.sb-main-centered {
-            align-items: normal;
-          }
-
-          .sb-show-main.sb-main-centered #storybook-root {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-          }
-        `}
-        </style>
-        <Story />
-      </>
-    ),
-  ],
 } satisfies Meta<typeof PageHeader.Root>;
 
 const BeeIcon = () => <Bee size={32} />;

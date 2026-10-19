@@ -115,6 +115,9 @@ function HelpMenuItems({
 }: ItemsProps) {
   const baseId = useId();
   const prefix = usePrefix();
+  // As in Carbon's Menu: once one item has an icon, every label starts after
+  // the icon column.
+  const withIcons = items.some((item) => 'icon' in item && item.icon);
   return (
     <Switcher aria-label={label} expanded={expanded}>
       {items.map((item, index) => {
@@ -128,6 +131,9 @@ function HelpMenuItems({
           <Item
             key={item.id}
             id={id}
+            {...(item.description === undefined
+              ? {}
+              : { className: 'afframe-help-menu-item--described' })}
             aria-labelledby={
               external ? `${id}-label ${id}-new-tab` : `${id}-label`
             }
@@ -145,7 +151,11 @@ function HelpMenuItems({
               // A link that leaves the page takes focus with it.
               onSelected?.(!!item.href && !external);
             }}>
-            {Icon && <Icon size={16} className="afframe-help-menu-icon" />}
+            {Icon ? (
+              <Icon size={16} className="afframe-help-menu-icon" />
+            ) : (
+              withIcons && <span className="afframe-help-menu-icon-space" />
+            )}
             <span className="afframe-help-menu-text">
               <span id={`${id}-label`}>{item.label}</span>
               {item.description !== undefined && (
