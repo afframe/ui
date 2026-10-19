@@ -45,10 +45,10 @@ function SomeComponent() {
 <Canvas of={useContextMenu.SpecificElement} />
 
 In Afframe UI, keep in mind that the hook only listens to the `contextmenu`
-event. Browsers also fire it for Shift+F10 and the context menu key, but only on
-the focused element. Keyboard users reach the menu only if the target, or
-something inside it, can take focus; otherwise offer the same actions another
-way, such as a visible menu button.
+event. Some platforms also fire it from the keyboard (Shift+F10 or a context
+menu key), but only on the focused element. Keyboard users reach the menu only
+if the element passed to the hook, or something inside it, can take focus;
+otherwise offer the same actions another way, such as a visible menu button.
 
 Be aware that the following props are not set by `useContextMenu` and can
 therefore be configured by the user:

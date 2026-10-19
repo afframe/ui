@@ -13,13 +13,14 @@ const rows = [
     link('DefinitionTooltip', 'components-definitiontooltip'),
   ],
   [
-    'More information opened by click or Enter, with links or actions inside',
+    'More information opened by click, Enter or Space, with links or actions inside; closes on Escape',
     link('Toggletip', 'components-toggletip'),
   ],
   [
     <>
       Custom floating content whose open state the app controls, such as a
-      settings panel. The app closes it in <code>onRequestClose</code>
+      settings panel. It does not close itself on Escape; the app closes it in
+      <code>onRequestClose</code>
     </>,
     link('Popover', 'components-popover'),
   ],
