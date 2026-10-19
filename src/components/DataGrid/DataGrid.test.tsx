@@ -11,7 +11,7 @@ import { createRef, useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { iconButton } from '../MenuParts/menuTestUtils.js';
+import { iconButton } from '../../testUtils.js';
 import { DataGrid } from './DataGrid.js';
 import {
   dataGridColumnCustomization,
@@ -503,6 +503,7 @@ test('edits a cell with the keyboard: Enter saves, Escape cancels', async () => 
   await userEvent.keyboard('{Enter}');
   await userEvent.clear(document.activeElement as HTMLInputElement);
   await userEvent.keyboard('1234{Enter}');
+  expect(onCellEdit).toHaveBeenCalledTimes(1);
   expect(onCellEdit).toHaveBeenCalledWith({
     row: few[1],
     rowId: '1',

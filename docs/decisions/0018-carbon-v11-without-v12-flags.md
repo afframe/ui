@@ -4,7 +4,7 @@ Date: 2026-10-12
 
 ## Status
 
-Accepted. Supersedes [ADR 0002](0002-stable-carbon-with-v12-flags.md). Amends [ADR 0004](0004-scope-core-products-labs-extras.md), [ADR 0005](0005-migrated-components-via-ibm-products.md) and [ADR 0006](0006-compiled-css-light-dark-plex.md).
+Accepted, superseded in part by [ADR 0023](0023-no-compatibility-layers-before-users.md) (the per-instance `enable-v12-overflowmenu` switch and the 1.0.x menu consequences). Supersedes [ADR 0002](0002-stable-carbon-with-v12-flags.md). Amends [ADR 0004](0004-scope-core-products-labs-extras.md), [ADR 0005](0005-migrated-components-via-ibm-products.md) and [ADR 0006](0006-compiled-css-light-dark-plex.md).
 
 ## Context
 

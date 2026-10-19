@@ -1,4 +1,4 @@
-# 23. Agent guide in the package
+# 24. Agent guide in the package
 
 Date: 2026-10-19
 

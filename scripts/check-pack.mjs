@@ -48,8 +48,6 @@ const clientFamilies = [
   'FluidDatePicker',
   'TimePicker',
   'FluidTimePicker',
-  'OverflowMenu',
-  'DataTable',
 ];
 // Server-safe folders. tsdown inlines their pure re-export index.ts, so the
 // component file is the one required.

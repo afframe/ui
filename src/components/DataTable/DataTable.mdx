@@ -11,7 +11,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { TableChooser } from '../../../.storybook/TableChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, section on the toolbar menu with MenuItems added, upstream Feedback section and table of contents removed, table chooser added, Afframe notes on narrow batch actions and AI label column tables added, one canvas of the page's own story in place of the upstream canvases, sections link to their sub-pages.
+// Modified by Afframe in 2026: source label added, links pinned to the source tag, imports from @afframe/ui, row overflow menu snippet with `itemText` and a named trigger and menu, upstream Feedback section and table of contents removed, table chooser added, Afframe notes on narrow batch actions and AI label column tables added, one canvas of the page's own story in place of the upstream canvases, sections link to their sub-pages.
 
 <Meta isTemplate />
 
@@ -362,34 +362,6 @@ visible callout.
 
 Live example on the [Toolbar](?path=/docs/components-datatable-toolbar--overview)
 page.
-
-### Toolbar menu with MenuItems
-
-`TableToolbarMenu` takes `TableToolbarAction` children and is named by
-`iconDescription`. In Afframe UI it also takes a `label` prop and `MenuItem`
-children (also `MenuItemDivider`, `MenuItemGroup`, `MenuItemRadioGroup`,
-`MenuItemSelectable`), placed directly or in one Fragment. Either one switches
-that menu to Carbon's newer menu: it renders Carbon's `Menu` with its v11 look
-and works by keyboard. `label` names the trigger and the menu; each `MenuItem`
-is one menu entry with its own `label` and `onClick`. MenuItems inside your own
-wrapper component, or passed from a React Server Component, are not detected,
-so pass `label` there. The `TableToolbarMenu` types from Carbon omit `label`,
-the Afframe ones include it.
-
-Live example: the
-[With Menu Items](?path=/story/components-datatable-toolbar--with-menu-items)
-story on the Toolbar page.
-
-```jsx
-import { MenuItem, MenuItemDivider, TableToolbarMenu } from '@afframe/ui';
-
-<TableToolbarMenu label="Settings">
-  <MenuItem label="Action 1" onClick={handleAction1} />
-  <MenuItem label="Action 2" onClick={handleAction2} />
-  <MenuItemDivider />
-  <MenuItem label="Action 3" onClick={handleAction3} />
-</TableToolbarMenu>;
-```
 
 ### Overflow Menu
 

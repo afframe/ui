@@ -17,7 +17,7 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 - Focus: visible, moved on open, restored on close to the element that opened it.
 - Screen reader: roles, names, live regions; no axe violations.
 - Invalid fields: `aria-invalid` set and error text linked with `aria-describedby`; on submit, focus moves to the first invalid field, else to the error message.
-- Console: no warnings or errors in development when a story loads, except upstream ones documented as accepted, with the reason, on the component's Feature Flags page.
+- Console: no warnings or errors in development when a story loads, except upstream ones documented as accepted, with the reason, on the component's Feature Flags page, or in `docs/feature-flags.md` when it has none.
 - Controlled and uncontrolled use both work; callbacks fire once with the documented value.
 - Edge cases: no data, one item, many items, slow async, errors.
 - Server rendering: server-safe parts stay server-safe; `'use client'` only where needed.
@@ -25,7 +25,7 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 ## API (Afframe-owned)
 
 - Names match Carbon conventions (`size`, `kind`, `onChange`, `open`, `onClose`, `messages`).
-- One way to do each thing; no duplicate or dead props.
+- One way to do each thing; no duplicate or dead props, and no compatibility layers, deprecated aliases or old-shape variants kept for earlier Afframe versions (ADR 0023).
 - Siblings use the same prop and `messages` key names for the same thing.
 - No duplicated internals: logic shared by several components lives in one helper.
 - `className`, `ref` and rest props pass through to the root element.

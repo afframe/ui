@@ -7,19 +7,16 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, upstream v12 overflow menu branches removed, Afframe story for toolbar menu items added (MenuItem children and label), story names unified, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, visible overflow column header text (axe empty-table-header), keyboard play test on the row overflow menu, no-results state with IBM Products NotFoundEmptyState, inline spacing as Carbon spacing tokens, upstream v12 overflow menu branches removed, story names unified, prop getter keys passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
-import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
 import { useState } from 'react';
 import { action } from 'storybook/actions';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { afframeA11y } from '../../../../.storybook/afframeA11y.js';
 import {
   Button,
   DataTable,
-  MenuItem,
-  MenuItemDivider,
   NotFoundEmptyState,
   OverflowMenu,
   OverflowMenuItem,
@@ -604,39 +601,4 @@ WithOverflowMenu.play = async ({ canvasElement }) => {
   ).toHaveFocus();
   await userEvent.keyboard('{Escape}');
   await waitFor(() => expect(trigger).toHaveFocus());
-};
-
-// Afframe: `label` and MenuItem children turn on Carbon's newer menu in the
-// Afframe TableToolbarMenu, so the keyboard works.
-export const WithMenuItems: StoryObj<typeof TableToolbarMenu> = {
-  tags: ['afframe'],
-  parameters: { ...afframeA11y },
-  render: () => (
-    <TableToolbar aria-label="data table toolbar">
-      <TableToolbarContent>
-        <TableToolbarMenu label="Settings">
-          <MenuItem label="Action 1" onClick={action('Action 1')} />
-          <MenuItem label="Action 2" onClick={action('Action 2')} />
-          <MenuItemDivider />
-          <MenuItem label="Action 3" onClick={action('Action 3')} />
-        </TableToolbarMenu>
-      </TableToolbarContent>
-    </TableToolbar>
-  ),
-  play: async ({ canvasElement }) => {
-    const trigger = toolbarMenuTrigger(canvasElement);
-    trigger.focus();
-    await userEvent.keyboard('{Enter}');
-    // The menu renders in a portal on the body.
-    const body = within(canvasElement.ownerDocument.body);
-    await waitFor(() =>
-      expect(body.getByRole('menuitem', { name: 'Action 1' })).toHaveFocus()
-    );
-    await userEvent.keyboard('{ArrowDown}');
-    await expect(
-      body.getByRole('menuitem', { name: 'Action 2' })
-    ).toHaveFocus();
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(trigger).toHaveFocus());
-  },
 };
