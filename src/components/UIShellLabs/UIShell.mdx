@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as UIShellStories from './UIShell.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ShellChooser } from '../../../.storybook/ShellChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, Stackblitz links removed, the component list and imports under their @afframe/ui names (the Labs side nav set and HeaderContainer end in Labs), getting started rewritten for @afframe/ui (install, styles in the package CSS, imports), the SCSS section and the Stackblitz examples section removed, the Profile icon in the imports sample replaced by UserAvatar (Profile is the Labs component), upstream table of contents and Labs owner block removed.
+// Modified by Afframe in 2026: source label and source link added, Stackblitz links removed, the component list and imports under their @afframe/ui names (the Labs side nav set and HeaderContainer end in Labs), getting started rewritten for @afframe/ui (install, styles in the package CSS, imports), the SCSS section and the Stackblitz examples section removed, the Profile icon in the imports sample replaced by UserAvatar (Profile is the Labs component), upstream table of contents and Labs owner block removed, shell chooser table added, Afframe note on the Labs Global Header.
 
 <Meta isTemplate />
 
@@ -40,6 +41,16 @@ The following components come from Carbon Labs:
 - `TrialCountdown`
 
 <Canvas of={UIShellStories.Demo} />
+
+In Afframe UI, the Carbon Labs Global Header is not included. It is a web
+component (`@carbon-labs/wc-global-header`, Draft upstream) with no React
+version. Its profile, trial, help and logout parts map to `Profile`,
+`TrialCountdown`, `HelpMenu`, `LogoutBanner` and `LogoutTile`; its search,
+AssistMe, chatbot and session expiry parts have no counterpart here.
+
+## Which component to use
+
+<ShellChooser />
 
 ## Getting started
 

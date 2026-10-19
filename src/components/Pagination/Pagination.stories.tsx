@@ -7,13 +7,13 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, userEvent from storybook/test, totalItems omitted instead of set to undefined, NumberInput gets no size for xs (it has no xs size), em-dash in a comment replaced, reasons on the unused-vars eslint-disable lines, source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, userEvent from storybook/test, totalItems omitted instead of set to undefined, NumberInput gets no size for xs (it has no xs size), em-dash in a comment replaced, reasons on the unused-vars eslint-disable lines, source tag, inline spacing as Carbon spacing tokens, story names unified, WithRenderPageSelect shown, Chromatic parameters and the review TODO removed, Skeleton story and PaginationSkeleton subcomponent added. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
 import { action } from 'storybook/actions';
 import { userEvent } from 'storybook/test';
-import { NumberInput, Pagination } from '../../index.js';
+import { NumberInput, Pagination, PaginationSkeleton } from '../../index.js';
 import mdx from './Pagination.mdx';
 
 const args = {
@@ -105,6 +105,7 @@ const argTypes = {
 export default {
   title: 'Components/Pagination',
   component: Pagination,
+  subcomponents: { PaginationSkeleton },
   tags: ['carbon'],
   argTypes,
   args,
@@ -128,9 +129,6 @@ export const Default: StoryFn<typeof Pagination> = (args) => {
 
 export const TooltipHover: StoryObj<typeof Pagination> = {
   tags: ['!autodocs', '!dev'],
-  parameters: {
-    chromatic: { delay: 100 },
-  },
   play: async ({ canvasElement }) => {
     const nextButton = canvasElement.querySelector(
       '.cds--pagination__button--forward'
@@ -221,7 +219,6 @@ WithoutPageSizes.parameters = {
  * This story uses Carbon's `NumberInput` with `hideSteppers` to replace the
  * default page-select `<Select>`, illustrating how any custom control can be
  * slotted in.
- * TODO: remove after initial review ?
  */
 export const WithRenderPageSelect: StoryFn<typeof Pagination> = (args) => (
   <Pagination
@@ -258,10 +255,15 @@ export const WithRenderPageSelect: StoryFn<typeof Pagination> = (args) => (
   />
 );
 
-WithRenderPageSelect.tags = ['!dev', '!autodocs']; // remove this to enable story
 WithRenderPageSelect.parameters = {
-  chromatic: { disableSnapshot: true }, // remove this to enable snapshots
   controls: {
     exclude: ['renderPageSelect'],
   },
+};
+
+// The meta args belong to Pagination, so the skeleton takes none of them.
+export const Skeleton: StoryFn = () => <PaginationSkeleton />;
+
+Skeleton.parameters = {
+  controls: { disable: true },
 };

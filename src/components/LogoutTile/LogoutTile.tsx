@@ -5,7 +5,9 @@
 import { Logout } from '@carbon/icons-react';
 import { Button, InlineLoading, Layer, Tile } from '@carbon/react';
 import { useLayoutEffect, useRef, useState } from 'react';
+import type { HTMLAttributes, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
+import { useMergedRefs } from '../FlowParts/refs.js';
 
 export interface LogoutTileMessages {
   /** Text of the log-out button. */
@@ -30,10 +32,23 @@ interface LogoutTileBaseProps {
   /** Disables the button and shows the loading text. */
   loading?: boolean;
   messages?: Partial<LogoutTileMessages>;
+  /** On the tile root, Carbon's `Tile` `div` (inside a `Layer` wrapper). */
   className?: string;
+  /** The tile root, the same element as `className`. */
+  ref?: Ref<HTMLDivElement> | undefined;
 }
 
+/**
+ * Other attributes go to the tile root, the same element as `className`. The
+ * tile sets its own `tabIndex` (it holds focus while busy) and `aria-busy`.
+ */
+type LogoutTileRootAttributes = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  keyof LogoutTileBaseProps | 'children' | 'tabIndex' | 'aria-busy'
+>;
+
 export type LogoutTileProps = LogoutTileBaseProps &
+  LogoutTileRootAttributes &
   (
     | {
         /** Runs the log-out; a promise keeps the tile loading until it settles. */
@@ -55,11 +70,14 @@ export function LogoutTile({
   href,
   messages,
   className,
+  ref,
+  ...rest
 }: LogoutTileProps) {
   const text = resolveMessages(defaultLogoutTileMessages, messages);
   const [pending, setPending] = useState(false);
   const busy = loading || pending;
   const tileRef = useRef<HTMLDivElement>(null);
+  const mergedTileRef = useMergedRefs(tileRef, ref);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   // A disabled button drops focus to the page: keep it on the tile instead.
@@ -88,7 +106,8 @@ export function LogoutTile({
   return (
     <Layer>
       <Tile
-        ref={tileRef}
+        {...rest}
+        ref={mergedTileRef}
         tabIndex={-1}
         aria-busy={busy}
         className={['afframe-logout-tile', className]

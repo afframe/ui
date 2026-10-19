@@ -12,10 +12,17 @@ import {
   usePrefix,
 } from '@carbon/react';
 import { useId } from 'react';
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType, HTMLAttributes, ReactNode, Ref } from 'react';
 import { resolveMessages } from '../../messages.js';
-import { cloneAction, HeaderAction, useHeaderPanel } from './useHeaderPanel.js';
-import type { HeaderPanelActionProps } from './useHeaderPanel.js';
+import {
+  cloneAction,
+  HeaderAction,
+  useHeaderPanel,
+} from '../HeaderPanelParts/useHeaderPanel.js';
+import type {
+  HeaderPanelActionProps,
+  HeaderPanelRootAttribute,
+} from '../HeaderPanelParts/useHeaderPanel.js';
 
 export interface HelpMenuMessages {
   /** Accessible name of the action (and its tooltip). */
@@ -49,12 +56,22 @@ export type HelpMenuItem =
     }
   | { type: 'divider' };
 
-export interface HelpMenuProps extends HeaderPanelActionProps {
+interface HelpMenuOwnProps {
   items: HelpMenuItem[];
-  /** Accessible name of the action; default `messages.label`. */
-  label?: string;
   messages?: Partial<HelpMenuMessages>;
+  /** On the panel root: the HeaderPanel `div`, or in `'content'` mode the body `div`. */
+  className?: string;
+  /** The panel root, the same element as `className`. */
+  ref?: Ref<HTMLDivElement> | undefined;
 }
+
+/** Other attributes go to the panel root, the same element as `className`. */
+export type HelpMenuProps = HelpMenuOwnProps &
+  Omit<
+    HTMLAttributes<HTMLDivElement>,
+    keyof HelpMenuOwnProps | HeaderPanelRootAttribute
+  > &
+  HeaderPanelActionProps;
 
 // SwitcherItem passes `as`, `id` and `aria-describedby` on to its element; its
 // types do not list them. Same component, so Switcher still clones it.
@@ -98,6 +115,9 @@ function HelpMenuItems({
 }: ItemsProps) {
   const baseId = useId();
   const prefix = usePrefix();
+  // As in Carbon's Menu: once one item has an icon, every label starts after
+  // the icon column.
+  const withIcons = items.some((item) => 'icon' in item && item.icon);
   return (
     <Switcher aria-label={label} expanded={expanded}>
       {items.map((item, index) => {
@@ -111,6 +131,9 @@ function HelpMenuItems({
           <Item
             key={item.id}
             id={id}
+            {...(item.description === undefined
+              ? {}
+              : { className: 'afframe-help-menu-item--described' })}
             aria-labelledby={
               external ? `${id}-label ${id}-new-tab` : `${id}-label`
             }
@@ -128,7 +151,11 @@ function HelpMenuItems({
               // A link that leaves the page takes focus with it.
               onSelected?.(!!item.href && !external);
             }}>
-            {Icon && <Icon size={16} className="afframe-help-menu-icon" />}
+            {Icon ? (
+              <Icon size={16} className="afframe-help-menu-icon" />
+            ) : (
+              withIcons && <span className="afframe-help-menu-icon-space" />
+            )}
             <span className="afframe-help-menu-text">
               <span id={`${id}-label`}>{item.label}</span>
               {item.description !== undefined && (
@@ -157,10 +184,26 @@ function HelpMenuItems({
 }
 
 // Body only: the container owns open state, Escape, outside press and focus.
-function HelpMenuContent({ items, messages, className }: HelpMenuProps) {
+function HelpMenuContent({
+  items,
+  messages,
+  className,
+  // Left out of the root's attributes. The union keeps the panel-only props
+  // out of this mode; dropping them still keeps a cast off the DOM.
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  presentation: _presentation,
+  open: _open,
+  defaultOpen: _defaultOpen,
+  onOpenChange: _onOpenChange,
+  renderAction: _renderAction,
+  /* eslint-enable @typescript-eslint/no-unused-vars */
+  ...rest
+}: HelpMenuProps) {
   const text = resolveMessages(defaultHelpMenuMessages, messages);
   return (
-    <div className={['afframe-help-menu', className].filter(Boolean).join(' ')}>
+    <div
+      {...rest}
+      className={['afframe-help-menu', className].filter(Boolean).join(' ')}>
       <HelpMenuItems
         items={items}
         label={text.panelLabel}
@@ -173,16 +216,24 @@ function HelpMenuContent({ items, messages, className }: HelpMenuProps) {
 
 function HelpMenuPanel({
   items,
-  label,
   messages,
   className,
+  ref,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- left out of the root's attributes
+  presentation: _presentation,
+  open,
+  defaultOpen,
+  onOpenChange,
   renderAction,
-  ...openProps
+  ...rest
 }: HelpMenuProps) {
   const text = resolveMessages(defaultHelpMenuMessages, messages);
   const prefix = usePrefix();
   const { isOpen, close, panelProps, actionProps } = useHeaderPanel({
-    ...openProps,
+    open,
+    defaultOpen,
+    onOpenChange,
+    ref,
     initialFocus: (panel) =>
       panel.querySelector<HTMLElement>(`.${prefix}--switcher__item-link`),
   });
@@ -194,13 +245,14 @@ function HelpMenuPanel({
       ) : (
         <HeaderAction
           {...actionProps}
-          aria-label={label ?? text.label}
+          aria-label={text.label}
           isActive={isOpen}
           tooltipAlignment="end">
           <Help size={20} />
         </HeaderAction>
       )}
       <HeaderPanel
+        {...rest}
         {...panelProps}
         expanded={isOpen}
         addFocusListeners={false}

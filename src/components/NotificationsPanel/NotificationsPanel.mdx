@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as NotificationsPanelStories from './NotificationsPanel.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ShellChooser } from '../../../.storybook/ShellChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: StoryDocsPage blocks rewritten as MDX, internal usage guidelines link dropped, source label added, upstream table of contents removed.
+// Modified by Afframe in 2026: StoryDocsPage blocks rewritten as MDX, internal usage guidelines link dropped, source label added, upstream table of contents removed, Afframe overview and shell chooser table added.
 
 <Meta isTemplate />
 
@@ -12,6 +13,23 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 <SourceLabel name="ibm-products" />
 
 [Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/NotificationsPanel)
+
+## Overview
+
+`NotificationsPanel` opens from a bell in the UI shell header and lists the
+user's notifications by day, with read more, dismiss, do not disturb and a
+link to all notifications. With no notifications it shows its own empty state.
+
+Use it for notifications that collect over time. For a message about the page
+the user is on, use a Carbon notification from the
+[Notifications](?path=/docs/components-notifications-inlinenotification--overview)
+family. Use
+[NotificationsEmptyState](?path=/docs/components-empty-states-notificationsemptystate--overview)
+for an empty notifications view outside this panel.
+
+## Which component to use
+
+<ShellChooser />
 
 ## Default
 

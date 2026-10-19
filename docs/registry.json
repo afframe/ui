@@ -2477,7 +2477,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShell/UIShell.mdx"
     },
     {
       "name": "HeaderGlobalAction",
@@ -2797,14 +2798,6 @@
       "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
-      "name": "TabContent",
-      "kind": "component",
-      "source": "carbon",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable"
-    },
-    {
       "name": "TabsVertical",
       "kind": "component",
       "source": "carbon",
@@ -2819,7 +2812,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
       "name": "IconTab",
@@ -2827,7 +2821,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tabs/Tabs.mdx"
     },
     {
       "name": "ContentSwitcher",
@@ -2871,7 +2866,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Pagination/Pagination.mdx"
     },
     {
       "name": "PaginationNav",
@@ -4115,7 +4111,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview-candidate"
+      "status": "preview-candidate",
+      "docs": "src/components/Toolbar/Toolbar.mdx"
     },
     {
       "name": "previewCandidate__ToolbarGroup",
@@ -4123,7 +4120,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview-candidate"
+      "status": "preview-candidate",
+      "docs": "src/components/Toolbar/Toolbar.mdx"
     },
     {
       "name": "previewCandidate__SearchBar",
@@ -4367,7 +4365,8 @@
       "upstream": {
         "package": "@carbon-labs/react-ui-shell",
         "name": "HeaderContainer"
-      }
+      },
+      "docs": "src/components/UIShellLabs/UIShell.mdx"
     },
     {
       "name": "HeaderDivider",

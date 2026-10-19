@@ -6,4 +6,4 @@ export type {
   HelpMenuMessages,
   HelpMenuProps,
 } from './HelpMenu.js';
-export type { HeaderPanelActionProps } from './useHeaderPanel.js';
+export type { HeaderPanelActionProps } from '../HeaderPanelParts/useHeaderPanel.js';

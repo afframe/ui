@@ -11,13 +11,21 @@ import {
   HeaderPopoverContent,
 } from '../../index.js';
 import { HelpMenu } from '../HelpMenu/HelpMenu.js';
-import { CarbonShell, LabsShell } from '../LogoutBanner/storyShells.js';
+import {
+  CarbonShell,
+  headerPanelArgTypes,
+  LabsShell,
+} from '../HeaderPanelParts/storyShells.js';
 import { EnvironmentSwitcher } from './EnvironmentSwitcher.js';
 import type {
   EnvironmentOption,
   EnvironmentSwitcherProps,
 } from './EnvironmentSwitcher.js';
 import mdx from './EnvironmentSwitcher.mdx';
+
+// The props of the default `'panel'` presentation. Story args are typed as
+// the whole union, so the panel stories narrow them.
+type PanelProps = Extract<EnvironmentSwitcherProps, { presentation?: 'panel' }>;
 
 const environments: EnvironmentOption[] = [
   { id: 'dev', label: 'Development' },
@@ -51,6 +59,7 @@ const meta = {
     onOpenChange: action('onOpenChange'),
     defaultOpen: true,
   },
+  argTypes: headerPanelArgTypes,
   render: (args) => <CarbonShell actions={<Stateful {...args} />} />,
   parameters: {
     ...afframeA11y,
@@ -78,10 +87,22 @@ export const WithProduction: Story = {
   },
 };
 
+// The panel opens, but no environment can be chosen.
+export const Disabled: Story = {
+  args: { disabled: true, onChange: fn() },
+  play: async ({ args, canvas, userEvent }) => {
+    const development = canvas.getByRole('radio', { name: /Development/ });
+    await expect(development).toBeDisabled();
+    await userEvent.click(development);
+    await expect(args.onChange).not.toHaveBeenCalled();
+    await expect(canvas.getByRole('radio', { name: /Staging/ })).toBeChecked();
+  },
+};
+
 // The default action works in the Labs header bar as it is; renderAction
 // swaps in a ghost button like the Labs header's menu buttons.
 // The trigger shows the current environment from the app's state.
-function LabsTrigger(props: EnvironmentSwitcherProps) {
+function LabsTrigger(props: PanelProps) {
   const [value, setValue] = useState(props.value);
   const current = props.environments.find((option) => option.id === value);
   return (
@@ -103,7 +124,9 @@ function LabsTrigger(props: EnvironmentSwitcherProps) {
 
 export const InLabsShell: Story = {
   args: { environments, defaultOpen: false },
-  render: (args) => <LabsShell actions={<LabsTrigger {...args} />} />,
+  render: (args) => (
+    <LabsShell actions={<LabsTrigger {...(args as PanelProps)} />} />
+  ),
   play: async ({ canvas, userEvent }) => {
     const trigger = canvas.getByRole('button', {
       name: 'Environment: Staging',
@@ -118,7 +141,7 @@ export const InLabsShell: Story = {
 };
 
 // Two header actions, one open panel: the page holds which one is open.
-function TwoActions(props: EnvironmentSwitcherProps) {
+function TwoActions(props: PanelProps) {
   const [openPanel, setOpenPanel] = useState<'environment' | 'help' | null>(
     null
   );
@@ -148,7 +171,7 @@ function TwoActions(props: EnvironmentSwitcherProps) {
 
 export const OnePanelAtATime: Story = {
   args: { defaultOpen: false },
-  render: (args) => <TwoActions {...args} />,
+  render: (args) => <TwoActions {...(args as PanelProps)} />,
   play: async ({ canvas, userEvent }) => {
     const environment = canvas.getByLabelText('Environment: Staging', {
       selector: 'button',
@@ -166,7 +189,8 @@ export const OnePanelAtATime: Story = {
 // outside press, Escape and focus return; the switcher renders only the list.
 export const InHeaderPopover: Story = {
   args: { environments, presentation: 'content', onChange: fn() },
-  render: (args) => (
+  // Only the props content mode takes: the meta's open state args stay out.
+  render: ({ environments, value, onChange }) => (
     <LabsShell
       actions={
         <HeaderPopover align="bottom-end" className="story-environment-popover">
@@ -174,7 +198,12 @@ export const InHeaderPopover: Story = {
             <ArrowsHorizontal size={20} />
           </HeaderPopoverButton>
           <HeaderPopoverContent>
-            <Stateful {...args} />
+            <Stateful
+              presentation="content"
+              environments={environments}
+              value={value}
+              onChange={onChange}
+            />
           </HeaderPopoverContent>
         </HeaderPopover>
       }

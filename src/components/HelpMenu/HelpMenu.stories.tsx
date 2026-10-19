@@ -9,10 +9,18 @@ import {
   HeaderPopoverButton,
   HeaderPopoverContent,
 } from '../../index.js';
-import { CarbonShell, LabsShell } from '../LogoutBanner/storyShells.js';
+import {
+  CarbonShell,
+  headerPanelArgTypes,
+  LabsShell,
+} from '../HeaderPanelParts/storyShells.js';
 import { HelpMenu } from './HelpMenu.js';
-import type { HelpMenuItem } from './HelpMenu.js';
+import type { HelpMenuItem, HelpMenuProps } from './HelpMenu.js';
 import mdx from './HelpMenu.mdx';
+
+// The props of the default `'panel'` presentation. Story args are typed as
+// the whole union, so the panel stories narrow them.
+type PanelProps = Extract<HelpMenuProps, { presentation?: 'panel' }>;
 
 const items: HelpMenuItem[] = [
   { id: 'docs', label: 'Documentation', href: '#docs', icon: Book },
@@ -54,6 +62,7 @@ const meta = {
   component: HelpMenu,
   tags: ['afframe'],
   args: { items, defaultOpen: true, onOpenChange: action('onOpenChange') },
+  argTypes: headerPanelArgTypes,
   render: (args) => <CarbonShell actions={<HelpMenu {...args} />} />,
   parameters: {
     ...afframeA11y,
@@ -96,7 +105,7 @@ export const InLabsShell: Story = {
     <LabsShell
       actions={
         <HelpMenu
-          {...args}
+          {...(args as PanelProps)}
           renderAction={
             <Button kind="ghost" size="lg" renderIcon={Help}>
               Help
@@ -123,7 +132,8 @@ export const InLabsShell: Story = {
 // outside press, Escape and focus return; HelpMenu renders only the list.
 export const InHeaderPopover: Story = {
   args: { presentation: 'content' },
-  render: (args) => (
+  // Only the props content mode takes: the meta's open state args stay out.
+  render: ({ items }) => (
     <LabsShell
       actions={
         <HeaderPopover align="bottom-end" className="story-help-popover">
@@ -131,7 +141,7 @@ export const InHeaderPopover: Story = {
             <Help size={20} />
           </HeaderPopoverButton>
           <HeaderPopoverContent>
-            <HelpMenu {...args} />
+            <HelpMenu presentation="content" items={items} />
           </HeaderPopoverContent>
         </HeaderPopover>
       }

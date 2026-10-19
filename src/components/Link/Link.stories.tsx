@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Link from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Link from @afframe/ui, source tag, href on the Inline links so they take focus, PairedWithIcon renamed WithIcon. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -71,10 +71,11 @@ export const Inline: StoryFn<typeof Link> = (args) => {
 };
 Inline.args = {
   ...Default.args,
+  href: '#',
   inline: true,
 };
 
-export const PairedWithIcon: StoryFn<typeof Link> = (args) => {
+export const WithIcon: StoryFn<typeof Link> = (args) => {
   return (
     <Link
       href="#"

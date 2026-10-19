@@ -332,11 +332,17 @@ test('messages replace every English string', () => {
 });
 
 test('content mode renders only the list and leaves Escape to its container', async () => {
+  // @ts-expect-error: content mode takes no open state props.
+  const props: HelpMenuProps = {
+    items,
+    presentation: 'content',
+    defaultOpen: false,
+  };
   const onKeyDown = vi.fn();
   render(
     <AfframeProvider>
       <div onKeyDown={(event) => onKeyDown(event.key)}>
-        <HelpMenu items={items} presentation="content" defaultOpen={false} />
+        <HelpMenu {...props} />
       </div>
     </AfframeProvider>
   );
@@ -357,4 +363,20 @@ test('content mode renders only the list and leaves Escape to its container', as
   // Selecting keeps the list: closing is the container's job.
   expect(shortcuts).toBeInTheDocument();
   expect(shortcuts).toHaveFocus();
+});
+
+test('className, ref and other attributes go to the panel root', () => {
+  const ref = createRef<HTMLDivElement>();
+  render(<Page ref={ref} className="x-help" data-testid="x-panel" />);
+  expect(ref.current).toBe(screen.getByTestId('x-panel'));
+  expect(ref.current).toHaveClass('cds--header-panel', 'x-help');
+  render(
+    <HelpMenu
+      items={items}
+      presentation="content"
+      ref={ref}
+      className="x-content"
+    />
+  );
+  expect(ref.current).toHaveClass('afframe-help-menu', 'x-content');
 });

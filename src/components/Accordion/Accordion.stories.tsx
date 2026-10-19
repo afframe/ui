@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: components from @afframe/ui, source tag, styles from a plain CSS file, types on story args, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: components from @afframe/ui, source tag, styles from a plain CSS file, types on story args, story names unified, Skeleton wrapper takes a max width instead of a fixed width. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useState } from 'react';
@@ -283,7 +283,7 @@ export const Skeleton: StoryFn<typeof AccordionSkeleton> = (args) => (
 
 Skeleton.decorators = [
   (Story) => (
-    <div style={{ width: '500px' }}>
+    <div style={{ maxWidth: '500px' }}>
       <Story />
     </div>
   ),

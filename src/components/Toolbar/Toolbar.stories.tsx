@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2021, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, stories exported at their declaration, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, stories exported at their declaration, story names unified, ToolbarButton and ToolbarGroup listed as subcomponents. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -54,6 +54,7 @@ type ToolbarStoryProps = ComponentProps<typeof Toolbar>;
 export default {
   title: 'Preview/previewCandidate__Toolbar',
   component: Toolbar,
+  subcomponents: { ToolbarButton, ToolbarGroup },
   tags: ['ibm-products'],
   parameters: {
     docs: {

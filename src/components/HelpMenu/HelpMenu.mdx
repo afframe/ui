@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as HelpMenuStories from './HelpMenu.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ShellChooser } from '../../../.storybook/ShellChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -32,6 +33,21 @@ the fact that the items are links (no "open in new tab", no link list). Arrow
 keys still move between items, as in Carbon's switcher.
 
 <Canvas of={HelpMenuStories.Default} />
+
+## When to use
+
+Use `HelpMenu` for the help links and actions every page shares:
+documentation, a product tour, support, service status. Do not use it for:
+
+- switching between apps or products: Carbon `HeaderPanel` with `Switcher`
+  ([Header](?path=/docs/components-ui-shell-header--overview));
+- notifications: [NotificationsPanel](?path=/docs/components-ui-shell-notificationspanel--overview);
+- the user's account and log-out: Labs
+  [Profile](?path=/docs/components-ui-shell-profile--overview) with
+  `LogoutTile`;
+- switching the environment: `EnvironmentSwitcher`.
+
+<ShellChooser />
 
 ## Usage and props
 
@@ -66,15 +82,16 @@ import { HelpMenu } from '@afframe/ui';
   - `{ type: 'divider' }`: a line between groups.
 - `open`, `defaultOpen`, `onOpenChange`: controlled or uncontrolled open
   state. `onOpenChange` is called once per change.
-- `label`: the action's accessible name and tooltip; default
-  `messages.label`.
 - `renderAction`: a trigger element to use instead of the icon action (see
   the Labs shell).
 - `presentation`: `'panel'` (default) renders the action and its panel;
   `'content'` renders only the list, for a Labs `HeaderPopover` (see below).
-  In `'content'` mode `open`, `defaultOpen`, `onOpenChange`, `label` and
-  `renderAction` are ignored.
-- `messages`: overrides for the strings below.
+  In `'content'` mode `open`, `defaultOpen`, `onOpenChange` and
+  `renderAction` are type errors.
+- `messages`: overrides for the strings below; the action's name is
+  `messages.label`.
+- `className`, `ref` and other attributes go to the panel root: the
+  `HeaderPanel` `div`, or in `'content'` mode the `div` around the list.
 
 ### Use in the Carbon header
 
@@ -119,7 +136,9 @@ the popover's state.
 
 Header panels share the same place under the header. Keep one open: hold the
 open panel's name in state and pass `open` and `onOpenChange` to each action
-(see the EnvironmentSwitcher page for a page with two actions).
+(see the
+[One panel at a time](?path=/story/components-ui-shell-environmentswitcher--one-panel-at-a-time)
+story of `EnvironmentSwitcher` for a page with two actions).
 
 <ArgTypes of={HelpMenuStories} />
 
@@ -132,6 +151,8 @@ open panel's name in state and pass `open` and `onOpenChange` to each action
 | `label`         | Help                 |
 | `opensInNewTab` | (opens in a new tab) |
 | `panelLabel`    | Help links           |
+
+`label` names the action and its tooltip; `panelLabel` names the list.
 
 ## Examples
 
@@ -164,7 +185,7 @@ action; a link that navigates the page does not move focus.
 
 Screen readers announce:
 
-- the action as a button named by `label`, with its expanded state;
+- the action as a button named by `messages.label`, with its expanded state;
   `aria-controls` points at the panel;
 - the list by `panelLabel`, and each item as a link or a button named by its
   label (plus `opensInNewTab` for external links) and described by its

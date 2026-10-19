@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Resizer from @afframe/ui (styles ship in the package CSS, so the resizer.scss import is dropped), icons from @afframe/ui icons, a null guard in the grid story's resize-end handler, an unused initial assignment of newFraction removed, tabIndex on the scrollable Four Panels right-top panel, eslint-disable comments for plugins this repo does not use removed, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Resizer from @afframe/ui (styles ship in the package CSS, so the resizer.scss import is dropped), icons from @afframe/ui icons, a null guard in the grid story's resize-end handler, an unused initial assignment of newFraction removed, tabIndex on the scrollable Four Panels right-top panel, eslint-disable comments for plugins this repo does not use removed, source tag, story names unified, props table written in the argTypes. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 // cspell:ignore resizer
@@ -26,13 +26,55 @@ export default {
       page: mdx,
     },
   },
+  // Docgen does not read the Labs package, so the props table is written here
+  // from its types and source.
   argTypes: {
     orientation: {
       control: false,
+      description:
+        'Direction of the handle: horizontal resizes the block size of its siblings, vertical the inline size.',
+      type: { name: 'string', required: true },
+      table: { type: { summary: "'horizontal' | 'vertical'" } },
+    },
+    onResize: {
+      description:
+        'Called on every mouse or keyboard move with the delta from the start position.',
+      table: {
+        type: {
+          summary: '(event: MouseEvent | KeyboardEvent, delta: number) => void',
+        },
+      },
+    },
+    onResizeEnd: {
+      description: 'Called when a resize ends, with the ref of the handle.',
+      table: {
+        type: {
+          summary:
+            '(event: MouseEvent | KeyboardEvent, ref: RefObject<HTMLDivElement>) => void',
+        },
+      },
+    },
+    onDoubleClick: {
+      description:
+        'Replaces the default double-click reset of the sibling sizes.',
+      table: { type: { summary: '(event: MouseEvent) => string | void' } },
+    },
+    thickness: {
+      control: false,
+      description: 'Thickness of the handle in pixels.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '4' } },
+    },
+    className: {
+      control: false,
+      description: 'Class names added to the handle.',
+      table: { type: { summary: 'string' } },
     },
     children: {
       control: false,
+      description: 'Custom handle content.',
+      table: { type: { summary: 'ReactNode' } },
     },
+    key: { table: { disable: true } },
   },
 } satisfies Meta<typeof Resizer>;
 

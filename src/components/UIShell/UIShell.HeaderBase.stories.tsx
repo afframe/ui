@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, classnames inlined, HeaderMenu docs entry uses the public HeaderMenu, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, classnames inlined, HeaderMenu docs entry uses the public HeaderMenu, inline spacing as Carbon spacing tokens, story names unified, HeaderContainer listed as a subcomponent. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -226,6 +226,7 @@ export default {
   tags: ['carbon'],
   subcomponents: {
     Content,
+    HeaderContainer,
     HeaderMenuButton,
     HeaderName,
     HeaderNavigation,

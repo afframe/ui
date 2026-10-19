@@ -5,7 +5,7 @@ import { expect, waitFor } from 'storybook/test';
 import { afframeA11y } from '../../../.storybook/afframeA11y.js';
 import { UserAvatar } from '../../icons.js';
 import { HeaderGlobalAction, HeaderPanel } from '../../index.js';
-import { CarbonShell, LabsShell } from '../LogoutBanner/storyShells.js';
+import { CarbonShell, LabsShell } from '../HeaderPanelParts/storyShells.js';
 import { LogoutTile } from './LogoutTile.js';
 import type { LogoutTileProps } from './LogoutTile.js';
 import mdx from './LogoutTile.mdx';
@@ -55,7 +55,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Loading: Story = {
+export const LoggingOut: Story = {
   args: { loading: true },
   play: async ({ canvas }) => {
     const button = canvas.getByRole('button', { name: /Logging out/ });

@@ -13,6 +13,15 @@
     min-block-size: $spacing-07;
   }
 
+  // Carbon fixes the row at 2rem; a label with its description needs more.
+  .afframe-help-menu-item--described {
+    block-size: auto;
+  }
+
+  .afframe-help-menu-item--described .cds--switcher__item-link {
+    padding-block: $spacing-03;
+  }
+
   // Item buttons look like the item links.
   button.cds--switcher__item-link {
     inline-size: 100%;
@@ -27,6 +36,11 @@
 .afframe-help-menu-icon {
   flex: none;
   margin-block-start: $spacing-01;
+}
+
+.afframe-help-menu-icon-space {
+  flex: none;
+  inline-size: $spacing-05;
 }
 
 .afframe-help-menu-text {

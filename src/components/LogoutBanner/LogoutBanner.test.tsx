@@ -22,7 +22,7 @@ test('expiring: a polite status with the minutes and a stay action', async () =>
   expect(screen.queryByRole('alert')).toBeNull();
   await userEvent.click(screen.getByRole('button', { name: 'Stay signed in' }));
   expect(onStaySignedIn).toHaveBeenCalledOnce();
-  // No close button and no focus sentinels without onDismiss.
+  // No close button and no focus sentinels without onClose.
   expect(screen.getAllByRole('button')).toHaveLength(1);
   expect(screen.queryByRole('link')).toBeNull();
 });
@@ -59,16 +59,16 @@ test('the text changes only with the minute count', () => {
   expect(banner.textContent).toContain('Your session ends in 1 minute.');
 });
 
-test('onDismiss shows the close button; close and Escape call it, the app removes the banner', async () => {
-  const onDismiss = vi.fn();
-  renderBanner({ variant: 'expiring', minutesLeft: 4, onDismiss });
+test('onClose shows the close button; close and Escape call it, the app removes the banner', async () => {
+  const onClose = vi.fn();
+  renderBanner({ variant: 'expiring', minutesLeft: 4, onClose });
   await userEvent.click(screen.getByRole('button', { name: 'Close' }));
-  expect(onDismiss).toHaveBeenCalledOnce();
+  expect(onClose).toHaveBeenCalledOnce();
   // Carbon would hide itself; the app owns visibility, so it stays.
   expect(screen.getByRole('status')).toBeInTheDocument();
   screen.getByRole('button', { name: 'Close' }).focus();
   await userEvent.keyboard('{Escape}');
-  expect(onDismiss).toHaveBeenCalledTimes(2);
+  expect(onClose).toHaveBeenCalledTimes(2);
 });
 
 test('messages replace every English string', () => {
@@ -76,7 +76,7 @@ test('messages replace every English string', () => {
     variant: 'expiring',
     minutesLeft: 7,
     onStaySignedIn() {},
-    onDismiss() {},
+    onClose() {},
     messages: {
       expiring: (minutes) => `X-expiring-${minutes}`,
       staySignedIn: 'X-stay',
@@ -123,4 +123,11 @@ test('a whole minute count does not warn', () => {
   renderBanner({ variant: 'expiring', minutesLeft: 4 });
   expect(warn).not.toHaveBeenCalled();
   warn.mockRestore();
+});
+
+test('className and other attributes go to the banner root', () => {
+  renderBanner({ variant: 'signed-out', className: 'x-banner', id: 'x-root' });
+  const root = screen.getByRole('alert');
+  expect(root).toHaveAttribute('id', 'x-root');
+  expect(root).toHaveClass('cds--actionable-notification', 'x-banner');
 });

@@ -11,18 +11,27 @@ import {
   usePrefix,
 } from '@carbon/react';
 import { useId, useRef, useState } from 'react';
-import type { FocusEvent, KeyboardEvent, MouseEvent } from 'react';
+import type {
+  FocusEvent,
+  HTMLAttributes,
+  KeyboardEvent,
+  MouseEvent,
+  Ref,
+} from 'react';
 import { resolveMessages } from '../../messages.js';
 import {
   cloneAction,
   HeaderAction,
   useHeaderPanel,
-} from '../HelpMenu/useHeaderPanel.js';
-import type { HeaderPanelActionProps } from '../HelpMenu/useHeaderPanel.js';
+} from '../HeaderPanelParts/useHeaderPanel.js';
+import type {
+  HeaderPanelActionProps,
+  HeaderPanelRootAttribute,
+} from '../HeaderPanelParts/useHeaderPanel.js';
 
 export interface EnvironmentSwitcherMessages {
   /** Accessible name of the panel. */
-  label: string;
+  panelLabel: string;
   /** Legend of the list of environments. */
   panelHeading: string;
   /** Accessible name of the action and its tooltip. */
@@ -34,7 +43,7 @@ export interface EnvironmentSwitcherMessages {
 }
 
 export const defaultEnvironmentSwitcherMessages: EnvironmentSwitcherMessages = {
-  label: 'Switch environment',
+  panelLabel: 'Switch environment',
   panelHeading: 'Environments',
   currentEnvironment: (label) => `Environment: ${label}`,
   productionTag: 'Production',
@@ -49,18 +58,34 @@ export interface EnvironmentOption {
   production?: boolean;
 }
 
-export interface EnvironmentSwitcherProps extends HeaderPanelActionProps {
+interface EnvironmentSwitcherOwnProps {
   environments: EnvironmentOption[];
   /** Id of the current environment; the app owns it. */
   value: string;
   /** Called once with the chosen id when the user switches. */
   onChange: (id: string) => void;
-  /** Accessible name of the action; default `messages.currentEnvironment(current label)`. */
-  label?: string;
   /** The panel opens but no environment can be chosen. */
   disabled?: boolean;
   messages?: Partial<EnvironmentSwitcherMessages>;
+  /** On the panel root: the HeaderPanel `div`, or in `'content'` mode the body `div`. */
+  className?: string;
+  /** The panel root, the same element as `className`. */
+  ref?: Ref<HTMLDivElement> | undefined;
 }
+
+/**
+ * Other attributes go to the panel root, the same element as `className`.
+ * The panel sets its own `role` and `aria-label` (`messages.panelLabel`).
+ */
+export type EnvironmentSwitcherProps = EnvironmentSwitcherOwnProps &
+  Omit<
+    HTMLAttributes<HTMLDivElement>,
+    | keyof EnvironmentSwitcherOwnProps
+    | HeaderPanelRootAttribute
+    | 'role'
+    | 'aria-label'
+  > &
+  HeaderPanelActionProps;
 
 export function EnvironmentSwitcher(props: EnvironmentSwitcherProps) {
   return props.presentation === 'content' ? (
@@ -194,6 +219,16 @@ function EnvironmentSwitcherContent({
   disabled = false,
   messages,
   className,
+  // Left out of the root's attributes. The union keeps the panel-only props
+  // out of this mode; dropping them still keeps a cast off the DOM.
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  presentation: _presentation,
+  open: _open,
+  defaultOpen: _defaultOpen,
+  onOpenChange: _onOpenChange,
+  renderAction: _renderAction,
+  /* eslint-enable @typescript-eslint/no-unused-vars */
+  ...rest
 }: EnvironmentSwitcherProps) {
   const text = resolveMessages(defaultEnvironmentSwitcherMessages, messages);
   const prefix = usePrefix();
@@ -214,6 +249,7 @@ function EnvironmentSwitcherContent({
 
   return (
     <div
+      {...rest}
       className={['afframe-environment-switcher', className]
         .filter(Boolean)
         .join(' ')}>
@@ -244,12 +280,17 @@ function EnvironmentSwitcherPanel({
   environments,
   value,
   onChange,
-  label,
   disabled = false,
   messages,
   className,
+  ref,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- left out of the root's attributes
+  presentation: _presentation,
+  open,
+  defaultOpen,
+  onOpenChange,
   renderAction,
-  ...openProps
+  ...rest
 }: EnvironmentSwitcherProps) {
   const text = resolveMessages(defaultEnvironmentSwitcherMessages, messages);
   const prefix = usePrefix();
@@ -262,7 +303,10 @@ function EnvironmentSwitcherPanel({
   });
   const [draft, setDraft] = useState(value);
   const { isOpen, close, panelProps, actionProps } = useHeaderPanel({
-    ...openProps,
+    open,
+    defaultOpen,
+    onOpenChange,
+    ref,
     initialFocus: (panel) =>
       panel.querySelector<HTMLElement>('input:checked') ??
       panel.querySelector<HTMLElement>('input'),
@@ -275,7 +319,7 @@ function EnvironmentSwitcherPanel({
     if (isOpen) setDraft(value);
   }
   const current = environments.find((environment) => environment.id === value);
-  const actionName = label ?? text.currentEnvironment(current?.label ?? value);
+  const actionName = text.currentEnvironment(current?.label ?? value);
 
   return (
     <>
@@ -297,8 +341,9 @@ function EnvironmentSwitcherPanel({
         </HeaderAction>
       )}
       <HeaderPanel
+        {...rest}
         {...panelProps}
-        {...{ 'aria-label': text.label, role: 'region' }}
+        {...{ 'aria-label': text.panelLabel, role: 'region' }}
         expanded={isOpen}
         addFocusListeners={false}
         className={['afframe-environment-switcher', className]

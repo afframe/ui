@@ -1,9 +1,10 @@
 import { Story, Canvas, ArgTypes, Meta } from '@storybook/addon-docs/blocks';
 import * as BreadcrumbStories from './Breadcrumb.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { NavigationChooser } from '../../../.storybook/NavigationChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.118.0, story names unified, upstream Feedback section and table of contents removed, navigation chooser table added.
 
 <Meta isTemplate />
 
@@ -25,6 +26,10 @@ You can build a breadcrumb using a combination of the `Breadcrumb` and
 responsible for displaying the page links in the hierarchy.
 
 <Canvas of={BreadcrumbStories.Default} />
+
+## Which component to use
+
+<NavigationChooser />
 
 ## Breadcrumb with `OverflowMenu`
 
