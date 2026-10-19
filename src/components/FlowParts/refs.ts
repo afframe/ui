@@ -1,5 +1,5 @@
 'use client';
-// Ref helpers for the dialog roots (React 19 passes `ref` as a plain prop).
+// Ref helpers for the dialog roots and the header actions (React 19 passes `ref` as a plain prop).
 // Carbon's useMergedRefs is not public.
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Ref, RefCallback, RefObject } from 'react';

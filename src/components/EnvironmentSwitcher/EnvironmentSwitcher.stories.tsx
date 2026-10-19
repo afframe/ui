@@ -11,7 +11,11 @@ import {
   HeaderPopoverContent,
 } from '../../index.js';
 import { HelpMenu } from '../HelpMenu/HelpMenu.js';
-import { CarbonShell, LabsShell } from '../HeaderPanelParts/storyShells.js';
+import {
+  CarbonShell,
+  headerPanelArgTypes,
+  LabsShell,
+} from '../HeaderPanelParts/storyShells.js';
 import { EnvironmentSwitcher } from './EnvironmentSwitcher.js';
 import type {
   EnvironmentOption,
@@ -55,6 +59,7 @@ const meta = {
     onOpenChange: action('onOpenChange'),
     defaultOpen: true,
   },
+  argTypes: headerPanelArgTypes,
   render: (args) => <CarbonShell actions={<Stateful {...args} />} />,
   parameters: {
     ...afframeA11y,

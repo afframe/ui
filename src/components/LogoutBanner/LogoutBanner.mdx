@@ -76,7 +76,8 @@ import { LogoutBanner } from '@afframe/ui';
 - `messages`: overrides for the strings below.
 - `className` and other attributes go to the banner root, Carbon's
   `ActionableNotification` `div`. There is no `ref`: Carbon sets its own ref
-  on that `div` and does not forward one.
+  on that `div` and does not forward one. Carbon also sets its own `onKeyDown`
+  and `onBlur` there.
 
 ### Use in the Carbon header
 

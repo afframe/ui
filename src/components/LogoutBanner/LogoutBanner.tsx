@@ -52,7 +52,8 @@ interface LogoutBannerBaseProps {
 /**
  * Other attributes go to the banner root, the same element as `className`.
  * There is no `ref`: Carbon's ActionableNotification sets its own ref on
- * that `div` and does not forward one.
+ * that `div` and does not forward one. It also sets its own `onKeyDown` and
+ * `onBlur` there, after the passed attributes.
  */
 type LogoutBannerRootAttributes = Omit<
   HTMLAttributes<HTMLDivElement>,
@@ -62,6 +63,8 @@ type LogoutBannerRootAttributes = Omit<
   | 'title'
   | 'aria-label'
   | 'aria-labelledby'
+  | 'onKeyDown'
+  | 'onBlur'
 >;
 
 export type LogoutBannerProps = LogoutBannerBaseProps &

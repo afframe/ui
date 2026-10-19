@@ -9,7 +9,11 @@ import {
   HeaderPopoverButton,
   HeaderPopoverContent,
 } from '../../index.js';
-import { CarbonShell, LabsShell } from '../HeaderPanelParts/storyShells.js';
+import {
+  CarbonShell,
+  headerPanelArgTypes,
+  LabsShell,
+} from '../HeaderPanelParts/storyShells.js';
 import { HelpMenu } from './HelpMenu.js';
 import type { HelpMenuItem, HelpMenuProps } from './HelpMenu.js';
 import mdx from './HelpMenu.mdx';
@@ -58,6 +62,7 @@ const meta = {
   component: HelpMenu,
   tags: ['afframe'],
   args: { items, defaultOpen: true, onOpenChange: action('onOpenChange') },
+  argTypes: headerPanelArgTypes,
   render: (args) => <CarbonShell actions={<HelpMenu {...args} />} />,
   parameters: {
     ...afframeA11y,

@@ -79,3 +79,37 @@ export function LabsShell({
     </>
   );
 }
+
+// Docgen does not read the props from the union on `presentation`
+// (HeaderPanelActionProps), so the props tables list them from here.
+export const headerPanelArgTypes = {
+  presentation: {
+    control: false,
+    description:
+      "`'panel'` renders the action and its HeaderPanel; `'content'` renders only the panel body, for a container that owns open state (a Labs HeaderPopoverContent). With `'content'`, the open state props and `renderAction` are type errors.",
+    table: {
+      type: { summary: "'panel' | 'content'" },
+      defaultValue: { summary: "'panel'" },
+    },
+  },
+  open: {
+    control: 'boolean',
+    description: 'Controlled open state.',
+    table: { type: { summary: 'boolean' } },
+  },
+  defaultOpen: {
+    control: 'boolean',
+    description: 'Uncontrolled initial open state.',
+    table: { type: { summary: 'boolean' } },
+  },
+  onOpenChange: {
+    description: 'Called with the new state on every open and close.',
+    table: { type: { summary: '(open: boolean) => void' } },
+  },
+  renderAction: {
+    control: false,
+    description:
+      'A trigger to use instead of the default HeaderGlobalAction (for example a ghost Button with visible text). It receives `ref`, `onClick`, `aria-expanded` and `aria-controls`, and must name itself.',
+    table: { type: { summary: 'ReactElement' } },
+  },
+} as const;

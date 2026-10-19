@@ -398,7 +398,6 @@ export type {
   TabListVerticalProps,
   TabPanelProps,
   TabPanelsProps,
-  TabContentProps,
   TabsVerticalProps,
   IconTabProps,
   ContentSwitcherProps,
