@@ -78,24 +78,34 @@ test('keyboard happy path: rename, arrow to a format, export, success announced,
   expect(screen.getByRole('dialog', { name: 'Export' })).toBeTruthy();
   expect(nameField().value).toBe('invoices-2026');
   expect(radio('Spreadsheet (.csv)').checked).toBe(true);
+  // Each step waits for the focus or state it needs: under full-suite load
+  // React can commit after the key event resolves.
   await userEvent.keyboard('{ControlOrMeta>}a{/ControlOrMeta}q3-invoices');
+  await until(() => expect(nameField().value).toBe('q3-invoices'));
   await userEvent.tab();
-  expect(active()).toBe(radio('Spreadsheet (.csv)'));
+  await until(() => expect(active()).toBe(radio('Spreadsheet (.csv)')));
   await userEvent.keyboard('{ArrowDown}');
-  expect(active()).toBe(radio('Excel workbook (.xlsx)'));
+  await until(() => expect(active()).toBe(radio('Excel workbook (.xlsx)')));
   expect(radio('Excel workbook (.xlsx)').checked).toBe(true);
   await userEvent.keyboard('{ArrowDown}');
-  expect(radio('.pdf').checked).toBe(true);
+  await until(() => expect(radio('.pdf').checked).toBe(true));
   await userEvent.keyboard('{ArrowUp}');
+  await until(() => expect(radio('Excel workbook (.xlsx)').checked).toBe(true));
   await userEvent.tab();
   await userEvent.tab();
-  expect(active()).toBe(exportButton());
+  await until(() => expect(active()).toBe(exportButton()));
   await userEvent.keyboard('{Enter}');
-  expect(onExport).toHaveBeenCalledWith({
-    filename: 'q3-invoices',
-    extension: '.xlsx',
-  });
-  const status = await screen.findByText('q3-invoices.xlsx was exported.');
+  await until(() =>
+    expect(onExport).toHaveBeenCalledWith({
+      filename: 'q3-invoices',
+      extension: '.xlsx',
+    })
+  );
+  const status = await screen.findByText(
+    'q3-invoices.xlsx was exported.',
+    {},
+    { timeout: 2000 }
+  );
   expect(status.getAttribute('role')).toBe('status');
   expect(onClose).not.toHaveBeenCalled();
   await until(() => expect(onClose).toHaveBeenCalledTimes(1), 4000);
