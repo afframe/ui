@@ -130,17 +130,18 @@ test('filename validation: empty, forbidden characters and a custom rule', async
   await openByKeyboard();
   await userEvent.clear(nameField());
   const message = 'Enter a name without these characters: \\ / : * ? " < > |';
-  expect(screen.getByText(message)).toBeTruthy();
+  await until(() => expect(screen.getByText(message)).toBeTruthy());
   expect(exportButton().disabled).toBe(true);
   await userEvent.type(nameField(), 'a/b');
+  await until(() => expect(nameField().value).toBe('a/b'));
   expect(screen.getByText(message)).toBeTruthy();
   expect(exportButton().disabled).toBe(true);
   await userEvent.clear(nameField());
   await userEvent.type(nameField(), 'con');
-  expect(screen.getByText('Reserved name.')).toBeTruthy();
+  await until(() => expect(screen.getByText('Reserved name.')).toBeTruthy());
   await userEvent.clear(nameField());
   await userEvent.type(nameField(), 'report');
-  expect(exportButton().disabled).toBe(false);
+  await until(() => expect(exportButton().disabled).toBe(false));
 });
 
 test('read-only name when not editable', async () => {
