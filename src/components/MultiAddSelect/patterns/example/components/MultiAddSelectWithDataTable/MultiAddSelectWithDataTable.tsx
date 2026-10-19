@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript checks for strict mode, components and icons from @afframe/ui (preview__AddSelect and preview__Tearsheet as AddSelect and Tearsheet), styles compiled to plain CSS. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript checks for strict mode, components and icons from @afframe/ui (preview__AddSelect and preview__Tearsheet as AddSelect and Tearsheet), styles compiled to plain CSS, React keys from getHeaderProps and getRowProps passed directly instead of spread. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import {
@@ -375,19 +375,27 @@ export const MultiAddSelectWithDataTable = forwardRef<
                                         )
                                     }
                                   />
-                                  {headers.map((header) => (
-                                    <TableHeader
-                                      {...getHeaderProps({ header })}
-                                      isSortable={false}>
-                                      {header.header}
-                                    </TableHeader>
-                                  ))}
+                                  {headers.map((header) => {
+                                    const { key, ...headerProps } =
+                                      getHeaderProps({ header });
+                                    return (
+                                      <TableHeader
+                                        key={key}
+                                        {...headerProps}
+                                        isSortable={false}>
+                                        {header.header}
+                                      </TableHeader>
+                                    );
+                                  })}
                                 </TableRow>
                               </TableHead>
                               <TableBody>
                                 {rows.map((row) => {
+                                  const { key, ...rowProps } = getRowProps({
+                                    row,
+                                  });
                                   return (
-                                    <TableRow {...getRowProps({ row })}>
+                                    <TableRow key={key} {...rowProps}>
                                       <TableSelectRow
                                         {...getSelectionProps({ row })}
                                         radio={false}

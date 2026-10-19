@@ -72,6 +72,10 @@ export function EditableCell({
           } else return;
           closing.current = true;
           refocus.current = true;
+          // Blur before the field unmounts: a focused node removed during
+          // React's commit fires focusout there, and testing-library's change
+          // event on it re-enters act and logs act warnings in Storybook.
+          event.currentTarget.blur();
           setEditing(false);
         }}
       />

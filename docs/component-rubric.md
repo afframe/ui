@@ -17,7 +17,7 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 - Focus: visible, moved on open, restored on close to the element that opened it.
 - Screen reader: roles, names, live regions; no axe violations.
 - Invalid fields: `aria-invalid` set and error text linked with `aria-describedby`; on submit, focus moves to the first invalid field, else to the error message.
-- Console: no warnings or errors in development when a story loads, except upstream ones documented as accepted, with the reason, on the component's Feature Flags page.
+- Console: no warnings or errors in development when a story loads, except upstream ones documented as accepted, with the reason, on the component's Feature Flags page, or in `docs/feature-flags.md` when it has none.
 - Controlled and uncontrolled use both work; callbacks fire once with the documented value.
 - Edge cases: no data, one item, many items, slow async, errors.
 - Server rendering: server-safe parts stay server-safe; `'use client'` only where needed.

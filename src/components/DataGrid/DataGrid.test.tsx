@@ -503,6 +503,7 @@ test('edits a cell with the keyboard: Enter saves, Escape cancels', async () => 
   await userEvent.keyboard('{Enter}');
   await userEvent.clear(document.activeElement as HTMLInputElement);
   await userEvent.keyboard('1234{Enter}');
+  expect(onCellEdit).toHaveBeenCalledTimes(1);
   expect(onCellEdit).toHaveBeenCalledWith({
     row: few[1],
     rowId: '1',
