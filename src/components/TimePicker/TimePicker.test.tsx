@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { failOnConsoleError } from '../MenuParts/menuTestUtils.js';
+import { failOnConsoleError } from '../../testUtils.js';
 import { TimePicker } from './TimePicker.js';
 
 failOnConsoleError();

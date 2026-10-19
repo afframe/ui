@@ -208,6 +208,7 @@ export {
   TableToolbar,
   TableToolbarAction,
   TableToolbarContent,
+  TableToolbarMenu,
   TableToolbarSearch,
   StructuredListBody,
   StructuredListCell,
@@ -265,6 +266,7 @@ export type {
   TableSelectRowProps,
   TableToolbarProps,
   TableToolbarActionProps,
+  TableToolbarMenuProps,
   TableToolbarSearchProps,
   StructuredListBodyProps,
   StructuredListCellProps,
@@ -357,6 +359,7 @@ export {
   MenuItemRadioGroup,
   MenuItemSelectable,
   useContextMenu,
+  OverflowMenu,
   OverflowMenuItem,
   Link,
 } from '@carbon/react';
@@ -414,6 +417,7 @@ export type {
   MenuItemRadioGroupProps,
   MenuItemSelectableProps,
   ContextMenuProps,
+  OverflowMenuProps,
   OverflowMenuItemProps,
   LinkProps,
 } from '@carbon/react';
@@ -865,8 +869,3 @@ export * from './components/FluidTimePicker/index.js';
 // The typing mask under the date and time pickers, for other inputs
 // (ADR 0021).
 export * from './mask/index.js';
-
-// Carbon's OverflowMenu and TableToolbarMenu, wrapped so the 1.0.x menu shape
-// keeps working (docs/feature-flags.md).
-export * from './components/OverflowMenu/index.js';
-export * from './components/DataTable/index.js';

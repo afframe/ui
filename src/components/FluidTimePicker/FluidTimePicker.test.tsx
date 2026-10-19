@@ -2,7 +2,7 @@ import { FluidTimePickerSelect, SelectItem } from '@carbon/react';
 import { render, screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { failOnConsoleError } from '../MenuParts/menuTestUtils.js';
+import { failOnConsoleError } from '../../testUtils.js';
 import { FluidTimePicker } from './FluidTimePicker.js';
 
 failOnConsoleError();

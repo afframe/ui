@@ -11,7 +11,7 @@ import { createRef, useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { iconButton } from '../MenuParts/menuTestUtils.js';
+import { iconButton } from '../../testUtils.js';
 import { DataGrid } from './DataGrid.js';
 import {
   dataGridColumnCustomization,

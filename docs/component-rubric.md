@@ -25,7 +25,7 @@ Each item is scored ok / fix / n/a per component. "Re-export" marks items that a
 ## API (Afframe-owned)
 
 - Names match Carbon conventions (`size`, `kind`, `onChange`, `open`, `onClose`, `messages`).
-- One way to do each thing; no duplicate or dead props.
+- One way to do each thing; no duplicate or dead props, and no compatibility layers, deprecated aliases or old-shape variants kept for earlier Afframe versions (ADR 0023).
 - Siblings use the same prop and `messages` key names for the same thing.
 - No duplicated internals: logic shared by several components lives in one helper.
 - `className`, `ref` and rest props pass through to the root element.

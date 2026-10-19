@@ -1,6 +1,6 @@
 # Feature flags
 
-Afframe UI runs stable Carbon v11 with the v12 flags off except `enable-focus-wrap-without-sentinels`, plus a few opt-in flags (ADR 0018); the menu wrappers turn `enable-v12-overflowmenu` on per instance. Carbon flags have two sides, and both must be set where Carbon reads the flag on that side:
+Afframe UI runs stable Carbon v11 with the v12 flags off except `enable-focus-wrap-without-sentinels`, plus a few opt-in flags (ADR 0018). Carbon flags have two sides, and both must be set where Carbon reads the flag on that side:
 
 - React: `AfframeProvider` renders Carbon's `<FeatureFlags>` around the app.
 - Sass: the styles build sets `$feature-flags` before Carbon's styles load. Styling changes come only from Sass.
@@ -25,7 +25,7 @@ Carbon's own flag reference: https://github.com/carbon-design-system/carbon/blob
 - Never render a `<feature-flags>` DOM element above `@carbon/ai-chat`: its overflow menus stop opening (carbon-ai-chat issue #2308).
 - `LogoutBanner` also sets `enable-focus-wrap-without-sentinels` locally, so it works without the provider.
 - `enable-v12-dynamic-floating-styles` stays off: it drops `flip` from MenuButton and ComboButton, so their menus open past the bottom of the screen (browser check, 2026-10-12). It does not change the look. A floating element clipped by a scroll container gets `autoAlign` on that one instance.
-- `enable-v12-overflowmenu` stays off globally. The Afframe `OverflowMenu` and `TableToolbarMenu` turn it on for one menu when the caller passes `label` or `MenuItem` children (the 1.0.x shape): only Carbon's newer menu works with them by keyboard. The flag changes no look, because Carbon gates the v12 menu look on `enable-v12-release`. IBM Products menus and `DataGrid` are not affected.
+- `enable-v12-overflowmenu` stays off: under it `OverflowMenuItem` children cannot be reached by keyboard. `OverflowMenu` and `TableToolbarMenu` are Carbon's v11 menus, with no per-instance switch (ADR 0023).
 - IBM Products components behind its canary setting (in 2.100.0: ScrollGradient and `previewCandidate__Decorator`) are enabled by their own modules in `src/ibm-products/` when they load, with IBM's warnings silenced, not by consumers and not by the provider.
 - IBM Products' own flag API is re-exported as `preview__FeatureFlags`, `preview__useFeatureFlag` and `preview__useFeatureFlags`; for example, SidePanel reads `enableSidepanelResizer` from it.
 
