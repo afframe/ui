@@ -14,13 +14,13 @@ The repo commits only the registry line, in `.npmrc` at the workspace root:
 
 The token line never goes into the repo's `.npmrc`. Current pnpm versions ignore `${...}` in repository-controlled credentials (a cloned repo must not be able to read your environment) and warns `Ignored project-level auth setting`. It goes into a user-level config instead, one way per place:
 
-| Where                                                | Token                                         | Setup, once                                                                                                                                                                              |
-| ---------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Developer machine, and agent sessions that run on it | the `gh` CLI's token                          | the token helper below                                                                                                                                                                   |
-| Cloud agent sessions                                 | a personal access token, `read:packages` only | `NODE_AUTH_TOKEN` as a secret in the environment settings; the setup script writes the placeholder line below to `~/.npmrc`                                                              |
-| GitHub Actions                                       | `GITHUB_TOKEN`                                | `permissions: packages: read`; `actions/setup-node` writes the user-level line; an org owner gives the repo Read access in the package's "Manage Actions access" settings, once per repo |
-| Docker image builds                                  | the same token as the build host              | a BuildKit secret, below                                                                                                                                                                 |
-| Dependabot                                           | its own `GITHUB_TOKEN`                        | the same "Manage Actions access" entry (section 8)                                                                                                                                       |
+| Where                                                | Token                                         | Setup, once                                                                                                                 |
+| ---------------------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Developer machine, and agent sessions that run on it | the `gh` CLI's token                          | the token helper below                                                                                                      |
+| Cloud agent sessions                                 | a personal access token, `read:packages` only | `NODE_AUTH_TOKEN` as a secret in the environment settings; the setup script writes the placeholder line below to `~/.npmrc` |
+| GitHub Actions                                       | `GITHUB_TOKEN`                                | `permissions: packages: read`; `actions/setup-node` writes the user-level line                                              |
+| Docker image builds                                  | the same token as the build host              | a BuildKit secret, below                                                                                                    |
+| Dependabot                                           | its own `GITHUB_TOKEN`                        | nothing (section 8)                                                                                                         |
 
 Developer machine. The token helper runs `gh auth token` for each install: no copy of the token on disk and no environment variable, so apps that agents run from (outside a shell) see it too. pnpm reads the helper; npm does not, so a tool that installs with npm needs the placeholder line and `NODE_AUTH_TOKEN` set. With both lines in `~/.npmrc` and the variable unset, pnpm still uses the helper and warns `Failed to replace env in config: ${NODE_AUTH_TOKEN}`; the warning is harmless.
 
@@ -64,7 +64,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Every workflow that installs needs `packages: read`, image builds and scheduled rebuilds included. Keep `scope`: without it `setup-node` sends every package to GitHub Packages.
+Every workflow that installs needs `packages: read`, image builds and scheduled rebuilds included. Later pnpm steps without `NODE_AUTH_TOKEN` warn `Failed to replace env in config`; the warning is harmless. Keep `scope`: without it `setup-node` sends every package to GitHub Packages.
 
 Docker. The install stage writes a user-level `.npmrc` that holds no secret, and the token arrives as a BuildKit secret, so it stays out of every layer and build argument. The repo's `.npmrc` is not needed in the build context. The `# syntax` line takes effect only as the first line of the Dockerfile:
 
@@ -94,21 +94,24 @@ In GitHub Actions, `docker/build-push-action` takes `secrets: NODE_AUTH_TOKEN=${
 
 Check the setup in the consumer repo: `pnpm view @afframe/ui version` prints the latest version.
 
-| Symptom                                                          | Cause                                                                                                                                                                                                                     |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `WARN Ignored project-level auth setting`                        | the token line is in the repo's `.npmrc`; move it to user level                                                                                                                                                           |
-| `401 Unauthorized` or `403 Forbidden`                            | no token reached pnpm (user-level line missing, `NODE_AUTH_TOKEN` empty), or GitHub rejected it: a fine-grained token, no `read:packages`, or in Actions no `packages: read` or no Read access in "Manage Actions access" |
-| `ERR_PNPM_NO_MATCHING_VERSION` naming an older version as latest | an auth failure: pnpm fell back to cached metadata; fix the token                                                                                                                                                         |
-| `is not a legal HTTP header value`                               | the token ends in a newline, as when a secret comes from a file; pass it from an environment variable or strip the newline                                                                                                |
+| Symptom                                                          | Cause                                                                                                                                                                        |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `WARN Ignored project-level auth setting`                        | the token line is in the repo's `.npmrc`; move it to user level                                                                                                              |
+| `401 Unauthorized` or `403 Forbidden`                            | no token reached pnpm (user-level line missing, `NODE_AUTH_TOKEN` empty), or GitHub rejected it: a fine-grained token, no `read:packages`, or in Actions no `packages: read` |
+| `ERR_PNPM_NO_MATCHING_VERSION` naming an older version as latest | an auth failure: pnpm fell back to cached metadata; fix the token                                                                                                            |
+| `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` for `@afframe/ui`       | the release is less than a day old; add `minimumReleaseAgeExclude` (section 2)                                                                                               |
+| `is not a legal HTTP header value`                               | the token ends in a newline, as when a secret comes from a file; pass it from an environment variable or strip the newline                                                   |
 
 ## 2. Telemetry off
 
 Carbon packages arrive as dependencies of `@afframe/ui` and carry IBM Telemetry install scripts (ADR 0007). In the consumer repo:
 
 - Set `IBM_TELEMETRY_DISABLED=true` in every CI job and container build that installs dependencies. In a Dockerfile: `ENV IBM_TELEMETRY_DISABLED=true` in the stage that runs `pnpm fetch` or `pnpm install`.
-- pnpm: add `strictDepBuilds: false` to the workspace root `pnpm-workspace.yaml`. A Docker build copies that file into the install stage before `pnpm fetch` or `pnpm install`; without it the image build fails with `ERR_PNPM_IGNORED_BUILDS`.
+- pnpm: add `strictDepBuilds: false` and `minimumReleaseAgeExclude: ['@afframe/*']` to the workspace root `pnpm-workspace.yaml`. A Docker build copies that file into the install stage before `pnpm fetch` or `pnpm install`; without it the image build fails with `ERR_PNPM_IGNORED_BUILDS`.
 
 pnpm blocks dependency install scripts by default, and with `strictDepBuilds` (default `true`) it fails the install with `ERR_PNPM_IGNORED_BUILDS` for every package that has one, including transitive dependencies such as Carbon under `@afframe/ui`. Setting `strictDepBuilds: false` keeps the scripts blocked and removes only the failure. 21 of 22 `@carbon/*` and `@ibm/plex` packages run `ibmtelemetry` on postinstall. Checked on pnpm 12.9.1 on 2026-10-05: the default fails, an `allowBuilds` wildcard does not match, `strictDepBuilds: false` passes. A dependency cannot ship this setting, so each consumer repo sets it. pnpm then writes each of these packages under `allowBuilds` as undecided; set them to `false` (as this repo's `pnpm-workspace.yaml` does) so installs leave the file unchanged.
+
+On GitHub's runners and in image builds, pnpm rejects a version published less than a day ago (`ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`), lockfile entries included, so a fresh `@afframe/ui` release would fail CI and its Dependabot pull request for a day. `minimumReleaseAgeExclude` lifts that for the `@afframe` scope only; other packages keep the delay. Checked on pnpm 12.9.1 on 2026-10-19.
 
 ## 3. Install
 
@@ -208,6 +211,8 @@ Apps import `@afframe/ui` themselves (simpler, recommended). Each app depends on
 # pnpm-workspace.yaml at the workspace root
 catalog:
   '@afframe/ui': <version>
+minimumReleaseAgeExclude:
+  - '@afframe/*'
 ```
 
 ```json
@@ -241,8 +246,8 @@ In both shapes:
 - `@acme/ui`'s `package.json` sets `"sideEffects": ["**/*.css"]`, so bundlers drop unused re-exports and keep CSS imports.
 - Each app root imports `@afframe/ui/styles.css` once (or `@acme/ui/styles.css` in the re-export shape), and `charts.css` where charts render.
 - `data-afframe-theme` sits on `<html>` in each app's server root layout. `AfframeProvider` can sit inside `@acme/ui`'s client provider, which each app root renders.
-- Next.js: a workspace package that ships TypeScript source goes into the app's `transpilePackages`. `@afframe/ui` itself does not.
-- The registry line in `.npmrc`, `strictDepBuilds` and `allowBuilds` live at the workspace root only; a dependency cannot ship them.
+- Next.js: a workspace package that ships TypeScript source goes into the app's `transpilePackages`. `@afframe/ui` itself does not. The app's type check reads that source from the package's own folder, so the package lists `@types/react` and `@types/react-dom` in its `devDependencies`; without them `next build` fails with `TS7016: Could not find a declaration file for module 'react'`.
+- The registry line in `.npmrc`, `strictDepBuilds`, `minimumReleaseAgeExclude` and `allowBuilds` live at the workspace root only; a dependency cannot ship them.
 - `@acme/ui` does not import `@carbon/*` or `@carbon-labs/*` either.
 
 ## 7. Tests
@@ -282,7 +287,7 @@ updates:
       exclude: ['@afframe/*']
 ```
 
-- Dependabot reads GitHub Packages with its own `GITHUB_TOKEN` once the consumer repo has Read access in the package's "Manage Actions access" settings; no `registries:` entry and no personal token. If Dependabot reports a blocked host or a 401 for `npm.pkg.github.com`, add a `registries:` entry for it.
+- Dependabot reads GitHub Packages with its own `GITHUB_TOKEN`; no `registries:` entry, no personal token and, for this public package, no "Manage Actions access" grant (checked from a repo without one). If Dependabot reports a blocked host or a 401 for `npm.pkg.github.com`, add a `registries:` entry for it.
 - A `cooldown` delays every update by its days; exclude `@afframe/*` so a release arrives the day it ships.
 - In a monorepo with a catalog, Dependabot updates the catalog entry.
 
