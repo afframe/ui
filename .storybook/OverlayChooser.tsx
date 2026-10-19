@@ -19,7 +19,7 @@ const rows = [
   [
     <>
       Custom floating content whose open state the app controls, such as a
-      settings panel. It does not close itself on Escape; the app closes it in
+      settings panel. It does not close itself on Escape; the app closes it in{' '}
       <code>onRequestClose</code>
     </>,
     link('Popover', 'components-popover'),
