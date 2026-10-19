@@ -3,7 +3,7 @@ import * as useContextMenu from './useContextMenu.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, Menu link points to the Afframe docs page, Afframe note on keyboard access.
 
 <Meta isTemplate />
 
@@ -16,7 +16,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Overview
 
 The `useContextMenu` hook is meant to be used in conjunction with `Menu` (see
-this [component's documentation](/docs/components-menu--default) for more
+this [component's documentation](?path=/docs/components-menu--overview) for more
 details). It provides an easy way to generate the necessary props for `Menu`.
 
 By default, it will listen to the `contextmenu` event on `document`. In most
@@ -43,6 +43,12 @@ function SomeComponent() {
 ```
 
 <Canvas of={useContextMenu.SpecificElement} />
+
+In Afframe UI, keep in mind that the hook only listens to the `contextmenu`
+event. Browsers also fire it for Shift+F10 and the context menu key, but only on
+the focused element. Keyboard users reach the menu only if the target, or
+something inside it, can take focus; otherwise offer the same actions another
+way, such as a visible menu button.
 
 Be aware that the following props are not set by `useContextMenu` and can
 therefore be configured by the user:

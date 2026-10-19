@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as PopoverStories from './Popover.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { OverlayChooser } from '../../../.storybook/OverlayChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, code samples import from @afframe/ui, upstream Feedback section and table of contents removed, story names per ADR 0019.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, code samples import from @afframe/ui, upstream Feedback section and table of contents removed, story names per ADR 0019, overlay chooser table added, note that Popover never closes itself.
 
 <Meta isTemplate />
 
@@ -52,6 +53,10 @@ function CustomComponent() {
 
 <Canvas of={PopoverStories.Default} />
 
+### Which component to use
+
+<OverlayChooser />
+
 ## Visibility
 
 The `open` prop allows you to control the visibility of the `Popover`. This is
@@ -64,6 +69,11 @@ popover is open on the screen at a time. It also can be used to ensure that any
 clicks outside of a popover will close the popover. This is achieved by using
 state in conjunction with the callback prop to set `open` to false when
 `onRequestClose` is called.
+
+In Afframe UI, as in Carbon, `Popover` never closes by itself, not on Escape and
+not on a click outside. It calls `onRequestClose` on a click outside, when focus
+leaves it, and on Escape while focus is inside `PopoverContent`; the app sets
+`open` to `false` there.
 
 <Canvas of={PopoverStories.TabTip} />
 

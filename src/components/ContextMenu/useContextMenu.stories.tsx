@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Menu parts, CodeSnippet, lists and hooks from @afframe/ui (usePrefix is useCarbonPrefix), source tag, inline spacing as Carbon spacing tokens, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Menu parts, CodeSnippet, lists and hooks from @afframe/ui (usePrefix is useCarbonPrefix), source tag, inline spacing as Carbon spacing tokens, story names unified, menu labels added, text blocks as div because inline CodeSnippet and the list cannot sit inside p. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef } from 'react';
@@ -36,11 +36,19 @@ export default {
   },
 } satisfies Meta;
 
+// Inline CodeSnippet renders a div and the list is a ul, neither valid in a p;
+// the div blocks take Carbon's p type style instead.
+const paragraph = {
+  fontSize: 'var(--cds-body-02-font-size)',
+  lineHeight: 'var(--cds-body-02-line-height)',
+  letterSpacing: 'var(--cds-body-02-letter-spacing)',
+};
+
 const Text = () => (
   <div style={{ width: '40rem' }}>
     <h2>Right click anywhere in the story frame</h2>
     <br />
-    <p>
+    <div style={paragraph}>
       The <CodeSnippet type="inline">{`<Menu>`}</CodeSnippet> props are set
       using the hook{' '}
       <CodeSnippet type="inline">{`useContextMenu()`}</CodeSnippet>. This
@@ -58,8 +66,8 @@ const Text = () => (
         <ListItem>size</ListItem>
         <ListItem>target</ListItem>
       </UnorderedList>
-    </p>
-    <p>
+    </div>
+    <div style={paragraph}>
       The
       <CodeSnippet type="inline">{`<MenuItemGroup>`}</CodeSnippet> and
       <CodeSnippet type="inline">{`<MenuItem>`}</CodeSnippet>
@@ -72,7 +80,7 @@ const Text = () => (
       accept children. The{' '}
       <CodeSnippet type="inline">{`<MenuItemRadioGroup>`}</CodeSnippet> accepts
       an array of items to display as a group of single choice selection.
-    </p>
+    </div>
   </div>
 );
 

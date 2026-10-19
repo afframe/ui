@@ -3,7 +3,7 @@ import * as OverflowMenuStories from './OverflowMenu.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, section on the 1.0.1 menu items added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, section on the 1.0.1 menu items added, with a note on its tooltip props, upstream Feedback section and table of contents removed.
 
 <Meta isTemplate />
 
@@ -62,11 +62,13 @@ for `@afframe/ui` 1.0.x still works: a `label` prop, or `MenuItem` children
 `MenuItemSelectable`) placed directly or in one Fragment, switch that one menu
 to Carbon's newer menu. It renders Carbon's `Menu` with its v11 look and works
 by keyboard; `label` names the trigger and the menu, and `menuAlignment` sets
-where it opens (the v11 menu ignores it). MenuItems inside your own wrapper
+where it opens (the v11 menu ignores it). On the newer menu, `tooltipAlignment`
+and `tooltipAutoAlign` set the trigger tooltip in place of `align`, and
+`autoAlign` positions the menu. MenuItems inside your own wrapper
 component, or passed from a React Server Component, are not detected, so pass
 `label` there.
 
-<Canvas of={OverflowMenuStories.MenuItemsFrom101} />
+<Canvas of={OverflowMenuStories.WithMenuItems} />
 
 ```jsx
 import { MenuItem, MenuItemDivider, OverflowMenu } from '@afframe/ui';
