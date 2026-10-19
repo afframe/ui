@@ -64,7 +64,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Every workflow that installs needs `packages: read`, image builds and scheduled rebuilds included. Keep `scope`: without it `setup-node` sends every package to GitHub Packages.
+Every workflow that installs needs `packages: read`, image builds and scheduled rebuilds included. Later pnpm steps without `NODE_AUTH_TOKEN` warn `Failed to replace env in config`; the warning is harmless. Keep `scope`: without it `setup-node` sends every package to GitHub Packages.
 
 Docker. The install stage writes a user-level `.npmrc` that holds no secret, and the token arrives as a BuildKit secret, so it stays out of every layer and build argument. The repo's `.npmrc` is not needed in the build context. The `# syntax` line takes effect only as the first line of the Dockerfile:
 
@@ -241,7 +241,7 @@ In both shapes:
 - `@acme/ui`'s `package.json` sets `"sideEffects": ["**/*.css"]`, so bundlers drop unused re-exports and keep CSS imports.
 - Each app root imports `@afframe/ui/styles.css` once (or `@acme/ui/styles.css` in the re-export shape), and `charts.css` where charts render.
 - `data-afframe-theme` sits on `<html>` in each app's server root layout. `AfframeProvider` can sit inside `@acme/ui`'s client provider, which each app root renders.
-- Next.js: a workspace package that ships TypeScript source goes into the app's `transpilePackages`. `@afframe/ui` itself does not.
+- Next.js: a workspace package that ships TypeScript source goes into the app's `transpilePackages`. `@afframe/ui` itself does not. The app's type check reads that source from the package's own folder, so the package lists `@types/react` and `@types/react-dom` in its `devDependencies`; without them `next build` fails with `TS7016: Could not find a declaration file for module 'react'`.
 - The registry line in `.npmrc`, `strictDepBuilds` and `allowBuilds` live at the workspace root only; a dependency cannot ship them.
 - `@acme/ui` does not import `@carbon/*` or `@carbon-labs/*` either.
 
