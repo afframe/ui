@@ -19,7 +19,7 @@
 | `scripts/`                                   | Build, pack, example and licence checks; `scripts/ci/` holds CI helpers and image pins         |
 | `docs/`                                      | Handbook, package structure, testing, guides, ADRs (`docs/README.md`)                          |
 
-Detail: `docs/package-structure.md`; architecture: `ARCHITECTURE.md`; every public export with its import path, runtime and docs: `docs/registry.json`.
+Detail: `docs/package-structure.md`; architecture: `ARCHITECTURE.md`; every public export with its import path, runtime and docs: `docs/registry.json`. Consumer agents read `docs/agent-guide.md`, shipped as `dist/agents.md`.
 
 ## Commands
 

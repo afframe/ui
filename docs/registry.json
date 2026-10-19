@@ -1072,7 +1072,11 @@
       "docs": "src/components/DatePicker/DatePicker.mdx",
       "storyTitle": "Components/DatePicker",
       "status": "stable",
-      "exports": ["DatePicker", "defaultDatePickerMessages"],
+      "exports": [
+        "DatePicker",
+        "defaultDatePickerMessages",
+        "preview__DatePicker"
+      ],
       "types": ["DatePickerProps", "DatePickerMessages"],
       "wrapper": true,
       "parts": {
@@ -3563,6 +3567,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
+      "upstream": {
+        "package": "@carbon/react",
+        "name": "usePrefix"
+      },
       "docs": "src/components/useCarbonPrefix/useCarbonPrefix.mdx"
     },
     {
@@ -3633,6 +3641,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "preview__AddSelect"
+      },
       "docs": "src/components/AddSelect/AddSelect.mdx"
     },
     {
@@ -3660,6 +3672,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview-candidate",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "previewCandidate__BigNumber"
+      },
       "docs": "src/components/BigNumber/BigNumber.mdx"
     },
     {
@@ -3669,6 +3685,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "preview__Coachmark"
+      },
       "docs": "src/components/Coachmark/Coachmark.mdx"
     },
     {
@@ -3678,6 +3698,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "preview__CoachmarkBeacon"
+      },
       "docs": "src/components/Coachmark/Coachmark.mdx"
     },
     {
@@ -3687,6 +3711,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "preview__CoachmarkTagline"
+      },
       "docs": "src/components/Coachmark/Coachmark.mdx"
     },
     {
@@ -3704,6 +3732,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview-candidate",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "previewCandidate__ConditionBuilder"
+      },
       "docs": "src/components/ConditionBuilder/ConditionBuilder.mdx"
     },
     {
@@ -3747,6 +3779,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview-candidate",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "previewCandidate__Guidebanner"
+      },
       "docs": "src/components/Guidebanner/Guidebanner.mdx"
     },
     {
@@ -3755,7 +3791,11 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview-candidate"
+      "status": "preview-candidate",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "previewCandidate__GuidebannerElement"
+      }
     },
     {
       "name": "GuidebannerElementButton",
@@ -3763,7 +3803,11 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview-candidate"
+      "status": "preview-candidate",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "previewCandidate__GuidebannerElementButton"
+      }
     },
     {
       "name": "GuidebannerElementLink",
@@ -3771,7 +3815,11 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview-candidate"
+      "status": "preview-candidate",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "previewCandidate__GuidebannerElementLink"
+      }
     },
     {
       "name": "InterstitialScreen",
@@ -3807,6 +3855,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "preview__PageHeader"
+      },
       "docs": "src/components/PageHeader/PageHeader.mdx"
     },
     {
@@ -3834,6 +3886,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "preview__Tearsheet"
+      },
       "docs": "src/components/Tearsheet/Tearsheet.mdx"
     },
     {
@@ -3843,6 +3899,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "preview",
+      "upstream": {
+        "package": "@carbon/ibm-products",
+        "name": "preview__TruncatedText"
+      },
       "docs": "src/components/TruncatedText/TruncatedText.mdx"
     },
     {
@@ -4205,6 +4265,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
+      "upstream": {
+        "package": "@carbon-labs/react-ui-shell",
+        "name": "SideNav"
+      },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
@@ -4222,6 +4286,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
+      "upstream": {
+        "package": "@carbon-labs/react-ui-shell",
+        "name": "SideNavItems"
+      },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
@@ -4231,6 +4299,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
+      "upstream": {
+        "package": "@carbon-labs/react-ui-shell",
+        "name": "SideNavLink"
+      },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
@@ -4248,6 +4320,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
+      "upstream": {
+        "package": "@carbon-labs/react-ui-shell",
+        "name": "SideNavMenu"
+      },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
@@ -4257,6 +4333,10 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
+      "upstream": {
+        "package": "@carbon-labs/react-ui-shell",
+        "name": "SideNavMenuItem"
+      },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
@@ -4283,7 +4363,11 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "upstream": {
+        "package": "@carbon-labs/react-ui-shell",
+        "name": "HeaderContainer"
+      }
     },
     {
       "name": "HeaderDivider",

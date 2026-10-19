@@ -70,6 +70,7 @@ const familyModules = [
 const required = [
   'dist/index.js',
   'dist/index.d.ts',
+  'dist/agents.md',
   'dist/styles.css',
   'dist/charts.css',
   'dist/provider/AfframeProvider.js',

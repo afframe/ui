@@ -10,16 +10,10 @@ Carbon core and IBM Products components are re-exported from `@afframe/ui`, the 
 
 ## Usage
 
-Point the `@afframe` scope at GitHub Packages in `.npmrc` (auth: [docs/guides/consuming.md](docs/guides/consuming.md)):
-
-```ini
-@afframe:registry=https://npm.pkg.github.com
-```
-
-Installs need a token with `read:packages`, and pnpm apps set `strictDepBuilds: false` in `pnpm-workspace.yaml` (Carbon's telemetry install scripts stay blocked):
+Install from GitHub Packages. The registry line, the token setup for each environment and the pnpm settings: [docs/guides/consuming.md](docs/guides/consuming.md).
 
 ```sh
-IBM_TELEMETRY_DISABLED=true pnpm add @afframe/ui react react-dom
+IBM_TELEMETRY_DISABLED=true pnpm add --save-exact @afframe/ui react react-dom
 ```
 
 Import the styles once and wrap the app in `AfframeProvider`:

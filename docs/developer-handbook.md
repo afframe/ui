@@ -92,6 +92,8 @@ Versions are Afframe's own release numbers; they do not follow Carbon's versions
 
 GitHub Packages creates a new package as private. After the first publish, an org owner sets `@afframe/ui` to public and checks it is linked to this repo (package settings on `github.com/orgs/afframe/packages`); later versions keep both. A public package cannot be made private again.
 
+A new consumer repo needs Read access before its workflows and Dependabot can install the package: in the package settings, under "Manage Actions access", Add repository with the Read role (`docs/guides/consuming.md`, section 1).
+
 ## Components
 
 - A Carbon component Afframe does not change: re-export it from `src/index.ts`. No wrapper, and no code in its docs-only folder.

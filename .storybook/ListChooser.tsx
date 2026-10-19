@@ -10,7 +10,7 @@ const rows = [
   ],
   [
     'Rows with columns, optionally selectable',
-    link('StructuredList', 'components-structuredlist'),
+    link('StructuredListWrapper', 'components-structuredlist'),
   ],
   [
     'Items with actions or search in a container',
