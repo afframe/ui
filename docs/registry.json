@@ -4266,7 +4266,7 @@
       "runtime": "client",
       "status": "stable",
       "upstream": {
-        "package": "@carbon-labs/react-ui-shell/es/components/SideNav.js",
+        "package": "@carbon-labs/react-ui-shell",
         "name": "SideNav"
       },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
@@ -4287,7 +4287,7 @@
       "runtime": "client",
       "status": "stable",
       "upstream": {
-        "package": "@carbon-labs/react-ui-shell/es/components/SideNavItems.js",
+        "package": "@carbon-labs/react-ui-shell",
         "name": "SideNavItems"
       },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
@@ -4300,7 +4300,7 @@
       "runtime": "client",
       "status": "stable",
       "upstream": {
-        "package": "@carbon-labs/react-ui-shell/es/components/SideNavLink.js",
+        "package": "@carbon-labs/react-ui-shell",
         "name": "SideNavLink"
       },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
@@ -4321,7 +4321,7 @@
       "runtime": "client",
       "status": "stable",
       "upstream": {
-        "package": "@carbon-labs/react-ui-shell/es/components/SideNavMenu.js",
+        "package": "@carbon-labs/react-ui-shell",
         "name": "SideNavMenu"
       },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
@@ -4334,7 +4334,7 @@
       "runtime": "client",
       "status": "stable",
       "upstream": {
-        "package": "@carbon-labs/react-ui-shell/es/components/SideNavMenuItem.js",
+        "package": "@carbon-labs/react-ui-shell",
         "name": "SideNavMenuItem"
       },
       "docs": "src/components/UIShellLabs/SideNav.mdx"
@@ -4365,7 +4365,7 @@
       "runtime": "client",
       "status": "stable",
       "upstream": {
-        "package": "@carbon-labs/react-ui-shell/es/components/HeaderContainer.js",
+        "package": "@carbon-labs/react-ui-shell",
         "name": "HeaderContainer"
       }
     },
@@ -4616,10 +4616,6 @@
       "import": ["@afframe/ui"],
       "runtime": "client",
       "status": "stable",
-      "upstream": {
-        "package": "@carbon-labs/react-processing/es/components/Processing.js",
-        "name": "default"
-      },
       "docs": "src/components/Processing/Processing.mdx"
     },
     {

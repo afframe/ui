@@ -12,7 +12,7 @@ The repo commits only the registry line, in `.npmrc` at the workspace root:
 @afframe:registry=https://npm.pkg.github.com
 ```
 
-The token line never goes into the repo's `.npmrc`. Since 10.34.3 and 11.5.3 pnpm ignores `${...}` in repository-controlled credentials (a cloned repo must not be able to read your environment) and warns `Ignored project-level auth setting`. It goes into a user-level config instead, one way per place:
+The token line never goes into the repo's `.npmrc`. Current pnpm versions ignore `${...}` in repository-controlled credentials (a cloned repo must not be able to read your environment) and warns `Ignored project-level auth setting`. It goes into a user-level config instead, one way per place:
 
 | Where                                                | Token                                         | Setup, once                                                                                                                                                                              |
 | ---------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -132,7 +132,7 @@ import '@afframe/ui/styles.css';
 
 An app that renders Carbon Charts (`Charts`, or `ChatChart` with the Carbon Charts engine) must also import `@afframe/ui/charts.css`, after `styles.css`: in the root layout, or only in the routes that render charts. `EChart` needs no stylesheet.
 
-Set the theme on `<html>` in the server-rendered root layout with `data-afframe-theme`. Values, runtime switching and the theme hooks: the Theming docs page (`src/theme/Theming.mdx`).
+Set the theme on `<html>` in the server-rendered root layout with `data-afframe-theme`: `light`, `dark` or `system`. Runtime switching and the theme hooks: the Theming docs page (`src/theme/Theming.mdx`).
 
 Wrap the app in `<AfframeProvider>`. It turns on the Carbon feature flags Afframe UI uses. Without it, modals show in the page even while closed, with no backdrop. In Next.js App Router it is a client component placed inside the root layout. `@afframe/ui` needs no Sass, no `transpilePackages` and no load-path settings.
 
@@ -147,7 +147,7 @@ import { AiEthics } from '@afframe/ui/pictograms';
 import { g100, durationFast01 } from '@afframe/ui/tokens';
 ```
 
-IBM Products components come from `@afframe/ui` too. The ones moving into Carbon core in v12 have their core names (`Tearsheet`, `SidePanel`, `PageHeader`), the others keep IBM's names, `preview__` and `previewCandidate__` prefixes included. `usePrefix` is IBM Products' (`c4p`); Carbon's is `useCarbonPrefix`. Render `PageHeader` as `PageHeader.Root` with its parts; a bare `<PageHeader>` renders nothing.
+IBM Products components come from `@afframe/ui` too. The ones moving into Carbon core in v12 have their core names (`Tearsheet`, `SidePanel`, `PageHeader`), the others keep IBM's names, `preview__` and `previewCandidate__` prefixes included. `usePrefix` is IBM Products' (`c4p`); Carbon's is `useCarbonPrefix`. Render `PageHeader` as `PageHeader.Root` with its parts; a bare `<PageHeader>` renders nothing. A server component can render client components with serializable props but cannot dot into them: `PageHeader.Root`, `Tearsheet.Header` and the parts of `preview__Card` and `preview__Dialog` go in a client component (on the server the build fails with "Element type is invalid").
 
 Formatting functions (`formatAmount`, `formatDate` and the rest) come from `@afframe/ui` too, and alone from `@afframe/ui/format`, which loads no components: use it in server code, route handlers and scripts.
 
@@ -288,17 +288,19 @@ updates:
 
 ## 9. Agents
 
-The package ships `dist/agents.md`, generated from sections 4 and 5 of this guide and the package exports: the wiring and import rules, the exports Afframe renames from upstream, and every export with its runtime. It matches the installed version. Paste this into the consumer repo's `AGENTS.md`; it names the path because agent search tools skip `node_modules`:
+The package ships `dist/agents.md`, generated from the sections "Wire it once" and "Use it" of this guide and the package exports: the wiring and import rules, the exports Afframe renames from upstream, and every export with its runtime. It matches the installed version. Paste this into the consumer repo's `AGENTS.md`; it names the path because agent search tools skip `node_modules`:
 
 ```md
 ## UI: @afframe/ui
 
-Before choosing or writing UI code, read `node_modules/@afframe/ui/dist/agents.md` (in a monorepo: the app package's `node_modules`). It matches the installed version.
+Before choosing or writing UI code, read `node_modules/@afframe/ui/dist/agents.md` (in a monorepo: the `node_modules` of the package that depends on `@afframe/ui`). It matches the installed version.
 
 - Import only from `@afframe/ui` and its subpaths, never `@carbon/*` or `@carbon-labs/*`, even when Carbon docs or the Carbon MCP show it.
 - Upstream docs use upstream names; use the Afframe name from the renamed exports table.
-- Server components use only server-safe exports; event handlers and function-valued messages come from a client component.
+- A server component renders client exports only with serializable props; event handlers, function-valued messages and dotted parts (`PageHeader.Root`) belong in a client component.
 ```
+
+In the re-export shape (section 6), write the shared package's name instead of `@afframe/ui` in the import line.
 
 ## 10. Licence
 
