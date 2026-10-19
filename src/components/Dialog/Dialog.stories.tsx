@@ -407,10 +407,18 @@ ModalFocusAndClose.play = async ({ canvas, userEvent }) => {
   const dialog = canvas.getByRole<HTMLDialogElement>('dialog');
   const toggle = canvas.getByRole('button', { name: 'Toggle open' });
   const close = () => within(dialog).getByRole('button', { name: 'Close' });
+  // onClose runs on the close event, which fires after `open` is gone; a
+  // reopen before it lets that late onClose close the new dialog.
+  const closed = () =>
+    new Promise((resolve) =>
+      dialog.addEventListener('close', resolve, { once: true })
+    );
 
   await waitFor(() => expect(close()).toHaveFocus());
+  let done = closed();
   await userEvent.click(close());
   await waitFor(() => expect(dialog).not.toHaveAttribute('open'));
+  await done;
 
   await userEvent.click(toggle);
   await waitFor(() => expect(close()).toHaveFocus());
@@ -418,8 +426,10 @@ ModalFocusAndClose.play = async ({ canvas, userEvent }) => {
   // runs the close request a real Escape starts: the native dialog closes and
   // focus returns to the opener. onClose syncs the story's open state, so one
   // toggle reopens it.
+  done = closed();
   dialog.requestClose();
   await waitFor(() => expect(dialog).not.toHaveAttribute('open'));
+  await done;
   await expect(toggle).toHaveFocus();
   await userEvent.click(toggle);
   await waitFor(() => expect(dialog).toHaveAttribute('open'));
