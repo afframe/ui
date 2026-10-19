@@ -1,9 +1,10 @@
 import { ArgTypes, Meta, Canvas } from '@storybook/addon-docs/blocks';
 import * as PaginationStories from './Pagination.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { NavigationChooser } from '../../../.storybook/NavigationChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, navigation chooser table added, skeleton section added.
 
 <Meta isTemplate />
 
@@ -21,6 +22,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <Canvas of={PaginationStories.Default} />
 
+## Which component to use
+
+<NavigationChooser />
+
 ## Multiple pagination components
 
 <Canvas of={PaginationStories.Multiple} />
@@ -32,6 +37,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Pagination with custom page sizes label
 
 <Canvas of={PaginationStories.WithCustomPageSizesLabel} />
+
+## Skeleton state
+
+<Canvas of={PaginationStories.Skeleton} />
 
 ## Component API
 

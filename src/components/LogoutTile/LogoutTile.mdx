@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as LogoutTileStories from './LogoutTile.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ShellChooser } from '../../../.storybook/ShellChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -24,6 +25,18 @@ a sign-out link. `LogoutTile` follows the profile popover: the same two forms
 (a handler or a link), with a larger tertiary button and a loading state.
 
 <Canvas of={LogoutTileStories.Default} />
+
+## When to use
+
+Use `LogoutTile` inside a header profile panel to show who is signed in and
+the log-out action. Do not use it for:
+
+- the whole profile popover (user info, theme, links): Labs
+  [Profile](?path=/docs/components-ui-shell-profile--overview), with this tile
+  inside it;
+- telling the user the session ends or has ended: `LogoutBanner`.
+
+<ShellChooser />
 
 ## Usage and props
 
@@ -49,6 +62,8 @@ import { LogoutTile } from '@afframe/ui';
 - `loading`: shows the loading state (for example while the app signs out
   after a redirect).
 - `messages`: overrides for the strings below.
+- `className`, `ref` and other attributes go to the tile root, Carbon's
+  `Tile` `div` inside its `Layer` wrapper.
 
 ### Use in the Carbon header
 
@@ -78,7 +93,7 @@ component (a function cannot cross from a server component).
 
 ## Examples
 
-<Canvas of={LogoutTileStories.Loading} />
+<Canvas of={LogoutTileStories.LoggingOut} />
 
 <Canvas of={LogoutTileStories.AsLink} />
 

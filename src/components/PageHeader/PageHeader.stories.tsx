@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025, 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (PageHeader sub-components through the namespace), story styles in CSS, images loaded with new URL, lg breakpoint as a literal, srcset as srcSet, optional icons passed only when set, ids on TruncatedText and a label on ScrollButton (both required by IBM's types), TabBarWithTabsAndTags title only from its args (the args overwrote it), popover tags wrapped in a fragment, unused imports dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui (PageHeader sub-components through the namespace), story styles in CSS, images loaded with new URL, lg breakpoint as a literal, srcset as srcSet, optional icons passed only when set, ids on TruncatedText and a label on ScrollButton (both required by IBM's types), TabBarWithTabsAndTags title only from its args (the args overwrote it) and its story-only controls kept off PageHeader.Content (they reached the DOM), popover tags wrapped in a fragment, unused imports dropped. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -514,7 +514,13 @@ const renderUIShellHeader = () => (
   />
 );
 
-export const TabBarWithTabsAndTags: StoryFn<StoryArgs> = (args) => (
+export const TabBarWithTabsAndTags: StoryFn<StoryArgs> = ({
+  border,
+  pageActionsFlush,
+  contentActionsFlush,
+  renderBreadcrumbIcon,
+  title,
+}) => (
   <>
     {renderUIShellHeader()}
 
@@ -522,12 +528,10 @@ export const TabBarWithTabsAndTags: StoryFn<StoryArgs> = (args) => (
       <Tabs>
         <PageHeader.Root>
           <PageHeader.BreadcrumbBar
-            border={args.border}
-            pageActionsFlush={args.pageActionsFlush}
-            contentActionsFlush={args.contentActionsFlush}
-            {...(args.renderBreadcrumbIcon
-              ? { renderIcon: BreadcrumbBeeIcon }
-              : {})}
+            border={border}
+            pageActionsFlush={pageActionsFlush}
+            contentActionsFlush={contentActionsFlush}
+            {...(renderBreadcrumbIcon ? { renderIcon: BreadcrumbBeeIcon } : {})}
             pageActions={breadcrumbPageActions}
             contentActions={
               <PageHeader.ContentPageActions
@@ -571,7 +575,7 @@ export const TabBarWithTabsAndTags: StoryFn<StoryArgs> = (args) => (
                 actions={pageActionButtonItems}
               />
             }
-            {...args}>
+            title={title}>
             <PageHeader.ContentText subtitle="Subtitle">
               Built for modern teams, our technology platform simplifies
               complexity with powerful APIs, real-time collaboration tools, and

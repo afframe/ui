@@ -1,5 +1,5 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { Header, HeaderGlobalBar, HeaderName } from '../../index.js';
@@ -277,7 +277,7 @@ test('messages replace every English string', async () => {
     <Page
       defaultOpen
       messages={{
-        label: 'X-panel',
+        panelLabel: 'X-panel',
         panelHeading: 'X-heading',
         currentEnvironment: (label) => `X-current-${label}`,
         productionTag: 'X-prod',
@@ -300,16 +300,18 @@ test('messages replace every English string', async () => {
 test('content mode renders only the group and leaves Escape to its container', async () => {
   const onKeyDown = vi.fn();
   const onChange = vi.fn();
+  // @ts-expect-error: content mode takes no open state props.
+  const props: EnvironmentSwitcherProps = {
+    environments,
+    value: 'staging',
+    onChange,
+    presentation: 'content',
+    defaultOpen: false,
+  };
   render(
     <AfframeProvider>
       <div onKeyDown={(event) => onKeyDown(event.key)}>
-        <EnvironmentSwitcher
-          environments={environments}
-          value="staging"
-          onChange={onChange}
-          presentation="content"
-          defaultOpen={false}
-        />
+        <EnvironmentSwitcher {...props} />
       </div>
     </AfframeProvider>
   );
@@ -325,4 +327,22 @@ test('content mode renders only the group and leaves Escape to its container', a
   await userEvent.keyboard('{ArrowUp}{Enter}');
   expect(onChange).toHaveBeenCalledExactlyOnceWith('dev');
   expect(screen.getByRole('radio', { name: /Development/ })).toHaveFocus();
+});
+
+test('className, ref and other attributes go to the panel root', () => {
+  const ref = createRef<HTMLDivElement>();
+  render(<Page ref={ref} className="x-switcher" data-testid="x-panel" />);
+  expect(ref.current).toBe(screen.getByTestId('x-panel'));
+  expect(ref.current).toHaveClass('cds--header-panel', 'x-switcher');
+  render(
+    <EnvironmentSwitcher
+      environments={environments}
+      value="staging"
+      onChange={() => undefined}
+      presentation="content"
+      ref={ref}
+      className="x-content"
+    />
+  );
+  expect(ref.current).toHaveClass('afframe-environment-switcher', 'x-content');
 });

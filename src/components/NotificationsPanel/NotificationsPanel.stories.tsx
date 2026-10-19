@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, the c4p prefix as a literal, crypto.randomUUID instead of uuidv4, inline StoryDocsPage argType dropped, illustrationTheme arg set to its default, preventDefault dropped from the header action clicks (typed without an event). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, story styles in CSS, the c4p prefix as a literal, crypto.randomUUID instead of uuidv4, inline StoryDocsPage argType dropped, the empty state illustration follows the Storybook theme, title Components/UI Shell/NotificationsPanel, preventDefault dropped from the header action clicks (typed without an event). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -21,6 +21,7 @@ import {
   HeaderName,
   HeaderPanel,
   NotificationsPanel,
+  useColorScheme,
 } from '../../index.js';
 import type { NotificationsPanelProps } from '../../index.js';
 import { Close, Notification, Switcher, User } from '../../icons.js';
@@ -31,11 +32,16 @@ import mdx from './NotificationsPanel.mdx';
 import './notifications-panel-story.css';
 
 // The data and dateTimeLocale controls hold indexes that Storybook maps to
-// values before the story renders.
-type StoryArgs = Omit<NotificationsPanelProps, 'data' | 'dateTimeLocale'> & {
-  data: number;
-  dateTimeLocale: number;
-};
+// values before the story renders. IBM types illustrationTheme as required;
+// left unset, the story follows the Storybook theme.
+type StoryArgs = Omit<
+  NotificationsPanelProps,
+  'data' | 'dateTimeLocale' | 'illustrationTheme'
+> &
+  Partial<Pick<NotificationsPanelProps, 'illustrationTheme'>> & {
+    data: number;
+    dateTimeLocale: number;
+  };
 
 const storyBlockClass = `c4p--notifications-panel__story`;
 
@@ -83,7 +89,7 @@ const dateTimeLocaleOptions: Record<string, string | undefined> = {
 };
 
 export default {
-  title: 'Components/NotificationsPanel',
+  title: 'Components/UI Shell/NotificationsPanel',
   component: NotificationsPanel,
   tags: ['ibm-products'],
   parameters: {
@@ -114,7 +120,6 @@ const defaultProps: StoryArgs = {
   data: 0,
   dateTimeLocale: 0,
   dateTimeStyle: 'long',
-  illustrationTheme: 'light',
   open: true,
   onDoNotDisturbChange: action('Toggled "Do not disturb"'),
   onViewAllClick: action('Clicked "View all"'),
@@ -137,6 +142,7 @@ const newNotification = (): NotificationData => {
 const Template: StoryFn<StoryArgs> = (args) => {
   const { data, open, ...rest } = args as unknown as NotificationsPanelProps;
   const [notificationsData, setNotificationsData] = useState(data);
+  const scheme = useColorScheme();
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(true);
   const [userOpen, setUserOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(open);
@@ -267,6 +273,7 @@ const Template: StoryFn<StoryArgs> = (args) => {
               setNotificationsData(tempData);
             }}
             {...rest}
+            illustrationTheme={rest.illustrationTheme ?? scheme}
           />
           {/**
            *

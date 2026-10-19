@@ -4,6 +4,7 @@
 // notice of @carbon-labs/wc-global-header was a behaviour reference only.
 import { ActionableNotification, FeatureFlags } from '@carbon/react';
 import { useEffect } from 'react';
+import type { HTMLAttributes } from 'react';
 import { resolveMessages } from '../../messages.js';
 
 export interface LogoutBannerMessages {
@@ -41,13 +42,30 @@ interface LogoutBannerBaseProps {
   onStaySignedIn?: () => void;
   /** `signed-out`: called by the "Sign in" action. */
   onSignIn?: () => void;
-  /** Shows the close button; the app removes the banner. */
-  onDismiss?: () => void;
+  /** Shows the close button and closes on Escape; the app removes the banner. */
+  onClose?: () => void;
   messages?: Partial<LogoutBannerMessages>;
+  /** On the banner root, Carbon's `ActionableNotification` `div`. */
   className?: string;
 }
 
+/**
+ * Other attributes go to the banner root, the same element as `className`.
+ * There is no `ref`: Carbon's ActionableNotification sets its own ref on
+ * that `div` and does not forward one.
+ */
+type LogoutBannerRootAttributes = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  | keyof LogoutBannerBaseProps
+  | 'children'
+  | 'role'
+  | 'title'
+  | 'aria-label'
+  | 'aria-labelledby'
+>;
+
 export type LogoutBannerProps = LogoutBannerBaseProps &
+  LogoutBannerRootAttributes &
   (
     | {
         variant: 'expiring';
@@ -67,9 +85,10 @@ export function LogoutBanner({
   minutesLeft,
   onStaySignedIn,
   onSignIn,
-  onDismiss,
+  onClose,
   messages,
   className,
+  ...rest
 }: LogoutBannerProps) {
   const text = resolveMessages(defaultLogoutBannerMessages, messages);
   const expiring = variant === 'expiring';
@@ -88,6 +107,7 @@ export function LogoutBanner({
     // only make sense for its alertdialog role.
     <FeatureFlags enableFocusWrapWithoutSentinels>
       <ActionableNotification
+        {...rest}
         className={['afframe-logout-banner', className]
           .filter(Boolean)
           .join(' ')}
@@ -108,13 +128,13 @@ export function LogoutBanner({
               onActionButtonClick: action,
             })}
         hasFocus={false}
-        hideCloseButton={onDismiss === undefined}
-        closeOnEscape={onDismiss !== undefined}
+        hideCloseButton={onClose === undefined}
+        closeOnEscape={onClose !== undefined}
         aria-label={text.closeIconDescription}
         // The app owns visibility: returning false keeps Carbon from hiding
         // the banner on its own.
         onClose={() => {
-          onDismiss?.();
+          onClose?.();
           return false;
         }}
       />

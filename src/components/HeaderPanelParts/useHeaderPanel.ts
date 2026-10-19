@@ -23,31 +23,49 @@ import type {
   ReactElement,
   Ref,
 } from 'react';
+import { useMergedRefs } from '../FlowParts/refs.js';
 
-/** Props shared by the header actions that open a panel. */
-export interface HeaderPanelActionProps {
+/** Open state of a header action in `'panel'` mode. */
+export interface HeaderPanelOpenProps {
   /** Controlled open state. */
   open?: boolean;
   /** Uncontrolled initial open state. */
   defaultOpen?: boolean;
   /** Called with the new state on every open and close. */
   onOpenChange?: (open: boolean) => void;
-  /**
-   * A trigger to use instead of the default HeaderGlobalAction (for example a
-   * ghost Button with visible text). It receives `ref`, `onClick`,
-   * `aria-expanded` and `aria-controls`, and must name itself.
-   */
-  renderAction?: ReactElement;
-  /**
-   * `'panel'` (default): the action and its HeaderPanel. `'content'`: only the
-   * panel body, for a container that owns open state, outside press, Escape
-   * and focus return (a Labs HeaderPopoverContent). In `'content'` mode
-   * `open`, `defaultOpen`, `onOpenChange`, `renderAction` and `label` are
-   * ignored.
-   */
-  presentation?: 'panel' | 'content';
-  className?: string;
 }
+
+/**
+ * Props shared by the header actions that open a panel. `presentation`
+ * `'panel'` (default) renders the action and its HeaderPanel; `'content'`
+ * renders only the panel body, for a container that owns open state, outside
+ * press, Escape and focus return (a Labs HeaderPopoverContent), so the open
+ * state props and `renderAction` are type errors there.
+ */
+export type HeaderPanelActionProps =
+  | (HeaderPanelOpenProps & {
+      presentation?: 'panel';
+      /**
+       * A trigger to use instead of the default HeaderGlobalAction (for
+       * example a ghost Button with visible text). It receives `ref`,
+       * `onClick`, `aria-expanded` and `aria-controls`, and must name itself.
+       */
+      renderAction?: ReactElement;
+    })
+  | {
+      presentation: 'content';
+      open?: never;
+      defaultOpen?: never;
+      onOpenChange?: never;
+      renderAction?: never;
+    };
+
+/**
+ * Attributes the panel root sets itself: `id` names it for `aria-controls`,
+ * and the open state handlers and `inert` drive it.
+ */
+export type HeaderPanelRootAttribute =
+  'id' | 'inert' | 'onKeyDown' | 'onBlur' | 'children';
 
 // HeaderGlobalAction and HeaderPanel pass other props on at runtime; their
 // types do not list them.
@@ -56,10 +74,13 @@ export const HeaderAction = HeaderGlobalAction as ComponentType<
     ButtonHTMLAttributes<HTMLButtonElement> & { ref?: Ref<HTMLButtonElement> }
 >;
 
-interface Options extends Omit<
-  HeaderPanelActionProps,
-  'renderAction' | 'presentation'
-> {
+// `| undefined`: the components destructure these props before passing them.
+interface Options {
+  open?: boolean | undefined;
+  defaultOpen?: boolean | undefined;
+  onOpenChange?: ((open: boolean) => void) | undefined;
+  /** The consumer's ref to the panel root. */
+  ref?: Ref<HTMLDivElement> | undefined;
   /** Element to focus when the panel opens. */
   initialFocus: (panel: HTMLElement) => HTMLElement | null | undefined;
 }
@@ -68,6 +89,7 @@ export function useHeaderPanel({
   open,
   defaultOpen = false,
   onOpenChange,
+  ref,
   initialFocus,
 }: Options) {
   const [innerOpen, setInnerOpen] = useState(defaultOpen);
@@ -158,9 +180,10 @@ export function useHeaderPanel({
     }
   };
 
+  const mergedPanelRef = useMergedRefs(panelRef, ref);
   const panelProps = {
     id: panelId,
-    ref: panelRef,
+    ref: mergedPanelRef,
     inert: !isOpen,
     onKeyDown,
     onBlur,

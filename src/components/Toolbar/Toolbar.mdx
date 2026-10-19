@@ -1,9 +1,10 @@
 import { ArgTypes, Canvas, Story, Meta } from '@storybook/addon-docs/blocks';
 import * as stories from './Toolbar.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ToolbarChooser } from '../../../.storybook/ToolbarChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2021, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, TODO notes and code sample section removed, usage guidelines link removed (internal IBM page), vertical example heading renamed from With Image, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: source label and source link added, TODO notes and code sample section removed, usage guidelines link removed (internal IBM page), vertical example heading renamed from With Image, story names unified, upstream table of contents removed, Afframe intro and keyboard note added, toolbar chooser table added.
 
 <Meta isTemplate />
 
@@ -12,6 +13,14 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 <SourceLabel name="ibm-products" />
 
 [Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/Toolbar)
+
+`Toolbar` is a `role="toolbar"` container of `ToolbarGroup`s, each holding
+controls such as `ToolbarButton`, Carbon form controls and menus. Set
+`vertical` to stack the groups in a column.
+
+## Which component to use
+
+<ToolbarChooser />
 
 ## Example usage
 
@@ -26,3 +35,12 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 ## Component API
 
 <ArgTypes />
+
+## Keyboard and screen readers
+
+Every control is a Tab stop until one gets focus; from then on the toolbar is
+one Tab stop that returns to the last focused control. ArrowRight and ArrowLeft
+move focus to the next and previous control, across groups, or ArrowDown and
+ArrowUp when `vertical` is set. Focus stops at the first and last control; Home
+and End do nothing. Each `ToolbarButton` is a Carbon `IconButton`, so its
+`label` is the accessible name and the tooltip shown on focus and hover.

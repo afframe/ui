@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as EnvironmentSwitcherStories from './EnvironmentSwitcher.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ShellChooser } from '../../../.storybook/ShellChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -34,6 +35,22 @@ full name in the tooltip), closing on selection and `disabled`, and changes:
 
 <Canvas of={EnvironmentSwitcherStories.Default} />
 
+## When to use
+
+Use `EnvironmentSwitcher` when one sign-in reaches several environments or
+instances and the user must always see which one is current. Do not use it
+for:
+
+- switching between apps or products: Carbon `HeaderPanel` with `Switcher`
+  ([Header](?path=/docs/components-ui-shell-header--overview));
+- notifications: [NotificationsPanel](?path=/docs/components-notificationspanel--overview);
+- the user's account and log-out: Labs
+  [Profile](?path=/docs/components-ui-shell-profile--overview) with
+  `LogoutTile`;
+- help links: `HelpMenu`.
+
+<ShellChooser />
+
 ## Usage and props
 
 ```tsx
@@ -57,15 +74,17 @@ import { EnvironmentSwitcher } from '@afframe/ui';
   called once per switch, never for the current one.
 - `open`, `defaultOpen`, `onOpenChange`: controlled or uncontrolled open
   state. `onOpenChange` is called once per change.
-- `label`: the action's accessible name and tooltip; default
-  `messages.currentEnvironment(current label)`.
 - `disabled`: the panel opens, the radios are disabled.
 - `renderAction`: a trigger element to use instead of the icon action.
 - `presentation`: `'panel'` (default) renders the action and its panel;
   `'content'` renders only the radio group, for a Labs `HeaderPopover` (see
-  below). In `'content'` mode `open`, `defaultOpen`, `onOpenChange`, `label`
-  and `renderAction` are ignored.
-- `messages`: overrides for the strings below.
+  below). In `'content'` mode `open`, `defaultOpen`, `onOpenChange` and
+  `renderAction` are type errors.
+- `messages`: overrides for the strings below; the action's name is
+  `messages.currentEnvironment(current label)`.
+- `className`, `ref` and other attributes go to the panel root: the
+  `HeaderPanel` `div`, or in `'content'` mode the `div` around the group. The
+  panel sets its own `role` and `aria-label`.
 
 ### Use in the Carbon header
 
@@ -144,18 +163,20 @@ client component (a function cannot cross from a server component).
 
 | Key                  | Default              |
 | -------------------- | -------------------- |
-| `label`              | Switch environment   |
+| `panelLabel`         | Switch environment   |
 | `panelHeading`       | Environments         |
 | `currentEnvironment` | Environment: `label` |
 | `productionTag`      | Production           |
 | `switched`           | Switched to `label`  |
 
-`label` names the panel (a region); `currentEnvironment` names the action, so
+`panelLabel` names the panel (a region); `currentEnvironment` names the action, so
 the visible name is part of the accessible name.
 
 ## Examples
 
 <Canvas of={EnvironmentSwitcherStories.WithProduction} />
+
+<Canvas of={EnvironmentSwitcherStories.Disabled} />
 
 <Canvas of={EnvironmentSwitcherStories.InLabsShell} />
 
@@ -187,6 +208,6 @@ Screen readers announce:
 
 - the action as a button named by `currentEnvironment`, with its expanded
   state; `aria-controls` points at the panel;
-- the panel as a region named by `label`, the group by `panelHeading`, and
+- the panel as a region named by `panelLabel`, the group by `panelHeading`, and
   each radio by its label (plus `productionTag`) and description;
 - after a switch, `switched` in a polite status region outside the panel.

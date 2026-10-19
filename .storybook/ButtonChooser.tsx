@@ -29,6 +29,10 @@ const rows = [
     link('OverflowMenu', 'components-overflowmenu'),
   ],
   [
+    'Go to another page or resource, not run an action',
+    link('Link', 'components-link'),
+  ],
+  [
     'Copy a value shown next to the button',
     link('CopyButton', 'components-copybutton'),
   ],

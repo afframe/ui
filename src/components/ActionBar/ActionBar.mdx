@@ -1,9 +1,10 @@
 import { Controls, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as stories from './ActionBar.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ToolbarChooser } from '../../../.storybook/ToolbarChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: written from the upstream docs page component (StoryDocsPage) and the component's JSDoc, source label added, source link pinned to the tag, Afframe keyboard note.
+// Modified by Afframe in 2026: written from the upstream docs page component (StoryDocsPage) and the component's JSDoc, source label added, source link pinned to the tag, Afframe keyboard note, renderIcon type note, toolbar chooser table added.
 
 <Meta isTemplate />
 
@@ -21,12 +22,18 @@ container width, or go past `maxVisible`, move into an overflow menu.
 Pass `renderIcon` as a function, `(props) => <Bee size={16} {...props} />`, not
 the icon component itself: the overflow menu renders anything that is not a
 function as a React child, and a Carbon icon component is an object, so the menu
-throws once an item overflows.
+throws once an item overflows. IBM types `renderIcon` as `CarbonIconType`, so
+TypeScript rejects the function without a cast; the story casts the `actions`
+array with `as unknown as`.
 
 <Canvas of={stories.Default} />
 
 Pick "A lot" in the `actions` control, or narrow `containerWidth`, to see the
 overflow menu.
+
+## Which component to use
+
+<ToolbarChooser />
 
 ## Component API
 

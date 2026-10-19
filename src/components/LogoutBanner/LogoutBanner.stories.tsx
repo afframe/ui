@@ -7,7 +7,7 @@ import { Button } from '../../index.js';
 import { LogoutBanner } from './LogoutBanner.js';
 import type { LogoutBannerProps } from './LogoutBanner.js';
 import mdx from './LogoutBanner.mdx';
-import { CarbonShell, LabsShell } from './storyShells.js';
+import { CarbonShell, LabsShell } from '../HeaderPanelParts/storyShells.js';
 
 const meta = {
   title: 'Components/UI Shell/LogoutBanner',
@@ -17,7 +17,7 @@ const meta = {
     variant: 'expiring',
     minutesLeft: 5,
     onStaySignedIn: action('onStaySignedIn'),
-    onDismiss: action('onDismiss'),
+    onClose: action('onClose'),
   },
   render: (args) => (
     <CarbonShell>

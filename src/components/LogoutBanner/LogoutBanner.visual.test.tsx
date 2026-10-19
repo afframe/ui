@@ -31,3 +31,13 @@ test('logout-banner-focus', async () => {
     .toHaveFocus();
   await snapshot('logout-banner-focus');
 });
+
+test('logout-banner-narrow', async () => {
+  await page.viewport(375, 768);
+  try {
+    await Default.run();
+    await snapshot('logout-banner-narrow');
+  } finally {
+    await page.viewport(1024, 768);
+  }
+});

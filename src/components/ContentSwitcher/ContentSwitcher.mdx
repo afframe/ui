@@ -2,9 +2,10 @@ import { ArgTypes, Canvas, Meta, Unstyled } from '@storybook/addon-docs/blocks';
 import { ContentSwitcher, Switch } from '../../index.js';
 import * as ContentSwitcherStories from './ContentSwitcher.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { NavigationChooser } from '../../../.storybook/NavigationChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, navigation chooser table added.
 
 <Meta isTemplate />
 
@@ -25,6 +26,10 @@ within the same space on screen. Only one content section is shown at a time.
 Create Switch components for each section in the content switcher.
 
 <Canvas of={ContentSwitcherStories.Default} />
+
+## Which component to use
+
+<NavigationChooser />
 
 ## Icon Only
 

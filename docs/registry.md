@@ -196,7 +196,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | TreeView                           | component | carbon       | client  | stable            | [page](../src/components/TreeView/TreeView.mdx)                       |
 | TreeNode                           | component | carbon       | client  | stable            | [page](../src/components/TreeView/TreeView.mdx)                       |
 | Header                             | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
-| HeaderContainer                    | component | carbon       | client  | stable            |                                                                       |
+| HeaderContainer                    | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | HeaderGlobalAction                 | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | HeaderGlobalBar                    | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
 | HeaderMenu                         | component | carbon       | client  | stable            | [page](../src/components/UIShell/UIShell.mdx)                         |
@@ -233,15 +233,14 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | TabListVertical                    | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
 | TabPanel                           | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
 | TabPanels                          | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
-| TabContent                         | component | carbon       | client  | stable            |                                                                       |
 | TabsVertical                       | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
-| TabsSkeleton                       | component | carbon       | client  | stable            |                                                                       |
-| IconTab                            | component | carbon       | client  | stable            |                                                                       |
+| TabsSkeleton                       | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
+| IconTab                            | component | carbon       | client  | stable            | [page](../src/components/Tabs/Tabs.mdx)                               |
 | ContentSwitcher                    | component | carbon       | client  | stable            | [page](../src/components/ContentSwitcher/ContentSwitcher.mdx)         |
 | Switch                             | component | carbon       | client  | stable            | [page](../src/components/ContentSwitcher/ContentSwitcher.mdx)         |
 | IconSwitch                         | component | carbon       | client  | stable            | [page](../src/components/ContentSwitcher/ContentSwitcher.mdx)         |
 | Pagination                         | component | carbon       | client  | stable            | [page](../src/components/Pagination/Pagination.mdx)                   |
-| PaginationSkeleton                 | component | carbon       | client  | stable            |                                                                       |
+| PaginationSkeleton                 | component | carbon       | client  | stable            | [page](../src/components/Pagination/Pagination.mdx)                   |
 | PaginationNav                      | component | carbon       | client  | stable            | [page](../src/components/PaginationNav/PaginationNav.mdx)             |
 | Menu                               | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
 | MenuItem                           | component | carbon       | client  | stable            | [page](../src/components/Menu/Menu.mdx)                               |
@@ -375,8 +374,8 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | previewCandidate__InlineTipButton  | component | ibm-products | client  | preview-candidate |                                                                       |
 | previewCandidate__InlineTipLink    | component | ibm-products | client  | preview-candidate |                                                                       |
 | previewCandidate__Toolbar          | component | ibm-products | client  | preview-candidate | [page](../src/components/Toolbar/Toolbar.mdx)                         |
-| previewCandidate__ToolbarButton    | component | ibm-products | client  | preview-candidate |                                                                       |
-| previewCandidate__ToolbarGroup     | component | ibm-products | client  | preview-candidate |                                                                       |
+| previewCandidate__ToolbarButton    | component | ibm-products | client  | preview-candidate | [page](../src/components/Toolbar/Toolbar.mdx)                         |
+| previewCandidate__ToolbarGroup     | component | ibm-products | client  | preview-candidate | [page](../src/components/Toolbar/Toolbar.mdx)                         |
 | previewCandidate__SearchBar        | component | ibm-products | client  | preview-candidate | [page](../src/components/SearchBar/SearchBar.mdx)                     |
 | previewCandidate__TruncatedList    | component | ibm-products | client  | preview-candidate | [page](../src/components/TruncatedList/TruncatedList.mdx)             |
 | previewCandidate__NonLinearReading | component | ibm-products | client  | preview-candidate | [page](../src/components/NonLinearReading/NonLinearReading.mdx)       |
@@ -401,7 +400,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | SideNavMenuItemLabs                | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
 | SideNavSlot                        | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
 | SideNavTitle                       | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                     |
-| HeaderContainerLabs                | component | labs         | client  | stable            |                                                                       |
+| HeaderContainerLabs                | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/UIShell.mdx)                     |
 | HeaderDivider                      | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/UIShell.mdx)                     |
 | HeaderOverflowPanel                | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/HeaderOverflowPanel.mdx)         |
 | HeaderPopover                      | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/HeaderPopover.mdx)               |

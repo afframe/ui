@@ -342,7 +342,6 @@ export {
   TabListVertical,
   TabPanel,
   TabPanels,
-  TabContent,
   TabsVertical,
   TabsSkeleton,
   IconTab,

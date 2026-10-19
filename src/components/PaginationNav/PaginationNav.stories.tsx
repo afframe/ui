@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2020, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, PaginationNav from @afframe/ui, source tag. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, PaginationNav from @afframe/ui, source tag, story wrapper takes a max width instead of a fixed width. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
@@ -31,7 +31,7 @@ export default {
 
 export const Default: StoryFn<typeof PaginationNav> = (args) => {
   return (
-    <div style={{ width: '800px' }}>
+    <div style={{ maxWidth: '800px' }}>
       <PaginationNav totalItems={25} {...args} />
     </div>
   );

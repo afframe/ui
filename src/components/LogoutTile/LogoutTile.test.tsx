@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
@@ -126,4 +127,16 @@ test('messages replace every English string', () => {
     messages: { loggingOut: 'X-busy' },
   });
   expect(screen.getByRole('button', { name: /X-busy/ })).toBeDisabled();
+});
+
+test('className, ref and other attributes go to the tile root', () => {
+  const ref = createRef<HTMLDivElement>();
+  renderTile({
+    onLogout() {},
+    ref,
+    className: 'x-tile',
+    id: 'x-root',
+  });
+  expect(ref.current).toHaveAttribute('id', 'x-root');
+  expect(ref.current).toHaveClass('cds--tile', 'x-tile');
 });

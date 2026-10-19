@@ -161,9 +161,9 @@ Skeleton.argTypes = {
   },
 };
 
-export const BreadcrumbWithOverflowVisualSnapshots: StoryFn<
-  typeof Breadcrumb
-> = (args) => {
+export const WithOverflowMenuVisualSnapshots: StoryFn<typeof Breadcrumb> = (
+  args
+) => {
   return (
     <Breadcrumb {...args} noTrailingSlash>
       <BreadcrumbItem>
@@ -182,12 +182,12 @@ export const BreadcrumbWithOverflowVisualSnapshots: StoryFn<
   );
 };
 
-BreadcrumbWithOverflowVisualSnapshots.argTypes = {
+WithOverflowMenuVisualSnapshots.argTypes = {
   ...sharedArgTypes,
 };
 
-BreadcrumbWithOverflowVisualSnapshots.play = async ({ canvas, userEvent }) => {
+WithOverflowMenuVisualSnapshots.play = async ({ canvas, userEvent }) => {
   await userEvent.click(canvas.getByRole('button'));
 };
 
-BreadcrumbWithOverflowVisualSnapshots.tags = ['!dev', '!autodocs'];
+WithOverflowMenuVisualSnapshots.tags = ['!dev', '!autodocs'];

@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, inline spacing as Carbon spacing tokens. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, dismissable arg removed from Default (TabList does not take it), IconTab and TabsSkeleton listed as subcomponents. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -99,6 +99,8 @@ export default {
     Tab,
     TabPanels,
     TabPanel,
+    IconTab,
+    TabsSkeleton,
   },
   tags: ['carbon'],
   parameters: {
@@ -136,7 +138,6 @@ export const Default: StoryFn<TabListArgs> = (args) => {
 
 Default.args = {
   contained: false,
-  dismissable: false,
   ...lineTabsSizeArgs,
   scrollDebounceWait: 200,
 };
@@ -150,9 +151,6 @@ Default.argTypes = {
     control: {
       type: 'boolean',
     },
-  },
-  dismissable: {
-    control: false,
   },
   iconSize: {
     control: { type: 'select' },

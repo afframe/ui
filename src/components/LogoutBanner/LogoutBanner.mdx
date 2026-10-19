@@ -1,6 +1,7 @@
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as LogoutBannerStories from './LogoutBanner.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { ShellChooser } from '../../../.storybook/ShellChooser';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
@@ -30,6 +31,19 @@ warning and adds what the expiry notice leaves out:
 
 <Canvas of={LogoutBannerStories.Default} />
 
+## When to use
+
+Use `LogoutBanner` for the two session notices of the shell: the session ends
+soon, or it has ended. Do not use it for:
+
+- other notices that need an action: Carbon
+  [ActionableNotification](?path=/docs/components-notifications-actionablenotification--overview);
+- notices about one part of the page, with no action:
+  [InlineNotification](?path=/docs/components-notifications-inlinenotification--overview);
+- the signed-in user and the log-out action: `LogoutTile`.
+
+<ShellChooser />
+
 ## Usage and props
 
 ```tsx
@@ -41,7 +55,7 @@ import { LogoutBanner } from '@afframe/ui';
       variant="expiring"
       minutesLeft={minutesLeft}
       onStaySignedIn={refreshSession}
-      onDismiss={() => setBannerHidden(true)}
+      onClose={() => setBannerHidden(true)}
     />
   );
 }
@@ -57,9 +71,12 @@ import { LogoutBanner } from '@afframe/ui';
   the same on the server and in tests.
 - `onStaySignedIn` (`expiring`) and `onSignIn` (`signed-out`): the action
   button appears only when its callback is set.
-- `onDismiss`: shows the close button. The banner does not hide itself: the
-  app removes it in `onDismiss`.
+- `onClose`: shows the close button. The banner does not hide itself: the
+  app removes it in `onClose`.
 - `messages`: overrides for the strings below.
+- `className` and other attributes go to the banner root, Carbon's
+  `ActionableNotification` `div`. There is no `ref`: Carbon sets its own ref
+  on that `div` and does not forward one.
 
 ### Use in the Carbon header
 
@@ -100,14 +117,14 @@ component (a function cannot cross from a server component).
 ## Keyboard and screen reader behaviour
 
 The banner never moves focus when it appears. Focus order: the action button,
-then the close button (when `onDismiss` is set).
+then the close button (when `onClose` is set).
 
-| Key          | Where         | Action                                   |
-| ------------ | ------------- | ---------------------------------------- |
-| Tab          | page          | Reaches the action button, then close.   |
-| Enter, Space | action button | Calls `onStaySignedIn` or `onSignIn`.    |
-| Enter, Space | close button  | Calls `onDismiss`.                       |
-| Escape       | in the banner | Calls `onDismiss` (only when it is set). |
+| Key          | Where         | Action                                 |
+| ------------ | ------------- | -------------------------------------- |
+| Tab          | page          | Reaches the action button, then close. |
+| Enter, Space | action button | Calls `onStaySignedIn` or `onSignIn`.  |
+| Enter, Space | close button  | Calls `onClose`.                       |
+| Escape       | in the banner | Calls `onClose` (only when it is set). |
 
 Screen readers announce:
 

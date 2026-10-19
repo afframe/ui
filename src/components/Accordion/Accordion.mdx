@@ -2,9 +2,10 @@ import { Accordion, AccordionItem, AccordionSkeleton } from '../../index.js';
 import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as AccordionStories from './Accordion.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
+import { NavigationChooser } from '../../../.storybook/NavigationChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, upstream Feedback section and table of contents removed, navigation chooser table added.
 
 <Meta isTemplate />
 
@@ -30,6 +31,10 @@ Everything you pass in as a child of `AccordionItem` will be rendered in the
 accordion's panel.
 
 <Canvas of={AccordionStories.Default} />
+
+## Which component to use
+
+<NavigationChooser />
 
 ## Controlled
 
