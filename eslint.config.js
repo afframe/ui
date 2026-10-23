@@ -14,6 +14,7 @@ export default defineConfig(
     '.claude/',
     'examples/nextjs/.next/',
     'examples/nextjs/next-env.d.ts',
+    'examples/accent-demo/',
   ]),
   js.configs.recommended,
   tseslint.configs.strict,

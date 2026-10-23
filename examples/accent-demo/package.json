@@ -1,0 +1,21 @@
+{
+  "name": "accent-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@afframe/ui": "link:../..",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "latest",
+    "typescript": "6.0.3",
+    "vite": "latest"
+  }
+}
