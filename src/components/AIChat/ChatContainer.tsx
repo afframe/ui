@@ -106,7 +106,7 @@ export function ChatContainer({
     <div
       data-afframe-extra="ai-chat"
       style={wrapperStyle}
-      aria-busy={chat.status === 'loading'}>
+      aria-busy={chat.status === 'loading' || undefined}>
       {chat.status === 'loaded' ? (
         <chat.Component {...props} />
       ) : chat.status === 'failed' ? (
@@ -132,7 +132,7 @@ export function ChatCustomElement({
     <div
       data-afframe-extra="ai-chat"
       style={wrapperStyle}
-      aria-busy={chat.status === 'loading'}>
+      aria-busy={chat.status === 'loading' || undefined}>
       {chat.status === 'loaded' ? (
         <chat.Component {...props} />
       ) : chat.status === 'failed' ? (

@@ -85,5 +85,5 @@ test('while loading, the skeleton is busy and named, and keeps className', async
   );
   finish(fakeChat);
   expect(await screen.findByText('Loaded custom element')).toBeTruthy();
-  expect(wrapper).toHaveAttribute('aria-busy', 'false');
+  expect(wrapper).not.toHaveAttribute('aria-busy');
 });
