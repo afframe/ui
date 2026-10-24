@@ -128,7 +128,7 @@ the import again.
   `aria-busy="true"` and the `loading` message.
 - Invalid payload: an inline error with `invalid(type)`; raw data is never
   shown. `renderChatElement` passes only the payload fields of each type to
-  the component, so a payload cannot set `className` or `messages`.
+  the component, so a payload cannot set `className`, `messages` or `ref`.
 - Engine errors: each element sits behind its own error boundary. A failed
   engine import shows `loadError` (the next element that needs the engine
   imports it again); an engine that throws while drawing (such as ECharts on
