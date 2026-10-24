@@ -16,7 +16,7 @@ IBM_TELEMETRY_DISABLED=true pnpm install
 pnpm preflight
 ```
 
-`pnpm preflight` is the gate: Prettier check, ESLint, Stylelint, `tsc` and `pnpm registry --check`. CI runs the same. `pnpm format` fixes formatting. `pnpm check:licences` runs the CI licence-label check locally; it needs `reuse` at the version of the `reuse` image pinned in `scripts/ci/toolbox/Dockerfile`.
+`pnpm preflight` is the gate: Prettier check, ESLint, Stylelint, `tsc` and `pnpm registry --check`. CI runs the same. `pnpm format` fixes formatting. ESLint applies `eslint-plugin-react-hooks` only to own `.ts`/`.tsx` files in `src/` and `.storybook/`: files with Apache-2.0 in their header (copied from IBM) are left as upstream wrote them. `pnpm check:licences` runs the CI licence-label check locally; it needs `reuse` at the version of the `reuse` image pinned in `scripts/ci/toolbox/Dockerfile`.
 
 ## Test
 

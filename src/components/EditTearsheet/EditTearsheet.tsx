@@ -259,12 +259,15 @@ export function EditTearsheet({
   // onChange twice for Enter and Space (its keydown and the native click),
   // and once for the current step, which reads as unclickable.
   const shown = useRef(active);
-  shown.current = active;
+  useEffect(() => {
+    shown.current = active;
+  });
 
   // An error field the consumer marked only in a hidden form: useFlow could
   // not focus it, so show its form and focus it there. A field in the shown
   // form wins. Runs after every render until the error is dealt with: the
   // consumer may mark the field a render or more after the error.
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- no deps on purpose, see above; the guard stops the loop
   useEffect(() => {
     const container = flow.containerRef.current;
     if (
@@ -283,6 +286,7 @@ export function EditTearsheet({
     if (!field || index < 0) return;
     handledError.current = flow.errorCount;
     focusAfterSwitch.current = field;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the index comes from the committed DOM
     setCurrent(index);
   });
 

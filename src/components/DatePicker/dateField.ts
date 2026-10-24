@@ -379,6 +379,7 @@ export function useDateField({
   // A new date from the app: Carbon sets it without onChange, so typed text
   // and its error are stale. The app taking the picker's report is not new.
   const valueKey = isEmpty(value) ? '' : JSON.stringify(value);
+  const instance = () => pickerOf(inputs.current[0]);
   const lastValueKey = useRef(valueKey);
   useEffect(() => {
     const changed = valueKey !== lastValueKey.current;
@@ -420,7 +421,6 @@ export function useDateField({
       if (found && !dirty.current[n]) typed.current[n] = found.value;
     }
   };
-  const instance = () => pickerOf(inputs.current[0]);
   // A real date that minDate, maxDate, enable or disable rule out.
   const unavailable = (input: string) => {
     const date = parseStrictDate(input, effective);
@@ -601,7 +601,8 @@ export function useDateField({
   };
 
   const fieldChildren: ReactNode = masked
-    ? Children.toArray(children as ReactNode).map((child, index) =>
+    ? // eslint-disable-next-line react-hooks/refs -- inputProps reads refs only inside the event handlers it returns
+      Children.toArray(children as ReactNode).map((child, index) =>
         index < 2 && isValidElement<DateInputProps>(child)
           ? cloneElement(child, inputProps(index as 0 | 1, child.props))
           : child

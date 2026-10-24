@@ -114,7 +114,10 @@ function Harness(props: {
   keepOpen?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  if (props.closeRef) props.closeRef.current = () => setOpen(false);
+  const { closeRef } = props;
+  useEffect(() => {
+    if (closeRef) closeRef.current = () => setOpen(false);
+  });
   const [launcherShown, setLauncherShown] = useState(true);
   const launcherRef = useRef<HTMLButtonElement>(null);
   return (

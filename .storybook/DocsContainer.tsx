@@ -73,6 +73,7 @@ export function ThemedDocsContainer({
   children,
 }: PropsWithChildren<DocsContainerProps>) {
   const [theme, setTheme] = useState(() => currentTheme(context));
+  // eslint-disable-next-line react-hooks/immutability -- useColorScheme below reads it in this render
   document.documentElement.dataset.afframeTheme = theme;
   setIframeTheme(theme);
   useEffect(() => {
@@ -82,6 +83,7 @@ export function ThemedDocsContainer({
     context.channel.on(GLOBALS_UPDATED, update);
     context.channel.on(SET_GLOBALS, update);
     // Globals set between the first render and these listeners.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- catch-up read after subscribing to an external channel
     setTheme(currentTheme(context));
     return () => {
       context.channel.off(GLOBALS_UPDATED, update);
