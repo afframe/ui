@@ -205,7 +205,7 @@ test('pending: Escape ignored; rejection keeps it open with an alert', async () 
   );
   expect(getComputedStyle(active() as Element).outlineStyle).toBe('none');
   await userEvent.tab();
-  expect(active()).toBeInstanceOf(HTMLInputElement);
+  await until(() => expect(active()).toBeInstanceOf(HTMLInputElement));
   await userEvent.keyboard('{Escape}');
   await until(() => expect(onClose).toHaveBeenCalledTimes(1));
   await until(() => expect(active()).toBe(launcher()));
