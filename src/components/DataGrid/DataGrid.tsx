@@ -417,6 +417,7 @@ export function DataGrid<
     virtualize && maxHeight !== undefined && renderExpandedRow === undefined;
   const headerRows = table.getHeaderGroups().length;
   const estimate = rowHeights[size ?? 'lg'];
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Virtual; nothing here is compiled or memoized
   const virtualizer = useVirtualizer({
     count: virtual ? rows.length : 0,
     getScrollElement: () => scroller,

@@ -162,7 +162,7 @@ export function RemoveModal({
     }
   }
 
-  const dialog = useFlow({
+  const { containerRef, ...dialog } = useFlow({
     open,
     onClose,
     launcherRef,
@@ -212,10 +212,7 @@ export function RemoveModal({
       loadingIconDescription={text.pending}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => void confirm()}>
-      <div
-        ref={dialog.containerRef}
-        tabIndex={-1}
-        className="afframe-modal-body">
+      <div ref={containerRef} tabIndex={-1} className="afframe-modal-body">
         <FlowDescription
           description={
             typeof description === 'string' && description !== '' ? (
