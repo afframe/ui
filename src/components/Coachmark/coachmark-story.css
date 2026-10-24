@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, literal c4p prefix. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: plain CSS with var(--cds-*) custom properties, literal c4p prefix, docs canvases tall enough for the open popovers. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 .docs-story main {
@@ -49,4 +49,9 @@
   display: flex;
   align-self: flex-end;
   margin-block: var(--cds-spacing-05) var(--cds-spacing-05);
+}
+
+/* The popovers are positioned absolutely, so the docs canvas needs room for them. */
+.coachmark--docs-demo .docs-story main {
+  min-block-size: 18rem;
 }
