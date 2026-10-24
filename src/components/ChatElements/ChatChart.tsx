@@ -1,5 +1,6 @@
 'use client';
 import { useId, useMemo } from 'react';
+import type { Ref } from 'react';
 import { EngineSlot, lazyEngine } from './engine.js';
 import { safeEChartsOption } from './echartsOption.js';
 import { resolveMessages } from '../../messages.js';
@@ -103,8 +104,15 @@ const EChartsEngine = lazyEngine(async () => {
 });
 
 interface ChatChartOwnProps {
+  /** Overrides for the chart's strings; English defaults in `defaultChatChartMessages`. */
   messages?: Partial<ChatChartMessages> | undefined;
+  /**
+   * Class on the root element. Other HTML attributes are not passed through:
+   * the payload's keys, such as `title`, share their names.
+   */
   className?: string;
+  /** Ref to the root element. */
+  ref?: Ref<HTMLDivElement>;
   /** Chart animations; off for screenshots. Default `true`. */
   animations?: boolean;
 }
@@ -113,13 +121,14 @@ export type ChatChartProps = ChatChartData & ChatChartOwnProps;
 
 /** A chart from a chat payload, drawn by Carbon Charts or ECharts. */
 export function ChatChart(props: ChatChartProps) {
-  const { messages, className, animations = true, ...payload } = props;
+  const { messages, className, ref, animations = true, ...payload } = props;
   const text = resolveMessages(defaultChatChartMessages, messages);
   const summaryId = useId();
   if (!isChatChartData(payload))
     return <ElementError title={text.invalid('afframe-chart')} />;
   return (
     <div
+      ref={ref}
       className={['afframe-chat-chart', className].filter(Boolean).join(' ')}>
       <EngineSlot
         engine={payload.engine === 'echarts' ? EChartsEngine : ChartsEngine}

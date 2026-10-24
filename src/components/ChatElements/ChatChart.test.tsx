@@ -123,3 +123,19 @@ test('a Carbon Charts title never carries markup, encoded or not', async () => {
   expect(heading.children).toHaveLength(0);
   expect(heading.textContent).not.toMatch(/[<>]/);
 });
+
+test('className and ref reach the root element', () => {
+  let root: HTMLDivElement | null = null;
+  const { container } = render(
+    <ChatChart
+      {...bar}
+      animations={false}
+      className="custom"
+      ref={(node) => {
+        root = node;
+      }}
+    />
+  );
+  expect(root).toBe(container.firstElementChild);
+  expect(root).toHaveClass('afframe-chat-chart', 'custom');
+});
