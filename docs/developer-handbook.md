@@ -59,7 +59,7 @@ pnpm build:storybook
   - `test (1/2)`, `test (2/2)`: the Vitest projects `node`, `unit` and `storybook`, in two shards.
   - `ci`: passes only when every job above passed (`pr-title` may be skipped on `main`). It is the required check.
 - The images for `secrets`, `workflow-lint` and the reuse step of `preflight` are pinned in `scripts/ci/toolbox/Dockerfile`; Dependabot updates them.
-- The release checks (`.github/workflows/release-checks.yml`) run on a `v*` tag and by hand with `gh workflow run release-checks.yml --ref <branch>`: `visual`, `package` (build, `check:pack`, `examples/nextjs` from the tarball) and `storybook` (the build as an artifact).
+- The release checks (`.github/workflows/release-checks.yml`) are called by the release workflow on a `v*` tag and run by hand with `gh workflow run release-checks.yml --ref <branch>`: `visual`, `package` (build, `check:pack`, `examples/nextjs` from the tarball) and `storybook` (the build as an artifact).
 - CodeQL runs on every PR (GitHub default setup). CodeRabbit reviews only on request (comment `@coderabbitai review`) and only code paths. A Claude review runs only with the `claude-review` label or a manual run of `claude-code-review.yml`.
 - Merge gate: the `main` ruleset in `.github/rulesets/main.json` requires the `ci` check, squash merges, linear and signed history, and blocks force-pushes and deletion. The `tags` ruleset in `.github/rulesets/tags.json` lets only admins create, move or delete `v*` tags, since a `v*` tag publishes the package. A red PR merges only through the admin bypass: `gh pr merge --squash --admin`. GitHub enforces the files only after an admin applies them. On a new repo, create each:
 
@@ -81,12 +81,12 @@ pnpm build:storybook
 
 ## Release
 
-`.github/workflows/release.yml` publishes to GitHub Packages (`@afframe` scope) on a `v*` tag, only in `afframe/ui` (ADR 0016). It refuses a tag that does not equal `v` plus the `package.json` version or that is not on `main`, runs preflight, `pnpm test` (visual included), `pnpm build` and `check:pack`, packs the tarball, a second job publishes that tarball after a reviewer approves the `release` environment, and a third creates the GitHub Release with notes generated from the merged PR titles. Only admins can push `v*` tags (`tags` ruleset), so apply both rulesets before anyone else gets write access.
+`.github/workflows/release.yml` publishes to GitHub Packages (`@afframe` scope) on a `v*` tag, only in `afframe/ui` (ADR 0016). It refuses a tag that does not equal `v` plus the `package.json` version or that is not on `main`, runs preflight, the `node`, `unit` and `storybook` tests, `pnpm build` and `check:pack`, and packs the tarball. A parallel job calls the release checks. Once both pass, a reviewer approves the `release` environment and a third job publishes that tarball, and a fourth creates the GitHub Release with notes generated from the merged PR titles. Only admins can push `v*` tags (`tags` ruleset), so apply both rulesets before anyone else gets write access.
 
 Versions are Afframe's own release numbers; they do not follow Carbon's versions. A release with a breaking change gets migration notes added to its GitHub Release by hand.
 
 1. In a PR, set `version` in `package.json` to the release version and merge it.
-2. Run the release checks on `main` for the example app and Storybook build, which the release workflow does not run: `gh workflow run release-checks.yml --ref main`.
+2. Optional: run the release checks on `main` before tagging to catch a failure early: `gh workflow run release-checks.yml --ref main`. The release workflow runs them again on the tag.
 3. Tag the merge commit and push the tag: `git tag -m v<version> v<version> && git push origin v<version>`.
 4. Approve the `release` environment on the workflow run.
 
