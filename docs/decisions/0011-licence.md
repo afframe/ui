@@ -30,7 +30,7 @@ Commercial use of `@afframe/ui` needs a separate licence from the copyright hold
 
 ## Amendment 2026-10-25: OFL-1.1 text and Storybook licences page
 
-`LICENSES/` also holds `OFL-1.1.txt`. The Storybook page Getting Started/Licences carries IBM's Plex notice as an `SPDX-Snippet` declared OFL-1.1 in `//` lines, so reuse counts the licence as used; a `REUSE.toml` annotation would need a tracked OFL-1.1 file. The page lists the dependencies with their licences from `package.json`, shows the Apache ECharts NOTICE, and links the licence texts, which Storybook serves from `LICENSES/` beside the static build.
+`LICENSES/` also holds `OFL-1.1.txt`. The Storybook page Getting Started/Licences carries IBM's Plex notice as an `SPDX-Snippet` declared OFL-1.1 in `//` lines, so reuse counts the licence as used; a `REUSE.toml` annotation would need a tracked OFL-1.1 file. The page lists the runtime dependencies and the style sources with their licences from `package.json`, shows the Apache ECharts and es-toolkit NOTICEs, and links the licence texts, which the static build copies to `/LICENSES/`, and the third-party notices file Vite writes beside them.
 
 ## Consequences
 
