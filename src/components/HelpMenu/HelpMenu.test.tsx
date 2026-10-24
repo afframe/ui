@@ -6,16 +6,7 @@ import { Header, HeaderGlobalBar, HeaderName } from '../../index.js';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
 import { HelpMenu } from './HelpMenu.js';
 import type { HelpMenuItem, HelpMenuProps } from './HelpMenu.js';
-
-const settleAnimations = () =>
-  Promise.allSettled(
-    document
-      .getAnimations()
-      .filter(
-        (animation) => animation.effect?.getTiming().iterations !== Infinity
-      )
-      .map((animation) => animation.finished)
-  );
+import { settleAnimations, until } from '../../testUtils.js';
 
 afterEach(async () => {
   await settleAnimations();
@@ -60,7 +51,6 @@ function Page(props: Partial<HelpMenuProps>) {
 
 const action = () => screen.getByLabelText('Help', { selector: 'button' });
 const firstItem = () => screen.getByRole('link', { name: 'Documentation' });
-const until = (check: () => void) => vi.waitFor(check, { timeout: 2000 });
 
 test.each(['click', '{Enter}', ' '])(
   'opens by %s, focus moves to the first item',

@@ -10,7 +10,7 @@ class EngineLoadError extends Error {
   }
 }
 
-export interface LazyEngine<P extends object> {
+interface LazyEngine<P extends object> {
   /** Renders the engine; suspends while its module loads. */
   Engine: ComponentType<P>;
   /** Drops a failed load, so the next mount imports again. */

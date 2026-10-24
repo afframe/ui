@@ -3,6 +3,7 @@ import {
   defaultLocale,
   defaultMaxFractionDigits,
 } from './defaults.js';
+import { intlCache } from './intlCache.js';
 
 // Rounding, zero and NaN rules: src/format/Formatting.mdx.
 
@@ -31,23 +32,7 @@ export interface FormatAmountOptions extends AmountOptions, IntlAmountOptions {
   trailingZeroDisplay?: IntlAmountOptions['trailingZeroDisplay'];
 }
 
-// Intl formatters are slow to build; a table renders thousands of amounts.
-// ponytail: cleared when full, an LRU if apps use many option sets.
-const formatters = new Map<string, Intl.NumberFormat>();
-
-function numberFormat(
-  locale: string,
-  options: Intl.NumberFormatOptions
-): Intl.NumberFormat {
-  const key = `${locale}|${JSON.stringify(options)}`;
-  let format = formatters.get(key);
-  if (!format) {
-    if (formatters.size >= 100) formatters.clear();
-    format = new Intl.NumberFormat(locale, options);
-    formatters.set(key, format);
-  }
-  return format;
-}
+const numberFormat = intlCache(Intl.NumberFormat);
 
 function assertFinite(value: number): void {
   if (!Number.isFinite(value)) {
@@ -143,8 +128,8 @@ export function formatNumber(
     intl.minimumSignificantDigits === undefined &&
     intl.maximumSignificantDigits === undefined;
   return numberFormat(locale, {
-    signDisplay: 'negative',
     ...intl,
+    signDisplay: intl.signDisplay ?? 'negative',
     ...(twoDecimals ? { maximumFractionDigits: defaultMaxFractionDigits } : {}),
   }).format(value);
 }

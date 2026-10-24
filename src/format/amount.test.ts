@@ -133,6 +133,10 @@ test('shows a sign when asked', () => {
   );
 });
 
+test('signDisplay passed as undefined still hides the minus of zero', () => {
+  expect(formatNumber(-0, { signDisplay: undefined })).toBe('0');
+});
+
 test('throws on NaN and Infinity', () => {
   expect(() => formatAmount(Number.NaN)).toThrow(RangeError);
   expect(() => roundAmount(Number.POSITIVE_INFINITY)).toThrow(RangeError);

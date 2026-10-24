@@ -11,7 +11,7 @@ import {
 } from 'react';
 import type { KeyboardEvent, RefObject } from 'react';
 
-export interface FlowOptions {
+interface FlowOptions {
   open: boolean;
   onClose: () => void;
   /** Focus target on close; else the element focused before opening. */

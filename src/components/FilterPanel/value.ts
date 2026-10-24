@@ -75,7 +75,7 @@ type TagText = Pick<
   'tagLabel' | 'dateRangeValue' | 'atMostValue'
 >;
 
-export interface FilterTag {
+interface FilterTag {
   key: string;
   label: string;
   /** The value without this tag's filter. */
