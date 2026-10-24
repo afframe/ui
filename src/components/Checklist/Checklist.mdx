@@ -3,7 +3,7 @@ import * as CheckListStories from './Checklist.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, Codesandbox link comment removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed, When to use added.
+// Modified by Afframe in 2026: source label added, Codesandbox link comment removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed, When to use and Afframe notes added.
 
 <Meta isTemplate />
 
@@ -41,6 +41,12 @@ explain, educate, and cultivate novice users into high-functioning power users.
 <Canvas style={{ backgroundColor: '#f4f4f4' }}>
   <Story of={CheckListStories.Default} />
 </Canvas>
+
+## Afframe notes
+
+- **View all only logs.** In the Default story, "View all" calls
+  `onClickViewAll`, which only logs to the Actions panel; the app decides what
+  the button opens.
 
 ## Component API
 
