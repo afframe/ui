@@ -1,6 +1,4 @@
-import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
-import * as ChartStories from './ChatChart.stories';
-import * as InChatStories from './InChat.stories';
+import { ArgTypes, Meta, Stories } from '@storybook/addon-docs/blocks';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
@@ -25,6 +23,13 @@ markdown table or fenced code block in a `text` item (the chat's markdown
 renderer sorts, filters and pages tables and highlights and copies code). See
 the [message format](https://chat.carbondesignsystem.com/tag/latest/docs/documents/Server_communication.Message_format.html)
 and the [markdown options](https://chat.carbondesignsystem.com/tag/latest/docs/interfaces/Type_reference.ChatContainerPropsMarkdown.html).
+
+## Supported elements
+
+One element type today, `afframe-chart`: a chart drawn by Carbon Charts or
+ECharts. `renderChatElement` returns `null` for any other `user_defined_type`,
+so other types render nothing unless the app chains its own renderer. New types
+are added in `payloads.ts` and `renderChatElement.tsx`.
 
 ## Wiring
 
@@ -149,23 +154,16 @@ load. Reload the page to try again.").
 
 ## Examples
 
-Charts: bar, line, pie, donut, ECharts and dark.
+This page serves two story files, and each shows its own stories here. The
+[ChatChart](?path=/docs/components-ai-chat-elements-chatchart--overview) page
+shows the charts on their own: bar, line, pie, donut, ECharts and dark. The
+[In chat](?path=/docs/components-ai-chat-elements-in-chat--overview) page shows
+one message with a chart and a markdown code block, which the chat renders
+natively. The props below are those of the page's component.
 
-<Canvas of={ChartStories.Default} />
+<Stories includePrimary title="" />
 
-<Canvas of={ChartStories.Line} />
-
-<Canvas of={ChartStories.Pie} />
-
-<Canvas of={ChartStories.Donut} />
-
-<Canvas of={ChartStories.Echarts} />
-
-<ArgTypes of={ChartStories} />
-
-In a chat: one message with a chart and a markdown code block, which the chat renders natively.
-
-<Canvas of={InChatStories.InChat} />
+<ArgTypes />
 
 ## Keyboard and screen reader behaviour
 
