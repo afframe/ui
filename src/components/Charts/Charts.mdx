@@ -72,6 +72,10 @@ IBM's type declarations resolve with `moduleResolution: "bundler"` (the
 Next.js and Vite default). Under `node16` or `nodenext` they do not resolve,
 so the option types fall back to `any` and TypeScript does not check them.
 
+While data loads, set `options.data.loading` to `true` to show IBM's
+skeleton. Empty `data` shows IBM's empty state: the chart frame without
+values. [Bar](?path=/docs/components-charts-bar--overview) shows both.
+
 For every option, see IBM's
 [chart documentation](https://charts.carbondesignsystem.com/).
 
