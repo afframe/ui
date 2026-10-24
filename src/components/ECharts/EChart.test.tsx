@@ -26,7 +26,7 @@ function renderChart(props: Partial<Parameters<typeof EChart>[0]> = {}) {
   const result = render(
     <EChart
       option={option}
-      ref={ref}
+      chartRef={ref}
       style={{ width: 400, height: 300 }}
       {...props}
     />
@@ -42,11 +42,18 @@ test('renders a canvas chart in its container', () => {
   expect(ref.current?.getDom()).toBe(box);
 });
 
+test('passes ref and className to the container', () => {
+  const root = createRef<HTMLDivElement>();
+  const { ref } = renderChart({ ref: root, className: 'revenue' });
+  expect(root.current).toBe(ref.current?.getDom());
+  expect(root.current?.className).toBe('revenue');
+});
+
 test('turns on the aria description unless the option sets aria', () => {
   const { ref, rerender } = renderChart();
   expect(ref.current?.getDom().getAttribute('aria-label')).toBeTruthy();
   rerender(
-    <EChart option={{ ...option, aria: { enabled: false } }} ref={ref} />
+    <EChart option={{ ...option, aria: { enabled: false } }} chartRef={ref} />
   );
   expect(ref.current?.getOption()['aria']).toMatchObject({ enabled: false });
 });
@@ -76,7 +83,7 @@ test('notMerge replaces the option', () => {
     yAxis: { type: 'value' },
     series: [{ type: 'line', data: [1] }],
   };
-  rerender(<EChart option={lineOnly} notMerge ref={ref} />);
+  rerender(<EChart option={lineOnly} notMerge chartRef={ref} />);
   const series = ref.current?.getOption()['series'] as { type: string }[];
   expect(series.map((s) => s.type)).toEqual(['line']);
 });
@@ -89,7 +96,7 @@ test('binds and unbinds onEvents', () => {
   const { ref, rerender } = renderChart({ onEvents: { click } });
   live(ref).trigger('click', clickEvent);
   expect(click).toHaveBeenCalledTimes(1);
-  rerender(<EChart option={option} ref={ref} onEvents={{}} />);
+  rerender(<EChart option={option} chartRef={ref} onEvents={{}} />);
   live(ref).trigger('click', clickEvent);
   expect(click).toHaveBeenCalledTimes(1);
 });
