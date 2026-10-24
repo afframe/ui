@@ -2,7 +2,8 @@
 
 # Conductor workspace scripts.
 [scripts]
-setup = "IBM_TELEMETRY_DISABLED=true pnpm install --frozen-lockfile"
+# corepack enable puts the packageManager pnpm on PATH for the .nvmrc Node.
+setup = "corepack enable && IBM_TELEMETRY_DISABLED=true pnpm install --frozen-lockfile"
 
 [scripts.run.storybook]
 available_in = ["local"]
