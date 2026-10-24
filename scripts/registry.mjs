@@ -209,6 +209,9 @@ const docsAliases = {
   ErrorBoundaryContext: 'ErrorBoundary/ErrorBoundary.mdx',
   AILabelContent: 'AILabel/AILabel.mdx',
   AILabelActions: 'AILabel/AILabel.mdx',
+  GuidebannerElement: 'Guidebanner/Guidebanner.mdx',
+  GuidebannerElementButton: 'Guidebanner/Guidebanner.mdx',
+  GuidebannerElementLink: 'Guidebanner/Guidebanner.mdx',
   WelcomeInterstitial: 'FirstTimeOrientation/FirstTimeOrientation.mdx',
   PersonalizationInterstitial: 'FirstTimeOrientation/FirstTimeOrientation.mdx',
 };

@@ -340,9 +340,9 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | EditInPlace                        | component | ibm-products | client  | stable            | [page](../src/components/EditInPlace/EditInPlace.mdx)                   |
 | FullPageError                      | component | ibm-products | client  | stable            | [page](../src/components/FullPageError/FullPageError.mdx)               |
 | Guidebanner                        | component | ibm-products | client  | preview-candidate | [page](../src/components/Guidebanner/Guidebanner.mdx)                   |
-| GuidebannerElement                 | component | ibm-products | client  | preview-candidate |                                                                         |
-| GuidebannerElementButton           | component | ibm-products | client  | preview-candidate |                                                                         |
-| GuidebannerElementLink             | component | ibm-products | client  | preview-candidate |                                                                         |
+| GuidebannerElement                 | component | ibm-products | client  | preview-candidate | [page](../src/components/Guidebanner/Guidebanner.mdx)                   |
+| GuidebannerElementButton           | component | ibm-products | client  | preview-candidate | [page](../src/components/Guidebanner/Guidebanner.mdx)                   |
+| GuidebannerElementLink             | component | ibm-products | client  | preview-candidate | [page](../src/components/Guidebanner/Guidebanner.mdx)                   |
 | InterstitialScreen                 | component | ibm-products | client  | stable            | [page](../src/components/InterstitialScreen/InterstitialScreen.mdx)     |
 | InterstitialScreenView             | component | ibm-products | client  | stable            | [page](../src/components/InterstitialScreen/InterstitialScreen.mdx)     |
 | NotificationsPanel                 | component | ibm-products | client  | stable            | [page](../src/components/NotificationsPanel/NotificationsPanel.mdx)     |

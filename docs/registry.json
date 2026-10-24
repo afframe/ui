@@ -3793,7 +3793,8 @@
       "upstream": {
         "package": "@carbon/ibm-products",
         "name": "previewCandidate__GuidebannerElement"
-      }
+      },
+      "docs": "src/components/Guidebanner/Guidebanner.mdx"
     },
     {
       "name": "GuidebannerElementButton",
@@ -3805,7 +3806,8 @@
       "upstream": {
         "package": "@carbon/ibm-products",
         "name": "previewCandidate__GuidebannerElementButton"
-      }
+      },
+      "docs": "src/components/Guidebanner/Guidebanner.mdx"
     },
     {
       "name": "GuidebannerElementLink",
@@ -3817,7 +3819,8 @@
       "upstream": {
         "package": "@carbon/ibm-products",
         "name": "previewCandidate__GuidebannerElementLink"
-      }
+      },
+      "docs": "src/components/Guidebanner/Guidebanner.mdx"
     },
     {
       "name": "InterstitialScreen",
