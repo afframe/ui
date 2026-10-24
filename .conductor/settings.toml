@@ -3,7 +3,7 @@
 # Conductor workspace scripts.
 [scripts]
 # corepack enable puts the packageManager pnpm on PATH for the .nvmrc Node.
-setup = "corepack enable && IBM_TELEMETRY_DISABLED=true pnpm install --frozen-lockfile"
+setup = "corepack enable && IBM_TELEMETRY_DISABLED=true pnpm install --frozen-lockfile && pnpm exec playwright install chromium --only-shell"
 
 [scripts.run.storybook]
 available_in = ["local"]
@@ -16,7 +16,7 @@ command = "pnpm preflight"
 icon = "check"
 
 [scripts.run.test]
-command = "pnpm exec playwright install chromium --only-shell && pnpm test"
+command = "pnpm test"
 icon = "test-tube"
 
 [prompts]
