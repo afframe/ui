@@ -38,7 +38,11 @@ export interface CarbonChartProps<Options extends BaseChartOptions, Instance> {
   data: ChartTabularData;
   /** IBM's chart options; `theme` defaults to the page's Carbon theme. */
   options: Options;
-  /** IBM's class instance; its `chart` field is the core chart. */
+  /**
+   * IBM's class instance; its `chart` field is the core chart. The instance
+   * also has its own `chartRef` field, which is the `.chart-holder` div, not
+   * the chart.
+   */
   chartRef?: Ref<Instance>;
 }
 

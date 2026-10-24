@@ -42,7 +42,8 @@ import.
 ## Usage and props
 
 Each chart takes IBM's `data` and `options`. `chartRef` reaches IBM's class
-instance; its `chart` field is the core chart.
+instance; its `chart` field is the core chart. IBM's instance also has its own
+`chartRef` field, which is the `.chart-holder` div, not the chart.
 
 ```tsx
 'use client';
