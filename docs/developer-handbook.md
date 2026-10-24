@@ -59,7 +59,7 @@ pnpm build:storybook
   - `docgen`: `pnpm build:storybook` and `pnpm check:docgen` (`scripts/check-docgen.mjs`: the API tables of sample Carbon and IBM Products components, which the experimental docgen server fills, still have their props).
   - `test (1/2)`, `test (2/2)`: the Vitest projects `node`, `unit` and `storybook`, in two shards.
   - `ci`: passes only when every job above passed (`pr-title` may be skipped on `main`). It is the required check.
-- A failed run is retried with a fresh run (push or `gh workflow run`), not `gh run rerun`: a rerun restores the first attempt's dependency cache and has failed every story with a duplicated React.
+- A failed run is retried with a fresh run (a new push, or closing and reopening the PR; `ci.yml` has no manual trigger), not `gh run rerun`: a rerun restores the first attempt's dependency cache and has failed every story with a duplicated React.
 - The images for `secrets`, `workflow-lint` and the reuse step of `preflight` are pinned in `scripts/ci/toolbox/Dockerfile`; Dependabot updates them.
 - The release checks (`.github/workflows/release-checks.yml`) are called by the release workflow on a `v*` tag and run by hand with `gh workflow run release-checks.yml --ref <branch>`: `visual`, `package` (build, `check:pack`, `examples/nextjs` from the tarball) and `storybook` (the build and `check:docgen`; the build is kept as an artifact).
 - CodeQL runs on every PR (GitHub default setup). CodeRabbit reviews only on request (comment `@coderabbitai review`) and only code paths. A Claude review runs only with the `claude-review` label or a manual run of `claude-code-review.yml`.

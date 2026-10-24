@@ -23,14 +23,15 @@ Detail: `docs/package-structure.md`; architecture: `ARCHITECTURE.md`; every publ
 
 ## Commands
 
-| Command                         | When                                                            |
-| ------------------------------- | --------------------------------------------------------------- |
-| `pnpm preflight`                | Always: format, lint, types, registry check                     |
-| `pnpm test`                     | After a change to `src/`, `.storybook/` or styles               |
-| `pnpm test:node`                | Formatters under Node's ICU; opens no browser                   |
-| `pnpm build && pnpm check:pack` | After a change to exports, build config or `package.json`       |
-| `pnpm check:licences`           | After a change to `.mdx` pages or licence files (needs `reuse`) |
-| `pnpm registry`                 | After a change to exports or component folders (regenerates)    |
+| Command                                     | When                                                            |
+| ------------------------------------------- | --------------------------------------------------------------- |
+| `pnpm preflight`                            | Always: format, lint, types, registry check                     |
+| `pnpm test`                                 | After a change to `src/`, `.storybook/` or styles               |
+| `pnpm test:node`                            | Formatters under Node's ICU; opens no browser                   |
+| `pnpm build && pnpm check:pack`             | After a change to exports, build config or `package.json`       |
+| `pnpm check:licences`                       | After a change to `.mdx` pages or licence files (needs `reuse`) |
+| `pnpm build:storybook && pnpm check:docgen` | After a Storybook or docgen config update; checks API tables    |
+| `pnpm registry`                             | After a change to exports or component folders (regenerates)    |
 
 Once before tests: `pnpm exec playwright install chromium --only-shell`. CI also runs gitleaks, actionlint and zizmor; `docs/developer-handbook.md` lists every job.
 

@@ -28,7 +28,7 @@ Layout: [docs/package-structure.md](docs/package-structure.md).
 
 Name: `@afframe/ui`.
 
-Description: one import path, `@afframe/ui`, for every component. Icons, pictograms and JavaScript token values follow Carbon's own pattern (`@carbon/react/icons`): subpaths `@afframe/ui/icons`, `@afframe/ui/pictograms` and `@afframe/ui/tokens`, with Carbon's names. Carbon components are re-exported by name as they are; only components Afframe changes get an Afframe wrapper, such as the date and time pickers with the system format and a typing mask (`src/mask/`, ADR 0021). The components IBM is moving from IBM Products into Carbon core are exported under Afframe names, backed by IBM Products (ADR 0005). Extras (Carbon Charts, ECharts with the Carbon theme, `@carbon/ai-chat`, TanStack data grid, onboarding, Labs) come through the same path and must tree-shake out of apps that do not use them: each extra family is its own `'use client'` module, and the AI chat loads lazily ([docs/package-structure.md](docs/package-structure.md)).
+Description: one import path, `@afframe/ui`, for every component. Icons, pictograms and JavaScript token values follow Carbon's own pattern (`@carbon/react/icons`): subpaths `@afframe/ui/icons`, `@afframe/ui/pictograms` and `@afframe/ui/tokens`, with Carbon's names. Carbon components are re-exported by name as they are; only components Afframe changes get an Afframe wrapper, such as the date and time pickers with the system format and a typing mask (`src/mask/`, ADR 0021). The components IBM is moving from IBM Products into Carbon core are exported under Afframe names, backed by IBM Products (ADR 0005). Extras (Carbon Charts, ECharts with the Carbon theme, `@carbon/ai-chat`, TanStack data grid) and Labs come through the same path and must tree-shake out of apps that do not use them: each extra family and each Labs package is its own `'use client'` module, and the AI chat loads lazily ([docs/package-structure.md](docs/package-structure.md)).
 
 Technologies: React, TypeScript, Carbon `@carbon/react` on the stable v11 line without the v12 feature flags except the focus wrap flag (ADR 0018), Sass. Versions: `package.json`.
 
@@ -69,7 +69,7 @@ CI/CD Pipeline: GitHub Actions (`.github/workflows/`): fast checks in `ci.yml` o
 
 Local setup: [docs/developer-handbook.md](docs/developer-handbook.md).
 
-Build: tsdown for JavaScript (per-file ESM, `'use client'` kept), `tsc` for type declarations, Sass for `styles.css`.
+Build: tsdown for JavaScript (per-file ESM, `'use client'` kept), `tsc` for type declarations, Sass for `styles.css` and `charts.css`.
 
 Testing Frameworks: Vitest browser mode (Playwright, Chromium) with Testing Library; every story runs as a test with the Storybook a11y addon, violations fail; screenshot tests for Afframe-owned components against committed Linux baselines, run only in CI (release checks). `pnpm test` runs the rest; detail: [docs/testing.md](docs/testing.md).
 

@@ -2,7 +2,7 @@
 
 Afframe UI and design system.
 
-`@afframe/ui` is one React package built on IBM's Carbon Design System: Carbon core, IBM Products, Carbon Labs and a set of extras (charts, ECharts, AI chat, data grid, onboarding), configured once and themed for Afframe. It is general purpose for every Afframe product, not bound to any one app.
+`@afframe/ui` is one React package built on IBM's Carbon Design System: Carbon core, IBM Products, Carbon Labs and a set of extras (charts, ECharts, AI chat, data grid), configured once and themed for Afframe. It is general purpose for every Afframe product, not bound to any one app.
 
 ## Status
 
