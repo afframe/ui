@@ -11,6 +11,7 @@
     "src/index.ts",
     "src/icons.ts",
     "src/pictograms.ts",
-    "src/tokens.ts"
+    "src/tokens.ts",
+    "src/format/index.ts"
   ]
 }
