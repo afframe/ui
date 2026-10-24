@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, dismissable arg removed from Default (TabList does not take it), IconTab and TabsSkeleton listed as subcomponents. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui, source tag, inline spacing as Carbon spacing tokens, IconTab and TabsSkeleton listed as subcomponents. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -52,12 +52,39 @@ type TabListArgs = Omit<ComponentProps<typeof TabList>, 'size'> & {
   size: TabListSize;
   dismissable?: boolean;
 };
-type IconTabArgs = Omit<ComponentProps<typeof IconTab>, 'label'> & {
+type TabProps = ComponentProps<typeof Tab>;
+type DefaultArgs = TabListArgs &
+  Pick<
+    ComponentProps<typeof Tabs>,
+    'defaultSelectedIndex' | 'onChange' | 'onTabCloseRequest' | 'selectedIndex'
+  > &
+  Pick<TabProps, 'disabled' | 'onClick' | 'onKeyDown' | 'secondaryLabel'> & {
+    as?: TabProps['as'];
+    renderIcon?: TabProps['renderIcon'];
+    tabClassName?: string;
+    tabPanelClassName?: string;
+  };
+interface IconStoryArgs {
+  badgeIndicator?: boolean;
+  defaultOpen?: boolean;
+  enterDelayMs?: number;
+  iconTabClassName?: string;
+  iconTabDisabled?: boolean;
+  iconTabLabel: string;
+  leaveDelayMs?: number;
   size: TabListSize;
-};
-type VerticalArgs = ComponentProps<typeof TabsVertical> & {
-  size: NonNullable<ComponentProps<typeof TabListVertical>['size']>;
-};
+}
+type VerticalArgs = ComponentProps<typeof TabsVertical> &
+  Pick<
+    ComponentProps<typeof TabListVertical>,
+    'activation' | 'aria-label' | 'className' | 'scrollIntoView'
+  > & {
+    size: NonNullable<ComponentProps<typeof TabListVertical>['size']>;
+  };
+interface SkeletonArgs {
+  contained?: boolean;
+  skeletonClassName?: string;
+}
 type TabsChangeEvent = { selectedIndex: number };
 interface TabItem {
   label: string;
@@ -65,11 +92,21 @@ interface TabItem {
   disabled?: boolean;
 }
 
+// Upstream passes each arg as a prop; under exactOptionalPropertyTypes an unset
+// arg (undefined) does not fit Carbon's optional props, so unset ones are dropped.
+const defined = <T extends object>(props: T) =>
+  Object.fromEntries(
+    Object.entries(props).filter(([, value]) => value !== undefined)
+  ) as { [K in keyof T]?: Exclude<T[K], undefined> };
+
 const lineTabsSizeArgType = {
   size: {
     control: { type: 'select' },
     options: ['sm', 'md'],
     description: 'Specify the size of the tabs',
+    table: {
+      category: 'TabList',
+    },
   },
 } satisfies ArgTypes;
 
@@ -78,6 +115,9 @@ const tabsSizeArgType = {
     control: { type: 'select' },
     options: ['sm', 'md', 'lg'],
     description: 'Specify the size of the tabs',
+    table: {
+      category: 'TabList',
+    },
   },
 } satisfies ArgTypes;
 
@@ -88,6 +128,445 @@ const containedTabsSizeArgs = {
 const lineTabsSizeArgs = {
   size: 'md',
 } satisfies TabListArgs;
+
+const iconStoriesArgs = {
+  badgeIndicator: false,
+  defaultOpen: false,
+  iconTabClassName: '',
+  iconTabDisabled: false,
+  iconTabLabel: 'New Notifications',
+} satisfies Partial<IconStoryArgs>;
+
+const tabsArgTypes = {
+  tabsChildren: {
+    control: false,
+    description:
+      'Provide child elements to be rendered inside the `Tabs`. These elements should render either `TabsList` or `TabsPanels`',
+    name: 'children',
+    table: {
+      category: 'Tabs',
+    },
+  },
+  defaultSelectedIndex: {
+    control: { type: 'number' },
+    description:
+      'Specify which content tab should be initially selected when the component is first rendered',
+    table: {
+      category: 'Tabs',
+      defaultValue: {
+        summary: '0',
+      },
+    },
+  },
+  dismissable: {
+    control: { type: 'boolean' },
+    description: 'Whether the rendered Tab children should be dismissable.',
+    table: {
+      category: 'Tabs',
+    },
+  },
+  onChange: {
+    action: 'onChange',
+    description:
+      'Provide an optional function which is called whenever the state of the `Tabs` changes',
+    table: {
+      category: 'Tabs',
+    },
+  },
+  onTabCloseRequest: {
+    action: 'onTabCloseRequest',
+    description:
+      'If specifying the `onTabCloseRequest` prop, provide a callback function responsible for removing the tab when close button is pressed on one of the Tab elements',
+    table: {
+      category: 'Tabs',
+    },
+  },
+  selectedIndex: {
+    control: { type: 'number' },
+    description:
+      'Control which content panel is currently selected. This puts the component in a controlled mode and should be used along with `onChange`',
+    table: {
+      category: 'Tabs',
+    },
+  },
+} satisfies ArgTypes;
+
+const tabListArgTypes = {
+  activation: {
+    control: { type: 'select' },
+    options: ['automatic', 'manual'],
+    description:
+      'Specify whether the content tab should be activated automatically or manually',
+    table: {
+      category: 'TabList',
+      defaultValue: {
+        summary: 'automatic',
+      },
+    },
+  },
+  tabListChildren: {
+    control: false,
+    description:
+      'Provide child elements to be rendered inside `ContentTabs`. These elements should render a `ContentTab`',
+    name: 'children',
+    table: {
+      category: 'TabList',
+    },
+  },
+  'aria-label': {
+    control: { type: 'text' },
+    description:
+      'Provide an accessible label to be read when a user interacts with this component',
+    table: {
+      category: 'TabList',
+    },
+  },
+  className: {
+    control: { type: 'text' },
+    description:
+      'Specify an optional className to be added to the container node',
+    table: {
+      category: 'TabList',
+    },
+  },
+  contained: {
+    control: { type: 'boolean' },
+    description: 'Specify whether component is contained type',
+    table: {
+      category: 'TabList',
+      defaultValue: {
+        summary: 'false',
+      },
+    },
+  },
+  fullWidth: {
+    control: { type: 'boolean' },
+    description:
+      'Used for tabs within a grid, this makes it so tabs span the full container width and have the same width. Only available on contained tabs with <9 children',
+    table: {
+      category: 'TabList',
+      defaultValue: {
+        summary: 'false',
+      },
+    },
+  },
+  iconSize: {
+    control: { type: 'select' },
+    options: ['default', 'lg'],
+    description: 'If using `IconTab`, specify the size of the icon being used.',
+    table: {
+      category: 'TabList',
+    },
+  },
+  leftOverflowButtonProps: {
+    control: { type: 'object' },
+    description: 'Provide the props that describe the left overflow button',
+    table: {
+      category: 'TabList',
+    },
+  },
+  rightOverflowButtonProps: {
+    control: { type: 'object' },
+    description: 'Provide the props that describe the right overflow button',
+    table: {
+      category: 'TabList',
+    },
+  },
+  scrollDebounceWait: {
+    control: { type: 'number' },
+    description:
+      'Optionally provide a delay (in milliseconds) passed to the lodash debounce of the onScroll handler. This will impact the responsiveness of scroll arrow buttons rendering when scrolling to the first or last tab.',
+    table: {
+      category: 'TabList',
+      defaultValue: {
+        summary: '200',
+      },
+    },
+  },
+  scrollIntoView: {
+    control: { type: 'boolean' },
+    description:
+      'Choose whether to automatically scroll to newly selected tabs on component rerender',
+    table: {
+      category: 'TabList',
+    },
+  },
+} satisfies ArgTypes;
+
+const iconStoriesArgTypes = {
+  badgeIndicator: {
+    description: '**Experimental**: Display an empty dot badge on the Tab.',
+    control: {
+      type: 'boolean',
+    },
+    table: {
+      category: 'IconTab',
+    },
+  },
+  iconTabChildren: {
+    control: false,
+    description:
+      'Provide an icon to be rendered inside `IconTab` as the visual label for Tab.',
+    name: 'children',
+    table: {
+      category: 'IconTab',
+    },
+  },
+  iconTabClassName: {
+    control: { type: 'text' },
+    description: 'Specify an optional className to be added to your Tab',
+    name: 'className',
+    table: {
+      category: 'IconTab',
+    },
+  },
+  defaultOpen: {
+    control: { type: 'boolean' },
+    description:
+      'Specify whether the tooltip for the icon should be open when it first renders',
+    table: {
+      category: 'IconTab',
+      defaultValue: {
+        summary: 'false',
+      },
+    },
+  },
+  iconTabDisabled: {
+    control: { type: 'boolean' },
+    description: 'Specify whether your IconTab is disabled.',
+    name: 'disabled',
+    table: {
+      category: 'IconTab',
+    },
+  },
+  enterDelayMs: {
+    control: { type: 'number' },
+    description:
+      'Specify the duration in milliseconds to delay before displaying the tooltip for the icon.',
+    table: {
+      category: 'IconTab',
+    },
+  },
+  iconTabLabel: {
+    control: { type: 'text' },
+    description: 'Provide the label to be rendered inside the Tooltip.',
+    name: 'label',
+    table: {
+      category: 'IconTab',
+    },
+  },
+  leaveDelayMs: {
+    control: { type: 'number' },
+    description:
+      'Specify the duration in milliseconds to delay before hiding the tooltip',
+    table: {
+      category: 'IconTab',
+    },
+  },
+} satisfies ArgTypes;
+
+const tabArgTypes = {
+  as: {
+    control: { type: 'text' },
+    description:
+      'Provide a custom element to render instead of the default button',
+    table: {
+      category: 'Tab',
+      defaultValue: {
+        summary: 'button',
+      },
+    },
+  },
+  tabChildren: {
+    control: false,
+    description: 'Provide child elements to be rendered inside `Tab`.',
+    name: 'children',
+    table: {
+      category: 'Tab',
+    },
+  },
+  tabClassName: {
+    control: { type: 'text' },
+    description: 'Specify an optional className to be added to your Tab',
+    name: 'className',
+    table: {
+      category: 'Tab',
+    },
+  },
+  disabled: {
+    control: { type: 'boolean' },
+    description: 'Whether your Tab is disabled.',
+    table: {
+      category: 'Tab',
+    },
+  },
+  onClick: {
+    action: 'onClick',
+    description:
+      'Provide a handler that is invoked when a user clicks on the control',
+    table: {
+      category: 'Tab',
+    },
+  },
+  onKeyDown: {
+    action: 'onKeyDown',
+    description:
+      'Provide a handler that is invoked on the key down event for the control',
+    table: {
+      category: 'Tab',
+    },
+  },
+  renderButton: {
+    control: false,
+    table: {
+      disable: true,
+    },
+  },
+  renderIcon: {
+    control: false,
+    description: 'A component used to render an icon.',
+    table: {
+      category: 'Tab',
+    },
+  },
+  secondaryLabel: {
+    control: { type: 'text' },
+    description:
+      'An optional label to render under the primary tab label. Only useful for contained tabs.',
+    table: {
+      category: 'Tab',
+    },
+  },
+} satisfies ArgTypes;
+
+const tabPanelsArgTypes = {
+  tabPanelsChildren: {
+    control: false,
+    description: 'Provide child elements to be rendered inside `TabPanels`.',
+    name: 'children',
+    table: {
+      category: 'TabPanels',
+    },
+  },
+} satisfies ArgTypes;
+
+const tabPanelArgTypes = {
+  tabPanelChildren: {
+    control: false,
+    description: 'Provide child elements to be rendered inside `TabPanel`.',
+    name: 'children',
+    table: {
+      category: 'TabPanel',
+    },
+  },
+  tabPanelClassName: {
+    control: { type: 'text' },
+    description: 'Specify an optional className to be added to TabPanel.',
+    name: 'className',
+    table: {
+      category: 'TabPanel',
+    },
+  },
+} satisfies ArgTypes;
+
+const tabsSkeletonArgTypes = {
+  skeletonClassName: {
+    control: { type: 'text' },
+    description: 'Specify an optional className to add.',
+    name: 'className',
+    table: {
+      category: 'TabsSkeleton',
+    },
+  },
+} satisfies ArgTypes;
+
+const tabListVerticalArgTypes = {
+  activation: {
+    ...tabListArgTypes.activation,
+    table: {
+      category: 'TabListVertical',
+      defaultValue: {
+        summary: 'automatic',
+      },
+    },
+  },
+  tabListVerticalChildren: {
+    control: false,
+    description:
+      'Provide child elements to be rendered inside `ContentTabs`. These elements should render a `ContentTab`',
+    name: 'children',
+    table: {
+      category: 'TabListVertical',
+    },
+  },
+  'aria-label': {
+    ...tabListArgTypes['aria-label'],
+    table: {
+      category: 'TabListVertical',
+    },
+  },
+  className: {
+    ...tabListArgTypes.className,
+    table: {
+      category: 'TabListVertical',
+    },
+  },
+  scrollIntoView: {
+    ...tabListArgTypes.scrollIntoView,
+    table: {
+      category: 'TabListVertical',
+    },
+  },
+  size: {
+    control: { type: 'select' },
+    options: ['sm', 'md', 'lg', 'xl'],
+    description: 'Specify the size of the tabs.',
+    table: {
+      category: 'TabListVertical',
+    },
+  },
+} satisfies ArgTypes;
+
+const tabsVerticalArgTypes = {
+  tabsVerticalChildren: {
+    control: false,
+    description:
+      'Provide child elements to be rendered inside the `TabsVertical`. These elements should render either `TabsListVertical` or `TabsPanels`',
+    name: 'children',
+    table: {
+      category: 'TabsVertical',
+    },
+  },
+  defaultSelectedIndex: {
+    ...tabsArgTypes.defaultSelectedIndex,
+    table: {
+      category: 'TabsVertical',
+      defaultValue: {
+        summary: '0',
+      },
+    },
+  },
+  height: {
+    control: { type: 'text' },
+    description:
+      'Option to set a height style only if using vertical variation',
+    table: {
+      category: 'TabsVertical',
+    },
+  },
+  onChange: {
+    ...tabsArgTypes.onChange,
+    table: {
+      category: 'TabsVertical',
+    },
+  },
+  selectedIndex: {
+    ...tabsArgTypes.selectedIndex,
+    table: {
+      category: 'TabsVertical',
+    },
+  },
+} satisfies ArgTypes;
 
 export default {
   title: 'Components/Tabs',
@@ -109,6 +588,12 @@ export default {
     },
   },
   argTypes: {
+    children: {
+      table: {
+        disable: true,
+      },
+    },
+    // `light` is deprecated
     light: {
       table: {
         disable: true,
@@ -117,17 +602,76 @@ export default {
   },
 } satisfies Meta<ComponentProps<typeof Tabs> & { light?: boolean }>;
 
-export const Default: StoryFn<TabListArgs> = (args) => {
+export const Default: StoryFn<DefaultArgs> = (args) => {
+  const {
+    activation,
+    as,
+    className,
+    contained,
+    defaultSelectedIndex,
+    disabled,
+    dismissable,
+    fullWidth,
+    iconSize,
+    leftOverflowButtonProps,
+    onChange,
+    onClick,
+    onKeyDown,
+    onTabCloseRequest,
+    renderIcon,
+    rightOverflowButtonProps,
+    scrollDebounceWait,
+    scrollIntoView,
+    secondaryLabel,
+    selectedIndex,
+    size,
+    tabClassName,
+    tabPanelClassName,
+  } = args;
+
   return (
-    <Tabs onTabCloseRequest={() => {}}>
-      <TabList {...args}>
-        <Tab>Dashboard</Tab>
+    <Tabs
+      {...defined({
+        defaultSelectedIndex,
+        dismissable,
+        onChange,
+        onTabCloseRequest,
+        selectedIndex,
+      })}>
+      <TabList
+        {...defined({
+          activation,
+          'aria-label': args['aria-label'],
+          className,
+          contained,
+          fullWidth,
+          iconSize,
+          leftOverflowButtonProps,
+          rightOverflowButtonProps,
+          scrollDebounceWait,
+          scrollIntoView,
+        })}
+        size={size}>
+        <Tab
+          {...defined({
+            as,
+            className: tabClassName,
+            disabled,
+            onClick,
+            onKeyDown,
+            renderIcon,
+            secondaryLabel,
+          })}>
+          Dashboard
+        </Tab>
         <Tab>Monitoring</Tab>
         <Tab>Activity</Tab>
         <Tab>Settings</Tab>
       </TabList>
       <TabPanels>
-        <TabPanel>Tab Panel 1</TabPanel>
+        <TabPanel {...defined({ className: tabPanelClassName })}>
+          Tab Panel 1
+        </TabPanel>
         <TabPanel>Tab Panel 2</TabPanel>
         <TabPanel>Tab Panel 3</TabPanel>
         <TabPanel>Tab Panel 4</TabPanel>
@@ -137,46 +681,20 @@ export const Default: StoryFn<TabListArgs> = (args) => {
 };
 
 Default.args = {
+  defaultSelectedIndex: 0,
   contained: false,
+  dismissable: false,
   ...lineTabsSizeArgs,
   scrollDebounceWait: 200,
 };
 
 Default.argTypes = {
-  activation: {
-    control: { type: 'select' },
-    options: ['automatic', 'manual'],
-  },
-  contained: {
-    control: {
-      type: 'boolean',
-    },
-  },
-  iconSize: {
-    control: { type: 'select' },
-    options: ['default', 'lg'],
-  },
-  leftOverflowButtonProps: {
-    control: {
-      type: 'object',
-    },
-  },
-  rightOverflowButtonProps: {
-    control: {
-      type: 'object',
-    },
-  },
-  scrollDebounceWait: {
-    control: {
-      type: 'number',
-    },
-  },
-  scrollIntoView: {
-    control: {
-      type: 'boolean',
-    },
-  },
+  ...tabsArgTypes,
+  ...tabListArgTypes,
   ...lineTabsSizeArgType,
+  ...tabArgTypes,
+  ...tabPanelsArgTypes,
+  ...tabPanelArgTypes,
 };
 
 export const Dismissable: StoryFn<TabListArgs> = (args) => {
@@ -345,10 +863,7 @@ DismissableContained.parameters = {
   },
 };
 
-export const DismissableWithIcons: StoryFn<TabListArgs> = ({
-  contained,
-  size,
-}) => {
+export const DismissableWithIcons: StoryFn<TabListArgs> = ({ size }) => {
   const tabs: TabItem[] = [
     {
       label: 'Dashboard',
@@ -410,7 +925,7 @@ export const DismissableWithIcons: StoryFn<TabListArgs> = ({
         onChange={handleTabChange}
         dismissable
         onTabCloseRequest={handleCloseTabRequest}>
-        <TabList contained={contained ?? false} size={size}>
+        <TabList size={size}>
           {renderedTabs.map((tab, index) => (
             <Tab
               key={index}
@@ -481,10 +996,10 @@ export const WithIcons: StoryFn<TabListArgs> = (args) => {
 WithIcons.argTypes = lineTabsSizeArgType;
 WithIcons.args = lineTabsSizeArgs;
 
-export const Manual: StoryFn = () => {
+export const Manual: StoryFn<TabListArgs> = (args) => {
   return (
     <Tabs>
-      <TabList activation="manual">
+      <TabList activation="manual" size={args.size}>
         <Tab>Dashboard</Tab>
         <Tab>Monitoring</Tab>
         <Tab title="Tab label 4">Activity</Tab>
@@ -521,7 +1036,18 @@ export const Manual: StoryFn = () => {
   );
 };
 
-export const Icon20Only: StoryFn<IconTabArgs> = (args) => {
+Manual.argTypes = lineTabsSizeArgType;
+Manual.args = lineTabsSizeArgs;
+
+export const Icon20Only: StoryFn<IconStoryArgs> = ({
+  badgeIndicator,
+  defaultOpen,
+  enterDelayMs,
+  iconTabClassName,
+  iconTabDisabled,
+  iconTabLabel,
+  leaveDelayMs,
+}) => {
   return (
     <Tabs>
       <TabList iconSize="lg">
@@ -531,7 +1057,16 @@ export const Icon20Only: StoryFn<IconTabArgs> = (args) => {
         <IconTab label="Activity">
           <Activity size={20} aria-label="Activity" />
         </IconTab>
-        <IconTab label="New Notifications" {...args}>
+        <IconTab
+          {...defined({
+            badgeIndicator,
+            className: iconTabClassName,
+            defaultOpen,
+            disabled: iconTabDisabled,
+            enterDelayMs,
+            leaveDelayMs,
+          })}
+          label={iconTabLabel}>
           <Notification size={20} aria-label="Notification" />
         </IconTab>
         <IconTab label="Chat">
@@ -548,26 +1083,38 @@ export const Icon20Only: StoryFn<IconTabArgs> = (args) => {
   );
 };
 
-Icon20Only.argTypes = {
-  badgeIndicator: {
-    description: '**Experimental**: Display an empty dot badge on the Tab.',
-    control: {
-      type: 'boolean',
-    },
-  },
-};
+Icon20Only.argTypes = iconStoriesArgTypes;
+Icon20Only.args = iconStoriesArgs;
 
-export const IconOnly: StoryFn<IconTabArgs> = (args) => {
+export const IconOnly: StoryFn<IconStoryArgs> = ({
+  badgeIndicator,
+  defaultOpen,
+  enterDelayMs,
+  iconTabClassName,
+  iconTabDisabled,
+  iconTabLabel,
+  leaveDelayMs,
+  size,
+}) => {
   return (
     <Tabs>
-      <TabList iconSize="default" size={args.size}>
+      <TabList iconSize="default" size={size}>
         <IconTab label="Analyze" disabled>
           <IbmWatsonDiscovery aria-label="Analyze" />
         </IconTab>
         <IconTab label="Activity">
           <Activity aria-label="Activity" />
         </IconTab>
-        <IconTab label="New Notifications" {...args}>
+        <IconTab
+          {...defined({
+            badgeIndicator,
+            className: iconTabClassName,
+            defaultOpen,
+            disabled: iconTabDisabled,
+            enterDelayMs,
+            leaveDelayMs,
+          })}
+          label={iconTabLabel}>
           <Notification aria-label="Notification" />
         </IconTab>
         <IconTab label="Chat">
@@ -586,14 +1133,12 @@ export const IconOnly: StoryFn<IconTabArgs> = (args) => {
 
 IconOnly.argTypes = {
   ...lineTabsSizeArgType,
-  badgeIndicator: {
-    description: '**Experimental**: Display an empty dot badge on the Tab.',
-    control: {
-      type: 'boolean',
-    },
-  },
+  ...iconStoriesArgTypes,
 };
-IconOnly.args = lineTabsSizeArgs;
+IconOnly.args = {
+  ...lineTabsSizeArgs,
+  ...iconStoriesArgs,
+};
 
 export const Contained: StoryFn<TabListArgs> = (args) => {
   return (
@@ -687,10 +1232,10 @@ export const ContainedWithIcons: StoryFn<TabListArgs> = (args) => {
 ContainedWithIcons.argTypes = tabsSizeArgType;
 ContainedWithIcons.args = containedTabsSizeArgs;
 
-export const ContainedWithSecondaryLabels: StoryFn = () => {
+export const ContainedWithSecondaryLabels: StoryFn<TabListArgs> = (args) => {
   return (
     <Tabs>
-      <TabList contained>
+      <TabList contained size={args.size}>
         <Tab secondaryLabel="(21/25)">Engage</Tab>
         <Tab secondaryLabel="(12/16)">Analyze</Tab>
         <Tab secondaryLabel="(0/7)">Remediate</Tab>
@@ -731,10 +1276,15 @@ export const ContainedWithSecondaryLabels: StoryFn = () => {
   );
 };
 
-export const ContainedWithSecondaryLabelsAndIcons: StoryFn = () => {
+ContainedWithSecondaryLabels.argTypes = tabsSizeArgType;
+ContainedWithSecondaryLabels.args = containedTabsSizeArgs;
+
+export const ContainedWithSecondaryLabelsAndIcons: StoryFn<TabListArgs> = (
+  args
+) => {
   return (
     <Tabs>
-      <TabList contained>
+      <TabList contained size={args.size}>
         <Tab renderIcon={Task} secondaryLabel="(21/25)">
           Engage
         </Tab>
@@ -782,6 +1332,9 @@ export const ContainedWithSecondaryLabelsAndIcons: StoryFn = () => {
     </Tabs>
   );
 };
+
+ContainedWithSecondaryLabelsAndIcons.argTypes = tabsSizeArgType;
+ContainedWithSecondaryLabelsAndIcons.args = containedTabsSizeArgs;
 
 export const ContainedFullWidth: StoryFn<TabListArgs> = (args) => {
   return (
@@ -836,10 +1389,28 @@ export const ContainedFullWidth: StoryFn<TabListArgs> = (args) => {
 };
 
 export const Vertical: StoryFn<VerticalArgs> = (args) => {
-  const { size, ...tabsVerticalArgs } = args;
+  const {
+    activation,
+    className,
+    defaultSelectedIndex,
+    height,
+    onChange,
+    scrollIntoView,
+    selectedIndex,
+    size,
+  } = args;
+
   return (
-    <TabsVertical {...tabsVerticalArgs}>
-      <TabListVertical size={size}>
+    <TabsVertical
+      {...defined({ defaultSelectedIndex, height, onChange, selectedIndex })}>
+      <TabListVertical
+        {...defined({
+          activation,
+          'aria-label': args['aria-label'],
+          className,
+          scrollIntoView,
+        })}
+        size={size}>
         <Tab>Dashboard</Tab>
         <Tab>
           Extra long label that will go two lines then truncate when it goes
@@ -898,21 +1469,14 @@ export const Vertical: StoryFn<VerticalArgs> = (args) => {
 };
 
 Vertical.args = {
+  defaultSelectedIndex: 0,
   height: '',
   size: 'xl',
 };
 
 Vertical.argTypes = {
-  height: {
-    control: {
-      type: 'text',
-    },
-  },
-  size: {
-    control: { type: 'select' },
-    options: ['sm', 'md', 'lg', 'xl'],
-    description: 'Specify the size of the vertical tabs',
-  },
+  ...tabsVerticalArgTypes,
+  ...tabListVerticalArgTypes,
 };
 
 Vertical.parameters = {
@@ -921,15 +1485,46 @@ Vertical.parameters = {
   },
 };
 
-export const Skeleton: StoryFn = () => {
+export const Skeleton: StoryFn<SkeletonArgs> = ({
+  skeletonClassName,
+  ...args
+}) => {
   return (
     <div style={{ maxWidth: '100%' }}>
-      <TabsSkeleton />
+      <TabsSkeleton
+        {...defined({
+          contained: args.contained,
+          className: skeletonClassName,
+        })}
+      />
     </div>
   );
 };
 
-export const Icon20OnlyVisualSnapshots: StoryFn<IconTabArgs> = (args) => {
+Skeleton.argTypes = {
+  ...tabsSkeletonArgTypes,
+  contained: {
+    control: { type: 'boolean' },
+    description: 'Provide the type of Tab',
+    table: {
+      category: 'TabsSkeleton',
+    },
+  },
+};
+Skeleton.args = {
+  contained: false,
+  skeletonClassName: '',
+};
+
+export const Icon20OnlyVisualSnapshots: StoryFn<IconStoryArgs> = ({
+  badgeIndicator,
+  defaultOpen,
+  enterDelayMs,
+  iconTabClassName,
+  iconTabDisabled,
+  iconTabLabel,
+  leaveDelayMs,
+}) => {
   return (
     <Tabs>
       <TabList iconSize="lg">
@@ -939,7 +1534,16 @@ export const Icon20OnlyVisualSnapshots: StoryFn<IconTabArgs> = (args) => {
         <IconTab label="Activity">
           <Activity size={20} aria-label="Activity" />
         </IconTab>
-        <IconTab label="New Notifications" {...args}>
+        <IconTab
+          {...defined({
+            badgeIndicator,
+            className: iconTabClassName,
+            defaultOpen,
+            disabled: iconTabDisabled,
+            enterDelayMs,
+            leaveDelayMs,
+          })}
+          label={iconTabLabel}>
           <Notification size={20} aria-label="Notification" />
         </IconTab>
         <IconTab label="Chat">
@@ -956,14 +1560,8 @@ export const Icon20OnlyVisualSnapshots: StoryFn<IconTabArgs> = (args) => {
   );
 };
 
-Icon20OnlyVisualSnapshots.argTypes = {
-  badgeIndicator: {
-    description: '**Experimental**: Display an empty dot badge on the Tab.',
-    control: {
-      type: 'boolean',
-    },
-  },
-};
+Icon20OnlyVisualSnapshots.argTypes = iconStoriesArgTypes;
+Icon20OnlyVisualSnapshots.args = iconStoriesArgs;
 
 Icon20OnlyVisualSnapshots.play = async ({ userEvent }) => {
   await userEvent.keyboard('{Tab}');
@@ -978,7 +1576,15 @@ Icon20OnlyVisualSnapshots.parameters = {
   },
 };
 
-export const IconOnlyVisualSnapshots: StoryFn<IconTabArgs> = (args) => {
+export const IconOnlyVisualSnapshots: StoryFn<IconStoryArgs> = ({
+  badgeIndicator,
+  defaultOpen,
+  enterDelayMs,
+  iconTabClassName,
+  iconTabDisabled,
+  iconTabLabel,
+  leaveDelayMs,
+}) => {
   return (
     <Tabs>
       <TabList iconSize="default">
@@ -988,7 +1594,16 @@ export const IconOnlyVisualSnapshots: StoryFn<IconTabArgs> = (args) => {
         <IconTab label="Activity">
           <Activity aria-label="Activity" />
         </IconTab>
-        <IconTab label="New Notifications" {...args}>
+        <IconTab
+          {...defined({
+            badgeIndicator,
+            className: iconTabClassName,
+            defaultOpen,
+            disabled: iconTabDisabled,
+            enterDelayMs,
+            leaveDelayMs,
+          })}
+          label={iconTabLabel}>
           <Notification aria-label="Notification" />
         </IconTab>
         <IconTab label="Chat">
@@ -1005,14 +1620,8 @@ export const IconOnlyVisualSnapshots: StoryFn<IconTabArgs> = (args) => {
   );
 };
 
-IconOnlyVisualSnapshots.argTypes = {
-  badgeIndicator: {
-    description: '**Experimental**: Display an empty dot badge on the Tab.',
-    control: {
-      type: 'boolean',
-    },
-  },
-};
+IconOnlyVisualSnapshots.argTypes = iconStoriesArgTypes;
+IconOnlyVisualSnapshots.args = iconStoriesArgs;
 
 IconOnlyVisualSnapshots.play = async ({ userEvent }) => {
   await userEvent.keyboard('{Tab}');

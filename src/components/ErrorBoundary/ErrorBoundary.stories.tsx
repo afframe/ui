@@ -11,18 +11,10 @@
  */
 
 import type { Meta, StoryFn } from '@storybook/react-vite';
-import { ErrorBoundary, ErrorBoundaryContext, Button } from '../../index.js';
-import { useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
+import { ErrorBoundary, ErrorBoundaryContext } from '../../index.js';
 import mdx from './ErrorBoundary.mdx';
-
-interface DemoArgs {
-  buttonLabel: string;
-  children: ReactNode;
-  errorMessage: string;
-  fallback: ReactNode;
-  onLog: (error: Error, errorInfo: ErrorInfo) => void;
-  shouldThrowError: boolean;
-}
+import DemoComponent from './stories/demo.js';
+import type { DemoArgs } from './stories/demo.js';
 
 const defaultArgs = {
   buttonLabel: 'Throw an error',
@@ -52,50 +44,6 @@ export default {
     controls: { include: Object.keys(argTypes) },
   },
 } satisfies Meta<typeof ErrorBoundary>;
-
-function ThrowError({
-  children,
-  errorMessage,
-  shouldThrowError,
-}: Pick<DemoArgs, 'children' | 'errorMessage' | 'shouldThrowError'>) {
-  if (shouldThrowError) {
-    throw new Error(errorMessage);
-  }
-  return children;
-}
-
-function DemoComponent({
-  buttonLabel,
-  children,
-  errorMessage,
-  fallback,
-  shouldThrowError: shouldThrowErrorArg,
-}: DemoArgs) {
-  const [shouldThrowError, setShouldThrowError] = useState(shouldThrowErrorArg);
-
-  useEffect(() => {
-    setShouldThrowError(shouldThrowErrorArg);
-  }, [shouldThrowErrorArg]);
-
-  function onClick() {
-    setShouldThrowError(!shouldThrowError);
-  }
-
-  return (
-    <>
-      <Button onClick={onClick}>{buttonLabel}</Button>
-      <div>
-        <ErrorBoundary fallback={fallback}>
-          <ThrowError
-            shouldThrowError={shouldThrowError}
-            errorMessage={errorMessage}>
-            {children}
-          </ThrowError>
-        </ErrorBoundary>
-      </div>
-    </>
-  );
-}
 
 export const Default: StoryFn<DemoArgs> = (args) => {
   return <DemoComponent {...args} />;

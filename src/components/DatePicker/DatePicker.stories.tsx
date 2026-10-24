@@ -275,6 +275,14 @@ export const SimpleWithLayer: StoryFn<DatePickerStoryArgs> = (args) => {
 SimpleWithLayer.args = { ...sharedArgs };
 SimpleWithLayer.argTypes = { ...sharedArgTypes };
 
+SimpleWithLayer.parameters = {
+  docs: {
+    source: {
+      type: 'code',
+    },
+  },
+};
+
 export const SingleWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
   args
 ) => {
@@ -298,6 +306,14 @@ export const SingleWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
 
 SingleWithCalendarWithLayer.args = { ...sharedArgs };
 SingleWithCalendarWithLayer.argTypes = { ...sharedArgTypes };
+
+SingleWithCalendarWithLayer.parameters = {
+  docs: {
+    source: {
+      type: 'code',
+    },
+  },
+};
 
 export const RangeWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
   args
@@ -327,6 +343,14 @@ export const RangeWithCalendarWithLayer: StoryFn<DatePickerStoryArgs> = (
 
 RangeWithCalendarWithLayer.args = { ...sharedArgs };
 RangeWithCalendarWithLayer.argTypes = { ...sharedArgTypes };
+
+RangeWithCalendarWithLayer.parameters = {
+  docs: {
+    source: {
+      type: 'code',
+    },
+  },
+};
 
 // Carbon merges an object locale over flatpickr's strings for its `locale`
 // key (DatePicker.js:240-247). Module scope: Carbon caches on the object.

@@ -460,6 +460,71 @@ FixedWithDivider.argTypes = {
   ...sideNavArgTypes,
 };
 
+export const FixedWithMixedLinksAndButtons: StoryFn<ShellStoryArgs> = (
+  args
+) => (
+  <>
+    <Header aria-label={args.headerAriaLabel}>
+      <SkipToContent />
+      <HeaderName href="#" prefix={args.platformPrefix}>
+        {args.platformName}
+      </HeaderName>
+    </Header>
+    <SideNav
+      isFixedNav
+      expanded={args.expanded}
+      isChildOfHeader={false}
+      aria-label={args.sideNavAriaLabel}>
+      <SideNavItems>
+        <SideNavLink href="https://www.carbondesignsystem.com/">
+          Overview
+        </SideNavLink>
+        <SideNavLink
+          as="button"
+          type="button"
+          onClick={action('Open release notes')}>
+          Release notes
+        </SideNavLink>
+        <SideNavMenu title="Resources">
+          <SideNavMenuItem href="https://www.carbondesignsystem.com/">
+            Documentation
+          </SideNavMenuItem>
+          <SideNavMenuItem
+            as="button"
+            type="button"
+            onClick={action('Open version details')}>
+            Version details
+          </SideNavMenuItem>
+          <SideNavMenuItem href="https://www.carbondesignsystem.com/">
+            Support
+          </SideNavMenuItem>
+        </SideNavMenu>
+        <SideNavDivider />
+        <SideNavLink href="https://www.carbondesignsystem.com/" isActive>
+          Settings
+        </SideNavLink>
+        <SideNavLink
+          as="button"
+          type="button"
+          onClick={action('Open feedback modal')}>
+          Send feedback
+        </SideNavLink>
+      </SideNavItems>
+    </SideNav>
+    <StoryContent useResponsiveOffset={false} />
+  </>
+);
+
+FixedWithMixedLinksAndButtons.args = {
+  ...headerArgs,
+  ...sideNavArgs,
+};
+
+FixedWithMixedLinksAndButtons.argTypes = {
+  ...headerArgTypes,
+  ...sideNavArgTypes,
+};
+
 export const RailWithHeader: StoryFn<ShellStoryArgs> = (args) => {
   const {
     enterDelayMs,
