@@ -2,7 +2,7 @@
 
 Afframe UI and design system.
 
-`@afframe/ui` is one React package built on IBM's Carbon Design System: Carbon core, IBM Products, Carbon Labs and a set of extras (charts, ECharts, AI chat, data grid, onboarding), configured once and themed for Afframe. It is general purpose for every Afframe product, not bound to any one app.
+`@afframe/ui` is one React package built on IBM's Carbon Design System: Carbon core, IBM Products, Carbon Labs and a set of extras (charts, ECharts, AI chat, data grid), configured once and themed for Afframe. It is general purpose for every Afframe product, not bound to any one app.
 
 ## Status
 
@@ -49,4 +49,4 @@ The license covers only the original work of the copyright holder. Third-party c
 
 Portions of this project are copied from or derived from IBM's Carbon Design System projects (Copyright IBM Corp.), licensed under the Apache License 2.0: see [LICENSES/Apache-2.0.txt](LICENSES/Apache-2.0.txt). Those portions remain under Apache-2.0.
 
-The compiled stylesheets in the package are built from IBM's Carbon, IBM Products, Carbon Labs and Carbon Charts styles (Apache-2.0); the IBM Plex fonts ship unmodified under the SIL Open Font License 1.1 (`dist/fonts/LICENSE.txt`). Per-file licences are machine-readable (REUSE 3.3). IBM, IBM Plex and Carbon are trademarks or registered trademarks of International Business Machines Corporation; Afframe UI is an independent project, not affiliated with or endorsed by IBM.
+The compiled stylesheets in the package are built from IBM's Carbon, IBM Products, Carbon Labs and Carbon Charts styles (Apache-2.0); the IBM Plex fonts ship unmodified under the SIL Open Font License 1.1 (`LICENSES/OFL-1.1.txt`, and `dist/fonts/LICENSE.txt` with the fonts). The Storybook page Getting Started/Licences lists the runtime dependencies, the style sources and the fonts with their licences. Per-file licences are machine-readable (REUSE 3.3). IBM, IBM Plex and Carbon are trademarks or registered trademarks of International Business Machines Corporation; Afframe UI is an independent project, not affiliated with or endorsed by IBM.

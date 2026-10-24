@@ -3303,7 +3303,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/AILabel/AILabel.mdx"
     },
     {
       "name": "AILabelContent",
@@ -3311,7 +3312,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/AILabel/AILabel.mdx"
     },
     {
       "name": "AISkeletonIcon",
@@ -3791,7 +3793,8 @@
       "upstream": {
         "package": "@carbon/ibm-products",
         "name": "previewCandidate__GuidebannerElement"
-      }
+      },
+      "docs": "src/components/Guidebanner/Guidebanner.mdx"
     },
     {
       "name": "GuidebannerElementButton",
@@ -3803,7 +3806,8 @@
       "upstream": {
         "package": "@carbon/ibm-products",
         "name": "previewCandidate__GuidebannerElementButton"
-      }
+      },
+      "docs": "src/components/Guidebanner/Guidebanner.mdx"
     },
     {
       "name": "GuidebannerElementLink",
@@ -3815,7 +3819,8 @@
       "upstream": {
         "package": "@carbon/ibm-products",
         "name": "previewCandidate__GuidebannerElementLink"
-      }
+      },
+      "docs": "src/components/Guidebanner/Guidebanner.mdx"
     },
     {
       "name": "InterstitialScreen",
@@ -4535,7 +4540,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FirstTimeOrientation/FirstTimeOrientation.mdx"
     },
     {
       "name": "PersonalizationInterstitial",
@@ -4543,7 +4549,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/FirstTimeOrientation/FirstTimeOrientation.mdx"
     },
     {
       "name": "Calendar",

@@ -182,7 +182,7 @@ for (const pass of ['component', 'subcomponents']) {
     }
   }
 }
-// Hooks, contexts and helpers documented on another export's page.
+// Exports documented on another export's page.
 const docsAliases = {
   ColumnHang: 'Grid/Grid.mdx',
   GridSettings: 'Grid/Grid.mdx',
@@ -207,6 +207,13 @@ const docsAliases = {
   NotificationButton: 'Notification/Notification.mdx',
   NotificationActionButton: 'Notification/Notification.mdx',
   ErrorBoundaryContext: 'ErrorBoundary/ErrorBoundary.mdx',
+  AILabelContent: 'AILabel/AILabel.mdx',
+  AILabelActions: 'AILabel/AILabel.mdx',
+  GuidebannerElement: 'Guidebanner/Guidebanner.mdx',
+  GuidebannerElementButton: 'Guidebanner/Guidebanner.mdx',
+  GuidebannerElementLink: 'Guidebanner/Guidebanner.mdx',
+  WelcomeInterstitial: 'FirstTimeOrientation/FirstTimeOrientation.mdx',
+  PersonalizationInterstitial: 'FirstTimeOrientation/FirstTimeOrientation.mdx',
 };
 for (const [name, page] of Object.entries(docsAliases)) {
   if (!docsByName.has(name)) docsByName.set(name, `src/components/${page}`);

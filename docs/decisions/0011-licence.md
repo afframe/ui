@@ -2,11 +2,11 @@
 
 Date: 2026-10-05
 
-Amended: 2026-10-07, 2026-10-13, 2026-10-19
+Amended: 2026-10-07, 2026-10-13, 2026-10-19, 2026-10-25
 
 ## Status
 
-Accepted, amended 2026-10-19 (commercial use)
+Accepted, amended 2026-10-19 (commercial use) and 2026-10-25 (OFL-1.1 text and Storybook licences page)
 
 ## Context
 
@@ -14,11 +14,11 @@ Afframe UI is source-available, not open source. It copies and derives material 
 
 ## Decision
 
-The PolyForm Noncommercial License 1.0.0 governs the project. Carbon-derived parts stay under Apache-2.0. Licence texts live in `LICENSES/` in the REUSE layout: `LICENSES/PolyForm-Noncommercial-1.0.0.txt` and `LICENSES/Apache-2.0.txt`. Copied stories and styles keep IBM's header; copied `.mdx` pages, which upstream ships without a header, get IBM's copyright and SPDX lines added. Every copied file says when it was modified. Carbon, IBM Products and Carbon Labs publish no NOTICE file at the copied tags (Carbon v11.119.0, IBM Products 2.101.0 and the Carbon Labs package tags each page links to), so none is carried.
+The PolyForm Noncommercial License 1.0.0 governs the project. Carbon-derived parts stay under Apache-2.0. Licence texts live in `LICENSES/` in the REUSE layout: `LICENSES/PolyForm-Noncommercial-1.0.0.txt`, `LICENSES/Apache-2.0.txt` and `LICENSES/OFL-1.1.txt`. Copied stories and styles keep IBM's header; copied `.mdx` pages, which upstream ships without a header, get IBM's copyright and SPDX lines added. Every copied file says when it was modified. Carbon, IBM Products and Carbon Labs publish no NOTICE file at the copied tags (Carbon v11.119.0, IBM Products 2.101.0 and the Carbon Labs package tags each page links to), so none is carried.
 
 In `.mdx`, the header lines are `//` comments directly after the last `import` line of the first import block. reuse parses JSX `{/* */}` one-liners only under some Python hash seeds, so those pages fell back to `REUSE.toml` at random. Afframe-written pages declare their own licence in the same place. CI runs `reuse lint --json` through `scripts/check-licence-labels.mjs`: a page whose licence comes from `REUSE.toml`, or whose source label disagrees with its licence, fails the build.
 
-The package ships both licence texts in `LICENSES/` and the OFL-1.1 text with the fonts; the root `LICENSE` is a symlink, which npm and pnpm do not pack. `dist/styles.css` opens with a `/*!` banner naming IBM's Apache-2.0 styles, Afframe's PolyForm additions and the OFL-1.1 fonts. The IBM Plex fonts are redistributed unmodified: the OFL reserves the name "Plex", so subset or re-encoded fonts would have to drop it.
+The package ships the licence texts in `LICENSES/` and the OFL-1.1 text again with the fonts; the root `LICENSE` is a symlink, which npm and pnpm do not pack. `dist/styles.css` opens with a `/*!` banner naming IBM's Apache-2.0 styles, Afframe's PolyForm additions and the OFL-1.1 fonts. The IBM Plex fonts are redistributed unmodified: the OFL reserves the name "Plex", so subset or re-encoded fonts would have to drop it.
 
 ## Amendment 2026-10-13: source label
 
@@ -27,6 +27,10 @@ The source label on a docs page names where the component comes from, not who wr
 ## Amendment 2026-10-19: commercial use
 
 Commercial use of `@afframe/ui` needs a separate licence from the copyright holder, granted per product. Grants live outside this repo; `docs/guides/consuming.md` (Licence) tells consumers.
+
+## Amendment 2026-10-25: OFL-1.1 text and Storybook licences page
+
+`LICENSES/` also holds `OFL-1.1.txt`. The Storybook page Getting Started/Licences carries IBM's Plex notice as an `SPDX-Snippet` declared OFL-1.1 in `//` lines, so reuse counts the licence as used; a `REUSE.toml` annotation would need a tracked OFL-1.1 file. The page lists the runtime dependencies and the style sources with their licences from `package.json`, shows the Apache ECharts and es-toolkit NOTICEs, and links the licence texts, which the static build copies to `/LICENSES/`, and the third-party notices file Vite writes beside them.
 
 ## Consequences
 

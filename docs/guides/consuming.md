@@ -187,6 +187,7 @@ export default function Total() {
 Carbon Charts, ECharts, the data grid and the AI chat each sit in their own client module, so a route that does not use one ships none of its JavaScript (`scripts/check-example.mjs` checks it).
 
 - Charts and `EChart` load statically with the route that renders them. The server renders an empty container; the chart draws in the browser.
+- Carbon Charts components take `chartRef` for IBM's chart instance, where IBM's docs use `ref`. `EChart` takes `chartRef` for the ECharts instance; its `ref` is the container `div`.
 - `ChatContainer` and `ChatCustomElement` load `@carbon/ai-chat` lazily in the browser, because it defines custom elements when it loads. The server renders a placeholder.
 - IBM's enums (for example `ScaleTypes`, `ChartTheme`, `MessageResponseTypes`) come from client modules, so a server component cannot read their values. Build chart or chat options in a client component, or pass the plain string values.
 - Carbon Charts CSS ships separately as `@afframe/ui/charts.css` (about 257 KB, 24 KB gzipped); `styles.css` carries none of it. Import it where charts render (section 4).
