@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
 import { defaultExportModalMessages, ExportModal } from './ExportModal.js';
 import type { ExportModalProps } from './ExportModal.js';
+import { until } from '../../testUtils.js';
 
 type HarnessProps = Partial<Omit<ExportModalProps, 'open' | 'onClose'>> & {
   onClose?: () => void;
@@ -54,8 +55,6 @@ const renderHarness = (props: HarnessProps = {}) =>
 
 const active = () => document.activeElement;
 const launcher = () => screen.getByRole('button', { name: 'Open' });
-const until = (check: () => void, timeout = 2000) =>
-  vi.waitFor(check, { timeout });
 const nameField = () =>
   screen.getByRole<HTMLInputElement>('textbox', { name: 'File name' });
 const exportButton = () =>
@@ -206,7 +205,7 @@ test('pending: Escape ignored; rejection keeps it open with an alert', async () 
   );
   expect(getComputedStyle(active() as Element).outlineStyle).toBe('none');
   await userEvent.tab();
-  expect(active()).toBeInstanceOf(HTMLInputElement);
+  await until(() => expect(active()).toBeInstanceOf(HTMLInputElement));
   await userEvent.keyboard('{Escape}');
   await until(() => expect(onClose).toHaveBeenCalledTimes(1));
   await until(() => expect(active()).toBe(launcher()));

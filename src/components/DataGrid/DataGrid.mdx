@@ -104,6 +104,8 @@ a new array on every render makes TanStack rebuild its rows each time.
   shows its own summary unless this is set; `null` hides it.
 - `filterPanel`: settings of the `dataGridFilterPanel` panel
   ([Filter panel](#filter-panel)).
+- `locale`: BCP 47 locale of the numbers and dates in the filter panel and
+  summary. Default the package locale, `cs-CZ`.
 - `messages`: overrides for any string (below).
 - `ref` and other HTML attributes (`id`, `data-*`, `aria-*`, `style`) go to
   the table container, Carbon's `section.cds--data-table-container`.
@@ -170,7 +172,9 @@ no numbers and no bounds gets no field. The variant picks the column's
 
 `inOptions` compares the cell as a string, and an array cell matches when
 any item does. `inDayRange` compares calendar days, so a row with a time on
-the end day still matches; a range without a start is no filter.
+the end day still matches; a range without a start is no filter. An ISO
+instant cell counts on its day in the default time zone, the day `formatDate`
+shows; a `Date` cell counts on its local day.
 
 `filterPanel` takes:
 

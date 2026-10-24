@@ -48,7 +48,7 @@ export default {
   component: ComboBox,
   // Docgen lists only a few ComboBox props (cause not found; Dropdown's types
   // have the same shape and fill in), so the main ones are listed here with
-  // Carbon 1.118's descriptions.
+  // Carbon 1.119's descriptions.
   argTypes: {
     allowCustomValue: {
       control: 'boolean',
@@ -460,7 +460,7 @@ ReadOnly.args = {
 };
 ReadOnly.argTypes = Default.argTypes;
 
-// Carbon 1.118 links the error text but sets no aria-invalid. ComboBox spreads
+// Carbon 1.119 links the error text but sets no aria-invalid. ComboBox spreads
 // rest props on its input, so the story passes it. The gap is an upstream bug.
 export const Invalid: StoryFn<ItemArgs> = Default.bind({});
 Invalid.args = { ...sharedArgs, invalid: true, 'aria-invalid': true };

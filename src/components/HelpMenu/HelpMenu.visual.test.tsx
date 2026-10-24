@@ -2,6 +2,7 @@ import { composeStories } from '@storybook/react-vite';
 import { expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import * as stories from './HelpMenu.stories.js';
+import { snapshot as bodySnapshot } from '../../testUtils.js';
 
 const { Default, Dark } = composeStories(stories);
 
@@ -13,11 +14,7 @@ async function snapshot(name: string) {
   await Promise.all(
     document.getAnimations().map((animation) => animation.finished)
   );
-  await document.fonts.load('400 14px "IBM Plex Sans"');
-  await document.fonts.ready;
-  await expect
-    .element(page.elementLocator(document.body))
-    .toMatchScreenshot(name);
+  await bodySnapshot(name);
 }
 
 test.each([

@@ -75,7 +75,7 @@ type TagText = Pick<
   'tagLabel' | 'dateRangeValue' | 'atMostValue'
 >;
 
-export interface FilterTag {
+interface FilterTag {
   key: string;
   label: string;
   /** The value without this tag's filter. */
@@ -211,10 +211,11 @@ export function countFilterPanelSelections(
 function valueText(
   group: FilterPanelGroup,
   field: FilterPanelFieldValue,
-  text: TagText
+  text: TagText,
+  options: { locale?: string }
 ): string {
   if (typeof field === 'number') {
-    const number = formatNumber(field);
+    const number = formatNumber(field, options);
     return group.variant === 'slider' ? text.atMostValue(number) : number;
   }
   if (typeof field === 'string') {
@@ -225,9 +226,9 @@ function valueText(
   // isEmpty already dropped a range without a start.
   if (!start) return '';
   return text.dateRangeValue(
-    formatDate(start),
-    end ? formatDate(end) : null,
-    end ? formatDateRange(start, end) : null
+    formatDate(start, options),
+    end ? formatDate(end, options) : null,
+    end ? formatDateRange(start, end, options) : null
   );
 }
 
@@ -238,7 +239,9 @@ function valueText(
 export function filterTags(
   groups: readonly FilterPanelGroup[],
   value: FilterPanelValue,
-  text: TagText
+  text: TagText,
+  /** `locale` of the numbers and dates; default the package locale (cs-CZ). */
+  options: { locale?: string } = {}
 ): FilterTag[] {
   return groups.flatMap((group): FilterTag[] => {
     const field = value[group.id];
@@ -258,7 +261,10 @@ export function filterTags(
     return [
       {
         key: group.id,
-        label: text.tagLabel(group.label, valueText(group, field, text)),
+        label: text.tagLabel(
+          group.label,
+          valueText(group, field, text, options)
+        ),
         without: () => setGroupValue(value, group, undefined),
       },
     ];

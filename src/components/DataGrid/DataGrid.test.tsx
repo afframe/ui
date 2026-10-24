@@ -1130,7 +1130,15 @@ test('inOptions matches cells converted to strings, and array items', () => {
 
 test('inDayRange includes both end days, for timestamps and local dates', () => {
   const march = ['2026-03-01', '2026-03-31'] as const;
+  const april = ['2026-04-01', '2026-04-30'] as const;
+  // An instant uses its day in the default zone, Europe/Prague: 01.04.2026.
   expect(runFilter(filterFn_inDayRange, '2026-03-31T23:59:00Z', march)).toBe(
+    false
+  );
+  expect(runFilter(filterFn_inDayRange, '2026-03-31T23:59:00Z', april)).toBe(
+    true
+  );
+  expect(runFilter(filterFn_inDayRange, '2026-03-31T21:59:00Z', march)).toBe(
     true
   );
   expect(runFilter(filterFn_inDayRange, '2026-03-01T00:00:00Z', march)).toBe(
@@ -1139,6 +1147,7 @@ test('inDayRange includes both end days, for timestamps and local dates', () => 
   expect(runFilter(filterFn_inDayRange, '2026-04-01T00:00:00Z', march)).toBe(
     false
   );
+  expect(runFilter(filterFn_inDayRange, '2026-03-02Tnoon', march)).toBe(false);
   expect(runFilter(filterFn_inDayRange, '2026-02-28', march)).toBe(false);
   // A Date uses its local day.
   expect(
@@ -1394,6 +1403,27 @@ test('the filter panel, summary and empty state take custom messages', async () 
   await userEvent.click(within(panel).getByText('Paid'));
   await userEvent.click(within(panel).getByRole('button', { name: 'Use' }));
   expect(screen.getByRole('button', { name: 'Reset all' })).toBeTruthy();
+});
+
+test('locale formats the filter summary tags', async () => {
+  const columns = panelHelper.columns([
+    panelHelper.accessor('amount', {
+      header: 'Amount',
+      meta: { filter: { variant: 'number' } },
+    }),
+  ]);
+  render(
+    <DataGrid
+      options={{
+        features: panelFeatures,
+        columns,
+        data: few,
+        initialState: { columnFilters: [{ id: 'amount', value: 1234.5 }] },
+      }}
+      locale="en-US"
+    />
+  );
+  expect(await removeTag('Amount: 1,234.5')).toBeTruthy();
 });
 
 test('inDayRange treats an end that is not an ISO day as open', () => {

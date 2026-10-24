@@ -111,6 +111,8 @@ export interface FilterPanelProps extends Omit<
   /** Number of results with the applied `value`; shown and announced when set. */
   resultCount?: number;
   messages?: Partial<FilterPanelMessages>;
+  /** Locale of the formatted numbers and dates; default the package locale (cs-CZ). */
+  locale?: string;
   /** Level of the title heading. Default 2. */
   headingLevel?: 2 | 3;
   className?: string;
@@ -146,6 +148,7 @@ export function FilterPanel({
   onClose,
   resultCount,
   messages,
+  locale,
   headingLevel = 2,
   className,
   ref,
@@ -210,6 +213,7 @@ export function FilterPanel({
       onChange={(next) => change(group, next)}
       id={`${id}-${index}`}
       text={text}
+      locale={locale}
       hideLabel={accordion}
     />
   );

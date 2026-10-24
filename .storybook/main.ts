@@ -26,7 +26,6 @@ const config: StorybookConfig = {
     sidebarOnboardingChecklist: false,
     menuOnboardingChecklist: false,
   },
-  typescript: { reactDocgen: 'react-docgen' },
   // Vite's dev watcher skips its outDir (dist) while emptyOutDir is on, so a
   // rebuilt dist/styles.css never reached an open Storybook.
   viteFinal: (viteConfig, { configType }) =>

@@ -191,7 +191,7 @@ export function ImportModal({
     }
   }
 
-  const dialog = useFlow({
+  const { containerRef, ...dialog } = useFlow({
     open,
     onClose,
     launcherRef,
@@ -200,7 +200,9 @@ export function ImportModal({
   });
 
   const limit =
-    maxFileSize === undefined ? undefined : formatFileSize(maxFileSize, locale);
+    maxFileSize === undefined || !Number.isFinite(maxFileSize)
+      ? undefined
+      : formatFileSize(maxFileSize, locale);
   const requirements = text.requirements(accept, limit);
 
   // The drop area and rows stay enabled while an import runs (Carbon's
@@ -298,10 +300,7 @@ export function ImportModal({
       loadingIconDescription={text.pending}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => void importFiles()}>
-      <div
-        ref={dialog.containerRef}
-        tabIndex={-1}
-        className="afframe-modal-body">
+      <div ref={containerRef} tabIndex={-1} className="afframe-modal-body">
         <FlowDescription description={description} />
         <div
           className="afframe-import-modal-drop"

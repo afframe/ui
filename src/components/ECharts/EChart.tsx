@@ -119,7 +119,9 @@ export function EChart({
   const [chart, setChart] = useState<EChartsType | null>(null);
   const theme = THEME_NAMES[useCarbonTheme()];
   const themeAtInit = useRef(theme);
-  themeAtInit.current = theme;
+  useLayoutEffect(() => {
+    themeAtInit.current = theme;
+  });
 
   useLayoutEffect(() => {
     if (!container.current) return;

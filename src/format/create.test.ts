@@ -48,3 +48,18 @@ test('presets use the app time zone and week start', () => {
     })
   );
 });
+
+// Consumers without exactOptionalPropertyTypes can pass undefined.
+test('an option passed as undefined keeps the app default', () => {
+  expect(
+    createFormat({ currency: 'EUR' }).formatAmount(5, {
+      currency: undefined,
+    } as never)
+  ).toBe(formatAmount(5, { currency: 'EUR' }));
+  expect(
+    createFormat({ timeZone: 'America/New_York' }).formatDate(
+      '2026-04-01T02:00:00Z',
+      { timeZone: undefined } as never
+    )
+  ).toBe('31.03.2026');
+});

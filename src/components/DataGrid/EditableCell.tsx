@@ -1,8 +1,8 @@
 'use client';
 // Inline edit of one cell: an edit button opens a text field. Enter saves and
 // Escape cancels, both returning focus to the button; leaving the field saves
-// and leaves focus where the user went. An empty or unchanged value is not
-// saved.
+// and leaves focus where the user went. An unchanged value, or an empty
+// number, is not saved.
 import { Edit } from '@carbon/icons-react';
 import { IconButton, TextInput } from '@carbon/react';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';

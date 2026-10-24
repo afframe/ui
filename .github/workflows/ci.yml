@@ -31,7 +31,18 @@ jobs:
       - name: gitleaks
         run: |
           image="$(sed -n 's/^FROM \(.*\) AS gitleaks$/\1/p' scripts/ci/toolbox/Dockerfile)"
-          docker run --rm -v "$PWD:/repo" "$image" git --config /repo/.gitleaks.toml --no-banner --redact /repo
+          # The config comes from the base branch, and a PR may not add a .gitleaksignore
+          # (gitleaks reads it from the scanned tree): a PR must not allowlist its own secret.
+          if [ -n "$GITHUB_BASE_REF" ]; then
+            git show "origin/$GITHUB_BASE_REF:.gitleaks.toml" > "$RUNNER_TEMP/gitleaks.toml"
+            if git diff --name-only "origin/$GITHUB_BASE_REF...HEAD" | grep -qx .gitleaksignore; then
+              echo "::error::.gitleaksignore changes are reviewed outside CI"
+              exit 1
+            fi
+          else
+            cp .gitleaks.toml "$RUNNER_TEMP/gitleaks.toml"
+          fi
+          docker run --rm -v "$PWD:/repo" -v "$RUNNER_TEMP/gitleaks.toml:/gitleaks.toml:ro" "$image" git --config /gitleaks.toml --no-banner --redact /repo
 
   # The squash merge uses the PR title as the commit subject: Conventional Commits.
   pr-title:
@@ -77,6 +88,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm preflight
+      - run: pnpm build
+      - run: pnpm check:pack
       # The docgen server is experimental: a Storybook update can empty the
       # Carbon and IBM Products API tables without failing the build.
       - run: pnpm build:storybook

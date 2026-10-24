@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, CopyButton from @afframe/ui, source tag, Disabled story. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, CopyButton from @afframe/ui, source tag, Disabled story, no empty kind default. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn } from '@storybook/react-vite';
@@ -17,11 +17,11 @@ import mdx from './CopyButton.mdx';
 
 const defaultArgs: CopyButtonProps = {
   align: 'bottom',
-  autoAlign: true,
   disabled: false,
   feedback: 'Copied!',
   feedbackTimeout: 2000,
   iconDescription: 'Copy to clipboard',
+  size: 'md',
 };
 
 const argTypes: Partial<ArgTypes<CopyButtonProps>> = {
@@ -56,6 +56,24 @@ const argTypes: Partial<ArgTypes<CopyButtonProps>> = {
   },
   iconDescription: {
     control: 'text',
+  },
+  kind: {
+    control: 'select',
+    options: [
+      ' ',
+      'primary',
+      'secondary',
+      'tertiary',
+      'ghost',
+      'danger',
+      'danger--primary',
+      'danger--ghost',
+      'danger--tertiary',
+    ],
+  },
+  size: {
+    control: 'select',
+    options: ['sm', 'md', 'lg'],
   },
   onClick: {
     action: 'onClick',

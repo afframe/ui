@@ -1,19 +1,16 @@
 import { composeStories } from '@storybook/react-vite';
 import { expect, test } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { userEvent } from 'vitest/browser';
 import * as stories from './ChatChart.stories.js';
+import { snapshot as bodySnapshot } from '../../testUtils.js';
 
 const { Default, Dark, Echarts } = composeStories(stories);
 
 async function snapshot(name: string) {
-  await document.fonts.load('400 14px "IBM Plex Sans"');
-  await document.fonts.ready;
   await Promise.all(
     document.getAnimations().map((animation) => animation.finished)
   );
-  await expect
-    .element(page.elementLocator(document.body))
-    .toMatchScreenshot(name);
+  await bodySnapshot(name);
 }
 
 // Stories turn chart animations off; the play functions wait for the chart.

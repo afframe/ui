@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui (UserAvatar is IBM Products'), source tag, WithVideo kept out of the story tests, YouTube embeds through youtube-nocookie.com without the share id, the WithVideo card whose video source is a YouTube page removed, rel on the new-tab link, story styles as plain CSS, two upstream illustrations used for every image (IBM logo removed), console.log and alert as actions, type fixes (numeric icon sizes, iconDescription for the unknown label prop, the Next icon as a child, anchor props spread, explicit Disabled argTypes, truncate props default to false), dashes replaced, example data from the Afframe glossary (card titles, person, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components and icons from @afframe/ui (UserAvatar is IBM Products'), source tag, WithVideo kept out of the story tests, YouTube embeds through youtube-nocookie.com without the share id, the WithVideo card whose video source is a YouTube page removed, rel on the new-tab link, story styles as plain CSS, two upstream illustrations used for every image (IBM logo removed), console.log and alert as actions, type fixes (numeric icon sizes, iconDescription for the unknown label prop, the Next icon as a child, no style on the flush Card.Body (not in CardBodyProps), anchor props spread, explicit Disabled argTypes, truncate props default to false), dashes replaced, example data from the Afframe glossary (card titles, person, AI label text). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ArgTypes, Meta, StoryFn, StoryObj } from '@storybook/react-vite';
@@ -819,10 +819,9 @@ export const WithFlushBody: StoryFn<CardStoryArgs> = () => (
           <div
             style={{
               background: 'var(--cds-highlight)',
-              border: '1px dashed var(--cds-link-primary)',
-              padding: '1rem',
+              padding: 'var(--cds-spacing-05)',
             }}>
-            Body with default padding
+            Content with 16px body padding
           </div>
         </Card.Body>
       </Card>
@@ -838,10 +837,9 @@ export const WithFlushBody: StoryFn<CardStoryArgs> = () => (
           <div
             style={{
               background: 'var(--cds-highlight)',
-              border: '1px dashed var(--cds-link-primary)',
-              padding: '1rem',
+              padding: 'var(--cds-spacing-05)',
             }}>
-            Body flush to card edges
+            Content fills edge-to-edge
           </div>
         </Card.Body>
       </Card>
@@ -1272,7 +1270,7 @@ export const WithIcon: StoryFn<CardStoryArgs> = () => (
           <Card.Action>
             <Button
               kind="ghost"
-              iconDescription="View report"
+              iconDescription="Share"
               size="md"
               renderIcon={Share}
               hasIconOnly></Button>
@@ -1363,7 +1361,7 @@ export const WithMedia: StoryFn<CardStoryArgs> = () => (
           <Card.Action>
             <Button
               kind="ghost"
-              iconDescription="View report"
+              iconDescription="Share"
               size="md"
               renderIcon={Share}
               hasIconOnly></Button>

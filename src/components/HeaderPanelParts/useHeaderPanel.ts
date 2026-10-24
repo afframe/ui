@@ -26,7 +26,7 @@ import type {
 import { useMergedRefs } from '../FlowParts/refs.js';
 
 /** Open state of a header action in `'panel'` mode. */
-export interface HeaderPanelOpenProps {
+interface HeaderPanelOpenProps {
   /** Controlled open state. */
   open?: boolean;
   /** Uncontrolled initial open state. */

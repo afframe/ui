@@ -2,7 +2,8 @@
 
 # Conductor workspace scripts.
 [scripts]
-setup = "IBM_TELEMETRY_DISABLED=true pnpm install --frozen-lockfile"
+# Any pnpm switches itself to the packageManager version; Node 25+ ships no corepack.
+setup = "(command -v pnpm >/dev/null || npm i -g pnpm) && IBM_TELEMETRY_DISABLED=true pnpm install --frozen-lockfile && pnpm exec playwright install chromium --only-shell"
 
 [scripts.run.storybook]
 available_in = ["local"]

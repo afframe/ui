@@ -206,7 +206,7 @@ export const ReadOnly = stateStory('fluid-text-input-read-only', {
   readOnly: true,
 });
 
-// Carbon 1.118 points aria-errormessage at the error but adds no live region
+// Carbon 1.119 points aria-errormessage at the error but adds no live region
 // or aria-describedby, which fails axe's aria-valid-attr-value. FluidTextInput
 // passes rest props to TextInput, which spreads them after its own
 // aria-describedby, so the error id links it. The gap is an upstream bug.

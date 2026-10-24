@@ -17,6 +17,11 @@ const browser = () => ({
   ],
 });
 
+// Each browser project opens one page per worker; two projects at once on a
+// laptop is too much, so local runs are capped (one value for all projects:
+// Vitest refuses different caps in one run). CI keeps every core.
+const local = process.env.CI ? {} : { maxWorkers: 4 };
+
 // Stories files import their MDX docs; visual tests only need the stories.
 const stubMdx: Plugin = {
   name: 'stub-mdx',
@@ -65,6 +70,7 @@ export default defineConfig({
     ],
   },
   test: {
+    ...local,
     projects: [
       {
         extends: true,

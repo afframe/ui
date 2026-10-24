@@ -139,7 +139,7 @@ export function AddSelectGuidance() {
     <ul>
       <li>
         {link('AddSelect', 'components-addselect')}: start here. It is IBM's
-        composable successor, a preview in IBM Products 2.100.0, and moves into
+        composable successor, a preview in IBM Products 2.101.0, and moves into
         Carbon v12 core (
         <AnchorMdx href="https://github.com/carbon-design-system/carbon/issues/22920">
           carbon issue #22920
@@ -151,7 +151,7 @@ export function AddSelectGuidance() {
         {link('SingleAddSelect', 'components-singleaddselect')} and{' '}
         {link('MultiAddSelect', 'components-multiaddselect')}: stable,
         ready-made tearsheet flows with modifiers, sort and filter built in. IBM
-        deprecates them upstream, with no deprecation marker in 2.100.0. Use
+        deprecates them upstream, with no deprecation marker in 2.101.0. Use
         them until you migrate to <code>AddSelect</code>.
       </li>
     </ul>
