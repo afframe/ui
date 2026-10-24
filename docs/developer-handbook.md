@@ -58,6 +58,7 @@ pnpm build:storybook
   - `preflight`: `pnpm preflight`, `pnpm build` and `pnpm check:pack`, and `reuse lint --json` through `scripts/check-licence-labels.mjs` (the licence labels of the docs pages), in the official reuse container image.
   - `test (1/2)`, `test (2/2)`: the Vitest projects `node`, `unit` and `storybook`, in two shards.
   - `ci`: passes only when every job above passed (`pr-title` may be skipped on `main`). It is the required check.
+- A failed run is retried with a fresh run (push or `gh workflow run`), not `gh run rerun`: a rerun restores the first attempt's dependency cache and has failed every story with a duplicated React.
 - The images for `secrets`, `workflow-lint` and the reuse step of `preflight` are pinned in `scripts/ci/toolbox/Dockerfile`; Dependabot updates them.
 - The release checks (`.github/workflows/release-checks.yml`) are called by the release workflow on a `v*` tag and run by hand with `gh workflow run release-checks.yml --ref <branch>`: `visual`, `package` (build, `check:pack`, `examples/nextjs` from the tarball) and `storybook` (the build as an artifact).
 - CodeQL runs on every PR (GitHub default setup). CodeRabbit reviews only on request (comment `@coderabbitai review`) and only code paths. A Claude review runs only with the `claude-review` label or a manual run of `claude-code-review.yml`.
