@@ -5,15 +5,18 @@
 }
 
 .demo-chat-sidebar-page {
+  display: flex;
   block-size: 36rem;
+}
+
+.demo-chat-sidebar-page main {
+  flex: 1;
   padding: var(--cds-spacing-05);
 }
 
-/* Fills the SidePanel body, which gives the chat its frame. The panel wraps
-   its body in a Layer div of auto height, so that div needs the height too. */
-.demo-chat-sidebar-panel .c4p--side-panel__inner-content > *,
+/* Sized as a flex item of the page, so the class must reach the chat. */
 .demo-chat-sidebar {
-  block-size: 100%;
+  flex: 0 0 22.5rem;
 }
 
 /* A float chat is fixed to the viewport; this keeps room for its launcher. */

@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState, type ComponentProps } from 'react';
 import { Tile } from '@carbon/react';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { ChatContainer, ChatCustomElement } from './ChatContainer.js';
-import { Button, SidePanel } from '../../index.js';
 import {
   ButtonItemType,
   MessageResponseTypes,
@@ -327,7 +325,7 @@ export const Float: Story = {
   ),
 };
 
-// ChatCustomElement in IBM's SidePanel, slid in next to the page content.
+// ChatCustomElement in a side column of the page.
 export const Sidebar: Story = {
   parameters: upstreamA11y(),
   args: {
@@ -335,47 +333,25 @@ export const Sidebar: Story = {
     className: 'demo-chat-sidebar',
     onBeforeRender: welcome(greeting),
   },
+  // The class sizes the chat as a flex item of the page: 22.5rem wide and as
+  // tall as the page.
   play: async ({ canvasElement }) => {
     await waitForChat(canvasElement, openChat);
-    const panel = document.querySelector('.c4p--side-panel');
-    const body = document.querySelector('.c4p--side-panel__inner-content');
-    const chat = document.querySelector('div.demo-chat-sidebar');
-    await expect(panel?.classList).toContain('c4p--side-panel--open');
-    // The chat fills the content box of the panel body, inside its padding.
-    const style = body ? getComputedStyle(body) : null;
-    const contentHeight =
-      (body?.clientHeight ?? 0) -
-      parseFloat(style?.paddingBlockStart ?? '0') -
-      parseFloat(style?.paddingBlockEnd ?? '0');
-    await expect(chat?.getBoundingClientRect().height).toBe(contentHeight);
+    const page = canvasElement.querySelector('.demo-chat-sidebar-page');
+    const chat = canvasElement.querySelector('div.demo-chat-sidebar');
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    await expect(chat?.getBoundingClientRect().width).toBe(22.5 * rem);
+    await expect(chat?.getBoundingClientRect().height).toBe(
+      page?.getBoundingClientRect().height
+    );
   },
-  render: (args) => <SidebarPage {...args} />,
+  render: (args) => (
+    <div className="demo-chat-sidebar-page">
+      <main>Page content</main>
+      <ChatCustomElement {...args} />
+    </div>
+  ),
 };
-
-function SidebarPage(args: ComponentProps<typeof ChatCustomElement>) {
-  const [open, setOpen] = useState(true);
-  return (
-    <>
-      <main id="demo-chat-sidebar-page" className="demo-chat-sidebar-page">
-        <p>Page content</p>
-        <Button kind="tertiary" size="md" onClick={() => setOpen(true)}>
-          Open assistant
-        </Button>
-      </main>
-      <SidePanel
-        slideIn
-        selectorPageContent="#demo-chat-sidebar-page"
-        className="demo-chat-sidebar-panel"
-        size="md"
-        title="Assistant"
-        open={open}
-        preventCloseOnClickOutside
-        onRequestClose={() => setOpen(false)}>
-        <ChatCustomElement {...args} />
-      </SidePanel>
-    </>
-  );
-}
 
 export const Dark: Story = {
   tags: ['!dev', '!autodocs'],
