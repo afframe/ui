@@ -43,7 +43,7 @@ pnpm storybook
 pnpm build:storybook
 ```
 
-`pnpm storybook` serves it on port 6006; `pnpm build:storybook` writes `storybook-static/`. Both build `dist/styles.css` and `dist/charts.css` first, since stories use the compiled styles. The toolbar switches the theme (`light`, `dark`, `system`). Each component has a docs page first, then its stories.
+`pnpm storybook` serves it on port 6006; `pnpm build:storybook` writes `storybook-static/`. Both build `dist/styles.css` and `dist/charts.css` first, since stories use the compiled styles. The toolbar switches the theme (`light`, `dark`, `system`) of canvases and docs pages alike (`.storybook/DocsContainer.tsx`). After a Storybook update, `pnpm build:storybook && pnpm check:docgen` checks that the docgen server still fills the API tables of re-exported components. Each component has a docs page first, then its stories.
 
 ## Working
 
@@ -55,11 +55,11 @@ pnpm build:storybook
   - `secrets`: gitleaks over the full git history with `.gitleaks.toml`.
   - `pr-title`: the PR title is a Conventional Commit, since the squash merge uses it. PRs only.
   - `workflow-lint`: actionlint (with shellcheck) and zizmor over the workflows and `dependabot.yml`.
-  - `preflight`: `pnpm preflight`, and `reuse lint --json` through `scripts/check-licence-labels.mjs` (the licence labels of the docs pages), in the official reuse container image.
+  - `preflight`: `pnpm preflight`; `pnpm build:storybook` and `pnpm check:docgen` (`scripts/check-docgen.mjs`: the API tables of sample Carbon and IBM Products components, which the experimental docgen server fills, still have their props); and `reuse lint --json` through `scripts/check-licence-labels.mjs` (the licence labels of the docs pages), in the official reuse container image.
   - `test (1/2)`, `test (2/2)`: the Vitest projects `unit` and `storybook`, in two shards.
   - `ci`: passes only when every job above passed (`pr-title` may be skipped on `main`). It is the required check.
 - The images for `secrets`, `workflow-lint` and the reuse step of `preflight` are pinned in `scripts/ci/toolbox/Dockerfile`; Dependabot updates them.
-- The release checks (`.github/workflows/release-checks.yml`) run on a `v*` tag and by hand with `gh workflow run release-checks.yml --ref <branch>`: `visual`, `package` (build, `check:pack`, `examples/nextjs` from the tarball) and `storybook` (the build as an artifact).
+- The release checks (`.github/workflows/release-checks.yml`) run on a `v*` tag and by hand with `gh workflow run release-checks.yml --ref <branch>`: `visual`, `package` (build, `check:pack`, `examples/nextjs` from the tarball) and `storybook` (the build and `check:docgen`; the build is kept as an artifact).
 - CodeQL runs on every PR (GitHub default setup). CodeRabbit reviews only on request (comment `@coderabbitai review`) and only code paths. A Claude review runs only with the `claude-review` label or a manual run of `claude-code-review.yml`.
 - Merge gate: the `main` ruleset in `.github/rulesets/main.json` requires the `ci` check, squash merges, linear and signed history, and blocks force-pushes and deletion. The `tags` ruleset in `.github/rulesets/tags.json` lets only admins create, move or delete `v*` tags, since a `v*` tag publishes the package. A red PR merges only through the admin bypass: `gh pr merge --squash --admin`. GitHub enforces the files only after an admin applies them. On a new repo, create each:
 

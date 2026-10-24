@@ -65,7 +65,7 @@ jobs:
 
   preflight:
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -77,6 +77,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm preflight
+      # The docgen server is experimental: a Storybook update can empty the
+      # Carbon and IBM Products API tables without failing the build.
+      - run: pnpm build:storybook
+      - run: pnpm check:docgen
       - name: reuse lint and licence labels
         run: scripts/ci/licence-check.sh
 
