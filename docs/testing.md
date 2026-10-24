@@ -19,15 +19,16 @@ pnpm exec playwright install chromium --only-shell
 pnpm test
 ```
 
-Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.css`, then runs `vitest run`. Every test runs in headless Chromium through Playwright at the viewport set in `vitest.config.ts`. To run one project: `pnpm exec vitest run --project unit`. A local run of `unit` and `storybook` takes under a minute (254 test files, 1,295 tests in 45 s on 2026-10-07). The `visual` project runs only with `CI` set, in the release checks: its baselines are rendered on the CI runner, and font rendering differs on other machines.
+Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.css`, then runs `vitest run`. Browser projects run in headless Chromium through Playwright at the viewport set in `vitest.config.ts`; the `node` project runs in Node. Local runs are capped at four workers (`vitest.config.ts`); CI uses every core. Run one browser suite per machine at a time: two at once open dozens of Chromium pages. A check that only needs Node, such as a Node version check, is `pnpm test:node` (the formatters, no browser). To run one project: `pnpm exec vitest run --project unit`. A local run of `unit` and `storybook` takes under a minute. The `visual` project runs only with `CI` set, in the release checks: its baselines are rendered on the CI runner, and font rendering differs on other machines.
 
 The Storybook dev server logs `Lit is in dev mode. Not recommended for production!` once per load. It comes from Lit, which `@carbon/web-components` and `@carbon/ai-chat` use; it is expected and fails nothing.
 
-| Project     | Runs                                                         | Fails on                                     |
-| ----------- | ------------------------------------------------------------ | -------------------------------------------- |
-| `unit`      | `src/**/*.test.{ts,tsx}`, with `styles.css` and `charts.css` | a failed assertion                           |
-| `storybook` | every story not tagged `!test`, as a test                    | a render error or an accessibility violation |
-| `visual`    | `src/**/*.visual.test.tsx`                                   | a screenshot that differs from its baseline  |
+| Project     | Runs                                                                 | Fails on                                     |
+| ----------- | -------------------------------------------------------------------- | -------------------------------------------- |
+| `unit`      | `src/**/*.test.{ts,tsx}`, with `styles.css` and `charts.css`         | a failed assertion                           |
+| `node`      | `src/format/**/*.test.ts` in Node, beside the same tests in Chromium | a failed assertion                           |
+| `storybook` | every story not tagged `!test`, as a test                            | a render error or an accessibility violation |
+| `visual`    | `src/**/*.visual.test.tsx`                                           | a screenshot that differs from its baseline  |
 
 ## Rules
 
@@ -73,6 +74,6 @@ A Playwright, Chromium or runner image update shifts pixels across many baseline
 
 ## CI
 
-The `test` jobs of CI (`.github/workflows/ci.yml`) run the `unit` and `storybook` projects on every PR and push to `main`, split in two shards (`test (1/2)`, `test (2/2)`). Playwright browsers are cached between runs. The `visual` job of `.github/workflows/release-checks.yml` runs the `visual` project on a `v*` tag and by hand. Dependabot groups the Storybook packages (`storybook`) and Vitest and Playwright (`test`); `.github/dependabot.yml` lists every group.
+The `test` jobs of CI (`.github/workflows/ci.yml`) run the `node`, `unit` and `storybook` projects on every PR and push to `main`, split in two shards (`test (1/2)`, `test (2/2)`). Playwright browsers are cached between runs. The `visual` job of `.github/workflows/release-checks.yml` runs the `visual` project on a `v*` tag and by hand. Dependabot groups the Storybook packages (`storybook`) and Vitest and Playwright (`test`); `.github/dependabot.yml` lists every group.
 
 Types, lint and format run separately in `pnpm preflight`, locally and in CI.

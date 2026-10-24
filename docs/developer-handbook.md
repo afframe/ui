@@ -16,7 +16,7 @@ IBM_TELEMETRY_DISABLED=true pnpm install
 pnpm preflight
 ```
 
-`pnpm preflight` is the gate: Prettier check, ESLint, Stylelint and `tsc`. CI runs the same. `pnpm format` fixes formatting. `pnpm check:licences` runs the CI licence-label check locally; it needs `reuse` at the version of the `reuse` image pinned in `scripts/ci/toolbox/Dockerfile`.
+`pnpm preflight` is the gate: Prettier check, ESLint, Stylelint, `tsc` and `pnpm registry --check`. CI runs the same. `pnpm format` fixes formatting. `pnpm check:licences` runs the CI licence-label check locally; it needs `reuse` at the version of the `reuse` image pinned in `scripts/ci/toolbox/Dockerfile`.
 
 ## Test
 
@@ -25,7 +25,7 @@ pnpm exec playwright install chromium --only-shell
 pnpm test
 ```
 
-Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.css` and runs the Vitest projects `unit`, `storybook` (every story, accessibility violations fail) in headless Chromium. The release checks also run `visual`, the screenshot tests against the committed baselines. Projects, accessibility exceptions and updating baselines: `docs/testing.md`.
+Install the browser once. `pnpm test` builds `dist/styles.css` and `dist/charts.css` and runs the Vitest projects `unit` and `storybook` (every story, accessibility violations fail) in headless Chromium, and `node` (the formatters under Node's ICU). The release checks also run `visual`, the screenshot tests against the committed baselines. `pnpm test:node` runs only the `node` project. Projects, accessibility exceptions and updating baselines: `docs/testing.md`.
 
 ## Build
 
@@ -52,11 +52,11 @@ pnpm build:storybook
 - Conventional Commits, one logical unit per commit.
 - A decision that shapes the package gets an ADR in `docs/decisions/`.
 - CI (`.github/workflows/ci.yml`) runs on every PR and every push to `main`, with no path filters. Target: 2 to 3 minutes. Its jobs:
-  - `secrets`: gitleaks over the full git history with `.gitleaks.toml`.
+  - `secrets`: gitleaks over the full git history with `.gitleaks.toml` (from the base branch on a PR).
   - `pr-title`: the PR title is a Conventional Commit, since the squash merge uses it. PRs only.
   - `workflow-lint`: actionlint (with shellcheck) and zizmor over the workflows and `dependabot.yml`.
-  - `preflight`: `pnpm preflight`, and `reuse lint --json` through `scripts/check-licence-labels.mjs` (the licence labels of the docs pages), in the official reuse container image.
-  - `test (1/2)`, `test (2/2)`: the Vitest projects `unit` and `storybook`, in two shards.
+  - `preflight`: `pnpm preflight`, `pnpm build` and `pnpm check:pack`, and `reuse lint --json` through `scripts/check-licence-labels.mjs` (the licence labels of the docs pages), in the official reuse container image.
+  - `test (1/2)`, `test (2/2)`: the Vitest projects `node`, `unit` and `storybook`, in two shards.
   - `ci`: passes only when every job above passed (`pr-title` may be skipped on `main`). It is the required check.
 - The images for `secrets`, `workflow-lint` and the reuse step of `preflight` are pinned in `scripts/ci/toolbox/Dockerfile`; Dependabot updates them.
 - The release checks (`.github/workflows/release-checks.yml`) run on a `v*` tag and by hand with `gh workflow run release-checks.yml --ref <branch>`: `visual`, `package` (build, `check:pack`, `examples/nextjs` from the tarball) and `storybook` (the build as an artifact).
@@ -92,7 +92,7 @@ Versions are Afframe's own release numbers; they do not follow Carbon's versions
 
 GitHub Packages creates a new package as private. After the first publish, an org owner sets `@afframe/ui` to public and checks it is linked to this repo (package settings on `github.com/orgs/afframe/packages`); later versions keep both. A public package cannot be made private again.
 
-A consumer repo needs no "Manage Actions access" grant: its workflow token and Dependabot read the public package (checked 2026-10-19). If the package ever becomes private, each consumer repo needs Read access there.
+A consumer repo needs no "Manage Actions access" grant: its workflow token and Dependabot read the public package. If the package ever becomes private, each consumer repo needs Read access there.
 
 ## Components
 
