@@ -155,7 +155,10 @@ const TooltipTemplate: StoryFn<typeof Coachmark> = (args, context) => {
               <Button
                 size="sm"
                 className="coachmark-done-button"
-                onClick={action('Done button clicked')}>
+                onClick={(event) => {
+                  action('Done button clicked')(event);
+                  handleClose();
+                }}>
                 Done
               </Button>
             </Coachmark.ContentBody>
@@ -208,7 +211,12 @@ const FloatingTemplate: StoryFn<typeof Coachmark> = (args, context) => {
             <Coachmark.ContentBody>
               <h2>Hello World</h2>
               <p>this is a description test</p>
-              <Button size="sm" onClick={action('Done button clicked')}>
+              <Button
+                size="sm"
+                onClick={(event) => {
+                  action('Done button clicked')(event);
+                  handleClose();
+                }}>
                 Done
               </Button>
             </Coachmark.ContentBody>
