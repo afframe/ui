@@ -80,7 +80,6 @@ export const Default: StoryFn<IconButtonStoryArgs> = (args) => {
 
 Default.args = {
   align: 'bottom',
-  autoAlign: false,
   closeOnActivation: true,
   defaultOpen: true,
   disabled: false,

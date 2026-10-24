@@ -38,7 +38,6 @@ const items: Item[] = paymentTermItems;
 
 const sharedArgs = {
   'aria-label': '',
-  autoAlign: false,
   direction: 'bottom',
   disabled: false,
   helperText: 'Applies to new invoices for this customer',

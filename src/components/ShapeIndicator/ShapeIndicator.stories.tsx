@@ -104,7 +104,6 @@ export const Default: StoryFn<IndicatorArgs> = (props) => {
 
 Default.args = {
   align: 'right',
-  autoAlign: false,
   compact: false,
   textSize: 12,
 };
@@ -136,7 +135,6 @@ export const DefaultWithTextSize14: StoryFn<IndicatorArgs> = (props) => {
 
 DefaultWithTextSize14.args = {
   align: 'right',
-  autoAlign: false,
   compact: false,
   textSize: 14,
 };

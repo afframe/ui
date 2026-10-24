@@ -199,7 +199,6 @@ function preserveCustomSearchResults(items: readonly CustomSearchItem[]) {
 
 const sharedArgs = {
   size: 'md',
-  autoAlign: false,
   type: 'default',
   titleText: 'Payment terms offered',
   disabled: false,

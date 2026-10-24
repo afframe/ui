@@ -122,7 +122,6 @@ const sharedArgTypes: ArgTypes = {
 };
 
 const sharedArgs: Partial<FluidDropdownProps<unknown>> = {
-  autoAlign: false,
   className: 'test-class',
   direction: 'bottom',
   disabled: false,

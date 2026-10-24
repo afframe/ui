@@ -2,7 +2,7 @@ import { ChooserTable, docsLink as link } from './chooser';
 
 // Which form field fits a task, and which prop names each field uses. Every
 // docs page of the family shows these two tables, so the guidance lives here
-// and not in each MDX page. Prop names: Carbon 1.118, IBM Products 2.100.0
+// and not in each MDX page. Prop names: Carbon 1.119, IBM Products 2.101.0
 // and Labs TagInput type definitions.
 
 const fieldRows = [
