@@ -170,7 +170,9 @@ no numbers and no bounds gets no field. The variant picks the column's
 
 `inOptions` compares the cell as a string, and an array cell matches when
 any item does. `inDayRange` compares calendar days, so a row with a time on
-the end day still matches; a range without a start is no filter.
+the end day still matches; a range without a start is no filter. An ISO
+instant cell counts on its day in the default time zone, the day `formatDate`
+shows; a `Date` cell counts on its local day.
 
 `filterPanel` takes:
 
