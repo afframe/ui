@@ -50,6 +50,7 @@ interface FieldProps<G extends FilterPanelGroup = FilterPanelGroup> {
   /** Unique per panel and group. */
   id: string;
   text: FilterPanelMessages;
+  locale: string | undefined;
   /** Accordion layout: the item title names the group, so labels are visually hidden. */
   hideLabel: boolean;
 }
@@ -320,7 +321,7 @@ function DateRangeField(props: FieldProps<GroupOf<'dateRange'>>) {
 }
 
 function SliderField(props: FieldProps<GroupOf<'slider'>>) {
-  const { group, field, onChange, id, hideLabel } = props;
+  const { group, field, onChange, id, hideLabel, locale } = props;
   const value = typeof field === 'number' ? field : group.max;
   return (
     <GroupFieldset legend={group.label} hideLabel={hideLabel}>
@@ -333,7 +334,9 @@ function SliderField(props: FieldProps<GroupOf<'slider'>>) {
         {...(group.step !== undefined && { step: group.step })}
         value={value}
         hideTextInput
-        formatLabel={(number) => formatNumber(number)}
+        formatLabel={(number) =>
+          formatNumber(number, locale === undefined ? {} : { locale })
+        }
         onChange={({ value: next }) => onChange(next)}
       />
     </GroupFieldset>

@@ -6,6 +6,7 @@ import {
   defaultFilterSummaryMessages,
   FilterSummary,
 } from './FilterSummary.js';
+import { formatDate, formatDateRange } from '../../format/index.js';
 import { filterTags } from './value.js';
 import type { FilterPanelGroup, FilterPanelValue } from './value.js';
 
@@ -227,6 +228,47 @@ test('summary: custom messages', async () => {
   expect(start).toMatch(/^Odebrat Range = .+ až …$/);
   expect(slider).toBe('Odebrat Slider = nejvýše 40');
   expect(button('Zrušit filtry')).toBeTruthy();
+});
+
+test('summary: locale formats numbers and dates', async () => {
+  render(
+    <div style={{ inlineSize: '200rem' }}>
+      <FilterSummary
+        groups={[
+          { id: 'number', label: 'Number', variant: 'number' },
+          { id: 'range', label: 'Range', variant: 'dateRange' },
+          { id: 'from', label: 'From', variant: 'dateRange' },
+          {
+            id: 'slider',
+            label: 'Slider',
+            variant: 'slider',
+            min: 0,
+            max: 5000,
+          },
+        ]}
+        value={{
+          number: 1234.5,
+          range: ['2026-01-05', '2026-02-10'],
+          from: ['2026-03-01', null],
+          slider: 1234.5,
+        }}
+        onChange={() => undefined}
+        locale="en-US"
+      />
+    </div>
+  );
+  const range = formatDateRange('2026-01-05', '2026-02-10', {
+    locale: 'en-US',
+  });
+  const from = formatDate('2026-03-01', { locale: 'en-US' });
+  await vi.waitFor(() =>
+    expect(names(lineButtons())).toEqual([
+      'Remove filter Number: 1,234.5',
+      `Remove filter Range: ${range}`,
+      `Remove filter From: from ${from}`,
+      'Remove filter Slider: up to 1,234.5',
+    ])
+  );
 });
 
 test('summary: narrow, "+N" counts, lists and dismisses the hidden tags', async () => {

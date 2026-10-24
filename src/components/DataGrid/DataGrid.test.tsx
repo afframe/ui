@@ -1396,6 +1396,27 @@ test('the filter panel, summary and empty state take custom messages', async () 
   expect(screen.getByRole('button', { name: 'Reset all' })).toBeTruthy();
 });
 
+test('locale formats the filter summary tags', async () => {
+  const columns = panelHelper.columns([
+    panelHelper.accessor('amount', {
+      header: 'Amount',
+      meta: { filter: { variant: 'number' } },
+    }),
+  ]);
+  render(
+    <DataGrid
+      options={{
+        features: panelFeatures,
+        columns,
+        data: few,
+        initialState: { columnFilters: [{ id: 'amount', value: 1234.5 }] },
+      }}
+      locale="en-US"
+    />
+  );
+  expect(await removeTag('Amount: 1,234.5')).toBeTruthy();
+});
+
 test('inDayRange treats an end that is not an ISO day as open', () => {
   expect(
     runFilter(filterFn_inDayRange, '2026-05-05', ['soon', '2026-05-31'])

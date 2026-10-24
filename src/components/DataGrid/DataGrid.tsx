@@ -186,6 +186,8 @@ export interface DataGridProps<
   filterSummary?: ReactNode;
   /** The filter panel of `dataGridFilterPanel`. */
   filterPanel?: DataGridFilterPanelSettings;
+  /** Locale of the formatted numbers and dates in the filter panel and summary; default the package locale (cs-CZ). */
+  locale?: string;
   messages?: Partial<DataGridMessages>;
 }
 
@@ -247,6 +249,7 @@ export function DataGrid<
   filteredEmptyState,
   filterSummary,
   filterPanel,
+  locale,
   messages,
   className,
   ref,
@@ -322,6 +325,7 @@ export function DataGrid<
       <FilterPanelLayout
         panel={panel}
         settings={filterPanel}
+        {...(locale === undefined ? {} : { locale })}
         resultCount={
           paginating
             ? table.getRowCount()
@@ -535,6 +539,7 @@ export function DataGrid<
               groups={panel.groups}
               value={panel.value}
               onChange={panel.onChange}
+              {...(locale === undefined ? {} : { locale })}
               {...(filterPanel?.summaryMessages && {
                 messages: filterPanel.summaryMessages,
               })}
