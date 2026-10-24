@@ -55,7 +55,8 @@ pnpm build:storybook
   - `secrets`: gitleaks over the full git history with `.gitleaks.toml` (from the base branch on a PR).
   - `pr-title`: the PR title is a Conventional Commit, since the squash merge uses it. PRs only.
   - `workflow-lint`: actionlint (with shellcheck) and zizmor over the workflows and `dependabot.yml`.
-  - `preflight`: `pnpm preflight`, `pnpm build` and `pnpm check:pack`; `pnpm build:storybook` and `pnpm check:docgen` (`scripts/check-docgen.mjs`: the API tables of sample Carbon and IBM Products components, which the experimental docgen server fills, still have their props); and `reuse lint --json` through `scripts/check-licence-labels.mjs` (the licence labels of the docs pages), in the official reuse container image.
+  - `preflight`: `pnpm preflight`, `pnpm build` and `pnpm check:pack`; and `reuse lint --json` through `scripts/check-licence-labels.mjs` (the licence labels of the docs pages), in the official reuse container image.
+  - `docgen`: `pnpm build:storybook` and `pnpm check:docgen` (`scripts/check-docgen.mjs`: the API tables of sample Carbon and IBM Products components, which the experimental docgen server fills, still have their props).
   - `test (1/2)`, `test (2/2)`: the Vitest projects `node`, `unit` and `storybook`, in two shards.
   - `ci`: passes only when every job above passed (`pr-title` may be skipped on `main`). It is the required check.
 - A failed run is retried with a fresh run (push or `gh workflow run`), not `gh run rerun`: a rerun restores the first attempt's dependency cache and has failed every story with a duplicated React.
