@@ -6,6 +6,7 @@ import { AfframeProvider } from '../../provider/AfframeProvider.js';
 import { formatFileSize } from './fileSize.js';
 import { defaultImportModalMessages, ImportModal } from './ImportModal.js';
 import type { ImportModalProps } from './ImportModal.js';
+import { until } from '../../testUtils.js';
 
 type HarnessProps = Partial<Omit<ImportModalProps, 'open' | 'onClose'>> & {
   onClose?: () => void;
@@ -48,7 +49,6 @@ const renderHarness = (props: HarnessProps = {}) =>
 
 const active = () => document.activeElement;
 const launcher = () => screen.getByRole('button', { name: 'Open' });
-const until = (check: () => void) => vi.waitFor(check, { timeout: 2000 });
 const drop = () =>
   screen.getByRole('button', {
     name: 'Drag and drop a file here or click to browse',
@@ -120,6 +120,13 @@ test('keyboard happy path: add a file, Tab to Import, Enter imports and closes',
   expect(onImport).toHaveBeenCalledWith([file]);
   await until(() => expect(screen.queryByRole('dialog')).toBeNull());
   await until(() => expect(active()).toBe(launcher()));
+});
+
+test('an infinite maxFileSize means no limit', async () => {
+  renderHarness({ accept: ['.csv'], maxFileSize: Infinity });
+  await openByKeyboard();
+  expect(screen.getByText('Accepted: .csv.')).toBeTruthy();
+  expect(screen.queryByText(/Maximum size/)).toBeNull();
 });
 
 test('rejects the wrong type and a file that is too large, on the item', async () => {

@@ -44,22 +44,39 @@ export function createFormat(defaults: FormatDefaults = {}) {
     currency,
     timeZone,
     formatAmount: (value: number, options?: FormatAmountOptions) =>
-      formatAmount(value, { locale, currency, ...options }),
+      formatAmount(value, {
+        ...options,
+        locale: options?.locale ?? locale,
+        currency: options?.currency ?? currency,
+      }),
     roundAmount: (
       value: number,
       options?: { currency?: string; digits?: number }
-    ) => roundAmount(value, { currency, ...options }),
+    ) =>
+      roundAmount(value, {
+        ...options,
+        currency: options?.currency ?? currency,
+      }),
     formatNumber: (
       value: number,
       options?: Intl.NumberFormatOptions & { locale?: string }
-    ) => formatNumber(value, { locale, ...options }),
+    ) => formatNumber(value, { ...options, locale: options?.locale ?? locale }),
     formatDate: (value: DateInput, options?: DateFormatOptions) =>
-      formatDate(value, { locale, timeZone, ...options }),
+      formatDate(value, {
+        ...options,
+        locale: options?.locale ?? locale,
+        timeZone: options?.timeZone ?? timeZone,
+      }),
     formatDateRange: (
       start: DateInput,
       end: DateInput,
       options?: DateFormatOptions
-    ) => formatDateRange(start, end, { locale, timeZone, ...options }),
+    ) =>
+      formatDateRange(start, end, {
+        ...options,
+        locale: options?.locale ?? locale,
+        timeZone: options?.timeZone ?? timeZone,
+      }),
     civilDateIn: (instant: Date | number, zone: string = timeZone) =>
       civilDateIn(instant, zone),
     startOfDayIn: (date: CivilDate, zone: string = timeZone) =>
@@ -67,7 +84,12 @@ export function createFormat(defaults: FormatDefaults = {}) {
     getDateRangePreset: (
       preset: DateRangePreset,
       options?: DateRangePresetOptions
-    ) => getDateRangePreset(preset, { timeZone, weekStartsOn, ...options }),
+    ) =>
+      getDateRangePreset(preset, {
+        ...options,
+        timeZone: options?.timeZone ?? timeZone,
+        weekStartsOn: options?.weekStartsOn ?? weekStartsOn,
+      }),
   };
 }
 

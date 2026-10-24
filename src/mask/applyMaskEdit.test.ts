@@ -313,3 +313,15 @@ describe('normalizeMaskValue', () => {
     expect(normalizeMaskValue(once.value, once.caret, dotted)).toEqual(once);
   });
 });
+
+describe('inserting in the middle', () => {
+  test.each([
+    [h23, '|19:5', '2'],
+    [dotted, '1|2.10', '0'],
+  ])(
+    'rejects a digit that shifts a later part out of range: %#',
+    (spec, from, data) => {
+      expect(edit(spec, from, 'insertText', data)).toBe(from);
+    }
+  );
+});
