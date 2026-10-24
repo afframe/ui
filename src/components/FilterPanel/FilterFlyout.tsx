@@ -54,6 +54,7 @@ export interface FilterFlyoutProps
       | 'layout'
       | 'resultCount'
       | 'headingLevel'
+      | 'locale'
     >,
     Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'children'> {
   /** Ref to the root `div` (Carbon's Popover). */
@@ -103,6 +104,7 @@ export function FilterFlyout({
   layout,
   resultCount,
   headingLevel,
+  locale,
   defaultOpen = false,
   trigger = 'icon',
   messages,
@@ -204,6 +206,7 @@ export function FilterFlyout({
             {...(layout !== undefined ? { layout } : {})}
             {...(resultCount !== undefined ? { resultCount } : {})}
             {...(headingLevel !== undefined ? { headingLevel } : {})}
+            {...(locale !== undefined ? { locale } : {})}
             messages={text}
           />
         )}
