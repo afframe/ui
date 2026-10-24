@@ -31,7 +31,13 @@ jobs:
       - name: gitleaks
         run: |
           image="$(sed -n 's/^FROM \(.*\) AS gitleaks$/\1/p' scripts/ci/toolbox/Dockerfile)"
-          docker run --rm -v "$PWD:/repo" "$image" git --config /repo/.gitleaks.toml --no-banner --redact /repo
+          # The config comes from the base branch: a PR must not be able to allowlist its own secret.
+          if [ -n "$GITHUB_BASE_REF" ]; then
+            git show "origin/$GITHUB_BASE_REF:.gitleaks.toml" > "$RUNNER_TEMP/gitleaks.toml"
+          else
+            cp .gitleaks.toml "$RUNNER_TEMP/gitleaks.toml"
+          fi
+          docker run --rm -v "$PWD:/repo" -v "$RUNNER_TEMP/gitleaks.toml:/gitleaks.toml:ro" "$image" git --config /gitleaks.toml --no-banner --redact /repo
 
   # The squash merge uses the PR title as the commit subject: Conventional Commits.
   pr-title:
@@ -65,7 +71,7 @@ jobs:
 
   preflight:
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -77,6 +83,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm preflight
+      - run: pnpm build
+      - run: pnpm check:pack
       - name: reuse lint and licence labels
         run: scripts/ci/licence-check.sh
 
