@@ -2,16 +2,9 @@ import { composeStories } from '@storybook/react-vite';
 import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import * as stories from './StatusIndicator.stories.js';
+import { snapshot } from '../../testUtils.js';
 
 const { Icon, Dark, Compact } = composeStories(stories);
-
-async function snapshot(name: string) {
-  await document.fonts.load('400 14px "IBM Plex Sans"');
-  await document.fonts.ready;
-  await expect
-    .element(page.elementLocator(document.body))
-    .toMatchScreenshot(name);
-}
 
 test.each([
   ['status-indicator-light', Icon],

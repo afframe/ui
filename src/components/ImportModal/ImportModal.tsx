@@ -200,7 +200,9 @@ export function ImportModal({
   });
 
   const limit =
-    maxFileSize === undefined ? undefined : formatFileSize(maxFileSize, locale);
+    maxFileSize === undefined || !Number.isFinite(maxFileSize)
+      ? undefined
+      : formatFileSize(maxFileSize, locale);
   const requirements = text.requirements(accept, limit);
 
   // The drop area and rows stay enabled while an import runs (Carbon's

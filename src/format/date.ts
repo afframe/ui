@@ -1,4 +1,5 @@
 import { defaultLocale, defaultTimeZone } from './defaults.js';
+import { intlCache } from './intlCache.js';
 import {
   defaultDatePattern,
   defaultTimePattern,
@@ -31,23 +32,7 @@ const civilPattern = /^(\d{4})-(\d{2})-(\d{2})$/;
 const instantPattern =
   /^(\d{4}-\d{2}-\d{2})T([01]\d|2[0-3]):[0-5]\d(:[0-5]\d(\.\d{1,9})?)?(Z|[+-]([01]\d|2[0-3]):[0-5]\d)$/;
 
-// Intl formatters are slow to build; presets and tables call them often.
-// ponytail: cleared when full, as in amount.ts.
-const formatters = new Map<string, Intl.DateTimeFormat>();
-
-function cachedDateTimeFormat(
-  locale: string,
-  options: Intl.DateTimeFormatOptions
-): Intl.DateTimeFormat {
-  const key = `${locale}|${JSON.stringify(options)}`;
-  let format = formatters.get(key);
-  if (!format) {
-    if (formatters.size >= 100) formatters.clear();
-    format = new Intl.DateTimeFormat(locale, options);
-    formatters.set(key, format);
-  }
-  return format;
-}
+const cachedDateTimeFormat = intlCache(Intl.DateTimeFormat);
 
 // Node's ICU puts U+2009 around a range dash and U+202F before AM/PM where
 // Chromium may use U+0020; one form keeps server and client output equal.

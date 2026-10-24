@@ -9,16 +9,7 @@ import type {
   EnvironmentOption,
   EnvironmentSwitcherProps,
 } from './EnvironmentSwitcher.js';
-
-const settleAnimations = () =>
-  Promise.allSettled(
-    document
-      .getAnimations()
-      .filter(
-        (animation) => animation.effect?.getTiming().iterations !== Infinity
-      )
-      .map((animation) => animation.finished)
-  );
+import { settleAnimations, until } from '../../testUtils.js';
 
 afterEach(async () => {
   await settleAnimations();
@@ -64,7 +55,6 @@ const action = (name = /^Environment: /) =>
   screen.getByLabelText(name, { selector: 'button' });
 const radio = (name: RegExp) =>
   screen.getByRole<HTMLInputElement>('radio', { name });
-const until = (check: () => void) => vi.waitFor(check, { timeout: 2000 });
 
 test.each(['click', '{Enter}', ' '])(
   'opens by %s, focus moves to the checked radio',

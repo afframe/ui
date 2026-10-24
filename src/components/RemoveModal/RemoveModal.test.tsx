@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
 import { defaultRemoveModalMessages, RemoveModal } from './RemoveModal.js';
 import type { RemoveModalProps } from './RemoveModal.js';
+import { until } from '../../testUtils.js';
 
 type HarnessProps = Partial<Omit<RemoveModalProps, 'open' | 'onClose'>> & {
   onClose?: () => void;
@@ -58,7 +59,6 @@ async function openByKeyboard() {
   await vi.waitFor(() => expect(dialogRole()).not.toBeNull());
 }
 
-const until = (check: () => void) => vi.waitFor(check, { timeout: 2000 });
 // Carbon puts the danger description inside the danger button, so its
 // accessible name is the description followed by the button text.
 const dangerButton = (text: string, description = 'Danger') =>

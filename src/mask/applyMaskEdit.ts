@@ -1,4 +1,4 @@
-import type { MaskSpec } from './spec.js';
+import type { MaskPart, MaskSpec } from './spec.js';
 
 export interface MaskState {
   value: string;
@@ -91,6 +91,27 @@ function tokenize(text: string, caret: number, spec: MaskSpec, from = 0) {
   return { digits, k };
 }
 
+const outOfRange = (chunk: string, part: MaskPart) =>
+  chunk.length === part.length &&
+  part.min !== undefined &&
+  (Number(chunk) < part.min || Number(chunk) > (part.max ?? Infinity));
+
+// Inserting before later digits shifts them into the next parts. A part
+// already out of range (a cut selection or a deletion shifted digits into it)
+// does not block typing; the part the digit completes, and any part the
+// insert pushes out of range, do.
+function accepts(before: string, after: string, last: number, spec: MaskSpec) {
+  let start = 0;
+  return spec.parts.every((part) => {
+    const from = start;
+    start += part.length;
+    return (
+      !outOfRange(after.slice(from, start), part) ||
+      (start - 1 !== last && outOfRange(before.slice(from, start), part))
+    );
+  });
+}
+
 // fallow-ignore-next-line complexity -- one branch per range rule of the design
 function insertDigit(
   { digits, k }: Digits,
@@ -108,16 +129,15 @@ function insertDigit(
     Number(digit) > part.firstMax
   ) {
     if (room < 2) return undefined;
-    return {
-      digits: digits.slice(0, k) + '0' + digit + digits.slice(k),
-      k: k + 2,
-    };
+    const padded = digits.slice(0, k) + '0' + digit + digits.slice(k);
+    return accepts(digits, padded, k + 1, spec)
+      ? { digits: padded, k: k + 2 }
+      : undefined;
   }
-  if (position === 1 && part.min !== undefined && part.max !== undefined) {
-    const value = Number(digits.charAt(k - 1) + digit);
-    if (value < part.min || value > part.max) return undefined;
-  }
-  return { digits: digits.slice(0, k) + digit + digits.slice(k), k: k + 1 };
+  const next = digits.slice(0, k) + digit + digits.slice(k);
+  return accepts(digits, next, k, spec)
+    ? { digits: next, k: k + 1 }
+    : undefined;
 }
 
 /** A typed non-digit: pads a one-digit part or steps past a full one. */

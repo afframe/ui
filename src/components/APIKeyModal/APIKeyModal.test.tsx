@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { AfframeProvider } from '../../provider/AfframeProvider.js';
 import { APIKeyModal, defaultAPIKeyModalMessages } from './APIKeyModal.js';
 import type { APIKeyModalProps } from './APIKeyModal.js';
+import { until } from '../../testUtils.js';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -51,7 +52,6 @@ const renderHarness = (props: HarnessProps = {}) =>
 
 const active = () => document.activeElement;
 const launcher = () => screen.getByRole('button', { name: 'Open' });
-const until = (check: () => void) => vi.waitFor(check, { timeout: 2000 });
 const nameField = () =>
   screen.getByRole<HTMLInputElement>('textbox', { name: 'Name' });
 const button = (name: string) =>

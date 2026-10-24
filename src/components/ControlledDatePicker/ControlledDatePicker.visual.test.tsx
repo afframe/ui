@@ -2,6 +2,7 @@ import { composeStories } from '@storybook/react-vite';
 import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import * as stories from './ControlledDatePicker.stories.js';
+import { snapshot as bodySnapshot } from '../../testUtils.js';
 
 const { Default, Dark, Open } = composeStories(stories);
 
@@ -26,12 +27,8 @@ async function snapshot(name: string) {
   await Promise.all(
     document.getAnimations().map((animation) => animation.finished)
   );
-  await document.fonts.load('400 14px "IBM Plex Sans"');
-  await document.fonts.ready;
   // flatpickr appends the calendar to <body>.
-  await expect
-    .element(page.elementLocator(document.body))
-    .toMatchScreenshot(name);
+  await bodySnapshot(name);
 }
 
 test.each([

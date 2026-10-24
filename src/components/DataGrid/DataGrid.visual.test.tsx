@@ -1,18 +1,11 @@
 import { composeStories } from '@storybook/react-vite';
-import { expect, test } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { test } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import * as stories from './DataGrid.stories.js';
+import { snapshot } from '../../testUtils.js';
 
 const { Default, Dark, WithFilterPanel, FilteredEmpty } =
   composeStories(stories);
-
-async function snap(name: string) {
-  await document.fonts.load('400 14px "IBM Plex Sans"');
-  await document.fonts.ready;
-  await expect
-    .element(page.elementLocator(document.body))
-    .toMatchScreenshot(name);
-}
 
 test.each([
   ['data-grid-light', Default],
@@ -21,12 +14,12 @@ test.each([
   ['data-grid-filtered-empty', FilteredEmpty],
 ] as const)('%s', async (name, story) => {
   await story.run();
-  await snap(name);
+  await snapshot(name);
 });
 
 test('data-grid-focus', async () => {
   await Default.run();
   // The first tab stop is the first sortable header.
   await userEvent.tab();
-  await snap('data-grid-focus');
+  await snapshot('data-grid-focus');
 });

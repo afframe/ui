@@ -1,7 +1,7 @@
 import { composeStories } from '@storybook/react-vite';
-import { expect, test } from 'vitest';
-import { page } from 'vitest/browser';
+import { test } from 'vitest';
 import * as stories from './Amount.stories.js';
+import { snapshot } from '../../testUtils.js';
 
 const { Signs, Dark } = composeStories(stories);
 
@@ -11,9 +11,5 @@ test.each([
   ['amount-dark', Dark],
 ] as const)('%s', async (name, story) => {
   await story.run();
-  await document.fonts.load('400 14px "IBM Plex Sans"');
-  await document.fonts.ready;
-  await expect
-    .element(page.elementLocator(document.body))
-    .toMatchScreenshot(name);
+  await snapshot(name);
 });

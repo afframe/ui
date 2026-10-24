@@ -71,7 +71,7 @@ Local setup: [docs/developer-handbook.md](docs/developer-handbook.md).
 
 Build: tsdown for JavaScript (per-file ESM, `'use client'` kept), `tsc` for type declarations, Sass for `styles.css`.
 
-Testing Frameworks: Vitest browser mode (Playwright, Chromium) with Testing Library; every story runs as a test with the Storybook a11y addon, violations fail; screenshot tests for Afframe-owned components against committed Linux baselines. `pnpm test` runs them; detail: [docs/testing.md](docs/testing.md).
+Testing Frameworks: Vitest browser mode (Playwright, Chromium) with Testing Library; every story runs as a test with the Storybook a11y addon, violations fail; screenshot tests for Afframe-owned components against committed Linux baselines, run only in CI (release checks). `pnpm test` runs the rest; detail: [docs/testing.md](docs/testing.md).
 
 Code Quality Tools: ESLint, Stylelint with `stylelint-plugin-carbon-tokens`, Prettier.
 

@@ -40,7 +40,7 @@ const textInputTypes = new Set([
 export type FlowFormOwnAttribute =
   'noValidate' | 'aria-busy' | 'onKeyDown' | 'onFocus' | 'onSubmit';
 
-export interface FlowFormProps extends Omit<
+interface FlowFormProps extends Omit<
   FormHTMLAttributes<HTMLFormElement>,
   FlowFormOwnAttribute
 > {
