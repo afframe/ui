@@ -1,7 +1,7 @@
 'use client';
 // Filter functions of the filter panel's column filters.
 import { constructFilterFn } from '@tanstack/react-table';
-import { localDateToCivilDate } from '../../format/date.js';
+import { civilDateIn, localDateToCivilDate } from '../../format/date.js';
 import { isoDay } from '../FilterPanel/value.js';
 
 const listOf = (value: unknown): unknown[] =>
@@ -22,16 +22,20 @@ export const filterFn_inOptions = constructFilterFn({
     value == null || value === '' || (Array.isArray(value) && !value.length),
 });
 
-/** The cell's calendar day as `YYYY-MM-DD`; a `Date` uses its local day. */
-// fallow-ignore-next-line complexity -- Date, invalid Date, ISO string or other cell
+/**
+ * The cell's calendar day as `YYYY-MM-DD`. A `Date` uses its local day; an ISO
+ * instant uses the default time zone, the day `formatDate` shows.
+ */
+// fallow-ignore-next-line complexity -- Date, invalid Date, ISO instant, ISO day or other cell
 function dayOf(value: unknown): string | undefined {
   if (value instanceof Date)
     return Number.isNaN(value.getTime())
       ? undefined
       : localDateToCivilDate(value);
-  return typeof value === 'string' && value.length >= 10
-    ? value.slice(0, 10)
-    : undefined;
+  if (typeof value !== 'string' || value.length < 10) return undefined;
+  if (!value.includes('T')) return value.slice(0, 10);
+  const instant = new Date(value);
+  return Number.isNaN(instant.getTime()) ? undefined : civilDateIn(instant);
 }
 
 type DayRange = readonly [start: string | null, end: string | null];
