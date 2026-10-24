@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2025
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, icons from @afframe/ui icons, IBM's stable Tearsheet rewritten onto the Tearsheet from @afframe/ui (IBM's preview__Tearsheet: title in Tearsheet.HeaderContent, navigation in Tearsheet.NavigationBar, influencer in Tearsheet.Influencer, content in Tearsheet.MainContent, closeIconDescription on Tearsheet.Header), the pkg flag and the commented IBM CSS import dropped, the Labs prefix as the 'clabs' literal, typed refs for the Toc and ViewStack handles and typed ViewStack callbacks, ScrollGradient cast to a props type (IBM types it ref-only), story styles converted from SCSS to plain CSS, source tag, the Latest highlights sections at level 3 under the Tearsheet h2 title (heading-order), the listitem a11y rule disabled (Labs TocList), a play function that opens the Tearsheet, the example images replaced by a local Afframe illustration, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, icons from @afframe/ui icons, IBM's stable Tearsheet rewritten onto the Tearsheet from @afframe/ui (IBM's preview__Tearsheet: title in Tearsheet.HeaderContent, navigation in Tearsheet.NavigationBar, influencer in Tearsheet.Influencer, content in Tearsheet.MainContent, closeIconDescription on Tearsheet.Header), the pkg flag and the commented IBM CSS import dropped, the Labs prefix as the 'clabs' literal, typed refs for the Toc and ViewStack handles and typed ViewStack callbacks, ScrollGradient cast to a props type (IBM types it ref-only), story styles converted from SCSS to plain CSS, source tag, the Latest highlights sections at level 3 under the Tearsheet h2 title (heading-order), the listitem a11y rule disabled (Labs TocList), a play function that opens the Tearsheet, the example images replaced by a local Afframe illustration, story names unified, the docs.defaultName parameter dropped (a main.ts option, ignored here). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import {
@@ -68,7 +68,6 @@ export default {
   parameters: {
     docs: {
       page: mdx,
-      defaultName: 'Overview+',
     },
   },
 } satisfies Meta;
