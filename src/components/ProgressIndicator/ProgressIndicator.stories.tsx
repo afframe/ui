@@ -1,17 +1,18 @@
 /**
- * Copyright IBM Corp. 2016, 2023
+ * Copyright IBM Corp. 2016, 2026
  *
  * This source code is licensed under the Apache-2.0 license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
+ * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, Default story first, Afframe example data, Default without the step props that currentIndex overrides, Interactive keeps currentIndex in state and logs onChange as an action. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, source tag, Default story first, Afframe example data, Default without the step props that currentIndex overrides, Interactive moves currentIndex through its args and logs onChange as an action. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
+import type { ComponentProps } from 'react';
 import type { Meta, StoryFn } from '@storybook/react-vite';
-import { useState } from 'react';
+import { useArgs } from 'storybook/preview-api';
 import { fn } from 'storybook/test';
 import {
   ProgressIndicator,
@@ -19,6 +20,32 @@ import {
   ProgressStep,
 } from '../../index.js';
 import mdx from './ProgressIndicator.mdx';
+
+const progressIndicatorArgs = {
+  currentIndex: 0,
+  spaceEqually: false,
+  vertical: false,
+};
+
+const progressIndicatorArgTypes = {
+  currentIndex: {
+    control: { type: 'number', min: 0, max: 4 },
+    description: 'Optionally specify the current step array index.',
+    table: { defaultValue: { summary: '0' } },
+  },
+  spaceEqually: {
+    control: { type: 'boolean' },
+    description:
+      'Specify whether the progress steps should be split equally in size in the div.',
+    table: { defaultValue: { summary: 'false' } },
+  },
+  vertical: {
+    control: { type: 'boolean' },
+    description:
+      'Determines whether or not the ProgressIndicator should be rendered vertically.',
+    table: { defaultValue: { summary: 'false' } },
+  },
+} as const;
 
 export default {
   title: 'Components/ProgressIndicator',
@@ -35,12 +62,16 @@ export default {
   },
 } satisfies Meta<typeof ProgressIndicator>;
 
-export const Default: StoryFn<typeof ProgressIndicator> = (args) => (
+type DefaultArgs = ComponentProps<typeof ProgressIndicator> & {
+  secondaryLabel?: string;
+};
+
+export const Default: StoryFn<DefaultArgs> = ({ secondaryLabel, ...args }) => (
   <ProgressIndicator {...args}>
     <ProgressStep
       label="Customer"
       description="Step 1: Choose the customer"
-      secondaryLabel="Lakeside Furniture"
+      {...(secondaryLabel ? { secondaryLabel } : {})}
     />
     <ProgressStep
       label="Invoice items"
@@ -65,33 +96,31 @@ export const Default: StoryFn<typeof ProgressIndicator> = (args) => (
 );
 
 Default.args = {
+  ...progressIndicatorArgs,
   currentIndex: 1,
-  spaceEqually: false,
-  vertical: false,
+  secondaryLabel: 'Lakeside Furniture',
 };
 
 Default.argTypes = {
-  currentIndex: {
-    control: { type: 'number' },
-  },
-  spaceEqually: {
-    control: { type: 'boolean' },
-  },
-  vertical: {
-    control: { type: 'boolean' },
+  ...progressIndicatorArgTypes,
+  secondaryLabel: {
+    control: { type: 'text' },
+    description: 'Provide an optional secondary label.',
+    table: {
+      category: 'ProgressStep',
+      defaultValue: { summary: 'undefined' },
+    },
   },
 };
 
-export const Interactive: StoryFn<typeof ProgressIndicator> = ({
-  onChange,
-}) => {
-  const [currentIndex, setCurrentIndex] = useState(1);
+export const Interactive: StoryFn<typeof ProgressIndicator> = (args) => {
+  const [, updateArgs] = useArgs();
   return (
     <ProgressIndicator
-      currentIndex={currentIndex}
+      {...args}
       onChange={(index) => {
-        onChange?.(index);
-        setCurrentIndex(index);
+        args.onChange?.(index);
+        updateArgs({ currentIndex: index });
       }}>
       <ProgressStep
         label="Customer"
@@ -107,9 +136,36 @@ export const Interactive: StoryFn<typeof ProgressIndicator> = ({
 };
 
 Interactive.args = {
+  ...progressIndicatorArgs,
+  currentIndex: 1,
   onChange: fn(),
 };
 
-export const Skeleton: StoryFn<typeof ProgressIndicatorSkeleton> = () => {
-  return <ProgressIndicatorSkeleton />;
+Interactive.argTypes = {
+  ...progressIndicatorArgTypes,
+  currentIndex: {
+    ...progressIndicatorArgTypes.currentIndex,
+    control: { type: 'number', min: 0, max: 2 },
+  },
+  onChange: {
+    description:
+      'Optional callback called if a ProgressStep is clicked on. Returns the index of the step.',
+    table: { defaultValue: { summary: 'undefined' } },
+  },
+};
+
+export const Skeleton: StoryFn<typeof ProgressIndicatorSkeleton> = (args) => (
+  <ProgressIndicatorSkeleton {...args} />
+);
+
+Skeleton.args = {
+  vertical: false,
+};
+
+Skeleton.argTypes = {
+  vertical: progressIndicatorArgTypes.vertical,
+};
+
+Skeleton.parameters = {
+  controls: { include: ['vertical'] },
 };

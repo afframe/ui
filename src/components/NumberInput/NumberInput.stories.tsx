@@ -48,7 +48,7 @@ export default {
       exclude: ['id', 'defaultValue', 'light', 'translateWithId'],
     },
   },
-  // Carbon's prop docs from its 1.118 .d.ts, written out: the generated props
+  // Carbon's prop docs from its 1.119 .d.ts, written out: the generated props
   // table shows only translateWithId (cause not verified).
   argTypes: {
     validate: {
@@ -218,7 +218,7 @@ export default {
     },
     size: {
       description: 'Specify the size of the Number Input.',
-      table: { type: { summary: "'sm' | 'md' | 'lg'" } },
+      table: { type: { summary: "'xs' | 'sm' | 'md' | 'lg'" } },
     },
     slug: {
       description: 'Deprecated: use `decorator`.',

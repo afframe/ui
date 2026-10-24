@@ -29,7 +29,7 @@ export default {
       page: mdx,
     },
   },
-  // Carbon's prop docs from its 1.118 .d.ts, written out: the generated props
+  // Carbon's prop docs from its 1.119 .d.ts, written out: the generated props
   // table shows only translateWithId (cause not verified).
   argTypes: {
     ariaLabelInput: {
