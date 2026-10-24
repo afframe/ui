@@ -16,7 +16,7 @@ command = "pnpm preflight"
 icon = "check"
 
 [scripts.run.test]
-command = "pnpm test"
+command = "pnpm exec playwright install chromium --only-shell && pnpm test"
 icon = "test-tube"
 
 [prompts]
