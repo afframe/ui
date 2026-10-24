@@ -45,6 +45,9 @@ preferences that tailor the product. Do not use it for:
   Both take no props: their text, tags and image are fixed in the Labs
   package. Apps write their own steps inside `InterstitialScreen.Body`, and
   use these two only as a reference.
+- **The personalization tags need their own spacing.** Labs renders the
+  selectable tags in a bare group with no gap and ships no style for it; the
+  story adds the gap, so an app that writes its own tag step adds its own.
 - **The welcome image does not load in an app.** Labs sets the image source
   to a bare file name (`0dbe8337b79d613d.png`) and does not ship the file, so
   the browser requests it next to the current page and gets a 404. This
