@@ -3,7 +3,7 @@ import * as stories from './Guidebanner.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, Stackblitz link import removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: source label added, Stackblitz link import removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed, When to use added.
 
 <Meta isTemplate />
 
@@ -20,6 +20,15 @@ foundational concepts related to the page's content. The component is a
 collapsible banner that provides guidance or information to users. It features a
 horizontal scrollable list of guide elements with navigation controls, and can
 be expanded or collapsed to show or hide detailed content.
+
+## When to use
+
+Use a guide banner at the top of a page to introduce the concepts behind its
+content. Do not use it for:
+
+- status, errors or system messages: Carbon [InlineNotification](?path=/docs/components-notifications-inlinenotification--overview);
+- pointing at one control: [Coachmark](?path=/docs/components-onboarding-coachmark--overview);
+- a short definition inside text: [NonLinearReading](?path=/docs/preview-previewcandidate-nonlinearreading--overview).
 
 ## Example usage
 
