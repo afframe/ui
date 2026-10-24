@@ -3,7 +3,7 @@ import * as CheckListStories from './Checklist.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, Codesandbox link comment removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: source label added, Codesandbox link comment removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed, When to use added.
 
 <Meta isTemplate />
 
@@ -18,6 +18,15 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 The Checklist tracks a user's progress much like Your Learning or WalkMe. Each
 item in the list can be clickable, and each item has an icon that defines the
 item's state as "not started", "in progress", and "complete".
+
+## When to use
+
+Use a checklist for setup tasks the user completes over several sessions, with
+their progress. Do not use it for:
+
+- steps of one form or flow: Carbon [ProgressIndicator](?path=/docs/components-progressindicator--overview);
+- one task card on a get started page: [GetStartedCard](?path=/docs/preview-previewcandidate-getstartedcard--overview);
+- a first-visit welcome: [FirstTimeOrientation](?path=/docs/components-onboarding-firsttimeorientation--overview).
 
 ## About Onboarding
 
