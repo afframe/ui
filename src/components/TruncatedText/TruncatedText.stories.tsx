@@ -19,7 +19,6 @@ const storyClass = 'truncated-text-stories';
 
 const defaultProps = {
   align: 'top' as const,
-  autoAlign: false,
   collapseLabel: 'View less',
   expandLabel: 'View more',
   id: 'example-id',

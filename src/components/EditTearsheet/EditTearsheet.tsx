@@ -198,6 +198,7 @@ export function EditTearsheet({
   messages,
   children,
   className,
+  'aria-describedby': ariaDescribedBy,
   ...rest
 }: EditTearsheetProps) {
   const text = resolveMessages(defaultEditTearsheetMessages, messages);
@@ -346,6 +347,8 @@ export function EditTearsheet({
         open={open}
         variant={variant}
         {...(decorator ? { decorator } : {})}
+        // Carbon 1.119 types aria-describedby on ComposedModal as string only.
+        {...(ariaDescribedBy ? { 'aria-describedby': ariaDescribedBy } : {})}
         // false: ComposedModal would otherwise close itself, while the
         // flow may keep it open (dirty, submitting).
         onClose={() => {

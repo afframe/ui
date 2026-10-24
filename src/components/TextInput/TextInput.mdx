@@ -12,7 +12,7 @@ import { FieldChooser } from '../../../.storybook/FieldChooser';
 
 <SourceLabel name="carbon" />
 
-[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/TextInput)
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.119.0/packages/react/src/components/TextInput)
 &nbsp;|&nbsp;
 [Usage guidelines](https://www.carbondesignsystem.com/components/text-input/usage)
 &nbsp;|&nbsp;
@@ -67,6 +67,36 @@ data format, such as types of characters allowed or date structure.
 `TextInput.Password` is deprecated, use
 [PasswordInput](?path=/docs/components-passwordinput--overview)
 component instead.
+
+## Translations
+
+When `maxCount` is set, `TextInput` announces the remaining characters to screen
+readers as the value approaches the limit. These announcements can be translated
+with `translateWithId`. The function receives a translation ID and an object
+with `count` and `maxCount`, and must return the translated string. Use `count`
+to select the correct plural form.
+
+```jsx
+const translations = {
+  'carbon.text-input.counter.characters.remaining': ({ count }) =>
+    count === 1 ? '1 caractère restant.' : `${count} caractères restants.`,
+  'carbon.text-input.counter.characters.max-reached': () =>
+    'Nombre maximal de caractères atteint.',
+};
+
+<TextInput
+  id="text-input"
+  labelText="Label"
+  enableCounter
+  maxCount={100}
+  translateWithId={(id, args) => translations[id](args)}
+/>;
+```
+
+| Translation ID                                     | Default                                          | `count`              |
+| -------------------------------------------------- | ------------------------------------------------ | -------------------- |
+| `carbon.text-input.counter.characters.remaining`   | `1 character left.` / `{count} characters left.` | Remaining characters |
+| `carbon.text-input.counter.characters.max-reached` | `Maximum characters reached.`                    | `maxCount`           |
 
 ## Error message and screen readers
 
