@@ -327,23 +327,24 @@ export const Float: Story = {
 
 // ChatCustomElement in a side column of the page.
 export const Sidebar: Story = {
-  parameters: upstreamA11y(),
+  parameters: { ...upstreamA11y(), layout: 'fullscreen' },
   args: {
     namespace: 'sidebar',
     className: 'demo-chat-sidebar',
     onBeforeRender: welcome(greeting),
   },
-  // The class sizes the chat as a flex item of the page: 22.5rem wide and as
-  // tall as the page.
+  // The class sizes the chat as a flex item of the page: 30rem wide, at its
+  // right edge and as tall as the page.
   play: async ({ canvasElement }) => {
     await waitForChat(canvasElement, openChat);
     const page = canvasElement.querySelector('.demo-chat-sidebar-page');
     const chat = canvasElement.querySelector('div.demo-chat-sidebar');
+    const pageBox = page?.getBoundingClientRect();
+    const chatBox = chat?.getBoundingClientRect();
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-    await expect(chat?.getBoundingClientRect().width).toBe(22.5 * rem);
-    await expect(chat?.getBoundingClientRect().height).toBe(
-      page?.getBoundingClientRect().height
-    );
+    await expect(chatBox?.width).toBe(30 * rem);
+    await expect(chatBox?.right).toBe(pageBox?.right);
+    await expect(chatBox?.height).toBe(pageBox?.height);
   },
   render: (args) => (
     <div className="demo-chat-sidebar-page">

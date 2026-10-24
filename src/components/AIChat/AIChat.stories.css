@@ -6,7 +6,7 @@
 
 .demo-chat-sidebar-page {
   display: flex;
-  block-size: 36rem;
+  block-size: 100vh;
 }
 
 .demo-chat-sidebar-page main {
@@ -14,9 +14,14 @@
   padding: var(--cds-spacing-05);
 }
 
-/* Sized as a flex item of the page, so the class must reach the chat. */
+/* Sized as a flex item of the page, so the class must reach the chat. Width,
+   border and layer follow IBM's right-placed md side panel. */
 .demo-chat-sidebar {
-  flex: 0 0 22.5rem;
+  flex: 0 0 30rem;
+  max-inline-size: 75vw;
+  margin-inline-start: auto;
+  border-inline-start: 1px solid var(--cds-border-subtle-01);
+  background-color: var(--cds-layer);
 }
 
 /* A float chat is fixed to the viewport; this keeps room for its launcher. */
