@@ -3,7 +3,7 @@ import * as CoachmarkStories from './Coachmark.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, title Components/Onboarding/Coachmark, link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, title Components/Onboarding/Coachmark, link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed, sample position matches the story, When to use added.
 
 <Meta isTemplate />
 
@@ -25,13 +25,23 @@ understand.
 - The trigger element or first child of `Coachmark` should always be either a
   CoachmarkBeacon or a Button.
 
+## When to use
+
+Use a coachmark to point at one control the user may not notice, at the moment
+it matters. Do not use it for:
+
+- tips that stay on the page: [Guidebanner](?path=/docs/components-onboarding-guidebanner--overview);
+- a welcome or announcement before the user starts: [InterstitialScreen](?path=/docs/components-onboarding-interstitialscreen--overview);
+- news about features released since the last visit: [WhatsNew](?path=/docs/components-onboarding-whatsnew--overview);
+- a short explanation the user opens themselves: Carbon [Toggletip](?path=/docs/components-toggletip--overview).
+
 ## Coachmark code sample
 
 ```jsx
 <Theme theme="white">
   <Coachmark
     ariaLabel="Coachmark"
-    position={{ x: 151, y: 155 }}
+    position={{ x: 151, y: 200 }}
     open={isOpen}
     onClose={handleClose}
     launcherButtonRef={beaconButtonRef}

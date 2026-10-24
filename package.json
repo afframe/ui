@@ -57,6 +57,7 @@
     "build:types": "tsc -p tsconfig.build.json",
     "build:css": "node scripts/build-css.mjs",
     "check:licences": "reuse lint --json | node scripts/check-licence-labels.mjs",
+    "check:docgen": "node scripts/check-docgen.mjs",
     "check:pack": "node scripts/check-pack.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

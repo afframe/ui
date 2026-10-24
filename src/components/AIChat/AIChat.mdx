@@ -25,7 +25,7 @@ Report problems in the chat itself to
 
 `@carbon/ai-chat` defines custom elements when it loads, which fails on the
 server. `ChatContainer` and `ChatCustomElement` therefore load it in the
-browser after the first render. Until then they show a Carbon skeleton. If the
+browser after the first render. Until then they show a Carbon skeleton, marked busy. If the
 load fails they show an error, and the next mount tries again. Both
 render inside `<div data-afframe-extra="ai-chat">`, also on the server. The
 `div` has `display: contents`, so a `className` that sizes `ChatCustomElement`
@@ -81,8 +81,9 @@ dark themes. `injectCarbonTheme` forces one theme instead.
 
 ## Messages
 
-`messages` overrides Afframe's one string, `loadError`, the error shown when
-the chat fails to load (English default in `defaultAIChatMessages`).
+`messages` overrides Afframe's two strings (English defaults in
+`defaultAIChatMessages`): `loading`, the screen-reader text of the skeleton
+while the chat loads, and `loadError`, the error shown when it fails to load.
 
 The chat's own strings are IBM's. Override them with the `strings` prop, a partial
 of IBM's `LanguagePack` (English defaults in `enLanguagePack`). Header menu
@@ -103,6 +104,6 @@ Float: `ChatContainer` with its launcher in the corner of the page.
 
 <Canvas of={AIChatStories.Float} />
 
-Sidebar: `ChatCustomElement` in a side column.
+Sidebar: `ChatCustomElement` as a plain column at the page's right edge, with the side panel's width and border. The app can put the chat into its own panel or shell instead.
 
 <Canvas of={AIChatStories.Sidebar} />

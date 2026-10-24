@@ -32,7 +32,7 @@ test('renders an IBM chart with the light theme by default', async () => {
       InstanceType<typeof import('@carbon/charts-react').SimpleBarChart>
     >();
   const { container } = render(
-    <SimpleBarChart data={data} options={options} ref={ref} />
+    <SimpleBarChart data={data} options={options} chartRef={ref} />
   );
   await waitFor(() =>
     expect(holder(container)?.getAttribute('data-carbon-theme')).toBe('white')

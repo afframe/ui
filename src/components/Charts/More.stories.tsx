@@ -53,7 +53,9 @@ const comboOptions: ComboChartOptions = {
 const radarOptions: RadarChartOptions = {
   ...base,
   title: 'Supplier scores',
-  radar: { axes: { angle: 'feature', value: 'score' } },
+  // Scores are out of 10. Unset, IBM reads `maxValue` as null and warns that
+  // it is below the data maximum.
+  radar: { axes: { angle: 'feature', value: 'score' }, maxValue: 10 },
   data: { groupMapsTo: 'supplier' },
 };
 

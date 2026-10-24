@@ -66,6 +66,9 @@ const preview: Preview = {
         const key = (title = '') => {
           const [section, ...rest] = title.split('/');
           const index = rank(sections, section);
+          // A folder's Overview page sorts before its siblings: a space sorts
+          // before any letter.
+          if (rest[rest.length - 1] === 'Overview') rest[rest.length - 1] = ' ';
           return {
             index,
             page: section === 'Getting Started' ? rank(start, rest[0]) : 0,

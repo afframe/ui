@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { SourceLabel } from '../../../.storybook/SourceLabel';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+
+<Meta title="Components/Charts/Overview" />
+
+# Charts
+
+<SourceLabel name="extras" />
+
+Two chart libraries ship with `@afframe/ui`. Carbon Charts are the
+`@carbon/charts-react` wrappers, with the page theme as their default and their
+styles in `@afframe/ui/charts.css`. Use them for dashboards and reports: they
+follow Carbon's data visualization guidelines and come with a legend, tooltips,
+a toolbar and a "Show as table" view.
+
+`EChart` wraps one Apache ECharts instance with the Carbon theme. Use it for a
+chart type or an interaction Carbon Charts does not have, or for large data
+sets: it draws on a canvas instead of SVG, so it has no "Show as table" view.
+
+- [Bar](?path=/docs/components-charts-bar--overview)
+- [Distribution](?path=/docs/components-charts-distribution--overview)
+- [Flow and Hierarchy](?path=/docs/components-charts-flow-and-hierarchy--overview)
+- [Gauge and Meter](?path=/docs/components-charts-gauge-and-meter--overview)
+- [Line and Area](?path=/docs/components-charts-line-and-area--overview)
+- [More](?path=/docs/components-charts-more--overview)
+- [Pie and Donut](?path=/docs/components-charts-pie-and-donut--overview)
+- [Scatter and Bubble](?path=/docs/components-charts-scatter-and-bubble--overview)
+- [EChart](?path=/docs/components-charts-echart--overview)

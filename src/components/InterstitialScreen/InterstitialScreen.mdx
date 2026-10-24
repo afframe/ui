@@ -2,7 +2,7 @@ import { Controls, Meta } from '@storybook/addon-docs/blocks';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, Stackblitz examples and unused imports removed, source link pinned to the tag, internal IBM links removed, upstream table of contents removed.
+// Modified by Afframe in 2026: source label added, Stackblitz examples and unused imports removed, source link pinned to the tag, internal IBM links removed, upstream table of contents removed, When to use added.
 
 <Meta isTemplate />
 
@@ -18,6 +18,17 @@ Interstitial screens
 can be a full page or an overlay, and are shown on the first time a user
 accesses a new experience (e.g. upon first login or first time opening a page
 where a newly purchased capability is presented).
+
+## When to use
+
+Use an interstitial screen, as a modal or a full page, before the user starts a
+new experience: a first login or a newly purchased capability. Do not use it
+for:
+
+- a first-visit welcome with personalization: [FirstTimeOrientation](?path=/docs/components-onboarding-firsttimeorientation--overview), built on this component;
+- news for returning users: [WhatsNew](?path=/docs/components-onboarding-whatsnew--overview);
+- a decision or a form: Carbon [Modal](?path=/docs/components-modal--overview);
+- pointing at one control: [Coachmark](?path=/docs/components-onboarding-coachmark--overview).
 
 ## Expected Composability
 
