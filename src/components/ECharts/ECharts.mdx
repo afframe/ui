@@ -1,4 +1,5 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as EChartStories from './EChart.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: 2026 Hleb Tkachenko
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
@@ -21,6 +22,15 @@ Registered: bar, line, pie and scatter series; aria, dataset, grid, legend,
 title and tooltip components; the canvas renderer. Other series or components
 in the option are ignored by ECharts.
 
+## When to use
+
+- Use `EChart` for a chart type or an interaction
+  [Carbon Charts](?path=/docs/components-charts-bar--overview) does not have,
+  or for large data sets: it draws on a canvas instead of SVG.
+- Prefer Carbon Charts for dashboards and reports: they follow Carbon's data
+  visualization guidelines and have a "Show as table" view, which a canvas
+  lacks.
+
 ## Usage and props
 
 ```tsx
@@ -42,7 +52,8 @@ const option: EChartOption = {
 | `option`   | `EChartsCoreOption`                  |         | Passed to `setOption`. `EChartOption` is the strict type.    |
 | `notMerge` | `boolean`                            | `false` | Replace the previous option instead of merging into it.      |
 | `onEvents` | `Record<string, EChartEventHandler>` |         | Handlers by ECharts event name, bound with `chart.on`.       |
-| `ref`      | `Ref<EChartInstance \| null>`        |         | The ECharts instance; `null` before mount and after unmount. |
+| `chartRef` | `Ref<EChartInstance \| null>`        |         | The ECharts instance; `null` before mount and after unmount. |
+| `ref`      | `Ref<HTMLDivElement>`                |         | The container `div`.                                         |
 
 Other props go to the container `div`. Give it a height: ECharts draws into
 the container's size and resizes with it. The chart is disposed on unmount.
@@ -76,8 +87,8 @@ Afframe adds no strings. Titles, series names and labels come from your
 
 Animations are off in every story, so they render the same each time.
 
-<Canvas id="components-echarts--bar" />
-<Canvas id="components-echarts--line" />
-<Canvas id="components-echarts--pie" />
-<Canvas id="components-echarts--scatter" />
-<Canvas id="components-echarts--dataset" />
+<Canvas of={EChartStories.Default} />
+<Canvas of={EChartStories.Line} />
+<Canvas of={EChartStories.Pie} />
+<Canvas of={EChartStories.Scatter} />
+<Canvas of={EChartStories.Dataset} />
