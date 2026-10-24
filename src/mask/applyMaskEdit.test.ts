@@ -324,4 +324,10 @@ describe('inserting in the middle', () => {
       expect(edit(spec, from, 'insertText', data)).toBe(from);
     }
   );
+
+  test('retyping a selected or deleted part is not blocked by its old value', () => {
+    expect(edit(dotted, '[31].12.2026', 'insertText', '1')).toBe('1|1.22.026');
+    expect(edit(h23, '[19]:45', 'insertText', '2')).toBe('2|4:5');
+    expect(edit(h23, '2|4:5', 'insertText', '1')).toBe('21:|45');
+  });
 });
