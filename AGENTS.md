@@ -27,6 +27,7 @@ Detail: `docs/package-structure.md`; architecture: `ARCHITECTURE.md`; every publ
 | ------------------------------- | --------------------------------------------------------------- |
 | `pnpm preflight`                | Always: format, lint, types, registry check                     |
 | `pnpm test`                     | After a change to `src/`, `.storybook/` or styles               |
+| `pnpm test:node`                | Node-only checks (formatters, Node version); opens no browser   |
 | `pnpm build && pnpm check:pack` | After a change to exports, build config or `package.json`       |
 | `pnpm check:licences`           | After a change to `.mdx` pages or licence files (needs `reuse`) |
 | `pnpm registry`                 | After a change to exports or component folders (regenerates)    |
