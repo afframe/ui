@@ -1,8 +1,9 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as DataTableAILabelStories from '../DataTable/stories/DataTable-ai-label.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: unused imports, release status and V10 links removed, source label added, source link pinned to v11.118.0, upstream Feedback section and table of contents removed, story ids follow the DataTable AI Label stories.
+// Modified by Afframe in 2026: unused imports, release status and V10 links removed, source label added, source link pinned to v11.118.0, upstream Feedback section and table of contents removed, canvases show the DataTable AI Label stories.
 
 <Meta isTemplate />
 
@@ -16,9 +17,9 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 The `DataTable` supports placing a `AI label` in both the column header and row.
 
-<Canvas id="components-datatable-ai-label--column-ai-label-with-selection-and-expansion" />
+<Canvas of={DataTableAILabelStories.ColumnAILabelWithSelectionAndExpansion} />
 
-<Canvas id="components-datatable-ai-label--default" />
+<Canvas of={DataTableAILabelStories.Default} />
 
 ## AILabel anatomy
 
