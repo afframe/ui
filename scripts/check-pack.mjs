@@ -84,6 +84,7 @@ const required = [
   ...serverFamilies.map((name) => `dist/components/${name}/${name}.js`),
   'dist/fonts/LICENSE.txt',
   'LICENSES/Apache-2.0.txt',
+  'LICENSES/OFL-1.1.txt',
   'LICENSES/PolyForm-Noncommercial-1.0.0.txt',
 ];
 

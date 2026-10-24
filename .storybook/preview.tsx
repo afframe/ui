@@ -57,6 +57,7 @@ const preview: Preview = {
           'AfframeProvider',
           'Formatting',
           'Feature Flags',
+          'Licences',
         ];
         // Unlisted names sort after the listed ones.
         const rank = (list = [''], name = '') => {

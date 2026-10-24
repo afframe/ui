@@ -2,7 +2,12 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
-  stories: ['./Welcome.mdx', '../src/**/*.mdx', '../src/**/*.stories.tsx'],
+  stories: [
+    './Welcome.mdx',
+    './Licences.mdx',
+    '../src/**/*.mdx',
+    '../src/**/*.stories.tsx',
+  ],
   addons: [
     {
       // GitHub-flavoured Markdown: tables in the MDX pages.
@@ -15,8 +20,9 @@ const config: StorybookConfig = {
     '@storybook/addon-vitest',
   ],
   framework: '@storybook/react-vite',
-  // Story assets, served from the root (the What's new example image).
-  staticDirs: ['./public'],
+  // Story assets, served from the root (the What's new example image), and
+  // the licence texts the Licences page links to.
+  staticDirs: ['./public', { from: '../LICENSES', to: '/LICENSES' }],
   docs: { defaultName: 'Overview' },
   core: { disableTelemetry: true, disableWhatsNewNotifications: true },
   features: {

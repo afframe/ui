@@ -1,0 +1,92 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { dependencies, devDependencies } from '../package.json';
+import echartsNotice from '../node_modules/echarts/NOTICE?raw';
+import { ChooserTable } from './chooser';
+// SPDX-FileCopyrightText: 2026 Hleb Tkachenko
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+// SPDX-SnippetBegin
+// SPDX-SnippetCopyrightText: Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+// SPDX-License-Identifier: OFL-1.1
+export const plexNotice =
+  'Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"';
+// SPDX-SnippetEnd
+
+export const licences = [
+  // Licence of each runtime dependency, checked against its package. A
+  // dependency missing here shows "See its package" rather than a guess.
+  [/^@carbon(-labs)?\//, 'Apache-2.0'],
+  [/^echarts$/, 'Apache-2.0'],
+  [/^(@tanstack\/react-(table|virtual)|react-is|sass|tabbable)$/, 'MIT'],
+];
+
+export const text = (name, label = name) => (
+  <a href={`LICENSES/${name}.txt`} target="_blank" rel="noreferrer">
+    {label}
+  </a>
+);
+
+export const DependencyTable = () => (
+  <ChooserTable
+    head={['Package', 'Version', 'Licence']}
+    rows={Object.entries(dependencies).map(([name, version]) => [
+      <code>{name}</code>,
+      version,
+      licences.find(([pattern]) => pattern.test(name))?.[1] ??
+        'See its package',
+    ])}
+  />
+);
+
+<Meta title="Getting Started/Licences" />
+
+# Licences
+
+## Afframe UI
+
+Afframe UI's own code, components and docs pages are under the
+{text('PolyForm-Noncommercial-1.0.0', 'PolyForm Noncommercial License 1.0.0')}.
+Commercial use needs a separate licence from the copyright holder: see the
+[consuming guide](https://github.com/afframe/ui/blob/main/docs/guides/consuming.md#10-licence).
+
+## Dependencies
+
+`@afframe/ui` installs these packages at the versions pinned in its
+`package.json`. IBM Corp. holds the rights to the `@carbon/*` and
+`@carbon-labs/*` packages and licenses them under the
+{text('Apache-2.0', 'Apache License 2.0')}. Each MIT
+package ships its licence and copyright notice in its own `LICENSE` file, and
+every package's own dependencies keep their own licences.
+
+<DependencyTable />
+
+Apache ECharts ships this notice:
+
+<blockquote style={{ whiteSpace: 'pre-line' }}>
+  {echartsNotice.trim()}
+</blockquote>
+
+## Docs and stories copied from IBM
+
+The pages and stories copied from Carbon, IBM Products and Carbon Labs stay
+IBM Corp.'s work under the {text('Apache-2.0', 'Apache License 2.0')}, with
+IBM's headers kept and Afframe's changes marked. The upstream tags they
+were copied from are listed in
+[ADR 0011](https://github.com/afframe/ui/blob/main/docs/decisions/0011-licence.md).
+
+## IBM Plex fonts
+
+IBM Plex {devDependencies['@ibm/plex']} is redistributed unmodified in the
+package (`dist/fonts/`) and in this Storybook, under the
+{text('OFL-1.1', 'SIL Open Font License 1.1')}:
+
+> {plexNotice}
+
+## Licence texts
+
+- {text('PolyForm-Noncommercial-1.0.0', 'PolyForm Noncommercial License 1.0.0')}
+- {text('Apache-2.0', 'Apache License 2.0')}
+- {text('OFL-1.1', 'SIL Open Font License 1.1')}
+
+IBM, IBM Plex and Carbon are trademarks or registered trademarks of
+International Business Machines Corporation; Afframe UI is an independent
+project, not affiliated with or endorsed by IBM.
