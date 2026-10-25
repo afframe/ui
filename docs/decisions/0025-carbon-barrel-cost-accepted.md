@@ -29,7 +29,6 @@ Measured with `@carbon/react` 1.119.0 and `@carbon/ibm-products` 2.101.0: a copy
 ## Decision
 
 - Accept the one shared Carbon chunk. Afframe keeps re-exporting Carbon from the `@carbon/react` root (ADR 0001).
-- In Next.js, build with Turbopack (the default); `next build --webpack` is not supported. `optimizePackageImports` is not needed. Other bundlers were not measured.
 - No per-component client modules in Afframe.
 - `AfframeProvider` imports `@carbon/react/es/feature-flags.js` itself, so Carbon's flag defaults hold under a bundler that reaches the provider without the barrel. This follows from Carbon listing `es/feature-flags.js` in `sideEffects` and from the barrel and the direct import resolving to the same file; it was not measured, since the measured package predates the import. `check:pack` fails if the built provider loses that import.
 
@@ -44,7 +43,6 @@ Measured with `@carbon/react` 1.119.0 and `@carbon/ibm-products` 2.101.0: a copy
 
 - The first page of an Afframe app loads about 233 KB gzip of Carbon, about 540 KB with an IBM Products component; later pages load it from cache.
 - Plain Carbon apps that import from the root pay the same, so the cost is Carbon's, not added by Afframe.
-- In Next.js, build with Turbopack (the default); `next build --webpack` is not supported. Under webpack the provider's own import should still keep Carbon's flag defaults (Decision); not measured.
 
 Check again on:
 
