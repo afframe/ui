@@ -100,4 +100,4 @@ v12 flags: Carbon feature flags (`enable-v12-release` and `enable-v12-*`) that t
 
 Migrated components: the components IBM is moving from IBM Products into Carbon core for v12.
 
-Afframe-owned component: a component Afframe wraps, changes or builds; as opposed to a Carbon component re-exported as is.
+Afframe-owned component: a component Afframe wraps, changes or builds; as opposed to a Carbon component re-exported as is. The list: the "Afframe families and subpaths" section of [docs/registry.md](docs/registry.md).

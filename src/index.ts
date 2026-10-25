@@ -3,11 +3,10 @@
 // Callout) are left out, `preview__` components without a stable twin are in.
 // IBM Products components that Carbon v12 moves into core use their core
 // names, the rest keep IBM's names. Of the names both packages export,
-// `ComboButton` is Carbon's and `usePrefix` is IBM Products'.
-export { AfframeProvider } from './provider/index.js';
-export type { AfframeProviderProps } from './provider/index.js';
+// `ComboButton` is Carbon's and `usePrefix` is IBM Products'. Sections follow
+// the source only; components group by their Storybook title (ADR 0019).
 
-// Actions
+// Carbon (@carbon/react)
 export {
   Button,
   PrimaryButton,
@@ -37,7 +36,6 @@ export type {
   CopyButtonProps,
 } from '@carbon/react';
 
-// Forms
 export {
   Form,
   FormGroup,
@@ -138,7 +136,6 @@ export type {
   SliderSkeletonProps,
 } from '@carbon/react';
 
-// Fluid forms
 export {
   FluidForm,
   FluidComboBox,
@@ -185,7 +182,6 @@ export type {
   FluidTimePickerSkeletonProps,
 } from '@carbon/react';
 
-// Data display
 export {
   DataTable,
   DataTableSkeleton,
@@ -302,7 +298,6 @@ export type {
   TreeNodeProps,
 } from '@carbon/react';
 
-// Navigation and UI shell
 export {
   Header,
   HeaderContainer,
@@ -420,7 +415,6 @@ export type {
   LinkProps,
 } from '@carbon/react';
 
-// Overlays
 export {
   Modal,
   ComposedModal,
@@ -462,7 +456,6 @@ export type {
   ToggletipContentProps,
 } from '@carbon/react';
 
-// Feedback
 export {
   ActionableNotification,
   InlineNotification,
@@ -505,7 +498,6 @@ export type {
   PortalProps,
 } from '@carbon/react';
 
-// AI
 export {
   AILabel,
   AILabelActions,
@@ -521,7 +513,6 @@ export type {
   AISkeletonTextProps,
 } from '@carbon/react';
 
-// Layout and theme
 export {
   Grid,
   Column,
@@ -565,7 +556,6 @@ export type {
   IdPrefixProps,
 } from '@carbon/react';
 
-// Preview
 export {
   preview__IconIndicator,
   preview__ShapeIndicator,
@@ -593,7 +583,8 @@ export type {
   LayoutProps,
 } from '@carbon/react';
 
-// IBM Products: migrated components under their Carbon v12 core names
+// IBM Products (@carbon/ibm-products): migrated components under their Carbon
+// v12 core names
 export {
   preview__AddSelect as AddSelect,
   SingleAddSelect,
@@ -761,6 +752,13 @@ export type {
   NonLinearReadingProps,
 } from '@carbon/ibm-products';
 
+// IBM Products feature flags (SidePanel reads enableSidepanelResizer).
+export {
+  preview__FeatureFlags,
+  preview__useFeatureFlag,
+  preview__useFeatureFlags,
+} from '@carbon/ibm-products';
+
 // Carbon Labs, one 'use client' module per Labs package in src/labs/, so a
 // Next.js route that uses one Labs component ships only that package's
 // JavaScript. No Labs package marks its modules 'use client', so these modules
@@ -787,16 +785,9 @@ export * from './labs/text-highlighter.js';
 // Plain data, kept out of the client module so server components can read it.
 export { themeSets } from '@carbon-labs/react-theme-settings/es/components/theme-settings-consts.js';
 
-// IBM Products feature flags (SidePanel reads enableSidepanelResizer).
-export {
-  preview__FeatureFlags,
-  preview__useFeatureFlag,
-  preview__useFeatureFlags,
-} from '@carbon/ibm-products';
-
-// Carbon's framework-free utilities (@carbon/utilities), by Carbon's names. No
-// directive: they touch the DOM only when called, so server code can import
-// them. Named re-exports only: the package root also exports AddSelectData
+// Carbon utilities: the framework-free ones (@carbon/utilities), by Carbon's
+// names. No directive: they touch the DOM only when called, so server code can
+// import them. Named re-exports only: the package root also exports AddSelectData
 // (ours is typed, see above) and all of @internationalized/number.
 export {
   createOverflowHandler,
@@ -820,8 +811,11 @@ export {
 // IBM's ComboButton, the legacy PageHeader and stable Tearsheet, deprecated
 // components and the Datagrid family; Carbon's initCarousel (ADR 0004).
 
-// Afframe components, formatting, theme hooks, messages and the extras. One
-// module per family, so a route ships only the 'use client' families it uses.
+// Afframe: the provider, Afframe components, formatting, theme hooks, messages
+// and the extras. One module per family, so a route ships only the 'use client'
+// families it uses.
+export { AfframeProvider } from './provider/index.js';
+export type { AfframeProviderProps } from './provider/index.js';
 export * from './components/DataGrid/index.js';
 export * from './components/FilterPanel/index.js';
 export * from './components/Amount/index.js';
