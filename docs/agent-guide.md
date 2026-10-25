@@ -128,7 +128,7 @@ Source `afframe`: Afframe code and the stylesheets it compiles. `extras`: an Aff
 - **EditSidePanel** (afframe, component, client, `@afframe/ui`): `EditSidePanel`, `defaultEditSidePanelMessages`
 - **EditTearsheet** (afframe, component, client, `@afframe/ui`): `defaultEditTearsheetMessages`, `EditTearsheet`, `EditTearsheetForm`
 - **DataGrid** (afframe, component, client, `@afframe/ui`): `DataGrid`, `dataGridColumnCustomization`, `dataGridColumnMeta`, `dataGridExpansion`, `dataGridFilterPanel`, `dataGridFiltering`, `dataGridInlineEdit`, `dataGridPagination`, `dataGridResizing`, `dataGridSelection`, `dataGridSorting`, `dataGridStickyColumns`, `defaultDataGridMessages`
-- **DatePicker** (carbon wrapper, component, client, `@afframe/ui`): `DatePicker`, `defaultDatePickerMessages`, `preview__DatePicker`
+- **DatePicker** (carbon wrapper, component, client, `@afframe/ui`): `DatePicker`, `defaultDatePickerMessages`
 - **mask** (afframe, util, client, `@afframe/ui`): `applyMaskEdit`, `dateMaskSpec`, `timeMaskSpec`, `useInputMask`
 - **DescriptionList** (afframe, component, server, `@afframe/ui`): `DescriptionList`, `DescriptionListItem`, `defaultDescriptionListMessages`
 - **FilterPanel** (afframe, component, client, `@afframe/ui`): `defaultFilterPanelMessages`, `FilterPanel`, `countFilterPanelSelections`, `defaultFilterFlyoutMessages`, `FilterFlyout`, `defaultFilterSummaryMessages`, `FilterSummary`

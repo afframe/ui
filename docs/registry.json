@@ -835,23 +835,13 @@
       "section": "Components",
       "family": null,
       "status": "stable",
-      "exports": [
-        "DatePicker",
-        "defaultDatePickerMessages",
-        "preview__DatePicker"
-      ],
+      "exports": ["DatePicker", "defaultDatePickerMessages"],
       "types": ["DatePickerProps", "DatePickerMessages"],
       "wrapper": true,
       "parts": {
         "afframeStory": true,
         "test": true,
         "docs": true
-      },
-      "pages": {
-        "preview__DatePicker": {
-          "docs": "src/components/DatePicker/DatePickerV2.mdx",
-          "storyTitle": "Preview/preview__DatePicker"
-        }
       }
     },
     {

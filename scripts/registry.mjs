@@ -161,9 +161,8 @@ for (const pass of ['component', 'subcomponents']) {
       ? rel(join(dir, dirname(file), page))
       : folders.get(rel(dir).split('/').pop().toLowerCase())?.docs;
     if (!docs) continue;
-    // A stories file can render a namespace member under a local name
-    // (`const { DatePicker } = preview__DatePicker`); its title still names
-    // the export.
+    // A stories file can render a namespace member under a local name; its
+    // title still names the export.
     const names =
       pass === 'component'
         ? [
@@ -568,23 +567,6 @@ for (const subpath of subpaths) {
   }
 }
 
-// A prefixed export with a page of its own (preview__DatePicker) links it
-// beside the family page.
-for (const entry of families) {
-  const pages = entry.exports
-    .filter((name) => name !== baseName(name))
-    .map((name) => [name, docsByName.get(name)])
-    .filter(([, docs]) => docs && docs !== entry.docs);
-  if (pages.length > 0) {
-    entry.pages = Object.fromEntries(
-      pages.map(([name, docs]) => [
-        name,
-        { docs, storyTitle: titleFor(name, docs) },
-      ])
-    );
-  }
-}
-
 // Afframe folders need every part and an export; every listed path must exist.
 for (const entry of families) {
   for (const [part, present] of Object.entries(entry.parts ?? {})) {
@@ -592,8 +574,7 @@ for (const entry of families) {
   }
 }
 for (const entry of [...families, ...upstream]) {
-  const pages = Object.values(entry.pages ?? {}).map((page) => page.docs);
-  for (const path of [entry.folder, entry.docs, ...pages]) {
+  for (const path of [entry.folder, entry.docs]) {
     if (path && !existsSync(join(root, path))) {
       problems.push(`${entry.name}: ${path} does not exist`);
     }
@@ -695,7 +676,7 @@ const markdown = [
   '',
   'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. ' +
     ownership +
-    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page. A prefixed export with a page of its own, such as `preview__DatePicker`, is linked by name in Docs (`pages` in registry.json). A module with no page of its own links the page that documents it (`familyDocs` in `scripts/registry.mjs`: `mask` on the DatePicker page).',
+    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page. A module with no page of its own links the page that documents it (`familyDocs` in `scripts/registry.mjs`: `mask` on the DatePicker page).',
   '',
   ...table(
     [
@@ -715,14 +696,7 @@ const markdown = [
       sourceLabel(entry),
       entry.import.map((path) => `\`${path}\``).join(', '),
       entry.runtime,
-      [
-        link(entry.docs),
-        ...Object.entries(entry.pages ?? {}).map(
-          ([name, page]) => `[${name}](../${page.docs})`
-        ),
-      ]
-        .filter(Boolean)
-        .join(', '),
+      link(entry.docs),
       Object.values(entry.parts ?? {})
         .map((present) => (present ? 'yes' : 'no'))
         .join(', '),

@@ -2,11 +2,11 @@
 
 Date: 2026-10-05
 
-Amended: 2026-10-18
+Amended: 2026-10-18, 2026-10-25
 
 ## Status
 
-Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the render checks run without the v12 flags. Amended 2026-10-15: Carbon's utilities. Amended by [ADR 0021](0021-system-date-and-time-format-and-input-masks.md): the date and time pickers are wrapped. Amended by [ADR 0022](0022-filtering-follows-tanstack-carbon.md): the filter panel follows Carbon's tanstack-carbon examples.
+Accepted. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the render checks run without the v12 flags. Amended 2026-10-15: Carbon's utilities. Amended by [ADR 0021](0021-system-date-and-time-format-and-input-masks.md): the date and time pickers are wrapped. Amended by [ADR 0022](0022-filtering-follows-tanstack-carbon.md): the filter panel follows Carbon's tanstack-carbon examples. Amended 2026-10-25: `preview__DatePicker` is removed; it has a stable twin, so the rule above leaves it out.
 
 ## Context
 
@@ -16,7 +16,7 @@ The carbon-design-system organisation publishes far more than one product needs:
 
 In scope:
 
-- Carbon core (`@carbon/react`): every stable component group, plus preview components that have no stable twin (`preview__IconIndicator`, `preview__ShapeIndicator`), and the opt-in non-v12 flags listed in `docs/feature-flags.md`. Both Carbon date pickers (stable `DatePicker` and `preview__DatePicker`) ship as Afframe wrappers under Carbon's names, with the date and time pickers that [ADR 0021](0021-system-date-and-time-format-and-input-masks.md) lists; Afframe-owned components use the stable `DatePicker` until v12, when it gets the Temporal internals (carbon #22427).
+- Carbon core (`@carbon/react`): every stable component group, plus preview components that have no stable twin (`preview__IconIndicator`, `preview__ShapeIndicator`), and the opt-in non-v12 flags listed in `docs/feature-flags.md`. Carbon's stable `DatePicker` ships as an Afframe wrapper under Carbon's name, with the date and time pickers that [ADR 0021](0021-system-date-and-time-format-and-input-masks.md) lists; Afframe-owned components use the stable `DatePicker` until v12, when it gets the Temporal internals (carbon #22427).
 - Tokens, icons and pictograms (`@carbon/themes` and the other token packages, `@carbon/icons-react`, `@carbon/pictograms-react`).
 - IBM Products (`@carbon/ibm-products`): the non-deprecated components (the deprecated `CreateFullPage`, `CreateTearsheet` and `Saving` are dropped), including the onboarding set, AddSelect, ConditionBuilder, ScrollGradient and the selected preview and preview-candidate components.
 - Carbon Labs: every live Labs React package, except `@carbon-labs/react-style-picker` (cannot be installed), `@carbon-labs/react-plane-stack-3d` (React 18 only), `@carbon-labs/react-date-picker` (replaced by the core `DatePicker`), `@carbon-labs/react-animated-header` (global theme CSS and IBM brand assets), `@carbon-labs/react-registration-flow` (only its wrapper is published), `@carbon-labs/react-split-panel` (deprecated), `@carbon-labs/react-example-button` (scaffold), `@carbon-labs/mdx-components` and `@carbon-labs/vscode-snippets` (no use in the package). Each exclusion is rechecked on a Labs release.
