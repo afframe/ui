@@ -79,7 +79,8 @@ Code Quality Tools: ESLint, Stylelint with `stylelint-plugin-carbon-tokens`, Pre
 
 - Carbon v11 without the v12 flags; a move to v12 is a new decision once it ships as stable (ADR 0018, issue #2).
 - Workarounds waiting for upstream fixes: issue #4.
-- Component limits: issue #9; client bundle size of the Carbon barrel: issue #8.
+- Component limits: issue #9.
+- Client JavaScript: Carbon ships as one shared chunk (ADR 0025).
 - Open work: [GitHub issues](https://github.com/afframe/ui/issues).
 
 ## 10. Project Identification

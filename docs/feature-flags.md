@@ -23,6 +23,7 @@ Carbon's own flag reference: https://github.com/carbon-design-system/carbon/blob
 ## Rules
 
 - Never render a `<feature-flags>` DOM element above `@carbon/ai-chat`: its overflow menus stop opening (carbon-ai-chat issue #2308).
+- `AfframeProvider` imports `@carbon/react/es/feature-flags.js`, Carbon's own defaults (`enable-css-grid`, `enable-css-custom-properties`), so they hold when a bundler skips Carbon's barrel (ADR 0025).
 - `LogoutBanner` also sets `enable-focus-wrap-without-sentinels` locally, so it works without the provider.
 - `enable-v12-dynamic-floating-styles` stays off: it drops `flip` from MenuButton and ComboButton, so their menus open past the bottom of the screen. It does not change the look. A floating element clipped by a scroll container gets `autoAlign` on that one instance.
 - `enable-v12-overflowmenu` stays off: under it `OverflowMenuItem` children cannot be reached by keyboard. `OverflowMenu` and `TableToolbarMenu` are Carbon's v11 menus, with no per-instance switch (ADR 0023).

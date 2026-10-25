@@ -139,6 +139,8 @@ Set the theme on `<html>` in the server-rendered root layout with `data-afframe-
 
 Wrap the app in `<AfframeProvider>`. It turns on the Carbon feature flags Afframe UI uses. Without it, modals show in the page even while closed, with no backdrop. In Next.js App Router it is a client component placed inside the root layout. `@afframe/ui` needs no Sass, no `transpilePackages` and no load-path settings.
 
+With the default `next build`, the first page loads about 233 KB gzip of Carbon, more on a page with IBM Products components; later pages take it from the cache. Measurements: ADR 0025.
+
 ## 5. Use it
 
 Import every component from `@afframe/ui`. Icons, pictograms and JavaScript token values have their own paths, with Carbon's names, as in `@carbon/react/icons`:

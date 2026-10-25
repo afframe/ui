@@ -1,5 +1,8 @@
 'use client';
 
+// Carbon's flag defaults load from its barrel; this keeps them when a bundler
+// skips the barrel (ADR 0025).
+import '@carbon/react/es/feature-flags.js';
 import { FeatureFlags, GlobalTheme } from '@carbon/react';
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
