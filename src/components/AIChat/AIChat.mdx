@@ -91,6 +91,10 @@ items come from `header.menuOptions`.
 
 ## Stories
 
+The stories set `shouldTakeFocusIfOpensAutomatically={false}` so this page
+does not scroll to an open chat. Leave it out in an app: it also turns off the
+chat's focus handling when a user opens it or a panel.
+
 Response types: text, a `user_defined` item drawn by
 `renderUserDefinedResponse`, options as buttons, a button and an inline error.
 
