@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript checks enabled (@ts-nocheck removed, story args typed, optional props passed by conditional spread), components from @afframe/ui (AddSelect is preview__AddSelect), icons from @afframe/ui icons, title Components/AddSelect, unused hierarchicalItems removed, story styles converted from SCSS to plain CSS, em-dashes replaced, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript checks enabled (@ts-nocheck removed, story args typed, optional props passed by conditional spread), components from @afframe/ui (AddSelect is preview__AddSelect), icons from @afframe/ui icons, title Components/Add and Select/AddSelect, unused hierarchicalItems removed, story styles converted from SCSS to plain CSS, em-dashes replaced, source tag, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import {
@@ -170,7 +170,7 @@ const PlaceholderRows = () => {
 };
 
 export default {
-  title: 'Components/AddSelect',
+  title: 'Components/Add and Select/AddSelect',
   component: AddSelect,
   tags: ['ibm-products'],
   decorators: [

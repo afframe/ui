@@ -13,10 +13,6 @@ const rows = [
     link('FluidDatePicker', 'components-fluid-inputs-fluiddatepicker'),
   ],
   [
-    "Try Carbon's next date picker, a preview whose API may still change",
-    link('preview__DatePicker', 'preview-preview-datepicker'),
-  ],
-  [
     'Open the calendar from another control, such as a button',
     link('ControlledDatePicker', 'components-controlleddatepicker'),
   ],

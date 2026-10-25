@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2026
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, title Components/Add and Select/MultiAddSelect, story styles imported as plain CSS from the SingleAddSelect pattern folder instead of the styles parameter, centred layout as in IBM's Storybook, the Overview story left out (the docs page takes its name in IBM's Storybook too), docs page converted to MDX, source tag, story names from the export names where no other characters are needed (ADR 0019). Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, title Components/Add and Select/MultiAddSelect Pattern, story styles imported as plain CSS from the SingleAddSelect pattern folder instead of the styles parameter, centred layout as in IBM's Storybook, the Overview story left out (the docs page takes its name in IBM's Storybook too), docs page converted to MDX, source tag, story names from the export names where no other characters are needed (ADR 0019). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -25,7 +25,7 @@ import { MultiAddSelectWithDataTablePreview } from './example/preview-components
 import '../../SingleAddSelect/patterns/story-styles.css';
 
 export default {
-  title: 'Components/Add and Select/MultiAddSelect',
+  title: 'Components/Add and Select/MultiAddSelect Pattern',
   tags: ['ibm-products'],
   parameters: {
     // IBM's Storybook centres every story.

@@ -161,9 +161,8 @@ for (const pass of ['component', 'subcomponents']) {
       ? rel(join(dir, dirname(file), page))
       : folders.get(rel(dir).split('/').pop().toLowerCase())?.docs;
     if (!docs) continue;
-    // A stories file can render a namespace member under a local name
-    // (`const { DatePicker } = preview__DatePicker`); its title still names
-    // the export.
+    // A stories file can render a namespace member under a local name; its
+    // title still names the export.
     const names =
       pass === 'component'
         ? [
@@ -297,6 +296,8 @@ const docsAliases = {
   ButtonTooltipPositions: 'Button/Button.mdx',
   IconButtonKinds: 'IconButton/IconButton.mdx',
 };
+// Afframe modules documented on a component's page.
+const familyDocs = { mask: 'DatePicker/DatePicker.mdx' };
 // Upstream exports no page documents or shows; any other export without a
 // docs link fails the check.
 const noDocsPage = {
@@ -332,8 +333,7 @@ const noDocsPage = {
 for (const [name, page] of Object.entries(docsAliases)) {
   if (!docsByName.has(name)) docsByName.set(name, `src/components/${page}`);
 }
-// A prefixed name takes its own page before the folder of its base name
-// (preview__DatePicker: DatePickerV2.mdx, not DatePicker.mdx).
+// A prefixed name takes its own page before the folder of its base name.
 const docsOf = (name) =>
   (name !== baseName(name) && docsByName.get(name)) ||
   (folders.get(baseName(name).toLowerCase())?.docs ??
@@ -525,9 +525,10 @@ for (const { from, star, names } of exportsOf(index)) {
     const info =
       dir === 'src' ? {} : { ...scan(join(root, dir), name), owned: false };
     const folder = dir === 'src' ? rel(file) : dir;
+    const page = familyDocs[name] && `src/components/${familyDocs[name]}`;
     family(
       name,
-      info,
+      page ? { ...info, docs: page, storyTitle: titleOf(page) } : info,
       { kind, source: 'afframe', runtime, folder },
       star ? collected : names
     );
@@ -557,7 +558,7 @@ for (const subpath of subpaths) {
       { ...folders.get(name), owned: false },
       {
         kind: 'foundation',
-        source: 'carbon',
+        source: name.endsWith('.css') ? 'afframe' : 'carbon',
         import: [importPath],
         runtime: file ? collect(file).runtime : 'server',
       },
@@ -657,7 +658,7 @@ upstream.sort(bySidebar);
 const sourceLabel = (entry) =>
   entry.wrapper ? `${entry.source} wrapper` : (entry.source ?? '');
 const ownership =
-  "Afframe-owned code has source `afframe` (Afframe components and helpers), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a Carbon subpath or stylesheet. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide).";
+  "Source `afframe`: Afframe code and the stylesheets it compiles. `extras`: an Afframe module around another IBM or charting library, under that library's names. `<source> wrapper`: Afframe code around an upstream component. `carbon`: a Carbon package passed through. Everything else is upstream (`upstream` in registry.json, Renamed exports in the agent guide).";
 const table = (header, rows) => [
   `| ${header.join(' | ')} |`,
   `| ${header.map(() => '---').join(' | ')} |`,
@@ -675,7 +676,7 @@ const markdown = [
   '',
   'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. ' +
     ownership +
-    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.',
+    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page. A module with no page of its own links the page that documents it (`familyDocs` in `scripts/registry.mjs`: `mask` on the DatePicker page).',
   '',
   ...table(
     [
@@ -704,7 +705,7 @@ const markdown = [
   '',
   '## Carbon, IBM Products and Labs',
   '',
-  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export such as `preview__DatePicker` takes its own page before the folder of its base name. An export without a link is one no page documents, listed with its reason in `noDocsPage` in the same script.',
+  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export takes its own page before the folder of its base name. An export without a link is one no page documents, listed with its reason in `noDocsPage` in the same script.',
   '',
   ...table(
     ['Export', 'Storybook', 'Kind', 'Source', 'Runtime', 'Status', 'Docs'],
