@@ -2,11 +2,11 @@
 
 Date: 2026-10-12
 
-Amended: 2026-10-13, 2026-10-15
+Amended: 2026-10-13, 2026-10-15, 2026-10-25
 
 ## Status
 
-Accepted, amended 2026-10-13 (Task Dialogs family) and 2026-10-15 (Add and Select family, test-only stories, IBM Plex under Typography)
+Accepted, amended 2026-10-13 (Task Dialogs family), 2026-10-15 (Add and Select family, test-only stories, IBM Plex under Typography) and 2026-10-25 (the Storybook title is the only grouping)
 
 ## Context
 
@@ -34,6 +34,7 @@ The sidebar follows Carbon's Storybook layout, with Afframe's content merged int
 - Theme copies (`Dark`), Carbon's `Test*` stories and test-only stories whose play leaves a state not worth showing (`FocusNotObscured`) are test fixtures: tagged `!dev` and `!autodocs`, so they run as tests but stay out of the sidebar and docs pages. The theme toolbar shows any story in dark.
 - Where a component comes from shows as the sidebar badge and the docs page label, not as a section.
 - Storybook's own onboarding checklist and release notes popup are off.
+- The Storybook title is the only grouping of the package. `pnpm registry` takes each entry's `storyTitle`, `section` and `family` from the title of its docs page and lists entries in sidebar order, read from `storySort`; `src/index.ts` groups its exports by source only (Carbon, IBM Products, Labs, Carbon utilities, Afframe). No other file keeps a grouping of its own. The script drops sub-page title tails (`Feature Flags`, `Examples`, `Docs`, its `subPages` list) and treats a title part that names an export as the component, so the family is the parts before it.
 
 ## Options not chosen
 
@@ -43,4 +44,4 @@ The sidebar follows Carbon's Storybook layout, with Afframe's content merged int
 ## Consequences
 
 - Story ids change with the titles; links between docs pages use the new ids.
-- A new component picks its section and, for a family, its subfolder from this table.
+- A new component picks its section and, for a family, its subfolder from this table; the registry and the agent guide follow without an edit.
