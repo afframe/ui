@@ -21,7 +21,8 @@ Carbon's design tokens come in two forms.
 - CSS custom properties, in `@afframe/ui/styles.css`. They follow the theme
   set on `<html>`, so prefer them in styles.
 - JavaScript values, from `@afframe/ui/tokens`. These are Carbon's exports of
-  `@carbon/themes` and `@carbon/motion` with Carbon's names.
+  `@carbon/themes` and `@carbon/motion` with Carbon's names and Carbon's stock
+  values, read from the packages, not from `styles.css`.
 
 ```css
 .panel {
@@ -56,7 +57,9 @@ Afframe will take them from Carbon then.
 ## Spacing
 
 Carbon's spacing scale, from `@carbon/layout`. Use the custom properties for
-margins, padding and gaps; `Stack` takes the step number as `gap`.
+margins, padding and gaps; `Stack` takes the step number as `gap`. Carbon
+components compile their spacing into the stylesheet, so redefining
+`--cds-spacing-*` changes only CSS that reads the properties.
 
 <Canvas of={TokensStories.Spacing} />
 

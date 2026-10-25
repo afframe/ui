@@ -37,6 +37,7 @@ Do not:
 
 - install or configure `@carbon/styles` Sass (a second configuration fails to compile);
 - override `.cds--` or `.c4p--` classes;
+- redefine `--cds-*` tokens: an override is undone inside `Theme` zones and charts and does not reach the values compiled into `styles.css` (`docs/guides/theming.md`);
 - import `@carbon/*` (including `@carbon/ibm-products`) or `@carbon-labs/*` directly; it can pull a second Carbon version.
 
 ### Formatting on the server
