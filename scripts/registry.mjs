@@ -332,8 +332,7 @@ const noDocsPage = {
 for (const [name, page] of Object.entries(docsAliases)) {
   if (!docsByName.has(name)) docsByName.set(name, `src/components/${page}`);
 }
-// A prefixed name takes its own page before the folder of its base name
-// (preview__DatePicker: DatePickerV2.mdx, not DatePicker.mdx).
+// A prefixed name takes its own page before the folder of its base name.
 const docsOf = (name) =>
   (name !== baseName(name) && docsByName.get(name)) ||
   (folders.get(baseName(name).toLowerCase())?.docs ??
@@ -566,6 +565,23 @@ for (const subpath of subpaths) {
   }
 }
 
+// A prefixed export with a page of its own (preview__DatePicker) links it
+// beside the family page.
+for (const entry of families) {
+  const pages = entry.exports
+    .filter((name) => name !== baseName(name))
+    .map((name) => [name, docsByName.get(name)])
+    .filter(([, docs]) => docs && docs !== entry.docs);
+  if (pages.length > 0) {
+    entry.pages = Object.fromEntries(
+      pages.map(([name, docs]) => [
+        name,
+        { docs, storyTitle: titleFor(name, docs) },
+      ])
+    );
+  }
+}
+
 // Afframe folders need every part and an export; every listed path must exist.
 for (const entry of families) {
   for (const [part, present] of Object.entries(entry.parts ?? {})) {
@@ -573,7 +589,8 @@ for (const entry of families) {
   }
 }
 for (const entry of [...families, ...upstream]) {
-  for (const path of [entry.folder, entry.docs]) {
+  const pages = Object.values(entry.pages ?? {}).map((page) => page.docs);
+  for (const path of [entry.folder, entry.docs, ...pages]) {
     if (path && !existsSync(join(root, path))) {
       problems.push(`${entry.name}: ${path} does not exist`);
     }
@@ -675,7 +692,7 @@ const markdown = [
   '',
   'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. ' +
     ownership +
-    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.',
+    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page. A prefixed export with a page of its own, such as `preview__DatePicker`, is linked by name in Docs (`pages` in registry.json).',
   '',
   ...table(
     [
@@ -695,7 +712,14 @@ const markdown = [
       sourceLabel(entry),
       entry.import.map((path) => `\`${path}\``).join(', '),
       entry.runtime,
-      link(entry.docs),
+      [
+        link(entry.docs),
+        ...Object.entries(entry.pages ?? {}).map(
+          ([name, page]) => `[${name}](../${page.docs})`
+        ),
+      ]
+        .filter(Boolean)
+        .join(', '),
       Object.values(entry.parts ?? {})
         .map((present) => (present ? 'yes' : 'no'))
         .join(', '),
@@ -704,7 +728,7 @@ const markdown = [
   '',
   '## Carbon, IBM Products and Labs',
   '',
-  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export such as `preview__DatePicker` takes its own page before the folder of its base name. An export without a link is one no page documents, listed with its reason in `noDocsPage` in the same script.',
+  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export takes its own page before the folder of its base name. An export without a link is one no page documents, listed with its reason in `noDocsPage` in the same script.',
   '',
   ...table(
     ['Export', 'Storybook', 'Kind', 'Source', 'Runtime', 'Status', 'Docs'],
