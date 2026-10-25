@@ -24,7 +24,7 @@ Measured with `@carbon/react` 1.119.0 and `@carbon/ibm-products` 2.101.0: a copy
 - Under Turbopack the barrel is one shared chunk of 746 KB raw, 233 KB gzip, with the same hash on every route: it downloads once per deploy, and a later page adds 0 KB for it. After it, a Carbon, Afframe or Labs component adds 0.3 to 3 KB.
 - `experimental.optimizePackageImports` for `@afframe/ui`, `@carbon/react` and `@carbon/ibm-products` gives byte-identical chunks under Turbopack, also for the app's own root import. A consumer cannot change this by config.
 - CPU at 4x throttle in Chromium, median of 5 loads: the provider adds about 70 ms of script time and 19 ms of Total Blocking Time over the empty page, a page with an IBM Products component about 144 ms and 45 ms. Both stay within the Core Web Vitals "good" range.
-- Rendering under webpack with `optimizePackageImports` was not checked.
+- Under webpack with `optimizePackageImports`, a headless check of the provider, `Button` and IBM Products routes showed no console errors after hydration and a working `Button`; no other behaviour was checked.
 
 ## Decision
 
@@ -37,7 +37,7 @@ Measured with `@carbon/react` 1.119.0 and `@carbon/ibm-products` 2.101.0: a copy
 
 - Per-component client modules with deep imports: about 203 KB gzip less, on the first page only and only on routes without IBM Products; Carbon has no `exports` map, so every Carbon update can move the paths, the flag defaults need their own import first, and it breaks "re-exported as they are" (ADR 0001).
 - `optimizePackageImports`: no effect under Turbopack.
-- webpack with `optimizePackageImports`: the smallest result, but not the Next.js 16 default, every consumer has to configure it, rendering is unchecked, and it bypasses the barrel and its flag defaults.
+- webpack with `optimizePackageImports`: the smallest result, but not the Next.js 16 default, every consumer has to configure it, only a hydration check was run, and it bypasses the barrel and its flag defaults.
 - Plain webpack: about 1 MB gzip on every route with the provider.
 
 ## Consequences
