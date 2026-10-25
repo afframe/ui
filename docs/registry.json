@@ -1285,7 +1285,7 @@
     {
       "name": "styles.css",
       "kind": "foundation",
-      "source": "carbon",
+      "source": "afframe",
       "import": ["@afframe/ui/styles.css"],
       "runtime": "server",
       "folder": null,
@@ -1300,7 +1300,7 @@
     {
       "name": "charts.css",
       "kind": "foundation",
-      "source": "carbon",
+      "source": "afframe",
       "import": ["@afframe/ui/charts.css"],
       "runtime": "server",
       "folder": null,

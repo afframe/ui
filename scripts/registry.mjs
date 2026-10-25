@@ -557,7 +557,9 @@ for (const subpath of subpaths) {
       { ...folders.get(name), owned: false },
       {
         kind: 'foundation',
-        source: 'carbon',
+        // Afframe compiles the stylesheets from Carbon, IBM Products, Labs and
+        // its own Sass; the other subpaths pass Carbon's packages through.
+        source: name.endsWith('.css') ? 'afframe' : 'carbon',
         import: [importPath],
         runtime: file ? collect(file).runtime : 'server',
       },
@@ -657,7 +659,7 @@ upstream.sort(bySidebar);
 const sourceLabel = (entry) =>
   entry.wrapper ? `${entry.source} wrapper` : (entry.source ?? '');
 const ownership =
-  "Afframe-owned code has source `afframe` (Afframe components and helpers), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a Carbon subpath or stylesheet. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide).";
+  "Afframe-owned code has source `afframe` (Afframe components and helpers, and the stylesheets Afframe compiles from Carbon, IBM Products, Labs and its own styles), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a subpath that passes a Carbon package through. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide).";
 const table = (header, rows) => [
   `| ${header.join(' | ')} |`,
   `| ${header.map(() => '---').join(' | ')} |`,

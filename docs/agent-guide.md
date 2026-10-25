@@ -109,7 +109,7 @@ Upstream docs and the Carbon MCP use the upstream name. Import the Afframe name 
 
 ## Afframe families and subpaths
 
-Afframe-owned code has source `afframe` (Afframe components and helpers), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a Carbon subpath or stylesheet. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide).
+Afframe-owned code has source `afframe` (Afframe components and helpers, and the stylesheets Afframe compiles from Carbon, IBM Products, Labs and its own styles), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a subpath that passes a Carbon package through. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide).
 
 - **theme** (afframe, hook, client, `@afframe/ui`): `useColorScheme`, `useCarbonTheme`
 - **AfframeProvider** (afframe, provider, client, `@afframe/ui`): `AfframeProvider`
@@ -148,8 +148,8 @@ Afframe-owned code has source `afframe` (Afframe components and helpers), `extra
 - **tokens** (carbon, foundation, server, `@afframe/ui/tokens`)
 - **messages** (afframe, util, server, `@afframe/ui`): `resolveMessages`
 - **mask** (afframe, util, client, `@afframe/ui`): `applyMaskEdit`, `dateMaskSpec`, `timeMaskSpec`, `useInputMask`
-- **styles.css** (carbon, foundation, server, `@afframe/ui/styles.css`)
-- **charts.css** (carbon, foundation, server, `@afframe/ui/charts.css`)
+- **styles.css** (afframe, foundation, server, `@afframe/ui/styles.css`)
+- **charts.css** (afframe, foundation, server, `@afframe/ui/charts.css`)
 
 ## Carbon, IBM Products and Labs
 
