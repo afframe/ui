@@ -656,6 +656,10 @@ const bySidebar = (a, b) =>
 families.sort(bySidebar);
 upstream.sort(bySidebar);
 
+const sourceLabel = (entry) =>
+  entry.wrapper ? `${entry.source} wrapper` : (entry.source ?? '');
+const ownership =
+  "Afframe-owned code has source `afframe` (Afframe components and helpers), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a Carbon subpath or stylesheet. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide).";
 const table = (header, rows) => [
   `| ${header.join(' | ')} |`,
   `| ${header.map(() => '---').join(' | ')} |`,
@@ -671,7 +675,9 @@ const markdown = [
   '',
   '## Afframe families and subpaths',
   '',
-  'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.',
+  'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. ' +
+    ownership +
+    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.',
   '',
   ...table(
     [
@@ -688,7 +694,7 @@ const markdown = [
       entry.name,
       entry.storyTitle ?? '',
       entry.kind,
-      entry.wrapper ? `${entry.source} wrapper` : (entry.source ?? ''),
+      sourceLabel(entry),
       entry.import.map((path) => `\`${path}\``).join(', '),
       entry.runtime,
       link(entry.docs),
@@ -752,10 +758,12 @@ const agents = [
   '',
   '## Afframe families and subpaths',
   '',
+  ownership,
+  '',
   // A list, not a table: Prettier pads every table row to the widest cell.
   ...families.map(
     (entry) =>
-      `- **${entry.name}** (${entry.kind}, ${entry.runtime}, ${codeList(entry.import)})` +
+      `- **${entry.name}** (${sourceLabel(entry)}, ${entry.kind}, ${entry.runtime}, ${codeList(entry.import)})` +
       (entry.exports.length > 0 ? `: ${codeList(entry.exports)}` : '')
   ),
   '',

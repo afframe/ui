@@ -6,7 +6,7 @@ Amended: 2026-10-25
 
 ## Status
 
-Accepted, amended 2026-10-25 (sidebar order)
+Accepted, amended 2026-10-25 (sidebar order, source of each family)
 
 ## Context
 
@@ -14,7 +14,7 @@ Coding agents build UI in the repos that install `@afframe/ui`. The installed pa
 
 ## Decision
 
-The package ships one agent guide, `dist/agents.md`. `pnpm registry` generates it as `docs/agent-guide.md` (not `docs/agents.md`, which macOS treats as `docs/AGENTS.md`, an instruction file for this repo) from the sections "Wire it once" and "Use it" of `docs/guides/consuming.md`, quoted so the rules live in one file, and from the export registry: the renamed upstream exports, the Afframe families with runtime and exports, and every Carbon, IBM Products and Labs value, in Storybook's sidebar order (ADR 0019). `pnpm registry --check` fails on drift, `pnpm build` copies it into `dist/` and `check:pack` requires it. The consumer guide gives a short block for the consumer repo's `AGENTS.md` that points agents to it.
+The package ships one agent guide, `dist/agents.md`. `pnpm registry` generates it as `docs/agent-guide.md` (not `docs/agents.md`, which macOS treats as `docs/AGENTS.md`, an instruction file for this repo) from the sections "Wire it once" and "Use it" of `docs/guides/consuming.md`, quoted so the rules live in one file, and from the export registry: the renamed upstream exports, the Afframe families with source, runtime and exports, so an agent sees which ones Afframe owns, and every Carbon, IBM Products and Labs value, in Storybook's sidebar order (ADR 0019). `pnpm registry --check` fails on drift, `pnpm build` copies it into `dist/` and `check:pack` requires it. The consumer guide gives a short block for the consumer repo's `AGENTS.md` that points agents to it.
 
 ## Options not chosen
 

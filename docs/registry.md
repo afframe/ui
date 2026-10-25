@@ -6,7 +6,7 @@ Grouping follows Storybook only (ADR 0019): `storyTitle` is the Storybook title 
 
 ## Afframe families and subpaths
 
-One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.
+One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. Afframe-owned code has source `afframe` (Afframe components and helpers), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a Carbon subpath or stylesheet. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide). Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.
 
 | Family               | Storybook                                  | Kind       | Source         | Import                              | Runtime | Docs                                                                    | Afframe parts      |
 | -------------------- | ------------------------------------------ | ---------- | -------------- | ----------------------------------- | ------- | ----------------------------------------------------------------------- | ------------------ |

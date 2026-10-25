@@ -106,45 +106,47 @@ Upstream docs and the Carbon MCP use the upstream name. Import the Afframe name 
 
 ## Afframe families and subpaths
 
-- **theme** (hook, client, `@afframe/ui`): `useColorScheme`, `useCarbonTheme`
-- **AfframeProvider** (provider, client, `@afframe/ui`): `AfframeProvider`
-- **format** (util, server, `@afframe/ui`, `@afframe/ui/format`): `defaultLocale`, `defaultCurrency`, `defaultTimeZone`, `defaultMaxFractionDigits`, `defaultDateFormat`, `defaultTimeFormat`, `parseDatePattern`, `toFlatpickrFormat`, `fromFlatpickrFormat`, `datePlaceholder`, `dateInputPattern`, `parseTimePattern`, `timePlaceholder`, `defaultDatePattern`, `defaultTimePattern`, `currencyDigits`, `roundAmount`, `formatAmount`, `formatNumber`, `formatDate`, `formatDateRange`, `civilDateIn`, `startOfDayIn`, `addDays`, `civilDateToLocalDate`, `localDateToCivilDate`, `dateRangePresets`, `defaultDateRangePresetMessages`, `getDateRangePreset`, `createFormat`
-- **AccentTag** (component, client, `@afframe/ui`): `AccentTag`, `defaultAccentTagMessages`
-- **AIChat** (component, client, `@afframe/ui`): `ChatContainer`, `ChatCustomElement`, `defaultAIChatMessages`, `BusEventType`, `ButtonItemKind`, `ButtonItemType`, `CHAT_BUTTON_KIND`, `CHAT_BUTTON_SIZE`, `CancellationReason`, `CarbonTheme`, `ChainOfThoughtStepStatus`, `CornersType`, `ErrorType`, `FeedbackInteractionType`, `FileStatusValue`, `HeaderMenuClickType`, `HumanAgentMessageType`, `HumanAgentsOnlineStatus`, `IFrameItemDisplayOption`, `LayoutCustomProperties`, `MessageErrorState`, `MessageInputType`, `MessageResponseTypes`, `MessageSendSource`, `MessageState`, `MinimizeButtonIconType`, `OnErrorType`, `OptionItemPreference`, `PageObjectId`, `PanelType`, `ReasoningStepOpenState`, `ScreenShareState`, `UserType`, `ViewChangeReason`, `ViewType`, `WidthOptions`, `WriteableElementName`, `buildCarbonExtensions`, `carbonAutocomplete`, `carbonCommand`, `carbonMention`, `carbonStarterTrigger`, `enLanguagePack`, `findNodesByType`, `getRawText`, `loadAllLazyDeps`, `mapNodes`, `removeNodesByType`, `setHostOriginMeta`, `textToDoc`
-- **ChatElements** (component, client, `@afframe/ui`): `ChatChart`, `defaultChatChartMessages`, `defaultChatElementsMessages`, `chatChartTypes`, `chatElementTypes`, `isChatChartData`, `renderChatElement`
-- **Amount** (component, server, `@afframe/ui`): `Amount`
-- **AmountInput** (component, client, `@afframe/ui`): `AmountInput`, `defaultAmountInputMessages`
-- **Charts** (component, client, `@afframe/ui`): `AlluvialChart`, `AreaChart`, `BoxplotChart`, `BubbleChart`, `BulletChart`, `ChoroplethChart`, `CirclePackChart`, `ComboChart`, `DonutChart`, `GaugeChart`, `GroupedBarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `LollipopChart`, `MeterChart`, `PieChart`, `RadarChart`, `ScatterChart`, `SimpleBarChart`, `StackedAreaChart`, `StackedBarChart`, `TreeChart`, `TreemapChart`, `WordCloudChart`, `Alignments`, `AreaEvent`, `ArrowDirections`, `AxisEvent`, `AxisFlavor`, `AxisPositions`, `AxisTitleOrientations`, `BarEvent`, `BoxplotEvent`, `CalloutDirections`, `CanvasZoomEvent`, `CartesianOrientations`, `ChartEvent`, `ChartTheme`, `ChartTypes`, `ColorClassNameTypes`, `ColorLegendType`, `DividerStatus`, `DominantBaseline`, `GaugeEvent`, `GaugeTypes`, `LayoutAlignItems`, `LayoutDirection`, `LayoutGrowth`, `LegendItemType`, `LegendOrientations`, `LegendPositions`, `LineEvent`, `ModalEvent`, `ModelEvent`, `PieEvent`, `Projection`, `RadarEvent`, `RenderTypes`, `ScaleTypes`, `ScatterEvent`, `Skeletons`, `Statuses`, `TextAnchor`, `ThresholdEvent`, `TickRotations`, `ToolbarControlTypes`, `TooltipEvent`, `TreeEvent`, `TreemapEvent`, `TreeTypes`, `TruncationTypes`, `WordCloudEvent`, `ZoomBarTypes`, `ZoombarEvent`, `ZoomDomainEvent`
-- **ECharts** (component, client, `@afframe/ui`): `EChart`
-- **ControlledDatePicker** (component, client, `@afframe/ui`): `ControlledDatePicker`
-- **CreateModal** (component, client, `@afframe/ui`): `CreateModal`, `defaultCreateModalMessages`
-- **CreateSidePanel** (component, client, `@afframe/ui`): `CreateSidePanel`, `defaultCreateSidePanelMessages`
-- **EditFullPage** (component, client, `@afframe/ui`): `defaultEditFullPageMessages`, `EditFullPage`
-- **EditSidePanel** (component, client, `@afframe/ui`): `EditSidePanel`, `defaultEditSidePanelMessages`
-- **EditTearsheet** (component, client, `@afframe/ui`): `defaultEditTearsheetMessages`, `EditTearsheet`, `EditTearsheetForm`
-- **DataGrid** (component, client, `@afframe/ui`): `DataGrid`, `dataGridColumnCustomization`, `dataGridColumnMeta`, `dataGridExpansion`, `dataGridFilterPanel`, `dataGridFiltering`, `dataGridInlineEdit`, `dataGridPagination`, `dataGridResizing`, `dataGridSelection`, `dataGridSorting`, `dataGridStickyColumns`, `defaultDataGridMessages`
-- **DatePicker** (component, client, `@afframe/ui`): `DatePicker`, `defaultDatePickerMessages`, `preview__DatePicker`
-- **DescriptionList** (component, server, `@afframe/ui`): `DescriptionList`, `DescriptionListItem`, `defaultDescriptionListMessages`
-- **FilterPanel** (component, client, `@afframe/ui`): `defaultFilterPanelMessages`, `FilterPanel`, `countFilterPanelSelections`, `defaultFilterFlyoutMessages`, `FilterFlyout`, `defaultFilterSummaryMessages`, `FilterSummary`
-- **FluidDatePicker** (component, client, `@afframe/ui`): `FluidDatePicker`
-- **FluidTimePicker** (component, client, `@afframe/ui`): `FluidTimePicker`
-- **StatusIndicator** (component, server, `@afframe/ui`): `StatusIndicator`, `defaultStatusIndicatorMessages`
-- **APIKeyModal** (component, client, `@afframe/ui`): `APIKeyModal`, `defaultAPIKeyModalMessages`
-- **ExportModal** (component, client, `@afframe/ui`): `defaultExportModalMessages`, `ExportModal`
-- **ImportModal** (component, client, `@afframe/ui`): `defaultImportModalMessages`, `ImportModal`
-- **RemoveModal** (component, client, `@afframe/ui`): `defaultRemoveModalMessages`, `RemoveModal`
-- **TimePicker** (component, client, `@afframe/ui`): `TimePicker`
-- **EnvironmentSwitcher** (component, client, `@afframe/ui`): `defaultEnvironmentSwitcherMessages`, `EnvironmentSwitcher`
-- **HelpMenu** (component, client, `@afframe/ui`): `defaultHelpMenuMessages`, `HelpMenu`
-- **LogoutBanner** (component, client, `@afframe/ui`): `defaultLogoutBannerMessages`, `LogoutBanner`
-- **LogoutTile** (component, client, `@afframe/ui`): `defaultLogoutTileMessages`, `LogoutTile`
-- **icons** (foundation, server, `@afframe/ui/icons`)
-- **pictograms** (foundation, server, `@afframe/ui/pictograms`)
-- **tokens** (foundation, server, `@afframe/ui/tokens`)
-- **messages** (util, server, `@afframe/ui`): `resolveMessages`
-- **mask** (util, client, `@afframe/ui`): `applyMaskEdit`, `dateMaskSpec`, `timeMaskSpec`, `useInputMask`
-- **styles.css** (foundation, server, `@afframe/ui/styles.css`)
-- **charts.css** (foundation, server, `@afframe/ui/charts.css`)
+Afframe-owned code has source `afframe` (Afframe components and helpers), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a Carbon subpath or stylesheet. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide).
+
+- **theme** (afframe, hook, client, `@afframe/ui`): `useColorScheme`, `useCarbonTheme`
+- **AfframeProvider** (afframe, provider, client, `@afframe/ui`): `AfframeProvider`
+- **format** (afframe, util, server, `@afframe/ui`, `@afframe/ui/format`): `defaultLocale`, `defaultCurrency`, `defaultTimeZone`, `defaultMaxFractionDigits`, `defaultDateFormat`, `defaultTimeFormat`, `parseDatePattern`, `toFlatpickrFormat`, `fromFlatpickrFormat`, `datePlaceholder`, `dateInputPattern`, `parseTimePattern`, `timePlaceholder`, `defaultDatePattern`, `defaultTimePattern`, `currencyDigits`, `roundAmount`, `formatAmount`, `formatNumber`, `formatDate`, `formatDateRange`, `civilDateIn`, `startOfDayIn`, `addDays`, `civilDateToLocalDate`, `localDateToCivilDate`, `dateRangePresets`, `defaultDateRangePresetMessages`, `getDateRangePreset`, `createFormat`
+- **AccentTag** (afframe, component, client, `@afframe/ui`): `AccentTag`, `defaultAccentTagMessages`
+- **AIChat** (extras, component, client, `@afframe/ui`): `ChatContainer`, `ChatCustomElement`, `defaultAIChatMessages`, `BusEventType`, `ButtonItemKind`, `ButtonItemType`, `CHAT_BUTTON_KIND`, `CHAT_BUTTON_SIZE`, `CancellationReason`, `CarbonTheme`, `ChainOfThoughtStepStatus`, `CornersType`, `ErrorType`, `FeedbackInteractionType`, `FileStatusValue`, `HeaderMenuClickType`, `HumanAgentMessageType`, `HumanAgentsOnlineStatus`, `IFrameItemDisplayOption`, `LayoutCustomProperties`, `MessageErrorState`, `MessageInputType`, `MessageResponseTypes`, `MessageSendSource`, `MessageState`, `MinimizeButtonIconType`, `OnErrorType`, `OptionItemPreference`, `PageObjectId`, `PanelType`, `ReasoningStepOpenState`, `ScreenShareState`, `UserType`, `ViewChangeReason`, `ViewType`, `WidthOptions`, `WriteableElementName`, `buildCarbonExtensions`, `carbonAutocomplete`, `carbonCommand`, `carbonMention`, `carbonStarterTrigger`, `enLanguagePack`, `findNodesByType`, `getRawText`, `loadAllLazyDeps`, `mapNodes`, `removeNodesByType`, `setHostOriginMeta`, `textToDoc`
+- **ChatElements** (afframe, component, client, `@afframe/ui`): `ChatChart`, `defaultChatChartMessages`, `defaultChatElementsMessages`, `chatChartTypes`, `chatElementTypes`, `isChatChartData`, `renderChatElement`
+- **Amount** (afframe, component, server, `@afframe/ui`): `Amount`
+- **AmountInput** (afframe, component, client, `@afframe/ui`): `AmountInput`, `defaultAmountInputMessages`
+- **Charts** (extras, component, client, `@afframe/ui`): `AlluvialChart`, `AreaChart`, `BoxplotChart`, `BubbleChart`, `BulletChart`, `ChoroplethChart`, `CirclePackChart`, `ComboChart`, `DonutChart`, `GaugeChart`, `GroupedBarChart`, `HeatmapChart`, `HistogramChart`, `LineChart`, `LollipopChart`, `MeterChart`, `PieChart`, `RadarChart`, `ScatterChart`, `SimpleBarChart`, `StackedAreaChart`, `StackedBarChart`, `TreeChart`, `TreemapChart`, `WordCloudChart`, `Alignments`, `AreaEvent`, `ArrowDirections`, `AxisEvent`, `AxisFlavor`, `AxisPositions`, `AxisTitleOrientations`, `BarEvent`, `BoxplotEvent`, `CalloutDirections`, `CanvasZoomEvent`, `CartesianOrientations`, `ChartEvent`, `ChartTheme`, `ChartTypes`, `ColorClassNameTypes`, `ColorLegendType`, `DividerStatus`, `DominantBaseline`, `GaugeEvent`, `GaugeTypes`, `LayoutAlignItems`, `LayoutDirection`, `LayoutGrowth`, `LegendItemType`, `LegendOrientations`, `LegendPositions`, `LineEvent`, `ModalEvent`, `ModelEvent`, `PieEvent`, `Projection`, `RadarEvent`, `RenderTypes`, `ScaleTypes`, `ScatterEvent`, `Skeletons`, `Statuses`, `TextAnchor`, `ThresholdEvent`, `TickRotations`, `ToolbarControlTypes`, `TooltipEvent`, `TreeEvent`, `TreemapEvent`, `TreeTypes`, `TruncationTypes`, `WordCloudEvent`, `ZoomBarTypes`, `ZoombarEvent`, `ZoomDomainEvent`
+- **ECharts** (extras, component, client, `@afframe/ui`): `EChart`
+- **ControlledDatePicker** (afframe, component, client, `@afframe/ui`): `ControlledDatePicker`
+- **CreateModal** (afframe, component, client, `@afframe/ui`): `CreateModal`, `defaultCreateModalMessages`
+- **CreateSidePanel** (afframe, component, client, `@afframe/ui`): `CreateSidePanel`, `defaultCreateSidePanelMessages`
+- **EditFullPage** (afframe, component, client, `@afframe/ui`): `defaultEditFullPageMessages`, `EditFullPage`
+- **EditSidePanel** (afframe, component, client, `@afframe/ui`): `EditSidePanel`, `defaultEditSidePanelMessages`
+- **EditTearsheet** (afframe, component, client, `@afframe/ui`): `defaultEditTearsheetMessages`, `EditTearsheet`, `EditTearsheetForm`
+- **DataGrid** (afframe, component, client, `@afframe/ui`): `DataGrid`, `dataGridColumnCustomization`, `dataGridColumnMeta`, `dataGridExpansion`, `dataGridFilterPanel`, `dataGridFiltering`, `dataGridInlineEdit`, `dataGridPagination`, `dataGridResizing`, `dataGridSelection`, `dataGridSorting`, `dataGridStickyColumns`, `defaultDataGridMessages`
+- **DatePicker** (carbon wrapper, component, client, `@afframe/ui`): `DatePicker`, `defaultDatePickerMessages`, `preview__DatePicker`
+- **DescriptionList** (afframe, component, server, `@afframe/ui`): `DescriptionList`, `DescriptionListItem`, `defaultDescriptionListMessages`
+- **FilterPanel** (afframe, component, client, `@afframe/ui`): `defaultFilterPanelMessages`, `FilterPanel`, `countFilterPanelSelections`, `defaultFilterFlyoutMessages`, `FilterFlyout`, `defaultFilterSummaryMessages`, `FilterSummary`
+- **FluidDatePicker** (carbon wrapper, component, client, `@afframe/ui`): `FluidDatePicker`
+- **FluidTimePicker** (carbon wrapper, component, client, `@afframe/ui`): `FluidTimePicker`
+- **StatusIndicator** (afframe, component, server, `@afframe/ui`): `StatusIndicator`, `defaultStatusIndicatorMessages`
+- **APIKeyModal** (afframe, component, client, `@afframe/ui`): `APIKeyModal`, `defaultAPIKeyModalMessages`
+- **ExportModal** (afframe, component, client, `@afframe/ui`): `defaultExportModalMessages`, `ExportModal`
+- **ImportModal** (afframe, component, client, `@afframe/ui`): `defaultImportModalMessages`, `ImportModal`
+- **RemoveModal** (afframe, component, client, `@afframe/ui`): `defaultRemoveModalMessages`, `RemoveModal`
+- **TimePicker** (carbon wrapper, component, client, `@afframe/ui`): `TimePicker`
+- **EnvironmentSwitcher** (afframe, component, client, `@afframe/ui`): `defaultEnvironmentSwitcherMessages`, `EnvironmentSwitcher`
+- **HelpMenu** (afframe, component, client, `@afframe/ui`): `defaultHelpMenuMessages`, `HelpMenu`
+- **LogoutBanner** (afframe, component, client, `@afframe/ui`): `defaultLogoutBannerMessages`, `LogoutBanner`
+- **LogoutTile** (afframe, component, client, `@afframe/ui`): `defaultLogoutTileMessages`, `LogoutTile`
+- **icons** (carbon, foundation, server, `@afframe/ui/icons`)
+- **pictograms** (carbon, foundation, server, `@afframe/ui/pictograms`)
+- **tokens** (carbon, foundation, server, `@afframe/ui/tokens`)
+- **messages** (afframe, util, server, `@afframe/ui`): `resolveMessages`
+- **mask** (afframe, util, client, `@afframe/ui`): `applyMaskEdit`, `dateMaskSpec`, `timeMaskSpec`, `useInputMask`
+- **styles.css** (carbon, foundation, server, `@afframe/ui/styles.css`)
+- **charts.css** (carbon, foundation, server, `@afframe/ui/charts.css`)
 
 ## Carbon, IBM Products and Labs
 
