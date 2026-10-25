@@ -6,7 +6,7 @@ Amended: 2026-10-13, 2026-10-15, 2026-10-25
 
 ## Status
 
-Accepted, amended 2026-10-13 (Task Dialogs family), 2026-10-15 (Add and Select family, test-only stories, IBM Plex under Typography) and 2026-10-25 (the Storybook title is the only grouping; the AddSelect pages join the Add and Select family)
+Accepted, amended 2026-10-13 (Task Dialogs family), 2026-10-15 (Add and Select family, test-only stories, IBM Plex under Typography) and 2026-10-25 (the Storybook title is the only grouping; the AddSelect pages join the Add and Select family; Licences under Getting Started; where the sidebar differs from Carbon)
 
 ## Context
 
@@ -14,11 +14,11 @@ Copied docs pages kept the top-level section of the Storybook they came from. Th
 
 ## Decision
 
-The sidebar follows Carbon's Storybook layout, with Afframe's content merged into it.
+The sidebar follows Carbon's Storybook layout, with Afframe's content merged into it. It differs from Carbon in two places on purpose: Layout also holds Grid, FlexGrid, AspectRatio, Heading and Layer (Carbon files Grid and FlexGrid under Elements and the others under Components), and Utilities holds ErrorBoundary and IdPrefix (Carbon: Components).
 
 | Section         | Holds                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Getting Started | Welcome, Theming, AfframeProvider, Formatting, Feature Flags, in this order                                                                                                                                                                                                                                                                                                                                                       |
+| Getting Started | Welcome, Theming, AfframeProvider, Formatting, Feature Flags, Licences, in this order                                                                                                                                                                                                                                                                                                                                             |
 | Components      | Every component; a family of siblings shares a subfolder (`Create and Edit`, `Task Dialogs`, `Empty States`, `Fluid Inputs`, `Notifications`, `Skeletons`, `UI Shell`, `Charts`, `Onboarding`, `AI`, `Cards`, `Add and Select`); `Add and Select` holds AddSelect, MultiAddSelect and SingleAddSelect, and IBM's MultiAddSelect and SingleAddSelect patterns as `MultiAddSelect Pattern` and `SingleAddSelect Pattern` (ADR 0008) |
 | Elements        | Tokens, typography (with IBM Plex as its sub-page), icons, pictograms                                                                                                                                                                                                                                                                                                                                                             |
 | Layout          | Grid, FlexGrid, Layer, Stack, AspectRatio, Heading (covers Section)                                                                                                                                                                                                                                                                                                                                                               |
