@@ -1434,9 +1434,9 @@
         "name": "preview__AddSelect"
       },
       "docs": "src/components/AddSelect/AddSelect.mdx",
-      "storyTitle": "Components/AddSelect",
+      "storyTitle": "Components/Add and Select/AddSelect",
       "section": "Components",
-      "family": null
+      "family": "Add and Select"
     },
     {
       "name": "AddSelectData",
@@ -1446,9 +1446,33 @@
       "runtime": "client",
       "status": "stable",
       "docs": "src/components/AddSelect/AddSelect.mdx",
-      "storyTitle": "Components/AddSelect",
+      "storyTitle": "Components/Add and Select/AddSelect",
       "section": "Components",
-      "family": null
+      "family": "Add and Select"
+    },
+    {
+      "name": "MultiAddSelect",
+      "kind": "component",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable",
+      "docs": "src/components/MultiAddSelect/MultiAddSelect.mdx",
+      "storyTitle": "Components/Add and Select/MultiAddSelect",
+      "section": "Components",
+      "family": "Add and Select"
+    },
+    {
+      "name": "SingleAddSelect",
+      "kind": "component",
+      "source": "ibm-products",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "status": "stable",
+      "docs": "src/components/SingleAddSelect/SingleAddSelect.mdx",
+      "storyTitle": "Components/Add and Select/SingleAddSelect",
+      "section": "Components",
+      "family": "Add and Select"
     },
     {
       "name": "AILabel",
@@ -2875,18 +2899,6 @@
       "family": null
     },
     {
-      "name": "MultiAddSelect",
-      "kind": "component",
-      "source": "ibm-products",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/MultiAddSelect/MultiAddSelect.mdx",
-      "storyTitle": "Components/MultiAddSelect",
-      "section": "Components",
-      "family": null
-    },
-    {
       "name": "MultiSelect",
       "kind": "component",
       "source": "carbon",
@@ -3623,18 +3635,6 @@
       "status": "stable",
       "docs": "src/components/SidePanel/SidePanel.mdx",
       "storyTitle": "Components/SidePanel",
-      "section": "Components",
-      "family": null
-    },
-    {
-      "name": "SingleAddSelect",
-      "kind": "component",
-      "source": "ibm-products",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "status": "stable",
-      "docs": "src/components/SingleAddSelect/SingleAddSelect.mdx",
-      "storyTitle": "Components/SingleAddSelect",
       "section": "Components",
       "family": null
     },
