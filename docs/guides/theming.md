@@ -12,7 +12,7 @@ Carbon has five kinds of colour values.
 | Theme tokens     | Four maps, `white`, `g10`, `g90`, `g100`, of role tokens (`background`, `layer-01`, `text-primary`, `interactive`, `focus`, `support-error`, the `ai-*` set and so on). Each map also carries the spacing and type tokens. | `@carbon/themes/scss/generated/_themes.scss`                |
 | Component tokens | Per-theme colours of five groups: button, notification, tag, status, content switcher. Carbon Charts adds its own group.                                                                                                   | `_tokens.scss` in each component folder of `@carbon/styles` |
 | Layer aliases    | Unnumbered tokens (`--cds-layer`, `--cds-field`, `--cds-border-subtle`) that point at the numbered theme tokens of the current layer. `Layer` re-points them with `.cds--layer-one/two/three`.                             | `@carbon/styles/scss/_layer.scss`, `layer/_layer-sets.scss` |
-| Zones            | Classes `.cds--white`, `.cds--g10`, `.cds--g90`, `.cds--g100` that re-emit one stock map on an element. Carbon's `Theme` component renders them.                                                                           | `@carbon/styles/scss/_zone.scss`                            |
+| Zones            | Classes `.cds--white`, `.cds--g10`, `.cds--g90`, `.cds--g100` that re-emit only the colour tokens and `color-scheme` of one stock map on an element, not spacing or type. Carbon's `Theme` component renders them.         | `@carbon/styles/scss/_zone.scss`                            |
 
 Facts that follow from the model:
 
