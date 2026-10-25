@@ -129,6 +129,7 @@ Source `afframe`: Afframe code and the stylesheets it compiles. `extras`: an Aff
 - **EditTearsheet** (afframe, component, client, `@afframe/ui`): `defaultEditTearsheetMessages`, `EditTearsheet`, `EditTearsheetForm`
 - **DataGrid** (afframe, component, client, `@afframe/ui`): `DataGrid`, `dataGridColumnCustomization`, `dataGridColumnMeta`, `dataGridExpansion`, `dataGridFilterPanel`, `dataGridFiltering`, `dataGridInlineEdit`, `dataGridPagination`, `dataGridResizing`, `dataGridSelection`, `dataGridSorting`, `dataGridStickyColumns`, `defaultDataGridMessages`
 - **DatePicker** (carbon wrapper, component, client, `@afframe/ui`): `DatePicker`, `defaultDatePickerMessages`, `preview__DatePicker`
+- **mask** (afframe, util, client, `@afframe/ui`): `applyMaskEdit`, `dateMaskSpec`, `timeMaskSpec`, `useInputMask`
 - **DescriptionList** (afframe, component, server, `@afframe/ui`): `DescriptionList`, `DescriptionListItem`, `defaultDescriptionListMessages`
 - **FilterPanel** (afframe, component, client, `@afframe/ui`): `defaultFilterPanelMessages`, `FilterPanel`, `countFilterPanelSelections`, `defaultFilterFlyoutMessages`, `FilterFlyout`, `defaultFilterSummaryMessages`, `FilterSummary`
 - **FluidDatePicker** (carbon wrapper, component, client, `@afframe/ui`): `FluidDatePicker`
@@ -147,7 +148,6 @@ Source `afframe`: Afframe code and the stylesheets it compiles. `extras`: an Aff
 - **pictograms** (carbon, foundation, server, `@afframe/ui/pictograms`)
 - **tokens** (carbon, foundation, server, `@afframe/ui/tokens`)
 - **messages** (afframe, util, server, `@afframe/ui`): `resolveMessages`
-- **mask** (afframe, util, client, `@afframe/ui`): `applyMaskEdit`, `dateMaskSpec`, `timeMaskSpec`, `useInputMask`
 - **styles.css** (afframe, foundation, server, `@afframe/ui/styles.css`)
 - **charts.css** (afframe, foundation, server, `@afframe/ui/charts.css`)
 

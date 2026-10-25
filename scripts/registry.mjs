@@ -297,6 +297,8 @@ const docsAliases = {
   ButtonTooltipPositions: 'Button/Button.mdx',
   IconButtonKinds: 'IconButton/IconButton.mdx',
 };
+// Afframe modules documented on a component's page.
+const familyDocs = { mask: 'DatePicker/DatePicker.mdx' };
 // Upstream exports no page documents or shows; any other export without a
 // docs link fails the check.
 const noDocsPage = {
@@ -524,9 +526,10 @@ for (const { from, star, names } of exportsOf(index)) {
     const info =
       dir === 'src' ? {} : { ...scan(join(root, dir), name), owned: false };
     const folder = dir === 'src' ? rel(file) : dir;
+    const page = familyDocs[name] && `src/components/${familyDocs[name]}`;
     family(
       name,
-      info,
+      page ? { ...info, docs: page, storyTitle: titleOf(page) } : info,
       { kind, source: 'afframe', runtime, folder },
       star ? collected : names
     );
@@ -692,7 +695,7 @@ const markdown = [
   '',
   'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. ' +
     ownership +
-    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page. A prefixed export with a page of its own, such as `preview__DatePicker`, is linked by name in Docs (`pages` in registry.json).',
+    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page. A prefixed export with a page of its own, such as `preview__DatePicker`, is linked by name in Docs (`pages` in registry.json). A module with no page of its own links the page that documents it (`familyDocs` in `scripts/registry.mjs`: `mask` on the DatePicker page).',
   '',
   ...table(
     [

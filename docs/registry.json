@@ -855,6 +855,35 @@
       }
     },
     {
+      "name": "mask",
+      "kind": "util",
+      "source": "afframe",
+      "import": ["@afframe/ui"],
+      "runtime": "client",
+      "folder": "src/mask",
+      "docs": "src/components/DatePicker/DatePicker.mdx",
+      "storyTitle": "Components/DatePicker",
+      "section": "Components",
+      "family": null,
+      "status": "stable",
+      "exports": [
+        "applyMaskEdit",
+        "dateMaskSpec",
+        "timeMaskSpec",
+        "useInputMask"
+      ],
+      "types": [
+        "MaskEdit",
+        "MaskState",
+        "DateMaskOptions",
+        "MaskPart",
+        "MaskPartKind",
+        "MaskSpec",
+        "TimeMaskOptions",
+        "InputMaskProps"
+      ]
+    },
+    {
       "name": "DescriptionList",
       "kind": "component",
       "source": "afframe",
@@ -1258,35 +1287,6 @@
       "status": "stable",
       "exports": ["resolveMessages"],
       "types": []
-    },
-    {
-      "name": "mask",
-      "kind": "util",
-      "source": "afframe",
-      "import": ["@afframe/ui"],
-      "runtime": "client",
-      "folder": "src/mask",
-      "docs": null,
-      "storyTitle": null,
-      "section": null,
-      "family": null,
-      "status": "stable",
-      "exports": [
-        "applyMaskEdit",
-        "dateMaskSpec",
-        "timeMaskSpec",
-        "useInputMask"
-      ],
-      "types": [
-        "MaskEdit",
-        "MaskState",
-        "DateMaskOptions",
-        "MaskPart",
-        "MaskPartKind",
-        "MaskSpec",
-        "TimeMaskOptions",
-        "InputMaskProps"
-      ]
     },
     {
       "name": "styles.css",
