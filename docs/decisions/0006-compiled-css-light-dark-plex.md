@@ -4,7 +4,7 @@ Date: 2026-09-24
 
 ## Status
 
-Accepted. Amended by [ADR 0015](0015-carbon-charts-css-in-its-own-file.md): Carbon Charts CSS ships separately as `charts.css`. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the stylesheet compiles without the v12 flags, so the look is v11.
+Accepted. Amended by [ADR 0015](0015-carbon-charts-css-in-its-own-file.md): Carbon Charts CSS ships separately as `charts.css`. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the stylesheet compiles without the v12 flags, so the look is v11. Amended 2026-10-25: only colours, type properties and layout size and density are runtime tokens in v11, so brand changes are made in this repo but not all of them are token changes ([theming guide](../guides/theming.md)).
 
 ## Context
 
@@ -18,4 +18,4 @@ The look is Carbon v11 as IBM ships it. Afframe visual changes go through Carbon
 
 ## Consequences
 
-Consumers import one CSS file and use Carbon tokens as CSS variables (`var(--cds-spacing-05)`) in their own styles. They must not override `.cds--` or `.c4p--` classes. Brand changes are a token change in this repo, not a consumer concern.
+Consumers import one CSS file and use Carbon tokens as CSS variables (`var(--cds-spacing-05)`) in their own styles. They must not override `.cds--` or `.c4p--` classes. Brand changes are made in this repo, not by consumers. Spacing, sizes, motion, the typeface and almost all corners compile to fixed values and are not runtime tokens; what each one takes: [theming guide](../guides/theming.md).

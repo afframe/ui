@@ -14,4 +14,5 @@ Index of the `docs/` folder. The project overview is the root [README.md](../REA
 | [guides/consuming.md](guides/consuming.md)             | How an Afframe repo installs and uses `@afframe/ui`                                  |
 | [guides/updating-carbon.md](guides/updating-carbon.md) | How Carbon and other upstream updates arrive and get reviewed                        |
 | [guides/accessibility.md](guides/accessibility.md)     | Accessibility target and how it is checked                                           |
+| [guides/theming.md](guides/theming.md)                 | Carbon's token model, runtime and compile-time values, how the themes are applied    |
 | [decisions/](decisions/README.md)                      | Architecture decision records; the list is in `decisions/README.md`                  |
