@@ -223,6 +223,8 @@ const meta = {
     messaging,
     header,
     openChatByDefault: true,
+    // Each open chat takes focus on load, which scrolls the docs page to it.
+    shouldTakeFocusIfOpensAutomatically: false,
     layout: { showFrame: false },
   },
   play: async ({ canvasElement }) => {
