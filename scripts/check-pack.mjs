@@ -161,6 +161,18 @@ for (const path of clientModules) {
   }
 }
 
+// Carbon's flag defaults (CSS grid, custom properties) load from its barrel;
+// the provider imports them itself for bundlers that skip it (ADR 0025).
+if (
+  !/import\s*["']@carbon\/react\/es\/feature-flags\.js["']/.test(
+    read('dist/provider/AfframeProvider.js')
+  )
+) {
+  problems.push(
+    'dist/provider/AfframeProvider.js must import @carbon/react/es/feature-flags.js'
+  );
+}
+
 // IBM's canary components render a placeholder unless their module turns the
 // setting on, and the barrel must take them from that module.
 for (const [name, setting, file] of [
