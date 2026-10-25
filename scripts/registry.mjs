@@ -464,12 +464,10 @@ async function listUpstream(names, source, runtime, specifier) {
         original !== 'default' && {
           upstream: { package: upstreamPackage, name: original },
         }),
-      ...(docs && {
-        docs,
-        storyTitle: titleFor(name, docs),
-        section: null,
-        family: null,
-      }),
+      ...(docs && { docs }),
+      storyTitle: docs ? titleFor(name, docs) : null,
+      section: null,
+      family: null,
     });
   }
 }
