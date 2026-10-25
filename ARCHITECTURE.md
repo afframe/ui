@@ -80,7 +80,7 @@ Code Quality Tools: ESLint, Stylelint with `stylelint-plugin-carbon-tokens`, Pre
 - Carbon v11 without the v12 flags; a move to v12 is a new decision once it ships as stable (ADR 0018, issue #2).
 - Workarounds waiting for upstream fixes: issue #4.
 - Component limits: issue #9.
-- Client JavaScript: Carbon ships as one shared chunk; the supported bundler is Turbopack (ADR 0025).
+- Client JavaScript: Carbon ships as one shared chunk. In Next.js, build with Turbopack (the default); `next build --webpack` is not supported (ADR 0025).
 - Open work: [GitHub issues](https://github.com/afframe/ui/issues).
 
 ## 10. Project Identification
