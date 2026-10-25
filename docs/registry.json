@@ -1293,7 +1293,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Button/Button.mdx"
     },
     {
       "name": "ButtonSizes",
@@ -1301,7 +1302,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Button/Button.mdx"
     },
     {
       "name": "ButtonTooltipAlignments",
@@ -1309,7 +1311,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Button/Button.mdx"
     },
     {
       "name": "ButtonTooltipPositions",
@@ -1317,7 +1320,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Button/Button.mdx"
     },
     {
       "name": "IconButton",
@@ -1334,7 +1338,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/IconButton/IconButton.mdx"
     },
     {
       "name": "ComboButton",
@@ -1651,7 +1656,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Toggle/Toggle.mdx"
     },
     {
       "name": "ToggleSmallSkeleton",
@@ -2008,7 +2014,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableActionList",
@@ -2024,7 +2031,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableBatchActions",
@@ -2032,7 +2040,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableBody",
@@ -2040,7 +2049,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableCell",
@@ -2048,7 +2058,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableContainer",
@@ -2056,7 +2067,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableDecoratorRow",
@@ -2064,7 +2076,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableExpandHeader",
@@ -2072,7 +2085,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableExpandRow",
@@ -2080,7 +2094,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableExpandedRow",
@@ -2088,7 +2103,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableHead",
@@ -2096,7 +2112,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableHeader",
@@ -2104,7 +2121,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableRow",
@@ -2112,7 +2130,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableSelectAll",
@@ -2120,7 +2139,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableSelectRow",
@@ -2128,7 +2148,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableToolbar",
@@ -2136,7 +2157,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableToolbarAction",
@@ -2144,7 +2166,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableToolbarContent",
@@ -2152,7 +2175,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableToolbarMenu",
@@ -2160,7 +2184,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "TableToolbarSearch",
@@ -2168,7 +2193,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/DataTable/DataTable.mdx"
     },
     {
       "name": "StructuredListBody",
@@ -2221,7 +2247,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/StructuredList/StructuredList.mdx"
     },
     {
       "name": "StructuredListWrapper",
@@ -2247,7 +2274,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tag/Tag.mdx"
     },
     {
       "name": "OperationalTag",
@@ -2255,7 +2283,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tag/Tag.mdx"
     },
     {
       "name": "SelectableTag",
@@ -2272,7 +2301,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Tag/Tag.mdx"
     },
     {
       "name": "Tile",
@@ -2388,7 +2418,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/CodeSnippet/CodeSnippet.mdx"
     },
     {
       "name": "OrderedList",
@@ -3019,7 +3050,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Modal/Modal.featureflag.mdx"
     },
     {
       "name": "ComposedModalPresence",
@@ -3027,7 +3059,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ComposedModal/ComposedModal.featureflag.mdx"
     },
     {
       "name": "withModalPresence",
@@ -3035,7 +3068,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/Modal/Modal.featureflag.mdx"
     },
     {
       "name": "withComposedModalPresence",
@@ -3043,7 +3077,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/ComposedModal/ComposedModal.featureflag.mdx"
     },
     {
       "name": "Popover",
@@ -3595,7 +3630,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview"
+      "status": "preview",
+      "docs": "src/components/ChatButton/ChatButton.stories.tsx"
     },
     {
       "name": "preview__ChatButtonSkeleton",
@@ -3603,7 +3639,8 @@
       "source": "carbon",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview"
+      "status": "preview",
+      "docs": "src/components/ChatButton/ChatButton.stories.tsx"
     },
     {
       "name": "preview__Card",
@@ -3939,7 +3976,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/AddSelect/AddSelect.mdx"
     },
     {
       "name": "AboutModal",
@@ -4091,7 +4129,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview-candidate"
+      "status": "preview-candidate",
+      "docs": "src/components/InlineTip/InlineTip.mdx"
     },
     {
       "name": "previewCandidate__InlineTipLink",
@@ -4099,7 +4138,8 @@
       "source": "ibm-products",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "preview-candidate"
+      "status": "preview-candidate",
+      "docs": "src/components/InlineTip/InlineTip.mdx"
     },
     {
       "name": "previewCandidate__Toolbar",
@@ -4280,7 +4320,8 @@
       "source": "labs",
       "import": ["@afframe/ui"],
       "runtime": "client",
-      "status": "stable"
+      "status": "stable",
+      "docs": "src/components/UIShellLabs/SideNav.mdx"
     },
     {
       "name": "SideNavItemsLabs",

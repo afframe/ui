@@ -50,7 +50,7 @@ One entry per Afframe or extras module and per subpath; the JSON lists its expor
 
 ## Carbon, IBM Products and Labs
 
-One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export such as `preview__DatePicker` takes its own page before the folder of its base name.
+One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export such as `preview__DatePicker` takes its own page before the folder of its base name. An export without a link is one no page documents, listed with its reason in `noDocsPage` in the same script.
 
 | Export                             | Kind      | Source       | Runtime | Status            | Docs                                                                    |
 | ---------------------------------- | --------- | ------------ | ------- | ----------------- | ----------------------------------------------------------------------- |
@@ -60,12 +60,12 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | DangerButton                       | component | carbon       | client  | stable            |                                                                         |
 | ButtonSet                          | component | carbon       | client  | stable            | [page](../src/components/ButtonSet/ButtonSet.mdx)                       |
 | ButtonSkeleton                     | component | carbon       | client  | stable            | [page](../src/components/Button/Button.mdx)                             |
-| ButtonKinds                        | util      | carbon       | client  | stable            |                                                                         |
-| ButtonSizes                        | util      | carbon       | client  | stable            |                                                                         |
-| ButtonTooltipAlignments            | util      | carbon       | client  | stable            |                                                                         |
-| ButtonTooltipPositions             | util      | carbon       | client  | stable            |                                                                         |
+| ButtonKinds                        | util      | carbon       | client  | stable            | [page](../src/components/Button/Button.mdx)                             |
+| ButtonSizes                        | util      | carbon       | client  | stable            | [page](../src/components/Button/Button.mdx)                             |
+| ButtonTooltipAlignments            | util      | carbon       | client  | stable            | [page](../src/components/Button/Button.mdx)                             |
+| ButtonTooltipPositions             | util      | carbon       | client  | stable            | [page](../src/components/Button/Button.mdx)                             |
 | IconButton                         | component | carbon       | client  | stable            | [page](../src/components/IconButton/IconButton.mdx)                     |
-| IconButtonKinds                    | util      | carbon       | client  | stable            |                                                                         |
+| IconButtonKinds                    | util      | carbon       | client  | stable            | [page](../src/components/IconButton/IconButton.mdx)                     |
 | ComboButton                        | component | carbon       | client  | stable            | [page](../src/components/ComboButton/ComboButton.mdx)                   |
 | MenuButton                         | component | carbon       | client  | stable            | [page](../src/components/MenuButton/MenuButton.mdx)                     |
 | Copy                               | component | carbon       | client  | stable            |                                                                         |
@@ -101,7 +101,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | RadioButtonGroup                   | component | carbon       | client  | stable            | [page](../src/components/RadioButton/RadioButton.mdx)                   |
 | RadioButtonSkeleton                | component | carbon       | client  | stable            | [page](../src/components/RadioButton/RadioButton.mdx)                   |
 | Toggle                             | component | carbon       | client  | stable            | [page](../src/components/Toggle/Toggle.mdx)                             |
-| ToggleSkeleton                     | component | carbon       | client  | stable            |                                                                         |
+| ToggleSkeleton                     | component | carbon       | client  | stable            | [page](../src/components/Toggle/Toggle.mdx)                             |
 | ToggleSmallSkeleton                | component | carbon       | client  | stable            |                                                                         |
 | Search                             | component | carbon       | client  | stable            | [page](../src/components/Search/Search.mdx)                             |
 | ExpandableSearch                   | component | carbon       | client  | stable            | [page](../src/components/Search/Search.mdx)                             |
@@ -141,39 +141,39 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | FluidTimePickerSkeleton            | component | carbon       | client  | stable            | [page](../src/components/FluidTimePicker/FluidTimePicker.mdx)           |
 | DataTable                          | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
 | DataTableSkeleton                  | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
-| Table                              | component | carbon       | client  | stable            |                                                                         |
+| Table                              | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
 | TableActionList                    | component | carbon       | client  | stable            |                                                                         |
-| TableBatchAction                   | component | carbon       | client  | stable            |                                                                         |
-| TableBatchActions                  | component | carbon       | client  | stable            |                                                                         |
-| TableBody                          | component | carbon       | client  | stable            |                                                                         |
-| TableCell                          | component | carbon       | client  | stable            |                                                                         |
-| TableContainer                     | component | carbon       | client  | stable            |                                                                         |
-| TableDecoratorRow                  | component | carbon       | client  | stable            |                                                                         |
-| TableExpandHeader                  | component | carbon       | client  | stable            |                                                                         |
-| TableExpandRow                     | component | carbon       | client  | stable            |                                                                         |
-| TableExpandedRow                   | component | carbon       | client  | stable            |                                                                         |
-| TableHead                          | component | carbon       | client  | stable            |                                                                         |
-| TableHeader                        | component | carbon       | client  | stable            |                                                                         |
-| TableRow                           | component | carbon       | client  | stable            |                                                                         |
-| TableSelectAll                     | component | carbon       | client  | stable            |                                                                         |
-| TableSelectRow                     | component | carbon       | client  | stable            |                                                                         |
-| TableToolbar                       | component | carbon       | client  | stable            |                                                                         |
-| TableToolbarAction                 | component | carbon       | client  | stable            |                                                                         |
-| TableToolbarContent                | component | carbon       | client  | stable            |                                                                         |
-| TableToolbarMenu                   | component | carbon       | client  | stable            |                                                                         |
-| TableToolbarSearch                 | component | carbon       | client  | stable            |                                                                         |
+| TableBatchAction                   | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableBatchActions                  | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableBody                          | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableCell                          | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableContainer                     | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableDecoratorRow                  | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableExpandHeader                  | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableExpandRow                     | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableExpandedRow                   | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableHead                          | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableHeader                        | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableRow                           | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableSelectAll                     | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableSelectRow                     | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableToolbar                       | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableToolbarAction                 | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableToolbarContent                | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableToolbarMenu                   | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
+| TableToolbarSearch                 | component | carbon       | client  | stable            | [page](../src/components/DataTable/DataTable.mdx)                       |
 | StructuredListBody                 | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)             |
 | StructuredListCell                 | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)             |
 | StructuredListHead                 | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)             |
 | StructuredListInput                | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)             |
 | StructuredListRow                  | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)             |
-| StructuredListSkeleton             | component | carbon       | client  | stable            |                                                                         |
+| StructuredListSkeleton             | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)             |
 | StructuredListWrapper              | component | carbon       | client  | stable            | [page](../src/components/StructuredList/StructuredList.mdx)             |
 | Tag                                | component | carbon       | client  | stable            | [page](../src/components/Tag/Tag.mdx)                                   |
-| DismissibleTag                     | component | carbon       | client  | stable            |                                                                         |
-| OperationalTag                     | component | carbon       | client  | stable            |                                                                         |
+| DismissibleTag                     | component | carbon       | client  | stable            | [page](../src/components/Tag/Tag.mdx)                                   |
+| OperationalTag                     | component | carbon       | client  | stable            | [page](../src/components/Tag/Tag.mdx)                                   |
 | SelectableTag                      | component | carbon       | client  | stable            | [page](../src/components/Tag/Tag.mdx)                                   |
-| TagSkeleton                        | component | carbon       | client  | stable            |                                                                         |
+| TagSkeleton                        | component | carbon       | client  | stable            | [page](../src/components/Tag/Tag.mdx)                                   |
 | Tile                               | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                                 |
 | ClickableTile                      | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                                 |
 | ExpandableTile                     | component | carbon       | client  | stable            | [page](../src/components/Tile/Tile.mdx)                                 |
@@ -186,7 +186,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | AccordionItem                      | component | carbon       | client  | stable            | [page](../src/components/Accordion/Accordion.mdx)                       |
 | AccordionSkeleton                  | component | carbon       | client  | stable            | [page](../src/components/Accordion/Accordion.mdx)                       |
 | CodeSnippet                        | component | carbon       | client  | stable            | [page](../src/components/CodeSnippet/CodeSnippet.mdx)                   |
-| CodeSnippetSkeleton                | component | carbon       | client  | stable            |                                                                         |
+| CodeSnippetSkeleton                | component | carbon       | client  | stable            | [page](../src/components/CodeSnippet/CodeSnippet.mdx)                   |
 | OrderedList                        | component | carbon       | client  | stable            | [page](../src/components/OrderedList/OrderedList.mdx)                   |
 | UnorderedList                      | component | carbon       | client  | stable            | [page](../src/components/UnorderedList/UnorderedList.mdx)               |
 | ListItem                           | component | carbon       | client  | stable            | [page](../src/components/OrderedList/OrderedList.mdx)                   |
@@ -257,10 +257,10 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | ModalHeader                        | component | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.mdx)               |
 | ModalBody                          | component | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.mdx)               |
 | ModalFooter                        | component | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.mdx)               |
-| ModalPresence                      | component | carbon       | client  | stable            |                                                                         |
-| ComposedModalPresence              | component | carbon       | client  | stable            |                                                                         |
-| withModalPresence                  | util      | carbon       | client  | stable            |                                                                         |
-| withComposedModalPresence          | util      | carbon       | client  | stable            |                                                                         |
+| ModalPresence                      | component | carbon       | client  | stable            | [page](../src/components/Modal/Modal.featureflag.mdx)                   |
+| ComposedModalPresence              | component | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.featureflag.mdx)   |
+| withModalPresence                  | util      | carbon       | client  | stable            | [page](../src/components/Modal/Modal.featureflag.mdx)                   |
+| withComposedModalPresence          | util      | carbon       | client  | stable            | [page](../src/components/ComposedModal/ComposedModal.featureflag.mdx)   |
 | Popover                            | component | carbon       | client  | stable            | [page](../src/components/Popover/Popover.mdx)                           |
 | PopoverContent                     | component | carbon       | client  | stable            | [page](../src/components/Popover/Popover.mdx)                           |
 | Tooltip                            | component | carbon       | client  | stable            | [page](../src/components/Tooltip/Tooltip.mdx)                           |
@@ -321,8 +321,8 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | useCarbonPrefix                    | hook      | carbon       | client  | stable            | [page](../src/components/useCarbonPrefix/useCarbonPrefix.mdx)           |
 | preview__IconIndicator             | component | carbon       | client  | preview           | [page](../src/components/IconIndicator/IconIndicator.mdx)               |
 | preview__ShapeIndicator            | component | carbon       | client  | preview           | [page](../src/components/ShapeIndicator/ShapeIndicator.mdx)             |
-| preview__ChatButton                | component | carbon       | client  | preview           |                                                                         |
-| preview__ChatButtonSkeleton        | component | carbon       | client  | preview           |                                                                         |
+| preview__ChatButton                | component | carbon       | client  | preview           | [page](../src/components/ChatButton/ChatButton.stories.tsx)             |
+| preview__ChatButtonSkeleton        | component | carbon       | client  | preview           | [page](../src/components/ChatButton/ChatButton.stories.tsx)             |
 | preview__Card                      | namespace | carbon       | client  | preview           | [page](../src/components/Card/Card.mdx)                                 |
 | preview__Dialog                    | namespace | carbon       | client  | preview           | [page](../src/components/Dialog/Dialog.mdx)                             |
 | preview_Layout                     | component | carbon       | client  | preview           | [page](../src/components/Layout/Layout.mdx)                             |
@@ -354,7 +354,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | UserAvatar                         | component | ibm-products | client  | stable            | [page](../src/components/UserAvatar/UserAvatar.mdx)                     |
 | ScrollGradient                     | component | ibm-products | client  | stable            | [page](../src/components/ScrollGradient/ScrollGradient.mdx)             |
 | previewCandidate__Decorator        | component | ibm-products | client  | preview-candidate | [page](../src/components/Decorator/Decorator.mdx)                       |
-| AddSelectData                      | util      | ibm-products | client  | stable            |                                                                         |
+| AddSelectData                      | util      | ibm-products | client  | stable            | [page](../src/components/AddSelect/AddSelect.mdx)                       |
 | AboutModal                         | component | ibm-products | client  | stable            | [page](../src/components/AboutModal/AboutModal.mdx)                     |
 | ActionBar                          | component | ibm-products | client  | stable            | [page](../src/components/ActionBar/ActionBar.mdx)                       |
 | EmptyState                         | component | ibm-products | client  | stable            | [page](../src/components/EmptyState/EmptyState.mdx)                     |
@@ -371,8 +371,8 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | Cascade                            | component | ibm-products | client  | stable            | [page](../src/components/Cascade/Cascade.mdx)                           |
 | previewCandidate__GetStartedCard   | component | ibm-products | client  | preview-candidate | [page](../src/components/GetStartedCard/GetStartedCard.mdx)             |
 | previewCandidate__InlineTip        | component | ibm-products | client  | preview-candidate | [page](../src/components/InlineTip/InlineTip.mdx)                       |
-| previewCandidate__InlineTipButton  | component | ibm-products | client  | preview-candidate |                                                                         |
-| previewCandidate__InlineTipLink    | component | ibm-products | client  | preview-candidate |                                                                         |
+| previewCandidate__InlineTipButton  | component | ibm-products | client  | preview-candidate | [page](../src/components/InlineTip/InlineTip.mdx)                       |
+| previewCandidate__InlineTipLink    | component | ibm-products | client  | preview-candidate | [page](../src/components/InlineTip/InlineTip.mdx)                       |
 | previewCandidate__Toolbar          | component | ibm-products | client  | preview-candidate | [page](../src/components/Toolbar/Toolbar.mdx)                           |
 | previewCandidate__ToolbarButton    | component | ibm-products | client  | preview-candidate | [page](../src/components/Toolbar/Toolbar.mdx)                           |
 | previewCandidate__ToolbarGroup     | component | ibm-products | client  | preview-candidate | [page](../src/components/Toolbar/Toolbar.mdx)                           |
@@ -392,7 +392,7 @@ One entry per exported value, imported from `@afframe/ui`; types are left out. K
 | StepGroup                          | component | carbon       | client  | stable            | [page](../src/components/StepFlow/StepFlow.mdx)                         |
 | useStepContext                     | hook      | carbon       | client  | stable            | [page](../src/components/StepFlow/StepFlow.mdx)                         |
 | SideNavLabs                        | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                       |
-| SIDE_NAV_TYPE                      | util      | labs         | client  | stable            |                                                                         |
+| SIDE_NAV_TYPE                      | util      | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                       |
 | SideNavItemsLabs                   | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                       |
 | SideNavLinkLabs                    | component | labs         | client  | stable            | [page](../src/components/UIShellLabs/SideNav.mdx)                       |
 | SideNavLinkPopover                 | component | labs         | client  | stable            |                                                                         |
