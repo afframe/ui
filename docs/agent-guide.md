@@ -109,7 +109,7 @@ Upstream docs and the Carbon MCP use the upstream name. Import the Afframe name 
 
 ## Afframe families and subpaths
 
-Afframe-owned code has source `afframe` (Afframe components and helpers, and the stylesheets Afframe compiles from Carbon, IBM Products, Labs and its own styles), `extras` (an Afframe module around another IBM or charting library, exported under that library's names) or `<source> wrapper` (Afframe code around an upstream component that keeps its look, such as `carbon wrapper`). Plain `carbon`: a subpath that passes a Carbon package through. Every other export is the upstream component or value, a few under an Afframe name (`upstream` in registry.json, Renamed exports in the agent guide).
+Source `afframe`: Afframe code and the stylesheets it compiles. `extras`: an Afframe module around another IBM or charting library, under that library's names. `<source> wrapper`: Afframe code around an upstream component. `carbon`: a Carbon package passed through. Everything else is upstream (`upstream` in registry.json, Renamed exports in the agent guide).
 
 - **theme** (afframe, hook, client, `@afframe/ui`): `useColorScheme`, `useCarbonTheme`
 - **AfframeProvider** (afframe, provider, client, `@afframe/ui`): `AfframeProvider`
