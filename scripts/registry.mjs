@@ -141,6 +141,8 @@ const folders = new Map(
 // Stories in subfolders (`DataTable/stories/expansion/`) count for their
 // component folder.
 const docsByName = new Map();
+// The title of the stories file that gave an export its page.
+const titleByName = new Map();
 const storyFiles = [];
 for (const name of readdirSync(componentsDir).sort()) {
   const dir = join(componentsDir, name);
@@ -181,10 +183,63 @@ for (const pass of ['component', 'subcomponents']) {
         (name.startsWith(folder(docs)) && !name.startsWith(folder(current)))
       ) {
         docsByName.set(name, docs);
+        titleByName.set(name, /title:\s*'([^']*\/[^']*)'/.exec(code)?.[1]);
       }
     }
   }
 }
+// The Storybook title of each docs page: a page names itself in
+// <Meta title="...">, else it takes the titles of the stories files that use
+// it (their shared path when they differ); a stories file without a page is
+// its own autodocs page.
+const titlesOfPage = new Map();
+const storyTitles = new Set(
+  readdirSync(join(root, 'src'), { recursive: true })
+    .filter((file) => file.endsWith('.stories.tsx'))
+    .map(
+      (file) =>
+        /title:\s*'([^']*\/[^']*)'/.exec(read(join(root, 'src', file)))?.[1]
+    )
+);
+for (const { dir, file } of storyFiles) {
+  const code = read(join(dir, file));
+  const title = /title:\s*'([^']*\/[^']*)'/.exec(code)?.[1];
+  const page = /import\s+\w+\s+from\s+'(\.\.?\/[^']+\.mdx)'/.exec(code)?.[1];
+  const path = rel(join(dir, page ? join(dirname(file), page) : file));
+  if (title) titlesOfPage.set(path, [...(titlesOfPage.get(path) ?? []), title]);
+}
+const ownTitle = (page) =>
+  page.endsWith('.mdx')
+    ? (/<Meta\s[^>]*title="([^"]+)"/.exec(read(join(root, page)))?.[1] ?? null)
+    : null;
+function titleOf(page) {
+  if (!page) return null;
+  const own = ownTitle(page);
+  if (own) return own;
+  const parts = (titlesOfPage.get(page) ?? []).map((title) => title.split('/'));
+  if (parts.length === 0) return null;
+  return (
+    parts[0]
+      .filter((part, i) => parts.every((other) => other[i] === part))
+      .join('/') || null
+  );
+}
+// A page shared by stories files with different titles (UIShell.mdx) takes,
+// for each export, the title of the stories file that named it, unless the
+// shared title ends in a component folder (`Components/DataTable`).
+function titleFor(name, docs) {
+  const shared = titleOf(docs);
+  if (ownTitle(docs) || folders.has(shared?.split('/').at(-1).toLowerCase())) {
+    return shared;
+  }
+  return (
+    [name, baseName(name)]
+      .filter((key) => docsByName.get(key) === docs)
+      .map((key) => titleByName.get(key))
+      .find(Boolean) ?? shared
+  );
+}
+
 // Exports documented on another export's page.
 const docsAliases = {
   ColumnHang: 'Grid/Grid.mdx',
@@ -366,6 +421,8 @@ function family(name, info, fields, names) {
       folder: info.folder ?? null,
       docs: info.docs ?? null,
       storyTitle: info.storyTitle ?? null,
+      section: null,
+      family: null,
       status: 'stable',
       exports: [],
       types: [],
@@ -407,7 +464,12 @@ async function listUpstream(names, source, runtime, specifier) {
         original !== 'default' && {
           upstream: { package: upstreamPackage, name: original },
         }),
-      ...(docs && { docs }),
+      ...(docs && {
+        docs,
+        storyTitle: titleFor(name, docs),
+        section: null,
+        family: null,
+      }),
     });
   }
 }
@@ -546,6 +608,54 @@ for (const { folder, owned } of folders.values()) {
   }
 }
 
+// Grouping comes from the Storybook title only (ADR 0019): its first part is
+// the section; the family is the subfolder between section and page. A part
+// that names an export is the component (`Components/DataTable/
+// Basic`, `Components/Modal/Feature Flags`), and so is the end of a page
+// title; a title that is only a folder (`Components/Charts`) is a family.
+const pageNames = new Set([
+  ...upstream.map((entry) => entry.name),
+  ...families.flatMap((entry) => entry.exports),
+]);
+const subPages = ['Feature Flags', 'Examples', 'Docs'];
+for (const entry of [...families, ...upstream]) {
+  if (!entry.storyTitle) continue;
+  const parts = entry.storyTitle.split('/');
+  const named = parts.findIndex((part, i) => i > 0 && pageNames.has(part));
+  const sub = parts.findIndex((part, i) => i > 1 && subPages.includes(part));
+  const path = sub < 0 ? parts : parts.slice(0, sub);
+  const family =
+    named > 0
+      ? parts.slice(1, named)
+      : storyTitles.has(path.join('/')) ||
+          ownTitle(entry.docs ?? '') === path.join('/')
+        ? path.slice(1, -1)
+        : path.slice(1);
+  entry.section = parts[0];
+  entry.family = family.join('/') || null;
+}
+
+// Entries in sidebar order: Storybook's own sort, read from
+// .storybook/preview.tsx. Storybook requires storySort inline and free of
+// outside references, so it cannot be imported; its source is evaluated here.
+// Entries without a title go last; ties keep the src/index.ts order.
+const sortSource = /storySort: (\(a, b\) => \{[\s\S]*?\n {6}\}),\n/.exec(
+  read(join(root, '.storybook/preview.tsx'))
+)?.[1];
+if (!sortSource) {
+  throw new Error(
+    'registry: no storySort in .storybook/preview.tsx; expected `storySort: (a, b) => {` closed by `},` at 6 spaces'
+  );
+}
+const storySort = new Function(`return ${sortSource}`)();
+const bySidebar = (a, b) =>
+  !a.storyTitle || !b.storyTitle
+    ? Number(!a.storyTitle) - Number(!b.storyTitle)
+    : // storySort reads only `title` of Storybook's index entries.
+      storySort({ title: a.storyTitle }, { title: b.storyTitle });
+families.sort(bySidebar);
+upstream.sort(bySidebar);
+
 const table = (header, rows) => [
   `| ${header.join(' | ')} |`,
   `| ${header.map(() => '---').join(' | ')} |`,
@@ -557,14 +667,26 @@ const markdown = [
   '',
   'Every public export of `@afframe/ui`. Generated by `pnpm registry` from `src/index.ts`, the subpath entries and `src/components`; `pnpm registry --check` (part of `pnpm preflight`) fails when it is out of date. The full data is in [registry.json](registry.json).',
   '',
+  'Grouping follows Storybook only (ADR 0019): `storyTitle` is the Storybook title of the docs page, `section` its first part, `family` the subfolder between section and page (none when the page sits in the section). Both tables are in sidebar order; entries without a docs page come last.',
+  '',
   '## Afframe families and subpaths',
   '',
   'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.',
   '',
   ...table(
-    ['Family', 'Kind', 'Source', 'Import', 'Runtime', 'Docs', 'Afframe parts'],
+    [
+      'Family',
+      'Storybook',
+      'Kind',
+      'Source',
+      'Import',
+      'Runtime',
+      'Docs',
+      'Afframe parts',
+    ],
     families.map((entry) => [
       entry.name,
+      entry.storyTitle ?? '',
       entry.kind,
       entry.wrapper ? `${entry.source} wrapper` : (entry.source ?? ''),
       entry.import.map((path) => `\`${path}\``).join(', '),
@@ -581,9 +703,10 @@ const markdown = [
   'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export such as `preview__DatePicker` takes its own page before the folder of its base name. An export without a link is one no page documents, listed with its reason in `noDocsPage` in the same script.',
   '',
   ...table(
-    ['Export', 'Kind', 'Source', 'Runtime', 'Status', 'Docs'],
+    ['Export', 'Storybook', 'Kind', 'Source', 'Runtime', 'Status', 'Docs'],
     upstream.map((entry) => [
       entry.name,
+      entry.storyTitle ?? '',
       entry.kind,
       entry.source,
       entry.runtime,
