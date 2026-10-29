@@ -56,7 +56,7 @@ jobs:
       - uses: pnpm/action-setup@<sha>
       - uses: actions/setup-node@<sha>
         with:
-          node-version: 24
+          node-version: 26
           registry-url: https://npm.pkg.github.com
           scope: '@afframe'
       - run: pnpm install --frozen-lockfile
@@ -70,7 +70,7 @@ Docker. The install stage writes a user-level `.npmrc` that holds no secret, and
 
 ```dockerfile
 # syntax=docker/dockerfile:1
-FROM node:24-slim AS deps
+FROM node:26-slim AS deps
 ENV IBM_TELEMETRY_DISABLED=true
 RUN npm install -g pnpm@<version>
 WORKDIR /app
