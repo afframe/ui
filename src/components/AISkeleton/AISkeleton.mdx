@@ -5,7 +5,7 @@ import * as AISkeletonTextStories from './AISkeletonText.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, story names unified, upstream Feedback section and table of contents removed, Afframe notes added.
 
 <Meta isTemplate />
 
@@ -13,7 +13,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <SourceLabel name="carbon" />
 
-[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/AISkeleton)
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.119.0/packages/react/src/components/AISkeleton)
 
 ## Overview
 
@@ -28,6 +28,14 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 #### AI Skeleton Text
 
 <Canvas of={AISkeletonTextStories.Text} />
+
+## Afframe notes
+
+Use AI skeletons while AI content loads; once it has loaded, mark it with
+[AILabel](?path=/docs/components-ai-ailabel--overview). For content that is not
+AI generated use Carbon's
+[SkeletonText](?path=/docs/components-skeletons-skeletontext--overview) and
+[SkeletonPlaceholder](?path=/docs/components-skeletons-skeletonplaceholder--overview).
 
 ## Component API
 

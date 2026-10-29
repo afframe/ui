@@ -32,11 +32,18 @@ import { createElement, useMemo } from 'react';
 import type { ComponentClass, ReactElement, Ref } from 'react';
 import { useCarbonTheme } from '../../theme/use-afframe-theme.js';
 
-/** Props of a Carbon Charts component; `ref` reaches IBM's class instance (its `chart` field is the core chart). */
+/** Props of a Carbon Charts component. */
 export interface CarbonChartProps<Options extends BaseChartOptions, Instance> {
+  /** IBM's tabular data. */
   data: ChartTabularData;
+  /** IBM's chart options; `theme` defaults to the page's Carbon theme. */
   options: Options;
-  ref?: Ref<Instance>;
+  /**
+   * IBM's class instance; its `chart` field is the core chart. The instance
+   * also has its own `chartRef` field, which is the `.chart-holder` div, not
+   * the chart.
+   */
+  chartRef?: Ref<Instance>;
 }
 
 /** A Carbon Charts component with the page's theme as its default. */
@@ -54,8 +61,11 @@ function withCarbonTheme<Options extends BaseChartOptions, Instance>(
   Chart: unknown,
   name: string
 ): CarbonChart<Options, Instance> {
-  function Themed(props: CarbonChartProps<Options, Instance>) {
-    const { options } = props;
+  function Themed({
+    chartRef,
+    options,
+    ...rest
+  }: CarbonChartProps<Options, Instance>) {
     const theme = useCarbonTheme();
     const themed = useMemo(
       () =>
@@ -69,8 +79,12 @@ function withCarbonTheme<Options extends BaseChartOptions, Instance>(
       [options, theme]
     );
     return createElement(
-      Chart as ComponentClass<CarbonChartProps<Options, Instance>>,
-      { ...props, options: themed }
+      Chart as ComponentClass<{
+        data: ChartTabularData;
+        options: Options;
+        ref: Ref<Instance> | undefined;
+      }>,
+      { ...rest, options: themed, ref: chartRef }
     );
   }
   Themed.displayName = name;

@@ -28,7 +28,7 @@ Layout: [docs/package-structure.md](docs/package-structure.md).
 
 Name: `@afframe/ui`.
 
-Description: one import path, `@afframe/ui`, for every component. Icons, pictograms and JavaScript token values follow Carbon's own pattern (`@carbon/react/icons`): subpaths `@afframe/ui/icons`, `@afframe/ui/pictograms` and `@afframe/ui/tokens`, with Carbon's names. Carbon components are re-exported by name as they are; only components Afframe changes get an Afframe wrapper, such as the date and time pickers with the system format and a typing mask (`src/mask/`, ADR 0021). The components IBM is moving from IBM Products into Carbon core are exported under Afframe names, backed by IBM Products (ADR 0005). Extras (Carbon Charts, ECharts with the Carbon theme, `@carbon/ai-chat`, TanStack data grid, onboarding, Labs) come through the same path and must tree-shake out of apps that do not use them: each extra family is its own `'use client'` module, and the AI chat loads lazily ([docs/package-structure.md](docs/package-structure.md)).
+Description: one import path, `@afframe/ui`, for every component. Icons, pictograms and JavaScript token values follow Carbon's own pattern (`@carbon/react/icons`): subpaths `@afframe/ui/icons`, `@afframe/ui/pictograms` and `@afframe/ui/tokens`, with Carbon's names. Carbon components are re-exported by name as they are; only components Afframe changes get an Afframe wrapper, such as the date and time pickers with the system format and a typing mask (`src/mask/`, ADR 0021). The components IBM is moving from IBM Products into Carbon core are exported under Afframe names, backed by IBM Products (ADR 0005). Extras (Carbon Charts, ECharts with the Carbon theme, `@carbon/ai-chat`, TanStack data grid) and Labs come through the same path and must tree-shake out of apps that do not use them: each extra family and each Labs package is its own `'use client'` module, and the AI chat loads lazily ([docs/package-structure.md](docs/package-structure.md)).
 
 Technologies: React, TypeScript, Carbon `@carbon/react` on the stable v11 line without the v12 feature flags except the focus wrap flag (ADR 0018), Sass. Versions: `package.json`.
 
@@ -40,7 +40,7 @@ Wraps the consumer app once. Turns on the React side of the opt-in Carbon flags 
 
 ### 3.3. Styles
 
-One Sass build compiles Carbon, IBM Products and Afframe styles with the Sass side of the opt-in flags (`docs/feature-flags.md`) into `dist/styles.css`. Consumers never touch Sass. Prefixes stay `cds` (Carbon) and `c4p` (IBM Products). Themes `light`, `dark` and `system` (follows the OS), chosen by `data-afframe-theme` on `<html>`. The app renders that attribute on the server and the CSS does the rest, so the theme does not flash. Carbon Charts CSS is compiled separately into `dist/charts.css`, which an app that renders charts imports as well. IBM Plex fonts ship in `dist/fonts/`, referenced by relative URLs.
+One Sass build compiles Carbon, IBM Products and Afframe styles with the Sass side of the opt-in flags (`docs/feature-flags.md`) into `dist/styles.css`. Consumers never touch Sass. Prefixes stay `cds` (Carbon) and `c4p` (IBM Products). Themes `light`, `dark` and `system` (follows the OS), chosen by `data-afframe-theme` on `<html>`. The app renders that attribute on the server and the CSS does the rest, so the theme does not flash. Carbon Charts CSS is compiled separately into `dist/charts.css`, which an app that renders charts imports as well. IBM Plex fonts ship in `dist/fonts/`, referenced by relative URLs. Carbon writes no theme tokens on `:root`; `src/styles/index.scss` writes the stock White and Gray 100 themes there, and zones, chart holders and Guidebanner re-emit stock themes on their own elements ([docs/guides/theming.md](docs/guides/theming.md)).
 
 ### 3.4. Storybook
 
@@ -69,7 +69,7 @@ CI/CD Pipeline: GitHub Actions (`.github/workflows/`): fast checks in `ci.yml` o
 
 Local setup: [docs/developer-handbook.md](docs/developer-handbook.md).
 
-Build: tsdown for JavaScript (per-file ESM, `'use client'` kept), `tsc` for type declarations, Sass for `styles.css`.
+Build: tsdown for JavaScript (per-file ESM, `'use client'` kept), `tsc` for type declarations, Sass for `styles.css` and `charts.css`.
 
 Testing Frameworks: Vitest browser mode (Playwright, Chromium) with Testing Library; every story runs as a test with the Storybook a11y addon, violations fail; screenshot tests for Afframe-owned components against committed Linux baselines, run only in CI (release checks). `pnpm test` runs the rest; detail: [docs/testing.md](docs/testing.md).
 
@@ -79,7 +79,8 @@ Code Quality Tools: ESLint, Stylelint with `stylelint-plugin-carbon-tokens`, Pre
 
 - Carbon v11 without the v12 flags; a move to v12 is a new decision once it ships as stable (ADR 0018, issue #2).
 - Workarounds waiting for upstream fixes: issue #4.
-- Component limits: issue #9; client bundle size of the Carbon barrel: issue #8.
+- Component limits: issue #9.
+- Client JavaScript: Carbon ships as one shared chunk (ADR 0025).
 - Open work: [GitHub issues](https://github.com/afframe/ui/issues).
 
 ## 10. Project Identification
@@ -100,4 +101,4 @@ v12 flags: Carbon feature flags (`enable-v12-release` and `enable-v12-*`) that t
 
 Migrated components: the components IBM is moving from IBM Products into Carbon core for v12.
 
-Afframe-owned component: a component Afframe wraps, changes or builds; as opposed to a Carbon component re-exported as is.
+Afframe-owned component: a component Afframe wraps, changes or builds; as opposed to a Carbon component re-exported as is. The list: the "Afframe families and subpaths" section of [docs/registry.md](docs/registry.md).

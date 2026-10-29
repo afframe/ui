@@ -3,7 +3,7 @@ import { Default } from './FirstTimeOrientation.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, Stackblitz link and unused imports removed, Meta as a plain template, a link to an IBM-internal site removed (the IBM-only pages site), prose reflowed and typos fixed, the InterstitialScreen link points to the page here, story names unified, upstream Labs owner block removed.
+// Modified by Afframe in 2026: source label and source link added, Stackblitz link and unused imports removed, Meta as a plain template, a link to an IBM-internal site removed (the IBM-only pages site), prose reflowed and typos fixed, the InterstitialScreen link points to the page here, story names unified, upstream Labs owner block removed, When to use and Afframe notes added.
 
 <Meta isTemplate />
 
@@ -28,3 +28,29 @@ interstitial. The personalization interstitial uses
 from Carbon.
 
 <Canvas of={Default} />
+
+## When to use
+
+Use the pattern once, on a user's first visit, to welcome them and collect
+preferences that tailor the product. Do not use it for:
+
+- announcing new features to returning users: [WhatsNew](?path=/docs/components-onboarding-whatsnew--overview);
+- a one-off message in a modal, with or without steps: [InterstitialScreen](?path=/docs/components-onboarding-interstitialscreen--overview);
+- pointing at one control on the page: [Coachmark](?path=/docs/components-onboarding-coachmark--overview);
+- a list of setup tasks the user works through over time: [Checklist](?path=/docs/components-onboarding-checklist--overview).
+
+## Afframe notes
+
+- **`WelcomeInterstitial` and `PersonalizationInterstitial` are samples.**
+  Both take no props: their text, tags and image are fixed in the Labs
+  package. Apps write their own steps inside `InterstitialScreen.Body`, and
+  use these two only as a reference.
+- **The personalization tags need their own spacing.** Labs renders the
+  selectable tags in a bare group with no gap and ships no style for it; the
+  story adds the gap, so an app that writes its own tag step adds its own.
+- **The welcome image does not load in an app.** Labs sets the image source
+  to a bare file name (`0dbe8337b79d613d.png`) and does not ship the file, so
+  the browser requests it next to the current page and gets a 404. This
+  Storybook serves its own placeholder under that name; an app that renders
+  `WelcomeInterstitial` must serve an image at that path or, better, render
+  its own welcome step with its own image.

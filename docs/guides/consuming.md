@@ -139,6 +139,8 @@ Set the theme on `<html>` in the server-rendered root layout with `data-afframe-
 
 Wrap the app in `<AfframeProvider>`. It turns on the Carbon feature flags Afframe UI uses. Without it, modals show in the page even while closed, with no backdrop. In Next.js App Router it is a client component placed inside the root layout. `@afframe/ui` needs no Sass, no `transpilePackages` and no load-path settings.
 
+With the default `next build`, the first page loads about 233 KB gzip of Carbon, more on a page with IBM Products components; later pages take it from the cache. Measurements: ADR 0025.
+
 ## 5. Use it
 
 Import every component from `@afframe/ui`. Icons, pictograms and JavaScript token values have their own paths, with Carbon's names, as in `@carbon/react/icons`:
@@ -160,6 +162,7 @@ Do not:
 
 - install or configure `@carbon/styles` Sass (a second configuration fails to compile);
 - override `.cds--` or `.c4p--` classes;
+- redefine `--cds-*` tokens: an override is undone inside `Theme` zones and charts and does not reach the values compiled into `styles.css` (`docs/guides/theming.md`);
 - import `@carbon/*` (including `@carbon/ibm-products`) or `@carbon-labs/*` directly; it can pull a second Carbon version.
 
 ### Formatting on the server
@@ -187,6 +190,7 @@ export default function Total() {
 Carbon Charts, ECharts, the data grid and the AI chat each sit in their own client module, so a route that does not use one ships none of its JavaScript (`scripts/check-example.mjs` checks it).
 
 - Charts and `EChart` load statically with the route that renders them. The server renders an empty container; the chart draws in the browser.
+- Carbon Charts components take `chartRef` for IBM's chart instance, where IBM's docs use `ref`. `EChart` takes `chartRef` for the ECharts instance; its `ref` is the container `div`.
 - `ChatContainer` and `ChatCustomElement` load `@carbon/ai-chat` lazily in the browser, because it defines custom elements when it loads. The server renders a placeholder.
 - IBM's enums (for example `ScaleTypes`, `ChartTheme`, `MessageResponseTypes`) come from client modules, so a server component cannot read their values. Build chart or chat options in a client component, or pass the plain string values.
 - Carbon Charts CSS ships separately as `@afframe/ui/charts.css` (about 257 KB, 24 KB gzipped); `styles.css` carries none of it. Import it where charts render (section 4).

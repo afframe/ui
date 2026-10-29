@@ -84,6 +84,7 @@ const required = [
   ...serverFamilies.map((name) => `dist/components/${name}/${name}.js`),
   'dist/fonts/LICENSE.txt',
   'LICENSES/Apache-2.0.txt',
+  'LICENSES/OFL-1.1.txt',
   'LICENSES/PolyForm-Noncommercial-1.0.0.txt',
 ];
 
@@ -158,6 +159,18 @@ for (const path of clientModules) {
   if (/^\s*export\s*\*/m.test(code)) {
     problems.push(`${path} must not use export *`);
   }
+}
+
+// Carbon's flag defaults (CSS grid, custom properties) load from its barrel;
+// the provider imports them itself for bundlers that skip it (ADR 0025).
+if (
+  !/import\s*["']@carbon\/react\/es\/feature-flags\.js["']/.test(
+    read('dist/provider/AfframeProvider.js')
+  )
+) {
+  problems.push(
+    'dist/provider/AfframeProvider.js must import @carbon/react/es/feature-flags.js'
+  );
 }
 
 // IBM's canary components render a placeholder unless their module turns the

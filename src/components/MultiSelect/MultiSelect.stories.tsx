@@ -199,7 +199,6 @@ function preserveCustomSearchResults(items: readonly CustomSearchItem[]) {
 
 const sharedArgs = {
   size: 'md',
-  autoAlign: false,
   type: 'default',
   titleText: 'Payment terms offered',
   disabled: false,
@@ -703,7 +702,7 @@ Disabled.parameters = {
 export const ReadOnly: StoryFn<StoryArgs> = WithInitialSelectedItems.bind({});
 ReadOnly.args = { ...sharedArgs, readOnly: true };
 
-// Carbon 1.118 gives the error text no id, links nothing to it and sets no
+// Carbon 1.119 gives the error text no id, links nothing to it and sets no
 // aria-invalid; MultiSelect takes no extra props to fix it from outside.
 // This is an upstream bug.
 export const Invalid: StoryFn<StoryArgs> = Default.bind({});

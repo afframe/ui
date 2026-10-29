@@ -140,6 +140,8 @@ above. The others:
 - `resultCount`: the number of results with the applied `value`; shown and
   announced when set.
 - `messages`: overrides for the strings below.
+- `locale`: BCP 47 locale of the slider bounds and of `FilterSummary`'s
+  numbers and dates. Default the package locale, `cs-CZ`.
 - `headingLevel`: level of the title heading, 2 (default) or 3. Use 3 when
   the panel sits under a page section heading.
 - `ref` and other HTML attributes go to the root `section`.
@@ -149,7 +151,7 @@ above. The others:
 ## FilterFlyout
 
 `FilterFlyout` takes `groups`, `value`, `onChange`, `updateMethod`, `layout`,
-`resultCount`, `headingLevel` and `messages`, and has no close button.
+`resultCount`, `headingLevel`, `locale` and `messages`, and has no close button.
 `defaultOpen` opens it on first render. `ref` and other HTML attributes go to
 its root `div`, Carbon's Popover.
 
@@ -182,7 +184,7 @@ root.
 `FilterSummary` needs `AfframeProvider`: without it IBM's closed "All filters"
 modal paints on screen.
 
-It takes `groups`, `value`, `onChange` and `messages`; `ref` and other HTML
+It takes `groups`, `value`, `onChange`, `locale` and `messages`; `ref` and other HTML
 attributes go to its root `div`. Render it right before the data it filters,
 as upstream does between the table toolbar and the table.
 

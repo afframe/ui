@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2023, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, Checklist and TruncatedText from @afframe/ui, plain CSS file, the MDX page replaces the docs page component, the theme prop from getSelectedCarbonTheme dropped, task lists cast to the unexported kind enum, color-contrast disabled on TaskStates, story names unified. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, Checklist and TruncatedText from @afframe/ui, plain CSS file, the MDX page replaces the docs page component, the theme prop from getSelectedCarbonTheme dropped, task lists cast to the unexported kind enum, color-contrast disabled on TaskStates, story names unified, the Default chart label passed as text (IBM wraps it in a p, where the TruncatedText div is invalid). Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { ComponentProps } from 'react';
@@ -120,16 +120,7 @@ Default.args = {
     action(`toggle ${isOpen ? 'open' : 'closed'}`)();
   },
   chartValue: 0.15,
-  chartLabel: (
-    <TruncatedText
-      autoAlign
-      align="bottom"
-      id="example-id-1"
-      lines={2}
-      type="tooltip"
-      value="15% complete"
-    />
-  ),
+  chartLabel: '15% complete',
   taskLists: taskLists,
   title: (
     <TruncatedText

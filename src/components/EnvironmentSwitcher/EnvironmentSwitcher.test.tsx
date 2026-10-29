@@ -1,5 +1,5 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
-import { createRef, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { Header, HeaderGlobalBar, HeaderName } from '../../index.js';
@@ -178,7 +178,9 @@ test('a new value while open replaces the draft', async () => {
   let setOutside: (id: string) => void = () => undefined;
   function Outside() {
     const [value, setValue] = useState('staging');
-    setOutside = setValue;
+    useEffect(() => {
+      setOutside = setValue;
+    }, []);
     return (
       <EnvironmentSwitcher
         environments={environments}

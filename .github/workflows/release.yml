@@ -18,7 +18,9 @@ env:
   STORYBOOK_DISABLE_TELEMETRY: '1'
 
 jobs:
-  # The same checks as the release checks, without write permissions.
+  # Refuses a wrong tag, runs the fast checks and packs the tarball that publish
+  # uploads, without write permissions. The visual, example and Storybook checks
+  # run in the checks job.
   verify:
     # Only the public repo publishes; forks never do.
     if: github.repository == 'afframe/ui'
@@ -42,8 +44,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm preflight
       - run: pnpm exec playwright install chromium --only-shell
-      # CI is set, so this includes the visual project.
-      - run: pnpm test
+      - run: pnpm build:css
+      - run: pnpm exec vitest run --project node --project unit --project storybook
       - run: pnpm build
       - run: pnpm check:pack
       # check:pack inspects npm's pack, so publish uploads that one; pnpm pack
@@ -55,8 +57,15 @@ jobs:
           path: package.tgz
           if-no-files-found: error
 
+  checks:
+    if: github.repository == 'afframe/ui'
+    # actionlint 1.7.12 rejects the $/ form that zizmor asks for.
+    uses: ./.github/workflows/release-checks.yml # zizmor: ignore[self-repository]
+    permissions:
+      contents: read
+
   publish:
-    needs: verify
+    needs: [verify, checks]
     if: github.repository == 'afframe/ui'
     runs-on: ubuntu-24.04
     timeout-minutes: 10

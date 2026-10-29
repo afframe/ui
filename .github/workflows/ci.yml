@@ -93,6 +93,24 @@ jobs:
       - name: reuse lint and licence labels
         run: scripts/ci/licence-check.sh
 
+  docgen:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # The docgen server is experimental: a Storybook update can empty the
+      # Carbon and IBM Products API tables without failing the build.
+      - run: pnpm build:storybook
+      - run: pnpm check:docgen
+
   # Two shards keep the job fast. Visual tests run in release-checks.yml.
   test:
     name: test (${{ matrix.shard }}/2)
@@ -136,7 +154,7 @@ jobs:
   # pr-title is skipped on pushes to main.
   ci:
     if: always()
-    needs: [secrets, pr-title, workflow-lint, preflight, test]
+    needs: [secrets, pr-title, workflow-lint, preflight, docgen, test]
     runs-on: ubuntu-24.04
     timeout-minutes: 1
     steps:

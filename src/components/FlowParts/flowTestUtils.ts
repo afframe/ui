@@ -12,7 +12,7 @@ export async function leavePendingButton(): Promise<HTMLElement> {
 
 /**
  * afterEach for EditTearsheet: lets running exit animations finish, then
- * unmounts. IBM Products' own Tearsheet `usePresence` (2.100.0) awaits
+ * unmounts. IBM Products' own Tearsheet `usePresence` (2.101.0) awaits
  * `animation.finished` without a catch, so unmounting a closing tearsheet
  * mid-animation leaves an unhandled AbortError. The local patch covers only
  * Carbon's copy in `@carbon/react`.

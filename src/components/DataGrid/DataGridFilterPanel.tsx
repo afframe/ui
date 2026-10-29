@@ -267,11 +267,13 @@ export function FilterPanelLayout({
   panel,
   settings,
   resultCount,
+  locale,
   children,
 }: {
   panel: FilterPanelState;
   settings: DataGridFilterPanelSettings | undefined;
   resultCount: number;
+  locale?: string;
   children: ReactNode;
 }) {
   const { open } = panel;
@@ -301,6 +303,7 @@ export function FilterPanelLayout({
           updateMethod={updateMethod}
           {...(layout && { layout })}
           {...(headingLevel && { headingLevel })}
+          {...(locale === undefined ? {} : { locale })}
         />
       )}
       <div className="afframe-data-grid-filter-main">{children}</div>

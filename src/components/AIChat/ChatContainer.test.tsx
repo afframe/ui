@@ -67,3 +67,23 @@ test('the chat renders in a wrapper that takes no box', async () => {
   const wrapper = container.querySelector('[data-afframe-extra="ai-chat"]');
   expect(wrapper && getComputedStyle(wrapper).display).toBe('contents');
 });
+
+test('while loading, the skeleton is busy and named, and keeps className', async () => {
+  let finish: (chat: ChatModule) => void = () => undefined;
+  load.mockReturnValue(new Promise((done) => (finish = done)));
+  const { container } = render(
+    <ChatCustomElement
+      className="chat"
+      messages={{ loading: 'Opening chat' }}
+    />
+  );
+  const wrapper = container.querySelector('[data-afframe-extra="ai-chat"]');
+  expect(wrapper).toHaveAttribute('aria-busy', 'true');
+  expect(wrapper).toHaveTextContent('Opening chat');
+  expect(wrapper?.querySelector('.cds--skeleton__placeholder')).toHaveClass(
+    'chat'
+  );
+  finish(fakeChat);
+  expect(await screen.findByText('Loaded custom element')).toBeTruthy();
+  expect(wrapper).not.toHaveAttribute('aria-busy');
+});

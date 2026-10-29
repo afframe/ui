@@ -164,7 +164,7 @@ export function ExportModal({
     }
   }
 
-  const dialog = useFlow({
+  const { containerRef, ...dialog } = useFlow({
     open,
     onClose,
     launcherRef,
@@ -175,7 +175,9 @@ export function ExportModal({
   // onClose through a ref: a new function from a parent render must not
   // restart the timer. Closing first (open false) clears it.
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
   useEffect(() => {
     if (!open || !succeeded || !closeOnSuccess) return;
     const timer = setTimeout(() => onCloseRef.current(), closeDelay);
@@ -224,10 +226,7 @@ export function ExportModal({
       loadingIconDescription={text.pending}
       onRequestClose={dialog.requestClose}
       onRequestSubmit={() => void submit()}>
-      <div
-        ref={dialog.containerRef}
-        tabIndex={-1}
-        className="afframe-modal-body">
+      <div ref={containerRef} tabIndex={-1} className="afframe-modal-body">
         <FlowDescription description={description} />
         <TextInput
           ref={nameRef}

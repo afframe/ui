@@ -1,8 +1,9 @@
 // Writes docs/registry.json and docs/registry.md from src/index.ts, the
 // subpath entries and a scan of src/components. `--check` writes nothing and
 // fails on drift, on an Afframe folder without stories, test, visual test or
-// docs page, on a wrapper without an `afframe` story, test or docs page, and
-// on an export whose module or docs page does not exist.
+// docs page, on a wrapper without an `afframe` story, test or docs page, on
+// an export whose module or docs page does not exist, and on an upstream
+// export with no docs page that `noDocsPage` does not list.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -137,11 +138,15 @@ const folders = new Map(
 // Docs pages of exports without a folder of their own: a stories meta's
 // `component` and `subcomponents` point to the page the stories file uses;
 // a folder's main stories file wins over the others.
+// Stories in subfolders (`DataTable/stories/expansion/`) count for their
+// component folder.
 const docsByName = new Map();
+// The title of the stories file that gave an export its page.
+const titleByName = new Map();
 const storyFiles = [];
 for (const name of readdirSync(componentsDir).sort()) {
   const dir = join(componentsDir, name);
-  for (const file of readdirSync(dir)
+  for (const file of readdirSync(dir, { recursive: true })
     .filter((f) => f.endsWith('.stories.tsx'))
     .sort()) {
     storyFiles.push({ dir, file, main: file === `${name}.stories.tsx` });
@@ -151,14 +156,13 @@ storyFiles.sort((a, b) => Number(b.main) - Number(a.main));
 for (const pass of ['component', 'subcomponents']) {
   for (const { dir, file } of storyFiles) {
     const code = read(join(dir, file));
-    const page = /import\s+\w+\s+from\s+'\.\/([^']+\.mdx)'/.exec(code)?.[1];
+    const page = /import\s+\w+\s+from\s+'(\.\.?\/[^']+\.mdx)'/.exec(code)?.[1];
     const docs = page
-      ? rel(join(dir, page))
+      ? rel(join(dir, dirname(file), page))
       : folders.get(rel(dir).split('/').pop().toLowerCase())?.docs;
     if (!docs) continue;
-    // A stories file can render a namespace member under a local name
-    // (`const { DatePicker } = preview__DatePicker`); its title still names
-    // the export.
+    // A stories file can render a namespace member under a local name; its
+    // title still names the export.
     const names =
       pass === 'component'
         ? [
@@ -178,11 +182,64 @@ for (const pass of ['component', 'subcomponents']) {
         (name.startsWith(folder(docs)) && !name.startsWith(folder(current)))
       ) {
         docsByName.set(name, docs);
+        titleByName.set(name, /title:\s*'([^']*\/[^']*)'/.exec(code)?.[1]);
       }
     }
   }
 }
-// Hooks, contexts and helpers documented on another export's page.
+// The Storybook title of each docs page: a page names itself in
+// <Meta title="...">, else it takes the titles of the stories files that use
+// it (their shared path when they differ); a stories file without a page is
+// its own autodocs page.
+const titlesOfPage = new Map();
+const storyTitles = new Set(
+  readdirSync(join(root, 'src'), { recursive: true })
+    .filter((file) => file.endsWith('.stories.tsx'))
+    .map(
+      (file) =>
+        /title:\s*'([^']*\/[^']*)'/.exec(read(join(root, 'src', file)))?.[1]
+    )
+);
+for (const { dir, file } of storyFiles) {
+  const code = read(join(dir, file));
+  const title = /title:\s*'([^']*\/[^']*)'/.exec(code)?.[1];
+  const page = /import\s+\w+\s+from\s+'(\.\.?\/[^']+\.mdx)'/.exec(code)?.[1];
+  const path = rel(join(dir, page ? join(dirname(file), page) : file));
+  if (title) titlesOfPage.set(path, [...(titlesOfPage.get(path) ?? []), title]);
+}
+const ownTitle = (page) =>
+  page.endsWith('.mdx')
+    ? (/<Meta\s[^>]*title="([^"]+)"/.exec(read(join(root, page)))?.[1] ?? null)
+    : null;
+function titleOf(page) {
+  if (!page) return null;
+  const own = ownTitle(page);
+  if (own) return own;
+  const parts = (titlesOfPage.get(page) ?? []).map((title) => title.split('/'));
+  if (parts.length === 0) return null;
+  return (
+    parts[0]
+      .filter((part, i) => parts.every((other) => other[i] === part))
+      .join('/') || null
+  );
+}
+// A page shared by stories files with different titles (UIShell.mdx) takes,
+// for each export, the title of the stories file that named it, unless the
+// shared title ends in a component folder (`Components/DataTable`).
+function titleFor(name, docs) {
+  const shared = titleOf(docs);
+  if (ownTitle(docs) || folders.has(shared?.split('/').at(-1).toLowerCase())) {
+    return shared;
+  }
+  return (
+    [name, baseName(name)]
+      .filter((key) => docsByName.get(key) === docs)
+      .map((key) => titleByName.get(key))
+      .find(Boolean) ?? shared
+  );
+}
+
+// Exports documented on another export's page.
 const docsAliases = {
   ColumnHang: 'Grid/Grid.mdx',
   GridSettings: 'Grid/Grid.mdx',
@@ -207,12 +264,76 @@ const docsAliases = {
   NotificationButton: 'Notification/Notification.mdx',
   NotificationActionButton: 'Notification/Notification.mdx',
   ErrorBoundaryContext: 'ErrorBoundary/ErrorBoundary.mdx',
+  AILabelContent: 'AILabel/AILabel.mdx',
+  AILabelActions: 'AILabel/AILabel.mdx',
+  GuidebannerElement: 'Guidebanner/Guidebanner.mdx',
+  GuidebannerElementButton: 'Guidebanner/Guidebanner.mdx',
+  GuidebannerElementLink: 'Guidebanner/Guidebanner.mdx',
+  WelcomeInterstitial: 'FirstTimeOrientation/FirstTimeOrientation.mdx',
+  PersonalizationInterstitial: 'FirstTimeOrientation/FirstTimeOrientation.mdx',
+  ToggleSkeleton: 'Toggle/Toggle.mdx',
+  TableDecoratorRow: 'DataTable/DataTable.mdx',
+  StructuredListSkeleton: 'StructuredList/StructuredList.mdx',
+  DismissibleTag: 'Tag/Tag.mdx',
+  OperationalTag: 'Tag/Tag.mdx',
+  TagSkeleton: 'Tag/Tag.mdx',
+  CodeSnippetSkeleton: 'CodeSnippet/CodeSnippet.mdx',
+  ModalPresence: 'Modal/Modal.featureflag.mdx',
+  withModalPresence: 'Modal/Modal.featureflag.mdx',
+  ComposedModalPresence: 'ComposedModal/ComposedModal.featureflag.mdx',
+  withComposedModalPresence: 'ComposedModal/ComposedModal.featureflag.mdx',
+  AddSelectData: 'AddSelect/AddSelect.mdx',
+  previewCandidate__InlineTipButton: 'InlineTip/InlineTip.mdx',
+  previewCandidate__InlineTipLink: 'InlineTip/InlineTip.mdx',
+  SIDE_NAV_TYPE: 'UIShellLabs/SideNav.mdx',
+  // ChatButton has no .mdx: its docs page is the autodocs page of its stories.
+  preview__ChatButton: 'ChatButton/ChatButton.stories.tsx',
+  preview__ChatButtonSkeleton: 'ChatButton/ChatButton.stories.tsx',
+  // Lists of a prop's values, on the page with that prop's section.
+  ButtonKinds: 'Button/Button.mdx',
+  ButtonSizes: 'Button/Button.mdx',
+  ButtonTooltipAlignments: 'Button/Button.mdx',
+  ButtonTooltipPositions: 'Button/Button.mdx',
+  IconButtonKinds: 'IconButton/IconButton.mdx',
+};
+// Afframe modules documented on a component's page.
+const familyDocs = { mask: 'DatePicker/DatePicker.mdx' };
+// Upstream exports no page documents or shows; any other export without a
+// docs link fails the check.
+const noDocsPage = {
+  // Carbon parts with no Carbon story or docs section of their own.
+  PrimaryButton: 'Button with kind primary',
+  SecondaryButton: 'Button with kind secondary',
+  DangerButton: 'Button with kind danger',
+  Copy: 'the base of CopyButton',
+  FormItem: 'the wrapper inside form fields',
+  FormContext: 'the context of Form',
+  ControlledPasswordInput: 'PasswordInput with outside visibility state',
+  InlineCheckbox: 'the checkbox inside DataTable selection',
+  ToggleSmallSkeleton: 'the skeleton of the small Toggle',
+  Filename: 'the status icon of FileUploaderItem',
+  validateNumberSeparators: 'the separator check inside NumberInput',
+  TableActionList: 'the action list inside TableBatchActions',
+  SideNavDetails: 'a part of the Carbon SideNav',
+  SideNavFooter: 'a part of the Carbon SideNav',
+  SideNavHeader: 'a part of the Carbon SideNav',
+  SideNavIcon: 'a part of the Carbon SideNav',
+  SideNavItem: 'a part of the Carbon SideNav',
+  SideNavLinkText: 'a part of the Carbon SideNav',
+  SideNavSwitcher: 'a part of the Carbon SideNav',
+  // IBM Products and Labs.
+  BEACON_KIND: 'values of the CoachmarkBeacon kind prop, no section for it',
+  ConditionBuilderContext: 'the context of ConditionBuilder',
+  getEmptyState: 'returns an empty ConditionBuilder state',
+  usePrefix: 'IBM Products hook with no IBM page',
+  SideNavLinkPopover: 'a part of the Labs SideNav',
+  SharkFinIcon: 'an icon of the Labs shell',
+  themeSets: 'the theme set values of ThemeSetDropdown',
 };
 for (const [name, page] of Object.entries(docsAliases)) {
   if (!docsByName.has(name)) docsByName.set(name, `src/components/${page}`);
 }
-// A prefixed name takes its own page before the folder of its base name
-// (preview__DatePicker: DatePickerV2.mdx, not DatePicker.mdx).
+// A prefixed name takes its own page before the folder of its base name.
 const docsOf = (name) =>
   (name !== baseName(name) && docsByName.get(name)) ||
   (folders.get(baseName(name).toLowerCase())?.docs ??
@@ -300,6 +421,8 @@ function family(name, info, fields, names) {
       folder: info.folder ?? null,
       docs: info.docs ?? null,
       storyTitle: info.storyTitle ?? null,
+      section: null,
+      family: null,
       status: 'stable',
       exports: [],
       types: [],
@@ -342,6 +465,9 @@ async function listUpstream(names, source, runtime, specifier) {
           upstream: { package: upstreamPackage, name: original },
         }),
       ...(docs && { docs }),
+      storyTitle: docs ? titleFor(name, docs) : null,
+      section: null,
+      family: null,
     });
   }
 }
@@ -399,9 +525,10 @@ for (const { from, star, names } of exportsOf(index)) {
     const info =
       dir === 'src' ? {} : { ...scan(join(root, dir), name), owned: false };
     const folder = dir === 'src' ? rel(file) : dir;
+    const page = familyDocs[name] && `src/components/${familyDocs[name]}`;
     family(
       name,
-      info,
+      page ? { ...info, docs: page, storyTitle: titleOf(page) } : info,
       { kind, source: 'afframe', runtime, folder },
       star ? collected : names
     );
@@ -431,7 +558,7 @@ for (const subpath of subpaths) {
       { ...folders.get(name), owned: false },
       {
         kind: 'foundation',
-        source: 'carbon',
+        source: name.endsWith('.css') ? 'afframe' : 'carbon',
         import: [importPath],
         runtime: file ? collect(file).runtime : 'server',
       },
@@ -453,12 +580,85 @@ for (const entry of [...families, ...upstream]) {
     }
   }
 }
+for (const entry of upstream) {
+  if (!entry.docs && !(entry.name in noDocsPage)) {
+    problems.push(
+      `${entry.name}: no docs page; link one or add it to noDocsPage`
+    );
+  }
+  if (entry.docs && entry.name in noDocsPage) {
+    problems.push(`${entry.name}: has a docs page; remove it from noDocsPage`);
+  }
+}
+for (const name of Object.keys(noDocsPage)) {
+  if (!upstream.some((entry) => entry.name === name)) {
+    problems.push(`${name}: in noDocsPage but not an upstream export`);
+  }
+}
+for (const [name, page] of Object.entries(docsAliases)) {
+  const entry = upstream.find((other) => other.name === name);
+  if (entry?.docs !== `src/components/${page}`) {
+    problems.push(`${name}: docsAliases entry is not its docs link; remove it`);
+  }
+}
 for (const { folder, owned } of folders.values()) {
   if (owned && !families.some((entry) => entry.folder === folder)) {
     problems.push(`${folder}: Afframe folder without an export`);
   }
 }
 
+// Grouping comes from the Storybook title only (ADR 0019): its first part is
+// the section; the family is the subfolder between section and page. A part
+// that names an export is the component (`Components/DataTable/
+// Basic`, `Components/Modal/Feature Flags`), and so is the end of a page
+// title; a title that is only a folder (`Components/Charts`) is a family.
+const pageNames = new Set([
+  ...upstream.map((entry) => entry.name),
+  ...families.flatMap((entry) => entry.exports),
+]);
+const subPages = ['Feature Flags', 'Examples', 'Docs'];
+for (const entry of [...families, ...upstream]) {
+  if (!entry.storyTitle) continue;
+  const parts = entry.storyTitle.split('/');
+  const named = parts.findIndex((part, i) => i > 0 && pageNames.has(part));
+  const sub = parts.findIndex((part, i) => i > 1 && subPages.includes(part));
+  const path = sub < 0 ? parts : parts.slice(0, sub);
+  const family =
+    named > 0
+      ? parts.slice(1, named)
+      : storyTitles.has(path.join('/')) ||
+          ownTitle(entry.docs ?? '') === path.join('/')
+        ? path.slice(1, -1)
+        : path.slice(1);
+  entry.section = parts[0];
+  entry.family = family.join('/') || null;
+}
+
+// Entries in sidebar order: Storybook's own sort, read from
+// .storybook/preview.tsx. Storybook requires storySort inline and free of
+// outside references, so it cannot be imported; its source is evaluated here.
+// Entries without a title go last; ties keep the src/index.ts order.
+const sortSource = /storySort: (\(a, b\) => \{[\s\S]*?\n {6}\}),\n/.exec(
+  read(join(root, '.storybook/preview.tsx'))
+)?.[1];
+if (!sortSource) {
+  throw new Error(
+    'registry: no storySort in .storybook/preview.tsx; expected `storySort: (a, b) => {` closed by `},` at 6 spaces'
+  );
+}
+const storySort = new Function(`return ${sortSource}`)();
+const bySidebar = (a, b) =>
+  !a.storyTitle || !b.storyTitle
+    ? Number(!a.storyTitle) - Number(!b.storyTitle)
+    : // storySort reads only `title` of Storybook's index entries.
+      storySort({ title: a.storyTitle }, { title: b.storyTitle });
+families.sort(bySidebar);
+upstream.sort(bySidebar);
+
+const sourceLabel = (entry) =>
+  entry.wrapper ? `${entry.source} wrapper` : (entry.source ?? '');
+const ownership =
+  "Source `afframe`: Afframe code and the stylesheets it compiles. `extras`: an Afframe module around another IBM or charting library, under that library's names. `<source> wrapper`: Afframe code around an upstream component. `carbon`: a Carbon package passed through. Everything else is upstream (`upstream` in registry.json, Renamed exports in the agent guide).";
 const table = (header, rows) => [
   `| ${header.join(' | ')} |`,
   `| ${header.map(() => '---').join(' | ')} |`,
@@ -470,16 +670,30 @@ const markdown = [
   '',
   'Every public export of `@afframe/ui`. Generated by `pnpm registry` from `src/index.ts`, the subpath entries and `src/components`; `pnpm registry --check` (part of `pnpm preflight`) fails when it is out of date. The full data is in [registry.json](registry.json).',
   '',
+  'Grouping follows Storybook only (ADR 0019): `storyTitle` is the Storybook title of the docs page, `section` its first part, `family` the subfolder between section and page (none when the page sits in the section). Both tables are in sidebar order; entries without a docs page come last.',
+  '',
   '## Afframe families and subpaths',
   '',
-  'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page.',
+  'One entry per Afframe or extras module and per subpath; the JSON lists its exports and types. ' +
+    ownership +
+    ' Afframe parts: stories, test, visual test, docs page; for a wrapper of an upstream component (source marked `wrapper`): an `afframe` story with a play test, test, docs page. A module with no page of its own links the page that documents it (`familyDocs` in `scripts/registry.mjs`: `mask` on the DatePicker page).',
   '',
   ...table(
-    ['Family', 'Kind', 'Source', 'Import', 'Runtime', 'Docs', 'Afframe parts'],
+    [
+      'Family',
+      'Storybook',
+      'Kind',
+      'Source',
+      'Import',
+      'Runtime',
+      'Docs',
+      'Afframe parts',
+    ],
     families.map((entry) => [
       entry.name,
+      entry.storyTitle ?? '',
       entry.kind,
-      entry.wrapper ? `${entry.source} wrapper` : (entry.source ?? ''),
+      sourceLabel(entry),
       entry.import.map((path) => `\`${path}\``).join(', '),
       entry.runtime,
       link(entry.docs),
@@ -491,12 +705,13 @@ const markdown = [
   '',
   '## Carbon, IBM Products and Labs',
   '',
-  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export such as `preview__DatePicker` takes its own page before the folder of its base name.',
+  'One entry per exported value, imported from `@afframe/ui`; types are left out. Kind comes from the value: hook for a `use` name, component when React can render it, namespace for an object of components, else util. Docs links the folder named after the export, else the page whose stories name it as `component`, in `subcomponents` or as the last part of the title, else a page named in the alias map in `scripts/registry.mjs`; a prefixed export takes its own page before the folder of its base name. An export without a link is one no page documents, listed with its reason in `noDocsPage` in the same script.',
   '',
   ...table(
-    ['Export', 'Kind', 'Source', 'Runtime', 'Status', 'Docs'],
+    ['Export', 'Storybook', 'Kind', 'Source', 'Runtime', 'Status', 'Docs'],
     upstream.map((entry) => [
       entry.name,
+      entry.storyTitle ?? '',
       entry.kind,
       entry.source,
       entry.runtime,
@@ -542,10 +757,12 @@ const agents = [
   '',
   '## Afframe families and subpaths',
   '',
+  ownership,
+  '',
   // A list, not a table: Prettier pads every table row to the widest cell.
   ...families.map(
     (entry) =>
-      `- **${entry.name}** (${entry.kind}, ${entry.runtime}, ${codeList(entry.import)})` +
+      `- **${entry.name}** (${sourceLabel(entry)}, ${entry.kind}, ${entry.runtime}, ${codeList(entry.import)})` +
       (entry.exports.length > 0 ? `: ${codeList(entry.exports)}` : '')
   ),
   '',

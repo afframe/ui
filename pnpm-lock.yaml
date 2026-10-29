@@ -163,7 +163,7 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@carbon/react@1.118.0': 78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61
+  '@carbon/react@1.119.0': 78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61
 
 importers:
 
@@ -195,58 +195,58 @@ importers:
         version: 0.106.0
       '@carbon-labs/react-whats-new':
         specifier: 0.28.0
-        version: 0.28.0(@carbon/ibm-products@2.100.0(@carbon/grid@11.64.0)(@carbon/layout@11.61.0)(@carbon/motion@11.54.0)(@carbon/react@1.118.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.83.0)(@carbon/type@11.69.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 0.28.0(@carbon/ibm-products@2.101.0(@carbon/grid@11.65.0)(@carbon/layout@11.62.0)(@carbon/motion@11.55.0)(@carbon/react@1.119.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.84.0)(@carbon/type@11.70.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@carbon-labs/utilities':
         specifier: 0.28.0
         version: 0.28.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@carbon/ai-chat':
         specifier: 1.22.0
-        version: 1.22.0(@carbon/web-components@2.65.0(sass@1.106.1))(@tiptap/pm@3.31.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.106.1)
+        version: 1.22.0(@carbon/web-components@2.66.0(sass@1.106.1))(@tiptap/pm@3.31.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.106.1)
       '@carbon/charts':
-        specifier: 1.27.21
-        version: 1.27.21
+        specifier: 1.27.23
+        version: 1.27.23
       '@carbon/charts-react':
-        specifier: 1.27.21
-        version: 1.27.21(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 1.27.23
+        version: 1.27.23(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@carbon/echarts-theme':
         specifier: 0.7.0
         version: 0.7.0(echarts@6.1.0)
       '@carbon/grid':
-        specifier: 11.64.0
-        version: 11.64.0
+        specifier: 11.65.0
+        version: 11.65.0
       '@carbon/ibm-products':
-        specifier: 2.100.0
-        version: 2.100.0(@carbon/grid@11.64.0)(@carbon/layout@11.61.0)(@carbon/motion@11.54.0)(@carbon/react@1.118.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.83.0)(@carbon/type@11.69.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)
+        specifier: 2.101.0
+        version: 2.101.0(@carbon/grid@11.65.0)(@carbon/layout@11.62.0)(@carbon/motion@11.55.0)(@carbon/react@1.119.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.84.0)(@carbon/type@11.70.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)
       '@carbon/icons-react':
-        specifier: 11.90.0
-        version: 11.90.0(react@19.3.1)
+        specifier: 11.91.0
+        version: 11.91.0(react@19.3.1)
       '@carbon/layout':
-        specifier: 11.61.0
-        version: 11.61.0
+        specifier: 11.62.0
+        version: 11.62.0
       '@carbon/motion':
-        specifier: 11.54.0
-        version: 11.54.0
+        specifier: 11.55.0
+        version: 11.55.0
       '@carbon/pictograms-react':
-        specifier: 11.112.0
-        version: 11.112.0(react@19.3.1)
+        specifier: 11.113.0
+        version: 11.113.0(react@19.3.1)
       '@carbon/react':
-        specifier: 1.118.0
-        version: 1.118.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1)
+        specifier: 1.119.0
+        version: 1.119.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1)
       '@carbon/themes':
-        specifier: 11.83.0
-        version: 11.83.0
+        specifier: 11.84.0
+        version: 11.84.0
       '@carbon/type':
-        specifier: 11.69.0
-        version: 11.69.0
+        specifier: 11.70.0
+        version: 11.70.0
       '@carbon/utilities':
-        specifier: 0.27.0
-        version: 0.27.0
+        specifier: 0.28.0
+        version: 0.28.0
       '@carbon/utilities-react':
-        specifier: 0.30.0
-        version: 0.30.0(react@19.3.1)
+        specifier: 0.31.0
+        version: 0.31.0(react@19.3.1)
       '@carbon/web-components':
-        specifier: 2.65.0
-        version: 2.65.0(sass@1.106.1)
+        specifier: 2.66.0
+        version: 2.66.0(sass@1.106.1)
       '@tanstack/react-table':
         specifier: 9.3.1
         version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -267,11 +267,11 @@ importers:
         version: 6.5.0
     devDependencies:
       '@carbon/ibm-products-styles':
-        specifier: 2.96.0
-        version: 2.96.0(@carbon/grid@11.64.0)(@carbon/layout@11.61.0)(@carbon/motion@11.54.0)(@carbon/themes@11.83.0)(@carbon/type@11.69.0)
+        specifier: 2.97.0
+        version: 2.97.0(@carbon/grid@11.65.0)(@carbon/layout@11.62.0)(@carbon/motion@11.55.0)(@carbon/themes@11.84.0)(@carbon/type@11.70.0)
       '@carbon/styles':
-        specifier: 1.117.0
-        version: 1.117.0(sass@1.106.1)
+        specifier: 1.118.0
+        version: 1.118.0(sass@1.106.1)
       '@eslint/js':
         specifier: 10.0.1
         version: 10.0.1(eslint@10.13.0(supports-color@10.2.2))
@@ -314,6 +314,9 @@ importers:
       eslint:
         specifier: 10.13.0
         version: 10.13.0(supports-color@10.2.2)
+      eslint-plugin-react-hooks:
+        specifier: 7.1.1
+        version: 7.1.1(eslint@10.13.0(supports-color@10.2.2))(supports-color@10.2.2)
       globals:
         specifier: 17.13.0
         version: 17.13.0
@@ -507,20 +510,23 @@ packages:
       react: '>=17.0.0 <20.0.0'
       react-dom: '>=17.0.0 <20.0.0'
 
-  '@carbon/charts-react@1.27.21':
-    resolution: {integrity: sha512-YdXJtxKE7yg4gtCcVUyx4TQutZ0IQFFT5RVmnf6ekNVPdOZOfZGdVa2yinojjek4J80nAkRAXAAE48n2ngzUOA==}
+  '@carbon/charts-react@1.27.23':
+    resolution: {integrity: sha512-qpugku77/OBo3tn7Re3/JaCARjoY3+CubEjo4ptQFyQWsMRMVA2Y+55qDM+JmUoiQRuEj2Vbjw7ZH4OSadkdgw==}
     peerDependencies:
       react: ^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0
       react-dom: ^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0
 
-  '@carbon/charts@1.27.21':
-    resolution: {integrity: sha512-2BH0nPUguK15ZHS8cetcp+dEM8QifbA1ctptxj01dEEhtgXkcro4O1CDguug/nMlMys73UWcuwkiwSEk1+CHvA==}
+  '@carbon/charts@1.27.23':
+    resolution: {integrity: sha512-YqIPrfhl37AffPrwxOTgabmGRaJoEC20TGhBLMVmRSCgRTWNWpUUXDvIn7BtR8AogjP5WRAW81StaedmNJkTgA==}
 
   '@carbon/colors@11.59.0':
     resolution: {integrity: sha512-8Uz0KatyYgVYcujtCZeNmDX03BniD/WIy77uN2PuXoYCKMyv/kziSHHWBJ3DPhvsZb1734796lyESMvrgL8NBg==}
 
   '@carbon/colors@11.60.0':
     resolution: {integrity: sha512-hJ5fPDfT9EfjkLm3I6a7dhpIE6TmeTt39qEnlrDGRIUo00fiOh6ZwkZ/I7r9nZNjW9dQZUZfO+dTPcGAC1hpOQ==}
+
+  '@carbon/colors@11.61.0':
+    resolution: {integrity: sha512-pEDtZ0jPGyjbxcnzBxFCIB05oIJSbfT2E+z9TY+txqRfHmXe+QCEDD4fQPaFkxq60ToJ7KWfCb/SjnhF5/aq8A==}
 
   '@carbon/echarts-theme@0.7.0':
     resolution: {integrity: sha512-7vb6UFG24991jtUEPak4SoeRlEyiI5z8wNMt9eECL8qO11YXxMy5lqw2IexaqU51qUFOv/jhCtkMj3io49j00g==}
@@ -530,11 +536,14 @@ packages:
   '@carbon/feature-flags@1.10.0':
     resolution: {integrity: sha512-dRqo+H1wy2Zzghj813qLTaROXPKISp1IpxOgdSqsd0NqB9is1Hlv5fr6Asygzo5LTLXNvGyRmsHbFCyfDxmZxQ==}
 
-  '@carbon/grid@11.64.0':
-    resolution: {integrity: sha512-nzMje7whWZAoQmNKpPeVOK8T1jnxa7pHDCPbF9ykNUpxBi/Xm0NX/zMVjzIz1K75dY6MKmrzR4Bf+4MJH48pfg==}
+  '@carbon/feature-flags@1.11.0':
+    resolution: {integrity: sha512-HN8bzIwPubG53xSlOZGFcCghL3zspj/LzA+LOfkoLwpagYIpZsOddpvqmCpOh3JOumNb5Cxq9qmjJL9yEiVYNA==}
 
-  '@carbon/ibm-products-styles@2.96.0':
-    resolution: {integrity: sha512-VJtNGSNQwCqPuQt59Ygbtq3TJaFNkTwkdeHwjbfiRt2dXjUkrgNSVLlyU/U6rDRalZ+8OPJbAtTxQj1D2EttAA==}
+  '@carbon/grid@11.65.0':
+    resolution: {integrity: sha512-zuHs9oDYd/gMZQPKV0a/PNJXK/iaYmnMFqcwgbm4zYJ3MnD3kWgJKoqFSSPGuks8xKrg722exFYW4yDdwImIDQ==}
+
+  '@carbon/ibm-products-styles@2.97.0':
+    resolution: {integrity: sha512-VNAVsKiu3x+FE4Grd8myljD+ceE9RQ9eBGuEaRaopH7Rq/bveQTkRbMB2tVK7sExd03RnUeV94QF9rRMJrwDVg==}
     peerDependencies:
       '@carbon/grid': ^11.61.0
       '@carbon/layout': ^11.58.0
@@ -542,8 +551,8 @@ packages:
       '@carbon/themes': ^11.80.0
       '@carbon/type': ^11.66.0
 
-  '@carbon/ibm-products@2.100.0':
-    resolution: {integrity: sha512-PDx964t5L8L2++5qYNgdKKre8sg4IE0pf95/fJnvSKauPdwhfNioCEeFo3nmANYKPBjV1quILxd5R9kCwtmBTQ==}
+  '@carbon/ibm-products@2.101.0':
+    resolution: {integrity: sha512-Urr0JgMQHPBYN0ImuIPuggPLsdnB3NBABZnxXMpGkqZxXu13WoineGkM/YTwdS/+HG+x5yaW8Fjp1rcWtABgeA==}
     peerDependencies:
       '@carbon/grid': ^11.61.0
       '@carbon/layout': ^11.58.0
@@ -569,33 +578,41 @@ packages:
     peerDependencies:
       react: '>=16'
 
-  '@carbon/icons@11.89.0':
-    resolution: {integrity: sha512-M54u+J19d+nUSp2mpRqc1Opcsqx/bv5oLLk8ECVwE0PGWmUiUlJkfl6NbWHcA2pOIyvJoEwv686KsCO1Q7RSlQ==}
-
-  '@carbon/icons@11.90.0':
-    resolution: {integrity: sha512-lTCB5fPb8xaaOjFmLlHv7dZsAvDmMYoxdQGtgRxLc+0uKEvad0749YcOkTcuozEgTB48ki3RaxvL63DIOXj6fw==}
-
-  '@carbon/layout@11.61.0':
-    resolution: {integrity: sha512-+j3wKiGe4XaJyub31TUhDXDL8py2cCg/ZqQ1y0BWp3/yi5IvlbH5lXhBjV/iJwpMgtbiGJuKkKBCKMgqDlf8tQ==}
-
-  '@carbon/motion@11.54.0':
-    resolution: {integrity: sha512-gBixqCLn5DvH7DfY7CqvzDphWuU+/zgsEi5RtVzHSxgfx7dQ8Y/XwdAJvlCSh5kgxlVfXpnFc5UtyNVCuy+ZLg==}
-
-  '@carbon/pictograms-react@11.112.0':
-    resolution: {integrity: sha512-Z8o5qfbjVwFylc52Wnt1ycuoV9Zke7DSGgT0gH8d2CkCQxByFFQy+yODmSkrfhV2BgsFEx+QyIg7j4ra/P4mxQ==}
+  '@carbon/icons-react@11.91.0':
+    resolution: {integrity: sha512-kaYUe1rQCmYJswXBniXDJpnCo7t7IF0ucKd0Bml4O3oyOdzKmNHYCaAbaYlq+3/VzUMstc7llfEbPyPsAKntVg==}
     peerDependencies:
       react: '>=16'
 
-  '@carbon/react@1.118.0':
-    resolution: {integrity: sha512-YmwU2HdxfixQkbj/eC6BTk6bM2BCSlV4MyeTAks0q4/GvL63KBH4Nu0ikyRYaCct/sddXR2wuAJXKDnxPTCeew==}
+  '@carbon/icons@11.89.0':
+    resolution: {integrity: sha512-M54u+J19d+nUSp2mpRqc1Opcsqx/bv5oLLk8ECVwE0PGWmUiUlJkfl6NbWHcA2pOIyvJoEwv686KsCO1Q7RSlQ==}
+
+  '@carbon/icons@11.91.0':
+    resolution: {integrity: sha512-XMFcuwdUHrrI+GK3ZB8TjueZoe2hD6ThCfMKT4ZO64aEvEYgqtpkQ+FvLs1KCWDysQbsMEnKdrheBx54vHTY4w==}
+
+  '@carbon/layout@11.62.0':
+    resolution: {integrity: sha512-MBXjxBkY9DNbdDmSPhPF5t+rBUJffxk/hlLlTawX901X84BFBKVtbCYy/UfFl5IytCN8mXXuCdOJ3rPOEwEX1Q==}
+
+  '@carbon/motion@11.55.0':
+    resolution: {integrity: sha512-jBjLagm+DvFPcVpZUYuS+lY3FkZWolA69apKe+Oh8Ezulm3Q1DQMkG9Ky+VOa0rptgFTnafP6L6y8vmZ3LJa5g==}
+
+  '@carbon/pictograms-react@11.113.0':
+    resolution: {integrity: sha512-aSOgbwcOnmqMuNz2dGT8JjQefUDuf2EfAsxvA+OPYOjjKyxY+TkYFIMzrhcsXF3rYPnFTm66MjrcHx+5RgfGIA==}
+    peerDependencies:
+      react: '>=16'
+
+  '@carbon/react@1.119.0':
+    resolution: {integrity: sha512-nEkv9O1Kff1lioe2yPwMCpHnl+7M/8jNTntEfw3alYXcEKOuGR7At8BV7d7q6FsoB/lJh0UE/krdqNLUNvvQOw==}
     peerDependencies:
       react: ^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0
       react-dom: ^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0
       react-is: ^16.13.1 || ^17.0.2 || ^18.3.1 || ^19.0.0
       sass: ^1.33.0
+    peerDependenciesMeta:
+      sass:
+        optional: true
 
-  '@carbon/styles@1.117.0':
-    resolution: {integrity: sha512-1m/UH8aeSbDQ4PVIZ8no4QxvGhCswVV0tzMxdAaIrnRRtea6aMj6xQ3bKc1SR+F2SvpF2LJyut0Yd7hVQ4uoyQ==}
+  '@carbon/styles@1.118.0':
+    resolution: {integrity: sha512-/a5FktRWkAtrWmWMPO9tpc+GKX91dctdKXFL/pk02BJg47NZxhGCwFBJTDGeLvuEZnlkYaN5nUJXBi6vj4oKjQ==}
     peerDependencies:
       sass: ^1.33.0
     peerDependenciesMeta:
@@ -606,20 +623,20 @@ packages:
     resolution: {integrity: sha512-kNWt0bkgPwGW0i5h7HFuljbKRXPvIhsKbB+1tEURAYLXoJg9iJLF1eGvWN5iVoFCS2zje4GR3OGOsvvKVe7Hlg==}
     hasBin: true
 
-  '@carbon/themes@11.83.0':
-    resolution: {integrity: sha512-YxfO7BsoPCT+tJbJq/JiOZaYE+OE1ZSGMK93yC5pws/X5l25qUpKxWOb85OQBkOnYrwKGUsPEbAKm2wXvbFb5w==}
+  '@carbon/themes@11.84.0':
+    resolution: {integrity: sha512-SQI2Zq7bRC9+VOI6wPpoIt+k2nuzq47or76749h8xZTkjIYVMPKUh4OtUYI0+VZK3K4abeHCuUexQSqoAb54Gg==}
     engines: {node: '>=22'}
 
-  '@carbon/type@11.69.0':
-    resolution: {integrity: sha512-8gmk6VrFV8+R7786YfLk+x1eS6EIGaCz7JLX/UEKlnVSck/7qnZdRjAkFceO3J6NL6hifP2X3wDO1qW9BMmESA==}
+  '@carbon/type@11.70.0':
+    resolution: {integrity: sha512-cmxwwhlVD/8L/J6k1N4/U6AhNldrpLynCQ4+Z7wSeGO6Ki0wE1Iczza8PAPa2eMoIw7frzk1q8jrwnI0zHBftw==}
 
   '@carbon/utilities-react@0.28.0':
     resolution: {integrity: sha512-Ia+XOdH/0Ily/3ATLMe+YcHWnpD2sbio4wcUct7SlnHBS8yl2qMM6+U0tt7/uMPRfdpCm8m77vq1WRU9nEswSA==}
     peerDependencies:
       react: ^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0
 
-  '@carbon/utilities-react@0.30.0':
-    resolution: {integrity: sha512-iQn/gd77EjBTd0m36mCX+XCihY6Xvi43kAzy+hls3Tn72lbRhw4hFI/BbnTpCijYeT7SEvBpuiYTJAnB2YUo1A==}
+  '@carbon/utilities-react@0.31.0':
+    resolution: {integrity: sha512-Zu1/zqBHuYZ1y2+N4hO4WsOS6nwXze9YMVgd96zaRr4fjzUsPVNWDPBSLI3RoVmjTNYYin+Ndk5NF7Oyec1hfQ==}
     peerDependencies:
       react: ^16.8.6 || ^17.0.1 || ^18.2.0 || ^19.0.0
 
@@ -629,14 +646,14 @@ packages:
   '@carbon/utilities@0.25.0':
     resolution: {integrity: sha512-00zsQ3ldFKQUb1CrQ47pMZHDDigY9gR5OiusxdugyGBJmZUMg2FhycHQD94W35YYv28sG7ILNQJQ/x1tehDQzQ==}
 
-  '@carbon/utilities@0.27.0':
-    resolution: {integrity: sha512-wjQ33XDkuvrQxaSf1v72JYIEieYZjLz3jfNs/hFzEIaK8xlo56ie/VU48oJhpjfjcBlU6TtLbLrOO64pzQ2q5Q==}
+  '@carbon/utilities@0.28.0':
+    resolution: {integrity: sha512-I24KN06PLNAR1kGaixwVq3eJ0BkgC+KGV4wT1oNNAkP5197aIjPlUZrYLvhLOEXLBH0BLx7cUgFr8pRawkXYcw==}
 
   '@carbon/utils-position@1.3.0':
     resolution: {integrity: sha512-bfar2dV+fQ15syIrH3n9ujY4PXd1Q+AF2VcTLJIC04IDe2f80zOnJlLNPc/RktHcWTZ7WSQm80cQo3abGcsfTA==}
 
-  '@carbon/web-components@2.65.0':
-    resolution: {integrity: sha512-Hl6kDL7XZkZ0jhfLHYFKy0nArnjHnZYP7y5BPrP4ihFVH3ASDZLIk/U4QAbC52nMhUF6i2FaU5JkvZ0mIP2RMQ==}
+  '@carbon/web-components@2.66.0':
+    resolution: {integrity: sha512-dE8OCOADj3bcBNtmGL8Av/jQxfgEPQDuXswDSvyYLNJB5fT4jNeiZvO3ksJzO1IZ6k3qaPQyf8vBE+FT6gHPPQ==}
     hasBin: true
     bundledDependencies:
       - flatpickr
@@ -1178,9 +1195,6 @@ packages:
 
   '@lezer/yaml@1.0.4':
     resolution: {integrity: sha512-2lrrHqxalACEbxIbsjhqGpSW8kWpUKuY6RHgnSAFZa6qK62wvnPxA8hGOwOoDbwHcOFs5M4o27mjGu+P7TvBmw==}
-
-  '@lit-labs/signals@0.3.0':
-    resolution: {integrity: sha512-PfB5FLtorVfkhwTWXOPNT/rvrVdSDY8siwPyR17ztrViRbMqxy1TQBcHqJoA4303QT8yXPGxYtGKJGj7fEfEwg==}
 
   '@lit-labs/ssr-dom-shim@1.6.0':
     resolution: {integrity: sha512-VHb0ALPMTlgKjM6yIxxoQNnpKyUKLD04VzeQdsiXkMqkvYlAHxq9glGLmgbb889/1GsohSOAjvQYoiBppXFqrQ==}
@@ -2688,6 +2702,12 @@ packages:
     resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
     engines: {node: '>=12'}
 
+  eslint-plugin-react-hooks@7.1.1:
+    resolution: {integrity: sha512-f2I7Gw6JbvCexzIInuSbZpfdQ44D7iqdWX01FKLvrPgqxoE7oMj8clOfto8U6vYiz4yd5oKu39rRSVOe1zRu0g==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0 || ^10.0.0
+
   eslint-scope@9.1.2:
     resolution: {integrity: sha512-xS90H51cKw0jltxmvmHy2Iai1LIqrfbw57b79w/J7MfvDfkIkFZ+kj6zC3BjtUwh150HsSSdxXZcsuv72miDFQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
@@ -2887,6 +2907,12 @@ packages:
   hasown@2.0.4:
     resolution: {integrity: sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==}
     engines: {node: '>= 0.4'}
+
+  hermes-estree@0.25.1:
+    resolution: {integrity: sha512-0wUoCcLp+5Ev5pDW2OriHC2MJCbwLwuRx+gAqMTOkGKJJiBCLjtrvy4PWUGn6MIVefecRpzoOZ/UV6iGdOr+Cw==}
+
+  hermes-parser@0.25.1:
+    resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
 
   hookable@6.1.2:
     resolution: {integrity: sha512-+abwxtiEA52GCVIsQqut3S/uKTbUwYIp4Pe/vv+6py5XiXBCqMZHg6pA6Y5qhgLSEys0/cYuPbO0z1QFj5ZCmg==}
@@ -3757,9 +3783,6 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  signal-polyfill@0.2.2:
-    resolution: {integrity: sha512-p63Y4Er5/eMQ9RHg0M0Y64NlsQKpiu6MDdhBXpyywRuWiPywhJTpKJ1iB5K2hJEbFZ0BnDS7ZkJ+0AfTuL37Rg==}
-
   simple-swizzle@0.2.4:
     resolution: {integrity: sha512-nAu1WFPQSMNr2Zn9PGSZK9AGn4t/y97lEm+MXTtUDwfP0ksAIX4nO+6ruD9Jwut4C49SB1Ws+fbXsm/yScWOHw==}
 
@@ -4236,6 +4259,15 @@ packages:
     resolution: {integrity: sha512-XrBh9ZiQK5mJVRxZBAvD6LwRyAYrK3MFtH3+onyuxFL5hFD44EC3QOmIC1FjTj6H2MMwq46/NAI+NZxLZPZgxg==}
     engines: {node: '>=14.18.0'}
 
+  zod-validation-error@4.0.2:
+    resolution: {integrity: sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      zod: ^3.25.0 || ^4.0.0
+
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
+
   zrender@6.1.0:
     resolution: {integrity: sha512-oEGMDB6pOP2S6OwRR4PdVv610zrjnA3Bh+JnSG12fYJlBKjtNAoEb5fSUoCOOINlH96I2fU38/A2UpRKs67xYQ==}
 
@@ -4408,10 +4440,10 @@ snapshots:
     dependencies:
       '@ibm/telemetry-js': 1.11.0
 
-  '@carbon-labs/react-whats-new@0.28.0(@carbon/ibm-products@2.100.0(@carbon/grid@11.64.0)(@carbon/layout@11.61.0)(@carbon/motion@11.54.0)(@carbon/react@1.118.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.83.0)(@carbon/type@11.69.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@carbon-labs/react-whats-new@0.28.0(@carbon/ibm-products@2.101.0(@carbon/grid@11.65.0)(@carbon/layout@11.62.0)(@carbon/motion@11.55.0)(@carbon/react@1.119.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.84.0)(@carbon/type@11.70.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@carbon-labs/utilities': 0.28.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@carbon/ibm-products': 2.100.0(@carbon/grid@11.64.0)(@carbon/layout@11.61.0)(@carbon/motion@11.54.0)(@carbon/react@1.118.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.83.0)(@carbon/type@11.69.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)
+      '@carbon/ibm-products': 2.101.0(@carbon/grid@11.65.0)(@carbon/layout@11.62.0)(@carbon/motion@11.55.0)(@carbon/react@1.119.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.84.0)(@carbon/type@11.70.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)
       '@ibm/telemetry-js': 1.11.0
     transitivePeerDependencies:
       - react
@@ -4431,9 +4463,9 @@ snapshots:
     dependencies:
       '@carbon/icon-helpers': 10.83.0
       '@carbon/icons': 11.89.0
-      '@carbon/styles': 1.117.0(sass@1.106.1)
+      '@carbon/styles': 1.118.0(sass@1.106.1)
       '@carbon/utilities': 0.24.0
-      '@carbon/web-components': 2.65.0(sass@1.106.1)
+      '@carbon/web-components': 2.66.0(sass@1.106.1)
       '@codemirror/autocomplete': 6.20.3
       '@codemirror/commands': 6.11.1
       '@codemirror/lang-angular': 0.1.4
@@ -4486,12 +4518,12 @@ snapshots:
       - '@types/react'
       - sass
 
-  '@carbon/ai-chat@1.22.0(@carbon/web-components@2.65.0(sass@1.106.1))(@tiptap/pm@3.31.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.106.1)':
+  '@carbon/ai-chat@1.22.0(@carbon/web-components@2.66.0(sass@1.106.1))(@tiptap/pm@3.31.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.106.1)':
     dependencies:
       '@carbon/ai-chat-components': 1.12.0(@floating-ui/dom@1.8.0)(@types/react@19.3.0)(react@19.3.1)(sass@1.106.1)
       '@carbon/icons': 11.89.0
       '@carbon/utilities': 0.24.0
-      '@carbon/web-components': 2.65.0(sass@1.106.1)
+      '@carbon/web-components': 2.66.0(sass@1.106.1)
       '@floating-ui/dom': 1.8.0
       '@ibm/telemetry-js': 1.11.0
       '@lit/react': 1.0.8(@types/react@19.3.0)
@@ -4515,17 +4547,17 @@ snapshots:
       - '@types/react-dom'
       - sass
 
-  '@carbon/charts-react@1.27.21(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@carbon/charts-react@1.27.23(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@carbon/charts': 1.27.21
+      '@carbon/charts': 1.27.23
       '@carbon/icons-react': 11.90.0(react@19.3.1)
       '@ibm/telemetry-js': 1.11.0
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  '@carbon/charts@1.27.21':
+  '@carbon/charts@1.27.23':
     dependencies:
-      '@carbon/colors': 11.59.0
+      '@carbon/colors': 11.60.0
       '@carbon/utils-position': 1.3.0
       '@ibm/telemetry-js': 1.11.0
       '@types/d3': 7.4.3
@@ -4548,6 +4580,10 @@ snapshots:
     dependencies:
       '@ibm/telemetry-js': 1.11.0
 
+  '@carbon/colors@11.61.0':
+    dependencies:
+      '@ibm/telemetry-js': 1.11.0
+
   '@carbon/echarts-theme@0.7.0(echarts@6.1.0)':
     dependencies:
       '@ibm/telemetry-js': 1.11.0
@@ -4557,33 +4593,37 @@ snapshots:
     dependencies:
       '@ibm/telemetry-js': 1.11.0
 
-  '@carbon/grid@11.64.0':
+  '@carbon/feature-flags@1.11.0':
     dependencies:
-      '@carbon/layout': 11.61.0
       '@ibm/telemetry-js': 1.11.0
 
-  '@carbon/ibm-products-styles@2.96.0(@carbon/grid@11.64.0)(@carbon/layout@11.61.0)(@carbon/motion@11.54.0)(@carbon/themes@11.83.0)(@carbon/type@11.69.0)':
+  '@carbon/grid@11.65.0':
     dependencies:
-      '@carbon/grid': 11.64.0
-      '@carbon/layout': 11.61.0
-      '@carbon/motion': 11.54.0
-      '@carbon/themes': 11.83.0
-      '@carbon/type': 11.69.0
+      '@carbon/layout': 11.62.0
       '@ibm/telemetry-js': 1.11.0
 
-  '@carbon/ibm-products@2.100.0(@carbon/grid@11.64.0)(@carbon/layout@11.61.0)(@carbon/motion@11.54.0)(@carbon/react@1.118.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.83.0)(@carbon/type@11.69.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)':
+  '@carbon/ibm-products-styles@2.97.0(@carbon/grid@11.65.0)(@carbon/layout@11.62.0)(@carbon/motion@11.55.0)(@carbon/themes@11.84.0)(@carbon/type@11.70.0)':
+    dependencies:
+      '@carbon/grid': 11.65.0
+      '@carbon/layout': 11.62.0
+      '@carbon/motion': 11.55.0
+      '@carbon/themes': 11.84.0
+      '@carbon/type': 11.70.0
+      '@ibm/telemetry-js': 1.11.0
+
+  '@carbon/ibm-products@2.101.0(@carbon/grid@11.65.0)(@carbon/layout@11.62.0)(@carbon/motion@11.55.0)(@carbon/react@1.119.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1))(@carbon/themes@11.84.0)(@carbon/type@11.70.0)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@carbon-labs/react-resizer': 0.25.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@carbon/feature-flags': 1.10.0
-      '@carbon/grid': 11.64.0
-      '@carbon/ibm-products-styles': 2.96.0(@carbon/grid@11.64.0)(@carbon/layout@11.61.0)(@carbon/motion@11.54.0)(@carbon/themes@11.83.0)(@carbon/type@11.69.0)
-      '@carbon/layout': 11.61.0
-      '@carbon/motion': 11.54.0
-      '@carbon/react': 1.118.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1)
+      '@carbon/grid': 11.65.0
+      '@carbon/ibm-products-styles': 2.97.0(@carbon/grid@11.65.0)(@carbon/layout@11.62.0)(@carbon/motion@11.55.0)(@carbon/themes@11.84.0)(@carbon/type@11.70.0)
+      '@carbon/layout': 11.62.0
+      '@carbon/motion': 11.55.0
+      '@carbon/react': 1.119.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1)
       '@carbon/telemetry': 0.1.0
-      '@carbon/themes': 11.83.0
-      '@carbon/type': 11.69.0
+      '@carbon/themes': 11.84.0
+      '@carbon/type': 11.70.0
       '@carbon/utilities': 0.25.0
       '@carbon/utilities-react': 0.28.0(react@19.3.1)
       '@dnd-kit/core': 6.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -4617,38 +4657,45 @@ snapshots:
       prop-types: 15.8.1
       react: 19.3.1
 
-  '@carbon/icons@11.89.0':
-    dependencies:
-      '@ibm/telemetry-js': 1.11.0
-
-  '@carbon/icons@11.90.0':
-    dependencies:
-      '@ibm/telemetry-js': 1.11.0
-
-  '@carbon/layout@11.61.0':
-    dependencies:
-      '@ibm/telemetry-js': 1.11.0
-
-  '@carbon/motion@11.54.0':
-    dependencies:
-      '@ibm/telemetry-js': 1.11.0
-
-  '@carbon/pictograms-react@11.112.0(react@19.3.1)':
+  '@carbon/icons-react@11.91.0(react@19.3.1)':
     dependencies:
       '@carbon/icon-helpers': 10.84.0
       '@ibm/telemetry-js': 1.11.0
       prop-types: 15.8.1
       react: 19.3.1
 
-  '@carbon/react@1.118.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1)':
+  '@carbon/icons@11.89.0':
+    dependencies:
+      '@ibm/telemetry-js': 1.11.0
+
+  '@carbon/icons@11.91.0':
+    dependencies:
+      '@ibm/telemetry-js': 1.11.0
+
+  '@carbon/layout@11.62.0':
+    dependencies:
+      '@ibm/telemetry-js': 1.11.0
+
+  '@carbon/motion@11.55.0':
+    dependencies:
+      '@ibm/telemetry-js': 1.11.0
+
+  '@carbon/pictograms-react@11.113.0(react@19.3.1)':
+    dependencies:
+      '@carbon/icon-helpers': 10.84.0
+      '@ibm/telemetry-js': 1.11.0
+      prop-types: 15.8.1
+      react: 19.3.1
+
+  '@carbon/react@1.119.0(patch_hash=78b2c806d464ee63af282fd6f6ebdfd8022daadc067b9131d6c9c8827bfd3f61)(react-dom@19.3.1(react@19.3.1))(react-is@19.3.1)(react@19.3.1)(sass@1.106.1)':
     dependencies:
       '@babel/runtime': 8.0.5
-      '@carbon/feature-flags': 1.10.0
-      '@carbon/icons-react': 11.90.0(react@19.3.1)
-      '@carbon/layout': 11.61.0
-      '@carbon/motion': 11.54.0
-      '@carbon/styles': 1.117.0(sass@1.106.1)
-      '@carbon/utilities': 0.27.0
+      '@carbon/feature-flags': 1.11.0
+      '@carbon/icons-react': 11.91.0(react@19.3.1)
+      '@carbon/layout': 11.62.0
+      '@carbon/motion': 11.55.0
+      '@carbon/styles': 1.118.0(sass@1.106.1)
+      '@carbon/utilities': 0.28.0
       '@floating-ui/react': 0.27.20(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ibm/telemetry-js': 1.11.0
       classnames: 2.5.1
@@ -4663,18 +4710,19 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
       react-fast-compare: 3.2.2
       react-is: 19.3.1
-      sass: 1.106.1
       tabbable: 6.5.0
+    optionalDependencies:
+      sass: 1.106.1
 
-  '@carbon/styles@1.117.0(sass@1.106.1)':
+  '@carbon/styles@1.118.0(sass@1.106.1)':
     dependencies:
-      '@carbon/colors': 11.60.0
-      '@carbon/feature-flags': 1.10.0
-      '@carbon/grid': 11.64.0
-      '@carbon/layout': 11.61.0
-      '@carbon/motion': 11.54.0
-      '@carbon/themes': 11.83.0
-      '@carbon/type': 11.69.0
+      '@carbon/colors': 11.61.0
+      '@carbon/feature-flags': 1.11.0
+      '@carbon/grid': 11.65.0
+      '@carbon/layout': 11.62.0
+      '@carbon/motion': 11.55.0
+      '@carbon/themes': 11.84.0
+      '@carbon/type': 11.70.0
       '@ibm/plex': 6.4.1
       '@ibm/plex-mono': 2.5.0
       '@ibm/plex-sans': 1.1.0
@@ -4690,18 +4738,18 @@ snapshots:
 
   '@carbon/telemetry@0.1.0': {}
 
-  '@carbon/themes@11.83.0':
+  '@carbon/themes@11.84.0':
     dependencies:
-      '@carbon/colors': 11.60.0
-      '@carbon/layout': 11.61.0
-      '@carbon/type': 11.69.0
+      '@carbon/colors': 11.61.0
+      '@carbon/layout': 11.62.0
+      '@carbon/type': 11.70.0
       '@ibm/telemetry-js': 1.11.0
       color: 4.2.3
 
-  '@carbon/type@11.69.0':
+  '@carbon/type@11.70.0':
     dependencies:
-      '@carbon/grid': 11.64.0
-      '@carbon/layout': 11.61.0
+      '@carbon/grid': 11.65.0
+      '@carbon/layout': 11.62.0
       '@ibm/telemetry-js': 1.11.0
 
   '@carbon/utilities-react@0.28.0(react@19.3.1)':
@@ -4710,9 +4758,9 @@ snapshots:
       '@ibm/telemetry-js': 1.11.0
       react: 19.3.1
 
-  '@carbon/utilities-react@0.30.0(react@19.3.1)':
+  '@carbon/utilities-react@0.31.0(react@19.3.1)':
     dependencies:
-      '@carbon/utilities': 0.27.0
+      '@carbon/utilities': 0.28.0
       '@ibm/telemetry-js': 1.11.0
       react: 19.3.1
 
@@ -4727,7 +4775,7 @@ snapshots:
       '@internationalized/number': 3.6.8
       temporal-polyfill: 1.0.5
 
-  '@carbon/utilities@0.27.0':
+  '@carbon/utilities@0.28.0':
     dependencies:
       '@ibm/telemetry-js': 1.11.0
       '@internationalized/number': 3.6.8
@@ -4737,15 +4785,14 @@ snapshots:
     dependencies:
       '@ibm/telemetry-js': 1.11.0
 
-  '@carbon/web-components@2.65.0(sass@1.106.1)':
+  '@carbon/web-components@2.66.0(sass@1.106.1)':
     dependencies:
       '@carbon/icon-helpers': 10.47.0
-      '@carbon/icons': 11.90.0
-      '@carbon/styles': 1.117.0(sass@1.106.1)
-      '@carbon/utilities': 0.27.0
+      '@carbon/icons': 11.91.0
+      '@carbon/styles': 1.118.0(sass@1.106.1)
+      '@carbon/utilities': 0.28.0
       '@floating-ui/dom': 1.8.0
       '@ibm/telemetry-js': 1.11.0
-      '@lit-labs/signals': 0.3.0
       '@lit/context': 1.1.6
       lit: 3.3.3
       lodash-es: 4.18.1
@@ -5394,11 +5441,6 @@ snapshots:
       '@lezer/common': 1.5.3
       '@lezer/highlight': 1.2.5
       '@lezer/lr': 1.4.10
-
-  '@lit-labs/signals@0.3.0':
-    dependencies:
-      lit: 3.3.3
-      signal-polyfill: 0.2.2
 
   '@lit-labs/ssr-dom-shim@1.6.0': {}
 
@@ -6826,6 +6868,17 @@ snapshots:
 
   escape-string-regexp@5.0.0: {}
 
+  eslint-plugin-react-hooks@7.1.1(eslint@10.13.0(supports-color@10.2.2))(supports-color@10.2.2):
+    dependencies:
+      '@babel/core': 7.29.7(supports-color@10.2.2)
+      '@babel/parser': 7.29.9
+      eslint: 10.13.0(supports-color@10.2.2)
+      hermes-parser: 0.25.1
+      zod: 4.6.7
+      zod-validation-error: 4.0.2(zod@4.6.7)
+    transitivePeerDependencies:
+      - supports-color
+
   eslint-scope@9.1.2:
     dependencies:
       '@types/esrecurse': 4.3.1
@@ -7035,6 +7088,12 @@ snapshots:
   hasown@2.0.4:
     dependencies:
       function-bind: 1.1.2
+
+  hermes-estree@0.25.1: {}
+
+  hermes-parser@0.25.1:
+    dependencies:
+      hermes-estree: 0.25.1
 
   hookable@6.1.2: {}
 
@@ -8057,8 +8116,6 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  signal-polyfill@0.2.2: {}
-
   simple-swizzle@0.2.4:
     dependencies:
       is-arrayish: 0.3.4
@@ -8168,10 +8225,10 @@ snapshots:
   stylelint-plugin-carbon-tokens@5.0.6(postcss@8.5.31)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@carbon/colors': 11.59.0
-      '@carbon/layout': 11.61.0
-      '@carbon/motion': 11.54.0
-      '@carbon/themes': 11.83.0
-      '@carbon/type': 11.69.0
+      '@carbon/layout': 11.62.0
+      '@carbon/motion': 11.55.0
+      '@carbon/themes': 11.84.0
+      '@carbon/type': 11.70.0
       '@ibm/telemetry-js': 1.11.0
       postcss-scss: 4.0.9(postcss@8.5.31)
       postcss-value-parser: 4.2.0
@@ -8525,6 +8582,12 @@ snapshots:
     dependencies:
       '@yuku-toolchain/types': 0.19.0
       yuku-core: 0.19.0
+
+  zod-validation-error@4.0.2(zod@4.6.7):
+    dependencies:
+      zod: 4.6.7
+
+  zod@4.6.7: {}
 
   zrender@6.1.0:
     dependencies:

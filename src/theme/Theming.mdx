@@ -34,6 +34,16 @@ Style your own markup with Carbon tokens as CSS variables
 (`var(--cds-layer-01)`, `var(--cds-text-primary)`); they follow the theme.
 Values: [Tokens](?path=/docs/elements-tokens--overview).
 
+`styles.css` writes the tokens on `:root`, Carbon's White theme for light and
+Gray 100 for dark. Carbon's `Theme` zones and Carbon Charts write a stock
+theme again on their own element, `EChart` uses a JavaScript theme and the AI
+chat inherits the page's tokens.
+
+Do not redefine `--cds-*` tokens in app CSS: an override is undone inside
+zones and charts and does not reach the values compiled into the stylesheet,
+such as spacing in components, motion and corners. How the tokens work:
+[theming guide](https://github.com/afframe/ui/blob/main/docs/guides/theming.md).
+
 Two hooks read the current scheme in client components, for libraries that
 take a theme name instead of CSS:
 

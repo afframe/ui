@@ -41,6 +41,7 @@ import {
 } from 'react';
 import type { HTMLAttributes, Ref } from 'react';
 import { useCarbonTheme } from '../../theme/use-afframe-theme.js';
+import { useMergedRefs } from '../FlowParts/refs.js';
 
 echarts.use([
   BarChart,
@@ -79,6 +80,7 @@ export type EChartInstance = EChartsType;
 interface EChartEventHandlerMethod {
   handle(params: ECElementEvent): void;
 }
+/** An ECharts event handler, as for `chart.on(name, handler)`. */
 export type EChartEventHandler = EChartEventHandlerMethod['handle'];
 
 export interface EChartProps extends Omit<
@@ -96,7 +98,9 @@ export interface EChartProps extends Omit<
   /** ECharts event handlers by event name, as for `chart.on(name, handler)`. */
   onEvents?: Record<string, EChartEventHandler>;
   /** The ECharts instance, `null` before mount and after unmount. */
-  ref?: Ref<EChartInstance | null>;
+  chartRef?: Ref<EChartInstance | null>;
+  /** The container `div`. */
+  ref?: Ref<HTMLDivElement>;
 }
 
 const ariaOn = { enabled: true };
@@ -106,14 +110,18 @@ export function EChart({
   option,
   notMerge = false,
   onEvents,
+  chartRef,
   ref,
   ...rest
 }: EChartProps) {
   const container = useRef<HTMLDivElement>(null);
+  const rootRef = useMergedRefs(container, ref);
   const [chart, setChart] = useState<EChartsType | null>(null);
   const theme = THEME_NAMES[useCarbonTheme()];
   const themeAtInit = useRef(theme);
-  themeAtInit.current = theme;
+  useLayoutEffect(() => {
+    themeAtInit.current = theme;
+  });
 
   useLayoutEffect(() => {
     if (!container.current) return;
@@ -129,7 +137,7 @@ export function EChart({
   }, []);
 
   useImperativeHandle<EChartInstance | null, EChartInstance | null>(
-    ref,
+    chartRef,
     () => chart,
     [chart]
   );
@@ -163,5 +171,5 @@ export function EChart({
     };
   }, [chart, onEvents]);
 
-  return <div data-afframe-extra="echarts" ref={container} {...rest} />;
+  return <div data-afframe-extra="echarts" ref={rootRef} {...rest} />;
 }

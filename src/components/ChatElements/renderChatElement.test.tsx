@@ -142,6 +142,7 @@ test.each(chatElementTypes)(
             ...payloads[type],
             className: 'x-injected',
             messages: { loading: 'x-injected' },
+            ref: 'x-injected',
           })
         )}
       </>

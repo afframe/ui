@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, icons from @afframe/ui icons, pkg.prefix as the 'c4p' literal, headshot image copied from UserProfileImage and loaded with new URL(), docs page converted to MDX, commented-out imports removed, source tag, open state synced on Escape, launcher ref for focus return. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, icons from @afframe/ui icons, pkg.prefix as the 'c4p' literal, title Components/Add and Select/MultiAddSelect, headshot image copied from UserProfileImage and loaded with new URL(), docs page converted to MDX, commented-out imports removed, source tag, open state synced on Escape, launcher ref for focus return. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState, type ComponentProps } from 'react';
@@ -30,7 +30,7 @@ type IconProps = ComponentProps<typeof Document>;
 type StoryArgs = Record<string, unknown>;
 
 export default {
-  title: 'Components/MultiAddSelect',
+  title: 'Components/Add and Select/MultiAddSelect',
   component: MultiAddSelect,
   tags: ['ibm-products'],
   parameters: {

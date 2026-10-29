@@ -3,7 +3,7 @@ import * as stories from './GetStartedCard.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label added, Codesandbox link removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: source label added, Codesandbox link removed, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed, When to use added.
 
 <Meta isTemplate />
 
@@ -11,11 +11,19 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <SourceLabel name="ibm-products" />
 
-[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/GetStartedCard)
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.101.0/packages/ibm-products/src/components/GetStartedCard)
 
 ## Overview
 
 <Canvas of={stories.Default} />
+
+## When to use
+
+Use get started cards on a get started page, one card per first task, in
+sequence where order matters. Do not use them for:
+
+- progress through setup tasks in a panel: [Checklist](?path=/docs/components-onboarding-checklist--overview);
+- general clickable content: Carbon [Tile](?path=/docs/components-tile--overview).
 
 ## Example usage
 

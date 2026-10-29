@@ -28,6 +28,7 @@ export function useMergedRefs<T>(
       const cleanups = refs.map((ref) => assignRef(ref, node));
       return () => cleanups.forEach((cleanup) => cleanup());
     },
+    // eslint-disable-next-line react-hooks/use-memo, react-hooks/exhaustive-deps -- variadic refs: the list is the deps
     refs
   );
 }
@@ -40,6 +41,7 @@ export function useMergedRefs<T>(
 export function useObjectRef<T>(ref: Ref<T> | undefined): RefObject<T | null> {
   const latest = useRef(ref);
   // Set during render: IBM's node attaches before this component's effects run.
+  // eslint-disable-next-line react-hooks/refs -- read only at ref attach and in the layout effect, both after this render
   latest.current = ref;
   const [state] = useState(() => {
     let value: T | null = null;
@@ -65,7 +67,7 @@ export function useObjectRef<T>(ref: Ref<T> | undefined): RefObject<T | null> {
       },
     };
   });
-  useLayoutEffect(state.rebind, [ref, state]);
+  useLayoutEffect(() => state.rebind(), [ref, state]);
   return state.object;
 }
 

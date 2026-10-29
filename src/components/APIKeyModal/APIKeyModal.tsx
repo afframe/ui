@@ -261,13 +261,13 @@ export function APIKeyModal(props: APIKeyModalProps) {
 
   const nameStep = steps.length;
   const customStep = step < nameStep ? steps[step] : undefined;
-  const dialog = useFlow({
+  const { containerRef, ...dialog } = useFlow({
     open,
     onClose,
     launcherRef,
     messages: { error: text.error, errorText: text.errorText },
     initialFocus: (): HTMLElement | null =>
-      nameStep === 0 ? nameRef.current : dialog.containerRef.current,
+      nameStep === 0 ? nameRef.current : containerRef.current,
   });
 
   // Set the key through the DOM property only: a React `value` would also
@@ -283,8 +283,8 @@ export function APIKeyModal(props: APIKeyModalProps) {
     moved.current = false;
     if (succeeded) keyRef.current?.focus();
     else if (step === nameStep) nameRef.current?.focus();
-    else dialog.containerRef.current?.focus();
-  }, [step, succeeded, nameStep, dialog.containerRef]);
+    else containerRef.current?.focus();
+  }, [step, succeeded, nameStep, containerRef]);
 
   const goTo = (next: number) => {
     moved.current = true;
@@ -373,10 +373,7 @@ export function APIKeyModal(props: APIKeyModalProps) {
       onRequestSubmit={() => {
         if (!primary.disabled && !dialog.pending) void primary.action();
       }}>
-      <div
-        ref={dialog.containerRef}
-        tabIndex={-1}
-        className="afframe-modal-body">
+      <div ref={containerRef} tabIndex={-1} className="afframe-modal-body">
         <FlowDescription description={description} />
         {succeeded ? (
           <KeyView
@@ -394,7 +391,7 @@ export function APIKeyModal(props: APIKeyModalProps) {
                       trimmed,
                       downloadFileName,
                       downloadFileType,
-                      dialog.containerRef.current ?? document.body
+                      containerRef.current ?? document.body
                     ),
                 }
               : {})}

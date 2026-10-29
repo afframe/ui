@@ -11,11 +11,14 @@ import { loadChat } from './chat-loader.js';
 import type { ChatModule } from './chat-loader.js';
 
 export interface AIChatMessages {
+  /** Accessible text of the skeleton while the chat loads. */
+  loading: string;
   /** Shown when the chat's code fails to load. */
   loadError: string;
 }
 
 export const defaultAIChatMessages: AIChatMessages = {
+  loading: 'Loading',
   loadError: 'The chat could not load. Reload the page to try again.',
 };
 
@@ -52,19 +55,24 @@ function useChatComponent<P>(
   return state;
 }
 
-function LoadError({
-  messages,
-}: {
-  messages: Partial<AIChatMessages> | undefined;
-}) {
-  const text = resolveMessages(defaultAIChatMessages, messages);
+function LoadError({ title }: { title: string }) {
   return (
     <InlineNotification
       kind="error"
       lowContrast
       hideCloseButton
-      title={text.loadError}
+      title={title}
     />
+  );
+}
+
+// The skeleton keeps the chat's className, so it has no wrapper of its own.
+function Loading({ label, className }: { label: string; className?: string }) {
+  return (
+    <>
+      <SkeletonPlaceholder {...(className && { className })} />
+      <span className="cds--visually-hidden">{label}</span>
+    </>
   );
 }
 
@@ -93,14 +101,18 @@ export function ChatContainer({
   ...props
 }: ChatContainerComponentProps) {
   const chat = useChatComponent(pickContainer);
+  const text = resolveMessages(defaultAIChatMessages, messages);
   return (
-    <div data-afframe-extra="ai-chat" style={wrapperStyle}>
+    <div
+      data-afframe-extra="ai-chat"
+      style={wrapperStyle}
+      aria-busy={chat.status === 'loading' || undefined}>
       {chat.status === 'loaded' ? (
         <chat.Component {...props} />
       ) : chat.status === 'failed' ? (
-        <LoadError messages={messages} />
+        <LoadError title={text.loadError} />
       ) : (
-        <SkeletonPlaceholder />
+        <Loading label={text.loading} />
       )}
     </div>
   );
@@ -115,14 +127,18 @@ export function ChatCustomElement({
   ...props
 }: ChatCustomElementComponentProps) {
   const chat = useChatComponent(pickCustomElement);
+  const text = resolveMessages(defaultAIChatMessages, messages);
   return (
-    <div data-afframe-extra="ai-chat" style={wrapperStyle}>
+    <div
+      data-afframe-extra="ai-chat"
+      style={wrapperStyle}
+      aria-busy={chat.status === 'loading' || undefined}>
       {chat.status === 'loaded' ? (
         <chat.Component {...props} />
       ) : chat.status === 'failed' ? (
-        <LoadError messages={messages} />
+        <LoadError title={text.loadError} />
       ) : (
-        <SkeletonPlaceholder className={props.className} />
+        <Loading label={text.loading} className={props.className} />
       )}
     </div>
   );

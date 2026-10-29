@@ -281,7 +281,7 @@ Disabled.parameters = {
   a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
 };
 
-// Carbon 1.118 points aria-errormessage at the error but adds no live region
+// Carbon 1.119 points aria-errormessage at the error but adds no live region
 // or aria-describedby, which fails axe's aria-valid-attr-value. Carbon spreads
 // rest props after its own aria-describedby, so passing the error id
 // (`${id}-error-msg`) links it. The gap is an upstream bug.

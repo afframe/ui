@@ -122,7 +122,6 @@ const sharedArgTypes: ArgTypes = {
 };
 
 const sharedArgs: Partial<FluidDropdownProps<unknown>> = {
-  autoAlign: false,
   className: 'test-class',
   direction: 'bottom',
   disabled: false,
@@ -279,7 +278,7 @@ ReadOnly.args = {
 ReadOnly.argTypes = Default.argTypes;
 ReadOnly.parameters = Default.parameters;
 
-// Carbon 1.118 links the error text but sets no aria-invalid, and passes extra
+// Carbon 1.119 links the error text but sets no aria-invalid, and passes extra
 // props to the wrapper, not the button. This is an upstream bug.
 export const Invalid: StoryFn<
   Partial<FluidDropdownProps<unknown>> & { defaultWidth?: number }

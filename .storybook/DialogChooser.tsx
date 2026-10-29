@@ -73,11 +73,11 @@ const rows: [task: string, size: string, surface: string, ...ReactNode[]][] = [
     'Pick items from a list or a hierarchy',
     'Large',
     'Inline or tearsheet',
-    link('AddSelect', 'components-addselect'),
+    link('AddSelect', 'components-add-and-select-addselect'),
     ', ',
-    link('SingleAddSelect', 'components-singleaddselect'),
+    link('SingleAddSelect', 'components-add-and-select-singleaddselect'),
     ', ',
-    link('MultiAddSelect', 'components-multiaddselect'),
+    link('MultiAddSelect', 'components-add-and-select-multiaddselect'),
   ],
   [
     'Any other short task or message, from props',
@@ -138,9 +138,9 @@ export function AddSelectGuidance() {
   return (
     <ul>
       <li>
-        {link('AddSelect', 'components-addselect')}: start here. It is IBM's
-        composable successor, a preview in IBM Products 2.100.0, and moves into
-        Carbon v12 core (
+        {link('AddSelect', 'components-add-and-select-addselect')}: start here.
+        It is IBM's composable successor, a preview in IBM Products 2.101.0, and
+        moves into Carbon v12 core (
         <AnchorMdx href="https://github.com/carbon-design-system/carbon/issues/22920">
           carbon issue #22920
         </AnchorMdx>
@@ -148,11 +148,11 @@ export function AddSelectGuidance() {
         built-in modifiers, sort or filter.
       </li>
       <li>
-        {link('SingleAddSelect', 'components-singleaddselect')} and{' '}
-        {link('MultiAddSelect', 'components-multiaddselect')}: stable,
-        ready-made tearsheet flows with modifiers, sort and filter built in. IBM
-        deprecates them upstream, with no deprecation marker in 2.100.0. Use
-        them until you migrate to <code>AddSelect</code>.
+        {link('SingleAddSelect', 'components-add-and-select-singleaddselect')}{' '}
+        and {link('MultiAddSelect', 'components-add-and-select-multiaddselect')}
+        : stable, ready-made tearsheet flows with modifiers, sort and filter
+        built in. IBM deprecates them upstream, with no deprecation marker in
+        2.101.0. Use them until you migrate to <code>AddSelect</code>.
       </li>
     </ul>
   );

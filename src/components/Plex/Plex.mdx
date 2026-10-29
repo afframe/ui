@@ -3,7 +3,7 @@ import * as PlexStories from './Plex.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: docs page written for the upstream stories, which have none; source label and links pinned to v11.118.0, Default specimen and a heading per family.
+// Modified by Afframe in 2026: docs page written for the upstream stories, which have none; source label and links pinned to v11.119.0, Default specimen and a heading per family, the token of each family.
 
 <Meta isTemplate />
 
@@ -11,7 +11,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <SourceLabel name="carbon" />
 
-[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/Plex)
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.119.0/packages/react/src/components/Plex)
 &nbsp;|&nbsp;
 [Typography](https://carbondesignsystem.com/elements/typography/overview/)
 
@@ -32,7 +32,8 @@ stylesheet ships the Latin and Latin Extended subsets):
 
 ## IBM Plex Sans
 
-The default text face, `var(--cds-body-01-font-family)`.
+The default text face. `styles.css` sets it on `<body>` and components inherit
+it; no token carries it, so there is no `--cds-body-01-font-family`.
 
 <Canvas of={PlexStories.IBMPlexSans} />
 

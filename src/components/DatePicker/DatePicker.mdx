@@ -11,7 +11,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 import { DateChooser } from '../../../.storybook/DateChooser';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2026
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added, Afframe note on Czech dates and a Monday week start, date chooser added, section on typing a date added, example dates in the system format (US-format maxDate example with an explicit dateFormat).
+// Modified by Afframe in 2026: Stackblitz actions removed, components from @afframe/ui, source label added, inline spacing as Carbon spacing tokens, story names unified, upstream Feedback section and table of contents removed, note on formatting the picked date with formatDate added, Afframe note on Czech dates and a Monday week start, date chooser added, section on typing a date added, section on the typing mask in other inputs added, example dates in the system format (US-format maxDate example with an explicit dateFormat).
 
 <Meta isTemplate />
 
@@ -19,7 +19,7 @@ import { DateChooser } from '../../../.storybook/DateChooser';
 
 <SourceLabel name="carbon" />
 
-[Source code](https://github.com/carbon-design-system/carbon/tree/v11.118.0/packages/react/src/components/DatePicker)
+[Source code](https://github.com/carbon-design-system/carbon/tree/v11.119.0/packages/react/src/components/DatePicker)
 &nbsp;|&nbsp;
 [Usage guidelines](https://www.carbondesignsystem.com/components/date-picker/usage)
 &nbsp;|&nbsp;
@@ -464,6 +464,50 @@ start this at a different date, you can pass in a date string or date object.
     labelText="Value as object example"
   />
 </DatePicker>
+```
+
+## The typing mask in other inputs
+
+`useInputMask` puts the pickers' typing mask on an input an app builds itself
+([ADR 0021](https://github.com/afframe/ui/blob/main/docs/decisions/0021-system-date-and-time-format-and-input-masks.md)).
+It is a client hook: its module starts with `'use client'`.
+
+`useInputMask(spec, enabled = true)` takes a `MaskSpec` and returns props to
+spread on the input: `onFocus`, `onChange` and `onCompositionEnd` handlers,
+`inputMode="numeric"`, `autoComplete="off"`, and the spec's `placeholder` and
+`pattern`. On focus it listens to `beforeinput`, so separators appear and parts
+pad while typing; paste and autofill are normalised in `onChange`, IME text
+in `onCompositionEnd`. An input's own `onFocus`, `onChange` or
+`onCompositionEnd` must call the mask's handler first. `enabled: false` stops
+the listener, which outlives the spread props on an input that stays mounted.
+The mask checks each part's range, not whether the date exists (`31.02.2026`
+passes); that check is the app's.
+
+The spec sets the format:
+
+- `dateMaskSpec({ order, separator })`: `dd`, `mm` and `yyyy` once each, in any
+  order, joined by one separator. `parseDatePattern(defaultDateFormat)` gives
+  the system format.
+- `timeMaskSpec({ seconds, hourCycle, separator })`: `hh:mm` or `hh:mm:ss`,
+  with `hourCycle` `'h23'` or `'h12'`; `separator` defaults to `:`.
+- `applyMaskEdit(state, edit, spec)` is the pure edit step under the hook.
+
+```jsx
+'use client';
+import {
+  TextInput,
+  dateMaskSpec,
+  defaultDateFormat,
+  parseDatePattern,
+  useInputMask,
+} from '@afframe/ui';
+
+const spec = dateMaskSpec(parseDatePattern(defaultDateFormat));
+
+export function IssueDateField() {
+  const mask = useInputMask(spec);
+  return <TextInput id="issue-date" labelText="Issue date" {...mask} />;
+}
 ```
 
 ## References

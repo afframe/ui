@@ -79,3 +79,18 @@ export const Stacked: Story = {
   parameters: upstreamA11y(),
   render: () => <StackedBarChart data={regions} options={stackedOptions} />,
 };
+
+export const Loading: Story = {
+  parameters: upstreamA11y(),
+  render: () => (
+    <SimpleBarChart
+      data={quarters}
+      options={{ ...simpleOptions, data: { loading: true } }}
+    />
+  ),
+};
+
+export const Empty: Story = {
+  parameters: upstreamA11y(),
+  render: () => <SimpleBarChart data={[]} options={simpleOptions} />,
+};

@@ -66,6 +66,7 @@ export function FlowForm({
   ...rest
 }: FlowFormProps) {
   const formRef = useMergedRefs(flow.containerRef, ref);
+  const { lastFocusRef } = flow;
   const submit = () => {
     if (!submitDisabled && !flow.pending) onSubmit();
   };
@@ -104,7 +105,7 @@ export function FlowForm({
       onKeyDown={onKeyDown}
       onFocus={(event) => {
         if (event.target instanceof HTMLElement)
-          flow.lastFocusRef.current = event.target;
+          lastFocusRef.current = event.target;
       }}
       onSubmit={(event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();

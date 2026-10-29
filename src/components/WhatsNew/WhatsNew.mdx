@@ -6,7 +6,7 @@ import * as BubbleStories from './Bubble.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: source label and source link added, Stackblitz links and unused imports removed, Meta as a plain template, getting started and the example import from @afframe/ui and use its Tearsheet (IBM's preview__Tearsheet API), the SCSS section points to the package CSS, story names unified, upstream table of contents and Labs owner block removed.
+// Modified by Afframe in 2026: source label and source link added, Stackblitz links and unused imports removed, Meta as a plain template, getting started and the example import from @afframe/ui and use its Tearsheet (IBM's preview__Tearsheet API), the SCSS section points to the package CSS, story names unified, upstream table of contents and Labs owner block removed, When to use added.
 
 <Meta isTemplate />
 
@@ -41,6 +41,15 @@ components:
 - `View`
 
 <Canvas of={WhatsNewStories.Pattern} />
+
+## When to use
+
+Use the pattern to show returning users what changed since their last visit,
+one topic per section. Do not use it for:
+
+- a first-visit welcome: [FirstTimeOrientation](?path=/docs/components-onboarding-firsttimeorientation--overview);
+- a one-off message before a new experience: [InterstitialScreen](?path=/docs/components-onboarding-interstitialscreen--overview);
+- pointing at one new control: [Coachmark](?path=/docs/components-onboarding-coachmark--overview).
 
 ## Getting started
 

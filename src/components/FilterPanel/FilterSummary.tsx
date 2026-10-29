@@ -71,7 +71,7 @@ type SummaryItem = TagOverflowProps['items'][number] & {
 
 export interface FilterSummaryProps
   extends
-    Pick<FilterPanelProps, 'groups' | 'value' | 'onChange'>,
+    Pick<FilterPanelProps, 'groups' | 'value' | 'onChange' | 'locale'>,
     Omit<ComponentPropsWithoutRef<'div'>, 'onChange' | 'children'> {
   /** Ref to the root `div`. */
   ref?: Ref<HTMLDivElement>;
@@ -88,6 +88,7 @@ export function FilterSummary({
   groups,
   value,
   onChange,
+  locale,
   messages,
   className,
   ref,
@@ -98,7 +99,12 @@ export function FilterSummary({
   const mergedRef = useMergedRefs(rootRef, ref);
 
   const productsPrefix = useProductsPrefix();
-  const items: SummaryItem[] = filterTags(groups, value, text).map((tag) => ({
+  const items: SummaryItem[] = filterTags(
+    groups,
+    value,
+    text,
+    locale === undefined ? {} : { locale }
+  ).map((tag) => ({
     id: tag.key,
     label: tag.label,
     tagType: 'gray',

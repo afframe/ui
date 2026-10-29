@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2022, 2024
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, docs page converted to MDX, commented-out imports removed, source tag, open state synced on Escape, launcher ref for focus return. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, components from @afframe/ui, title Components/Add and Select/SingleAddSelect, docs page converted to MDX, commented-out imports removed, source tag, open state synced on Escape, launcher ref for focus return. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import { useRef, useState } from 'react';
@@ -24,7 +24,7 @@ import mdx from './SingleAddSelect.mdx';
 type StoryArgs = Record<string, unknown>;
 
 export default {
-  title: 'Components/SingleAddSelect',
+  title: 'Components/Add and Select/SingleAddSelect',
   component: SingleAddSelect,
   tags: ['ibm-products'],
   parameters: {

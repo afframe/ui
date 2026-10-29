@@ -193,6 +193,25 @@ test('flat: fieldsets and legends for checkbox, radio, date range and slider; la
   expect(screen.queryByRole('spinbutton', { name: 'Amount' })).toBeNull();
 });
 
+test('locale: the slider bounds follow it', () => {
+  const slider: FilterPanelGroup[] = [
+    { id: 'amount', label: 'Amount', variant: 'slider', min: 0, max: 5000.5 },
+  ];
+  render(
+    <FilterPanel
+      groups={slider}
+      value={{}}
+      onChange={() => {}}
+      locale="en-US"
+    />
+  );
+  const rangeLabels = document.querySelectorAll('.cds--slider__range-label');
+  expect([...rangeLabels].map((label) => label.textContent)).toEqual([
+    '0',
+    '5,000.5',
+  ]);
+});
+
 /** Sets one value in every variant of `allVariants`. */
 async function fillEveryVariant() {
   await userEvent.click(screen.getByText('Paid'));

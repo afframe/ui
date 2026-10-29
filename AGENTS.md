@@ -19,18 +19,21 @@
 | `scripts/`                                   | Build, pack, example and licence checks; `scripts/ci/` holds CI helpers and image pins         |
 | `docs/`                                      | Handbook, package structure, testing, guides, ADRs (`docs/README.md`)                          |
 
-Detail: `docs/package-structure.md`; architecture: `ARCHITECTURE.md`; every public export with its import path, runtime and docs: `docs/registry.json`. Consumer agents read `docs/agent-guide.md`, shipped as `dist/agents.md`.
+Detail: `docs/package-structure.md`; architecture: `ARCHITECTURE.md`; theming and what a token change reaches: `docs/guides/theming.md`; every public export with its import path, runtime and docs: `docs/registry.json`. Consumer agents read `docs/agent-guide.md`, shipped as `dist/agents.md`.
+
+Most `src/components/` folders are docs pages for re-exported Carbon, IBM Products and Labs components, not Afframe code. Which ones Afframe owns: the "Afframe families and subpaths" section of `docs/registry.md`.
 
 ## Commands
 
-| Command                         | When                                                            |
-| ------------------------------- | --------------------------------------------------------------- |
-| `pnpm preflight`                | Always: format, lint, types, registry check                     |
-| `pnpm test`                     | After a change to `src/`, `.storybook/` or styles               |
-| `pnpm test:node`                | Formatters under Node's ICU; opens no browser                   |
-| `pnpm build && pnpm check:pack` | After a change to exports, build config or `package.json`       |
-| `pnpm check:licences`           | After a change to `.mdx` pages or licence files (needs `reuse`) |
-| `pnpm registry`                 | After a change to exports or component folders (regenerates)    |
+| Command                                     | When                                                            |
+| ------------------------------------------- | --------------------------------------------------------------- |
+| `pnpm preflight`                            | Always: format, lint, types, registry check                     |
+| `pnpm test`                                 | After a change to `src/`, `.storybook/` or styles               |
+| `pnpm test:node`                            | Formatters under Node's ICU; opens no browser                   |
+| `pnpm build && pnpm check:pack`             | After a change to exports, build config or `package.json`       |
+| `pnpm check:licences`                       | After a change to `.mdx` pages or licence files (needs `reuse`) |
+| `pnpm build:storybook && pnpm check:docgen` | After a Storybook or docgen config update; checks API tables    |
+| `pnpm registry`                             | After a change to exports or component folders (regenerates)    |
 
 Once before tests: `pnpm exec playwright install chromium --only-shell`. CI also runs gitleaks, actionlint and zizmor; `docs/developer-handbook.md` lists every job.
 

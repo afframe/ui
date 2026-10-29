@@ -3,7 +3,7 @@ import * as stories from './Cascade.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2024, 2024
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: written from the upstream docs page component (StoryDocsPage), source label added, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed.
+// Modified by Afframe in 2026: written from the upstream docs page component (StoryDocsPage), source label added, source link pinned to the tag, internal IBM links removed, story names unified, upstream table of contents removed, When to use added.
 
 <Meta isTemplate />
 
@@ -11,9 +11,17 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 <SourceLabel name="ibm-products" />
 
-[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.100.0/packages/ibm-products/src/components/Cascade)
+[Source code](https://github.com/carbon-design-system/ibm-products/tree/%40carbon%2Fibm-products%402.101.0/packages/ibm-products/src/components/Cascade)
 &nbsp;|&nbsp;
 [Carbon motion overview](https://carbondesignsystem.com/elements/motion/overview/)
+
+## When to use
+
+Use `Cascade` to bring a group of cards or tiles in one after another when a
+page loads. Do not use it for:
+
+- loading states: Carbon [SkeletonPlaceholder](?path=/docs/components-skeletons-skeletonplaceholder--overview) and the skeleton states of each component;
+- content the user updates often, where the delay gets in the way.
 
 ## Without grid
 

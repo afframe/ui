@@ -146,7 +146,6 @@ const sharedArgTypes: ArgTypes = {
 };
 
 const sharedArgs = {
-  autoAlign: false,
   className: 'test-class',
   clearSelectionDescription: 'Total items selected: ',
   clearSelectionText: 'To clear selection, press Delete or Backspace.',
@@ -352,7 +351,7 @@ ReadOnly.args = {
 };
 ReadOnly.argTypes = Default.argTypes;
 
-// Carbon 1.118 gives the error text no id, links nothing to it and sets no
+// Carbon 1.119 gives the error text no id, links nothing to it and sets no
 // aria-invalid; MultiSelect takes no extra props to fix it from outside.
 // This is an upstream bug.
 export const Invalid: StoryFn<Partial<FluidMultiSelectProps<unknown>>> =

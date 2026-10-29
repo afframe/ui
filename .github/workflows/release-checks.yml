@@ -1,18 +1,19 @@
 name: Release checks
 
-# The heavy checks, run before a release and by hand: visual tests, the package
-# and example check, the Storybook build. No caches: a tag run must not restore
-# a cache that a PR run wrote.
+# The heavy checks, called by the release workflow on a tag and run by hand:
+# visual tests, the package and example check, the Storybook build. No caches: a
+# tag run must not restore a cache that a PR run wrote.
 on:
+  workflow_call:
   workflow_dispatch:
-  push:
-    tags: ['v*']
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Literal prefix: when called, github.workflow is the caller's name, and the
+  # caller's own group would deadlock.
+  group: release-checks-${{ github.ref }}
   cancel-in-progress: false
 
 env:
@@ -116,6 +117,7 @@ jobs:
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:storybook
+      - run: pnpm check:docgen
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: storybook

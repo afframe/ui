@@ -2,11 +2,11 @@
 
 Date: 2026-10-12
 
-Amended: 2026-10-13, 2026-10-15
+Amended: 2026-10-13, 2026-10-15, 2026-10-25
 
 ## Status
 
-Accepted, amended 2026-10-13 (Task Dialogs family) and 2026-10-15 (Add and Select family, test-only stories, IBM Plex under Typography)
+Accepted, amended 2026-10-13 (Task Dialogs family), 2026-10-15 (Add and Select family, test-only stories, IBM Plex under Typography) and 2026-10-25 (the Storybook title is the only grouping; the AddSelect pages join the Add and Select family; Licences under Getting Started; where the sidebar differs from Carbon)
 
 ## Context
 
@@ -14,17 +14,17 @@ Copied docs pages kept the top-level section of the Storybook they came from. Th
 
 ## Decision
 
-The sidebar follows Carbon's Storybook layout, with Afframe's content merged into it.
+The sidebar follows Carbon's Storybook layout, with Afframe's content merged into it. It differs from Carbon in two places on purpose: Layout also holds Grid, FlexGrid, AspectRatio, Heading and Layer (Carbon files Grid and FlexGrid under Elements and the others under Components), and Utilities holds ErrorBoundary and IdPrefix (Carbon: Components).
 
-| Section         | Holds                                                                                                                                                                                                                                                                                               |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Getting Started | Welcome, Theming, AfframeProvider, Formatting, Feature Flags, in this order                                                                                                                                                                                                                         |
-| Components      | Every component; a family of siblings shares a subfolder (`Create and Edit`, `Task Dialogs`, `Empty States`, `Fluid Inputs`, `Notifications`, `Skeletons`, `UI Shell`, `Charts`, `Onboarding`, `AI`, `Cards`, `Add and Select`); `Add and Select` holds IBM's AddSelect pattern examples (ADR 0008) |
-| Elements        | Tokens, typography (with IBM Plex as its sub-page), icons, pictograms                                                                                                                                                                                                                               |
-| Layout          | Grid, FlexGrid, Layer, Stack, AspectRatio, Heading (covers Section)                                                                                                                                                                                                                                 |
-| Hooks           | React hooks                                                                                                                                                                                                                                                                                         |
-| Utilities       | Helpers without their own look (ActionBar, Cascade, ErrorBoundary, IdPrefix)                                                                                                                                                                                                                        |
-| Preview         | `preview__` and `previewCandidate__` exports, under those names                                                                                                                                                                                                                                     |
+| Section         | Holds                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Getting Started | Welcome, Theming, AfframeProvider, Formatting, Feature Flags, Licences, in this order                                                                                                                                                                                                                                                                                                                                             |
+| Components      | Every component; a family of siblings shares a subfolder (`Create and Edit`, `Task Dialogs`, `Empty States`, `Fluid Inputs`, `Notifications`, `Skeletons`, `UI Shell`, `Charts`, `Onboarding`, `AI`, `Cards`, `Add and Select`); `Add and Select` holds AddSelect, MultiAddSelect and SingleAddSelect, and IBM's MultiAddSelect and SingleAddSelect patterns as `MultiAddSelect Pattern` and `SingleAddSelect Pattern` (ADR 0008) |
+| Elements        | Tokens, typography (with IBM Plex as its sub-page), icons, pictograms                                                                                                                                                                                                                                                                                                                                                             |
+| Layout          | Grid, FlexGrid, Layer, Stack, AspectRatio, Heading (covers Section)                                                                                                                                                                                                                                                                                                                                                               |
+| Hooks           | React hooks                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Utilities       | Helpers without their own look (ActionBar, Cascade, ErrorBoundary, IdPrefix)                                                                                                                                                                                                                                                                                                                                                      |
+| Preview         | `preview__` and `previewCandidate__` exports, under those names                                                                                                                                                                                                                                                                                                                                                                   |
 
 - Sections come in this order; everything inside is sorted A to Z by path (`storySort` in `.storybook/preview.tsx`). Stories of one component keep their file order.
 - A component's title is its export name (`Components/DataGrid`, `Components/UI Shell/HelpMenu`, `Preview/previewCandidate__Toolbar`). A page for a module with several exports takes the module name (`Components/AI/AIChat`). A family subfolder and a page that is not a component are in words, in Title Case.
@@ -34,6 +34,7 @@ The sidebar follows Carbon's Storybook layout, with Afframe's content merged int
 - Theme copies (`Dark`), Carbon's `Test*` stories and test-only stories whose play leaves a state not worth showing (`FocusNotObscured`) are test fixtures: tagged `!dev` and `!autodocs`, so they run as tests but stay out of the sidebar and docs pages. The theme toolbar shows any story in dark.
 - Where a component comes from shows as the sidebar badge and the docs page label, not as a section.
 - Storybook's own onboarding checklist and release notes popup are off.
+- The Storybook title is the only grouping of the package. `pnpm registry` takes each entry's `storyTitle`, `section` and `family` from the title of its docs page and lists entries in sidebar order, read from `storySort`; `src/index.ts` groups its exports by source only (Carbon, IBM Products, Labs, Carbon utilities, Afframe). No other file keeps a grouping of its own. The script drops sub-page title tails (`Feature Flags`, `Examples`, `Docs`, its `subPages` list) and treats a title part that names an export as the component, so the family is the parts before it.
 
 ## Options not chosen
 
@@ -43,4 +44,4 @@ The sidebar follows Carbon's Storybook layout, with Afframe's content merged int
 ## Consequences
 
 - Story ids change with the titles; links between docs pages use the new ids.
-- A new component picks its section and, for a family, its subfolder from this table.
+- A new component picks its section and, for a family, its subfolder from this table; the registry and the agent guide follow without an edit.
