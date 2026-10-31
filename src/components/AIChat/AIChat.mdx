@@ -77,6 +77,9 @@ export function Assistant() {
 The chat takes the page's Carbon theme tokens, so it follows the light and
 dark themes. `injectCarbonTheme` forces one theme instead.
 
+HTML in assistant messages is sanitized by default. Pass
+`shouldSanitizeHTML={false}` only when the HTML is trusted.
+
 <Canvas of={AIChatStories.Default} />
 
 ## Messages

@@ -157,6 +157,29 @@ describe('paste', () => {
     );
   });
 
+  test.each([
+    [dotted, '2026-10-07T10:00:00Z', '07.10.2026|'],
+    [dotted, '2026/10/07', '07.10.2026|'],
+    [dotted, '2026.10.07', '07.10.2026|'],
+    [dotted, '2026-10-07 10:00', '07.10.2026|'],
+    [dotted, '2026-1-7', '07.01.2026|'],
+    [iso, '07.10.2026', '2026-10-07|'],
+    [iso, '7/1/2026', '2026-01-07|'],
+  ])('a whole date in another order: %#', (spec, text, expected) => {
+    expect(edit(spec, '|', 'insertFromPaste', text)).toBe(expected);
+  });
+
+  test('a full value pasted at the end of a full field replaces it', () => {
+    expect(edit(dotted, '01.01.2020|', 'insertFromPaste', '31.12.2026')).toBe(
+      '31.12.2026|'
+    );
+  });
+  test('an invalid full value pasted into a full field keeps it', () => {
+    expect(edit(dotted, '06.05.2024|', 'insertFromPaste', '32.01.2024')).toBe(
+      '06.05.2024|'
+    );
+  });
+
   test('drop and replacement text behave as paste', () => {
     expect(edit(dotted, '|', 'insertFromDrop', '1.2.2026')).toBe('01.02.2026|');
     expect(edit(dotted, '|', 'insertReplacementText', '1.2.2026')).toBe(
@@ -305,6 +328,26 @@ describe('normalizeMaskValue', () => {
     expect(normalizeMaskValue(raw, caret, dotted)).toEqual({
       value,
       caret: caretAfter,
+    });
+  });
+
+  test('keeps a partial value of a year-first field as typed', () => {
+    expect(normalizeMaskValue('2024-05-1', 9, iso)).toEqual({
+      value: '2024-05-1',
+      caret: 9,
+    });
+  });
+  test('reorders a year-first date', () => {
+    expect(normalizeMaskValue('2026-10-07T10:00', 16, dotted)).toEqual({
+      value: '07.10.2026',
+      caret: 10,
+    });
+  });
+
+  test('keeps the caret of a value already in order', () => {
+    expect(normalizeMaskValue('2026-10-07', 3, iso)).toEqual({
+      value: '2026-10-07',
+      caret: 3,
     });
   });
 

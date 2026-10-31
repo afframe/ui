@@ -182,6 +182,16 @@ test('filterTags: date range text for both ends and only a start', () => {
   ).toEqual({});
 });
 
+test('filterTags: a date with a year below 100 does not throw', () => {
+  expect(() =>
+    filterTags(
+      groups,
+      { issued: ['0026-01-15', null] },
+      defaultFilterSummaryMessages
+    )
+  ).not.toThrow();
+});
+
 test('filterTags: empty values give no tag; messages shape the text', () => {
   expect(
     filterTags(

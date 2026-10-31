@@ -112,11 +112,16 @@ function layoutDate(
 /** Parses `YYYY-MM-DD` to UTC midnight; throws on anything else. */
 function parseCivil(date: string): Date {
   const match = civilPattern.exec(date);
-  const utc = match
-    ? new Date(
-        Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
-      )
-    : undefined;
+  let utc: Date | undefined;
+  if (match) {
+    // setUTCFullYear keeps years below 100; Date.UTC moves them to 19xx.
+    utc = new Date(0);
+    utc.setUTCFullYear(
+      Number(match[1]),
+      Number(match[2]) - 1,
+      Number(match[3])
+    );
+  }
   if (!utc || toCivil(utc) !== date) {
     throw new RangeError(
       `Expected a date as YYYY-MM-DD, got "${date.slice(0, 40)}"`
@@ -288,7 +293,9 @@ export function addDays(date: CivilDate, days: number): CivilDate {
  */
 export function civilDateToLocalDate(date: CivilDate): Date {
   const utc = parseCivil(date);
-  return new Date(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate());
+  const local = new Date(0, 0, 1);
+  local.setFullYear(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate());
+  return local;
 }
 
 /**
@@ -298,9 +305,9 @@ export function civilDateToLocalDate(date: CivilDate): Date {
  */
 export function localDateToCivilDate(date: Date): CivilDate {
   if (Number.isNaN(date.getTime())) throw new RangeError('Invalid date');
-  return toCivil(
-    new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
-  );
+  const utc = new Date(0);
+  utc.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+  return toCivil(utc);
 }
 
 export const dateRangePresets = [

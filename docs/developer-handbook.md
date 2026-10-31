@@ -52,7 +52,7 @@ pnpm build:storybook
 - Conventional Commits, one logical unit per commit.
 - A decision that shapes the package gets an ADR in `docs/decisions/`.
 - CI (`.github/workflows/ci.yml`) runs on every PR and every push to `main`, with no path filters. Target: 2 to 3 minutes. Its jobs:
-  - `secrets`: gitleaks over the full git history with `.gitleaks.toml` (from the base branch on a PR).
+  - `secrets`: gitleaks over the full git history with `.gitleaks.toml` (from the base branch on a PR); inline `gitleaks:allow` comments are ignored.
   - `pr-title`: the PR title is a Conventional Commit, since the squash merge uses it. PRs only.
   - `workflow-lint`: actionlint (with shellcheck) and zizmor over the workflows and `dependabot.yml`.
   - `preflight`: `pnpm preflight`, `pnpm build` and `pnpm check:pack`; and `reuse lint --json` through `scripts/check-licence-labels.mjs` (the licence labels of the docs pages), in the official reuse container image.
@@ -62,7 +62,7 @@ pnpm build:storybook
 - A failed run is retried with a fresh run (a new push, or closing and reopening the PR; `ci.yml` has no manual trigger), not `gh run rerun`: a rerun restores the first attempt's dependency cache and has failed every story with a duplicated React.
 - The images for `secrets`, `workflow-lint` and the reuse step of `preflight` are pinned in `scripts/ci/toolbox/Dockerfile`; Dependabot updates them.
 - The release checks (`.github/workflows/release-checks.yml`) are called by the release workflow on a `v*` tag and run by hand with `gh workflow run release-checks.yml --ref <branch>`: `visual`, `package` (build, `check:pack`, `examples/nextjs` from the tarball) and `storybook` (the build and `check:docgen`; the build is kept as an artifact).
-- CodeQL runs on every PR (GitHub default setup). CodeRabbit reviews only on request (comment `@coderabbitai review`) and only code paths. A Claude review runs only with the `claude-review` label or a manual run of `claude-code-review.yml`.
+- CodeQL runs on every PR (GitHub default setup). CodeRabbit reviews only on request (comment `@coderabbitai review`) and only code paths. A Claude review runs only with the `claude-review` label or a manual run of `claude-code-review.yml`. `@claude` (`claude.yml`) answers only on issues and same-repo PRs the owner opened.
 - Merge gate: the `main` ruleset in `.github/rulesets/main.json` requires the `ci` check, squash merges, linear and signed history, and blocks force-pushes and deletion. The `tags` ruleset in `.github/rulesets/tags.json` lets only admins create, move or delete `v*` tags, since a `v*` tag publishes the package. A red PR merges only through the admin bypass: `gh pr merge --squash --admin`. GitHub enforces the files only after an admin applies them. On a new repo, create each:
 
   ```sh
