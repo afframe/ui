@@ -225,7 +225,8 @@ const paste: Handler = ({ selected, base, data, spec }) => {
   // A full value pasted with nothing selected replaces the field; inserted at
   // the caret of a full field it would find no room.
   if (!selected && whole.length === capacity(spec)) {
-    return insertDigits({ digits: '', k: 0 }, whole, spec);
+    const replaced = insertDigits({ digits: '', k: 0 }, whole, spec);
+    if (replaced.digits.length === capacity(spec)) return replaced;
   }
   return changed(base, insertDigits(base, pasted(data, spec, base.k), spec));
 };
@@ -303,7 +304,12 @@ export function normalizeMaskValue(
   spec: MaskSpec
 ): { value: string; caret: number } {
   const tokens = tokenize(raw, caret, spec);
-  const date = wholeDate(raw, spec);
+  // A year-first field already reads year-first text in order; padding its
+  // own partial value would jump the caret while typing.
+  const date =
+    spec.parts[0]?.kind === 'year' && yearFirst.test(raw.trim())
+      ? undefined
+      : wholeDate(raw, spec);
   // A reordered date has no caret mapping; it goes to the end.
   const { digits, k } =
     date && date !== tokens.digits ? { digits: date, k: date.length } : tokens;

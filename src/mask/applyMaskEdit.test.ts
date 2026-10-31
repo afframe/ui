@@ -174,6 +174,11 @@ describe('paste', () => {
       '31.12.2026|'
     );
   });
+  test('an invalid full value pasted into a full field keeps it', () => {
+    expect(edit(dotted, '06.05.2024|', 'insertFromPaste', '32.01.2024')).toBe(
+      '06.05.2024|'
+    );
+  });
 
   test('drop and replacement text behave as paste', () => {
     expect(edit(dotted, '|', 'insertFromDrop', '1.2.2026')).toBe('01.02.2026|');
@@ -326,6 +331,12 @@ describe('normalizeMaskValue', () => {
     });
   });
 
+  test('keeps a partial value of a year-first field as typed', () => {
+    expect(normalizeMaskValue('2024-05-1', 9, iso)).toEqual({
+      value: '2024-05-1',
+      caret: 9,
+    });
+  });
   test('reorders a year-first date', () => {
     expect(normalizeMaskValue('2026-10-07T10:00', 16, dotted)).toEqual({
       value: '07.10.2026',
