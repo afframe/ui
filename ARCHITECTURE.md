@@ -60,7 +60,9 @@ CI/CD Pipeline: GitHub Actions (`.github/workflows/`): fast checks in `ci.yml` o
 
 ## 7. Security Considerations
 
-- Public repo: no secrets or confidential information in code, docs, commits or PRs; the `secrets` CI job scans the full git history with gitleaks (`.gitleaks.toml`); secrets only in GitHub Actions secrets.
+- Public repo: no secrets or confidential information in code, docs, commits or PRs; the `secrets` CI job scans the full git history with gitleaks (`.gitleaks.toml`, inline `gitleaks:allow` ignored); secrets only in GitHub Actions secrets.
+- The AI chat sanitizes HTML in assistant messages by default (`shouldSanitizeHTML`); LLM output is untrusted.
+- `@claude` (`claude.yml`) runs only on issues and same-repo PRs the owner opened, since their text reaches the prompt.
 - IBM Telemetry off: ADR 0007.
 - Dependencies pinned to exact versions; updates arrive as reviewed Dependabot PRs.
 - Vulnerability reports: `SECURITY.md`.
