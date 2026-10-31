@@ -476,8 +476,9 @@ It is a client hook: its module starts with `'use client'`.
 spread on the input: `onFocus`, `onChange` and `onCompositionEnd` handlers,
 `inputMode="numeric"`, `autoComplete="off"`, and the spec's `placeholder` and
 `pattern`. On focus it listens to `beforeinput`, so separators appear and parts
-pad while typing; paste and autofill are normalised in `onChange`, IME text
-in `onCompositionEnd`. An input's own `onFocus`, `onChange` or
+pad while typing; paste and drop also go through `beforeinput`, with the same
+range checks. Autofill and undo are normalised in `onChange`, IME text in
+`onCompositionEnd`, without range checks. An input's own `onFocus`, `onChange` or
 `onCompositionEnd` must call the mask's handler first. `enabled: false` stops
 the listener, which outlives the spread props on an input that stays mounted.
 The mask checks each part's range, not whether the date exists (`31.02.2026`

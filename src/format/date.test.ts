@@ -171,6 +171,14 @@ test('reads the civil date of a local Date from DatePicker', () => {
   expect(() => localDateToCivilDate(new Date(Number.NaN))).toThrow(RangeError);
 });
 
+test('keeps years below 100', () => {
+  const local = new Date(2000, 0, 15);
+  local.setFullYear(26);
+  expect(localDateToCivilDate(local)).toBe('0026-01-15');
+  expect(civilDateToLocalDate('0026-01-15').getFullYear()).toBe(26);
+  expect(formatDate('0026-01-15')).toBe('15.01.0026');
+});
+
 describe('date-range presets', () => {
   // Wednesday 7 October 2026, 00:30 in Prague, still 6 October in UTC.
   const now = new Date('2026-10-06T22:30:00Z');

@@ -163,18 +163,30 @@ function insertDigits(state: Digits, text: string, spec: MaskSpec) {
   return next;
 }
 
-const isoDate = /^(\d{4})-(\d{2})-(\d{2})$/;
+const yearFirst = /^(\d{4})[-./](\d{1,2})[-./](\d{1,2})(?:[T ].*)?$/;
+const dayFirst = /^(\d{1,2})[-./](\d{1,2})[-./](\d{4})$/;
 
-function pasted(text: string, spec: MaskSpec, from: number) {
-  const iso = isoDate.exec(text.trim());
-  const kinds = spec.parts.map((part) => part.kind).sort();
-  if (iso && kinds.join() === 'day,month,year') {
-    const [, year, month, day] = iso;
-    const parts = { day, month, year } as Record<string, string>;
-    return spec.parts.map((part) => parts[part.kind]).join('');
-  }
-  return tokenize(text, text.length, spec, from).digits;
+/**
+ * A whole pasted date as digits in the spec's order. Day-first text is only
+ * reordered into a year-first spec: a year-last spec already reads it digit
+ * by digit in its own order, which keeps `mm/dd/yyyy` pastes as typed.
+ */
+function wholeDate(text: string, spec: MaskSpec) {
+  const kinds = spec.parts.map((part) => part.kind);
+  if ([...kinds].sort().join() !== 'day,month,year') return undefined;
+  const ymd = yearFirst.exec(text.trim());
+  const dmy = kinds[0] === 'year' ? dayFirst.exec(text.trim()) : null;
+  const found: Record<string, string | undefined> | null = ymd
+    ? { year: ymd[1], month: ymd[2], day: ymd[3] }
+    : dmy && { year: dmy[3], month: dmy[2], day: dmy[1] };
+  if (!found) return undefined;
+  return kinds
+    .map((kind) => (found[kind] ?? '').padStart(kind === 'year' ? 4 : 2, '0'))
+    .join('');
 }
+
+const pasted = (text: string, spec: MaskSpec, from: number) =>
+  wholeDate(text, spec) ?? tokenize(text, text.length, spec, from).digits;
 
 interface EditContext {
   digits: string;
@@ -208,8 +220,15 @@ const deleteForward =
       : undefined;
   };
 
-const paste: Handler = ({ base, data, spec }) =>
-  changed(base, insertDigits(base, pasted(data, spec, base.k), spec));
+const paste: Handler = ({ selected, base, data, spec }) => {
+  const whole = pasted(data, spec, 0);
+  // A full value pasted with nothing selected replaces the field; inserted at
+  // the caret of a full field it would find no room.
+  if (!selected && whole.length === capacity(spec)) {
+    return insertDigits({ digits: '', k: 0 }, whole, spec);
+  }
+  return changed(base, insertDigits(base, pasted(data, spec, base.k), spec));
+};
 
 const typeText: Handler = ({ base, data, spec }) => {
   let typed = base;
@@ -283,7 +302,11 @@ export function normalizeMaskValue(
   caret: number,
   spec: MaskSpec
 ): { value: string; caret: number } {
-  const { digits, k } = tokenize(raw, caret, spec);
+  const tokens = tokenize(raw, caret, spec);
+  const date = wholeDate(raw, spec);
+  // A reordered date has no caret mapping; it goes to the end.
+  const { digits, k } =
+    date && date !== tokens.digits ? { digits: date, k: date.length } : tokens;
   const max = capacity(spec);
   const state = toState(
     { digits: digits.slice(0, max), k: Math.min(k, max) },
