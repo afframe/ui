@@ -44,6 +44,32 @@ Do not:
 - redefine `--cds-*` tokens: an override is undone inside `Theme` zones and charts and does not reach the values compiled into `styles.css` (`docs/guides/theming.md`);
 - import `@carbon/*` (including `@carbon/ibm-products`) or `@carbon-labs/*` directly; it can pull a second Carbon version.
 
+### Typography
+
+Apply a Carbon type style to your own elements with Carbon's class, `className="cds--type-heading-03"`, or with its four custom properties (`--cds-heading-03-font-size`, `-font-weight`, `-line-height`, `-letter-spacing`). The classes go on your own markup, not on the elements of Carbon or IBM Products components. `styles.css` carries them before the component styles, so at equal specificity a component's own type style wins (ADR 0026).
+
+Carbon's and IBM Products' components use these styles for these roles:
+
+| Role                                                 | Class                                                                                    | Used by                                                                                                                          |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Page title                                           | `cds--type-heading-04`                                                                   | the `PageHeader` title (through its alias `productive-heading-04`), the wide `Tearsheet` title                                   |
+| Section, dialog, panel or table title, page subtitle | `cds--type-heading-03`                                                                   | `Modal`, `SidePanel`, `DataTable` and `EmptyState` titles, the `PageHeader` subtitle (through its alias `productive-heading-03`) |
+| Small heading, column header                         | `cds--type-heading-compact-01`                                                           | the `DataTable` and `StructuredList` headers, the `InlineNotification` title                                                     |
+| Short text in components                             | `cds--type-body-compact-01`                                                              | text inputs, tiles, table cells, tabs                                                                                            |
+| Longer text                                          | `cds--type-body-01`                                                                      | the `Modal` body, `Accordion` content, the `PageHeader` body text                                                                |
+| Field label, tag                                     | `cds--type-label-01`                                                                     | form labels, `Tag`                                                                                                               |
+| Helper text                                          | `cds--type-helper-text-01`                                                               | form helper text                                                                                                                 |
+| Code                                                 | `cds--type-code-01`, `cds--type-code-02`                                                 | `code-01`: `CodeSnippet`; `code-02`: the `DatePicker` and `TimePicker` inputs                                                    |
+| Legal text                                           | `cds--type-legal-01`                                                                     | no component; Carbon's [type sets](https://carbondesignsystem.com/elements/typography/type-sets/) list it                        |
+| Editorial pages                                      | `body-02`, `heading-02` and the other expressive styles, the `cds--type-fluid-*` classes | Carbon's [style strategies](https://carbondesignsystem.com/elements/typography/style-strategies/)                                |
+
+- `Heading` and `Section` set the heading level, not the look. A `Heading` outside a `Section` renders `h1`, which `styles.css` draws as `heading-06` (2.625rem, weight 300); one `Section` deeper it renders `h2`, drawn as `heading-05`. `Heading` renders a bare `h1` to `h6` with no Carbon class and passes `className` to it, so it counts as your own markup: put the role's class on it, `<Heading className="cds--type-heading-03">`.
+- A plain `<p>` gets `body-02`, an expressive style. `body` has line height 1.
+- Some components style plain elements inside them (a `p` directly in `ModalBody` or an `AccordionItem`, a `p` in a `Toggletip` or `InlineTip`, any element in a `PageHeader` available row). There the component's rule is more specific and wins; put the class on a `div` or `span` instead of the `p`.
+- Carbon's productive set is for product UI. Carbon pairs `body-compact-01` with `heading-compact-01` and `body-01` with `heading-01`.
+- `styles.css` carries the type classes as Carbon emits them, so it also has older and alias names (`caption`, `body-short`, `body-long`, `productive-heading` and the like) and font-family classes for Plex families it does not ship. Use the names in the table above. The fonts shipped are IBM Plex Sans, Mono and Serif (`cds--type-sans`, `cds--type-mono`, `cds--type-serif`).
+- `@afframe/ui/tokens` has the type tokens `@carbon/themes` exports at the top level: the v10 names (`bodyShort01`, `productiveHeading03` and the like) plus `heading01`, `heading02`, `label01`, `helperText01` and `code01`. It has no `heading03` to `heading07`, `headingCompact`, `bodyCompact`, `body01`, `body02`, `legal` or fluid names.
+
 ### Formatting on the server
 
 The formatters (`formatAmount`, `formatNumber`, `formatDate`, `formatDateRange` and the other formatters) and `Amount` are server-safe: call or render them in a server component, imported from `@afframe/ui`. Defaults are Czech locale, CZK and Prague time (ADR 0014), overridable per call.

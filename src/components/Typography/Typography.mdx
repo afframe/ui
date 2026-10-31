@@ -41,14 +41,27 @@ For consistent line heights Carbon pairs `body-compact-01` with
 `heading-compact-01`, `body-01` with `heading-01`, `body-compact-02` with
 `heading-compact-02` and `body-02` with `heading-02`.
 
-`styles.css` gives each fluid name one fixed value, the base size of the
-Carbon style it aliases (`fluid-heading-05` is 2rem, like
-`expressive-heading-05`). Growth with the viewport comes from Carbon's Sass
-mixin `type-style($name, true)`, which the compiled stylesheet does not
-include. The value and sample columns read the custom properties, so they show
-what the stylesheet renders.
+The `cds--type-fluid-*` classes grow with the viewport, as Carbon's Sass mixin
+`type-style($name, true)` does. The `--cds-fluid-*` custom properties hold one
+fixed value, the base size of the Carbon style each aliases
+(`fluid-heading-05` is 2rem, like `expressive-heading-05`). The value and
+sample columns read the custom properties, so they show the fixed values.
 
 <Canvas of={TypographyStories.Default} />
+
+## Apply a style
+
+`styles.css` also carries Carbon's type classes, one per style, which set all
+four properties. Put the class on your own element, not on a Carbon component's.
+`Heading` renders a bare `h1` to `h6` with no Carbon class, so it counts as your
+own element:
+
+```tsx
+<Heading className="cds--type-heading-03">Invoices</Heading>
+```
+
+Which style fits which role, as Carbon's components use them:
+[Typography in the consuming guide](https://github.com/afframe/ui/blob/main/docs/guides/consuming.md#typography).
 
 ## Default element styles
 

@@ -1,0 +1,5 @@
+// Carbon's type classes as @carbon/type emits them (ADR 0026). index.scss loads
+// this before @carbon/styles, so at equal specificity a Carbon or IBM Products
+// component rule comes later and wins over a type class.
+@use '@carbon/styles/scss/type';
+@include type.type-classes;

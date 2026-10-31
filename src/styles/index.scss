@@ -11,6 +11,7 @@
 @use '@carbon/styles/scss/config' with (
   $font-path: './fonts'
 );
+@use 'type-classes';
 @use '@carbon/styles';
 @use '@carbon/styles/scss/breakpoint';
 @use '@carbon/styles/scss/utilities/z-index';

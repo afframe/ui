@@ -22,7 +22,8 @@ Carbon, IBM Products, Carbon Labs and the other upstream packages are exact depe
 8. On a `@carbon/react` update: re-check the four date and time wrappers, `DatePicker`, `FluidDatePicker`, `TimePicker` and `FluidTimePicker` ([ADR 0021](../decisions/0021-system-date-and-time-format-and-input-masks.md)). They depend on `DatePicker` cloning its `DatePickerInput` children by identity, on extra props reaching the `<input>` (`TimePicker`, `FluidTimePicker`, `FluidDatePickerInput`), on the deprecated `parseDate` prop, and on flatpickr's blur handling: flatpickr empties an input it cannot parse on blur (`onBlur`) and on a click outside (`documentClick`), and `src/components/DatePicker/dateField.ts` writes the typed text back. Their component tests fail if one breaks. When Carbon drops flatpickr (v12, Temporal internals), `parseDate` and the blur write-back go with it and the strict parser moves to the new API.
 9. On a `@carbon/react` update: if `exports`, per-component `'use client'` or `sideEffects` change, re-measure per [ADR 0025](../decisions/0025-carbon-barrel-cost-accepted.md) (procedure in the ADR).
 10. On a `@carbon/styles` update: re-check the version-bound facts in `docs/guides/theming.md`: the radius behind `enable-v12-release`, what Carbon writes on `:root`, which type tokens carry a font family, and the component-token groups.
-11. The maintainer approves and merges. Nothing merges automatically.
+11. On a `@carbon/styles` or `@carbon/type` update: re-check the Typography role table in `docs/guides/consuming.md` against the component Sass, and that the `.cds--type-` classes still come before the component rules in `dist/styles.css` (ADR 0026; `pnpm check:pack` checks the order).
+12. The maintainer approves and merges. Nothing merges automatically.
 
 ## Local patches
 
