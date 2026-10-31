@@ -3,7 +3,7 @@ import * as PlexStories from './Plex.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: docs page written for the upstream stories, which have none; source label and links pinned to v11.119.0, Default specimen and a heading per family, the token of each family.
+// Modified by Afframe in 2026: docs page written for the upstream stories, which have none; source label and links pinned to v11.119.0, Default specimen and a heading per family, the token of each family, shipped subsets and italics, a Regular italic row per family.
 
 <Meta isTemplate />
 
@@ -25,8 +25,9 @@ font names.
 The Arabic, Devanagari, Hebrew and Thai Plex families are not shipped, so
 their upstream stories are not copied.
 
-Every family in its three shipped weights, with Czech diacritics (the
-stylesheet ships the Latin and Latin Extended subsets):
+The stylesheet ships the Cyrillic, Latin 1, Latin 2, Latin 3 and Pi subsets
+of each family, in weights 300, 400 and 600, normal and italic. Every family
+in its three weights and Regular italic, with Czech diacritics:
 
 <Canvas of={PlexStories.Default} />
 

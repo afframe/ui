@@ -27,11 +27,47 @@ after the token:
 }
 ```
 
-Use the productive sets (utility, body, heading) in the app; the expressive set
-is for marketing and larger editorial pages. Fluid tokens grow with the
-viewport. The table shows the base size; the sample column uses the custom
-properties, so it shows what the stylesheet renders.
+Carbon splits the styles into two
+[type sets](https://carbondesignsystem.com/elements/typography/type-sets/).
+The productive set (`-01` body styles, `heading-compact-01`, `heading-01`,
+`heading-03` to `heading-07`) is for product UI. The expressive set (`-02`
+body styles, `heading-compact-02`, `heading-02` and the fluid styles) is for
+pages where the content is
+[not restricted to a container, card, or data table](https://carbondesignsystem.com/elements/typography/style-strategies/).
+The utility styles (code, label, legal) serve both, `-01` productive and `-02`
+expressive.
+
+For consistent line heights Carbon pairs `body-compact-01` with
+`heading-compact-01`, `body-01` with `heading-01`, `body-compact-02` with
+`heading-compact-02` and `body-02` with `heading-02`.
+
+`styles.css` gives each fluid name one fixed value, the base size of the
+Carbon style it aliases (`fluid-heading-05` is 2rem, like
+`expressive-heading-05`). Growth with the viewport comes from Carbon's Sass
+mixin `type-style($name, true)`, which the compiled stylesheet does not
+include. Both columns of the table read the custom properties, so they show
+what the stylesheet renders.
 
 <Canvas of={TypographyStories.Default} />
+
+## Default element styles
+
+`styles.css` also styles plain HTML elements, with Carbon's type reset and
+default type styles:
+
+| Element  | Style                                    |
+| -------- | ---------------------------------------- |
+| `body`   | IBM Plex Sans, weight 400, line height 1 |
+| `h1`     | `heading-06`                             |
+| `h2`     | `heading-05`                             |
+| `h3`     | `heading-04`                             |
+| `h4`     | `heading-03`                             |
+| `h5`     | `heading-02`                             |
+| `h6`     | `heading-01`                             |
+| `p`      | `body-02`                                |
+| `a`      | color `link-primary`                     |
+| `em`     | italic                                   |
+| `strong` | weight 600                               |
+| `code`   | IBM Plex Mono                            |
 
 The typeface itself: [IBM Plex](?path=/docs/elements-typography-ibm-plex--overview).
