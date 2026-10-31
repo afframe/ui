@@ -108,7 +108,7 @@ export function ChatContainer({
       style={wrapperStyle}
       aria-busy={chat.status === 'loading' || undefined}>
       {chat.status === 'loaded' ? (
-        <chat.Component {...props} />
+        <chat.Component shouldSanitizeHTML {...props} />
       ) : chat.status === 'failed' ? (
         <LoadError title={text.loadError} />
       ) : (
@@ -134,7 +134,7 @@ export function ChatCustomElement({
       style={wrapperStyle}
       aria-busy={chat.status === 'loading' || undefined}>
       {chat.status === 'loaded' ? (
-        <chat.Component {...props} />
+        <chat.Component shouldSanitizeHTML {...props} />
       ) : chat.status === 'failed' ? (
         <LoadError title={text.loadError} />
       ) : (

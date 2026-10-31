@@ -68,6 +68,21 @@ test('the chat renders in a wrapper that takes no box', async () => {
   expect(wrapper && getComputedStyle(wrapper).display).toBe('contents');
 });
 
+test('assistant HTML is sanitized unless the app opts out', async () => {
+  const Probe = ({ shouldSanitizeHTML }: { shouldSanitizeHTML?: boolean }) => (
+    <p>sanitize {String(shouldSanitizeHTML)}</p>
+  );
+  load.mockResolvedValue({
+    ChatContainer: Probe,
+    ChatCustomElement: Probe,
+  } as unknown as ChatModule);
+  const first = render(<ChatContainer />);
+  expect(await screen.findByText('sanitize true')).toBeTruthy();
+  first.unmount();
+  render(<ChatCustomElement className="chat" shouldSanitizeHTML={false} />);
+  expect(await screen.findByText('sanitize false')).toBeTruthy();
+});
+
 test('while loading, the skeleton is busy and named, and keeps className', async () => {
   let finish: (chat: ChatModule) => void = () => undefined;
   load.mockReturnValue(new Promise((done) => (finish = done)));
