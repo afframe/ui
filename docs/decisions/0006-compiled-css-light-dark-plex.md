@@ -4,7 +4,7 @@ Date: 2026-09-24
 
 ## Status
 
-Accepted. Amended by [ADR 0015](0015-carbon-charts-css-in-its-own-file.md): Carbon Charts CSS ships separately as `charts.css`. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the stylesheet compiles without the v12 flags, so the look is v11. Amended 2026-10-25: only colours, type properties and layout size and density are runtime tokens in v11, so brand changes are made in this repo but not all of them are token changes ([theming guide](../guides/theming.md)).
+Accepted. Amended by [ADR 0015](0015-carbon-charts-css-in-its-own-file.md): Carbon Charts CSS ships separately as `charts.css`. Amended by [ADR 0018](0018-carbon-v11-without-v12-flags.md): the stylesheet compiles without the v12 flags, so the look is v11. Amended 2026-10-25: only colours, type properties and layout size and density are runtime tokens in v11, so brand changes are made in this repo but not all of them are token changes ([theming guide](../guides/theming.md)). Amended by [ADR 0026](0026-carbon-type-classes.md) on 2026-10-31: `styles.css` also carries Carbon's `.cds--type-*` classes, for consumers' own markup.
 
 ## Context
 

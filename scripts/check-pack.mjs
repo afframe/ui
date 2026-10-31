@@ -314,9 +314,20 @@ const contents = [
     pattern:
       /prefers-color-scheme:\s*dark\)\s*\{\s*:root\[data-afframe-theme=(system|'system'|"system")\]\s*\{[^}]*--cds-background:\s*#161616/,
   },
+  { what: 'the type class heading-03', pattern: /\.cds--type-heading-03\s*\{/ },
+  {
+    what: 'the type class body-compact-01',
+    pattern: /\.cds--type-body-compact-01\s*\{/,
+  },
 ];
 for (const { what, pattern } of contents) {
   if (!pattern.test(styles)) problems.push(`dist/styles.css lacks ${what}`);
+}
+// Type classes before the component rules, so a component wins at equal
+// specificity (ADR 0026).
+const typeAt = styles.indexOf('.cds--type-');
+if (typeAt === -1 || typeAt > styles.indexOf('.cds--btn')) {
+  problems.push('dist/styles.css must carry the type classes before .cds--btn');
 }
 if (styles.includes('cds--cc--')) {
   problems.push('dist/styles.css must not carry Carbon Charts (cds--cc--)');
