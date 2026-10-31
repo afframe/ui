@@ -29,6 +29,8 @@ import { AiEthics } from '@afframe/ui/pictograms';
 import { g100, durationFast01 } from '@afframe/ui/tokens';
 ```
 
+Icons render in server components. A component-valued prop such as `renderIcon={Add}` or `renderIcon={(props) => <Edit {...props} />}` must be passed from a client component (on the server the build fails with "Functions cannot be passed directly to Client Components").
+
 IBM Products components come from `@afframe/ui` too. The ones moving into Carbon core in v12 have their core names (`Tearsheet`, `SidePanel`, `PageHeader`), the others keep IBM's names, `preview__` and `previewCandidate__` prefixes included. `usePrefix` is IBM Products' (`c4p`); Carbon's is `useCarbonPrefix`. Render `PageHeader` as `PageHeader.Root` with its parts; a bare `<PageHeader>` renders nothing. A server component can render client components with serializable props but cannot dot into them: `PageHeader.Root`, `Tearsheet.Header` and the parts of `preview__Card` and `preview__Dialog` go in a client component (on the server the build fails with "Element type is invalid").
 
 Formatting functions (`formatAmount`, `formatDate` and the rest) come from `@afframe/ui` too, and alone from `@afframe/ui/format`, which loads no components: use it in server code, route handlers and scripts.

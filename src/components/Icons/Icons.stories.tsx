@@ -75,10 +75,11 @@ WithRelativeSize.args = {
 
 WithRelativeSize.argTypes = { size: { control: 'text' } };
 
-// Every icon export, A to Z. `_4K` and similar start with an underscore
-// because a name cannot start with a digit.
+// Every icon export, A to Z, without the base `Icon`, which draws nothing on
+// its own. `_4K` and similar start with an underscore because a name cannot
+// start with a digit.
 const iconNames = Object.keys(icons)
-  .filter((name) => /^_?[A-Z0-9]/.test(name))
+  .filter((name) => name !== 'Icon' && /^_?[A-Z0-9]/.test(name))
   .sort();
 const shown = 120;
 

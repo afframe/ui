@@ -3,7 +3,7 @@ import * as IconsStories from './Icons.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, import path note added, links pinned to v11.119.0, searchable icon gallery added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, import path note added, links pinned to v11.119.0, searchable icon gallery added, Library link, bundling, accessibility and color notes added, upstream Feedback section and table of contents removed.
 
 <Meta isTemplate />
 
@@ -14,12 +14,15 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 [Source code](https://github.com/carbon-design-system/carbon/tree/v11.119.0/packages/react/src/components/Icons)
 &nbsp;|&nbsp;
 [Usage guidelines](https://carbondesignsystem.com/elements/icons/usage/)
+&nbsp;|&nbsp;
+[Library](https://carbondesignsystem.com/elements/icons/library/)
 
 ## Overview
 
 Import icons from `@afframe/ui/icons`. Names are Carbon's, as in
-`@carbon/react/icons`. Each icon is its own module, so a bundler keeps only the
-icons you import.
+`@carbon/react/icons`. Icons ship in grouped bucket files, marked side-effect
+free (`sideEffects: false`) with pure annotations, so a production build keeps
+only the icons you import and the ones used by the Carbon components you render.
 
 ```jsx
 import { Bee, Edit } from '@afframe/ui/icons';
@@ -58,3 +61,28 @@ that returns the icon:
 ```jsx
 <MenuItem renderIcon={(props) => <Edit size="1rem" {...props} />} />
 ```
+
+## Color
+
+Icons draw with `fill="currentColor"`, so they follow the text color around
+them. Set `fill` to change it. Some filled icons have an inner path,
+`[data-icon-path="inner-path"]`, drawn with `fill="none"`; give it a `fill` in
+CSS for a second color.
+
+## Accessibility
+
+An icon is hidden from screen readers (`aria-hidden`) unless it has an
+`aria-label` or `aria-labelledby`; either adds `role="img"`. `title` alone does
+not label it. `tabIndex` makes an icon focusable only when it is labelled.
+
+All touch targets for interactive icons need to be 44px or larger
+([Carbon](https://carbondesignsystem.com/elements/icons/usage/)).
+
+Use instead:
+
+- `IconButton` for an icon-only action;
+- `StatusIndicator` or `preview__IconIndicator` for a status;
+- `SkeletonIcon` while content loads.
+
+Code reference:
+[Carbon icons code](https://carbondesignsystem.com/elements/icons/code/).
