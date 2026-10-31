@@ -12,7 +12,7 @@ Carbon, IBM Products, Carbon Labs and the other upstream packages are exact depe
 
 ## Reviewing an update PR
 
-1. CI passes (unit and accessibility tests), and the release checks pass on the PR branch (`gh workflow run release-checks.yml --ref <branch>`): visual tests, the package check and the example app build.
+1. CI passes (unit and accessibility tests), and the release checks pass on the PR branch (`gh workflow run release-checks.yml --ref <branch>`): visual tests, the package check and the example app build. An install that fails with `ERR_PNPM_TRUST_DOWNGRADE` names a package published with weaker provenance than before: check its publisher on npm, and add it to `trustPolicyExclude` in `pnpm-workspace.yaml` only when the change is explained.
 2. Check that IBM Products' peer range still accepts the new `@carbon/react`.
 3. Check `docs/feature-flags.md`: workarounds a fix makes unnecessary. The v12 flags stay off (ADR 0018).
 4. Check copied Carbon docs and stories for upstream changes (ADR 0008). A newly copied `.mdx` page gets IBM's SPDX lines as `//` comments directly after its imports and loses the upstream boilerplate (`docs/developer-handbook.md`).
