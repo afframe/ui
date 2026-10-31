@@ -65,6 +65,7 @@ CI/CD Pipeline: GitHub Actions (`.github/workflows/`): fast checks in `ci.yml` o
 - `@claude` (`claude.yml`) runs only on issues and same-repo PRs the owner opened, since their text reaches the prompt.
 - IBM Telemetry off: ADR 0007.
 - Dependencies pinned to exact versions; updates arrive as reviewed Dependabot PRs.
+- pnpm skips releases younger than 24 h and refuses a version with weaker provenance than an earlier one (`trustPolicy`, exceptions listed in `pnpm-workspace.yaml`).
 - Vulnerability reports: `SECURITY.md`.
 
 ## 8. Development & Testing Environment

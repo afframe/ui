@@ -79,6 +79,13 @@ test('assistant HTML is sanitized unless the app opts out', async () => {
   const first = render(<ChatContainer />);
   expect(await screen.findByText('sanitize true')).toBeTruthy();
   first.unmount();
+  // A wrapper that forwards an unset prop passes it as undefined.
+  const forwarded = { shouldSanitizeHTML: undefined } as unknown as {
+    shouldSanitizeHTML?: boolean;
+  };
+  const second = render(<ChatContainer {...forwarded} />);
+  expect(await screen.findByText('sanitize true')).toBeTruthy();
+  second.unmount();
   render(<ChatCustomElement className="chat" shouldSanitizeHTML={false} />);
   expect(await screen.findByText('sanitize false')).toBeTruthy();
 });

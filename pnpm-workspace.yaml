@@ -4,6 +4,20 @@ strictDepBuilds: false
 # Skips releases younger than 24 h, the window in which compromised packages are usually caught.
 minimumReleaseAge: 1440
 
+# Refuses a version published with weaker provenance than an earlier one, a sign of a taken-over account.
+# Carbon Labs moved from npm trusted publishing back to token plus provenance in 2026, which pnpm reads as
+# a downgrade, so its packages are excluded by name; semver 6.3.1 is a 2023 backport without provenance.
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - '@carbon-labs/react-first-time-orientation'
+  - '@carbon-labs/react-processing'
+  - '@carbon-labs/react-resizer'
+  - '@carbon-labs/react-text-highlighter'
+  - '@carbon-labs/react-theme-settings'
+  - '@carbon-labs/react-ui-shell'
+  - '@carbon-labs/react-whats-new'
+  - 'semver@6.3.1'
+
 # A Carbon bump leaves the patch unused instead of failing the install; ModalPresence.test.tsx shows if it is still needed.
 allowUnusedPatches: true
 # Fixes an unhandled AbortError in Carbon's usePresence (docs/guides/updating-carbon.md says when to drop it).
