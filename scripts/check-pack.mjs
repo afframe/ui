@@ -265,12 +265,28 @@ for (const path of componentFiles) {
 }
 
 for (const path of files.filter((path) =>
-  /^dist\/format\/.+\.js$/.test(path)
+  /^dist\/(format\/.+|icons|pictograms)\.js$/.test(path)
 )) {
   if (/^['"]use client['"]/.test(read(path))) {
     problems.push(
       `${path} is server-safe and must not start with "use client"`
     );
+  }
+}
+
+// Icons and pictograms re-export Carbon's packages; their entry, the `module`
+// field bundlers load, must stay server-safe too. It opens with a licence
+// comment, which a directive may follow.
+const require = createRequire(import.meta.url);
+for (const name of ['@carbon/icons-react', '@carbon/pictograms-react']) {
+  const manifest = require.resolve(`${name}/package.json`);
+  const entry = JSON.parse(readFileSync(manifest, 'utf8')).module;
+  const code = readFileSync(
+    posix.join(posix.dirname(manifest), entry),
+    'utf8'
+  ).replace(/^(\s+|\/\*[\s\S]*?\*\/|\/\/.*)*/, '');
+  if (/^['"]use client['"]/.test(code)) {
+    problems.push(`${name}/${entry} must not start with "use client"`);
   }
 }
 
