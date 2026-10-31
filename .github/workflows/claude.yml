@@ -36,6 +36,22 @@ jobs:
       id-token: write
       actions: read # Required for Claude to read CI results on PRs
     steps:
+      # The issue or PR body reaches the prompt, so its author must be trusted too.
+      - name: Refuse issues and PRs by others, and fork PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+          IS_PR: ${{ github.event.pull_request != null || github.event.issue.pull_request != null }}
+        run: |
+          if [ "$IS_PR" = true ]; then
+            refused="$(gh pr view "$NUMBER" -R "$GITHUB_REPOSITORY" --json author,isCrossRepository \
+              --jq '.isCrossRepository or .author.login != "hlebtkachenko"')"
+          else
+            refused="$(gh issue view "$NUMBER" -R "$GITHUB_REPOSITORY" --json author \
+              --jq '.author.login != "hlebtkachenko"')"
+          fi
+          test "$refused" = false
+
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

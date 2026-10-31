@@ -42,7 +42,7 @@ jobs:
           else
             cp .gitleaks.toml "$RUNNER_TEMP/gitleaks.toml"
           fi
-          docker run --rm -v "$PWD:/repo" -v "$RUNNER_TEMP/gitleaks.toml:/gitleaks.toml:ro" "$image" git --config /gitleaks.toml --no-banner --redact /repo
+          docker run --rm -v "$PWD:/repo" -v "$RUNNER_TEMP/gitleaks.toml:/gitleaks.toml:ro" "$image" git --config /gitleaks.toml --no-banner --redact --ignore-gitleaks-allow /repo
 
   # The squash merge uses the PR title as the commit subject: Conventional Commits.
   pr-title:
