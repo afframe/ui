@@ -18,8 +18,10 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 
 Pictograms are Carbon's larger illustrations for marketing and empty states.
 Import them from `@afframe/ui/pictograms` with Carbon's names, as in
-`@carbon/pictograms-react`. Each pictogram is its own module, so a bundler keeps
-only the ones you import.
+`@carbon/pictograms-react`. Pictograms ship in grouped bucket files, marked
+side-effect free (`sideEffects: false`) with pure annotations, so a production
+build keeps only the ones you import. Don't use pictograms as a replacement for
+UI icons.
 
 ```jsx
 import { Bee } from '@afframe/ui/pictograms';
@@ -32,10 +34,12 @@ import { Bee } from '@afframe/ui/pictograms';
 ## Size and color
 
 Pictograms are 64 by 64 pixels. Set `width` and `height` to change that; the
-`size` prop in the types has no effect on pictograms. They draw with
+`size` prop in the types has no effect on pictograms. The minimum size is 48
+pixels
+([usage guidelines](https://carbondesignsystem.com/elements/pictograms/usage/)). They draw with
 `currentColor`, so they follow the text color around them.
 
 ## Accessibility
 
 A pictogram is decorative by default (`aria-hidden`). When it carries meaning,
-give it an `aria-label`; it then gets `role="img"`.
+give it an `aria-label` or `aria-labelledby`; it then gets `role="img"`.

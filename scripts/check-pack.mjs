@@ -1,8 +1,11 @@
-// Checks the packed tarball's contents and the built dist/. Run after `build`.
+// Checks the packed tarball's contents, the built dist/ and the installed
+// Carbon icon entries. Run after `build`.
 import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { posix } from 'node:path';
+import { dirname, join, posix } from 'node:path';
+
+const require = createRequire(import.meta.url);
 
 const forbidden = [
   /\.stories\./,
@@ -120,7 +123,7 @@ for (const [subpath, target] of Object.entries(exports)) {
     if (Object.keys(await import(specifier)).length === 0) {
       problems.push(`${specifier} has no exports`);
     }
-    createRequire(import.meta.url)(specifier);
+    require(specifier);
   } catch (error) {
     problems.push(`${specifier} does not load: ${error.message}`);
   }
@@ -265,12 +268,29 @@ for (const path of componentFiles) {
 }
 
 for (const path of files.filter((path) =>
-  /^dist\/format\/.+\.js$/.test(path)
+  /^dist\/(format\/.+|icons|pictograms)\.js$/.test(path)
 )) {
   if (/^['"]use client['"]/.test(read(path))) {
     problems.push(
       `${path} is server-safe and must not start with "use client"`
     );
+  }
+}
+
+// Icons and pictograms re-export Carbon's packages; their entry files
+// (`main` and `module`, no `exports` map) must stay server-safe too. They open
+// with a licence comment or "use strict", which a directive may follow.
+for (const name of ['@carbon/icons-react', '@carbon/pictograms-react']) {
+  const manifest = require.resolve(`${name}/package.json`);
+  const pkg = JSON.parse(readFileSync(manifest, 'utf8'));
+  for (const entry of [pkg.main, pkg.module].filter(Boolean)) {
+    const code = readFileSync(join(dirname(manifest), entry), 'utf8').replace(
+      /^(\s+|\/\*[\s\S]*?\*\/|\/\/.*|['"]use strict['"];?)*/,
+      ''
+    );
+    if (/^['"]use client['"]/.test(code)) {
+      problems.push(`${name}/${entry} must not start with "use client"`);
+    }
   }
 }
 

@@ -4,7 +4,7 @@ import { Heading, Section } from '../../index.js';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.119.0, props tables for Heading and Section, the page also covers Section, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, links pinned to v11.119.0, props tables for Heading and Section, the page also covers Section, upstream Feedback section and table of contents removed, link to the default heading styles.
 
 <Meta isTemplate />
 
@@ -32,6 +32,9 @@ documents `Section` too. Every `Heading`
 component in that `Section` will use the correct heading level.
 
 <Canvas of={HeadingStories.Default} />
+
+The sizes of `h1` to `h6` come from `styles.css`; the element table is on the
+[Typography](?path=/docs/elements-typography--overview) page.
 
 ## Component API
 

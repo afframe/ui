@@ -7,7 +7,7 @@
  * SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2023
  * SPDX-License-Identifier: Apache-2.0
  *
- * Modified by Afframe in 2026: TypeScript, a Default story with every family and weight, Czech sample text, plain CSS with Carbon type tokens instead of Sass font mixins, docs page, source tag, stories for the Arabic, Devanagari, Hebrew and Thai families removed (not shipped; Arabic and Hebrew are right-to-left, which Afframe UI does not support), page moved under Elements/Typography. Apache-2.0 text: LICENSES/Apache-2.0.txt.
+ * Modified by Afframe in 2026: TypeScript, a Default story with every family and weight plus Regular italic, Czech sample text, plain CSS with Carbon type tokens instead of Sass font mixins, docs page, source tag, stories for the Arabic, Devanagari, Hebrew and Thai families removed (not shipped; Arabic and Hebrew are right-to-left, which Afframe UI does not support), page moved under Elements/Typography. Apache-2.0 text: LICENSES/Apache-2.0.txt.
  */
 
 import type { CSSProperties } from 'react';
@@ -52,9 +52,10 @@ const families = [
 ] as const;
 
 const weights = [
-  { name: 'Light', value: 300 },
-  { name: 'Regular', value: 400 },
-  { name: 'SemiBold', value: 600 },
+  { name: 'Light', value: 300, style: 'normal' },
+  { name: 'Regular', value: 400, style: 'normal' },
+  { name: 'SemiBold', value: 600, style: 'normal' },
+  { name: 'Regular italic', value: 400, style: 'italic' },
 ] as const;
 
 export const Default: StoryFn<PlexArgs> = () => {
@@ -67,7 +68,7 @@ export const Default: StoryFn<PlexArgs> = () => {
             <p
               key={weight.name}
               className={family.className}
-              style={{ fontWeight: weight.value }}>
+              style={{ fontWeight: weight.value, fontStyle: weight.style }}>
               <span className="plex-specimen__weight">
                 {weight.name} {weight.value}
               </span>
