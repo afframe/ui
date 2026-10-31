@@ -3,7 +3,7 @@ import * as IconsStories from './Icons.stories';
 import { SourceLabel } from '../../../.storybook/SourceLabel';
 // SPDX-FileCopyrightText: Copyright IBM Corp. 2016, 2025
 // SPDX-License-Identifier: Apache-2.0
-// Modified by Afframe in 2026: Stackblitz actions removed, source label added, import path note added, links pinned to v11.119.0, searchable icon gallery added, Library link, bundling, accessibility and color notes added, upstream Feedback section and table of contents removed.
+// Modified by Afframe in 2026: Stackblitz actions removed, source label added, import path note added, links pinned to v11.119.0, searchable icon gallery added, Library link, bundling, accessibility, color and server component notes added, upstream Feedback section and table of contents removed.
 
 <Meta isTemplate />
 
@@ -61,6 +61,10 @@ that returns the icon:
 ```jsx
 <MenuItem renderIcon={(props) => <Edit size="1rem" {...props} />} />
 ```
+
+A `renderIcon` value is a function, so pass it from a client component; from a
+server component the build fails
+([consuming guide](https://github.com/afframe/ui/blob/main/docs/guides/consuming.md#5-use-it)).
 
 ## Color
 
