@@ -22,7 +22,7 @@ import { SourceLabel } from '../../../.storybook/SourceLabel';
 Import icons from `@afframe/ui/icons`. Names are Carbon's, as in
 `@carbon/react/icons`. Icons ship in grouped bucket files, marked side-effect
 free (`sideEffects: false`) with pure annotations, so a production build keeps
-only the icons you import and the ones used by the Carbon components you render.
+only the icons you import and the ones the Carbon components you import use.
 
 ```jsx
 import { Bee, Edit } from '@afframe/ui/icons';
@@ -66,8 +66,8 @@ that returns the icon:
 
 Icons draw with `fill="currentColor"`, so they follow the text color around
 them. Set `fill` to change it. Some filled icons have an inner path,
-`[data-icon-path="inner-path"]`, drawn with `fill="none"`; give it a `fill` in
-CSS for a second color.
+`[data-icon-path="inner-path"]`, hidden with `fill="none"` or `opacity="0"`;
+for a second color, give it a `fill` and `opacity: 1` in CSS.
 
 ## Accessibility
 

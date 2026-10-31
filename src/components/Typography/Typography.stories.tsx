@@ -64,7 +64,7 @@ const properties = ['font-size', 'font-weight', 'line-height'] as const;
 
 const sample = 'Faktura 2026-0142: 1 234,50 Kč, splatnost 07.10.2026';
 
-// Theme classes declare the custom properties, so the values are read where
+// The root theme rules declare the custom properties, so the values are read where
 // the sample renders, from the same properties it uses.
 function TokenRow({ token }: { token: string }) {
   const sampleRef = useRef<HTMLSpanElement>(null);

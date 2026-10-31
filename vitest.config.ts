@@ -66,7 +66,6 @@ export default defineConfig({
       '@carbon/ai-chat/server',
       '@carbon/echarts-theme',
       '@carbon/layout',
-      '@carbon/type',
       'classnames',
     ],
   },
