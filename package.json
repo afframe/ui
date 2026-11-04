@@ -148,7 +148,7 @@
     "stylelint-plugin-carbon-tokens": "5.0.6",
     "tsdown": "0.23.2",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.72.0",
+    "typescript-eslint": "8.72.1",
     "vite": "8.3.5",
     "vitest": "5.0.5"
   }
