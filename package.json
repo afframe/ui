@@ -102,7 +102,7 @@
     "echarts": "6.1.0",
     "react-is": "19.3.1",
     "sass": "1.106.1",
-    "tabbable": "6.5.0"
+    "tabbable": "6.5.1"
   },
   "peerDependencies": {
     "@types/react": "^19",
