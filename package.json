@@ -86,7 +86,7 @@
     "@carbon/charts-react": "1.27.23",
     "@carbon/echarts-theme": "0.7.0",
     "@carbon/grid": "11.65.0",
-    "@carbon/ibm-products": "2.101.0",
+    "@carbon/ibm-products": "2.102.0",
     "@carbon/icons-react": "11.91.0",
     "@carbon/layout": "11.62.0",
     "@carbon/motion": "11.55.0",
@@ -119,7 +119,7 @@
     }
   },
   "devDependencies": {
-    "@carbon/ibm-products-styles": "2.97.0",
+    "@carbon/ibm-products-styles": "2.98.0",
     "@carbon/styles": "1.118.0",
     "@eslint/js": "10.0.1",
     "@ibm/plex": "6.4.1",
